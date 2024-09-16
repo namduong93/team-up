@@ -35,3 +35,7 @@ app.get('/', httpErrorHandler(async (req: Request, res: Response) => {
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })
+
+process.on('SIGINT', () => {
+  server.close(() => console.log('server closing'));
+})
