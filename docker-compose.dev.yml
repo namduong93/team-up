@@ -1,0 +1,47 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile.dev
+    volumes:
+    # sync the container app with the developing src code and create a volume
+    # at node_modules so that the node_modules doesn't get overridden
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=developement
+    depends_on:
+      - db
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile.dev
+    volumes:
+    # same as backend
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8000
+    depends_on:
+      - backend
+  
+  db:
+    image: capstone_db
+    container_name: capstone_db_container
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ab
+      - POSTGRES_DB=capstone_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    stdin_open: true
+    tty: true
+volumes:
+  db-data:
