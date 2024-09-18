@@ -1,4 +1,7 @@
 
+DROP DATABASE IF EXISTS capstone_db;
 CREATE DATABASE capstone_db;
-CREATE USER db_user WITH ENCRYPTED PASSWORD 'ab';
-GRANT ALL PRIVILEGES ON DATABASE db TO db_user;
+
+\c capstone_db;
+
+-- sql schema goes here:
