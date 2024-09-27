@@ -7,11 +7,11 @@ CREATE DATABASE capstone_db;
 -- sql schema goes here:
 
 
-CREATE OR REPLACE University (
-  id SERIAL PRIMARY KEY,
+CREATE TABLE universities (
+  id SERIAL PRIMARY KEY
 );
 
-CREATE OR REPLACE TABLE User (
+CREATE TABLE users (
   id SERIAL PRIMARY KEY,
 
   -- Don't know if there should be constraints on name lol
@@ -24,31 +24,31 @@ CREATE OR REPLACE TABLE User (
   email VARCHAR(320) NOT NULL,
 
   -- Optional field
-  pronouns TEXT,
+  pronouns TEXT
 );
 
-CREATE OR REPLACE TABLE Non_Student (
+CREATE TABLE non_students (
   -- Foreign Key Primary Key of their user id
   user_id INT PRIMARY KEY,
 
   -- any data specific to a Non_Student here
 
-  FOREIGN KEY (user_id) REFERENCES User (id)
+  FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE OR REPLACE TABLE Student (
+CREATE TABLE students (
   -- Foreign Key Primary Key of their user id
   user_id INT PRIMARY KEY,
   
   -- Foreign Key id of university they attend (null if they do not attend university (unofficial))
   university_id INT,
 
-  FOREIGN KEY (user_id) REFERENCES User (id),
-  FOREIGN KEY (university_id) REFERENCES University (id)
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (university_id) REFERENCES universities (id)
 
 );
 
-CREATE OR REPLACE TABLE Competition (
+CREATE TABLE competitions (
   id SERIAL PRIMARY KEY,
 
   -- TODO: add constraints to name
@@ -58,42 +58,42 @@ CREATE OR REPLACE TABLE Competition (
 
 );
 
-CREATE OR REPLACE TABLE Competition_Admin (
-  user_id INT REFERENCES User (id),
-  competition_id INT REFERENCES Competition (id),
+CREATE TABLE competition_admins (
+  user_id INT REFERENCES users (id),
+  competition_id INT REFERENCES competitions (id),
 
   PRIMARY KEY (user_id, competition_id)
 );
 
-CREATE OR REPLACE TABLE Competition_Coach (
+CREATE TABLE competition_coaches (
   user_id INT,
   competition_id INT,
 
-  FOREIGN KEY (user_id) REFERENCES User (id),
-  FOREIGN KEY (competition_id) REFERENCES Competition (id)
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (competition_id) REFERENCES competitions (id),
   PRIMARY KEY (user_id, competition_id)
 );
 
-CREATE OR REPLACE TABLE Competition_Team (
+CREATE TABLE competition_teams (
   id SERIAL PRIMARY KEY,
 
   -- TODO: add constraints to the name
   name TEXT NOT NULL,
   
-  competition_id INT NOT NULL REFERENCES Competition (id),
+  competition_id INT NOT NULL REFERENCES competitions (id),
 
-  university_id INT REFERENCES University (id)
+  university_id INT REFERENCES universities (id)
 );
 
-CREATE OR REPLACE TABLE Competition_Participant (
-  user_id INT NOT NULL REFERENCES User (id),
-  competition_id INT NOT NULL REFERENCES Competition (id),
+CREATE TABLE competition_participants (
+  user_id INT REFERENCES users (id),
+  competition_id INT REFERENCES competitions (id),
 
   -- TENTATIVE: Score ranking student
   qualification_score INT,
 
   -- The team they are in if they are in one.
-  competition_team_id INT REFERENCES Competition_Team (id)
+  competition_team_id INT REFERENCES competition_Teams (id),
 
-  PRIMARY KEY (user_id, competition_id),
+  PRIMARY KEY (user_id, competition_id)
 );
