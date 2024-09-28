@@ -72,6 +72,19 @@ CREATE TABLE competitions (
 
 );
 
+CREATE TABLE sites (
+  id SERIAL PRIMARY KEY,
+
+  competition_id INT NOT NULL REFERENCES competitions (id),
+
+  address TEXT NOT NULL,
+
+  capacity INT NOT NULL,
+
+  CONSTRAINT unique_site_competition UNIQUE (competition_id, address)
+);
+
+
 CREATE TABLE competition_admins (
   id SERIAL PRIMARY KEY,
   
@@ -90,6 +103,16 @@ CREATE TABLE competition_coaches (
   CONSTRAINT unique_coach UNIQUE (non_student_id, competition_id)
 );
 
+CREATE TABLE competition_site_coordinators (
+  id SERIAL PRIMARY KEY,
+
+  non_student_id INT NOT NULL REFERENCES non_students (user_id),
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  site_id INT NOT NULL REFERENCES sites (id),
+
+  CONSTRAINT unique_site_coordinator UNIQUE (non_student_id, competition_id)
+);
+
 CREATE TABLE competition_teams (
   id SERIAL PRIMARY KEY,
 
@@ -99,6 +122,7 @@ CREATE TABLE competition_teams (
   name TEXT NOT NULL,
   
   competition_id INT NOT NULL REFERENCES competitions (id),
+  site_id INT NOT NULL REFERENCES sites (id),
   university_id INT REFERENCES universities (id)
 );
 
