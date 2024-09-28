@@ -12,6 +12,8 @@ services:
       - "8000:8000"
     environment:
       - NODE_ENV=developement
+    networks:
+      - backend-db-network
     depends_on:
       - db
   frontend:
@@ -41,7 +43,11 @@ services:
       - POSTGRES_DB=capstone_db
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - backend-db-network
     stdin_open: true
     tty: true
 volumes:
   db-data:
+networks:
+  backend-db-network:

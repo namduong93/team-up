@@ -5,8 +5,11 @@ services:
       - "8000:8000"
     environment:
       NODE_ENV: production
+    networks:
+      - backend-db-network
     depends_on:
       - db
+
   frontend:
     build: ./frontend
     ports:
@@ -26,9 +29,13 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=ab
       - POSTGRES_DB=capstone_db
+    networks:
+      - backend-db-network
     volumes:
       - db-data:/var/lib/postgresql/data
     stdin_open: true
     tty: true
 volumes:
   db-data:
+networks:
+  backend-db-network:
