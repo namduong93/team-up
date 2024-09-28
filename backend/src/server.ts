@@ -3,12 +3,24 @@ import cors from 'cors';
 import morgan from 'morgan';
 import { serverAddress } from '../config/serverAddressConfig.js';
 import createHttpError, { HttpError } from 'http-errors';
+import pg from 'pg';
+const { Pool } = pg;
+
 
 const { HOST, PORT } = serverAddress;
 const app = express();
 app.use(json());
 app.use(cors());
 app.use(morgan('dev'));
+
+const pool = new Pool({
+  user: 'postgres',
+  host: HOST,
+  database: 'capstone_db',
+  password: 'ab',
+  port: 5432,
+  max: 10,
+});
 
 type HTTPFunction = (req: Request, res: Response) => Promise<void>;
 
@@ -29,7 +41,15 @@ function httpErrorHandler(httpFunction: HTTPFunction) {
 }
 
 app.get('/', httpErrorHandler(async (req: Request, res: Response) => {
-  res.json('Hi');
+  await pool.query(
+    `INSERT INTO users (name, hashed_password, email, pronouns) VALUES
+    ('Nam2', '012345678901234567890123456789012345678901234567890123456789', 'nam@gmail.com', 'he/him')`
+  );
+  const result = await pool.query(
+    `SELECT *
+    FROM users`
+  );
+  res.json(result.rows);
 }));
 
 const server = app.listen(Number(PORT), HOST, () => {

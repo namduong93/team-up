@@ -21,15 +21,17 @@
     "@types/http-errors": "^2.0.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.5.5",
+    "@types/pg": "^8.11.10",
     "concurrently": "^9.0.1",
     "nodemon": "^3.1.4",
     "typescript": "^5.6.2"
   },
   "dependencies": {
-    "rimraf": "^6.0.1",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "http-errors": "^2.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "pg": "^8.13.0",
+    "rimraf": "^6.0.1"
   }
 }

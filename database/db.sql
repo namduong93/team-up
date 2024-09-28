@@ -117,3 +117,6 @@ CREATE TABLE competition_participants (
   CONSTRAINT unique_participant UNIQUE (user_id, competition_id)
 
 );
+
+INSERT INTO users (name, hashed_password, email, pronouns) VALUES
+('Nam', '012345678901234567890123456789012345678901234567890123456789', 'nam@gmail.com', 'he/him');
