@@ -8,7 +8,20 @@ CREATE DATABASE capstone_db;
 
 
 CREATE TABLE universities (
-  id SERIAL PRIMARY KEY
+  id SERIAL PRIMARY KEY,
+  
+  name TEXT NOT NULL
+);
+
+CREATE TABLE courses (
+  id SERIAL PRIMARY KEY,
+  
+  name TEXT,
+
+  -- UG and PG course codes in format (UGcode/PGcode)
+  code TEXT NOT NULL,
+
+  university_id INT REFERENCES universities (id)
 );
 
 CREATE TABLE users (
@@ -31,7 +44,8 @@ CREATE TABLE non_students (
   -- Foreign Key Primary Key of their user id
   user_id INT PRIMARY KEY,
 
-  -- any data specific to a Non_Student here
+  university_id INT NOT NULL REFERENCES universities (id),
+
 
   FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -59,41 +73,47 @@ CREATE TABLE competitions (
 );
 
 CREATE TABLE competition_admins (
-  user_id INT REFERENCES users (id),
-  competition_id INT REFERENCES competitions (id),
+  id SERIAL PRIMARY KEY,
+  
+  non_student_id INT NOT NULL REFERENCES non_students (user_id),
+  competition_id INT NOT NULL REFERENCES competitions (id),
 
-  PRIMARY KEY (user_id, competition_id)
+  CONSTRAINT unique_admin UNIQUE (non_student_id, competition_id)
 );
 
 CREATE TABLE competition_coaches (
-  user_id INT,
-  competition_id INT,
+  id SERIAL PRIMARY KEY,
 
-  FOREIGN KEY (user_id) REFERENCES users (id),
-  FOREIGN KEY (competition_id) REFERENCES competitions (id),
-  PRIMARY KEY (user_id, competition_id)
+  non_student_id INT NOT NULL REFERENCES non_students (user_id),
+  competition_id INT NOT NULL REFERENCES competitions (id),
+
+  CONSTRAINT unique_coach UNIQUE (non_student_id, competition_id)
 );
 
 CREATE TABLE competition_teams (
   id SERIAL PRIMARY KEY,
 
+  competition_coach_id INT REFERENCES competition_coaches (id),
+
   -- TODO: add constraints to the name
   name TEXT NOT NULL,
   
   competition_id INT NOT NULL REFERENCES competitions (id),
-
   university_id INT REFERENCES universities (id)
 );
 
 CREATE TABLE competition_participants (
-  user_id INT REFERENCES users (id),
-  competition_id INT REFERENCES competitions (id),
+  id SERIAL PRIMARY KEY,
 
-  -- TENTATIVE: Score ranking student
-  qualification_score INT,
+  user_id INT NOT NULL REFERENCES users (id),
+  competition_id INT NOT NULL REFERENCES competitions (id),
+
+  -- -- TENTATIVE: Score ranking student
+  -- qualification_score INT,
 
   -- The team they are in if they are in one.
   competition_team_id INT REFERENCES competition_Teams (id),
 
-  PRIMARY KEY (user_id, competition_id)
+  CONSTRAINT unique_participant UNIQUE (user_id, competition_id)
+
 );
