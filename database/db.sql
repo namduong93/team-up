@@ -36,11 +36,13 @@ CREATE TABLE users (
   -- Maximum email address length is 320 chars set by IETF
   email VARCHAR(320) NOT NULL,
 
+  tshirt_size VARCHAR(4),
+
   -- Optional field
   pronouns TEXT
 );
 
-CREATE TABLE non_students (
+CREATE TABLE staff (
   -- Foreign Key Primary Key of their user id
   user_id INT PRIMARY KEY,
 
@@ -88,29 +90,29 @@ CREATE TABLE sites (
 CREATE TABLE competition_admins (
   id SERIAL PRIMARY KEY,
   
-  non_student_id INT NOT NULL REFERENCES non_students (user_id),
+  staff_id INT NOT NULL REFERENCES staff (user_id),
   competition_id INT NOT NULL REFERENCES competitions (id),
 
-  CONSTRAINT unique_admin UNIQUE (non_student_id, competition_id)
+  CONSTRAINT unique_admin UNIQUE (staff_id, competition_id)
 );
 
 CREATE TABLE competition_coaches (
   id SERIAL PRIMARY KEY,
 
-  non_student_id INT NOT NULL REFERENCES non_students (user_id),
+  staff_id INT NOT NULL REFERENCES staff (user_id),
   competition_id INT NOT NULL REFERENCES competitions (id),
 
-  CONSTRAINT unique_coach UNIQUE (non_student_id, competition_id)
+  CONSTRAINT unique_coach UNIQUE (staff_id, competition_id)
 );
 
 CREATE TABLE competition_site_coordinators (
   id SERIAL PRIMARY KEY,
 
-  non_student_id INT NOT NULL REFERENCES non_students (user_id),
+  staff_id INT NOT NULL REFERENCES staff (user_id),
   competition_id INT NOT NULL REFERENCES competitions (id),
   site_id INT NOT NULL REFERENCES sites (id),
 
-  CONSTRAINT unique_site_coordinator UNIQUE (non_student_id, competition_id)
+  CONSTRAINT unique_site_coordinator UNIQUE (staff_id, competition_id)
 );
 
 CREATE TABLE competition_teams (
