@@ -36,10 +36,12 @@ CREATE TABLE users (
   -- Maximum email address length is 320 chars set by IETF
   email VARCHAR(320) NOT NULL,
 
-  tshirt_size VARCHAR(4),
+  tshirt_size TEXT NOT NULL,
 
   -- Optional field
-  pronouns TEXT
+  pronouns TEXT,
+  allergies TEXT,
+  accessibility_reqs TEXT
 );
 
 CREATE TABLE staff (
@@ -62,6 +64,12 @@ CREATE TABLE students (
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (university_id) REFERENCES universities (id)
 
+);
+
+CREATE TABLE system_admins (
+  -- Foreign Key Primary Key of their Staff user id
+  staff_id INT PRIMARY KEY,
+  FOREIGN KEY (staff_id) REFERENCES staff (user_id)
 );
 
 CREATE TABLE competitions (
@@ -144,5 +152,5 @@ CREATE TABLE competition_participants (
 
 );
 
-INSERT INTO users (name, hashed_password, email, pronouns) VALUES
-('Nam', '012345678901234567890123456789012345678901234567890123456789', 'nam@gmail.com', 'he/him');
+INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns) VALUES
+('Nam', '012345678901234567890123456789012345678901234567890123456789', 'nam@gmail.com', 'L', 'he/him');
