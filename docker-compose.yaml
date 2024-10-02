@@ -6,7 +6,7 @@ services:
     environment:
       NODE_ENV: production
     networks:
-      - backend-db-network
+      - docker-network
     depends_on:
       - db
 
@@ -18,6 +18,8 @@ services:
       - REACT_APP_BACKEND_URL=http://localhost:8000
     depends_on:
       - backend
+    networks:
+      - docker-network
   
   db:
     build: ./database
@@ -30,7 +32,7 @@ services:
       - POSTGRES_PASSWORD=ab
       - POSTGRES_DB=capstone_db
     networks:
-      - backend-db-network
+      - docker-network
     volumes:
       - db-data:/var/lib/postgresql/data
     stdin_open: true
@@ -38,4 +40,4 @@ services:
 volumes:
   db-data:
 networks:
-  backend-db-network:
+  docker-network:

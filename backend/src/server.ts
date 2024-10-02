@@ -3,6 +3,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import { serverAddress } from '../config/serverAddressConfig.js';
 import createHttpError, { HttpError } from 'http-errors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 
 const { HOST, PORT } = serverAddress;
@@ -10,6 +12,9 @@ const app = express();
 app.use(json());
 app.use(cors());
 app.use(morgan('dev'));
+
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
+app.use('/images', express.static(path.join(currentDir, '../../public/images')));
 
 type HTTPFunction = (req: Request, res: Response) => Promise<void>;
 

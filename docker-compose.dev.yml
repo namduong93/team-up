@@ -7,13 +7,13 @@ services:
     # sync the container app with the developing src code and create a volume
     # at node_modules so that the node_modules doesn't get overridden
       - ./backend:/app
-      - /app/node_modules
+      - ./backend/node_modules:/app/node_modules
     ports:
       - "8000:8000"
     environment:
       - NODE_ENV=developement
     networks:
-      - backend-db-network
+      - docker-network
     depends_on:
       - db
   frontend:
@@ -23,13 +23,15 @@ services:
     volumes:
     # same as backend
       - ./frontend:/app
-      - /app/node_modules
+      - ./frontend/node_modules:/app/node_modules
     ports:
       - "5173:5173"
     environment:
       - REACT_APP_BACKEND_URL=http://localhost:8000
     depends_on:
       - backend
+    networks:
+      - docker-network
   
   db:
     build: ./database
@@ -44,10 +46,10 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
-      - backend-db-network
+      - docker-network
     stdin_open: true
     tty: true
 volumes:
   db-data:
 networks:
-  backend-db-network:
+  docker-network:
