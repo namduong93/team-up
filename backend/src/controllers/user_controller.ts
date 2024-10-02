@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { User } from "../models/user/user.js";
 import { UserService } from "../services/user_service.js";
 import createHttpError from "http-errors";
 
