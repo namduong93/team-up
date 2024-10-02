@@ -10,7 +10,7 @@ export const Login: FC = () => {
     e.preventDefault();
     setName(name);
     alert(`Welcome ${name}`);
-    navigate('../Dashboard.tsx');
+    navigate('/dashboard');
   }
   return (
   <FlexBackground>
@@ -21,7 +21,7 @@ export const Login: FC = () => {
         <button type="submit">Login</button>
         <button onClick={(e) => {
           e.preventDefault();
-          navigate('./SignUp.tsx');
+          navigate('/signup');
         }}>
           Create Account
         </button>

@@ -10,7 +10,7 @@ export const SignUp: FC = () => {
     e.preventDefault();
     setName(name);
     alert(`Welcome ${name}`);
-    navigate('/frontend/src/screens/Dashboard.tsx');
+    navigate('/dashboard');
   }
   return (
   <FlexBackground>
