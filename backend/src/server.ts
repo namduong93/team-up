@@ -1,11 +1,15 @@
-import express, { json, request, Request, response, Response } from 'express';
+import express, { json, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { serverAddress } from '../config/serverAddressConfig.js';
-import createHttpError, { HttpError } from 'http-errors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import pkg from 'pg';
+const { Pool } = pkg;
+import { dbConfig } from '../config/dbConfig.js';
+import { SqlDbUserRepository } from './repository/user/sqldb.js';
+import { UserService } from './services/user_service.js';
+import { UserController } from './controllers/user_controller.js';
 
 const { HOST, PORT } = serverAddress;
 const app = express();
@@ -13,32 +17,26 @@ app.use(json());
 app.use(cors());
 app.use(morgan('dev'));
 
+const pool = new Pool({
+  user: dbConfig.DB_USER,
+  host: dbConfig.DB_HOST,
+  database: dbConfig.DB_NAME,
+  password: dbConfig.DB_PASSWORD,
+  port: Number(dbConfig.DB_PORT),
+  max: 10,
+});
+
+const userRepository = new SqlDbUserRepository(pool);
+const userService = new UserService(userRepository);
+const userController = new UserController(userService);
+
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
 
-type HTTPFunction = (req: Request, res: Response) => Promise<void>;
+app.get('/', async (req: Request, res: Response) => {
+});
 
-function httpErrorHandler(httpFunction: HTTPFunction) {
-  return async function(req: Request, res: Response) {
-    // Call given function and pass on any error status code/messages
-    try {
-      await httpFunction(req, res);
-    } catch (err: unknown) {
-      // dev: 
-      console.log(err);
-      
-      if (createHttpError.isHttpError(err)) {
-        // err is auto cast to a HttpError here.
-        res.status(err.statusCode).json(err);
-      } else {
-        res.status(500).json({ message: 'An unknown error occurred' });
-      }
-    }
-  };
-}
-
-app.get('/', httpErrorHandler(async (req: Request, res: Response) => {
-}));
+app.post('/student/add', userController.addStudent);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
