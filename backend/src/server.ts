@@ -36,7 +36,42 @@ app.use('/images', express.static(path.join(currentDir, '../../public/images')))
 app.get('/', async (req: Request, res: Response) => {
 });
 
-app.post('/student/add', userController.addStudent);
+
+// PARAMS: name, preferredName, password, email, tshirtSize, pronouns?,
+// 	allergies?, accessibilityReqs?, universityId? studentId?
+// RESPONSE: { id: Number }
+app.post('/student/register', userController.studentRegister);
+
+
+// This should return things that need to be displayed on the dash
+// DEV: If you need this to return more things, you can just start assuming it does
+// on the frontend and then tell the backend team which more things you need it to return
+// PARAMS:
+// RESPONSE: { preferredName: string }
+app.get('/student/dash_info', userController.studentDashInfo);
+
+// This is used when the staff registers with a code or once the staff has been approved by admin.
+// DEV: For now it is ok to just call this straight away and we can implement the codes etc. later.
+// PARAMS: { name, preferredName, password, email, tshirtSize, pronouns?,
+// 	allergies?, accessibilityReqs?, universityId? }
+// RESPONSE: { id: Number }
+app.post('/staff/register', userController.staffRegister);
+
+// This should return things that need to be displayed on the dash
+// DEV: If you need this to return more things, you can just start assuming it does
+// on the frontend and then tell the backend team which more things you need it to return
+// PARAMS: {} --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// RESPONSE: { preferredName: string }
+app.get('/staff/dash_info', userController.staffDashInfo);
+
+// PARAMS: { email, password }
+// RESPONSE: {} --- NOTE: response will set sessionId cookie in the browser.
+app.post('/user/login', userController.userLogin);
+
+// Gets the type of user, 'staff' or 'student'
+// PARAMS: {} --- NOTE: will require the sessionId cookie in browser DEV: assumie it has the cookie
+// RESPONSE: { type: string }
+app.get('/user/type', userController.userType);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
