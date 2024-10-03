@@ -46,7 +46,7 @@ app.post('/student/register', userController.studentRegister);
 // This should return things that need to be displayed on the dash
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
-// PARAMS:
+// PARAMS: --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
 // RESPONSE: { preferredName: string }
 app.get('/student/dash_info', userController.studentDashInfo);
 
