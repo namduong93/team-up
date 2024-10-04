@@ -78,7 +78,13 @@ CREATE TABLE competitions (
   -- TODO: add constraints to name
   name TEXT NOT NULL,
 
-  team_size INT NOT NULL
+  team_size INT NOT NULL,
+
+  early_reg_deadline TIMESTAMP NOT NULL,
+
+  general_reg_deadline TIMESTAMP NOT NULL,
+  
+  code VARCHAR(8) NOT NULL
 
 );
 
@@ -136,6 +142,16 @@ CREATE TABLE competition_teams (
   university_id INT REFERENCES universities (id)
 );
 
+-- i.e. competition_pair
+CREATE TABLE competition_incomplete_teams (
+  id SERIAL PRIMARY KEY,
+
+  competition_coach_id INT REFERENCES competition_coaches (id),
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  university_id INT NOT NULL REFERENCES universities (id)
+
+);
+
 CREATE TABLE competition_participants (
   id SERIAL PRIMARY KEY,
 
@@ -148,6 +164,12 @@ CREATE TABLE competition_participants (
   -- The team they are in if they are in one.
   competition_team_id INT REFERENCES competition_Teams (id),
 
+  -- if not in one then the incomplete team they are in
+  competition_incomplete_team_id INT REFERENCES competition_incomplete_teams (id),
+  
+  -- enforce that you can only be in a team or an incomplete team but not both or neither.
+  CHECK (competition_team_id IS NULL AND competition_incomplete_team_id IS NOT NULL
+        OR competition_team_id IS NOT NULL AND competition_incomplete_team_id IS NULL),
   CONSTRAINT unique_participant UNIQUE (user_id, competition_id)
 
 );

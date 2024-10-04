@@ -1,6 +1,6 @@
 
 export class User {
-  private id: Number;
+  private id: number;
   private name: string;
   private hashedPassword: string;
   private email: string;
@@ -10,9 +10,9 @@ export class User {
   private accessibilityReqs: string | undefined;
 
   constructor(
-    id: Number, name: string, hashedPassword: string, email: string,
-    tshirt_size: string, pronouns: string | undefined, allergies: string | undefined,
-    accessibilityReqs: string | undefined
+    id: number, name: string, hashedPassword: string, email: string,
+    tshirt_size: string, pronouns?: string | undefined, allergies?: string | undefined,
+    accessibilityReqs?: string | undefined
   ) {
     this.id = id;
     this.hashedPassword = hashedPassword;
