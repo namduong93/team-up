@@ -38,7 +38,7 @@ export class SqlDbUserRepository implements UserRepository {
 
     const userQuery = `
       INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING id;
     `;
     const userValues = [
@@ -49,18 +49,17 @@ export class SqlDbUserRepository implements UserRepository {
       pronouns,
       allergies,
       accessibilityReqs,
-      studentId
     ];
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id; 
     const studentQuery = `
-      INSERT INTO students (user_id, university_id, student_id)
-      VALUES ($1, $2, $3)
+      INSERT INTO students (user_id, university_id)
+      VALUES ($1, $2)
       RETURNING *;
     `;
     const studentValues = [
       newUserId,
-      universityId
+      universityId    
     ];
 
     const studentResult = await this.pool.query(studentQuery, studentValues);
