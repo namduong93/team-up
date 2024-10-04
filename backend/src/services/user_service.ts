@@ -1,5 +1,12 @@
-import { Student } from "../models/user/student/student.js";
+import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
+import { StaffJSON } from "../models/user/staff/staff_json.js";
+import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
+import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
 import { UserRepository } from "../repository/user_repository_type.js";
+
+export type UserTypeObject = { type: string };
+
+type SessionIdObject = { sessionId: string };
 
 export class UserService {
   private userRepository: UserRepository;
@@ -8,9 +15,48 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-  addStudent = async (student: Student): Promise<Student | undefined> => {
+  studentRegister = async (name: string, preferredName: string,
+    password: string, email: string, tshirtSize: string, pronouns?: string,
+    allergies?: string, accessibilityReqs?: string,
+    universityId?: number, studentId?: number): Promise<SessionIdObject | undefined> => {
     // use the user passed in to do some stuff and call the 
     // userRepository methods to interact with the db on behalf of the user.
-    return new Student(1, '', '', '', '');
+
+    // return the sessionId of the student who registered
+    return { sessionId: '0' };
   }
+
+  staffRegister = async (staff: StaffJSON): Promise<SessionIdObject | undefined> => {
+
+    // return the sessionId of the staff who registered
+    return { sessionId: '0' };
+  }
+
+  userLogin = async (email: string, password: string): Promise<SessionIdObject | undefined> => {
+
+    // return the sessionId of whoever logged in
+    return { sessionId: '0' };
+  }
+
+  userType = async (sessionId: string): Promise<UserTypeObject | undefined> => {
+    
+    return { type: 'student' };
+  }
+
+  studentDashInfo = async (sessionId: string): Promise<StudentDashInfo | undefined> => {
+    
+    return { preferredName: 'Name' };
+  }
+
+  staffDashInfo = async (sessionId: string): Promise<StaffDashInfo | undefined> => {
+    
+    return { preferredName: 'Name' };
+  }
+
+  systemAdminDashInfo = async (sessionId: string): Promise<SystemAdminDashInfo | undefined> => {
+
+    return { preferredName: 'Name' };
+  }
+
+  
 }
