@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/user_service.js";
 import { httpErrorHandler } from "./controller_util/http_error_handler.js";
+import { Student } from "../models/user/student/student.js";
 
 
 export class UserController {
@@ -12,7 +13,22 @@ export class UserController {
 
   studentRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
-    res.json({ id: 1 });
+    const { name, password, email, tshirtSize, pronouns, allergies, accessibilityReqs, universityId, studentId } = req.body;
+    const id = Math.floor(Date.now() / 1000);
+    const new_student = new Student(
+      id,
+      name,
+      password, 
+      email,
+      tshirtSize,
+      pronouns,
+      allergies,
+      accessibilityReqs,
+      universityId,    
+      studentId
+  );
+    const student = await this.userService.studentRegister(new_student);
+    res.json(student);
     return;
   });
 

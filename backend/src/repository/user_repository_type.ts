@@ -1,15 +1,13 @@
 
 import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
 import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
-import { UserTypeObject } from "../services/user_service.js";
+import { SessionIdObject, UserTypeObject } from "../services/user_service.js";
 import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
+import { Student } from "../models/user/student/student.js";
 
 export type UserIdObject = { id: number };
 export interface UserRepository {
-  studentRegister(sessionId: string, sessionTimestamp: EpochTimeStamp, name: string, preferredName: string,
-    password: string, email: string, tshirtSize: string, pronouns?: string,
-    allergies?: string, accessibilityReqs?: string,
-    universityId?: number, studentId?: number): Promise<void | undefined>;
+  studentRegister(student: Student): Promise< SessionIdObject | undefined>;
 
   staffRegister(sessionId: string, sessionTimestamp: EpochTimeStamp, name: string, preferredName: string,
     password: string, email: string, tshirtSize: string, pronouns?: string,

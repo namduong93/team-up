@@ -15,11 +15,48 @@ export class User {
     accessibilityReqs?: string | undefined
   ) {
     this.id = id;
+    this.name = name;
     this.hashedPassword = hashedPassword;
     this.email = email;
     this.tshirt_size = tshirt_size;
     this.pronouns = pronouns;
     this.allergies = allergies;
     this.accessibilityReqs = accessibilityReqs;
+  }
+
+  getId(): number {
+    return this.id;
+  }
+
+  getName(): string {
+    return this.name;
+  }
+
+  getHashedPassword(): string {
+    return this.hashedPassword;
+  }
+
+  getEmail(): string {
+    return this.email;
+  }
+
+  setEmail(email: string): void {
+    this.email = email;
+  }
+
+  getTshirtSize(): string {
+    return this.tshirt_size;
+  }
+
+  getPronouns(): string | undefined {
+    return this.pronouns;
+  }
+
+  getAllergies(): string | undefined {
+    return this.allergies;
+  }
+
+  getAccessibilityReqs(): string | undefined {
+    return this.accessibilityReqs;
   }
 }

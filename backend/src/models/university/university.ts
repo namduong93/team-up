@@ -7,4 +7,8 @@ export class University {
     this.id = id;
     this.name = name;
   }
+
+  getId(): number {
+    return this.id;
+  }
 }

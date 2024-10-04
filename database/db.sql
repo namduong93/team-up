@@ -41,7 +41,7 @@ CREATE TABLE users (
   -- Optional field
   pronouns TEXT,
   allergies TEXT,
-  accessibility_reqs TEXT
+  accessibility_reqs TEXT,
 );
 
 CREATE TABLE staff (
@@ -60,6 +60,7 @@ CREATE TABLE students (
   
   -- Foreign Key id of university they attend (null if they do not attend university (unofficial))
   university_id INT,
+  student_id TEXT,
 
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (university_id) REFERENCES universities (id)
@@ -173,6 +174,3 @@ CREATE TABLE competition_participants (
   CONSTRAINT unique_participant UNIQUE (user_id, competition_id)
 
 );
-
-INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns) VALUES
-('Nam', '012345678901234567890123456789012345678901234567890123456789', 'nam@gmail.com', 'L', 'he/him');

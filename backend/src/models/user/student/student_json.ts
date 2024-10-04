@@ -4,4 +4,5 @@ import { UserJSON } from "../user_json.js";
 
 export interface StudentJSON extends UserJSON {
   university: UniversityJSON | undefined;
+  studentId: string | undefined;
 };

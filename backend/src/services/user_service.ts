@@ -1,12 +1,13 @@
 import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
 import { StaffJSON } from "../models/user/staff/staff_json.js";
 import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
+import { Student } from "../models/user/student/student.js";
 import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 
 export type UserTypeObject = { type: string };
 
-type SessionIdObject = { sessionId: string };
+export type SessionIdObject = { sessionId: string };
 
 export class UserService {
   private userRepository: UserRepository;
@@ -15,15 +16,11 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-  studentRegister = async (name: string, preferredName: string,
-    password: string, email: string, tshirtSize: string, pronouns?: string,
-    allergies?: string, accessibilityReqs?: string,
-    universityId?: number, studentId?: number): Promise<SessionIdObject | undefined> => {
+  studentRegister = async (student: Student): Promise<SessionIdObject | undefined> => {
     // use the user passed in to do some stuff and call the 
     // userRepository methods to interact with the db on behalf of the user.
-
-    // return the sessionId of the student who registered
-    return { sessionId: '0' };
+    let sessionObject = await this.userRepository.studentRegister(student);
+    return sessionObject;
   }
 
   staffRegister = async (staff: StaffJSON): Promise<SessionIdObject | undefined> => {
