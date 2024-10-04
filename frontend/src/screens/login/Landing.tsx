@@ -4,8 +4,14 @@ import { FlexBackground } from "../../components/general_utility/Background";
 
 export const Landing: FC = () => {
   // defining states
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setEmail(email);
+    setPassword(password);
+  }
   return (
     <FlexBackground>
       <div style={styles.leftHalf}>
@@ -19,31 +25,35 @@ export const Landing: FC = () => {
         <div style={styles.formContainer}>
           <h1>Welcome</h1>
           
-          <div style={styles.inputContainer}>
-            <label style={styles.inputHeading}>Email*</label>
-            <input
-              type='text'
-              // value={email}
-              // onChange={setEmail}
-              placeholder="Enter your email"
-              style={styles.inputBox}
-            />
+          <form onSubmit={handleSubmit}>
+            <div style={styles.inputContainer}>
+              <label style={styles.inputHeading}>Email*</label>
+              <input
+                type='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                style={styles.inputBox}
+                required
+              />
 
-            <label style={styles.inputHeading}>Password*</label>
-            <input
-              type='text'
-              // value={email}
-              // onChange={setEmail}
-              placeholder="Enter your password"
-              style={styles.inputBox}
-            />
+              <label style={styles.inputHeading}>Password*</label>
+              <input
+                type='password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                style={styles.inputBox}
+                required
+              />
 
-            <label style={{ textDecoration: 'underline' }}>Forgot Password?</label>
-          </div>
-          
-          <Link to={'/login'}>
-            <button style={styles.button}>Login</button>
-          </Link>
+              <label style={{ textDecoration: 'underline' }}>Forgot Password?</label>
+            </div>
+            
+            <Link to={'/login'}>
+              <button type="submit" style={styles.button}>Login</button>
+            </Link>
+          </form>
 
           <div>
             <span style={{ marginRight: '5px' }}>New Here?</span>
@@ -58,7 +68,7 @@ export const Landing: FC = () => {
   );
 }
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
   leftHalf: {
     flex: 1, 
     display: 'flex',
@@ -125,6 +135,6 @@ const styles = {
   signUpLink: {
     cursor: 'pointer',
     textDecoration: 'underline',
-    colour: '#6688D2',
+    color: '#6688D2',
   }
 }

@@ -18,57 +18,66 @@ export const RoleRegistration: FC = () => {
   const handleRoleClick = (selectedRole: 'Student' | 'Staff') => {
     setRole(selectedRole);
   };
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    if (!role) {
+      alert('Please select a role before proceeding');
+    }
+  }
   
   return (
   <FlexBackground style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-    <h1 style={{ textAlign: 'center' }}>
-      What is your role?
-    </h1>
+    <form onSubmit={handleSubmit} style={styles.formContainer}>
+      <h1 style={{ textAlign: 'center' }}>
+        What is your role?
+      </h1>
 
-    <div style={styles.roleContainer}>
-      <button 
-      style={{
-        ...styles.studentButton, 
-      border: role === 'Student' ? '1.5px solid #558964' : '0px'}}
-      onClick={() => handleRoleClick('Student')}
-      >
-        Student
-      </button>
+      <div style={styles.roleContainer}>
+        <button 
+        type='button'
+        style={{
+          ...styles.roleButton, 
+        backgroundColor: '#BFF4BE',
+        color: '#558964',
+        border: role === 'Student' ? '1.5px solid #558964' : '0px'}}
+        onClick={() => handleRoleClick('Student')}
+        >
+          Student
+        </button>
 
 
-      <button style={{
-        ...styles.staffButton,
+        <button
+        type='button' 
+        style={{
+        ...styles.roleButton,
+        backgroundColor: '#FEB1B1',
+        color: '#AD0B0B',
         border: role === 'Staff' ? '1.5px solid #AD0B0B' : '0px'}}
         onClick={() => handleRoleClick('Staff')}
-      >
-        Staff
-      </button>
-    </div>
+        >
+          Staff
+        </button>
+      </div>
 
-    <button style={styles.button}>Next</button>
+      <button type='submit' style={styles.button}>Next</button>
+    </form>
 
   </FlexBackground>
   );
 }
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
+  formContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   roleContainer: {
     display: 'flex',
     justifyContent: 'center',
   },
-  studentButton: {
-    // border: '1.5px solid #558964',
-    border: '0px',
-    borderRadius: '10px',
-    margin: '50px',
-    width: '300px',
-    height: '300px',
-    fontSize: '25px',
-    backgroundColor: '#BFF4BE',
-    color: '#558964',
-    cursor: 'pointer',
-  },
-  staffButton: {
+  roleButton: {
     // border: '1.5px solid #AD0B0B',
     border: '0px',
     borderRadius: '10px',
@@ -76,8 +85,6 @@ const styles = {
     width: '300px',
     height: '300px',
     fontSize: '25px',
-    backgroundColor: '#FEB1B1',
-    color: '#AD0B0B',
     cursor: 'pointer',
   },
   button: {
