@@ -5,6 +5,7 @@ import { Login } from './screens/login/Login';
 import { SignUp } from './screens/login/SignUp';
 import { Dashboard } from './screens/Dashboard';
 import { Profile } from './screens/Profile';
+import { RoleRegistration } from './screens/login/RoleRegistration';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/roleregistration" element={<RoleRegistration />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
