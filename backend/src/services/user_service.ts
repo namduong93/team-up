@@ -5,8 +5,6 @@ import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 
 export type UserTypeObject = { type: string };
-export type CompetitionCodeObject = { code: string };
-export type UniversitySiteInput = { universityId: number, defaultSite: string }
 
 type SessionIdObject = { sessionId: string };
 
@@ -53,14 +51,6 @@ export class UserService {
   staffDashInfo = async (sessionId: string): Promise<StaffDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
-  }
-
-  systemAdminCompetitionCreate = async (sessionId: string, name: string,
-    earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
-    siteLocations: Array<UniversitySiteInput>): Promise<CompetitionCodeObject | undefined> => {
-
-    // Once the competition is created return the code of it
-    return { code: 'REG12345' };
   }
 
   systemAdminDashInfo = async (sessionId: string): Promise<SystemAdminDashInfo | undefined> => {

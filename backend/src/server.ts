@@ -10,6 +10,9 @@ import { dbConfig } from '../config/dbConfig.js';
 import { SqlDbUserRepository } from './repository/user/sqldb.js';
 import { UserService } from './services/user_service.js';
 import { UserController } from './controllers/user_controller.js';
+import { SqlDbCompetitionRepository } from './repository/competition/sqldb.js';
+import { CompetitionService } from './services/competition_service.js';
+import { CompetitionController } from './controllers/competition_controller.js';
 
 const { HOST, PORT } = serverAddress;
 const app = express();
@@ -30,6 +33,10 @@ const userRepository = new SqlDbUserRepository(pool);
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);
 
+const competitionRepository = new SqlDbCompetitionRepository(pool);
+const competitionService = new CompetitionService(competitionRepository);
+const competitionController = new CompetitionController(competitionService);
+
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
 
@@ -41,7 +48,6 @@ app.get('/', async (req: Request, res: Response) => {
 // 	allergies?, accessibilityReqs?, universityId?, studentId? }
 // RESPONSE: { id: Number }
 app.post('/student/register', userController.studentRegister);
-
 
 // This should return things that need to be displayed on the dash
 // DEV: If you need this to return more things, you can just start assuming it does
@@ -73,16 +79,56 @@ app.post('/user/login', userController.userLogin);
 // RESPONSE: { type: string }
 app.get('/user/type', userController.userType);
 
-// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
-//          siteLocations: Array<{ universityId: number, defaultSite: string }> }
-// RESPONSE: { code: string }
-app.post('/system_admin/competition/create', userController.systemAdminCompetitionCreate);
-
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
 // PARAMS: {} --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
 // RESPONSE: { preferredName: string }
 app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
+
+// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
+//          siteLocations: Array<{ universityId: number, defaultSite: string }> }
+// RESPONSE: { code: string }
+app.post('/competitions/system_admin/create', competitionController.competitionsSystemAdminCreate);
+
+// Student join competition with 0 friends
+// PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote } }
+// --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// RESPONSE: { incompleteTeamId }
+app.post('/competition/student/join/0', competitionController.competitionStudentJoin0);
+
+// Student join competition with 1 friend
+// PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote },
+//          teamMate1: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree }
+// --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// RESPONSE: { incompleteTeamId }
+app.post('/competition/student/join/1', competitionController.competitionStudentJoin1);
+
+// Student join competition with 2 friends
+// PARAMS: { code, teamInfo: { teamName, competitionLevel, ICPCEligible, boersenEligible, isRemote }
+//          teamMate1: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree },
+// 	        teamMate2: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree } }
+// --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// RESPONSE: { teamId }
+app.post('/competition/student/join/2', competitionController.competitionStudentJoin2);
+
+
+// PARAMS: { competitionId }
+// RESPONSE: { universities: Array<{ id: number, name: string }> }
+app.get('/competition/universities/list')
+
+////////// Competition staff joining with a specific coach, site or admin code.
+
+// PARAMS: { code, universityId, defaultSiteId }
+// RESPONSE: {} --- (still receives 200 OK or an error)
+app.post('/competition/staff/join/coach');
+
+// PARAMS: { code, site, capacity }
+// RESPONSE: {} --- (still receives 200 OK or an error)
+app.post('/competition/staff/join/site_coordinator');
+
+// PARAMS: { code }
+// RESPONSE: {} --- (still receives 200 OK or an error)
+app.post('/competition/staff/join/admin');
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

@@ -1,7 +1,7 @@
 
 import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
 import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
-import { UniversitySiteInput, UserTypeObject } from "../services/user_service.js";
+import { UserTypeObject } from "../services/user_service.js";
 import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
 
 export type UserIdObject = { id: number };
@@ -24,7 +24,4 @@ export interface UserRepository {
   staffDashInfo(sessionId: string): Promise<StaffDashInfo | undefined>;
   systemAdminDashInfo(sessionId: string): Promise<SystemAdminDashInfo | undefined>;
 
-  systemAdminCompetitionCreate(sessionId: string, name: string,
-    earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
-    siteLocations: Array<UniversitySiteInput>, competitionCode: string): Promise<void | undefined>;
 };

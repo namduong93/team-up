@@ -2,7 +2,7 @@ import { Pool } from "pg";
 import { UserIdObject, UserRepository } from "../user_repository_type.js";
 import { StudentDashInfo } from "../../models/user/student/student_dash_info.js";
 import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
-import { CompetitionCodeObject, UniversitySiteInput, UserTypeObject } from "../../services/user_service.js";
+import { UserTypeObject } from "../../services/user_service.js";
 import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
 
 
@@ -52,13 +52,6 @@ export class SqlDbUserRepository implements UserRepository {
   staffDashInfo = async (sessionId: string): Promise<StaffDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
-  }
-
-  systemAdminCompetitionCreate = async (sessionId: string, name: string,
-    earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
-    siteLocations: Array<UniversitySiteInput>, competitionCode: string): Promise<void | undefined> => {
-    
-    return;
   }
 
   systemAdminDashInfo = async (sessionId: string): Promise<SystemAdminDashInfo | undefined> => {
