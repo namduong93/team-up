@@ -78,7 +78,13 @@ CREATE TABLE competitions (
   -- TODO: add constraints to name
   name TEXT NOT NULL,
 
-  team_size INT NOT NULL
+  team_size INT NOT NULL,
+
+  early_reg_deadline TIMESTAMP NOT NULL,
+
+  general_reg_deadline TIMESTAMP NOT NULL,
+  
+  code VARCHAR(8) NOT NULL
 
 );
 

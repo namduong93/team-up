@@ -1,6 +1,6 @@
 
 export interface UserJSON {
-  id: Number;
+  id: number;
   name: string;
   hashedPassword: string;
   email: string;

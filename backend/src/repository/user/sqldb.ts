@@ -1,11 +1,10 @@
 import { Pool } from "pg";
-import { UserRepository } from "../user_repository_type.js";
-import { Student } from "../../models/user/student/student.js";
-import { Staff } from "../../models/user/staff/staff.js";
-import { User } from "../../models/user/user.js";
-import { UserJSON } from "../../models/user/user_json.js";
+import { UserIdObject, UserRepository } from "../user_repository_type.js";
 import { StudentDashInfo } from "../../models/user/student/student_dash_info.js";
 import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
+import { CompetitionCodeObject, UniversitySiteInput, UserTypeObject } from "../../services/user_service.js";
+import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
+
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -14,24 +13,35 @@ export class SqlDbUserRepository implements UserRepository {
     this.pool = pool;
   }
 
-  studentRegister = async (student: Student): Promise<Student | undefined> => {
+  studentRegister = async (sessionId: string, sessionTimestamp: EpochTimeStamp, name: string,
+    preferredName: string, password: string, email: string, tshirtSize: string, pronouns?: string,
+    allergies?: string, accessibilityReqs?: string,
+    universityId?: number, studentId?: number): Promise<void | undefined> => {
     // Use the params to run an sql insert on the db
-    return new Student(1, '', '', '', '');
+    return;
   }
 
-  staffRegister = async (staff: Staff): Promise<Staff | undefined> => {
+  staffRegister = async (sessionId: string, sessionTimestamp: EpochTimeStamp, name: string,
+    preferredName: string, password: string, email: string, tshirtSize: string, pronouns?: string,
+    allergies?: string, accessibilityReqs?: string,
+    universityId?: number): Promise<void | undefined> => {
 
-    return new Staff(1, '', '', '', '');
+    return;
   }
 
-  userLogin = async (user: User): Promise<User | undefined> => {
-
-    return new User(1, '', '', '', '');
+  userAuthenticate = async (email: string, password: string): Promise<UserIdObject | undefined> => {
+    
+    return { id: 1 };
   }
 
-  userType = async (sessionId: string): Promise<string | undefined> => {
+  userLogin = async (sessionId: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined> => {
 
-    return 'student';
+    return;
+  }
+
+  userType = async (sessionId: string): Promise<UserTypeObject | undefined> => {
+
+    return { type: 'student' };
   }
 
   studentDashInfo = async(sessionId: string): Promise<StudentDashInfo | undefined> => {
@@ -41,6 +51,18 @@ export class SqlDbUserRepository implements UserRepository {
 
   staffDashInfo = async (sessionId: string): Promise<StaffDashInfo | undefined> => {
     
+    return { preferredName: 'Name' };
+  }
+
+  systemAdminCompetitionCreate = async (sessionId: string, name: string,
+    earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
+    siteLocations: Array<UniversitySiteInput>, competitionCode: string): Promise<void | undefined> => {
+    
+    return;
+  }
+
+  systemAdminDashInfo = async (sessionId: string): Promise<SystemAdminDashInfo | undefined> => {
+
     return { preferredName: 'Name' };
   }
 }

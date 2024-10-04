@@ -61,4 +61,14 @@ export class UserController {
     return;
   });
 
+  systemAdminCompetitionCreate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    res.json({ code: 'REG12345' });
+    return;
+  });
+
+  systemAdminDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    res.json({ preferredName: 'Name' });
+    return;
+  });
+
 }
