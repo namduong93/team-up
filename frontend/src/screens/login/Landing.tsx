@@ -1,16 +1,31 @@
-import { FC, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { FC, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FlexBackground } from "../../components/general_utility/Background";
+import { sendRequest } from "../../utility/request";
+import styled from "styled-components";
+
+const CustomButton = styled.button`
+  cursor: pointer;
+  &:hover {
+    
+  }
+`
 
 export const Landing: FC = () => {
+
+  const navigate = useNavigate();
   // defining states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setEmail(email);
-    setPassword(password);
+    try {
+      await sendRequest.post('/user/login');
+      navigate('/dashboard')
+    } catch (error: unknown) {
+
+    };
   }
   return (
     <FlexBackground style={{
@@ -30,6 +45,8 @@ export const Landing: FC = () => {
       </div>
         <form onSubmit={handleSubmit} style={styles.formContainer}>
           <h1>Welcome</h1>
+
+          {/* 68% to match the 65% from the input and the 3% of padding */}
           <div style={{width: '68%'}}>
             <label style={styles.inputHeading}>Email*</label>
           </div>
@@ -65,7 +82,7 @@ export const Landing: FC = () => {
           because I think that the link would actually stop the form submission.
           Also ruins the sizing/styling that we might want from the prent container
           */}
-          <button type="submit" style={styles.button}>Login</button>
+          <CustomButton type="submit" style={styles.button}>Login</CustomButton>
 
           <div>
             <span style={{ marginRight: '5px' }}>New Here?</span>
