@@ -13,11 +13,11 @@ export interface UserRepository {
   staffRegister(staff: Staff): Promise<UserIdObject | undefined>;
 
   userAuthenticate(email: string, password: string): Promise<UserIdObject | undefined>;
-  userLogin(sessionId: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined>;
+  userLogin(sessionToken: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined>;
 
-  userType(sessionId: string): Promise<UserTypeObject | undefined>;
-  studentDashInfo(sessionId: string): Promise<StudentDashInfo | undefined>;
-  staffDashInfo(sessionId: string): Promise<StaffDashInfo | undefined>;
-  systemAdminDashInfo(sessionId: string): Promise<SystemAdminDashInfo | undefined>;
+  userType(sessionToken: string): Promise<UserTypeObject | undefined>;
+  studentDashInfo(sessionToken: string): Promise<StudentDashInfo | undefined>;
+  staffDashInfo(sessionToken: string): Promise<StaffDashInfo | undefined>;
+  systemAdminDashInfo(sessionToken: string): Promise<SystemAdminDashInfo | undefined>;
 
 };

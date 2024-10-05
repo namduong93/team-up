@@ -56,13 +56,13 @@ app.get('/', async (req: Request, res: Response) => {
 
 // PARAMS: { name, password, email, tshirtSize, pronouns?,
 // 	allergies?, accessibilityReqs?, universityId?, studentId? }
-// RESPONSE: { sessionId: string }
+// RESPONSE: { sessionToken: string }
 app.post('/student/register', userController.studentRegister);
 
 // This should return things that need to be displayed on the dash
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
-// PARAMS: --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// PARAMS: --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { preferredName: string }
 app.get('/student/dash_info', userController.studentDashInfo);
 
@@ -70,28 +70,28 @@ app.get('/student/dash_info', userController.studentDashInfo);
 // DEV: For now it is ok to just call this straight away and we can implement the codes etc. later.
 // PARAMS: { name, password, email, tshirtSize, pronouns?,
 // 	allergies?, accessibilityReqs?, universityId?}
-// RESPONSE: { sessionId: string }
+// RESPONSE: { sessionToken: string }
 app.post('/staff/register', userController.staffRegister);
 
 // This should return things that need to be displayed on the dash
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
-// PARAMS: {} --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { preferredName: string }
 app.get('/staff/dash_info', userController.staffDashInfo);
 
 // PARAMS: { email, password }
-// RESPONSE: {} --- NOTE: response will set sessionId cookie in the browser.
+// RESPONSE: {} --- NOTE: response will set sessionToken cookie in the browser.
 app.post('/user/login', userController.userLogin);
 
 // Gets the type of user, 'staff', 'student' OR 'system_admin'
-// PARAMS: {} --- NOTE: will require the sessionId cookie in browser DEV: assumie it has the cookie
+// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
 // RESPONSE: { type: string }
 app.get('/user/type', userController.userType);
 
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
-// PARAMS: {} --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { preferredName: string }
 app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 
@@ -102,14 +102,14 @@ app.post('/competitions/system_admin/create', competitionController.competitions
 
 // Student join competition with 0 friends
 // PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote } }
-// --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { incompleteTeamId }
 app.post('/competition/student/join/0', competitionController.competitionStudentJoin0);
 
 // Student join competition with 1 friend
 // PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote },
 //          teamMate1: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree }
-// --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { incompleteTeamId }
 app.post('/competition/student/join/1', competitionController.competitionStudentJoin1);
 
@@ -117,7 +117,7 @@ app.post('/competition/student/join/1', competitionController.competitionStudent
 // PARAMS: { code, teamInfo: { teamName, competitionLevel, ICPCEligible, boersenEligible, isRemote }
 //          teamMate1: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree },
 // 	        teamMate2: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree } }
-// --- NOTE: will require the sessionId cookie in browser DEV: assume it has the cookie
+// --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { teamId }
 app.post('/competition/student/join/2', competitionController.competitionStudentJoin2);
 

@@ -142,27 +142,27 @@ export class SqlDbUserRepository implements UserRepository {
     return { userId: 1 };
   }
 
-  userLogin = async (sessionId: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined> => {
+  userLogin = async (sessionToken: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined> => {
 
     return;
   }
 
-  userType = async (sessionId: string): Promise<UserTypeObject | undefined> => {
+  userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
 
     return { type: 'student' };
   }
 
-  studentDashInfo = async(sessionId: string): Promise<StudentDashInfo | undefined> => {
+  studentDashInfo = async(sessionToken: string): Promise<StudentDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
   }
 
-  staffDashInfo = async (sessionId: string): Promise<StaffDashInfo | undefined> => {
+  staffDashInfo = async (sessionToken: string): Promise<StaffDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
   }
 
-  systemAdminDashInfo = async (sessionId: string): Promise<SystemAdminDashInfo | undefined> => {
+  systemAdminDashInfo = async (sessionToken: string): Promise<SystemAdminDashInfo | undefined> => {
 
     return { preferredName: 'Name' };
   }

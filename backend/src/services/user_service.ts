@@ -46,26 +46,26 @@ export class UserService {
 
   userLogin = async (email: string, password: string): Promise<SessionTokenObject | undefined> => {
 
-    // return the sessionId of whoever logged in
+    // return the sessionToken of whoever logged in
     return { sessionToken: '0' };
   }
 
-  userType = async (sessionId: string): Promise<UserTypeObject | undefined> => {
+  userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
     
     return { type: 'student' };
   }
 
-  studentDashInfo = async (sessionId: string): Promise<StudentDashInfo | undefined> => {
+  studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
   }
 
-  staffDashInfo = async (sessionId: string): Promise<StaffDashInfo | undefined> => {
+  staffDashInfo = async (sessionToken: string): Promise<StaffDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
   }
 
-  systemAdminDashInfo = async (sessionId: string): Promise<SystemAdminDashInfo | undefined> => {
+  systemAdminDashInfo = async (sessionToken: string): Promise<SystemAdminDashInfo | undefined> => {
 
     return { preferredName: 'Name' };
   }

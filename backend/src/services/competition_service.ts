@@ -38,7 +38,7 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
   }
 
-  competitionsSystemAdminCreate = async (sessionId: string, name: string,
+  competitionsSystemAdminCreate = async (sessionToken: string, name: string,
     earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
     siteLocations: Array<UniversitySiteInput>): Promise<CompetitionCodeObject | undefined> => {
 
@@ -46,17 +46,17 @@ export class CompetitionService {
     return { code: 'REG12345' };
   }
 
-  competitionStudentJoin0 = async (sessionId: string, code: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {
+  competitionStudentJoin0 = async (sessionToken: string, code: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {
 
     return { incompleteTeamId: 1 };
   }
 
-  competitionStudentJoin1 = async (sessionId: string, code: string, individualInfo: IndividualTeamInfo, teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined> => {
+  competitionStudentJoin1 = async (sessionToken: string, code: string, individualInfo: IndividualTeamInfo, teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined> => {
 
     return { incompleteTeamId: 1 };
   }
 
-  competitionStudentJoin2 = async (sessionId: string, code: string, teamInfo: TeamInfo,
+  competitionStudentJoin2 = async (sessionToken: string, code: string, teamInfo: TeamInfo,
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
 
     return { teamId: 1 };
