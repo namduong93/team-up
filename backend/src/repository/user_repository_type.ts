@@ -4,15 +4,13 @@ import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
 import { SessionIdObject, UserTypeObject } from "../services/user_service.js";
 import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
 import { Student } from "../models/user/student/student.js";
+import { Staff } from "../models/user/staff/staff.js";
 
 export type UserIdObject = { id: number };
 export interface UserRepository {
   studentRegister(student: Student): Promise< SessionIdObject | undefined>;
 
-  staffRegister(sessionId: string, sessionTimestamp: EpochTimeStamp, name: string, preferredName: string,
-    password: string, email: string, tshirtSize: string, pronouns?: string,
-    allergies?: string, accessibilityReqs?: string,
-    universityId?: number): Promise<void | undefined>;
+  staffRegister(staff: Staff): Promise<SessionIdObject | undefined>;
 
   userAuthenticate(email: string, password: string): Promise<UserIdObject | undefined>;
   userLogin(sessionId: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined>;

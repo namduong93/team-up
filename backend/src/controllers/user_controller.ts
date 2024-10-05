@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserService } from "../services/user_service.js";
 import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
+import { Staff } from "../models/user/staff/staff.js";
 
 
 export class UserController {
@@ -24,13 +25,28 @@ export class UserController {
       university: req.body.university,
       studentId: req.body.studentId,
     };
+
     const sessionIdObject = await this.userService.studentRegister(new_student);
     res.json(sessionIdObject);
+
     return;
   });
 
   staffRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ id: 1 });
+    const new_staff: Staff = {
+      name: req.body.name,
+      password: req.body.password,
+      email: req.body.email,
+      tshirtSize: req.body.tshirtSize,
+      pronouns: req.body.pronouns,
+      allergies: req.body.allergies,
+      accessibilityReqs: req.body.accessibilityReqs,
+      university: req.body.university,
+    };
+
+    const sessionIdObject = await this.userService.staffRegister(new_staff);
+    res.json(sessionIdObject);
+
     return;
   });
 

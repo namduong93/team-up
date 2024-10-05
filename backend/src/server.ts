@@ -44,9 +44,9 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 
-// PARAMS: { name, preferredName, password, email, tshirtSize, pronouns?,
-// 	allergies?, accessibilityReqs?, universityId?, studentId? }
-// RESPONSE: { student }
+// PARAMS: { name, password, email, tshirtSize, pronouns?,
+// 	allergies?, accessibilityReqs?, university?, studentId? }
+// RESPONSE: { sessionId: string }
 app.post('/student/register', userController.studentRegister);
 
 // This should return things that need to be displayed on the dash
@@ -58,9 +58,9 @@ app.get('/student/dash_info', userController.studentDashInfo);
 
 // This is used when the staff registers with a code or once the staff has been approved by admin.
 // DEV: For now it is ok to just call this straight away and we can implement the codes etc. later.
-// PARAMS: { name, preferredName, password, email, tshirtSize, pronouns?,
-// 	allergies?, accessibilityReqs?, universityId? }
-// RESPONSE: { id: Number }
+// PARAMS: { name, password, email, tshirtSize, pronouns?,
+// 	allergies?, accessibilityReqs?, university?}
+// RESPONSE: { sessionId: string }
 app.post('/staff/register', userController.staffRegister);
 
 // This should return things that need to be displayed on the dash

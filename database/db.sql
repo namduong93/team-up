@@ -48,7 +48,8 @@ CREATE TABLE staff (
   -- Foreign Key Primary Key of their user id
   user_id INT PRIMARY KEY,
 
-  university_id INT NOT NULL REFERENCES universities (id),
+  -- TODO: consider adding NOT NULL back if necessary
+  university_id INT REFERENCES universities (id), 
 
 
   FOREIGN KEY (user_id) REFERENCES users (id)
