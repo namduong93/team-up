@@ -41,7 +41,7 @@ CREATE TABLE users (
   -- Optional field
   pronouns TEXT,
   allergies TEXT,
-  accessibility_reqs TEXT,
+  accessibility_reqs TEXT
 );
 
 CREATE TABLE staff (
