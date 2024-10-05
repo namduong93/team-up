@@ -1,10 +1,10 @@
 
 export interface UserJSON {
-  id: number;
+  id?: number;
   name: string;
-  hashedPassword: string;
+  password: string;
   email: string;
-  tshirt_size: string;
+  tshirtSize: string;
   pronouns?: string | undefined;
   allergies?: string | undefined;
   accessibilityReqs?: string | undefined;

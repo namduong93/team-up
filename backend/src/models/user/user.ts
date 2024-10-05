@@ -2,7 +2,7 @@
 export class User {
   private id: number;
   private name: string;
-  private hashedPassword: string;
+  private password: string;
   private email: string;
   private tshirt_size: string;
   private pronouns: string | undefined;
@@ -10,13 +10,13 @@ export class User {
   private accessibilityReqs: string | undefined;
 
   constructor(
-    id: number, name: string, hashedPassword: string, email: string,
+    id: number, name: string, password: string, email: string,
     tshirt_size: string, pronouns?: string | undefined, allergies?: string | undefined,
     accessibilityReqs?: string | undefined
   ) {
     this.id = id;
     this.name = name;
-    this.hashedPassword = hashedPassword;
+    this.password = password;
     this.email = email;
     this.tshirt_size = tshirt_size;
     this.pronouns = pronouns;
@@ -32,8 +32,8 @@ export class User {
     return this.name;
   }
 
-  getHashedPassword(): string {
-    return this.hashedPassword;
+  getpassword(): string {
+    return this.password;
   }
 
   getEmail(): string {

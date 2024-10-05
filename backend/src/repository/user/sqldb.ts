@@ -4,8 +4,9 @@ import { StudentDashInfo } from "../../models/user/student/student_dash_info.js"
 import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
 import { SessionIdObject, UserTypeObject } from "../../services/user_service.js";
 import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
-import { Student, validate } from "../../models/user/student/student.js";
 import { v4 as uuidv4 } from 'uuid';
+import { StudentJSON, validate } from "../../models/user/student/student_json.js";
+import bcrypt from 'bcryptjs';
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -14,9 +15,9 @@ export class SqlDbUserRepository implements UserRepository {
     this.pool = pool;
   }
 
-  studentRegister = async (student : Student): Promise< SessionIdObject| undefined> => {
+  studentRegister = async (student : StudentJSON): Promise< SessionIdObject| undefined> => {
     // Use the params to run an sql insert on the db
-    student.setEmail(await this.trimDotsForEmail(student.getEmail()));
+    student.email = await this.trimDotsForEmail(student.email);
 
     const validated = validate(student);
     if (validated) {
@@ -25,15 +26,14 @@ export class SqlDbUserRepository implements UserRepository {
 
     let sessionId : string = uuidv4();
     let sessionTimestamp : EpochTimeStamp = Date.now();
-    let user_id = student.getId();
-    let name = student.getName();              
-    let hashed_password = student.getHashedPassword(); 
-    let email = student.getEmail();             
-    let tshirtSize = student.getTshirtSize();   
-    let pronouns = student.getPronouns();       
-    let allergies = student.getAllergies();     
-    let accessibilityReqs = student.getAccessibilityReqs(); 
-    let studentId = student.getStudentId();     
+    let name = student.name;              
+    let hashed_password = await bcrypt.hash(student.password, 10); 
+    let email = student.email;             
+    let tshirtSize = student.tshirtSize;   
+    let pronouns = student.pronouns;       
+    let allergies = student.allergies;     
+    let accessibilityReqs = student.accessibilityReqs; 
+    let studentId = student.studentId;     
 
     const userQuery = `
       INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)

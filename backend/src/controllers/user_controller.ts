@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/user_service.js";
 import { httpErrorHandler } from "./controller_util/http_error_handler.js";
-import { Student } from "../models/user/student/student.js";
+import { StudentJSON } from "../models/user/student/student_json.js";
 
 
 export class UserController {
@@ -13,17 +13,17 @@ export class UserController {
 
   studentRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
-    const { name, password, email, tshirtSize, pronouns, allergies, accessibilityReqs, universityId, studentId } = req.body;
-    const new_student = new Student(
-      name,
-      password, 
-      email,
-      tshirtSize,
-      pronouns,
-      allergies,
-      accessibilityReqs,
-      studentId
-  );
+    const new_student: StudentJSON = {
+      name: req.body.name,
+      password: req.body.password,
+      email: req.body.email,
+      tshirtSize: req.body.tshirtSize,
+      pronouns: req.body.pronouns,
+      allergies: req.body.allergies,
+      accessibilityReqs: req.body.accessibilityReqs,
+      university: req.body.university,
+      studentId: req.body.studentId,
+    };
     const sessionIdObject = await this.userService.studentRegister(new_student);
     res.json(sessionIdObject);
     return;

@@ -3,11 +3,11 @@ import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
 import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
 import { SessionIdObject, UserTypeObject } from "../services/user_service.js";
 import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
-import { Student } from "../models/user/student/student.js";
+import { StudentJSON } from "../models/user/student/student_json.js";
 
 export type UserIdObject = { id: number };
 export interface UserRepository {
-  studentRegister(student: Student): Promise< SessionIdObject | undefined>;
+  studentRegister(student: StudentJSON): Promise< SessionIdObject | undefined>;
 
   staffRegister(sessionId: string, sessionTimestamp: EpochTimeStamp, name: string, preferredName: string,
     password: string, email: string, tshirtSize: string, pronouns?: string,
