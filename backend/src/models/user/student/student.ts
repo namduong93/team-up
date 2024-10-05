@@ -2,13 +2,13 @@
 import { UniversityJSON } from "../../university/university_json.js";
 import { UserJSON } from "../user_json.js";
 
-export interface StudentJSON extends UserJSON {
+export interface Student extends UserJSON {
   university: UniversityJSON | undefined;
   studentId: string | undefined;
 };
 
 
-export function validate(student: StudentJSON): string {
+export function validate(student: Student): string {
   // Validate the student object
   if (!student.name || student.name.length === 0) {
     return "Name is required";

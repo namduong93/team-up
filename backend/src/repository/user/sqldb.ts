@@ -5,7 +5,7 @@ import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
 import { SessionIdObject, UserTypeObject } from "../../services/user_service.js";
 import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
 import { v4 as uuidv4 } from 'uuid';
-import { StudentJSON, validate } from "../../models/user/student/student_json.js";
+import { Student, validate } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
 
 export class SqlDbUserRepository implements UserRepository {
@@ -15,7 +15,7 @@ export class SqlDbUserRepository implements UserRepository {
     this.pool = pool;
   }
 
-  studentRegister = async (student : StudentJSON): Promise< SessionIdObject| undefined> => {
+  studentRegister = async (student : Student): Promise< SessionIdObject| undefined> => {
     // Use the params to run an sql insert on the db
     student.email = await this.trimDotsForEmail(student.email);
 
