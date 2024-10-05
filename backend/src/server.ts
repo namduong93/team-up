@@ -45,7 +45,7 @@ app.get('/', async (req: Request, res: Response) => {
 
 
 // PARAMS: { name, password, email, tshirtSize, pronouns?,
-// 	allergies?, accessibilityReqs?, university?, studentId? }
+// 	allergies?, accessibilityReqs?, universityId?, studentId? }
 // RESPONSE: { sessionId: string }
 app.post('/student/register', userController.studentRegister);
 
@@ -59,7 +59,7 @@ app.get('/student/dash_info', userController.studentDashInfo);
 // This is used when the staff registers with a code or once the staff has been approved by admin.
 // DEV: For now it is ok to just call this straight away and we can implement the codes etc. later.
 // PARAMS: { name, password, email, tshirtSize, pronouns?,
-// 	allergies?, accessibilityReqs?, university?}
+// 	allergies?, accessibilityReqs?, universityId?}
 // RESPONSE: { sessionId: string }
 app.post('/staff/register', userController.staffRegister);
 

@@ -16,7 +16,7 @@ export class SqlDbUserRepository implements UserRepository {
     this.pool = pool;
   }
 
-  // TODO: handle universityId, sessionTimestamp
+  // TODO: handle sessionTimestamp
   studentRegister = async (student : Student): Promise<SessionIdObject | undefined> => {
     // Use the params to run an sql insert on the db
     student.email = await this.trimDotsForEmail(student.email);
@@ -35,6 +35,7 @@ export class SqlDbUserRepository implements UserRepository {
     let pronouns = student.pronouns;       
     let allergies = student.allergies;     
     let accessibilityReqs = student.accessibilityReqs; 
+    let universityId = student.universityId;
     let studentId = student.studentId;     
 
     const userQuery = `
@@ -55,12 +56,13 @@ export class SqlDbUserRepository implements UserRepository {
     const newUserId = userResult.rows[0].id;
 
     const studentQuery = `
-      INSERT INTO students (user_id, student_id)
-      VALUES ($1, $2)
+      INSERT INTO students (user_id, university_id, student_id)
+      VALUES ($1, $2, $3)
       RETURNING *;
     `;
     const studentValues = [
       newUserId,
+      universityId,
       studentId
     ];
 
@@ -68,7 +70,7 @@ export class SqlDbUserRepository implements UserRepository {
     return { sessionId: sessionId };
   }
 
-  // TODO: Handle universityId, sessionTimestamp
+  // TODO: Handle sessionTimestamp
   staffRegister = async (staff : Staff): Promise<SessionIdObject | undefined> => {
     // Use the params to run an sql insert on the db
     staff.email = await this.trimDotsForEmail(staff.email);
@@ -86,7 +88,8 @@ export class SqlDbUserRepository implements UserRepository {
     let tshirtSize = staff.tshirtSize;   
     let pronouns = staff.pronouns;       
     let allergies = staff.allergies;     
-    let accessibilityReqs = staff.accessibilityReqs;     
+    let accessibilityReqs = staff.accessibilityReqs;
+    let universityId = staff.universityId;     
 
     const userQuery = `
       INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
@@ -106,15 +109,16 @@ export class SqlDbUserRepository implements UserRepository {
     const newUserId = userResult.rows[0].id; 
 
     const staffQuery = `
-      INSERT INTO staff (user_id)
-      VALUES ($1)
+      INSERT INTO staff (user_id, university_id)
+      VALUES ($1, $2)
       RETURNING *;
     `;
     const staffValues = [
-      newUserId
+      newUserId, 
+      universityId
     ];
 
-    const studentResult = await this.pool.query(staffQuery, staffValues);
+    const staffResult = await this.pool.query(staffQuery, staffValues);
     return { sessionId: sessionId };
   }
 
