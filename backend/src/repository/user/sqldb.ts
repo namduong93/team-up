@@ -33,7 +33,6 @@ export class SqlDbUserRepository implements UserRepository {
     let pronouns = student.getPronouns();       
     let allergies = student.getAllergies();     
     let accessibilityReqs = student.getAccessibilityReqs(); 
-    // let universityId = student.getUniversity?.()?.getId();  
     let studentId = student.getStudentId();     
 
     const userQuery = `
@@ -59,22 +58,10 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const studentValues = [
       newUserId,
-      // universityId,
       studentId
     ];
 
     const studentResult = await this.pool.query(studentQuery, studentValues);
-
-    // const query2 = `
-    //   INSERT INTO sessions (session_id, session_timestamp, user_id) VALUES
-    //   ($1, $2, (SELECT id FROM students WHERE user_id = $3)) RETURNING *;
-    // `;
-    // const values2 = [
-    //   sessionId,
-    //   sessionTimestamp,
-    //   user_id
-    // ];
-    // const result2 = await this.pool.query(query2, values2);
     return { sessionId: sessionId };
   }
 
@@ -120,35 +107,3 @@ export class SqlDbUserRepository implements UserRepository {
     return email.replace(/\./g, "");
   }
 }
-
-// async create(user: User): Promise<User | null> {
-
-//   user.id = Math.floor(Date.now() / 1000);
-//   const validated = validate(user);
-//   if (validated) {
-//       throw new Error(validated);
-//   }
-          
-//   user.email = await this.trimDotsForEmail(user.email);
-//   user.hashed_password = await bcrypt.hash(user.hashed_password, 10);
-
-//   const query = `
-//       INSERT INTO users (id, name, hashed_password, email, tshirt_size) VALUES
-//       ($1, $2, $3, $4, $5) RETURNING *;
-//   `;
-//   const values = [
-//       user.id,
-//       user.name,
-//       user.hashed_password,
-//       user.email,
-//       user.tshirt_size,
-//   ];
-
-//   try {
-//       const result = await this.pool.query(query, values);
-//       return result.rows[0]; // Return the created user
-//   } catch (err) {
-//       console.error("Error creating user in SQL database:", err);
-//       throw err; // Propagate error to the caller
-//   }
-// }
