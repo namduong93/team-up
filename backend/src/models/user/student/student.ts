@@ -1,9 +1,9 @@
 
-import { UniversityJSON } from "../../university/university.js";
+import { University } from "../../university/university.js";
 import { User } from "../user.js";
 
 export interface Student extends User {
-  university: UniversityJSON | undefined;
+  university: University | undefined;
   studentId: string | undefined;
 };
 
