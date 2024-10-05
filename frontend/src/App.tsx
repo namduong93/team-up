@@ -6,6 +6,7 @@ import { SignUp } from './screens/login/SignUp';
 import { Dashboard } from './screens/Dashboard';
 import { Profile } from './screens/Profile';
 import { RoleRegistration } from './screens/login/RoleRegistration';
+import { TeamsView } from './screens/staff/TeamsView';
 
 
 function App() {
@@ -20,6 +21,9 @@ function App() {
         <Route path="/roleregistration" element={<RoleRegistration />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
+        
+        {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
+        <Route path="/coach/page" element={<TeamsView />} />
       </Routes>
     </Router>
     </>
