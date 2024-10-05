@@ -17,7 +17,7 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   // TODO: handle sessionTimestamp
-  studentRegister = async (student : Student): Promise<SessionIdObject | undefined> => {
+  studentRegister = async (student : Student): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
     student.email = await this.trimDotsForEmail(student.email);
 
@@ -25,9 +25,6 @@ export class SqlDbUserRepository implements UserRepository {
     if (validated) {
         throw new Error(validated);
     }
-
-    let sessionId : string = uuidv4();
-    let sessionTimestamp : EpochTimeStamp = Date.now();
     let name = student.name;              
     let hashed_password = await bcrypt.hash(student.password, 10); 
     let email = student.email;             
@@ -38,6 +35,16 @@ export class SqlDbUserRepository implements UserRepository {
     let universityId = student.universityId;
     let studentId = student.studentId;     
 
+    // Check if user with email already exists
+    const checkUserQuery = `
+      SELECT id FROM users WHERE email = $1;
+    `;
+    const checkUserResult = await this.pool.query(checkUserQuery, [email]);
+    if (checkUserResult.rowCount > 0) {
+        throw new Error('User with this email already exists');
+    }
+
+    //Add user to users table
     const userQuery = `
       INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -55,6 +62,7 @@ export class SqlDbUserRepository implements UserRepository {
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id;
 
+    // Add student to students table
     const studentQuery = `
       INSERT INTO students (user_id, university_id, student_id)
       VALUES ($1, $2, $3)
@@ -67,7 +75,7 @@ export class SqlDbUserRepository implements UserRepository {
     ];
 
     const studentResult = await this.pool.query(studentQuery, studentValues);
-    return { sessionId: sessionId };
+    return { id: newUserId };
   }
 
   // TODO: Handle sessionTimestamp

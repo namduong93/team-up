@@ -8,7 +8,7 @@ import { Staff } from "../models/user/staff/staff.js";
 
 export type UserIdObject = { id: number };
 export interface UserRepository {
-  studentRegister(student: Student): Promise< SessionIdObject | undefined>;
+  studentRegister(student: Student): Promise< UserIdObject | undefined>;
 
   staffRegister(staff: Staff): Promise<SessionIdObject | undefined>;
 

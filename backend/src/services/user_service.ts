@@ -5,6 +5,8 @@ import { Student } from "../models/user/student/student.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 import { Staff } from "../models/user/staff/staff.js";
 import { SessionRepository } from "../repository/session_repository_type.js";
+import { Session } from "../models/session/session.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export type UserTypeObject = { type: string };
 
@@ -22,8 +24,15 @@ export class UserService {
   studentRegister = async (student: Student): Promise<SessionIdObject | undefined> => {
     // use the user passed in to do some stuff and call the 
     // userRepository methods to interact with the db on behalf of the user.
-    let sessionIdObject = await this.userRepository.studentRegister(student);
-    return sessionIdObject;
+
+    const userId = await this.userRepository.studentRegister(student);
+    let session : Session = { 
+      token: uuidv4(), 
+      userId: userId.id, 
+      createdAt: Math.floor(Date.now() / 1000) 
+    };
+    await this.sessionRepository.create(session);
+    return { sessionId: session.token };
   }
 
   staffRegister = async (staff: Staff): Promise<SessionIdObject | undefined> => {

@@ -34,7 +34,7 @@ CREATE TABLE users (
   hashed_password CHAR(60) NOT NULL,
 
   -- Maximum email address length is 320 chars set by IETF
-  email VARCHAR(320) NOT NULL,
+  email VARCHAR(320) NOT NULL UNIQUE,
 
   tshirt_size TEXT NOT NULL,
 

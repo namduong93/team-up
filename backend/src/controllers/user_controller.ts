@@ -15,6 +15,7 @@ export class UserController {
   studentRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
     const new_student: Student = {
+      id: req.body.id,
       name: req.body.name,
       password: req.body.password,
       email: req.body.email,
@@ -34,6 +35,7 @@ export class UserController {
 
   staffRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const new_staff: Staff = {
+      id: req.body.id,
       name: req.body.name,
       password: req.body.password,
       email: req.body.email,
