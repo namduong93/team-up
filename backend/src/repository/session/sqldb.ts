@@ -42,6 +42,7 @@ export class SqlDbSessionRepository implements SessionRepository {
         return null;
     }
 
+    //TODO: Delete every outdated session
     async delete(tk: string): Promise<boolean> {
         return false
     }
