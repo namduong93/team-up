@@ -22,7 +22,7 @@ export class UserController {
       pronouns: req.body.pronouns,
       allergies: req.body.allergies,
       accessibilityReqs: req.body.accessibilityReqs,
-      university: req.body.university,
+      universityId: req.body.universityId,
       studentId: req.body.studentId,
     };
 
@@ -41,7 +41,7 @@ export class UserController {
       pronouns: req.body.pronouns,
       allergies: req.body.allergies,
       accessibilityReqs: req.body.accessibilityReqs,
-      university: req.body.university,
+      universityId: req.body.universityId,
     };
 
     const sessionIdObject = await this.userService.staffRegister(new_staff);

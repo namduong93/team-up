@@ -48,9 +48,7 @@ CREATE TABLE staff (
   -- Foreign Key Primary Key of their user id
   user_id INT PRIMARY KEY,
 
-  -- TODO: consider adding NOT NULL back if necessary
-  university_id INT REFERENCES universities (id), 
-
+  university_id INT NOT NULL REFERENCES universities (id), 
 
   FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -77,7 +75,7 @@ CREATE TABLE system_admins (
 CREATE TABLE competitions (
   id SERIAL PRIMARY KEY,
 
-  -- TODO: add constraints to name
+  -- TODO: add constraints to the name
   name TEXT NOT NULL,
 
   team_size INT NOT NULL,
@@ -175,3 +173,12 @@ CREATE TABLE competition_participants (
   CONSTRAINT unique_participant UNIQUE (user_id, competition_id)
 
 );
+
+-- TODO: This is hard code for some university, we will delete it later when we get into Admin and University api
+INSERT INTO universities (name) 
+VALUES 
+('University of Melbourne'),
+('Monash University'),
+('RMIT University'),
+('University of Sydney'),
+('University of New South Wales');
