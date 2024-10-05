@@ -14,9 +14,7 @@ export class UserController {
   studentRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
     const { name, password, email, tshirtSize, pronouns, allergies, accessibilityReqs, universityId, studentId } = req.body;
-    const id = Math.floor(Date.now() / 1000);
     const new_student = new Student(
-      id,
       name,
       password, 
       email,
@@ -24,7 +22,6 @@ export class UserController {
       pronouns,
       allergies,
       accessibilityReqs,
-      universityId,    
       studentId
   );
     const sessionIdObject = await this.userService.studentRegister(new_student);

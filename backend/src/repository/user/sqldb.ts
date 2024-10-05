@@ -33,7 +33,7 @@ export class SqlDbUserRepository implements UserRepository {
     let pronouns = student.getPronouns();       
     let allergies = student.getAllergies();     
     let accessibilityReqs = student.getAccessibilityReqs(); 
-    let universityId = student.getUniversity?.()?.getId();  
+    // let universityId = student.getUniversity?.()?.getId();  
     let studentId = student.getStudentId();     
 
     const userQuery = `
@@ -59,7 +59,7 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const studentValues = [
       newUserId,
-      universityId,
+      // universityId,
       studentId
     ];
 
