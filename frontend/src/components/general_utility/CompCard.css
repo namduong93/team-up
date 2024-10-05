@@ -1,0 +1,79 @@
+.comp-card {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0 1rem 1rem 1rem;
+  margin: 1rem 1rem 1rem 0;
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-top button {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.card-top button:hover {
+  cursor: pointer;
+}
+
+.comp-header {
+  text-align: left;
+}
+
+.comp-header h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: black;
+}
+
+.card-middle {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-text {
+  margin: 1rem 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.role {
+  margin: 1rem 0;
+  background-color: #6688D2;
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+}
+
+#card-countdown {
+  margin: 1rem 0;
+  color: #6688D2;
+  font-size: 0.8rem;
+}
+
+.progress-bar {
+  background-color: #BCCFF8;
+  border-radius: 1rem;
+  height: 1rem;
+  overflow: hidden;
+}
+
+.progress {
+  background-color: #6688D2;
+  height: 100%;
+}
