@@ -24,9 +24,8 @@ export class UserService {
   }
 
   staffRegister = async (staff: Staff): Promise<SessionIdObject | undefined> => {
-
-    // return the sessionId of the staff who registered
-    return { sessionId: '0' };
+    let sessionIdObject = await this.userRepository.staffRegister(staff);
+    return sessionIdObject;
   }
 
   userLogin = async (email: string, password: string): Promise<SessionIdObject | undefined> => {

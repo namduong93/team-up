@@ -8,7 +8,7 @@ export interface Student extends User {
 };
 
 
-export function validate(student: Student): string {
+export function validateStudent(student: Student): string {
   // Validate the student object
   if (!student.name || student.name.length === 0) {
     return "Name is required";
