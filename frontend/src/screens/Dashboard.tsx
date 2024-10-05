@@ -13,6 +13,7 @@ interface Competition {
   compDate: string;
   compRole: string;
   compCountdown: number;
+  compId: string;
 };
 interface DashboardsProps {
   name: string;
@@ -54,6 +55,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
               compDate={comp.compDate}
               compRole={comp.compRole}
               compCountdown={comp.compCountdown}
+              compId={comp.compId}
             />
           ))}
         </div>

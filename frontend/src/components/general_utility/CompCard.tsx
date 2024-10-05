@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import "./CompCard.css";
+import { useNavigate } from "react-router-dom";
 
 interface CardProps {
   compName: string;
@@ -8,11 +9,28 @@ interface CardProps {
   compDate: string;
   compRole: string;
   compCountdown: number;
+  compId: string;
 };
 
-export const CompCard: FC<CardProps> = ({ compName, location, compDate, compRole, compCountdown }) => {
+export const CompCard: FC<CardProps> = ({ compName, location, compDate, compRole, compCountdown, compId }) => {
+  const navigate = useNavigate();
+  const roleUrl = (role: string) => {
+    switch (role) {
+      case 'Participant':
+        return `/competition/${compId}/participant`;
+      case 'Coach':
+        return `/competition/${compId}/coach`;
+      case 'Site-Coordinator':
+        return `/competition/${compId}/site-coordinator`;
+      case 'Admin':
+        return `/competition/${compId}/admin`;
+      default:
+        return `/competition/${compId}/participant`;
+    }
+  };
+
   return (
-    <div className="comp-card">
+    <div className="comp-card" onClick={() => navigate(roleUrl(compRole))}>
       <div className="card-header">
         <div className="card-top">
           <h2>{compName}</h2>
