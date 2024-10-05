@@ -2,7 +2,7 @@ import { SessionIdObject, UserService } from '../services/user_service';
 import { UserRepository } from '../repository/user_repository_type';
 import { Student } from '../models/user/student/student';
 
-describe('UserService', () => {
+describe('POST /student/register', () => {
     let userService: UserService;
     let mockUserRepository: jest.Mocked<UserRepository>;
 
