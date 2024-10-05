@@ -5,6 +5,6 @@ export type SessionTokenObject = { sessionToken: string };
 export interface SessionRepository {
     find(tk: string): Promise<Session | null>;
     create(session: Session): Promise<SessionTokenObject | null>;
-    // update(session: Session): Promise<Session | null>;
+    update(session: Session): Promise<Session | null>;
     delete(tk: string): Promise<boolean>;
 }

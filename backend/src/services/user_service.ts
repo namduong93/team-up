@@ -23,10 +23,10 @@ export class UserService {
     // use the user passed in to do some stuff and call the 
     // userRepository methods to interact with the db on behalf of the user.
 
-    const userId = await this.userRepository.studentRegister(student);
+    const userIdObject = await this.userRepository.studentRegister(student);
     let session : Session = { 
       token: uuidv4(), 
-      userId: userId.id, 
+      userId: userIdObject.userId, 
       createdAt: Math.floor(Date.now() / 1000) 
     };
     await this.sessionRepository.create(session);
@@ -37,7 +37,7 @@ export class UserService {
     let userId = await this.userRepository.staffRegister(staff);
     let session : Session = { 
       token: uuidv4(), 
-      userId: userId.id, 
+      userId: userId.userId, 
       createdAt: Math.floor(Date.now() / 1000) 
     };
     await this.sessionRepository.create(session);

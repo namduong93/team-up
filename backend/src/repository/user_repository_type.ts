@@ -6,7 +6,7 @@ import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_ad
 import { Student } from "../models/user/student/student.js";
 import { Staff } from "../models/user/staff/staff.js";
 
-export type UserIdObject = { id: number };
+export type UserIdObject = { userId: number };
 export interface UserRepository {
   studentRegister(student: Student): Promise< UserIdObject | undefined>;
 

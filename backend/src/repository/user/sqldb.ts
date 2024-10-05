@@ -41,7 +41,7 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
-        throw new Error('User with this email already exists');
+        throw new Error('Student with this email already exists');
     }
 
     //Add user to users table
@@ -75,7 +75,7 @@ export class SqlDbUserRepository implements UserRepository {
     ];
 
     const studentResult = await this.pool.query(studentQuery, studentValues);
-    return { id: newUserId };
+    return { userId: newUserId };
   }
 
   // TODO: Handle sessionTimestamp
@@ -103,7 +103,7 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
-        throw new Error('User with this email already exists');
+        throw new Error('Staff with this email already exists');
     }
 
     const userQuery = `
@@ -134,12 +134,12 @@ export class SqlDbUserRepository implements UserRepository {
     ];
 
     const staffResult = await this.pool.query(staffQuery, staffValues);
-    return { id: newUserId };
+    return { userId: newUserId };
   }
 
   userAuthenticate = async (email: string, password: string): Promise<UserIdObject | undefined> => {
     
-    return { id: 1 };
+    return { userId: 1 };
   }
 
   userLogin = async (sessionId: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined> => {

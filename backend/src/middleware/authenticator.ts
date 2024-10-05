@@ -47,11 +47,9 @@ export class Authenticator {
         throw TOKEN_NOT_FOUND;
       }
 
-      // Instead, we check with our sessions table
+      // Find the session in the database
       let sessionRepository = new SqlDbSessionRepository(pool);
       let session = await sessionRepository.find(token);
-
-      // Check if session exists
       if (!session) {
         throw INVALID_TOKEN;
       }
