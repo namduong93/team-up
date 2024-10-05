@@ -13,32 +13,39 @@ export const Landing: FC = () => {
     setPassword(password);
   }
   return (
-    <FlexBackground>
-      <div style={styles.leftHalf}>
+    <FlexBackground style={{
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      
+    }}>
+      <div style={{
+        width: '600px',
+        flex: '0 1 auto'
+      }}>
         <img
           src="https://sppcontests.org/wp-content/uploads/2024/02/RGB_SPCPA_Logo_24@4x-2.png"
           style={styles.image}
         />
       </div>
-
-      <div style={styles.rightHalf}>
-        <div style={styles.formContainer}>
+        <form onSubmit={handleSubmit} style={styles.formContainer}>
           <h1>Welcome</h1>
-          
-          <form onSubmit={handleSubmit}>
-            <div style={styles.inputContainer}>
-              <label style={styles.inputHeading}>Email*</label>
-              <input
+          <div style={{width: '68%'}}>
+            <label style={styles.inputHeading}>Email*</label>
+          </div>
+          <input
                 type='email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 style={styles.inputBox}
                 required
-              />
+          />
 
-              <label style={styles.inputHeading}>Password*</label>
-              <input
+          <div style={{ width: '68%' }}>
+            <label style={styles.inputHeading}>Password*</label>
+          </div>
+          <input
                 type='password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -46,14 +53,19 @@ export const Landing: FC = () => {
                 style={styles.inputBox}
                 required
               />
+          <div style={{
+            width: '68%'
+          }}>
+            <label style={{ textDecoration: 'underline', textAlign: 'left', display: 'block' }}>Forgot Password?</label>
+          </div>
 
-              <label style={{ textDecoration: 'underline' }}>Forgot Password?</label>
-            </div>
-            
-            <Link to={'/login'}>
-              <button type="submit" style={styles.button}>Login</button>
-            </Link>
-          </form>
+          {/*
+          The onSubmit of the form should use a useNavigate() navigate function 
+          to navigate to the next page rather than use Link
+          because I think that the link would actually stop the form submission.
+          Also ruins the sizing/styling that we might want from the prent container
+          */}
+          <button type="submit" style={styles.button}>Login</button>
 
           <div>
             <span style={{ marginRight: '5px' }}>New Here?</span>
@@ -62,8 +74,7 @@ export const Landing: FC = () => {
             </Link>
           </div>
           
-        </div>
-      </div>
+        </form>
     </FlexBackground>
   );
 }
@@ -80,10 +91,13 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    // height: '100vh',
+    // height: '100vh', 
   }, 
   formContainer: {
-    display: 'flex', 
+    display: 'flex',
+    width: '500px',
+    height: '500px',
+    flexShrink: '1',
     flexDirection: 'column',
     alignItems: 'center', 
     textAlign: 'center',
@@ -93,17 +107,20 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'flex-start', 
     textAlign: 'left',
+    width: '100%',
+    height: '100%',
   },
   image: {
-    maxWidth: '90%',
-    maxHeight: '90%',
+    width: '100%',
+    // maxWidth: '90%',
+    // maxHeight: '90%',
     // objectFit: 'contain',
     // width: 'auto',
     // height: 'auto',
   }, 
   inputBox: {
-    padding: '10px',
-    width: '350px',
+    padding: '10px 1.5% 10px 1.5%',
+    width: '65%',
     border: '1px solid #ccc',
     borderRadius: '10px',
     // marginTop: '5px',
@@ -116,7 +133,8 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: '20px'
   },
   button: {
-    width: '150px',
+    width: '30%',
+    minWidth: '74px',
     height: '35px',
     border: '0px',
     borderRadius: '30px',
