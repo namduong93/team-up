@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/user_service.js";
 import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
@@ -12,7 +12,7 @@ export class UserController {
     this.userService = userService;
   }
 
-  studentRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+  studentRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
     const new_student: Student = {
       id: req.body.id,
@@ -33,7 +33,7 @@ export class UserController {
     return;
   });
 
-  staffRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+  staffRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const new_staff: Staff = {
       id: req.body.id,
       name: req.body.name,
