@@ -27,8 +27,8 @@ export class UserController {
       universityId,    
       studentId
   );
-    const student = await this.userService.studentRegister(new_student);
-    res.json(student);
+    const sessionIdObject = await this.userService.studentRegister(new_student);
+    res.json(sessionIdObject);
     return;
   });
 

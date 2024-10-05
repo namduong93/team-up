@@ -19,8 +19,8 @@ export class UserService {
   studentRegister = async (student: Student): Promise<SessionIdObject | undefined> => {
     // use the user passed in to do some stuff and call the 
     // userRepository methods to interact with the db on behalf of the user.
-    let sessionObject = await this.userRepository.studentRegister(student);
-    return sessionObject;
+    let sessionIdObject = await this.userRepository.studentRegister(student);
+    return sessionIdObject;
   }
 
   staffRegister = async (staff: StaffJSON): Promise<SessionIdObject | undefined> => {

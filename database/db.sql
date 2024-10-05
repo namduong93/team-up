@@ -60,6 +60,7 @@ CREATE TABLE students (
   
   -- Foreign Key id of university they attend (null if they do not attend university (unofficial))
   university_id INT,
+  student_id TEXT,
 
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (university_id) REFERENCES universities (id)
