@@ -1,9 +1,9 @@
 import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
-import { StaffJSON } from "../models/user/staff/staff_json.js";
 import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
 import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
 import { Student } from "../models/user/student/student.js";
 import { UserRepository } from "../repository/user_repository_type.js";
+import { Staff } from "../models/user/staff/staff.js";
 
 export type UserTypeObject = { type: string };
 
@@ -23,7 +23,7 @@ export class UserService {
     return sessionIdObject;
   }
 
-  staffRegister = async (staff: StaffJSON): Promise<SessionIdObject | undefined> => {
+  staffRegister = async (staff: Staff): Promise<SessionIdObject | undefined> => {
 
     // return the sessionId of the staff who registered
     return { sessionId: '0' };
