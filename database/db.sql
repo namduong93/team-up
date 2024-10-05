@@ -66,6 +66,18 @@ CREATE TABLE students (
 
 );
 
+CREATE TABLE sessions (
+  id SERIAL PRIMARY KEY,
+
+  token CHAR(36) NOT NULL,
+  
+  -- Foreign Key id of the user that is logged in
+  user_id INT NOT NULL REFERENCES users (id),
+
+  -- The time the session was created
+  created_at TIMESTAMP NOT NULL
+);
+
 CREATE TABLE system_admins (
   -- Foreign Key Primary Key of their Staff user id
   staff_id INT PRIMARY KEY,

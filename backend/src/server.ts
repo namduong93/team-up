@@ -5,7 +5,6 @@ import { serverAddress } from '../config/serverAddressConfig.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
-const { Pool } = pkg;
 import { dbConfig } from '../config/dbConfig.js';
 import { SqlDbUserRepository } from './repository/user/sqldb.js';
 import { UserService } from './services/user_service.js';
@@ -13,6 +12,8 @@ import { UserController } from './controllers/user_controller.js';
 import { SqlDbCompetitionRepository } from './repository/competition/sqldb.js';
 import { CompetitionService } from './services/competition_service.js';
 import { CompetitionController } from './controllers/competition_controller.js';
+import { SqlDbSessionRepository } from './repository/session/sqldb.js';
+import { Authenticator } from './middleware/authenticator.js';
 
 const { HOST, PORT } = serverAddress;
 const app = express();
@@ -20,6 +21,7 @@ app.use(json());
 app.use(cors());
 app.use(morgan('dev'));
 
+const { Pool } = pkg;
 const pool = new Pool({
   user: dbConfig.DB_USER,
   host: dbConfig.DB_HOST,
@@ -29,10 +31,17 @@ const pool = new Pool({
   max: 10,
 });
 
+//Middleware to authenticate request
+const authenticator = new Authenticator();
+app.use(authenticator.authenticationMiddleware);
+
+//User Registry
+const sessionRepository = new SqlDbSessionRepository(pool);
 const userRepository = new SqlDbUserRepository(pool);
-const userService = new UserService(userRepository);
+const userService = new UserService(userRepository, sessionRepository);
 const userController = new UserController(userService);
 
+//Competition Registry
 const competitionRepository = new SqlDbCompetitionRepository(pool);
 const competitionService = new CompetitionService(competitionRepository);
 const competitionController = new CompetitionController(competitionService);
@@ -41,6 +50,7 @@ const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
 
 app.get('/', async (req: Request, res: Response) => {
+  res.json("Health check");
 });
 
 

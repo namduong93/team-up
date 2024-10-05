@@ -4,6 +4,7 @@ import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
 import { Student } from "../models/user/student/student.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 import { Staff } from "../models/user/staff/staff.js";
+import { SessionRepository } from "../repository/session_repository_type.js";
 
 export type UserTypeObject = { type: string };
 
@@ -11,9 +12,11 @@ export type SessionIdObject = { sessionId: string };
 
 export class UserService {
   private userRepository: UserRepository;
+  private sessionRepository: SessionRepository;
 
-  constructor(userRepository: UserRepository) {
+  constructor(userRepository: UserRepository, sessionRepository: SessionRepository) {
     this.userRepository = userRepository;
+    this.sessionRepository = sessionRepository;
   }
 
   studentRegister = async (student: Student): Promise<SessionIdObject | undefined> => {
