@@ -6,8 +6,9 @@ export interface Staff extends User {
 
 export function validateStaff(staff: Staff): string {
   // Validate the staff object
-  if (validateUser(staff) !== "") {
-    return validateUser(staff);
+  let userValidation = validateUser(staff);
+  if (userValidation) {
+    return userValidation;
   }
 
   if (!staff.universityId) {

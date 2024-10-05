@@ -8,8 +8,9 @@ export interface Student extends User {
 
 export function validateStudent(student: Student): string {
   // Validate the student object
-  if(validateUser(student) !== "") {
-    return validateUser(student);
+  let userValidation = validateUser(student);
+  if(userValidation) {
+    return userValidation;
   }
 
   return "";
