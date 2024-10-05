@@ -53,8 +53,8 @@ export class SqlDbUserRepository implements UserRepository {
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id; 
     const studentQuery = `
-      INSERT INTO students (user_id, university_id, student_id)
-      VALUES ($1, $2, $3)
+      INSERT INTO students (user_id, student_id)
+      VALUES ($1, $2)
       RETURNING *;
     `;
     const studentValues = [
