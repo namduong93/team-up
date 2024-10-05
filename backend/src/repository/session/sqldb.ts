@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { SessionRepository } from "../session_repository_type.js";
+import { SessionRepository, SessionTokenObject } from "../session_repository_type.js";
 import { Session } from "../../models/session/session.js";
 
 export class SqlDbSessionRepository implements SessionRepository {
@@ -23,7 +23,7 @@ export class SqlDbSessionRepository implements SessionRepository {
       return { token: session.token, userId: session.user_id, createdAt: session.created_at };
     }
 
-    async create(session: Session): Promise<Session | null> {
+    async create(session: Session): Promise<SessionTokenObject | null> {
       const sessionQuery = `
           INSERT INTO sessions (token, user_id, created_at)
           VALUES ($1, $2, to_timestamp($3))
@@ -35,7 +35,7 @@ export class SqlDbSessionRepository implements SessionRepository {
           return null;
       }
       const newSession = sessionResult.rows[0];
-      return { token: newSession.token, userId: newSession.user_id, createdAt: newSession.created_at };
+      return { sessionToken: newSession.token };
     }
 
     async update(session: Session): Promise<Session | null> {

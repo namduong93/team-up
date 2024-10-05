@@ -2,7 +2,7 @@ import { Pool } from "pg";
 import { UserIdObject, UserRepository } from "../user_repository_type.js";
 import { StudentDashInfo } from "../../models/user/student/student_dash_info.js";
 import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
-import { SessionIdObject, UserTypeObject } from "../../services/user_service.js";
+import { UserTypeObject } from "../../services/user_service.js";
 import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
 import { v4 as uuidv4 } from 'uuid';
 import { Student, validateStudent } from "../../models/user/student/student.js";
@@ -79,7 +79,7 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   // TODO: Handle sessionTimestamp
-  staffRegister = async (staff : Staff): Promise<SessionIdObject | undefined> => {
+  staffRegister = async (staff : Staff): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
     staff.email = await this.trimDotsForEmail(staff.email);
 
@@ -88,8 +88,6 @@ export class SqlDbUserRepository implements UserRepository {
         throw new Error(validated);
     }
 
-    let sessionId : string = uuidv4();
-    let sessionTimestamp : EpochTimeStamp = Date.now();
     let name = staff.name;              
     let hashed_password = await bcrypt.hash(staff.password, 10); 
     let email = staff.email;             
@@ -97,7 +95,16 @@ export class SqlDbUserRepository implements UserRepository {
     let pronouns = staff.pronouns;       
     let allergies = staff.allergies;     
     let accessibilityReqs = staff.accessibilityReqs;
-    let universityId = staff.universityId;     
+    let universityId = staff.universityId;   
+    
+    // Check if user with email already exists
+    const checkUserQuery = `
+      SELECT id FROM users WHERE email = $1;
+    `;
+    const checkUserResult = await this.pool.query(checkUserQuery, [email]);
+    if (checkUserResult.rowCount > 0) {
+        throw new Error('User with this email already exists');
+    }
 
     const userQuery = `
       INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
@@ -127,7 +134,7 @@ export class SqlDbUserRepository implements UserRepository {
     ];
 
     const staffResult = await this.pool.query(staffQuery, staffValues);
-    return { sessionId: sessionId };
+    return { id: newUserId };
   }
 
   userAuthenticate = async (email: string, password: string): Promise<UserIdObject | undefined> => {
