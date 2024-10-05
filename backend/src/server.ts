@@ -139,6 +139,7 @@ app.post('/competition/staff/join/admin', competitionController.competitionStaff
 
 // PARAMS: {}
 // RESPONSW: {universities: Array<{id: number, name: string}>}
+// TODO: Add it into middleware
 app.get('/universities/list', universityController.universitiesList);
 
 const server = app.listen(Number(PORT), HOST, () => {
