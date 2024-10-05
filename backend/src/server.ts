@@ -46,7 +46,7 @@ app.get('/', async (req: Request, res: Response) => {
 
 // PARAMS: { name, preferredName, password, email, tshirtSize, pronouns?,
 // 	allergies?, accessibilityReqs?, universityId?, studentId? }
-// RESPONSE: { id: Number }
+// RESPONSE: { student }
 app.post('/student/register', userController.studentRegister);
 
 // This should return things that need to be displayed on the dash

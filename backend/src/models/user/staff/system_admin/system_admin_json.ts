@@ -1,4 +1,4 @@
-import { StaffJSON } from "../staff_json.js";
+import { Staff } from "../staff.js";
 
-export interface SystemAdminJSON extends StaffJSON {
+export interface SystemAdmin extends Staff {
 }
