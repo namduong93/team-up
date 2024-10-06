@@ -67,7 +67,7 @@ app.get('/', async (req: Request, res: Response) => {
 
 // PARAMS: { name, password, email, tshirtSize, pronouns?,
 // 	allergies?, accessibilityReqs?, universityId?, studentId? }
-// RESPONSE: { sessionToken: string }
+// RESPONSE: { }
 app.post('/student/register', userController.studentRegister);
 
 // This should return things that need to be displayed on the dash
@@ -81,7 +81,7 @@ app.get('/student/dash_info', userController.studentDashInfo);
 // DEV: For now it is ok to just call this straight away and we can implement the codes etc. later.
 // PARAMS: { name, password, email, tshirtSize, pronouns?,
 // 	allergies?, accessibilityReqs?, universityId?}
-// RESPONSE: { sessionToken: string }
+// RESPONSE: { }
 app.post('/staff/register', userController.staffRegister);
 
 // This should return things that need to be displayed on the dash
@@ -94,8 +94,6 @@ app.get('/staff/dash_info', userController.staffDashInfo);
 // PARAMS: { email, password }
 // RESPONSE: {} --- NOTE: response will set sessionToken cookie in the browser.
 app.post('/user/login', userController.userLogin);
-
-
 
 // PARAMS: {}
 // RESPONSE: { name, email, university, gender, bio, tshirtSize, pronouns?, allergies?, accessibilityReqs? }

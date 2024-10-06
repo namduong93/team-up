@@ -4,7 +4,6 @@ import { StudentDashInfo } from "../../models/user/student/student_dash_info.js"
 import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
 import { UserTypeObject } from "../../services/user_service.js";
 import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
-import { v4 as uuidv4 } from 'uuid';
 import { Student, validateStudent } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
 import { Staff, validateStaff } from "../../models/user/staff/staff.js";
