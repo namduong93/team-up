@@ -7,25 +7,31 @@ import { Dashboard } from './screens/Dashboard';
 import { Profile } from './screens/Profile';
 import { RoleRegistration } from './screens/login/RoleRegistration';
 import { TeamsView } from './screens/staff/TeamsView/TeamsView';
+import { useState } from 'react';
+import { ThemeProvider } from 'styled-components';
+import { defaultTheme } from './themes/defaultTheme';
 
 
 function App() {
+  const [theme, setTheme] = useState(defaultTheme)
 
   return (
     <>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/roleregistration" element={<RoleRegistration />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        
-        {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
-        <Route path="/coach/page" element={<TeamsView />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/roleregistration" element={<RoleRegistration />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          
+          {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
+          <Route path="/coach/page" element={<TeamsView />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
     </>
   )
 }
