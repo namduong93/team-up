@@ -7,7 +7,7 @@ import { backendURL } from "../../config/backendURLConfig";
 // e.g.:
 // request.get(/student/details, { studentId: 5 });
 
-export class request {
+export class sendRequest {
   public static get<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
     return axios.get<T>(`${backendURL.HOST}:${backendURL.PORT}${path}?${new URLSearchParams(params)}`, {
       ...headers
