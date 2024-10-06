@@ -17,6 +17,7 @@ describe('POST /staff/register', () => {
       staffRegister: jest.fn(),
       userAuthenticate: jest.fn(),
       userLogin: jest.fn(),
+      userProfileInfo: jest.fn(),
       userType: jest.fn(),
       studentDashInfo: jest.fn(),
       staffDashInfo: jest.fn(),
