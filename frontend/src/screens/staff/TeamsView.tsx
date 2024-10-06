@@ -1,6 +1,7 @@
 import React, { FC, MouseEventHandler, ReactNode, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import styled from "styled-components";
+import { FaRegUser } from "react-icons/fa";
 
 interface TeamCardProps {
   teamDetails: {
@@ -29,13 +30,13 @@ export const TeamCardMember = ({ memberName }: { memberName: string }) => {
     gridTemplateColumns: '20% 80%',
     userSelect: 'none',
   }} draggable='false'>
-    <img style={{
+    <FaRegUser style={{
       width: '50%',
       minWidth: '18px',
       margin: 'auto 0 auto 25%',
       pointerEvents: 'none',
       userSelect: 'none',
-    }} src="/user.svg" draggable='false' />
+    }} />
     <div style={{
       display: 'flex',
       flexDirection: 'column',
@@ -60,6 +61,7 @@ export const TeamCard = ({ teamDetails }: TeamCardProps) => {
   return (
     <StyledHoverDiv style={{
       display: 'flex',
+      flex: '0 1 auto',
       flexWrap: 'wrap',
       flexDirection: 'column',
       width: '100%',
@@ -68,7 +70,6 @@ export const TeamCard = ({ teamDetails }: TeamCardProps) => {
       maxHeight: '260px',
       maxWidth: '294px',
       minWidth: '140px',
-      flex: '0 1 auto', 
       borderRadius: '20px 20px 20px 20px',
       boxShadow: '0 4px 4px 0 rgba(0, 0, 0, 0.25)',
       userSelect: 'none',
@@ -134,9 +135,21 @@ interface ToggleSwitchProps {
 
 
 
-// TODO: THIS PART IS REALLY MESSY and should probably be replaced with some premade component or
-// more carefully constructed custom component if none suffice.
-export const CustomToggleSwitch = ({ contents, callbacks, style }: ToggleSwitchProps) => {
+const StyledToggleContainer = styled.div<{ numElems: number, borderIndex: number }>`
+  &::after {
+    content: '';
+    height: 100%;
+    width: ${(props) => 100 / props.numElems}%;
+    position: absolute;
+    background-color: black;
+    z-index: -1;
+    translate: ${(props) => 100 * props.borderIndex}% 0;
+    padding-bottom: 2px;
+    transition: translate 200ms;
+  }
+`
+
+export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ contents, callbacks, style }) => {
 
   const [borderIndex, setBorderIndex] = useState(0);
 
@@ -148,8 +161,9 @@ export const CustomToggleSwitch = ({ contents, callbacks, style }: ToggleSwitchP
   }
 
   return (
-    <div style={{
+    <StyledToggleContainer borderIndex={borderIndex} numElems={contents.length} style={{
       display: 'flex',
+      position: 'relative',
       userSelect: 'none',
       ...style
     }}>
@@ -158,13 +172,14 @@ export const CustomToggleSwitch = ({ contents, callbacks, style }: ToggleSwitchP
         <div onClick={handleClick} style={{
           flex: '1',
           borderWidth: `${index === borderIndex ? '2px' : '0'}`,
-          borderBottom: `${index === borderIndex ? '2px' : '0'} solid black`,
-          cursor: 'pointer'
+          // borderBottom: `${index === borderIndex ? '2px' : '0'} solid black`,
+          cursor: 'pointer',
+          backgroundColor: 'white',
         }} data-index={index} key={index}>
           {content}
         </div>);
       })}
-    </div>
+    </StyledToggleContainer>
   )
 }
 
@@ -174,7 +189,8 @@ export const TeamsView: FC = () => {
   return (
     
   <FlexBackground style={{
-    overflowX: 'auto'
+    overflow: 'auto',
+    fontFamily: 'Arial, Helvetica, sans-serif',
   }}>
     {/* Sidebar */}
     <div style={{
@@ -183,19 +199,18 @@ export const TeamsView: FC = () => {
           minWidth: '78px',
           height: '94.92%',
           borderRadius: '20px',
-          margin: 'auto 0 auto 0',
+          margin: 'auto 1rem auto 1rem'
     }} />
 
 
     <div style={{
       flex: '1 1 auto',
       display: 'flex',
-      justifyContent: 'center',
     }}> 
       <div style={{
         flex: '0 1 auto',
         width: '100%',
-        maxWidth: '1700px',
+        // maxWidth: '1700px',
         minHeight: '600px',
         height: '100%',
         display: 'flex',
@@ -204,19 +219,23 @@ export const TeamsView: FC = () => {
 
         {/* Page header */}
         <div style={{
-          minHeight: '172px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: '20px',
+          minHeight: '117px',
           width: '100%',
         }}>
           <div style={{
-            marginTop: '56px'
+            // marginTop: '56px'
           }}>
             <h1 style={{
               marginBottom: '0',
-              fontSize: '2.5em'
+              fontSize: '2em'
             }}>Coach Page</h1>
           </div>
           <div>
-            <span style={{ color: '#525252', fontSize: '1.5em' }}>Manage Teams and Students for your Competition</span>
+            <span style={{ color: '#525252', fontSize: '1em' }}>Manage Teams and Students for your Competition</span>
           </div>
         </div>
 
@@ -225,7 +244,8 @@ export const TeamsView: FC = () => {
           minHeight: '78px',
           width: '100%',
           display: 'flex',
-          borderBottom: '1px solid #D9D9D9'
+          borderBottom: '1px solid #D9D9D9',
+          zIndex: '0'
         }}>
           <CustomToggleSwitch contents={[
             (<div style={{
@@ -233,7 +253,7 @@ export const TeamsView: FC = () => {
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
             }}>
             <span style={{
               fontSize: '2.5em',
@@ -261,12 +281,10 @@ export const TeamsView: FC = () => {
         <div style={{
           flex: '1',
           backgroundColor: 'white',
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignContent: 'flex-start',
-          overflow: 'auto',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(294px, 100%), 1fr))',
           marginTop: '32px',
-          gap: '32px',
+          rowGap: '20px'
         }}>
           {Array(50).fill(0).map((_, index) => (<TeamCard key={index} teamDetails={{
             teamName: 'Team Name',
