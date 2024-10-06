@@ -33,7 +33,7 @@ describe('POST /student/register', () => {
     userService = new UserService(mockUserRepository, mockSessionRepository);
   });
 
-  describe('successful cses', () => {
+  describe('successful cases', () => {
     test('success', async () => {
       const mockStudent: Student = {
         name: 'Quan',
