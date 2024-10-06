@@ -72,6 +72,14 @@ export class UserController {
     return;
   });
 
+  userLogout = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const sessionId = req.cookies.sessionId;
+    await this.userService.userLogout(sessionId);
+    res.clearCookie('sessionId');
+    res.json({});
+    return;
+  });
+
   userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({  });
     return;

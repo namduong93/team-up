@@ -46,8 +46,19 @@ export class UserService {
 
   userLogin = async (email: string, password: string): Promise<SessionTokenObject | undefined> => {
 
-    // return the sessionToken of whoever logged in
-    return { sessionId: '0' };
+   const userIdObject = await this.userRepository.userLogin(email, password);
+   let session : Session = { 
+     sessionId: uuidv4(), 
+     userId: userIdObject.userId, 
+     createdAt: Math.floor(Date.now() / 1000)
+    };
+    await this.sessionRepository.create(session);
+    return { sessionId: session.sessionId };
+  }
+
+  userLogout = async (sessionToken: string): Promise<void> => {
+    await this.sessionRepository.delete(sessionToken);
+    return ;
   }
 
   userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {

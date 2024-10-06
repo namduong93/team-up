@@ -92,8 +92,12 @@ app.post('/staff/register', userController.staffRegister);
 app.get('/staff/dash_info', userController.staffDashInfo);
 
 // PARAMS: { email, password }
-// RESPONSE: {} --- NOTE: response will set sessionToken cookie in the browser.
+// RESPONSE: {} --- NOTE: response will set sessionId cookie in the browser.
 app.post('/user/login', userController.userLogin);
+
+// PARAMS: { }
+// RESPONSE: {} --- NOTE: response will clear the sessionId cookie in the browser.
+app.post('/user/logout', userController.userLogout);
 
 // PARAMS: {}
 // RESPONSE: { name, email, university, gender, bio, tshirtSize, pronouns?, allergies?, accessibilityReqs? }

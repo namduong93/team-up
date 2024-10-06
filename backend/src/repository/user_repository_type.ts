@@ -13,7 +13,7 @@ export interface UserRepository {
   staffRegister(staff: Staff): Promise<UserIdObject | undefined>;
 
   userAuthenticate(email: string, password: string): Promise<UserIdObject | undefined>;
-  userLogin(sessionToken: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined>;
+  userLogin(email: string, password: string): Promise<UserIdObject | undefined>;
 
   userType(sessionToken: string): Promise<UserTypeObject | undefined>;
   studentDashInfo(sessionToken: string): Promise<StudentDashInfo | undefined>;

@@ -137,13 +137,33 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userAuthenticate = async (email: string, password: string): Promise<UserIdObject | undefined> => {
-    
+
     return { userId: 1 };
   }
 
-  userLogin = async (sessionToken: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined> => {
+  userLogin = async (email: string, password: string): Promise<UserIdObject | undefined> => {
+    if(!email || email.length === 0) {
+      throw new Error('Email is required');
+    }
+    email = await this.trimDotsForEmail(email);
 
-    return;
+    if(!password || password.length === 0) {
+      throw new Error('Password is required');
+    }
+
+    const userQuery = `
+      SELECT * FROM users WHERE email = $1;
+    `;
+    const userResult = await this.pool.query(userQuery, [email]);
+
+    if(userResult.rowCount === 0) {
+      throw new Error('User with this email does not exist');
+    }
+    if(!await bcrypt.compare(password, userResult.rows[0].hashed_password)) {
+      throw new Error('Incorrect password');
+    }
+
+    return { userId: userResult.rows[0].id };
   }
 
   userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
