@@ -1,10 +1,13 @@
-import { SessionIdObject, UserService } from '../services/user_service';
+import { UserService } from '../services/user_service';
 import { UserRepository } from '../repository/user_repository_type';
 import { Student } from '../models/user/student/student';
+import { SessionRepository } from '../repository/session_repository_type';
+import { SessionIdObject } from '../services/university_service';
 
 describe('POST /student/register', () => {
     let userService: UserService;
     let mockUserRepository: jest.Mocked<UserRepository>;
+    let mockSessionRepository: jest.Mocked<SessionRepository>;
 
     beforeEach(() => {
         mockUserRepository = {
@@ -18,7 +21,7 @@ describe('POST /student/register', () => {
           systemAdminDashInfo: jest.fn(),
       } as jest.Mocked<UserRepository>;
 
-        userService = new UserService(mockUserRepository);
+        userService = new UserService(mockUserRepository, mockSessionRepository);
     });
 
     describe('studentRegister', () => {

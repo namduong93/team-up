@@ -9,6 +9,7 @@ const ignoredRoutes = new Map();
 ignoredRoutes.set("/student/register", "POST");
 ignoredRoutes.set("/staff/register", "POST");
 ignoredRoutes.set("/user/login", "POST");
+ignoredRoutes.set("/universities/list", "GET");
 
 const { Pool } = pkg;
 const pool = new Pool({

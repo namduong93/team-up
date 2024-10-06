@@ -12,8 +12,11 @@ import { UserController } from './controllers/user_controller.js';
 import { SqlDbCompetitionRepository } from './repository/competition/sqldb.js';
 import { CompetitionService } from './services/competition_service.js';
 import { CompetitionController } from './controllers/competition_controller.js';
-import { SqlDbSessionRepository } from './repository/session/sqldb.js';
 import { Authenticator } from './middleware/authenticator.js';
+import { UniversityService } from './services/university_service.js';
+import { UniversityController } from './controllers/university_controller.js';
+import { SqlDbSessionRepository } from './repository/session/sqldb.js';
+import { SqlDbUniversityRepository } from './repository/university/sqldb.js';
 
 const { HOST, PORT } = serverAddress;
 const app = express();
@@ -45,6 +48,10 @@ const userController = new UserController(userService);
 const competitionRepository = new SqlDbCompetitionRepository(pool);
 const competitionService = new CompetitionService(competitionRepository);
 const competitionController = new CompetitionController(competitionService);
+
+const universityRepository = new SqlDbUniversityRepository(pool);
+const universityService = new UniversityService(universityRepository);
+const universityController = new UniversityController(universityService);
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
@@ -139,6 +146,11 @@ app.post('/competition/staff/join/site_coordinator', competitionController.compe
 // PARAMS: { code }
 // RESPONSE: {} --- (still receives 200 OK or an error)
 app.post('/competition/staff/join/admin', competitionController.competitionStaffJoinAdmin);
+
+// PARAMS: {}
+// RESPONSW: {universities: Array<{id: number, name: string}>}
+// TODO: Add it into middleware
+app.get('/universities/list', universityController.universitiesList);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
