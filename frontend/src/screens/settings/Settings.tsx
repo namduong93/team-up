@@ -1,13 +1,13 @@
 import { FC } from "react";
-import { FlexBackground } from "../components/general_utility/Background";
+import { FlexBackground } from "../../components/general_utility/Background";
 import { useNavigate } from "react-router-dom";
 
-export const Profile: FC = () => {
+export const Settings: FC = () => {
   const navigate = useNavigate();
 
   return (
   <FlexBackground>
-    <h2>Profile Page</h2>
+    <h2>Settings Page</h2>
     <div> 
       <button onClick={(e) => {
             e.preventDefault();

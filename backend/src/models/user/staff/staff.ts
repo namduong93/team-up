@@ -1,15 +1,19 @@
-import { University } from "../../university/university.js";
-import { User } from "../user.js";
+import { User, validateUser } from "../user.js";
 
-export class Staff extends User {
-  private university: University | undefined;
+export interface Staff extends User {
+  universityId: number;
+};
 
-  constructor(
-    id: number, name: string, hashedPassword: string, email: string,
-    tshirt_size: string, pronouns?: string | undefined, allergies?: string | undefined,
-    accessibilityReqs?: string | undefined, university?: University | undefined
-  ) {
-    super(id, name, hashedPassword, email, tshirt_size, pronouns, allergies, accessibilityReqs);
-    this.university = university;
+export function validateStaff(staff: Staff): string {
+  // Validate the staff object
+  let userValidation = validateUser(staff);
+  if (userValidation) {
+    return userValidation;
   }
+
+  if (!staff.universityId) {
+    return "University ID is required";
+  }
+
+  return "";
 }

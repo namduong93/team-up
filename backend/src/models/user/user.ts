@@ -1,25 +1,32 @@
 
-export class User {
-  private id: number;
-  private name: string;
-  private hashedPassword: string;
-  private email: string;
-  private tshirt_size: string;
-  private pronouns: string | undefined;
-  private allergies: string | undefined;
-  private accessibilityReqs: string | undefined;
+export interface User {
+  id?: number;
+  name: string;
+  password: string;
+  email: string;
+  tshirtSize: string;
+  pronouns?: string | undefined;
+  allergies?: string | undefined;
+  accessibilityReqs?: string | undefined;
+};
 
-  constructor(
-    id: number, name: string, hashedPassword: string, email: string,
-    tshirt_size: string, pronouns?: string | undefined, allergies?: string | undefined,
-    accessibilityReqs?: string | undefined
-  ) {
-    this.id = id;
-    this.hashedPassword = hashedPassword;
-    this.email = email;
-    this.tshirt_size = tshirt_size;
-    this.pronouns = pronouns;
-    this.allergies = allergies;
-    this.accessibilityReqs = accessibilityReqs;
+export function validateUser(user: User): string {
+  // Validate the user object
+  if (!user.name || user.name.length === 0) {
+    return "Name is required";
   }
+
+  if (!user.email || user.email.length === 0) {
+    return "Email is required";
+  }
+
+  if (!user.password || user.password.length === 0) {
+    return "Password is required";
+  }
+
+  if (!user.tshirtSize || user.tshirtSize.length === 0) {
+    return "Tshirt size is required";
+  }
+
+  return "";
 }

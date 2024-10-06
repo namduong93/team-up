@@ -1,5 +1,5 @@
 
-export interface CompetitionJSON {
+export interface Competition {
   id: number,
   name: string,
   teamSize: number,

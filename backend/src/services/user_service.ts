@@ -1,59 +1,71 @@
 import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
-import { StaffJSON } from "../models/user/staff/staff_json.js";
 import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
 import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
+import { Student } from "../models/user/student/student.js";
 import { UserRepository } from "../repository/user_repository_type.js";
+import { Staff } from "../models/user/staff/staff.js";
+import { SessionRepository, SessionTokenObject } from "../repository/session_repository_type.js";
+import { Session } from "../models/session/session.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export type UserTypeObject = { type: string };
 
-type SessionIdObject = { sessionId: string };
-
 export class UserService {
   private userRepository: UserRepository;
+  private sessionRepository: SessionRepository;
 
-  constructor(userRepository: UserRepository) {
+  constructor(userRepository: UserRepository, sessionRepository: SessionRepository) {
     this.userRepository = userRepository;
+    this.sessionRepository = sessionRepository;
   }
 
-  studentRegister = async (name: string, preferredName: string,
-    password: string, email: string, tshirtSize: string, pronouns?: string,
-    allergies?: string, accessibilityReqs?: string,
-    universityId?: number, studentId?: number): Promise<SessionIdObject | undefined> => {
+  studentRegister = async (student: Student): Promise<SessionTokenObject | undefined> => {
     // use the user passed in to do some stuff and call the 
     // userRepository methods to interact with the db on behalf of the user.
 
-    // return the sessionId of the student who registered
+    const userIdObject = await this.userRepository.studentRegister(student);
+    let session : Session = { 
+      sessionId: uuidv4(), 
+      userId: userIdObject.userId, 
+      createdAt: Math.floor(Date.now() / 1000) 
+    };
+    await this.sessionRepository.create(session);
+    return { sessionId: session.sessionId };
+  }
+
+  staffRegister = async (staff: Staff): Promise<SessionTokenObject | undefined> => {
+    let userId = await this.userRepository.staffRegister(staff);
+    let session : Session = { 
+      sessionId: uuidv4(), 
+      userId: userId.userId, 
+      createdAt: Math.floor(Date.now() / 1000) 
+    };
+    await this.sessionRepository.create(session);
+    return { sessionId: session.sessionId };
+  }
+
+  userLogin = async (email: string, password: string): Promise<SessionTokenObject | undefined> => {
+
+    // return the sessionToken of whoever logged in
     return { sessionId: '0' };
   }
 
-  staffRegister = async (staff: StaffJSON): Promise<SessionIdObject | undefined> => {
-
-    // return the sessionId of the staff who registered
-    return { sessionId: '0' };
-  }
-
-  userLogin = async (email: string, password: string): Promise<SessionIdObject | undefined> => {
-
-    // return the sessionId of whoever logged in
-    return { sessionId: '0' };
-  }
-
-  userType = async (sessionId: string): Promise<UserTypeObject | undefined> => {
+  userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
     
     return { type: 'student' };
   }
 
-  studentDashInfo = async (sessionId: string): Promise<StudentDashInfo | undefined> => {
+  studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
   }
 
-  staffDashInfo = async (sessionId: string): Promise<StaffDashInfo | undefined> => {
+  staffDashInfo = async (sessionToken: string): Promise<StaffDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
   }
 
-  systemAdminDashInfo = async (sessionId: string): Promise<SystemAdminDashInfo | undefined> => {
+  systemAdminDashInfo = async (sessionToken: string): Promise<SystemAdminDashInfo | undefined> => {
 
     return { preferredName: 'Name' };
   }
