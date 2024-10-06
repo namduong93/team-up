@@ -251,7 +251,7 @@ export const TeamsView: FC = () => {
           <CustomToggleSwitch style={{
             height: '100%',
             width: '100%',
-            maxWidth: '400px',
+            maxWidth: '300px',
           }}>
             
             <div style={{
@@ -261,7 +261,7 @@ export const TeamsView: FC = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }} >
-            <span style={{ fontSize: '2.5em' }}>Teams</span>
+            <span style={{ fontSize: '2em' }}>Teams</span>
             </div>
             
             <div style={{
@@ -271,7 +271,7 @@ export const TeamsView: FC = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              <span style={{ fontSize: '2.5em' }}>Students</span>
+              <span style={{ fontSize: '2em' }}>Students</span>
             </div>
           </CustomToggleSwitch>
         </div>
