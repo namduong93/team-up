@@ -21,22 +21,31 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation }) 
         </div>
         
         <nav className="nav-links">
-          <button id="dashboard-link" onClick={(e) => {
-            e.preventDefault();
-            navigate('/dashboard');
-          }}>
+          <button
+            className={location.pathname === "/dashboard" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/dashboard');
+            }}
+          >
             <FaHome /> Dashboard
           </button>
-          <button onClick={(e) => {
-            e.preventDefault();
-            navigate('/account');
-          }}>
+          <button
+            className={location.pathname === "/account" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/account');
+            }}
+          >
             <FaUser /> Account
           </button>
-          <button onClick={(e) => {
-            e.preventDefault();
-            navigate('/settings');
-          }}>
+          <button
+            className={location.pathname === "/settings" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/settings');
+            }}
+          >
             <FaCog /> Settings
           </button>
         </nav>

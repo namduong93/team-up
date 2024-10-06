@@ -91,7 +91,7 @@ export const Account: FC = () => {
                 onChange={handlePhotoUpload}
               />
             ) : (
-              <div className="details-text">Profile picture uploaded</div>
+              <></>
             )}
           </div>
           <div className="account-item">

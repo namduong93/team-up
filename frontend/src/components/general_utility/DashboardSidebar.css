@@ -71,6 +71,10 @@
   background-color: white;
 }
 
+.nav-links .active {
+  background-color: white;
+}
+
 .nav-links button svg {
   margin-right: 10px;
 }
