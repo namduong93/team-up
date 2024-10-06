@@ -128,8 +128,7 @@ export const TeamCard = ({ teamDetails }: TeamCardProps) => {
 }
 
 interface ToggleSwitchProps {
-  contents: Array<ReactNode>;
-  callbacks: Array<CallableFunction>;
+  children: ReactNode;
   style: React.CSSProperties;
 }
 
@@ -149,7 +148,7 @@ const StyledToggleContainer = styled.div<{ numElems: number, borderIndex: number
   }
 `
 
-export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ contents, callbacks, style }) => {
+export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style }) => {
 
   const [borderIndex, setBorderIndex] = useState(0);
 
@@ -160,14 +159,15 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ contents, callbacks,
     setBorderIndex(Number(ind));
   }
 
+  const numChildren = React.Children.count(children);
   return (
-    <StyledToggleContainer borderIndex={borderIndex} numElems={contents.length} style={{
+    <StyledToggleContainer borderIndex={borderIndex} numElems={numChildren} style={{
       display: 'flex',
       position: 'relative',
       userSelect: 'none',
       ...style
     }}>
-      {contents.map((content, index) => {
+      {React.Children.map(children, (child, index) => {
         return (
         <div onClick={handleClick} style={{
           flex: '1',
@@ -176,7 +176,7 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ contents, callbacks,
           cursor: 'pointer',
           backgroundColor: 'white',
         }} data-index={index} key={index}>
-          {content}
+          {child}
         </div>);
       })}
     </StyledToggleContainer>
@@ -196,7 +196,7 @@ export const TeamsView: FC = () => {
     <div style={{
           backgroundColor: '#D9D9D9',
           width: '78px',
-          minWidth: '78px',
+          minWidth: '68px',
           height: '94.92%',
           borderRadius: '20px',
           margin: 'auto 1rem auto 1rem'
@@ -239,26 +239,32 @@ export const TeamsView: FC = () => {
           </div>
         </div>
 
-        {/* Teams-Stuednts page selection */}
+        {/* Teams-Students page selection */}
         <div style={{
           minHeight: '78px',
           width: '100%',
           display: 'flex',
+          justifyContent: 'space-between',
           borderBottom: '1px solid #D9D9D9',
           zIndex: '0'
         }}>
-          <CustomToggleSwitch contents={[
-            (<div style={{
+          <CustomToggleSwitch style={{
+            height: '100%',
+            width: '100%',
+            maxWidth: '400px',
+          }}>
+            
+            <div style={{
               height: '100%',
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-            }}>
-            <span style={{
-              fontSize: '2.5em',
-            }}>Teams</span>
-            </div>), (<div style={{
+            }} >
+            <span style={{ fontSize: '2.5em' }}>Teams</span>
+            </div>
+            
+            <div style={{
               height: '100%',
               width: '100%',
               display: 'flex',
@@ -266,15 +272,8 @@ export const TeamsView: FC = () => {
               alignItems: 'center',
             }}>
               <span style={{ fontSize: '2.5em' }}>Students</span>
-            </div>)
-            ]} callbacks={[
-              () => {},
-              () => {}
-            ]} style={{
-            height: '100%',
-            width: '100%',
-            maxWidth: '400px',
-          }} />
+            </div>
+          </CustomToggleSwitch>
         </div>
 
         {/* Display of Teams/Students */}
