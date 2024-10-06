@@ -34,7 +34,7 @@ CREATE TABLE users (
   hashed_password CHAR(60) NOT NULL,
 
   -- Maximum email address length is 320 chars set by IETF
-  email VARCHAR(320) NOT NULL,
+  email VARCHAR(320) NOT NULL UNIQUE,
 
   tshirt_size TEXT NOT NULL,
 
@@ -48,8 +48,7 @@ CREATE TABLE staff (
   -- Foreign Key Primary Key of their user id
   user_id INT PRIMARY KEY,
 
-  university_id INT NOT NULL REFERENCES universities (id),
-
+  university_id INT NOT NULL REFERENCES universities (id), 
 
   FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -60,10 +59,23 @@ CREATE TABLE students (
   
   -- Foreign Key id of university they attend (null if they do not attend university (unofficial))
   university_id INT,
+  student_id TEXT,
 
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (university_id) REFERENCES universities (id)
 
+);
+
+CREATE TABLE sessions (
+  id SERIAL PRIMARY KEY,
+
+  session_id CHAR(36) NOT NULL,
+  
+  -- Foreign Key id of the user that is logged in
+  user_id INT NOT NULL REFERENCES users (id),
+
+  -- The time the session was created
+  created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE system_admins (
@@ -75,7 +87,7 @@ CREATE TABLE system_admins (
 CREATE TABLE competitions (
   id SERIAL PRIMARY KEY,
 
-  -- TODO: add constraints to name
+  -- TODO: add constraints to the name
   name TEXT NOT NULL,
 
   team_size INT NOT NULL,
@@ -174,5 +186,11 @@ CREATE TABLE competition_participants (
 
 );
 
-INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns) VALUES
-('Nam', '012345678901234567890123456789012345678901234567890123456789', 'nam@gmail.com', 'L', 'he/him');
+-- TODO: This is hard code for some university, we will delete it later when we get into Admin and University api
+INSERT INTO universities (name) 
+VALUES 
+('University of Melbourne'),
+('Monash University'),
+('RMIT University'),
+('University of Sydney'),
+('University of New South Wales');
