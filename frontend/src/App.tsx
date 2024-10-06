@@ -7,19 +7,16 @@ import { Dashboard } from './screens/Dashboard';
 import { Account } from './screens/Account';
 import { RoleRegistration } from './screens/login/RoleRegistration';
 import { TeamsView } from './screens/staff/TeamsView/TeamsView';
-import { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from './themes/defaultTheme';
 
 import { Settings } from './screens/settings/Settings';
 import { Competition } from './screens/competition/Competition';
-import { ThemeProvider } from 'styled-components';
-import { defaultTheme } from './themes/defaultTheme';
 import { darkTheme } from './themes/darkTheme';
 import { useState, useEffect } from 'react';
 
 function App() {
-  const [theme, setTheme] = useState(defaultTheme)
+  const [theme, setTheme] = useState(defaultTheme);
   
   const name = "Name";
   const affiliation = "UNSW";
@@ -52,8 +49,12 @@ function App() {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
+  useEffect(() => {
+    setTheme(isDarkTheme ? darkTheme : defaultTheme);
+  }, [isDarkTheme]);
+
   return (
-    <ThemeProvider theme={isDarkTheme ? darkTheme : defaultTheme}>
+    <ThemeProvider theme={theme}>
     <Router>
       <div style={{ background: isDarkTheme ? darkTheme.background : defaultTheme.background}}>
 
