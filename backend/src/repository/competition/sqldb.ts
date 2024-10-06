@@ -9,26 +9,26 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
-  competitionsSystemAdminCreate = async (sessionId: string, name: string,
+  competitionsSystemAdminCreate = async (sessionToken: string, name: string,
     earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
     siteLocations: Array<UniversitySiteInput>, competitionCode: string): Promise<void | undefined> => {
     
     return;
   }
 
-  competitionStudentJoin0 = async (sessionId: string,
+  competitionStudentJoin0 = async (sessionToken: string,
     individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {
 
     return { incompleteTeamId: 1 };
   }
 
-  competitionStudentJoin1 = async (sessionId: string, individualInfo: IndividualTeamInfo,
+  competitionStudentJoin1 = async (sessionToken: string, individualInfo: IndividualTeamInfo,
     teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined> => {
 
     return { incompleteTeamId: 1 };
   }
 
-  competitionStudentJoin2 = async (sessionId: string, teamInfo: TeamInfo,
+  competitionStudentJoin2 = async (sessionToken: string, teamInfo: TeamInfo,
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
 
     return { teamId: 1 };

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserService } from "../services/user_service.js";
 import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
@@ -12,9 +12,10 @@ export class UserController {
     this.userService = userService;
   }
 
-  studentRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+  studentRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
     const new_student: Student = {
+      id: req.body.id,
       name: req.body.name,
       password: req.body.password,
       email: req.body.email,
@@ -27,13 +28,18 @@ export class UserController {
     };
 
     const sessionIdObject = await this.userService.studentRegister(new_student);
-    res.json(sessionIdObject);
+    res.cookie('sessionId', sessionIdObject.sessionId, {
+      httpOnly: true,
+      // secure: true --- for ensuring it is only sent over https (for production)
+    });
+    res.json({});
 
     return;
   });
 
-  staffRegister = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+  staffRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const new_staff: Staff = {
+      id: req.body.id,
       name: req.body.name,
       password: req.body.password,
       email: req.body.email,
@@ -52,6 +58,11 @@ export class UserController {
 
   userLogin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({ id: 1 });
+    return;
+  });
+
+  userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    res.json({  });
     return;
   });
 
