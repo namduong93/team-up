@@ -49,7 +49,7 @@ describe('POST /student/register', () => {
       };
 
       const mockSessionToken: SessionTokenObject = {
-        sessionToken: 'mock-token-1234',
+        sessionId: 'mock-token-1234',
       };
       (uuidv4 as jest.Mock).mockReturnValue('mock-token-1234');
 
@@ -62,7 +62,7 @@ describe('POST /student/register', () => {
       expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(mockStudent);
       expect(mockSessionRepository.create).toHaveBeenCalledWith(expect.objectContaining({
           userId: mockUserId.userId,
-          token: 'mock-token-1234',
+          sessionId: 'mock-token-1234',
           createdAt: expect.any(Number),
       }));
     });
