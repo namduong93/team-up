@@ -1,12 +1,12 @@
-import React, { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { defaultTheme } from "../../themes/defaultTheme";
 import { darkTheme } from "../../themes/darkTheme";
 import { DashboardSidebar } from "../../components/general_utility/DashboardSidebar";
 
 export const Settings: FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const name = "Name";
   const affiliation = "UNSW";

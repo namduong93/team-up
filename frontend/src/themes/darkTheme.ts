@@ -3,7 +3,7 @@ import { defaultTheme } from "./defaultTheme";
 export const darkTheme = {
   fonts: {
     ...defaultTheme.fonts,
-    color: "#FFFFFF",
+    colour: "#FFFFFF",
   },
   background: "#121212",
   colours: {

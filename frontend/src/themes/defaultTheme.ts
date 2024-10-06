@@ -41,6 +41,6 @@ export const defaultTheme = {
       medium: 500,
       bold: 700,
     },
-    color: "#000000",
+    colour: "#000000",
   },
 };

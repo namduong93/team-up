@@ -21,16 +21,78 @@ function App() {
   const name = "Name";
   const affiliation = "UNSW";
   const competitions = [
-    { compName: 'ICPC 2024', location: 'Kazakhstan', compDate: 'Sep 2024', compRole: 'Participant', compCountdown: 25, compId: 'abc1'},
-    { compName: 'ICPC 2024', location: 'USA', compDate: 'Nov 2024', compRole: 'Coach', compCountdown: 40, compId: 'abc2'},
-    { compName: 'ICPC 2024', location: 'India', compDate: 'Dec 2024', compRole: 'Admin', compCountdown: 15, compId: 'abc9'},
-    { compName: 'ICPC 2024', location: 'Kazakhstan', compDate: 'Sep 2024', compRole: 'Participant', compCountdown: 25, compId: 'abc3'},
-    { compName: 'ICPC 2024', location: 'USA', compDate: 'Nov 2024', compRole: 'Coach', compCountdown: 40, compId: 'abc4'},
-    { compName: 'ICPC 2024', location: 'India', compDate: 'Dec 2024', compRole: 'Admin', compCountdown: 15, compId: 'abc5'},
-    { compName: 'ICPC 2024', location: 'Kazakhstan', compDate: 'Sep 2024', compRole: 'Participant', compCountdown: 25, compId: 'abc6'},
-    { compName: 'ICPC 2024', location: 'USA', compDate: 'Nov 2024', compRole: 'Site-Coordinator', compCountdown: 40, compId: 'abc7'},
-    { compName: 'ICPC 2024', location: 'India', compDate: 'Dec 2024', compRole: 'Admin', compCountdown: 15, compId: 'abc8'},
-  ];
+    {
+        compName: 'ICPC 2024',
+        location: 'Kazakhstan',
+        compDate: new Date('2024-09-01').toISOString(),
+        compRole: 'Participant',
+        compId: 'abc1',
+        compCreationDate: new Date().toISOString(),
+    },
+    {
+        compName: 'ICPC 2024',
+        location: 'USA',
+        compDate: new Date('2024-11-01').toISOString(),
+        compRole: 'Coach',
+        compId: 'abc2',
+        compCreationDate: new Date().toISOString(),
+    },
+    {
+        compName: 'ICPC 2024',
+        location: 'India',
+        compDate: new Date('2024-12-01').toISOString(),
+        compRole: 'Admin',
+        compId: 'abc9',
+        compCreationDate: new Date().toISOString(),
+    },
+    {
+        compName: 'ICPC 2024',
+        location: 'Kazakhstan',
+        compDate: new Date('2024-09-01').toISOString(),
+        compRole: 'Participant',
+        compId: 'abc3',
+        compCreationDate: new Date().toISOString(),
+    {
+        compName: 'ICPC 2024',
+        location: 'USA',
+        compDate: new Date('2024-11-01').toISOString(),
+        compRole: 'Coach',
+        compId: 'abc4',
+        compCreationDate: new Date().toISOString(),
+    },
+    {
+        compName: 'ICPC 2024',
+        location: 'India',
+        compDate: new Date('2024-12-01').toISOString(),
+        compRole: 'Admin',
+        compId: 'abc5',
+        compCreationDate: new Date().toISOString(),
+    },
+    {
+        compName: 'ICPC 2024',
+        location: 'Kazakhstan',
+        compDate: new Date('2024-09-01').toISOString(),
+        compRole: 'Participant',
+        compId: 'abc6',
+        compCreationDate: new Date().toISOString(),
+    {
+        compName: 'ICPC 2024',
+        location: 'USA',
+        compDate: new Date('2024-11-01').toISOString(),
+        compRole: 'Site-Coordinator',
+        compId: 'abc7',
+        compCreationDate: new Date().toISOString(),
+    },
+    {
+        compName: 'ICPC 2024',
+        location: 'India',
+        compDate: new Date('2024-12-01').toISOString(),
+        compRole: 'Admin',
+        compId: 'abc8',
+        compCreationDate: new Date().toISOString(),
+];
+
+  
 
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 

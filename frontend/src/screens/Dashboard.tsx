@@ -5,15 +5,15 @@ import { FaBell, FaFilter } from "react-icons/fa";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import { CompCard } from "../components/general_utility/CompCard";
 
-
 interface Competition {
   compName: string;
   location: string;
   compDate: string;
   compRole: string;
-  compCountdown: number;
   compId: string;
+  compCreationDate: string;
 };
+
 interface DashboardsProps {
   name: string;
   affiliation: string;
@@ -21,16 +21,25 @@ interface DashboardsProps {
 };
 
 // Component styling
+const OverflowFlexBackground = styled(FlexBackground)`
+  overflow: auto;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  height: 100vh;
+`;
+
 const DashboardContent = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100vw;
-  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
 `;
 
 const DashboardHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  min-height: 117px;
+  width: 100%;
 `;
 
 const WelcomeMessage = styled.div`
@@ -41,29 +50,26 @@ const WelcomeMessage = styled.div`
 `;
 
 const WelcomeText = styled.div`
-  color: #6c757d;
+  color: ${({ theme }) => theme.fonts.color};
 `;
 
 const ActionButtons = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  margin-right: 2rem;
+  gap: 10px;
 `;
 
 const RegisterAlert = styled.div`
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 10px;
 `;
 
 const RegisterButton = styled.button`
   background-color: ${({ theme }) => theme.colours.primaryLight};
-  padding: 0.5rem 3rem;
-  border-radius: 0.5rem;
+  border-radius: 10px;
   border: none;
-  font-weight: bold;
+  padding: 8px 20px;
   &:hover {
     cursor: pointer;
     background-color: ${({ theme }) => theme.colours.primaryDark};
@@ -72,8 +78,8 @@ const RegisterButton = styled.button`
 `;
 
 const AlertButton = styled.button`
-  border-radius: 0.5rem;
-  padding: 0.6rem;
+  border-radius: 10px;
+  padding: 8px;
   background-color: ${({ theme }) => theme.colours.secondaryLight};
   border: none;
   &:hover {
@@ -84,14 +90,15 @@ const AlertButton = styled.button`
 
 const FilterSearch = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 10px;
 `;
 
 const FilterButton = styled.button`
   background-color: white;
-  border-radius: 0.5rem;
+  border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   color: #6c757d;
+  padding: 8px 16px;
   &:hover {
     cursor: pointer;
     background-color: ${({ theme }) => theme.colours.sidebarBackground};
@@ -101,35 +108,31 @@ const FilterButton = styled.button`
 
 const SearchInput = styled.input`
   padding: 8px;
+  width: 200px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  border-radius: 0.5rem;
+  border-radius: 10px;
 `;
 
 const ContentArea = styled.div`
-  margin-top: 0;
-  margin-right: 1rem;
+  margin-top: 32px;
+  padding-right: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  max-height: calc(100vh - 200px);
 `;
 
 const CompetitionGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  gap: 2rem;
-
-  // Responsive adjustments
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-    gap: 0.5rem;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(294px, 1fr));
+  gap: 20px;
+  width: 100%;
+  padding: 0 16px;
 `;
 
 export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions }) => {
   return (
-    <FlexBackground>
+    <OverflowFlexBackground>
       <DashboardSidebar name={name} affiliation={affiliation} />
       <DashboardContent>
         <DashboardHeader>
@@ -157,13 +160,13 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
                 location={comp.location}
                 compDate={comp.compDate}
                 compRole={comp.compRole}
-                compCountdown={comp.compCountdown}
                 compId={comp.compId}
+                compCreationDate={comp.compCreationDate}
               />
             ))}
           </CompetitionGrid>
         </ContentArea>
       </DashboardContent>
-    </FlexBackground>
+    </OverflowFlexBackground>
   );
 };
