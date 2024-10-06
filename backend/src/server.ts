@@ -5,6 +5,7 @@ import { serverAddress } from '../config/serverAddressConfig.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'pg';
+import cookieParser from 'cookie-parser';
 import { dbConfig } from '../config/dbConfig.js';
 import { SqlDbUserRepository } from './repository/user/sqldb.js';
 import { UserService } from './services/user_service.js';
@@ -20,9 +21,10 @@ import { SqlDbUniversityRepository } from './repository/university/sqldb.js';
 
 const { HOST, PORT } = serverAddress;
 const app = express();
-app.use(json());
-app.use(cors());
 app.use(morgan('dev'));
+app.use(cors());
+app.use(cookieParser());
+app.use(json());
 
 const { Pool } = pkg;
 const pool = new Pool({
@@ -36,10 +38,12 @@ const pool = new Pool({
 
 //Middleware to authenticate request
 const authenticator = new Authenticator();
-app.use(authenticator.authenticationMiddleware);
 
 //User Registry
 const sessionRepository = new SqlDbSessionRepository(pool);
+app.use(authenticator.authenticationMiddleware(sessionRepository));
+// use authenticator middleware with the sessionRepository for getting session id
+
 const userRepository = new SqlDbUserRepository(pool);
 const userService = new UserService(userRepository, sessionRepository);
 const userController = new UserController(userService);
@@ -90,6 +94,13 @@ app.get('/staff/dash_info', userController.staffDashInfo);
 // PARAMS: { email, password }
 // RESPONSE: {} --- NOTE: response will set sessionToken cookie in the browser.
 app.post('/user/login', userController.userLogin);
+
+
+app.get('/user/profile_info', userController.userProfileInfo);
+
+// app.get('/student/profile_info', userController.studentProfileInfo);
+
+// app.get('/staff/profile_info', userController.staffProfileInf);
 
 // Gets the type of user, 'staff', 'student' OR 'system_admin'
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie

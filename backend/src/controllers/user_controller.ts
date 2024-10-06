@@ -28,7 +28,11 @@ export class UserController {
     };
 
     const sessionIdObject = await this.userService.studentRegister(new_student);
-    res.json(sessionIdObject);
+    res.cookie('sessionId', sessionIdObject.sessionId, {
+      httpOnly: true,
+      // secure: true --- for ensuring it is only sent over https (for production)
+    });
+    res.json({});
 
     return;
   });
@@ -54,6 +58,11 @@ export class UserController {
 
   userLogin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({ id: 1 });
+    return;
+  });
+
+  userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    res.json({  });
     return;
   });
 
