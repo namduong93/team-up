@@ -1,4 +1,5 @@
 export const defaultTheme = {
+  background: "#FFFFFF",
   colours: {
     primaryLight: "#BCCFF8",
     primaryDark: "#6688D2",
@@ -28,15 +29,18 @@ export const defaultTheme = {
   fonts: {
     fontFamily: "Arial, Helvetica, sans-serif",
     fontSizes: {
-      small: "0.875rem",  // 14px
-      medium: "1rem",     // 16px
-      large: "1.25rem",   // 20px
-      heading: "1.75rem", // 28px
+      small: "14px",
+      medium: "16px",
+      large: "20px",
+      subheading: "24px",
+      heading: "28px",
+      title: "32px"
     },
     fontWeights: {
       regular: 400,
       medium: 500,
       bold: 700,
     },
+    color: "#000000",
   },
 };

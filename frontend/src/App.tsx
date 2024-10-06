@@ -8,6 +8,10 @@ import { Account } from './screens/Account';
 import { RoleRegistration } from './screens/login/RoleRegistration';
 import { Settings } from './screens/settings/Settings';
 import { Competition } from './screens/competition/Competition';
+import { ThemeProvider } from 'styled-components';
+import { defaultTheme } from './themes/defaultTheme';
+import { darkTheme } from './themes/darkTheme';
+import { useState, useEffect } from 'react';
 
 function App() {
   const name = "Name";
@@ -24,9 +28,29 @@ function App() {
     { compName: 'ICPC 2024', location: 'India', compDate: 'Dec 2024', compRole: 'Admin', compCountdown: 15, compId: 'abc8'},
   ];
 
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  // use local storage for theme preference (change later)
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    setIsDarkTheme(savedTheme === "dark" ? true : false);
+
+    // update when settings changes
+    const handleStorageChange = () => {
+      const updatedTheme = localStorage.getItem("theme");
+      setIsDarkTheme(updatedTheme === "dark");
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   return (
-    <>
+    <ThemeProvider theme={isDarkTheme ? darkTheme : defaultTheme}>
     <Router>
+      <div style={{ background: isDarkTheme ? darkTheme.background : defaultTheme.background}}>
+
+      </div>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
@@ -38,7 +62,7 @@ function App() {
         <Route path="/competition/:compId/:role" element={<Competition />} />
       </Routes>
     </Router>
-    </>
+    </ThemeProvider>
   )
 }
 
