@@ -69,7 +69,7 @@ CREATE TABLE students (
 CREATE TABLE sessions (
   id SERIAL PRIMARY KEY,
 
-  token CHAR(36) NOT NULL,
+  session_id CHAR(36) NOT NULL,
   
   -- Foreign Key id of the user that is logged in
   user_id INT NOT NULL REFERENCES users (id),

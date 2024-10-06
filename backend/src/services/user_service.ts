@@ -25,29 +25,29 @@ export class UserService {
 
     const userIdObject = await this.userRepository.studentRegister(student);
     let session : Session = { 
-      token: uuidv4(), 
+      sessionId: uuidv4(), 
       userId: userIdObject.userId, 
       createdAt: Math.floor(Date.now() / 1000) 
     };
     await this.sessionRepository.create(session);
-    return { sessionToken: session.token };
+    return { sessionId: session.sessionId };
   }
 
   staffRegister = async (staff: Staff): Promise<SessionTokenObject | undefined> => {
     let userId = await this.userRepository.staffRegister(staff);
     let session : Session = { 
-      token: uuidv4(), 
+      sessionId: uuidv4(), 
       userId: userId.userId, 
       createdAt: Math.floor(Date.now() / 1000) 
     };
     await this.sessionRepository.create(session);
-    return { sessionToken: session.token };
+    return { sessionId: session.sessionId };
   }
 
   userLogin = async (email: string, password: string): Promise<SessionTokenObject | undefined> => {
 
     // return the sessionToken of whoever logged in
-    return { sessionToken: '0' };
+    return { sessionId: '0' };
   }
 
   userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {

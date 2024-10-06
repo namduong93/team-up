@@ -12,7 +12,7 @@ export class SqlDbSessionRepository implements SessionRepository {
     async find(tk: string): Promise<Session | null> {
       const sessionQuery = `
           SELECT * FROM sessions
-          WHERE token = $1;
+          WHERE session_id = $1;
       `;
       const sessionValues = [tk];
       const sessionResult = await this.pool.query(sessionQuery, sessionValues);
@@ -20,22 +20,22 @@ export class SqlDbSessionRepository implements SessionRepository {
           return null;
       }
       const session = sessionResult.rows[0];
-      return { token: session.token, userId: session.user_id, createdAt: session.created_at };
+      return { sessionId: session.session_id, userId: session.user_id, createdAt: session.created_at };
     }
 
     async create(session: Session): Promise<SessionTokenObject | null> {
       const sessionQuery = `
-          INSERT INTO sessions (token, user_id, created_at)
+          INSERT INTO sessions (session_id, user_id, created_at)
           VALUES ($1, $2, to_timestamp($3))
           RETURNING *;
       `;
-      const sessionValues = [session.token, session.userId, session.createdAt];
+      const sessionValues = [session.sessionId, session.userId, session.createdAt];
       const sessionResult = await this.pool.query(sessionQuery, sessionValues);
       if (sessionResult.rowCount === 0) {
           return null;
       }
       const newSession = sessionResult.rows[0];
-      return { sessionToken: newSession.token };
+      return { sessionId: newSession.token };
     }
 
     async update(session: Session): Promise<Session | null> {
