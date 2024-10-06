@@ -6,7 +6,7 @@ import { SignUp } from './screens/login/SignUp';
 import { Dashboard } from './screens/Dashboard';
 import { Profile } from './screens/Profile';
 import { RoleRegistration } from './screens/login/RoleRegistration';
-import { TeamsView } from './screens/staff/TeamsView';
+import { TeamsView } from './screens/staff/TeamsView/TeamsView';
 
 
 function App() {
