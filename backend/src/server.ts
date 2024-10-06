@@ -96,11 +96,19 @@ app.get('/staff/dash_info', userController.staffDashInfo);
 app.post('/user/login', userController.userLogin);
 
 
+
+// PARAMS: {}
+// RESPONSE: { name, email, university, gender, bio, tshirtSize, pronouns?, allergies?, accessibilityReqs? }
 app.get('/user/profile_info', userController.userProfileInfo);
 
+// PARAMS: {}
+// RESPONSE: { degree, degreeYear, ICPCEligible, boersenEligible, competitionLevel }
 // app.get('/student/profile_info', userController.studentProfileInfo);
 
-// app.get('/staff/profile_info', userController.staffProfileInf);
+
+// PARAMS: {}
+// RESPONSE: {} --- DEV: all staff specific info.
+// app.get('/staff/profile_info', userController.staffProfileInfo);
 
 // Gets the type of user, 'staff', 'student' OR 'system_admin'
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
