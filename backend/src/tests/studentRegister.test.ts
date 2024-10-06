@@ -1,76 +1,94 @@
-// import { UserService } from '../services/user_service';
-// import { UserRepository } from '../repository/user_repository_type';
-// import { Student } from '../models/user/student/student';
-// import { SessionRepository } from '../repository/session_repository_type';
-// import { SessionIdObject } from '../services/university_service';
+import { UserService } from '../services/user_service';
+import { UserIdObject, UserRepository } from '../repository/user_repository_type';
+import { Student } from '../models/user/student/student';
+import { SessionRepository, SessionTokenObject } from '../repository/session_repository_type';
+import { v4 as uuidv4 } from 'uuid';
 
-// describe('POST /student/register', () => {
-//     let userService: UserService;
-//     let mockUserRepository: jest.Mocked<UserRepository>;
-//     let mockSessionRepository: jest.Mocked<SessionRepository>;
+jest.mock('uuid');
 
-//     beforeEach(() => {
-//         mockUserRepository = {
-//           studentRegister: jest.fn(),
-//           staffRegister: jest.fn(),
-//           userAuthenticate: jest.fn(),
-//           userLogin: jest.fn(),
-//           userType: jest.fn(),
-//           studentDashInfo: jest.fn(),
-//           staffDashInfo: jest.fn(),
-//           systemAdminDashInfo: jest.fn(),
-//       } as jest.Mocked<UserRepository>;
+describe('POST /student/register', () => {
+    let userService: UserService;
+    let mockUserRepository: jest.Mocked<UserRepository>;
+    let mockSessionRepository: jest.Mocked<SessionRepository>;
 
-//         userService = new UserService(mockUserRepository, mockSessionRepository);
-//     });
+    beforeEach(() => {
+      mockUserRepository = {
+        studentRegister: jest.fn(),
+        staffRegister: jest.fn(),
+        userAuthenticate: jest.fn(),
+        userLogin: jest.fn(),
+        userType: jest.fn(),
+        studentDashInfo: jest.fn(),
+        staffDashInfo: jest.fn(),
+        systemAdminDashInfo: jest.fn(),
+      } as jest.Mocked<UserRepository>;
 
-//     describe('studentRegister', () => {
-//         test('should register a student successfully', async () => {
-//           const mockStudent: Student = {
-//             name: 'Quan',
-//             email: 'hoangtungquan@gmail.com',
-//             password: 'testPassword',
-//             tshirtSize: 'M',
-//             universityId: 1,
-//             studentId: 'z5296486'
-//           };
+      mockSessionRepository = {
+        find: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn(),
+        delete: jest.fn(),
+      } as jest.Mocked<SessionRepository>;
 
-//           const mockSessionId: SessionIdObject = {
-//             sessionId: 'mockSessionId',
-//           };
+      userService = new UserService(mockUserRepository, mockSessionRepository);
+    });
 
-//           mockUserRepository.studentRegister.mockResolvedValue(mockSessionId);
+    test('should register a student successfully', async () => {
+      const mockStudent: Student = {
+        name: 'Quan',
+        email: 'hoangtungquan@gmail.com',
+        password: 'testPassword',
+        tshirtSize: 'M',
+        universityId: 1,
+        studentId: 'z5296486'
+      };
 
-//           const result = await userService.studentRegister(mockStudent);
+      const mockUserId: UserIdObject = {
+        userId: 1,
+      };
 
-//           expect(result).toEqual(mockSessionId);
-//           expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(mockStudent);
-//         });
+      const mockSessionToken: SessionTokenObject = {
+        sessionToken: 'mock-token-1234',
+      };
+      (uuidv4 as jest.Mock).mockReturnValue('mock-token-1234');
 
-//         test('should handle failure to register a student', async () => {
-//             const newStudent: Student = {
-//               name: '',
-//               email: '',
-//               password: '',
-//               tshirtSize: '',
-//               universityId: 0,
-//               studentId: ''
-//             };
+      mockUserRepository.studentRegister.mockResolvedValue(mockUserId);
+      mockSessionRepository.create.mockResolvedValue(mockSessionToken);
 
-//             const errorMessage = "Failed to register student";
-//             mockUserRepository.studentRegister.mockRejectedValue(new Error(errorMessage));
+      const result = await userService.studentRegister(mockStudent);
 
-//             try {
-//                 await userService.studentRegister(newStudent);
-//             } catch (error) {
-//                 if (error instanceof Error) {
-//                     expect(error.message).toBe(errorMessage);
-//                 } else {
-//                     expect(error).toBe("Unknown error");
-//                 }
-//             }
+      expect(result).toEqual(mockSessionToken);
+      expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(mockStudent);
+      expect(mockSessionRepository.create).toHaveBeenCalledWith(expect.objectContaining({
+          userId: mockUserId.userId,
+          token: 'mock-token-1234',
+          createdAt: expect.any(Number),
+      }));
+    });
 
-//             expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(newStudent);
-//         });
-//     });
-// });
+    test('should handle failure to register a student', async () => {
+      const newStudent: Student = {
+        name: '',
+        email: '',
+        password: '',
+        tshirtSize: '',
+        universityId: 0,
+        studentId: ''
+      };
+
+      const errorMessage = "Failed to register student";
+      mockUserRepository.studentRegister.mockRejectedValue(new Error(errorMessage));
+
+      try {
+          await userService.studentRegister(newStudent);
+      } catch (error) {
+          if (error instanceof Error) {
+              expect(error.message).toBe(errorMessage);
+          } else {
+              expect(error).toBe("Unknown error");
+          }
+      }
+
+      expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(newStudent);
+    });
+});
