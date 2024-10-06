@@ -96,7 +96,7 @@ app.get('/staff/dash_info', userController.staffDashInfo);
 app.post('/user/login', userController.userLogin);
 
 // PARAMS: { }
-// RESPONSE: {} --- NOTE: response will clear the sessionId cookie in the browser.
+// RESPONSE: {} --- NOTE: will require the sessionId cookie in browser. response will clear the sessionId cookie in the browser.
 app.post('/user/logout', userController.userLogout);
 
 // PARAMS: {}
