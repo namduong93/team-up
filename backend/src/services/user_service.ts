@@ -7,6 +7,7 @@ import { Staff } from "../models/user/staff/staff.js";
 import { SessionRepository, SessionTokenObject } from "../repository/session_repository_type.js";
 import { Session } from "../models/session/session.js";
 import { v4 as uuidv4 } from 'uuid';
+import { UserProfileInfo } from "../models/user/user_profile_info.js";
 
 export type UserTypeObject = { type: string };
 
@@ -48,6 +49,11 @@ export class UserService {
 
     // return the sessionToken of whoever logged in
     return { sessionId: '0' };
+  }
+
+  userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
+    const userProfileInfo = await this.userRepository.userProfileInfo(userId);
+    return userProfileInfo;
   }
 
   userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {

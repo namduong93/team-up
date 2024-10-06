@@ -62,7 +62,10 @@ export class UserController {
   });
 
   userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({  });
+    const userId = req.query.userId;
+    const userProfileInfo = await this.userService.userProfileInfo(Number(userId));
+    res.json(userProfileInfo);
+
     return;
   });
 
