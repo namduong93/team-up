@@ -2,7 +2,7 @@ import { Pool } from "pg";
 import { UserIdObject, UserRepository } from "../user_repository_type.js";
 import { StudentDashInfo } from "../../models/user/student/student_dash_info.js";
 import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
-import { SessionIdObject, UserTypeObject } from "../../services/user_service.js";
+import { UserTypeObject } from "../../services/user_service.js";
 import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
 import { v4 as uuidv4 } from 'uuid';
 import { Student, validateStudent } from "../../models/user/student/student.js";
@@ -17,7 +17,7 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   // TODO: handle sessionTimestamp
-  studentRegister = async (student : Student): Promise<SessionIdObject | undefined> => {
+  studentRegister = async (student : Student): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
     student.email = await this.trimDotsForEmail(student.email);
 
@@ -25,9 +25,6 @@ export class SqlDbUserRepository implements UserRepository {
     if (validated) {
         throw new Error(validated);
     }
-
-    let sessionId : string = uuidv4();
-    let sessionTimestamp : EpochTimeStamp = Date.now();
     let name = student.name;              
     let hashed_password = await bcrypt.hash(student.password, 10); 
     let email = student.email;             
@@ -38,6 +35,16 @@ export class SqlDbUserRepository implements UserRepository {
     let universityId = student.universityId;
     let studentId = student.studentId;     
 
+    // Check if user with email already exists
+    const checkUserQuery = `
+      SELECT id FROM users WHERE email = $1;
+    `;
+    const checkUserResult = await this.pool.query(checkUserQuery, [email]);
+    if (checkUserResult.rowCount > 0) {
+        throw new Error('Student with this email already exists');
+    }
+
+    //Add user to users table
     const userQuery = `
       INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
       VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -55,6 +62,7 @@ export class SqlDbUserRepository implements UserRepository {
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id;
 
+    // Add student to students table
     const studentQuery = `
       INSERT INTO students (user_id, university_id, student_id)
       VALUES ($1, $2, $3)
@@ -67,11 +75,11 @@ export class SqlDbUserRepository implements UserRepository {
     ];
 
     const studentResult = await this.pool.query(studentQuery, studentValues);
-    return { sessionId: sessionId };
+    return { userId: newUserId };
   }
 
   // TODO: Handle sessionTimestamp
-  staffRegister = async (staff : Staff): Promise<SessionIdObject | undefined> => {
+  staffRegister = async (staff : Staff): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
     staff.email = await this.trimDotsForEmail(staff.email);
 
@@ -80,8 +88,6 @@ export class SqlDbUserRepository implements UserRepository {
         throw new Error(validated);
     }
 
-    let sessionId : string = uuidv4();
-    let sessionTimestamp : EpochTimeStamp = Date.now();
     let name = staff.name;              
     let hashed_password = await bcrypt.hash(staff.password, 10); 
     let email = staff.email;             
@@ -89,7 +95,16 @@ export class SqlDbUserRepository implements UserRepository {
     let pronouns = staff.pronouns;       
     let allergies = staff.allergies;     
     let accessibilityReqs = staff.accessibilityReqs;
-    let universityId = staff.universityId;     
+    let universityId = staff.universityId;   
+    
+    // Check if user with email already exists
+    const checkUserQuery = `
+      SELECT id FROM users WHERE email = $1;
+    `;
+    const checkUserResult = await this.pool.query(checkUserQuery, [email]);
+    if (checkUserResult.rowCount > 0) {
+        throw new Error('Staff with this email already exists');
+    }
 
     const userQuery = `
       INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
@@ -119,35 +134,35 @@ export class SqlDbUserRepository implements UserRepository {
     ];
 
     const staffResult = await this.pool.query(staffQuery, staffValues);
-    return { sessionId: sessionId };
+    return { userId: newUserId };
   }
 
   userAuthenticate = async (email: string, password: string): Promise<UserIdObject | undefined> => {
     
-    return { id: 1 };
+    return { userId: 1 };
   }
 
-  userLogin = async (sessionId: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined> => {
+  userLogin = async (sessionToken: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined> => {
 
     return;
   }
 
-  userType = async (sessionId: string): Promise<UserTypeObject | undefined> => {
+  userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
 
     return { type: 'student' };
   }
 
-  studentDashInfo = async(sessionId: string): Promise<StudentDashInfo | undefined> => {
+  studentDashInfo = async(sessionToken: string): Promise<StudentDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
   }
 
-  staffDashInfo = async (sessionId: string): Promise<StaffDashInfo | undefined> => {
+  staffDashInfo = async (sessionToken: string): Promise<StaffDashInfo | undefined> => {
     
     return { preferredName: 'Name' };
   }
 
-  systemAdminDashInfo = async (sessionId: string): Promise<SystemAdminDashInfo | undefined> => {
+  systemAdminDashInfo = async (sessionToken: string): Promise<SystemAdminDashInfo | undefined> => {
 
     return { preferredName: 'Name' };
   }

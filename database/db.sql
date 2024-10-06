@@ -34,7 +34,7 @@ CREATE TABLE users (
   hashed_password CHAR(60) NOT NULL,
 
   -- Maximum email address length is 320 chars set by IETF
-  email VARCHAR(320) NOT NULL,
+  email VARCHAR(320) NOT NULL UNIQUE,
 
   tshirt_size TEXT NOT NULL,
 
@@ -64,6 +64,18 @@ CREATE TABLE students (
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (university_id) REFERENCES universities (id)
 
+);
+
+CREATE TABLE sessions (
+  id SERIAL PRIMARY KEY,
+
+  token CHAR(36) NOT NULL,
+  
+  -- Foreign Key id of the user that is logged in
+  user_id INT NOT NULL REFERENCES users (id),
+
+  -- The time the session was created
+  created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE system_admins (
