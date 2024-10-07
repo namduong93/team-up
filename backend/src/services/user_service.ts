@@ -7,8 +7,8 @@ import { Session } from "../models/session/session.js";
 import { v4 as uuidv4 } from 'uuid';
 import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import createHttpError from "http-errors";
-import { Student, validateStudent } from "../models/user/student/student.js";
-import { Staff, validateStaff } from "../models/user/staff/staff.js";
+import { Student, validateStudent } from "../models/user/student/student";
+import { Staff, validateStaff } from "../models/user/staff/staff";
 
 export type UserTypeObject = { type: string };
 

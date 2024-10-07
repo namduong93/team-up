@@ -1,4 +1,4 @@
-import { User, validateUser } from "../user.js";
+import { User, validateUser } from "../user";
 
 export interface Student extends User {
   universityId: number | undefined;

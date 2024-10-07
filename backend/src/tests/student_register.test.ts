@@ -3,6 +3,7 @@ import { UserIdObject, UserRepository } from '../repository/user_repository_type
 import { Student } from '../models/user/student/student';
 import { SessionRepository, SessionTokenObject } from '../repository/session_repository_type';
 import { v4 as uuidv4 } from 'uuid';
+import HttpError from "http-errors";
 
 jest.mock('uuid');
 
@@ -62,9 +63,9 @@ describe('POST /student/register', () => {
       expect(result).toEqual(mockSessionToken);
       expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(mockStudent);
       expect(mockSessionRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-          userId: mockUserId.userId,
-          sessionId: 'mock-token-1234',
-          createdAt: expect.any(Number),
+        userId: mockUserId.userId,
+        sessionId: 'mock-token-1234',
+        createdAt: expect.any(Number),
       }));
     });
   })
@@ -80,20 +81,8 @@ describe('POST /student/register', () => {
         studentId: 'z5296486'
       };
 
-      const errorMessage = "Failed to register student";
-      mockUserRepository.studentRegister.mockRejectedValue(new Error(errorMessage));
-
-      try {
-          await userService.studentRegister(newStudent);
-      } catch (error) {
-          if (error instanceof Error) {
-              expect(error.message).toBe(errorMessage);
-          } else {
-              expect(error).toBe("Unknown error");
-          }
-      }
-
-      expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(newStudent);
+      await expect(userService.studentRegister(newStudent)).rejects.toThrow(HttpError.HttpError);
+      expect(mockUserRepository.studentRegister).not.toHaveBeenCalled();
     });
 
     test('missing email', async () => {
@@ -106,20 +95,8 @@ describe('POST /student/register', () => {
         studentId: 'z5296486'
       };
 
-      const errorMessage = "Failed to register student";
-      mockUserRepository.studentRegister.mockRejectedValue(new Error(errorMessage));
-
-      try {
-          await userService.studentRegister(newStudent);
-      } catch (error) {
-          if (error instanceof Error) {
-              expect(error.message).toBe(errorMessage);
-          } else {
-              expect(error).toBe("Unknown error");
-          }
-      }
-
-      expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(newStudent);
+      await expect(userService.studentRegister(newStudent)).rejects.toThrow(HttpError.HttpError);
+      expect(mockUserRepository.studentRegister).not.toHaveBeenCalled();
     });
 
     test('missing password', async () => {
@@ -132,20 +109,8 @@ describe('POST /student/register', () => {
         studentId: 'z5296486'
       };
 
-      const errorMessage = "Failed to register student";
-      mockUserRepository.studentRegister.mockRejectedValue(new Error(errorMessage));
-
-      try {
-          await userService.studentRegister(newStudent);
-      } catch (error) {
-          if (error instanceof Error) {
-              expect(error.message).toBe(errorMessage);
-          } else {
-              expect(error).toBe("Unknown error");
-          }
-      }
-
-      expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(newStudent);
+      await expect(userService.studentRegister(newStudent)).rejects.toThrow(HttpError.HttpError);
+      expect(mockUserRepository.studentRegister).not.toHaveBeenCalled();
     });
 
     test('missing t-shirt size', async () => {
@@ -157,23 +122,11 @@ describe('POST /student/register', () => {
         universityId: 1,
         studentId: 'z5296486'
       };
-
-      const errorMessage = "Failed to register student";
-      mockUserRepository.studentRegister.mockRejectedValue(new Error(errorMessage));
-
-      try {
-          await userService.studentRegister(newStudent);
-      } catch (error) {
-          if (error instanceof Error) {
-              expect(error.message).toBe(errorMessage);
-          } else {
-              expect(error).toBe("Unknown error");
-          }
-      }
-
-      expect(mockUserRepository.studentRegister).toHaveBeenCalledWith(newStudent);
+      
+      await expect(userService.studentRegister(newStudent)).rejects.toThrow(HttpError.HttpError);
+      expect(mockUserRepository.studentRegister).not.toHaveBeenCalled();
     });
-  
+
     test('duplicated email', async () => {
       const mockStudent1: Student = {
         name: 'Quan',
@@ -198,13 +151,13 @@ describe('POST /student/register', () => {
 
       mockUserRepository.studentRegister.mockResolvedValue({ userId: 2 });
       try {
-          await userService.studentRegister(mockStudent2);
+        await userService.studentRegister(mockStudent2);
       } catch (error) {
-          if (error instanceof Error) {
-              expect(error.message).toBe('Student with this email already exists');
-          } else {
-              expect(error).toBe("Unknown error");
-          }
+        if (error instanceof Error) {
+          expect(error.message).toEqual('Student with this email already exists');
+        } else {
+          expect(error).toEqual("Unknown error");
+        }
       }
     });
   })
