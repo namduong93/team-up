@@ -1,8 +1,9 @@
 import React, { FC, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { sendRequest } from "../../utility/request";
 import styled from "styled-components";
+import TextInput from "../../components/general_utility/TextInput";
 
 const CustomButton = styled.button`
   cursor: pointer;
@@ -14,7 +15,6 @@ const CustomButton = styled.button`
 export const Landing: FC = () => {
 
   const navigate = useNavigate();
-  // defining states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,6 +25,7 @@ export const Landing: FC = () => {
       navigate('/dashboard')
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
     } catch (error: unknown) {
+      console.error('Login failed', error)
     };
   }
   return (
@@ -44,36 +45,36 @@ export const Landing: FC = () => {
         />
       </div>
         <form onSubmit={handleSubmit} style={styles.formContainer}>
-          <h1>Welcome</h1>
+          <h1 style={{fontFamily: 'Arial, Helvetica, sans-serif', fontStyle: 'italic'}}>Welcome</h1>
 
-          {/* 68% to match the 65% from the input and the 3% of padding */}
           <div style={{width: '68%'}}>
-            <label style={styles.inputHeading}>Email*</label>
-          </div>
-          <input
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                style={styles.inputBox}
-                required
+          <TextInput
+            label="Email"
+            placeholder="email@example.com"
+            type="email"
+            required={true}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            width="97%" // Custom width
           />
 
-          <div style={{ width: '68%' }}>
-            <label style={styles.inputHeading}>Password*</label>
           </div>
-          <input
-                type='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                style={styles.inputBox}
-                required
-              />
-          <div style={{
-            width: '68%'
-          }}>
-            <label style={{ textDecoration: 'underline', textAlign: 'left', display: 'block' }}>Forgot Password?</label>
+
+          <div style={{ width: '68%' }}>
+            <TextInput
+              label="Password"
+              placeholder="Enter your password"
+              type="password"
+              required={true}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              width="97%" // Custom width
+            />
+          </div>
+          <div style={{ width: '68%', textAlign: 'left', marginTop: '-16px' }}>
+            <label style={{ textDecoration: 'underline', fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '12px', cursor: 'pointer' }}>
+              Forgot Password?
+            </label>
           </div>
 
           {/*
@@ -85,10 +86,13 @@ export const Landing: FC = () => {
           <CustomButton type="submit" style={styles.button}>Login</CustomButton>
 
           <div>
-            <span style={{ marginRight: '5px' }}>New Here?</span>
-            <Link to={'/roleregistration'}>
-              <span style={styles.signUpLink}>Sign Up</span>
-            </Link>
+            <span style={{ marginRight: '5px', fontFamily: 'Arial, Helvetica, sans-serif' }}>New Here?</span>
+            <span
+              style={styles.signUpLink}
+              onClick={() => navigate('/roleregistration')}
+            >
+            Sign Up
+            </span>
           </div>
           
         </form>
@@ -107,8 +111,7 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1, 
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    // height: '100vh', 
+    alignItems: 'center', 
   }, 
   formContainer: {
     display: 'flex',
@@ -129,26 +132,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   image: {
     width: '100%',
-    // maxWidth: '90%',
-    // maxHeight: '90%',
-    // objectFit: 'contain',
-    // width: 'auto',
-    // height: 'auto',
   }, 
-  inputBox: {
-    padding: '10px 1.5% 10px 1.5%',
-    width: '65%',
-    border: '1px solid #ccc',
-    borderRadius: '10px',
-    // marginTop: '5px',
-    marginBottom: '10px',
-  }, 
-  inputHeading: {
-    display: 'block', 
-    textAlign: 'left',
-    marginBottom: '5px',
-    marginTop: '20px'
-  },
   button: {
     width: '30%',
     minWidth: '74px',
@@ -162,14 +146,10 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '16px',
     fontWeight: 'bold',
   },
-  // signUpContainer: {
-  //   display: 'flex',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
   signUpLink: {
     cursor: 'pointer',
     textDecoration: 'underline',
     color: '#6688D2',
+    fontFamily: 'Arial, Helvetica, sans-serif'
   }
 }

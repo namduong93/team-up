@@ -1,4 +1,3 @@
-import React from "react";
 import { FC, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
@@ -64,6 +63,7 @@ const StyledHoverDiv = styled.div`
   user-select: none;
   &:hover {
     transform: translate(2px, 2px);
+    cursor: pointer;
   }
 `
 
@@ -102,12 +102,7 @@ const TeamMemberDiv = styled.div`
 `
 
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
-<<<<<<< HEAD
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [status, setStatus] = useState(teamDetails.status);
-=======
   const [status, _ ] = useState(teamDetails.status);
->>>>>>> main
   const colorMap = {
     'pending': '#F48385',
     'unregistered': '#FDD386',

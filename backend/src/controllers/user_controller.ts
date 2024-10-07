@@ -4,7 +4,6 @@ import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
 import { Staff } from "../models/user/staff/staff.js";
 
-
 export class UserController {
   private userService: UserService;
 
@@ -15,7 +14,6 @@ export class UserController {
   studentRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
     const new_student: Student = {
-      id: req.body.id,
       name: req.body.name,
       password: req.body.password,
       email: req.body.email,
@@ -32,14 +30,13 @@ export class UserController {
       httpOnly: true,
       // secure: true --- for ensuring it is only sent over https (for production)
     });
-    res.json({});
 
+    res.json({});
     return;
   });
 
   staffRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const new_staff: Staff = {
-      id: req.body.id,
       name: req.body.name,
       password: req.body.password,
       email: req.body.email,
@@ -51,18 +48,41 @@ export class UserController {
     };
 
     const sessionIdObject = await this.userService.staffRegister(new_staff);
-    res.json(sessionIdObject);
-
+    res.cookie('sessionId', sessionIdObject.sessionId, {
+      httpOnly: true,
+      // secure: true --- for ensuring it is only sent over https (for production)
+    });
+    
+    res.json({});
     return;
   });
 
   userLogin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ id: 1 });
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const sessionIdObject = await this.userService.userLogin(email, password);
+    res.cookie('sessionId', sessionIdObject.sessionId, {
+      httpOnly: true,
+      // secure: true --- for ensuring it is only sent over https (for production)
+    });
+    res.json({});
+
+    return;
+  });
+
+  userLogout = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const sessionId = req.cookies.sessionId;
+    await this.userService.userLogout(sessionId);
+    res.clearCookie('sessionId');
+    res.json({});
     return;
   });
 
   userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({  });
+    const userId = req.query.userId;
+    const userProfileInfo = await this.userService.userProfileInfo(Number(userId));
+    res.json(userProfileInfo);
     return;
   });
 
