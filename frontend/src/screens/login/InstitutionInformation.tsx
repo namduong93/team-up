@@ -5,6 +5,8 @@ import { FlexBackground } from "../../components/general_utility/Background";
 // import ProgressBar from "../../components/general_utility/ProgressBar";
 import TextInput from "../../components/general_utility/TextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
+import { useMultiStepRegoForm } from "./MultiStepRegoForm";
+import { sendRequest } from "../../utility/request";
 
 const steps = [
   { label: 'User Type', active: false },
@@ -36,14 +38,37 @@ const institutionOptions = [
 
 export const InstitutionInformation: FC = () => {
   const navigate = useNavigate();
-  const [institution, setInstitution] = useState("");
-  const [studentId, setStudentId] = useState("");
+  const { formData, setFormData } = useMultiStepRegoForm();
 
   const isButtonDisabled = () => {
-    return (
-      institution === '' ||
-      studentId === ''
-    );
+    return !formData.institution || (formData.role === 'Student' && !formData.studentId);
+  };
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+  
+    try {
+      const endpoint = formData.role === 'Staff' 
+        ? '/staff/register' 
+        : '/student/register';
+  
+      await sendRequest.post(endpoint, {
+        name: `${formData.firstName} ${formData.lastName}`,
+        password: formData.password,
+        email: formData.email,
+        tshirtSize: formData.tShirtSize,
+        pronouns: formData.preferredPronoun,
+        allergies: formData.foodAllergies,
+        accessibilityReqs: formData.accessibilityRequirements,
+        universityId: formData.institution,
+        studentId: formData.role === 'Student' ? formData.studentId : undefined,
+      });
+  
+      navigate('/dashboard');
+    } catch (error) {
+      console.error("Error during registration:", error);
+      // Handle error (show message, etc.)
+    }
   };
 
   return (
@@ -59,22 +84,24 @@ export const InstitutionInformation: FC = () => {
         <h1 style={{ marginBottom: '20px' }}>Institution Information</h1>
 
         <DropDownInput
-          label="T-Shirt Size"
+          label="Institution"
           options={institutionOptions}
-          value={institution}
+          value={formData.institution}
           required={true}
-          onChange={(e) => setInstitution(e.target.value)}
+          onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
           width="600px"
         />
 
-        <TextInput
+        {formData.role === 'Student' && (
+          <TextInput
             label="Student Identifier Number"
             placeholder="Please type"
             required={true}
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
+            value={formData.studentId || ""}
+            onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
             width="600px"
-        />
+          />
+        )}
 
         <div style={styles.buttonContainer}>
           <button style={{
@@ -88,7 +115,7 @@ export const InstitutionInformation: FC = () => {
           ...styles.button,
           ...(isButtonDisabled() ? styles.buttonDisabled : {}),}}
             disabled={isButtonDisabled()}
-            onClick={() => navigate('/dashboard')}
+            onClick={handleSubmit}
           >
           Create Account
           </button>

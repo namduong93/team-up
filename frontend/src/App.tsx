@@ -16,6 +16,7 @@ import { Competition } from './screens/competition/Competition';
 import { AccountInformation } from './screens/login/AccountInformation';
 import { SiteInformation } from './screens/login/SiteInformation';
 import { InstitutionInformation } from './screens/login/InstitutionInformation';
+import { MultiStepRegoFormProvider } from'./screens/login/MultiStepRegoForm';
 
 function App() {
   const [theme, setTheme] = useState(defaultTheme)
@@ -42,10 +43,31 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/roleregistration" element={<RoleRegistration />} />
+            {/* <Route path="/roleregistration" element={<RoleRegistration />} />
             <Route path="/accountinformation" element={<AccountInformation />} />
             <Route path="/siteinformation" element={<SiteInformation />} />
-            <Route path="/institutioninformation" element={<InstitutionInformation />} />
+            <Route path="/institutioninformation" element={<InstitutionInformation />} /> */}
+
+          <Route path="/roleregistration" element={
+            <MultiStepRegoFormProvider>
+              <RoleRegistration />
+            </MultiStepRegoFormProvider>
+          } />
+          <Route path="/accountinformation" element={
+            <MultiStepRegoFormProvider>
+              <AccountInformation />
+            </MultiStepRegoFormProvider>
+          } />
+          <Route path="/siteinformation" element={
+            <MultiStepRegoFormProvider>
+              <SiteInformation />
+            </MultiStepRegoFormProvider>
+          } />
+          <Route path="/institutioninformation" element={
+            <MultiStepRegoFormProvider>
+              <InstitutionInformation />
+            </MultiStepRegoFormProvider>
+          } />
             
             {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
             <Route path="/coach/page" element={<TeamsView />} />

@@ -1,27 +1,30 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FlexBackground } from "../../components/general_utility/Background";
-// import { sendRequest } from "../../utility/request";
-// import ProgressBar from "../../components/general_utility/ProgressBar";
+import { useMultiStepRegoForm } from "./MultiStepRegoForm"; // Import the context
 import DescriptiveTextInput from "../../components/general_utility/DescriptiveTextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import MultiRadio from "../../components/general_utility/MultiRadio";
 
 const steps = [
   { label: 'User Type', active: false },
-  { label: 'Account Information', active: false },  // Set the active step here
+  { label: 'Account Information', active: false },
   { label: 'Site Information', active: true },
   { label: 'Institution Information', active: false },
 ];
 
 export const SiteInformation: FC = () => {
   const navigate = useNavigate();
-  const [tShirtSize, setTShirtSize] = useState("");
-  const [foodAllergies, setFoodAllergies] = useState("");
-  const [dietaryRequirements, setDietaryRequirements] = useState<string[]>([]);
-  const [accessibilityRequirements, setAccessibilityRequirements] = useState("");
+  const { formData, setFormData } = useMultiStepRegoForm(); // Access the form context
+
+  // set form data everytime
+  // change the value to formData
+  const handleNext = () => {
+    navigate('/institutioninformation');
+  }
 
   const tShirtOptions = [
+    { value: '', label: 'Please Select' },
     { value: 'MXS', label: 'Mens XS' },
     { value: 'MS', label: 'Mens S' },
     { value: 'MM', label: 'Mens M' },
@@ -47,79 +50,72 @@ export const SiteInformation: FC = () => {
     { value: 'Halal', label: 'Halal' },
     { value: 'Kosher', label: 'Kosher' },
   ];
-
+  // use flex for the other stuff
   return (
-    <FlexBackground style={{
-      display: 'flex',
-      justifyContent: 'space-between', 
-      alignItems: 'flex-start', 
-      // padding: '5px', 
-      fontFamily: 'Arial, Helvetica, sans-serif',
-    }}>
-      {/* <ProgressBar steps={steps} /> */}
-      
+    <FlexBackground style={{ justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
       <div style={{ flex: 1, marginLeft: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h1 style={{ marginBottom: '20px' }}>Site Information</h1>
 
         <DropDownInput
           label="T-Shirt Size"
           options={tShirtOptions}
-          value={tShirtSize}
+          value={formData.tShirtSize}
           required={true}
-          onChange={(e) => setTShirtSize(e.target.value)}
+          onChange={(e) => setFormData({ ...formData, tShirtSize: e.target.value })}
           width="620px"
           descriptor="Please refer to the Sizing Guide"
         />
 
         <DescriptiveTextInput
-            label="Food Allergies"
-            descriptor="Please let us know if you have any food allergies so that we can ensure your safety"
-            placeholder="Enter a description"
-            required={false}
-            value={foodAllergies}
-            onChange={(e) => setFoodAllergies(e.target.value)}
-            width="600px" // Custom width
+          label="Food Allergies"
+          descriptor="Please let us know if you have any food allergies so that we can ensure your safety"
+          placeholder="Enter a description"
+          required={false}
+          value={formData.foodAllergies || ""}
+          onChange={(e) => setFormData({ ...formData, foodAllergies: e.target.value })}
+          width="600px"
         />
 
         <MultiRadio
           options={dietaryOptions}
-          selectedValues={dietaryRequirements}
-          onChange={setDietaryRequirements}
+          selectedValues={formData.dietaryRequirements || []}
+          onChange={(selectedValues) => setFormData({ ...formData, dietaryRequirements: selectedValues })}
           label="Dietary Requirements"
           descriptor="Please select one or more options, or specify 'Other' if applicable"
         />
-        <p>Selected options: {dietaryRequirements.join(', ')}</p>
+        <p>Selected options: {formData.dietaryRequirements?.join(', ') || []}</p>
 
         <DescriptiveTextInput
-            label="Accessibility Requirements"
-            descriptor="Please inform us of any accessibility needs you may have"
-            placeholder="Enter a description"
-            required={false}
-            value={accessibilityRequirements}
-            onChange={(e) => setAccessibilityRequirements(e.target.value)}
-            width="600px" // Custom width
+          label="Accessibility Requirements"
+          descriptor="Please inform us of any accessibility needs you may have"
+          placeholder="Enter a description"
+          required={false}
+          value={formData.accessibilityRequirements || ""}
+          onChange={(e) => setFormData({ ...formData, accessibilityRequirements: e.target.value })}
+          width="600px"
         />
 
         <div style={styles.buttonContainer}>
-          <button style={{
-          ...styles.button}}
-            onClick={() => navigate('/accountinformation')}
+          <button
+            style={styles.button}
+            onClick={() => {navigate('/accountinformation')
+            console.log(formData)}}
           >
-          Back
+            Back
           </button>
 
-          <button style={{
-          ...styles.button,
-          backgroundColor: tShirtSize ? '#6688D2' : '#ccc',
-          cursor: tShirtSize ? 'pointer' : 'not-allowed'}}
-            disabled={!tShirtSize}
-            onClick={() => navigate('/institutioninformation')}
+          <button
+            style={{
+              ...styles.button,
+              backgroundColor: formData.tShirtSize ? '#6688D2' : '#ccc',
+              cursor: formData.tShirtSize ? 'pointer' : 'not-allowed'
+            }}
+            disabled={!formData.tShirtSize}
+            onClick={handleNext}
           >
-          Next
+            Next
           </button>
         </div>
-        
-
       </div>
     </FlexBackground>
   );
@@ -128,10 +124,9 @@ export const SiteInformation: FC = () => {
 const styles: Record<string, React.CSSProperties> = {
   buttonContainer: {
     display: 'flex',
-    justifyContent: 'center', // Center the buttons
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: '90px', // Space between the buttons
-    // marginTop: '35px',
+    gap: '90px',
   },
   button: {
     width: '150px',
@@ -148,3 +143,4 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: 'Arial, Helvetica, sans-serif',
   },
 };
+
