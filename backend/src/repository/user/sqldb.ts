@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Student, validateStudent } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
 import { Staff, validateStaff } from "../../models/user/staff/staff.js";
+import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -145,6 +146,40 @@ export class SqlDbUserRepository implements UserRepository {
   userLogin = async (sessionToken: string, sessionTimestamp: EpochTimeStamp, id: number): Promise<void | undefined> => {
 
     return;
+  }
+
+  userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
+    // Query to get user profile info
+    const userQuery = `
+      SELECT name, email
+      FROM users
+      WHERE id = $1;
+    `;
+    
+    const userResult = await this.pool.query(userQuery, [userId]);
+
+    if (userResult.rowCount === 0) {
+      return undefined; // User not found
+    }
+
+    const userInfo = userResult.rows[0];
+
+    // Get the university name
+    const universityQuery = `
+      SELECT name 
+      FROM universities 
+      WHERE id = (SELECT university_id FROM students WHERE user_id = $1);
+    `;
+    
+    const universityResult = await this.pool.query(universityQuery, [userId]);
+    const universityName = universityResult.rowCount > 0 ? universityResult.rows[0].name : undefined;
+
+    // TODO: Add more fields to return
+    return {
+      name: userInfo.name,
+      email: userInfo.email,
+      university: universityName,
+    };
   }
 
   userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
