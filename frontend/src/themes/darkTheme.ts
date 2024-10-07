@@ -16,6 +16,9 @@ export const darkTheme = {
     confirm: "#6AC38A",
     confirmDark: "#3F7A55",
     sidebarBackground: "#333333",
+    optionUnselected: "#EBEBEB",
+    optionSelected: "#BCCFF8",
+    filterText: "#6c757d",
   },
   teamView: {
     pending: "#D46A6A",
