@@ -101,7 +101,7 @@ const TeamMemberDiv = styled.div`
 `
 
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
-  const [status, setStatus] = useState(teamDetails.status);
+  const [status, _ ] = useState(teamDetails.status);
   const colorMap = {
     'pending': '#F48385',
     'unregistered': '#FDD386',

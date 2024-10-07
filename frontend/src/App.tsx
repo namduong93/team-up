@@ -19,7 +19,7 @@ import { InstitutionInformation } from './screens/login/InstitutionInformation';
 import { MultiStepRegoFormProvider } from'./screens/login/MultiStepRegoForm';
 
 function App() {
-  const [theme, setTheme] = useState(defaultTheme)
+  const [theme, _ ] = useState(defaultTheme)
   
   const name = "Name";
   const affiliation = "UNSW";

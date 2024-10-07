@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm"; // Import the context
@@ -6,19 +6,17 @@ import DescriptiveTextInput from "../../components/general_utility/DescriptiveTe
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import MultiRadio from "../../components/general_utility/MultiRadio";
 
-const steps = [
-  { label: 'User Type', active: false },
-  { label: 'Account Information', active: false },
-  { label: 'Site Information', active: true },
-  { label: 'Institution Information', active: false },
-];
+// const steps = [
+//   { label: 'User Type', active: false },
+//   { label: 'Account Information', active: false },
+//   { label: 'Site Information', active: true },
+//   { label: 'Institution Information', active: false },
+// ];
 
 export const SiteInformation: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm(); // Access the form context
 
-  // set form data everytime
-  // change the value to formData
   const handleNext = () => {
     navigate('/institutioninformation');
   }

@@ -5,12 +5,12 @@ import TextInput from "../../components/general_utility/TextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
 
-const steps = [
-  { label: 'User Type', active: false },
-  { label: 'Account Information', active: true },
-  { label: 'Site Information', active: false },
-  { label: 'Institution Information', active: false },
-];
+// const steps = [
+//   { label: 'User Type', active: false },
+//   { label: 'Account Information', active: true },
+//   { label: 'Site Information', active: false },
+//   { label: 'Institution Information', active: false },
+// ];
 
 export const AccountInformation: FC = () => {
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ export const AccountInformation: FC = () => {
     { value: 'NB', label: 'They/Them' },
   ];
 
-  // Check if the Next button should be disabled
   const isButtonDisabled = () => {
     const { firstName, lastName, password, email, preferredPronoun } = formData;
     return (
@@ -40,15 +39,6 @@ export const AccountInformation: FC = () => {
     );
   };
 
-  // Handle direct updates to formData
-  // const handleInputChange = (field: keyof typeof formData, value: any) => {
-  //   setFormData({
-  //     ...formData,
-  //     [field]: value,
-  //   });
-  // };
-
-  // Handle confirm password change locally
   const handleConfirmPasswordChange = (value: string) => {
     setConfirmPassword(value);
     if (value !== formData.password) {
@@ -58,7 +48,6 @@ export const AccountInformation: FC = () => {
     }
   };
 
-  // Navigate to next step
   const handleNext = () => {
     navigate('/siteinformation');
   };
@@ -74,9 +63,9 @@ export const AccountInformation: FC = () => {
             placeholder="John"
             type="text"
             required={true}
-            value={formData.firstName}  // Directly use formData values
+            value={formData.firstName}  
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} 
-            width="270px" // Custom width
+            width="270px" 
           />
 
           <TextInput
@@ -86,7 +75,7 @@ export const AccountInformation: FC = () => {
             required={true}
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            width="270px" // Custom width
+            width="270px" 
           />
         </div>
 
@@ -98,7 +87,7 @@ export const AccountInformation: FC = () => {
             required={false}
             value={formData.preferredName || ""}
             onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
-            width="270px" // Custom width
+            width="270px" 
           />
 
           <DropDownInput
@@ -107,7 +96,7 @@ export const AccountInformation: FC = () => {
             value={formData.preferredPronoun}
             required={true}
             onChange={(e) => setFormData({ ...formData, preferredPronoun: e.target.value })}
-            width="270px" // Custom width
+            width="270px" 
           />
         </div>
 
@@ -118,7 +107,7 @@ export const AccountInformation: FC = () => {
           required={true}
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          width="600px" // Custom width
+          width="600px"
         />
 
         <TextInput
@@ -128,7 +117,7 @@ export const AccountInformation: FC = () => {
           required={true}
           value={formData.password}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          width="600px" // Custom width
+          width="600px" 
         />
 
         <TextInput
@@ -138,7 +127,7 @@ export const AccountInformation: FC = () => {
           required={true}
           value={confirmPassword}
           onChange={(e) => handleConfirmPasswordChange(e.target.value)} 
-          width="600px" // Custom width
+          width="600px" 
         />
 
         {error && (

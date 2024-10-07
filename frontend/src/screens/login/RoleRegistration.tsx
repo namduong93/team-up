@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { useNavigate } from "react-router-dom";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
