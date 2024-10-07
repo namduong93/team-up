@@ -9,26 +9,28 @@ interface SidebarProps {
 };
 
 const SidebarContainer = styled.div`
-  width: 300px;
+  min-width: 200px;
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   display: flex;
   flex-direction: column;
   padding: 10px;
   border-radius: 20px;
-  margin: 1rem;
-  height: 100%;
-  overflow-y: auto;
+  margin: 15px;
+  height: calc(100vh - 50px);
   overflow-x: hidden;
+  overflow-y: auto;
 `;
 
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 50px;
-  flex: 0 1 auto;
+  gap: 20px;
+  flex: 1;
   width: 100%;
   height: 100%;
   min-height: 600px;
+  overflow-y: auto;
+  margin-bottom: 10px;
 `;
 
 const ProfileSection = styled.div`
@@ -39,7 +41,7 @@ const ProfileSection = styled.div`
   gap: 20px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   color: ${({ theme }) => theme.fonts.colour};
-  margin-top: 100px;
+  flex-shrink: 1;
 `;
 
 const ProfilePic = styled.div`
@@ -57,6 +59,9 @@ const Name = styled.div`
 
 const NavLinks = styled.nav`
   margin-top: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const NavButton = styled.button<{ active: boolean }>`
@@ -73,6 +78,7 @@ const NavButton = styled.button<{ active: boolean }>`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   transition: background-color 0.3s;
   border-radius: 40px;
+  flex-shrink: 1;
 
   &:hover {
     background-color: ${({ theme }) => theme.background};
@@ -94,9 +100,15 @@ const LogoutButton = styled.button`
   font-weight: ${({ theme }) => theme.fonts.bold}
   border-radius: 40px;
   transition: background-color 0.3s;
-
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  padding-left: 25px;
+  margin-top: auto;
+  flex-shrink: 1;
   &:hover {
-    filter: brightness(1.1);
+    background-color: ${({ theme }) => theme.colours.cancelDark};
+    color: ${({ theme }) => theme.background};
   }
 `;
 

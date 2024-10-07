@@ -7,7 +7,7 @@ interface CardProps {
   compName: string;
   location: string;
   compDate: string;
-  compRole: string;
+  role: string;
   compId: string;
   compCreationDate: string;
 }
@@ -95,7 +95,7 @@ const Progress = styled.div<{ width: number }>`
   width: ${({ width }) => `${width}%`};
 `;
 
-export const CompCard: FC<CardProps> = ({ compName, location, compDate, compRole, compId, compCreationDate }) => {
+export const CompCard: FC<CardProps> = ({ compName, location, compDate, role, compId, compCreationDate }) => {
   const navigate = useNavigate();
 
   const roleUrl = (role: string) => {
@@ -124,7 +124,7 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, compRole
   // calculate the progress width
   const progressWidth = totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100; // set to 100% if no days left
   return (
-    <CompCardContainer onClick={() => navigate(roleUrl(compRole))}>
+    <CompCardContainer onClick={() => navigate(roleUrl(role))}>
       <CardHeader>
         <CardTop>
           <CompHeader>
@@ -139,7 +139,7 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, compRole
       </CardMiddle>
 
       <CardBottom>
-        <Role>{compRole}</Role>
+        <Role>{role}</Role>
         <Countdown>{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</Countdown>
       </CardBottom>
 

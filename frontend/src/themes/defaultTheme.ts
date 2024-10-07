@@ -10,6 +10,9 @@ export const defaultTheme = {
     confirm: "#8BDFA5",
     confirmDark: "#558964",
     sidebarBackground: "#EBEBEB",
+    optionUnselected: "#EBEBEB",
+    optionSelected: "#BCCFF8",
+    filterText: "#6c757d",
   },
   teamView: {
     pending: "#F68486",

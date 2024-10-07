@@ -25,71 +25,74 @@ function App() {
         compName: 'ICPC 2024',
         location: 'Kazakhstan',
         compDate: new Date('2024-09-01').toISOString(),
-        compRole: 'Participant',
+        role: 'Participant',
         compId: 'abc1',
-        compCreationDate: new Date().toISOString(),
+        compCreationDate: new Date('2024-04-01').toISOString(),
     },
     {
         compName: 'ICPC 2024',
         location: 'USA',
         compDate: new Date('2024-11-01').toISOString(),
-        compRole: 'Coach',
+        role: 'Coach',
         compId: 'abc2',
-        compCreationDate: new Date().toISOString(),
+        compCreationDate: new Date('2024-07-01').toISOString(),
     },
     {
         compName: 'ICPC 2024',
         location: 'India',
         compDate: new Date('2024-12-01').toISOString(),
-        compRole: 'Admin',
+        role: 'Admin',
         compId: 'abc9',
-        compCreationDate: new Date().toISOString(),
+        compCreationDate: new Date('2024-08-01').toISOString(),
     },
     {
-        compName: 'ICPC 2024',
+        compName: 'ICPC 2025',
         location: 'Kazakhstan',
-        compDate: new Date('2024-09-01').toISOString(),
-        compRole: 'Participant',
+        compDate: new Date('2025-09-01').toISOString(),
+        role: 'Participant',
         compId: 'abc3',
-        compCreationDate: new Date().toISOString(),
-    {
-        compName: 'ICPC 2024',
-        location: 'USA',
-        compDate: new Date('2024-11-01').toISOString(),
-        compRole: 'Coach',
-        compId: 'abc4',
-        compCreationDate: new Date().toISOString(),
+        compCreationDate: new Date('2024-10-07').toISOString(),
     },
     {
-        compName: 'ICPC 2024',
+        compName: 'ICPC 2022',
+        location: 'USA',
+        compDate: new Date('2022-11-01').toISOString(),
+        role: 'Coach',
+        compId: 'abc4',
+        compCreationDate: new Date('2022-07-01').toISOString(),
+    },
+    {
+        compName: 'ICPC 2023',
         location: 'India',
-        compDate: new Date('2024-12-01').toISOString(),
-        compRole: 'Admin',
+        compDate: new Date('2023-12-01').toISOString(),
+        role: 'Admin',
         compId: 'abc5',
-        compCreationDate: new Date().toISOString(),
+        compCreationDate: new Date('2023-08-01').toISOString(),
     },
     {
         compName: 'ICPC 2024',
         location: 'Kazakhstan',
         compDate: new Date('2024-09-01').toISOString(),
-        compRole: 'Participant',
+        role: 'Participant',
         compId: 'abc6',
-        compCreationDate: new Date().toISOString(),
+        compCreationDate: new Date('2024-05-01').toISOString(),
+    },
     {
         compName: 'ICPC 2024',
         location: 'USA',
         compDate: new Date('2024-11-01').toISOString(),
-        compRole: 'Site-Coordinator',
+        role: 'Site-Coordinator',
         compId: 'abc7',
-        compCreationDate: new Date().toISOString(),
+        compCreationDate: new Date('2024-07-01').toISOString(),
     },
     {
         compName: 'ICPC 2024',
         location: 'India',
         compDate: new Date('2024-12-01').toISOString(),
-        compRole: 'Admin',
+        role: 'Admin',
         compId: 'abc8',
-        compCreationDate: new Date().toISOString(),
+        compCreationDate: new Date('2024-08-01').toISOString(),
+    }
 ];
 
   
@@ -111,9 +114,7 @@ function App() {
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  useEffect(() => {
-    setTheme(isDarkTheme ? darkTheme : defaultTheme);
-  }, [isDarkTheme]);
+  useEffect(() => setTheme(isDarkTheme ? darkTheme : defaultTheme), [isDarkTheme]);
 
   return (
     <ThemeProvider theme={theme}>
