@@ -3,6 +3,7 @@ import { UserService } from "../services/user_service.js";
 import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
 import { Staff } from "../models/user/staff/staff.js";
+import createHttpError from "http-errors";
 
 export class UserController {
   private userService: UserService;
@@ -65,8 +66,7 @@ export class UserController {
     const userProfileInfo = await this.userService.userProfileInfo(Number(userId));
     
     if (!userProfileInfo) {
-      res.status(400).send('User not found');
-      return;
+      throw createHttpError(400, 'User not found');
     }
 
     res.json(userProfileInfo);
