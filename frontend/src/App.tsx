@@ -1,18 +1,20 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Landing } from './screens/login/Landing';
 import { Login } from './screens/login/Login';
 import { SignUp } from './screens/login/SignUp';
 import { Dashboard } from './screens/Dashboard';
 import { Account } from './screens/Account';
 import { RoleRegistration } from './screens/login/RoleRegistration';
-import { TeamsView } from './screens/staff/TeamsView/TeamsView';
+import { CoachPage } from './screens/staff/CoachPage/CoachPage';
 import { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from './themes/defaultTheme';
 
 import { Settings } from './screens/settings/Settings';
 import { Competition } from './screens/competition/Competition';
+import { TeamDisplay } from './screens/staff/CoachPage/TeamDisplay';
+import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
 
 function App() {
   const [theme, setTheme] = useState(defaultTheme)
@@ -42,11 +44,15 @@ function App() {
             <Route path="/roleregistration" element={<RoleRegistration />} />
             
             {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
-            <Route path="/coach/page" element={<TeamsView />} />
-            <Route path="/dashboard" element={<Dashboard name={name} affiliation={affiliation} competitions={competitions} />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/competition/:compId/:role" element={<Competition />} />
+            <Route path="/coach/page" element={<CoachPage />}>
+              <Route index element={ <Navigate to='/coach/page/teams' /> } />
+              <Route path='teams' element={ <TeamDisplay /> } />
+              <Route path='students' element={ <StudentDisplay /> } />
+            </Route>
+              <Route path="/dashboard" element={<Dashboard name={name} affiliation={affiliation} competitions={competitions} />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/competition/:compId/:role" element={<Competition />} />
           </Routes>
         </Router>
       </ThemeProvider>

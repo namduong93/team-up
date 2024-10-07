@@ -5,6 +5,7 @@ import styled from "styled-components";
 interface ToggleSwitchProps {
   children: ReactNode;
   style: React.CSSProperties;
+  defaultBorderIndex: number;
 }
 
 const StyledToggleDiv = styled.div<{ numElems: number, borderIndex: number }>`
@@ -30,9 +31,9 @@ const ToggleDivOptionDiv = styled.div`
   background-color: white;
 `;
 
-export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style }) => {
+export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style, defaultBorderIndex = 0 }) => {
 
-  const [borderIndex, setBorderIndex] = useState(0);
+  const [borderIndex, setBorderIndex] = useState(defaultBorderIndex);
 
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();

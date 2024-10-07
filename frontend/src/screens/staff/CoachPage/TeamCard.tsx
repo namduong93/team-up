@@ -63,6 +63,7 @@ const StyledHoverDiv = styled.div`
   user-select: none;
   &:hover {
     transform: translate(2px, 2px);
+    cursor: pointer;
   }
 `
 
