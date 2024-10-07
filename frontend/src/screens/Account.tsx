@@ -2,8 +2,8 @@ import { FC, useState } from "react";
 import { FlexBackground } from "../components/general_utility/Background";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 // import { useNavigate } from "react-router-dom";
-import "../styles/Account.css";
 import "../components/assets/cat-coding.jpg";
+import "./Account.css";
 
 interface User {
   name: string;

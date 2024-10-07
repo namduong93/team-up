@@ -1,10 +1,10 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import styled from "styled-components";
-
-interface FilterProps {
-  options: { [field: string]: string[] };
-  onFilterChange: (selectedFilters: { [field: string]: string[] }) => void;
-  isOpen: boolean; // controls pop-up visibility
+interface FilterSelectProps {
+  options: { [key: string]: string[] };
+  onFilterChange: (selectedFilters: { [key: string]: string[] }) => void;
+  isOpen: boolean;
+  currentFilters: { [field: string]: string[] };
 }
 
 const FilterContainer = styled.div<{ isOpen: boolean }>`
@@ -18,8 +18,8 @@ const FilterContainer = styled.div<{ isOpen: boolean }>`
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   display: ${({ isOpen }) => (isOpen ? "block" : "none")};
   padding: 10px;
-  width: 300px;
-  height: 400px;
+  width: fit-content;
+  height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
 `;
@@ -34,7 +34,8 @@ const FieldTitle = styled.h3`
 `;
 
 const OptionButton = styled.button<{ selected: boolean }>`
-  background-color: ${({ selected, theme }) => (selected ? theme.colours.optionSelected : theme.colours.optionUnselected)};
+  background-color: ${({ selected, theme }) =>
+    selected ? theme.colours.optionSelected : theme.colours.optionUnselected};
   color: ${({ theme }) => theme.fonts.colour};
   margin: 5px;
   padding: 4px 5px;
@@ -47,16 +48,30 @@ const OptionButton = styled.button<{ selected: boolean }>`
   }
 `;
 
-export const FilterSelect: FC<FilterProps> = ({ options, onFilterChange, isOpen }) => {
+export const FilterSelect: FC<FilterSelectProps> = ({
+  options,
+  onFilterChange,
+  isOpen,
+  currentFilters,
+}) => {
   const [selectedFilters, setSelectedFilters] = useState<{ [field: string]: string[] }>({});
 
-  const handleSelect = (field: string, option: string) => {
+  // update the current filters selected when prompted from filter tags in dashboard
+  useEffect(() => {
+    setSelectedFilters(currentFilters);
+  }, [currentFilters]);
+
+  const handleOptionChange = (field: string, option: string) => {
     setSelectedFilters((prev) => {
       const updated = { ...prev };
       if (!updated[field]) {
         updated[field] = [option];
       } else if (updated[field].includes(option)) {
         updated[field] = updated[field].filter((item) => item !== option);
+        // if empty, remove
+        if (updated[field].length === 0) {
+          delete updated[field];
+        }
       } else {
         updated[field].push(option);
       }
@@ -67,16 +82,16 @@ export const FilterSelect: FC<FilterProps> = ({ options, onFilterChange, isOpen 
 
   return (
     <FilterContainer isOpen={isOpen}>
-      {Object.keys(options).map((field) => (
+      {Object.entries(options).map(([field, values]) => (
         <FilterField key={field}>
           <FieldTitle>{field}</FieldTitle>
-          {options[field].map((option) => (
+          {values.map((value) => (
             <OptionButton
-              key={option}
-              selected={selectedFilters[field]?.includes(option)}
-              onClick={() => handleSelect(field, option)}
+              key={value}
+              selected={selectedFilters[field]?.includes(value) || false}
+              onClick={() => handleOptionChange(field, value)}
             >
-              {option}
+              {value}
             </OptionButton>
           ))}
         </FilterField>

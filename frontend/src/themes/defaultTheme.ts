@@ -42,7 +42,11 @@ export const defaultTheme = {
     fontWeights: {
       regular: 400,
       medium: 500,
-      bold: 700,
+      bold: 600,
+    },
+    spacing: {
+      normal: "0.3px",
+      wide: "1px",
     },
     colour: "#000000",
   },

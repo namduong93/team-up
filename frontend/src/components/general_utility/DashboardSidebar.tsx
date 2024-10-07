@@ -106,9 +106,11 @@ const LogoutButton = styled.button`
   padding-left: 25px;
   margin-top: auto;
   flex-shrink: 1;
+  letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
   &:hover {
     background-color: ${({ theme }) => theme.colours.cancelDark};
     color: ${({ theme }) => theme.background};
+    font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   }
 `;
 
