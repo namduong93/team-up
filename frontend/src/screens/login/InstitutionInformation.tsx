@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FlexBackground } from "../../components/general_utility/Background";
 // import { sendRequest } from "../../utility/request";
@@ -8,37 +8,62 @@ import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
 import { sendRequest } from "../../utility/request";
 
-const steps = [
-  { label: 'User Type', active: false },
-  { label: 'Account Information', active: false },  // Set the active step here
-  { label: 'Site Information', active: true },
-  { label: 'Institution Information', active: false },
-];
+// const steps = [
+//   { label: 'User Type', active: false },
+//   { label: 'Account Information', active: false },  // Set the active step here
+//   { label: 'Site Information', active: true },
+//   { label: 'Institution Information', active: false },
+// ];
 
-const institutionOptions = [
-  {value: '', label: 'Please Select'},
-  { value: 'MXS', label: 'Mens XS' },
-  { value: 'MS', label: 'Mens S' },
-  { value: 'MM', label: 'Mens M' },
-  { value: 'ML', label: 'Mens L' },
-  { value: 'MXL', label: 'Mens XL' },
-  { value: 'M2XL', label: 'Mens 2XL' },
-  { value: 'M3XL', label: 'Mens 3XL' },
-  { value: 'N4XL', label: 'Mens 4XL' },
-  { value: 'N5XL', label: 'Mens 5XL' },
-  { value: 'LXS', label: 'Ladies XS' },
-  { value: 'LS', label: 'Ladies S' },
-  { value: 'LM', label: 'Ladies M' },
-  { value: 'LL', label: 'Ladies L' },
-  { value: 'LXL', label: 'Ladies XL' },
-  { value: 'L2XL', label: 'Ladies 2XL' },
-  { value: 'L3XL', label: 'Ladies 3XL' },
-];
+// const institutionOptions = [
+//   {value: '', label: 'Please Select'},
+//   { value: 'MXS', label: 'Mens XS' },
+//   { value: 'MS', label: 'Mens S' },
+//   { value: 'MM', label: 'Mens M' },
+//   { value: 'ML', label: 'Mens L' },
+//   { value: 'MXL', label: 'Mens XL' },
+//   { value: 'M2XL', label: 'Mens 2XL' },
+//   { value: 'M3XL', label: 'Mens 3XL' },
+//   { value: 'N4XL', label: 'Mens 4XL' },
+//   { value: 'N5XL', label: 'Mens 5XL' },
+//   { value: 'LXS', label: 'Ladies XS' },
+//   { value: 'LS', label: 'Ladies S' },
+//   { value: 'LM', label: 'Ladies M' },
+//   { value: 'LL', label: 'Ladies L' },
+//   { value: 'LXL', label: 'Ladies XL' },
+//   { value: 'L2XL', label: 'Ladies 2XL' },
+//   { value: 'L3XL', label: 'Ladies 3XL' },
+// ];
 
+interface University {
+  id: string;
+  name: string;
+}
 
 export const InstitutionInformation: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
+  const [institutionOptions, setInstitutionOptions] = useState([{ value: '', label: 'Please Select' }]);
+
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      try {
+        const response = await sendRequest.get<University[]>('/universities/list');
+        const universities = response.data; 
+
+        const options = universities.map((university) => ({
+          value: university.id,
+          label: university.name,
+        }));
+
+        setInstitutionOptions(prevOptions => [...prevOptions, ...options]); 
+      } catch (error) {
+        console.error("Error fetching universities:", error);
+      }
+    };
+
+    fetchUniversities();
+  }, []);
 
   const isButtonDisabled = () => {
     return !formData.institution || (formData.role === 'Student' && !formData.studentId);
