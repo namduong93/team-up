@@ -1,10 +1,8 @@
 
 import { UserService } from '../services/user_service';
-import { UserProfileInfo } from '../models/user/user_profile_info';
 import { UserIdObject, UserRepository } from '../repository/user_repository_type';
-import { SessionRepository, SessionTokenObject } from '../repository/session_repository_type';
+import { SessionRepository } from '../repository/session_repository_type';
 import { Student } from '../models/user/student/student';
-import exp from 'constants';
 
 describe('GET /user/profile_info', () => {
   let userService: UserService;
@@ -75,6 +73,15 @@ describe('GET /user/profile_info', () => {
         name: 'Quan',
         email: 'hoangtungquan@gmail.com',
         university: expect.any(String), // You can also assert a specific university name if needed
+      }));
+
+      // Does not matter if we pass in another userId here, the mock will always return the same result
+      const result_2 = await userService.userProfileInfo(mockUserId.userId + 1);
+
+      expect(result_2).toEqual(expect.objectContaining({
+        name: 'Quan',
+        email: 'hoangtungquan@gmail.com',
+        university: expect.any(String),
       }));
     });
   });
