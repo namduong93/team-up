@@ -1,6 +1,6 @@
 
 export interface Session {
-  token: string;
+  sessionId: string;
   createdAt: EpochTimeStamp; // seconds since epoch
   userId: number;
 };

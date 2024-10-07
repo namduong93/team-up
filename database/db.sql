@@ -69,7 +69,7 @@ CREATE TABLE students (
 CREATE TABLE sessions (
   id SERIAL PRIMARY KEY,
 
-  token CHAR(36) NOT NULL,
+  session_id CHAR(36) NOT NULL,
   
   -- Foreign Key id of the user that is logged in
   user_id INT NOT NULL REFERENCES users (id),
@@ -186,6 +186,7 @@ CREATE TABLE competition_participants (
 
 );
 
+-- TEST DATA
 -- TODO: This is hard code for some university, we will delete it later when we get into Admin and University api
 INSERT INTO universities (name) 
 VALUES 
@@ -194,3 +195,24 @@ VALUES
 ('RMIT University'),
 ('University of Sydney'),
 ('University of New South Wales');
+
+-- Hardcoded data for users
+INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
+VALUES 
+('Alice Smith', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'alice.smith@example.com', 'M', 'she/her', 'None', 'None'),
+('Bob Johnson', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'bob.johnson@example.com', 'L', 'he/him', 'Peanuts', 'None'),
+('Charlie Brown', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'charlie.brown@example.com', 'S', 'they/them', 'None', 'Wheelchair Access');
+
+-- Hardcoded data for staff
+INSERT INTO staff (user_id, university_id)
+VALUES 
+(1, 1),
+(2, 2),
+(3, 3);
+
+-- Hardcoded data for students
+INSERT INTO students (user_id, university_id, student_id)
+VALUES 
+(1, 1, '1234567'),
+(2, 2, '7654321'),
+(3, NULL, '1231231');
