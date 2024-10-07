@@ -9,17 +9,21 @@ ignoredRoutes.set("/staff/register", "POST");
 ignoredRoutes.set("/user/login", "POST");
 ignoredRoutes.set("/universities/list", "GET");
 
-
 export class Authenticator {
 
   authenticationMiddleware(sessionRepository: SessionRepository) {
     return async function(req: Request, res: Response, next: NextFunction) {
       try {
         // Checking if the route is in the ignored list
-        if (ignoredRoutes.has(req.url) && ignoredRoutes.get(req.url) === req.method) {
+        for (const [route, method] of ignoredRoutes.entries()) {
+          const pathRegex = new RegExp(`^${route}(\\?.*)?$`); 
+          if (pathRegex.test(req.url) && method === req.method) {
             next();
             return;
+          }
         }
+        
+        console.log(ignoredRoutes, req.url, req.method);
 
         const reqSessionId = req.cookies.sessionId;
         if (!reqSessionId) {

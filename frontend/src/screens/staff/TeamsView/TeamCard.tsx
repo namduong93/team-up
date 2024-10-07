@@ -1,3 +1,4 @@
+import React from "react";
 import { FC, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
@@ -63,7 +64,6 @@ const StyledHoverDiv = styled.div`
   user-select: none;
   &:hover {
     transform: translate(2px, 2px);
-    cursor: pointer;
   }
 `
 
