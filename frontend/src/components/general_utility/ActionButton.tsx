@@ -64,6 +64,11 @@ const Question = styled.div`
 const ConfirmButton = styled.button`
   background-color: ${({ theme }) => theme.colours.confirm};
   color: ${({ theme }) => theme.fonts.colour};
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  cursor: pointer;
 
   &:hover {
     background-color: ${({ theme }) => theme.colours.confirmDark};
@@ -74,6 +79,11 @@ const ConfirmButton = styled.button`
 const CancelButton = styled.button`
   background-color: ${({ theme }) => theme.colours.cancel};
   color: ${({ theme }) => theme.fonts.colour};
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+  cursor: pointer;
 
   &:hover {
     background-color: ${({ theme }) => theme.colours.cancelDark};
