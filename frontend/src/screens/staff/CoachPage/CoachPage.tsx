@@ -1,8 +1,9 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import styled from "styled-components";
 import { TeamCard } from "./TeamCard";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 
 const OverflowFlexBackground = styled(FlexBackground)`
@@ -67,19 +68,24 @@ const ToggleOptionTextSpan = styled.div`
   font-size: 2em;
 `;
 
-const TeamCardGridDisplay = styled.div`
-  flex: 1;
-  background-color: white;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(294px, 100%), 1fr));
-  margin-top: 32px;
-  row-gap: 20px;
-`;
+const pathMap: Record<string, number> = {
+  '/coach/page/teams': 0,
+  '/coach/page/students': 1,
+}
 
-export const TeamsView: FC = () => {
+export const CoachPage: FC = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
+  const handleToggleTeams = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/coach/page/teams');
+  }
+  const handleToggleStudents = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/coach/page/students');
+  }
   return (
-    
   <OverflowFlexBackground>
     {/* Sidebar */}
     <SideBarDiv />
@@ -98,29 +104,21 @@ export const TeamsView: FC = () => {
           {/* Dimensions setting is probably fine like this because the way the toggleSwitch is setup
               Dimension setting is all you need to do for it to work.
           */}
-          <CustomToggleSwitch style={{ height: '100%', width: '100%', maxWidth: '300px' }}>
+          <CustomToggleSwitch defaultBorderIndex={pathMap[pathname] ?? 0} style={{ height: '100%', width: '100%', maxWidth: '300px' }}>
             
-            <ToggleOptionDiv>
+            <ToggleOptionDiv onClick={handleToggleTeams}>
               <ToggleOptionTextSpan>Teams</ToggleOptionTextSpan>
             </ToggleOptionDiv>
             
-            <ToggleOptionDiv>
+            <ToggleOptionDiv onClick={handleToggleStudents}>
               <ToggleOptionTextSpan>Students</ToggleOptionTextSpan>
             </ToggleOptionDiv>
           </CustomToggleSwitch>
         </PageOptionsContainerDiv>
 
         {/* Display of Teams/Students */}
-        <TeamCardGridDisplay>
-          {Array(50).fill(0).map((_, index) => (<TeamCard key={index} teamDetails={{
-            teamName: 'Team Name',
-            status: (index % 3) === 0 ? 'unregistered' : (index % 3) === 1 ? 'registered' : 'pending',
-            memberName1: 'Team Member 1',
-            memberName2: 'Team Member 2',
-            memberName3: 'Team Member 3'
-          }} />))}
-          
-        </TeamCardGridDisplay>
+        <Outlet />
+        
       </MainPageDiv>
   </OverflowFlexBackground>
   );
