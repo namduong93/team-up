@@ -35,7 +35,6 @@ const initialState: FormState = {
 interface MultiStepRegoFormContextType {
   formData: FormState;
   setFormData: (data: Partial<FormState>) => void
-  // resetFormData: () => void;
 }
 
 const MultiStepRegoFormContext = createContext<MultiStepRegoFormContextType | undefined>(undefined);

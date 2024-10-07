@@ -15,7 +15,6 @@ const CustomButton = styled.button`
 export const Landing: FC = () => {
 
   const navigate = useNavigate();
-  // defining states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
