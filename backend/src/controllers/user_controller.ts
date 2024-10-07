@@ -3,7 +3,6 @@ import { UserService } from "../services/user_service.js";
 import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
 import { Staff } from "../models/user/staff/staff.js";
-import createHttpError from "http-errors";
 
 export class UserController {
   private userService: UserService;
@@ -64,13 +63,7 @@ export class UserController {
   userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const userProfileInfo = await this.userService.userProfileInfo(Number(userId));
-    
-    if (!userProfileInfo) {
-      throw createHttpError(400, 'User not found');
-    }
-
     res.json(userProfileInfo);
-
     return;
   });
 

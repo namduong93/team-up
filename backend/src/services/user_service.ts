@@ -8,6 +8,7 @@ import { SessionRepository, SessionTokenObject } from "../repository/session_rep
 import { Session } from "../models/session/session.js";
 import { v4 as uuidv4 } from 'uuid';
 import { UserProfileInfo } from "../models/user/user_profile_info.js";
+import createHttpError from "http-errors";
 
 export type UserTypeObject = { type: string };
 
@@ -53,6 +54,11 @@ export class UserService {
 
   userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
     const userProfileInfo = await this.userRepository.userProfileInfo(userId);
+    
+    if (!userProfileInfo) {
+      throw createHttpError(400, 'User not found');
+    }
+
     return userProfileInfo;
   }
 
