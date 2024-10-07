@@ -64,6 +64,12 @@ export class UserController {
   userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const userProfileInfo = await this.userService.userProfileInfo(Number(userId));
+    
+    if (!userProfileInfo) {
+      res.status(404).send('User not found');
+      return;
+    }
+
     res.json(userProfileInfo);
 
     return;
