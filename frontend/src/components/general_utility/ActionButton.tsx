@@ -12,7 +12,7 @@ interface ActionButtonProps {
 const Button = styled.button<{ actionType: "primary" | "secondary" }>`
   border-radius: 10px;
   border: none;
-  padding: 8px 20px;
+  padding: 10px 20px;
   white-space: nowrap;
   width: 150px;
   letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};

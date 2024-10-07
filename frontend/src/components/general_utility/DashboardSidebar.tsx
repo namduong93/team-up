@@ -79,7 +79,8 @@ const NavButton = styled.button<{ active: boolean }>`
   transition: background-color 0.3s;
   border-radius: 40px;
   flex-shrink: 1;
-
+  margin: 5px;
+  
   &:hover {
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.fonts.colour};
@@ -103,8 +104,9 @@ const LogoutButton = styled.button`
   align-items: center;
   display: flex;
   gap: 20px;
-  padding-left: 25px;
-  margin-top: auto;
+  padding: 20px;
+  margin: 5px;
+  border-radius: 40px;
   flex-shrink: 1;
   letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
   &:hover {

@@ -23,8 +23,8 @@ export const Landing: FC = () => {
     try {
       await sendRequest.post('/user/login');
       navigate('/dashboard')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
     } catch (error: unknown) {
-
     };
   }
   return (

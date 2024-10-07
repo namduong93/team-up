@@ -118,23 +118,23 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-    <Router>
-      <div style={{ background: isDarkTheme ? darkTheme.background : defaultTheme.background}}>
+      <Router>
+        <div style={{ background: isDarkTheme ? darkTheme.background : defaultTheme.background}}>
 
-      </div>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/roleregistration" element={<RoleRegistration />} />
-        {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
-            <Route path="/coach/page" element={<TeamsView />} />
-        <Route path="/dashboard" element={<Dashboard name={name} affiliation={affiliation} competitions={competitions} />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/competition/:compId/:role" element={<Competition />} />
-      </Routes>
-    </Router>
+        </div>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/roleregistration" element={<RoleRegistration />} />
+          {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
+              <Route path="/coach/page" element={<TeamsView />} />
+          <Route path="/dashboard" element={<Dashboard name={name} affiliation={affiliation} competitions={competitions} />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/competition/:compId/:role" element={<Competition />} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   )
 }

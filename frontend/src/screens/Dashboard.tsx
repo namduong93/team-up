@@ -49,6 +49,7 @@ const DashboardHeader = styled.div`
   min-width: 500px;
   gap: 30px;
   margin-right: 20px;
+  margin-left: 20px;
 `;
 
 const WelcomeMessage = styled.div`
@@ -69,6 +70,7 @@ const ActionButtons = styled.div`
   align-items: flex-end;
   gap: 10px;
   width: 100%;
+  margin-right: 20px;
 `;
 
 const RegisterAlert = styled.div`
@@ -79,7 +81,7 @@ const RegisterAlert = styled.div`
 
 const AlertButton = styled.button`
   border-radius: 10px;
-  padding: 8px;
+  padding: 10px;
   background-color: ${({ theme }) => theme.colours.secondaryLight};
   color: ${({ theme }) => theme.fonts.colour};
   border: none;
@@ -90,7 +92,7 @@ const AlertButton = styled.button`
   }
 `;
 
-const FilterSearch = styled.div`
+const SortFilterSearch = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
@@ -149,7 +151,7 @@ const FilterTagButton = styled.button`
   align-items: center;
   background-color: ${({ theme }) => theme.colours.secondaryLight};
   border-radius: 10px;
-  padding: 5px 10px;
+  padding: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
   color: ${({ theme }) => theme.fonts.colour};
@@ -171,7 +173,7 @@ const SearchInput = styled.input`
   max-height: 38px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 10px;
-  margin-right: 10px;
+  padding: 10px;
 `;
 
 const ContentArea = styled.div`
@@ -341,7 +343,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
               <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}><FaBell /></AlertButton>
             </RegisterAlert>
             
-            <FilterSearch>
+            <SortFilterSearch>
             <SortButton
               isSortOpen={isSortOpen}
               onClick={handleSortToggle}
@@ -360,7 +362,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-            </FilterSearch>
+            </SortFilterSearch>
           </ActionButtons>
         </DashboardHeader>
 
