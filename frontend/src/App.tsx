@@ -8,6 +8,9 @@ import { Account } from './screens/Account';
 import { RoleRegistration } from './screens/login/RoleRegistration';
 import { Settings } from './screens/settings/Settings';
 import { Competition } from './screens/competition/Competition';
+import { AccountInformation } from './screens/login/AccountInformation';
+import { SiteInformation } from './screens/login/SiteInformation';
+import { InstitutionInformation } from './screens/login/InstitutionInformation';
 
 function App() {
   const name = "Name";
@@ -32,6 +35,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/roleregistration" element={<RoleRegistration />} />
+        <Route path="/accountinformation" element={<AccountInformation />} />
+        <Route path="/siteinformation" element={<SiteInformation />} />
+        <Route path="/institutioninformation" element={<InstitutionInformation />} />
         <Route path="/dashboard" element={<Dashboard name={name} affiliation={affiliation} competitions={competitions} />} />
         <Route path="/account" element={<Account />} />
         <Route path="/settings" element={<Settings />} />

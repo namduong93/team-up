@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const RoleRegistration: FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const [name, setName] = useState("");
 
   // const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -29,7 +29,7 @@ export const RoleRegistration: FC = () => {
   return (
   <FlexBackground style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
     <form onSubmit={handleSubmit} style={styles.formContainer}>
-      <h1 style={{ textAlign: 'center' }}>
+      <h1 style={{ textAlign: 'center', fontFamily: 'Arial, Helvetica, sans-serif' }}>
         What is your role?
       </h1>
 
@@ -60,7 +60,15 @@ export const RoleRegistration: FC = () => {
         </button>
       </div>
 
-      <button type='submit' style={styles.button}>Next</button>
+      <button type='submit' style={{
+        ...styles.button,
+        backgroundColor: role ? '#6688D2' : '#ccc',
+        cursor: role ? 'pointer' : 'not-allowed'}}
+          disabled={!role}
+          onClick={() => navigate('/accountinformation')}
+        >
+        Next
+      </button>
     </form>
 
   </FlexBackground>
@@ -76,6 +84,7 @@ const styles: Record<string, React.CSSProperties> = {
   roleContainer: {
     display: 'flex',
     justifyContent: 'center',
+    flexWrap: 'wrap',
   },
   roleButton: {
     // border: '1.5px solid #AD0B0B',
@@ -86,6 +95,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: '300px',
     fontSize: '25px',
     cursor: 'pointer',
+    fontFamily: 'Arial, Helvetica, sans-serif',
   },
   button: {
     width: '150px',
@@ -99,5 +109,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '16px',
     fontWeight: 'bold',
     cursor: 'pointer',
+    fontFamily: 'Arial, Helvetica, sans-serif',
   },
 }
