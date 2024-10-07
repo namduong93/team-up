@@ -7,7 +7,7 @@ const ignoredRoutes = new Map();
 ignoredRoutes.set("/student/register", "POST");
 ignoredRoutes.set("/staff/register", "POST");
 ignoredRoutes.set("/user/login", "POST");
-// ignoredRoutes.set("/universities/list", "GET");
+ignoredRoutes.set("/universities/list", "GET");
 
 
 export class Authenticator {

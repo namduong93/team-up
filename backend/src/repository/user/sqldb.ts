@@ -4,9 +4,10 @@ import { StudentDashInfo } from "../../models/user/student/student_dash_info.js"
 import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
 import { UserTypeObject } from "../../services/user_service.js";
 import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
-import { Student, validateStudent } from "../../models/user/student/student.js";
+import { Student } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
-import { Staff, validateStaff } from "../../models/user/staff/staff.js";
+import { Staff } from "../../models/user/staff/staff.js";
+import createHttpError from "http-errors";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -20,10 +21,6 @@ export class SqlDbUserRepository implements UserRepository {
     // Use the params to run an sql insert on the db
     student.email = await this.trimDotsForEmail(student.email);
 
-    const validated = validateStudent(student);
-    if (validated) {
-        throw new Error(validated);
-    }
     let name = student.name;              
     let hashed_password = await bcrypt.hash(student.password, 10); 
     let email = student.email;             
@@ -40,7 +37,7 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
-        throw new Error('Student with this email already exists');
+        throw createHttpError('Student with this email already exists');
     }
 
     //Add user to users table
@@ -82,11 +79,6 @@ export class SqlDbUserRepository implements UserRepository {
     // Use the params to run an sql insert on the db
     staff.email = await this.trimDotsForEmail(staff.email);
 
-    const validated = validateStaff(staff);
-    if (validated) {
-        throw new Error(validated);
-    }
-
     let name = staff.name;              
     let hashed_password = await bcrypt.hash(staff.password, 10); 
     let email = staff.email;             
@@ -102,7 +94,7 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
-        throw new Error('Staff with this email already exists');
+        throw createHttpError('Staff with this email already exists');
     }
 
     const userQuery = `
@@ -142,14 +134,7 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userLogin = async (email: string, password: string): Promise<UserIdObject | undefined> => {
-    if(!email || email.length === 0) {
-      throw new Error('Email is required');
-    }
     email = await this.trimDotsForEmail(email);
-
-    if(!password || password.length === 0) {
-      throw new Error('Password is required');
-    }
 
     const userQuery = `
       SELECT * FROM users WHERE email = $1;
@@ -157,10 +142,10 @@ export class SqlDbUserRepository implements UserRepository {
     const userResult = await this.pool.query(userQuery, [email]);
 
     if(userResult.rowCount === 0) {
-      throw new Error('User with this email does not exist');
+      throw createHttpError('User with this email does not exist');
     }
     if(!await bcrypt.compare(password, userResult.rows[0].hashed_password)) {
-      throw new Error('Incorrect password');
+      throw createHttpError('Incorrect password');
     }
 
     return { userId: userResult.rows[0].id };
