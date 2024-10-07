@@ -10,7 +10,6 @@ import { UserProfileInfo } from "../models/user/user_profile_info.js";
 export type UserIdObject = { userId: number };
 export interface UserRepository {
   studentRegister(student: Student): Promise< UserIdObject | undefined>;
-
   staffRegister(staff: Staff): Promise<UserIdObject | undefined>;
 
   userAuthenticate(email: string, password: string): Promise<UserIdObject | undefined>;

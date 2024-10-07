@@ -1,14 +1,14 @@
 import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
 import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
 import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
-import { Student } from "../models/user/student/student.js";
 import { UserRepository } from "../repository/user_repository_type.js";
-import { Staff } from "../models/user/staff/staff.js";
 import { SessionRepository, SessionTokenObject } from "../repository/session_repository_type.js";
 import { Session } from "../models/session/session.js";
 import { v4 as uuidv4 } from 'uuid';
 import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import createHttpError from "http-errors";
+import { Student, validateStudent } from "../models/user/student/student.js";
+import { Staff, validateStaff } from "../models/user/staff/staff.js";
 
 export type UserTypeObject = { type: string };
 
@@ -22,8 +22,10 @@ export class UserService {
   }
 
   studentRegister = async (student: Student): Promise<SessionTokenObject | undefined> => {
-    // use the user passed in to do some stuff and call the 
-    // userRepository methods to interact with the db on behalf of the user.
+    const validated = validateStudent(student);
+    if (validated) {
+        throw createHttpError(validated);
+    }
 
     const userIdObject = await this.userRepository.studentRegister(student);
     let session : Session = { 
@@ -36,6 +38,11 @@ export class UserService {
   }
 
   staffRegister = async (staff: Staff): Promise<SessionTokenObject | undefined> => {
+    const validated = validateStaff(staff);
+    if (validated) {
+        throw createHttpError(validated);
+    }
+
     let userId = await this.userRepository.staffRegister(staff);
     let session : Session = { 
       sessionId: uuidv4(), 
@@ -47,9 +54,15 @@ export class UserService {
   }
 
   userLogin = async (email: string, password: string): Promise<SessionTokenObject | undefined> => {
+    if(!email || email.length === 0) {
+      throw createHttpError('Email is required');
+    }
+    if(!password || password.length === 0) {
+      throw createHttpError('Password is required');
+    }
 
-   const userIdObject = await this.userRepository.userLogin(email, password);
-   let session : Session = { 
+    const userIdObject = await this.userRepository.userLogin(email, password);
+    let session : Session = { 
      sessionId: uuidv4(), 
      userId: userIdObject.userId, 
      createdAt: Math.floor(Date.now() / 1000)

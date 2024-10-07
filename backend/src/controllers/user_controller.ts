@@ -30,8 +30,8 @@ export class UserController {
       httpOnly: true,
       // secure: true --- for ensuring it is only sent over https (for production)
     });
-    res.json({});
 
+    res.json({});
     return;
   });
 
@@ -52,8 +52,8 @@ export class UserController {
       httpOnly: true,
       // secure: true --- for ensuring it is only sent over https (for production)
     });
+    
     res.json({});
-
     return;
   });
 
