@@ -4,7 +4,6 @@ import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
 import { Staff } from "../models/user/staff/staff.js";
 
-
 export class UserController {
   private userService: UserService;
 
@@ -81,7 +80,9 @@ export class UserController {
   });
 
   userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({  });
+    const userId = req.query.userId;
+    const userProfileInfo = await this.userService.userProfileInfo(Number(userId));
+    res.json(userProfileInfo);
     return;
   });
 

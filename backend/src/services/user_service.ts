@@ -7,6 +7,8 @@ import { Staff } from "../models/user/staff/staff.js";
 import { SessionRepository, SessionTokenObject } from "../repository/session_repository_type.js";
 import { Session } from "../models/session/session.js";
 import { v4 as uuidv4 } from 'uuid';
+import { UserProfileInfo } from "../models/user/user_profile_info.js";
+import createHttpError from "http-errors";
 
 export type UserTypeObject = { type: string };
 
@@ -59,6 +61,16 @@ export class UserService {
   userLogout = async (sessionToken: string): Promise<void> => {
     await this.sessionRepository.delete(sessionToken);
     return ;
+  }
+
+  userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
+    const userProfileInfo = await this.userRepository.userProfileInfo(userId);
+    
+    if (!userProfileInfo) {
+      throw createHttpError(400, 'User not found');
+    }
+
+    return userProfileInfo;
   }
 
   userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
