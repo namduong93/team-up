@@ -42,8 +42,16 @@ export class SqlDbSessionRepository implements SessionRepository {
         return null;
     }
 
-    //TODO: Delete every outdated session
     async delete(tk: string): Promise<boolean> {
-        return false
+        const deleteSessionQuery = `
+            DELETE FROM sessions
+            WHERE session_id = $1;
+        `;
+        const deleteSessionValues = [tk];
+        const deleteSessionResult = await this.pool.query(deleteSessionQuery, deleteSessionValues);
+        if (deleteSessionResult.rowCount === 0) {
+            return false;
+        }
+        return true;
     }
 }
