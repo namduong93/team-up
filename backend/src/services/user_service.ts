@@ -24,10 +24,14 @@ export class UserService {
   studentRegister = async (student: Student): Promise<SessionTokenObject | undefined> => {
     const validated = validateStudent(student);
     if (validated) {
-        throw createHttpError(validated);
+      throw createHttpError(400, validated);
     }
 
     const userIdObject = await this.userRepository.studentRegister(student);
+    if (!userIdObject) {
+      throw createHttpError(400, 'Student with this email already exists');
+    }
+
     let session : Session = { 
       sessionId: uuidv4(), 
       userId: userIdObject.userId, 
@@ -40,13 +44,17 @@ export class UserService {
   staffRegister = async (staff: Staff): Promise<SessionTokenObject | undefined> => {
     const validated = validateStaff(staff);
     if (validated) {
-        throw createHttpError(validated);
+      throw createHttpError(400, validated);
     }
 
-    let userId = await this.userRepository.staffRegister(staff);
+    let userIdObject = await this.userRepository.staffRegister(staff);
+    if (!userIdObject) {
+      throw createHttpError(400, 'Student with this email already exists');
+    }
+    
     let session : Session = { 
       sessionId: uuidv4(), 
-      userId: userId.userId, 
+      userId: userIdObject.userId, 
       createdAt: Math.floor(Date.now() / 1000) 
     };
     await this.sessionRepository.create(session);

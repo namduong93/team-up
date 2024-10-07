@@ -8,7 +8,6 @@ import { Student } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
 import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 import { Staff } from "../../models/user/staff/staff.js";
-import createHttpError from "http-errors";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -18,19 +17,19 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   // TODO: handle sessionTimestamp
-  studentRegister = async (student : Student): Promise<UserIdObject | undefined> => {
+  studentRegister = async (student: Student): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
     student.email = await this.trimDotsForEmail(student.email);
 
-    let name = student.name;              
-    let hashed_password = await bcrypt.hash(student.password, 10); 
-    let email = student.email;             
-    let tshirtSize = student.tshirtSize;   
-    let pronouns = student.pronouns;       
-    let allergies = student.allergies;     
-    let accessibilityReqs = student.accessibilityReqs; 
+    let name = student.name;
+    let hashed_password = await bcrypt.hash(student.password, 10);
+    let email = student.email;
+    let tshirtSize = student.tshirtSize;
+    let pronouns = student.pronouns;
+    let allergies = student.allergies;
+    let accessibilityReqs = student.accessibilityReqs;
     let universityId = student.universityId;
-    let studentId = student.studentId;     
+    let studentId = student.studentId;
 
     // Check if user with email already exists
     const checkUserQuery = `
@@ -38,7 +37,7 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
-        throw createHttpError('Student with this email already exists');
+      return undefined;
     }
 
     //Add user to users table
@@ -76,26 +75,26 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   // TODO: Handle sessionTimestamp
-  staffRegister = async (staff : Staff): Promise<UserIdObject | undefined> => {
+  staffRegister = async (staff: Staff): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
     staff.email = await this.trimDotsForEmail(staff.email);
 
-    let name = staff.name;              
-    let hashed_password = await bcrypt.hash(staff.password, 10); 
-    let email = staff.email;             
-    let tshirtSize = staff.tshirtSize;   
-    let pronouns = staff.pronouns;       
-    let allergies = staff.allergies;     
+    let name = staff.name;
+    let hashed_password = await bcrypt.hash(staff.password, 10);
+    let email = staff.email;
+    let tshirtSize = staff.tshirtSize;
+    let pronouns = staff.pronouns;
+    let allergies = staff.allergies;
     let accessibilityReqs = staff.accessibilityReqs;
-    let universityId = staff.universityId;   
-    
+    let universityId = staff.universityId;
+
     // Check if user with email already exists
     const checkUserQuery = `
       SELECT id FROM users WHERE email = $1;
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
-        throw createHttpError('Staff with this email already exists');
+      return undefined;
     }
 
     const userQuery = `
@@ -113,7 +112,7 @@ export class SqlDbUserRepository implements UserRepository {
       accessibilityReqs,
     ];
     const userResult = await this.pool.query(userQuery, userValues);
-    const newUserId = userResult.rows[0].id; 
+    const newUserId = userResult.rows[0].id;
 
     const staffQuery = `
       INSERT INTO staff (user_id, university_id)
@@ -121,7 +120,7 @@ export class SqlDbUserRepository implements UserRepository {
       RETURNING *;
     `;
     const staffValues = [
-      newUserId, 
+      newUserId,
       universityId
     ];
 
@@ -142,11 +141,11 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const userResult = await this.pool.query(userQuery, [email]);
 
-    if(userResult.rowCount === 0) {
+    if (userResult.rowCount === 0) {
       return undefined;
     }
 
-    if(!await bcrypt.compare(password, userResult.rows[0].hashed_password)) {
+    if (!await bcrypt.compare(password, userResult.rows[0].hashed_password)) {
       return undefined;
     }
 
@@ -160,7 +159,7 @@ export class SqlDbUserRepository implements UserRepository {
       FROM users
       WHERE id = $1;
     `;
-    
+
     const userResult = await this.pool.query(userQuery, [userId]);
 
     if (userResult.rowCount === 0) {
@@ -175,7 +174,7 @@ export class SqlDbUserRepository implements UserRepository {
       FROM universities 
       WHERE id = (SELECT university_id FROM students WHERE user_id = $1);
     `;
-    
+
     const universityResult = await this.pool.query(universityQuery, [userId]);
     const universityName = universityResult.rowCount > 0 ? universityResult.rows[0].name : undefined;
 
@@ -192,13 +191,13 @@ export class SqlDbUserRepository implements UserRepository {
     return { type: 'student' };
   }
 
-  studentDashInfo = async(sessionToken: string): Promise<StudentDashInfo | undefined> => {
-    
+  studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {
+
     return { preferredName: 'Name' };
   }
 
   staffDashInfo = async (sessionToken: string): Promise<StaffDashInfo | undefined> => {
-    
+
     return { preferredName: 'Name' };
   }
 
