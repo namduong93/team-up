@@ -7,8 +7,8 @@ import { Session } from "../models/session/session.js";
 import { v4 as uuidv4 } from 'uuid';
 import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import createHttpError from "http-errors";
-import { Student, validateStudent } from "../models/user/student/student";
-import { Staff, validateStaff } from "../models/user/staff/staff";
+import { Student, validateStudent } from "../models/user/student/student.js";
+import { Staff, validateStaff } from "../models/user/staff/staff.js";
 
 export type UserTypeObject = { type: string };
 
@@ -55,13 +55,17 @@ export class UserService {
 
   userLogin = async (email: string, password: string): Promise<SessionTokenObject | undefined> => {
     if(!email || email.length === 0) {
-      throw createHttpError('Email is required');
+      throw createHttpError(400, 'Email is required');
     }
     if(!password || password.length === 0) {
-      throw createHttpError('Password is required');
+      throw createHttpError(400, 'Password is required');
     }
 
     const userIdObject = await this.userRepository.userLogin(email, password);
+    if (!userIdObject) {
+      throw createHttpError(401, 'Invalid email or password');
+    }
+
     let session : Session = { 
      sessionId: uuidv4(), 
      userId: userIdObject.userId, 

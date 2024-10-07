@@ -143,10 +143,11 @@ export class SqlDbUserRepository implements UserRepository {
     const userResult = await this.pool.query(userQuery, [email]);
 
     if(userResult.rowCount === 0) {
-      throw createHttpError('User with this email does not exist');
+      return undefined;
     }
+
     if(!await bcrypt.compare(password, userResult.rows[0].hashed_password)) {
-      throw createHttpError('Incorrect password');
+      return undefined;
     }
 
     return { userId: userResult.rows[0].id };
