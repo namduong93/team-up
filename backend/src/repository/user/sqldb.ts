@@ -2,12 +2,12 @@ import { Pool } from "pg";
 import { UserIdObject, UserRepository } from "../user_repository_type.js";
 import { StudentDashInfo } from "../../models/user/student/student_dash_info.js";
 import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
-import { UserTypeObject } from "../../services/user_service.js";
 import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
 import { Student } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
 import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 import { Staff } from "../../models/user/staff/staff.js";
+import { UserType, UserTypeObject } from "../../models/user/user.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -192,7 +192,7 @@ export class SqlDbUserRepository implements UserRepository {
     const staff_result = await this.pool.query(staff, [userId]);
 
     if (!staff_result.rowCount) {
-      return { type: 'student' };
+      return { type: UserType.STUDENT };
     }
     else {
       const system_admin = `
@@ -200,10 +200,10 @@ export class SqlDbUserRepository implements UserRepository {
       `;
       const system_admin_result = await this.pool.query(system_admin, [userId]);
       if (system_admin_result.rowCount > 0) {
-        return { type: 'system_admin' };
+        return { type: UserType.SYSTEM_ADMIN };
       }
       else {
-        return { type: 'staff' };
+        return { type: UserType.STAFF };
       }
     }
   }

@@ -9,8 +9,7 @@ import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import createHttpError from "http-errors";
 import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
-
-export type UserTypeObject = { type: string };
+import { UserTypeObject } from "../models/user/user.js";
 
 export class UserService {
   private userRepository: UserRepository;

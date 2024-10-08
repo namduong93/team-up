@@ -1,4 +1,3 @@
-
 export interface User {
   id?: number;
   name: string;
@@ -30,3 +29,12 @@ export function validateUser(user: User): string {
 
   return "";
 }
+
+export const enum UserType {
+  STUDENT = 'student',
+  STAFF = 'staff',
+  SYSTEM_ADMIN = 'system_admin'
+}
+
+export type UserTypeObject = { type: UserType };
+
