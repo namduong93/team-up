@@ -9,8 +9,7 @@ import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import createHttpError from "http-errors";
 import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
-
-export type UserTypeObject = { type: string };
+import { UserTypeObject } from "../models/user/user.js";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -98,9 +97,9 @@ export class UserService {
     return userProfileInfo;
   }
 
-  userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
-    
-    return { type: 'student' };
+  userType = async (userId: number): Promise<UserTypeObject | undefined> => {
+    const userType = await this.userRepository.userType(userId);
+    return { type: userType.type };
   }
 
   studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {

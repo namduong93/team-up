@@ -44,7 +44,7 @@ CREATE TABLE users (
   accessibility_reqs TEXT
 );
 
-CREATE TABLE staff (
+CREATE TABLE staffs (
   -- Foreign Key Primary Key of their user id
   user_id INT PRIMARY KEY,
 
@@ -81,7 +81,7 @@ CREATE TABLE sessions (
 CREATE TABLE system_admins (
   -- Foreign Key Primary Key of their Staff user id
   staff_id INT PRIMARY KEY,
-  FOREIGN KEY (staff_id) REFERENCES staff (user_id)
+  FOREIGN KEY (staff_id) REFERENCES staffs (user_id)
 );
 
 CREATE TABLE competitions (
@@ -116,7 +116,7 @@ CREATE TABLE sites (
 CREATE TABLE competition_admins (
   id SERIAL PRIMARY KEY,
   
-  staff_id INT NOT NULL REFERENCES staff (user_id),
+  staff_id INT NOT NULL REFERENCES staffs (user_id),
   competition_id INT NOT NULL REFERENCES competitions (id),
 
   CONSTRAINT unique_admin UNIQUE (staff_id, competition_id)
@@ -125,7 +125,7 @@ CREATE TABLE competition_admins (
 CREATE TABLE competition_coaches (
   id SERIAL PRIMARY KEY,
 
-  staff_id INT NOT NULL REFERENCES staff (user_id),
+  staff_id INT NOT NULL REFERENCES staffs (user_id),
   competition_id INT NOT NULL REFERENCES competitions (id),
 
   CONSTRAINT unique_coach UNIQUE (staff_id, competition_id)
@@ -134,7 +134,7 @@ CREATE TABLE competition_coaches (
 CREATE TABLE competition_site_coordinators (
   id SERIAL PRIMARY KEY,
 
-  staff_id INT NOT NULL REFERENCES staff (user_id),
+  staff_id INT NOT NULL REFERENCES staffs (user_id),
   competition_id INT NOT NULL REFERENCES competitions (id),
   site_id INT NOT NULL REFERENCES sites (id),
 
@@ -199,20 +199,27 @@ VALUES
 -- Hardcoded data for users
 INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
 VALUES 
-('Alice Smith', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'alice.smith@example.com', 'M', 'she/her', 'None', 'None'),
-('Bob Johnson', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'bob.johnson@example.com', 'L', 'he/him', 'Peanuts', 'None'),
-('Charlie Brown', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'charlie.brown@example.com', 'S', 'they/them', 'None', 'Wheelchair Access');
+('System Admin', '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO', 'admin@examplecom', 'L', 'he/him', 'Peanuts', 'None'),
+('Staff Account', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'bob@examplecom', 'M', 'he/him', 'None', 'None'),
+('Student Account', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'charlie.brown@examplecom', 'S', 'they/them', 'None', 'Wheelchair Access'),
+('Student Account 2', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'daniel.brown@examplecom', 'S', 'they/them', 'None', 'None');
+
 
 -- Hardcoded data for staff
-INSERT INTO staff (user_id, university_id)
+INSERT INTO staffs (user_id, university_id)
 VALUES 
 (1, 1),
-(2, 2),
-(3, 3);
+(2, 2);
+;
+
+-- Hardcoded data for system admins
+INSERT INTO system_admins (staff_id)
+VALUES 
+(1);
 
 -- Hardcoded data for students
 INSERT INTO students (user_id, university_id, student_id)
 VALUES 
-(1, 1, '1234567'),
-(2, 2, '7654321'),
-(3, NULL, '1231231');
+(2, 1, '1234567'),
+(3, 2, '7654321'),
+(4, NULL, '1231231');

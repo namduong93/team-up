@@ -23,8 +23,6 @@ export class Authenticator {
           }
         }
         
-        console.log(ignoredRoutes, req.url, req.method);
-
         const reqSessionId = req.cookies.sessionId;
         if (!reqSessionId) {
           throw TOKEN_NOT_FOUND;
