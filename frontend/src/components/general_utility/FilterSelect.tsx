@@ -9,8 +9,8 @@ interface FilterSelectProps {
 
 const FilterContainer = styled.div<{ isOpen: boolean }>`
   position: absolute;
-  top: 140px;
-  right: 30px;
+  top: 33px;
+  right: 0;
   z-index: 1000;
   background-color: ${({ theme }) => theme.background};
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -18,7 +18,7 @@ const FilterContainer = styled.div<{ isOpen: boolean }>`
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   display: ${({ isOpen }) => (isOpen ? "block" : "none")};
   padding: 10px;
-  width: fit-content;
+  width: 250%;
   height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;

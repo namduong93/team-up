@@ -9,6 +9,7 @@ const TeamCardGridDisplay = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(min(294px, 100%), 1fr));
   margin-top: 32px;
   row-gap: 20px;
+  overflow: auto;
 `;
 
 export const TeamDisplay: FC = () => {

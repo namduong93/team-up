@@ -1,19 +1,10 @@
 import React, { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FlexBackground } from "../../components/general_utility/Background";
-// import { sendRequest } from "../../utility/request";
-// import ProgressBar from "../../components/general_utility/ProgressBar";
 import TextInput from "../../components/general_utility/TextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
 import { sendRequest } from "../../utility/request";
-
-// const steps = [
-//   { label: 'User Type', active: false },
-//   { label: 'Account Information', active: false },  // Set the active step here
-//   { label: 'Site Information', active: true },
-//   { label: 'Institution Information', active: false },
-// ];
 
 interface University {
   id: string;
@@ -24,20 +15,21 @@ export const InstitutionInformation: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
   const [institutionOptions, setInstitutionOptions] = useState([{ value: '', label: 'Please Select' }]);
+  const [isCustomInstitution, setIsCustomInstitution] = useState(false); 
 
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
         const response = await sendRequest.get<{ universities: University[] }>('/universities/list');
-        const universities = response.data; 
+        const universities = response.data;
 
-        
         const options = universities.universities.map((university) => ({
           value: university.id,
           label: university.name,
         }));
-        
-        setInstitutionOptions(prevOptions => [...prevOptions, ...options]); 
+
+        const otherOption = { value: 'other', label: 'Other' };
+        setInstitutionOptions([...institutionOptions, ...options, otherOption]);
       } catch (error) {
         console.error("Error fetching universities:", error);
       }
@@ -46,30 +38,41 @@ export const InstitutionInformation: FC = () => {
     fetchUniversities();
   }, []);
 
+  const handleInstitutionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+
+    if (selectedValue === 'other') {
+      setIsCustomInstitution(true);
+      setFormData({ ...formData, institution: '' }); 
+    } else {
+      setIsCustomInstitution(false);
+      setFormData({ ...formData, institution: selectedValue });
+    }
+  };
+
   const isButtonDisabled = () => {
     return !formData.institution || (formData.role === 'Student' && !formData.studentId);
   };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-  
+
     try {
-      const endpoint = formData.role === 'Staff' 
-        ? '/staff/register' 
-        : '/student/register';
-  
+      const endpoint = formData.role === 'Staff' ? '/staff/register' : '/student/register';
+
       await sendRequest.post(endpoint, {
         name: `${formData.firstName} ${formData.lastName}`,
         password: formData.password,
         email: formData.email,
         tshirtSize: formData.tShirtSize,
+        // gender: formData.gender,
         pronouns: formData.preferredPronoun,
         allergies: formData.foodAllergies,
         accessibilityReqs: formData.accessibilityRequirements,
         universityId: formData.institution,
         studentId: formData.role === 'Student' ? formData.studentId : undefined,
       });
-  
+
       navigate('/dashboard');
     } catch (error) {
       console.error("Error during registration:", error);
@@ -79,23 +82,32 @@ export const InstitutionInformation: FC = () => {
   return (
     <FlexBackground style={{
       display: 'flex',
-      justifyContent: 'space-between', 
-      alignItems: 'flex-start', 
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
       fontFamily: 'Arial, Helvetica, sans-serif',
     }}>
-      {/* <ProgressBar steps={steps} /> */}
-      
       <div style={{ flex: 1, marginLeft: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h1 style={{ marginBottom: '20px' }}>Institution Information</h1>
 
         <DropDownInput
           label="Institution"
           options={institutionOptions}
-          value={formData.institution}
+          value={formData.institution || (isCustomInstitution ? 'other' : '')}
           required={true}
-          onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
+          onChange={handleInstitutionChange}
           width="600px"
         />
+
+        {isCustomInstitution && (
+          <TextInput
+            label="Other Institution"
+            placeholder="Please type your institution"
+            required={true}
+            value={formData.institution}
+            onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
+            width="600px"
+          />
+        )}
 
         {formData.role === 'Student' && (
           <TextInput
@@ -109,36 +121,32 @@ export const InstitutionInformation: FC = () => {
         )}
 
         <div style={styles.buttonContainer}>
-          <button style={{
-          ...styles.button}}
+          <button
+            style={{ ...styles.button }}
             onClick={() => navigate('/siteinformation')}
           >
-          Back
+            Back
           </button>
 
-          <button style={{
-          ...styles.button,
-          ...(isButtonDisabled() ? styles.buttonDisabled : {}),}}
+          <button
+            style={{ ...styles.button, ...(isButtonDisabled() ? styles.buttonDisabled : {}) }}
             disabled={isButtonDisabled()}
             onClick={handleSubmit}
           >
-          Create Account
+            Create Account
           </button>
         </div>
-        
-
       </div>
     </FlexBackground>
   );
-}
+};
 
 const styles: Record<string, React.CSSProperties> = {
   buttonContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: '90px', 
-    // marginTop: '35px',
+    gap: '90px',
   },
   button: {
     width: '150px',

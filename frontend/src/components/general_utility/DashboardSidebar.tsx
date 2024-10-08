@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import styled from "styled-components";
+import { sendRequest } from "../../utility/request";
 
 interface SidebarProps {
   name: string;
@@ -165,6 +166,12 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cr
     navigate(path);
   };
 
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    await sendRequest.post('/user/logout');
+    handleNavigation('/');
+  }
+
   return (
     <SidebarContainer cropState={cropState}> {/* Pass cropState to SidebarContainer */}
       <SidebarContent>
@@ -199,8 +206,8 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cr
         </NavLinks>
       </SidebarContent>
 
-      <LogoutButton onClick={() => handleNavigation('/')}>
-        <FaSignOutAlt /> {!cropState && <span>Logout</span>}
+      <LogoutButton onClick={handleLogout}>
+        <FaSignOutAlt /> Logout
       </LogoutButton>
     </SidebarContainer>
   );

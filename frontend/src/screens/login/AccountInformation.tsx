@@ -5,19 +5,13 @@ import TextInput from "../../components/general_utility/TextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
 
-// const steps = [
-//   { label: 'User Type', active: false },
-//   { label: 'Account Information', active: true },
-//   { label: 'Site Information', active: false },
-//   { label: 'Institution Information', active: false },
-// ];
-
 export const AccountInformation: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [showOtherGenderInput, setShowOtherGenderInput] = useState(false); // Track if the "Other" gender input should be shown
 
   const pronounOptions = [
     { value: '', label: 'Please Select' },
@@ -26,8 +20,16 @@ export const AccountInformation: FC = () => {
     { value: 'NB', label: 'They/Them' },
   ];
 
+  const genderOptions = [
+    { value: '', label: 'Please Select' },
+    { value: 'M', label: 'Male' },
+    { value: 'F', label: 'Female' },
+    { value: 'NB', label: 'Non-Binary'},
+    { value: 'other', label: 'Other'},
+  ];
+
   const isButtonDisabled = () => {
-    const { firstName, lastName, password, email, preferredPronoun } = formData;
+    const { firstName, lastName, password, email, gender } = formData;
     return (
       error !== '' ||
       password === '' ||
@@ -35,7 +37,7 @@ export const AccountInformation: FC = () => {
       firstName === '' ||
       lastName === '' ||
       email === '' ||
-      preferredPronoun === ''
+      gender === ''
     );
   };
 
@@ -48,7 +50,19 @@ export const AccountInformation: FC = () => {
     }
   };
 
+  // Handle changes to the gender dropdown
+  const handleGenderChange = (value: string) => {
+    if (value === 'other') {
+      setShowOtherGenderInput(true); // Show text input if "Other" is selected
+      setFormData({ ...formData, gender: '' }); // Clear gender value in formData initially
+    } else {
+      setShowOtherGenderInput(false);
+      setFormData({ ...formData, gender: value });
+    }
+  };
+
   const handleNext = () => {
+    console.log(formData)
     navigate('/siteinformation');
   };
 
@@ -79,26 +93,48 @@ export const AccountInformation: FC = () => {
           />
         </div>
 
+        <TextInput
+          label="Preferred Name"
+          placeholder="Please Enter"
+          type="text"
+          required={false}
+          value={formData.preferredName || ""}
+          onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
+          width="600px" 
+        />
+
         <div style={styles.doubleInputContainer}>
-          <TextInput
-            label="Preferred Name"
-            placeholder="Please Enter"
-            type="text"
-            required={false}
-            value={formData.preferredName || ""}
-            onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
+          <DropDownInput
+            label="Gender"
+            options={genderOptions}
+            value={formData.gender}
+            required={true}
+            onChange={(e) => handleGenderChange(e.target.value)}
             width="270px" 
           />
 
           <DropDownInput
             label="Preferred Pronouns"
             options={pronounOptions}
-            value={formData.preferredPronoun}
-            required={true}
+            value={formData.preferredPronoun || ''}
+            required={false}
             onChange={(e) => setFormData({ ...formData, preferredPronoun: e.target.value })}
             width="270px" 
           />
         </div>
+
+        {/* Conditionally render the text input for "Other" gender */}
+        {showOtherGenderInput && (
+          <TextInput
+            label="Please Specify Your Gender"
+            placeholder="Enter your gender"
+            type="text"
+            required={true}
+            value={formData.gender || ''}
+            onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+            width="600px"
+          />
+        )}
 
         <TextInput
           label="Email"
@@ -197,4 +233,3 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'not-allowed',
   },
 };
-
