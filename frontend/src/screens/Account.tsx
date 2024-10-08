@@ -1,15 +1,19 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
+import defaultProfile from "../components/assets/default-profile.jpg";
 
 interface User {
   role: "student" | "staff"
   name: string;
+  preferredName: string;
   email: string;
   affiliation: string;
   gender: "Male" | "Female" | "Other";
+  preferredPronouns: "She/Her" | "He/Him" | "They/Them" | "Other";
   profilePic: string;
+  tshirtSize: string;
   dietaryPreferences: string;
   allergyPreferences: string;
   accessibilityPreferences: string;
@@ -24,85 +28,91 @@ interface CompetitionDetails {
   bio: string;
   previousCompetitions: string; 
   competitionResults: string; 
-}
+};
 
 const AccountContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
   height: 100vh;
   width: 100vw;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
-  overflow: hidden;
 `;
 
 const CardContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 90%;
-  gap: 40px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  width: 100%;
+  overflow-y: auto;
+  max-height: 100vh;
+  
+  & > * {
+    flex: 1 1 300px;
+    margin: 20px;
+  }
 `;
 
 const AccountCard = styled.div`
   background-color: ${({ theme }) => theme.background};
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 45%;
-  height: auto;
+  padding: 15px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  flex: 1 0;
   text-align: center;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
   word-wrap: break-word;
-  max-height: 100%;
+  max-height: 90%;
 `;
 
 const ProfilePic = styled.div<{ imageUrl: string }>`
-  width: 10rem;
-  height: 10rem;
-  background-color: blueviolet;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  margin-bottom: 1rem;
   background-image: url(${(props) => props.imageUrl});
   background-size: cover;
   background-position: center;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 const DetailsCard = styled.div`
   text-align: left;
-  margin-top: 2rem;
+  padding: 10px;
 `;
 
 const AccountItem = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
   margin-right: 20px;
 `;
 
 const Label = styled.label`
-  font-weight: bold;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const DetailsText = styled.div`
-  margin: 0.5rem 0;
+  margin: 10px 0;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 0.8rem;
-  margin-top: 0.5rem;
+  padding: 10px;
+  margin-top: 10px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  border-radius: 1rem;
+  border-radius: 20px;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
 `;
 
 const Select = styled.select`
-  padding: 1rem;
+  padding: 15px;
+  margin-top: 10px;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
-  border-radius: 0.5rem;
+  border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   width: 100%;
 `;
@@ -118,13 +128,13 @@ const ActionButtons = styled.div`
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 20px;
 `;
 
 const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
-  padding: 1rem 2rem;
+  padding: 15px 20px;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 10px;
   cursor: pointer;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.fonts.colour};
@@ -167,17 +177,20 @@ const Textarea = styled.textarea`
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 1rem;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
-  resize: vertical; // Allows the user to resize vertically
+  resize: vertical;
 `;
 
 export const Account: FC = () => {
   const [user, setUser] = useState<User>({
     role: "student",
     name: "John Doe",
+    preferredName: "Johnny",
     email: "john.doe@example.com",
     affiliation: "UNSW",
     gender: "Male",
+    preferredPronouns: "He/Him",
     profilePic: "../components/assets/default-profile.jpg",
+    tshirtSize: "Male L",
     dietaryPreferences: "N/A",
     allergyPreferences: "N/A",
     accessibilityPreferences: "N/A",
@@ -194,30 +207,53 @@ export const Account: FC = () => {
     competitionResults: "N/A",
   });
 
-  const [editingCard, setEditingCard] = useState<"user" | "competition" | null>(null);
-  const [newDetails, setNewDetails] = useState<User>(user);
+  const [isEditingUser, setIsEditingUser] = useState(false);
+  const [isEditingComp, setIsEditingComp] = useState(false);
+  
+  const [newDetails, setNewDetails] = useState<User>({
+    ...user,
+    profilePic: defaultProfile,
+  });
   const [newCompDetails, setNewCompDetails] = useState<CompetitionDetails>(compDetails);
 
-  const handleEdit = (card: "user" | "competition") => {
-    setEditingCard(card);
+  const handleEditUser = () => {
+    setIsEditingUser(true);
   };
 
-  const handleSave = () => {
+  const handleEditComp = () => {
+    setIsEditingComp(true);
+  };
+
+  const handleSaveUser = () => {
     setUser(newDetails);
-    setCompDetails(newCompDetails);
-    setEditingCard(null);
+    setIsEditingUser(false);
   };
 
-  const handleCancel = () => {
+  const handleSaveComp = () => {
+    setCompDetails(newCompDetails);
+    setIsEditingComp(false);
+  };
+
+  const handleCancelUser = () => {
     setNewDetails(user);
+    setIsEditingUser(false);
+  };
+
+  const handleCancelComp = () => {
     setNewCompDetails(compDetails);
-    setEditingCard(null);
+    setIsEditingComp(false);
   };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const photoFile = e.target.files?.[0];
 
     if (photoFile) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(photoFile.type)) {
+        alert("Unsupported file format. Please upload a JPEG, PNG, or GIF.");
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setNewDetails({ ...newDetails, profilePic: reader.result as string });
@@ -228,25 +264,21 @@ export const Account: FC = () => {
 
   return (
     <FlexBackground>
-      <DashboardSidebar name={user.name} affiliation={user.affiliation} cropState={false}/>
+      <DashboardSidebar name={user.name} affiliation={user.affiliation} cropState={false} />
       <AccountContainer>
         <CardContainer>
           <AccountCard>
-            <ProfilePic imageUrl={newDetails.profilePic} />
+            <ProfilePic imageUrl={newDetails.profilePic || defaultProfile } />
             <DetailsCard>
               <AccountItem>
                 <Label>Profile Picture:</Label>
-                {editingCard === "user" ? (
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                  />
-                ) : null}
+                {isEditingUser && (
+                  <Input type="file" accept="image/*" onChange={handlePhotoUpload} />
+                )}
               </AccountItem>
               <AccountItem>
                 <Label>Name:</Label>
-                {editingCard === "user" ? (
+                {isEditingUser ? (
                   <Input
                     type="text"
                     value={newDetails.name}
@@ -257,8 +289,20 @@ export const Account: FC = () => {
                 )}
               </AccountItem>
               <AccountItem>
+                <Label>Preferred Name:</Label>
+                {isEditingUser ? (
+                  <Input
+                    type="text"
+                    value={newDetails.preferredName}
+                    onChange={(e) => setNewDetails({ ...newDetails, preferredName: e.target.value })}
+                  />
+                ) : (
+                  <DetailsText>{user.preferredName}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
                 <Label>Email:</Label>
-                {editingCard === "user" ? (
+                {isEditingUser ? (
                   <Input
                     type="email"
                     value={newDetails.email}
@@ -270,7 +314,7 @@ export const Account: FC = () => {
               </AccountItem>
               <AccountItem>
                 <Label>Affiliation:</Label>
-                {editingCard === "user" ? (
+                {isEditingUser ? (
                   <Input
                     type="text"
                     value={newDetails.affiliation}
@@ -282,13 +326,10 @@ export const Account: FC = () => {
               </AccountItem>
               <AccountItem>
                 <Label>Gender:</Label>
-                {editingCard === "user" ? (
+                {isEditingUser ? (
                   <Select
                     value={newDetails.gender}
-                    onChange={(e) => {
-                      setNewDetails({ ...newDetails, gender: e.target.value as "Male" | "Female" | "Other" });
-                      setNewCompDetails({ ...newCompDetails, isBoersenEligible: e.target.value !== "Male" });
-                    }}
+                    onChange={(e) => setNewDetails({ ...newDetails, gender: e.target.value as User["gender"] })}
                   >
                     <Option value="Male">Male</Option>
                     <Option value="Female">Female</Option>
@@ -299,8 +340,43 @@ export const Account: FC = () => {
                 )}
               </AccountItem>
               <AccountItem>
+                <Label>Preferred Pronouns:</Label>
+                {isEditingUser ? (
+                  <Select
+                    value={newDetails.preferredPronouns}
+                    onChange={(e) => setNewDetails({ ...newDetails, preferredPronouns: e.target.value as User["preferredPronouns"] })}
+                  >
+                    <Option value="She/Her">She/Her</Option>
+                    <Option value="He/Him">He/Him</Option>
+                    <Option value="They/Them">They/Them</Option>
+                    <Option value="Other">Other</Option>
+                  </Select>
+                ) : (
+                  <DetailsText>{user.preferredPronouns}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
+                <Label>T-Shirt Size:</Label>
+                {isEditingUser ? (
+                  <Select
+                    value={newDetails.tshirtSize}
+                    onChange={(e) => setNewDetails({ ...newDetails, tshirtSize: e.target.value })}
+                  >
+                    <Option value="Male L">Male L</Option>
+                    <Option value="Male M">Male M</Option>
+                    <Option value="Male S">Male S</Option>
+                    <Option value="Female L">Female L</Option>
+                    <Option value="Female M">Female M</Option>
+                    <Option value="Female S">Female S</Option>
+                    <Option value="Other">Other</Option>
+                  </Select>
+                ) : (
+                  <DetailsText>{user.tshirtSize}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
                 <Label>Dietary Preferences:</Label>
-                {editingCard === "user" ? (
+                {isEditingUser ? (
                   <Input
                     type="text"
                     value={newDetails.dietaryPreferences}
@@ -312,7 +388,7 @@ export const Account: FC = () => {
               </AccountItem>
               <AccountItem>
                 <Label>Allergy Preferences:</Label>
-                {editingCard === "user" ? (
+                {isEditingUser ? (
                   <Input
                     type="text"
                     value={newDetails.allergyPreferences}
@@ -324,7 +400,7 @@ export const Account: FC = () => {
               </AccountItem>
               <AccountItem>
                 <Label>Accessibility Preferences:</Label>
-                {editingCard === "user" ? (
+                {isEditingUser ? (
                   <Input
                     type="text"
                     value={newDetails.accessibilityPreferences}
@@ -336,138 +412,139 @@ export const Account: FC = () => {
               </AccountItem>
             </DetailsCard>
             <ActionButtons>
-              {editingCard === "user" ? (
+              {isEditingUser ? (
                 <ButtonGroup>
-                  <Button type="confirm" onClick={handleSave}>Save</Button>
-                  <Button type="cancel" onClick={handleCancel}>Cancel</Button>
+                  <Button type="confirm" onClick={handleSaveUser}>
+                    Save
+                  </Button>
+                  <Button type="cancel" onClick={handleCancelUser}>
+                    Cancel
+                  </Button>
                 </ButtonGroup>
               ) : (
-                <Button type="primary" onClick={() => handleEdit("user")}>Edit Profile</Button>
+                <Button type="primary" onClick={handleEditUser}>Edit</Button>
               )}
             </ActionButtons>
           </AccountCard>
-
-          {/* Conditional rendering for competition details */}
-          {user.role === "student" && (
-            <AccountCard>
-              <h3>Competition Details</h3>
-              <DetailsCard>
-                <AccountItem>
-                  <Label>Degree:</Label>
-                  {editingCard === "competition" ? (
-                    <Input
-                      type="text"
-                      value={newCompDetails.degree}
-                      onChange={(e) => setNewCompDetails({ ...newCompDetails, degree: e.target.value })}
-                    />
-                  ) : (
-                    <DetailsText>{compDetails.degree}</DetailsText>
-                  )}
-                </AccountItem>
-                <AccountItem>
-                  <Label>Year:</Label>
-                  {editingCard === "competition" ? (
-                    <Input
-                      type="number"
-                      value={newCompDetails.year}
-                      onChange={(e) => setNewCompDetails({ ...newCompDetails, year: Number(e.target.value) })}
-                    />
-                  ) : (
-                    <DetailsText>{compDetails.year}</DetailsText>
-                  )}
-                </AccountItem>
-                <AccountItem>
-                  <Label>ICPC Eligibility:</Label>
-                  {editingCard === "competition" ? (
-                    <Select
-                      value={newCompDetails.isICPCEligible ? "true" : "false"}
-                      onChange={(e) => setNewCompDetails({ ...newCompDetails, isICPCEligible: e.target.value === "true" })}
-                    >
-                      <Option value="true">Yes</Option>
-                      <Option value="false">No</Option>
-                    </Select>
-                  ) : (
-                    <DetailsText>{compDetails.isICPCEligible ? "Yes" : "No"}</DetailsText>
-                  )}
-                </AccountItem>
-                <AccountItem>
-                  <Label>Competition Level:</Label>
-                  {editingCard === "competition" ? (
-                    <Select
-                      value={newCompDetails.competitionLevel}
-                      onChange={(e) => setNewCompDetails({ ...newCompDetails, competitionLevel: e.target.value as "A" | "B" | "AB" })}
-                    >
-                      <Option value="A">A</Option>
-                      <Option value="B">B</Option>
-                      <Option value="AB">AB</Option>
-                    </Select>
-                  ) : (
-                    <DetailsText>{compDetails.competitionLevel}</DetailsText>
-                  )}
-                </AccountItem>
-                <AccountItem>
-                  <Label>Boersen Eligibility:</Label>
-                  {editingCard === "competition" ? (
-                    <Select
-                      value={newCompDetails.isBoersenEligible ? "true" : "false"}
-                      onChange={(e) => setNewCompDetails({ ...newCompDetails, isBoersenEligible: e.target.value === "true" })}
-                    >
-                      <Option value="true">Yes</Option>
-                      <Option value="false">No</Option>
-                    </Select>
-                  ) : (
-                    <DetailsText>{compDetails.isBoersenEligible ? "Yes" : "No"}</DetailsText>
-                  )}
-                </AccountItem>
-                <AccountItem>
-                  <Label>Bio:</Label>
-                  {editingCard === "competition" ? (
-                    <Textarea
-                      value={newCompDetails.bio}
-                      onChange={(e) => setNewCompDetails({ ...newCompDetails, bio: e.target.value })}
-                      rows={4} // Adjust the number of rows as needed
-                    />
-                  ) : (
-                    <DetailsText>{compDetails.bio}</DetailsText>
-                  )}
-                </AccountItem>
-                <AccountItem>
-                  <Label>Previous Competitions:</Label>
-                  {editingCard === "competition" ? (
-                    <Input
-                      type="text"
-                      value={newCompDetails.previousCompetitions}
-                      onChange={(e) => setNewCompDetails({ ...newCompDetails, previousCompetitions: e.target.value })}
-                    />
-                  ) : (
-                    <DetailsText>{compDetails.previousCompetitions}</DetailsText>
-                  )}
-                </AccountItem>
-                <AccountItem>
-                  <Label>Competition Results:</Label>
-                  {editingCard === "competition" ? (
-                    <Input
-                      type="text"
-                      value={newCompDetails.competitionResults}
-                      onChange={(e) => setNewCompDetails({ ...newCompDetails, competitionResults: e.target.value })}
-                    />
-                  ) : (
-                    <DetailsText>{compDetails.competitionResults}</DetailsText>
-                  )}
-                </AccountItem>
-              </DetailsCard>
-              <ActionButtons>
-                {editingCard === "competition" ? (
-                  <ButtonGroup>
-                    <Button type="confirm" onClick={handleSave}>Save</Button>
-                    <Button type="cancel" onClick={handleCancel}>Cancel</Button>
-                  </ButtonGroup>
+          
+          <AccountCard>
+            <DetailsCard>
+              <AccountItem>
+                <Label>Degree:</Label>
+                {isEditingComp ? (
+                  <Input
+                    type="text"
+                    value={newCompDetails.degree}
+                    onChange={(e) => setNewCompDetails({ ...newCompDetails, degree: e.target.value })}
+                  />
                 ) : (
-                  <Button type="primary" onClick={() => handleEdit("competition")}>Edit Competition Details</Button>
+                  <DetailsText>{compDetails.degree}</DetailsText>
                 )}
-              </ActionButtons>
-            </AccountCard>
-          )}
+              </AccountItem>
+              <AccountItem>
+                <Label>Year:</Label>
+                {isEditingComp ? (
+                  <Input
+                    type="number"
+                    value={newCompDetails.year}
+                    onChange={(e) => setNewCompDetails({ ...newCompDetails, year: parseInt(e.target.value) })}
+                  />
+                ) : (
+                  <DetailsText>{compDetails.year}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
+                <Label>ICPC Eligible:</Label>
+                {isEditingComp ? (
+                  <Select
+                    value={newCompDetails.isICPCEligible ? "true" : "false"}
+                    onChange={(e) => setNewCompDetails({ ...newCompDetails, isICPCEligible: e.target.value === "true" })}
+                  >
+                    <Option value="true">Yes</Option>
+                    <Option value="false">No</Option>
+                  </Select>
+                ) : (
+                  <DetailsText>{compDetails.isICPCEligible ? "Yes" : "No"}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
+                <Label>Competition Level:</Label>
+                {isEditingComp ? (
+                  <Select
+                    value={newCompDetails.competitionLevel}
+                    onChange={(e) => setNewCompDetails({ ...newCompDetails, competitionLevel: e.target.value as CompetitionDetails["competitionLevel"] })}
+                  >
+                    <Option value="A">A</Option>
+                    <Option value="B">B</Option>
+                    <Option value="AB">AB</Option>
+                  </Select>
+                ) : (
+                  <DetailsText>{compDetails.competitionLevel}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
+                <Label>Boersen Eligible:</Label>
+                {isEditingComp ? (
+                  <Select
+                    value={newCompDetails.isBoersenEligible ? "true" : "false"}
+                    onChange={(e) => setNewCompDetails({ ...newCompDetails, isBoersenEligible: e.target.value === "true" })}
+                  >
+                    <Option value="true">Yes</Option>
+                    <Option value="false">No</Option>
+                  </Select>
+                ) : (
+                  <DetailsText>{compDetails.isBoersenEligible ? "Yes" : "No"}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
+                <Label>Bio:</Label>
+                {isEditingComp ? (
+                  <Textarea
+                    value={newCompDetails.bio}
+                    onChange={(e) => setNewCompDetails({ ...newCompDetails, bio: e.target.value })}
+                  />
+                ) : (
+                  <DetailsText>{compDetails.bio}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
+                <Label>Previous Competitions:</Label>
+                {isEditingComp ? (
+                  <Textarea
+                    value={newCompDetails.previousCompetitions}
+                    onChange={(e) => setNewCompDetails({ ...newCompDetails, previousCompetitions: e.target.value })}
+                  />
+                ) : (
+                  <DetailsText>{compDetails.previousCompetitions}</DetailsText>
+                )}
+              </AccountItem>
+              <AccountItem>
+                <Label>Competition Results:</Label>
+                {isEditingComp ? (
+                  <Textarea
+                    value={newCompDetails.competitionResults}
+                    onChange={(e) => setNewCompDetails({ ...newCompDetails, competitionResults: e.target.value })}
+                  />
+                ) : (
+                  <DetailsText>{compDetails.competitionResults}</DetailsText>
+                )}
+              </AccountItem>
+            </DetailsCard>
+            <ActionButtons>
+              {isEditingComp ? (
+                <ButtonGroup>
+                  <Button type="confirm" onClick={handleSaveComp}>
+                    Save
+                  </Button>
+                  <Button type="cancel" onClick={handleCancelComp}>
+                    Cancel
+                  </Button>
+                </ButtonGroup>
+              ) : (
+                <Button type="primary" onClick={handleEditComp}>Edit</Button>
+              )}
+            </ActionButtons>
+          </AccountCard>
         </CardContainer>
       </AccountContainer>
     </FlexBackground>
