@@ -30,7 +30,7 @@ export const Settings: FC = () => {
 
   return (
   <FlexBackground>
-    <DashboardSidebar name={name} affiliation={affiliation} />
+    <DashboardSidebar name={name} affiliation={affiliation} cropState={false}/>
     <h2>Settings Page</h2>
     <div> 
     <button 

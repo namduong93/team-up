@@ -330,7 +330,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
   
   return (
     <OverflowFlexBackground>
-      <DashboardSidebar name={name} affiliation={affiliation} />
+      <DashboardSidebar name={name} affiliation={affiliation} cropState={false}/>
       <DashboardContent>
         <DashboardHeader>
           <WelcomeMessage>

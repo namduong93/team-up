@@ -1,9 +1,11 @@
 import React, { FC } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import styled from "styled-components";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { TeamCard } from "./TeamCard";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 
 
 const OverflowFlexBackground = styled(FlexBackground)`
@@ -11,14 +13,15 @@ const OverflowFlexBackground = styled(FlexBackground)`
   font-family: Arial, Helvetica, sans-serif;
 `;
 
-const SideBarDiv = styled.div`
-  background-color: #D9D9D9;
-  width: 78px;
-  min-width: 68px;
-  height: 94.92%;
-  border-radius: 20px;
-  margin: auto 1rem auto 1rem;
-`;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// const SideBarDiv = styled.div`
+//   background-color: #D9D9D9;
+//   width: 78px;
+//   min-width: 68px;
+//   height: 94.92%;
+//   border-radius: 20px;
+//   margin: auto 1rem auto 1rem;
+// `;
 
 const MainPageDiv = styled.div`
   flex: 0 1 auto;
@@ -88,7 +91,7 @@ export const CoachPage: FC = () => {
   return (
   <OverflowFlexBackground>
     {/* Sidebar */}
-    <SideBarDiv />
+    <DashboardSidebar name={"Name"} affiliation={"UNSW"} cropState={true} />
 
       <MainPageDiv>
 

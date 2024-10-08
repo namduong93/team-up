@@ -6,10 +6,11 @@ import styled from "styled-components";
 interface SidebarProps {
   name: string;
   affiliation: string;
-};
+  cropState: boolean;
+}
 
-const SidebarContainer = styled.div`
-  min-width: 200px;
+const SidebarContainer = styled.div<{ cropState: boolean }>`
+  min-width: ${({ cropState }) => (cropState ? "60px" : "200px")}; /* Adjust min-width based on cropState */
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   display: flex;
   flex-direction: column;
@@ -19,13 +20,18 @@ const SidebarContainer = styled.div`
   height: calc(100vh - 50px);
   overflow-x: hidden;
   overflow-y: auto;
+
+  @media (max-width: 600px) {
+    min-width: 60px; /* Maintain this for mobile responsiveness */
+  }
 `;
 
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 20px;
-  flex: 1;
+  flex-grow: 1;
   width: 100%;
   height: 100%;
   min-height: 600px;
@@ -42,6 +48,10 @@ const ProfileSection = styled.div`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   color: ${({ theme }) => theme.fonts.colour};
   flex-shrink: 1;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const ProfilePic = styled.div`
@@ -59,9 +69,12 @@ const Name = styled.div`
 
 const NavLinks = styled.nav`
   margin-top: 20px;
+  margin-bottom: 20px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const NavButton = styled.button<{ active: boolean }>`
@@ -72,15 +85,16 @@ const NavButton = styled.button<{ active: boolean }>`
   display: flex;
   gap: 15px;
   align-items: center;
-  padding: 20px;
+  padding: 0px;
   width: 95%;
   text-align: left;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   transition: background-color 0.3s;
   border-radius: 40px;
-  flex-shrink: 1;
+  flex-grow: 1;
   margin: 5px;
-  
+  justify-content: center;
+
   &:hover {
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.fonts.colour};
@@ -88,6 +102,16 @@ const NavButton = styled.button<{ active: boolean }>`
 
   svg {
     margin-right: 10px;
+  }
+
+  @media (max-width: 600px) {
+    justify-content: center;
+    padding: 10px;
+    gap: 0;
+
+    span {
+      display: none; /* Hide text when in crop state */
+    }
   }
 `;
 
@@ -98,7 +122,7 @@ const LogoutButton = styled.button`
   cursor: pointer;
   width: 95%;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
-  font-weight: ${({ theme }) => theme.fonts.bold}
+  font-weight: ${({ theme }) => theme.fonts.bold};
   border-radius: 40px;
   transition: background-color 0.3s;
   align-items: center;
@@ -106,57 +130,77 @@ const LogoutButton = styled.button`
   gap: 20px;
   padding: 20px;
   margin: 5px;
-  border-radius: 40px;
-  flex-shrink: 1;
   letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
   &:hover {
     background-color: ${({ theme }) => theme.colours.cancelDark};
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   }
+
+  @media (max-width: 600px) {
+    justify-content: center;
+    gap: 0;
+
+    span {
+      display: none; /* Hide text when in crop state */
+    }
+    
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
 `;
 
-export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation }) => {
+export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cropState }) => {
   const navigate = useNavigate();
-  
+
   const handleNavigation = (path: string) => {
     navigate(path);
   };
 
   return (
-    <SidebarContainer>
+    <SidebarContainer cropState={cropState}> {/* Pass cropState to SidebarContainer */}
       <SidebarContent>
-        <ProfileSection>
-          <ProfilePic />
-          <div>Hello,</div>
-          <Name>{name}</Name>
-          <div>{affiliation}</div>
-        </ProfileSection>
+        {!cropState && (
+          <ProfileSection>
+            <ProfilePic />
+            <div>Hello,</div>
+            <Name>{name}</Name>
+            <div>{affiliation}</div>
+          </ProfileSection>
+        )}
 
         <NavLinks>
           <NavButton 
             active={location.pathname === "/dashboard"}
             onClick={() => handleNavigation('/dashboard')}
           >
-            <FaHome /> Dashboard
+            <FaHome /> {!cropState && <span>Dashboard</span>}
           </NavButton>
           <NavButton 
             active={location.pathname === "/account"}
             onClick={() => handleNavigation('/account')}
           >
-            <FaUser /> Account
+            <FaUser /> {!cropState && <span>Account</span>}
           </NavButton>
           <NavButton 
             active={location.pathname === "/settings"}
             onClick={() => handleNavigation('/settings')}
           >
-            <FaCog /> Settings
+            <FaCog /> {!cropState && <span>Settings</span>}
           </NavButton>
         </NavLinks>
       </SidebarContent>
 
       <LogoutButton onClick={() => handleNavigation('/')}>
-        <FaSignOutAlt /> Logout
+        <FaSignOutAlt /> {!cropState && <span>Logout</span>}
       </LogoutButton>
     </SidebarContainer>
   );

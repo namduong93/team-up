@@ -228,7 +228,7 @@ export const Account: FC = () => {
 
   return (
     <FlexBackground>
-      <DashboardSidebar name={user.name} affiliation={user.affiliation} />
+      <DashboardSidebar name={user.name} affiliation={user.affiliation} cropState={false}/>
       <AccountContainer>
         <CardContainer>
           <AccountCard>

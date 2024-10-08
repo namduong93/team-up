@@ -11,7 +11,7 @@ export const TeamProfile: FC = () => {
 
   return (
   <FlexBackground>
-    <DashboardSidebar name={name} affiliation={affiliation} />
+    <DashboardSidebar name={name} affiliation={affiliation} cropState={false}/>
     <h2>Team profile Page</h2>
     <div> 
     
