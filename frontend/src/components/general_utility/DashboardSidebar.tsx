@@ -11,11 +11,12 @@ interface SidebarProps {
 }
 
 const SidebarContainer = styled.div<{ cropState: boolean }>`
-  min-width: ${({ cropState }) => (cropState ? "60px" : "200px")}; /* Adjust min-width based on cropState */
+  min-width: ${({ cropState }) => (cropState ? "40px" : "200px")}; /* Adjust min-width based on cropState */
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  align-items: center;
+  padding: 10px; 
   border-radius: 20px;
   margin: 15px;
   height: calc(100vh - 50px);
@@ -23,7 +24,7 @@ const SidebarContainer = styled.div<{ cropState: boolean }>`
   overflow-y: auto;
 
   @media (max-width: 600px) {
-    min-width: 60px; /* Maintain this for mobile responsiveness */
+    min-width: 35px; /* Maintain this for mobile responsiveness */
   }
 `;
 
@@ -84,6 +85,7 @@ const NavButton = styled.button<{ active: boolean }>`
   color: ${({ theme }) => theme.fonts.colour};
   cursor: pointer;
   display: flex;
+  flex-direction: column;
   gap: 15px;
   align-items: center;
   padding: 0px;
@@ -102,7 +104,8 @@ const NavButton = styled.button<{ active: boolean }>`
   }
 
   svg {
-    margin-right: 10px;
+    /* margin-right: 10px; */
+    min-width: 16px;
   }
 
   @media (max-width: 600px) {
@@ -154,6 +157,7 @@ const LogoutButton = styled.button`
     
     svg {
       width: 24px;
+      min-width: 16px;
       height: 24px;
     }
   }
@@ -207,7 +211,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cr
       </SidebarContent>
 
       <LogoutButton onClick={handleLogout}>
-        <FaSignOutAlt /> Logout
+        <FaSignOutAlt /> <span>Logout</span>
       </LogoutButton>
     </SidebarContainer>
   );

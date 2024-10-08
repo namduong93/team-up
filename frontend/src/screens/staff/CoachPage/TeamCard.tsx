@@ -67,14 +67,16 @@ const StyledHoverDiv = styled.div`
   }
 `
 
-const CardHeaderDiv = styled.div<{ statusColor: string }>`
-  background-color: ${({statusColor}) => statusColor};
+const CardHeaderDiv = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'statusColor',
+})<{ statusColor: string }>`
+  background-color: ${(props) => props.statusColor};
   height: 58px;
   width: 100%;
   border-radius: 20px 20px 0px 0px;
   display: flex;
   align-items: center;
-`
+`;
 
 const TitleSpan = styled.span`
   font-size: 1.5rem;
