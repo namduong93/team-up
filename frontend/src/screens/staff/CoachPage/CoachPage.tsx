@@ -10,7 +10,7 @@ import { DashboardSidebar } from "../../../components/general_utility/DashboardS
 
 const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

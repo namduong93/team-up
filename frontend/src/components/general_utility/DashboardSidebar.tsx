@@ -78,7 +78,7 @@ const NavLinks = styled.nav`
 `;
 
 const NavButton = styled.button<{ active: boolean }>`
-  background-color: ${({ active }) => (active ? "white" : "transparent")};
+  background-color: ${({ theme, active }) => (active ? theme.background : "transparent")};
   border: none;
   color: ${({ theme }) => theme.fonts.colour};
   cursor: pointer;
@@ -110,7 +110,7 @@ const NavButton = styled.button<{ active: boolean }>`
     gap: 0;
 
     span {
-      display: none; /* Hide text when in crop state */
+      display: none;
     }
   }
 `;
@@ -148,7 +148,7 @@ const LogoutButton = styled.button`
     gap: 0;
 
     span {
-      display: none; /* Hide text when in crop state */
+      display: none;
     }
     
     svg {

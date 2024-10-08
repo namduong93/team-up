@@ -130,6 +130,7 @@ const UniversityContainerDiv = styled.div`
   white-space: normal;
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader = false, ...props }) => {
 
   return (

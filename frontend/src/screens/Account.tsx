@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
@@ -30,6 +30,10 @@ interface CompetitionDetails {
   competitionResults: string; 
 };
 
+const Background = styled(FlexBackground)`
+  background-color: ${({ theme }) => theme.background};
+`;
+
 const AccountContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -55,7 +59,7 @@ const CardContainer = styled.div`
 `;
 
 const AccountCard = styled.div`
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.colours.sidebarBackground};
   padding: 15px;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -73,7 +77,7 @@ const ProfilePic = styled.div<{ imageUrl: string }>`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-image: url(${(props) => props.imageUrl});
+  background-image: url(${(props) => props.imageUrl || defaultProfile});
   background-size: cover;
   background-position: center;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -91,12 +95,13 @@ const AccountItem = styled.div`
 
 const Label = styled.label`
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  color: ${({ theme }) => theme.fonts.colour};
+  color: ${({ theme }) => theme.colours.primaryDark};
 `;
 
 const DetailsText = styled.div`
   margin: 10px 0;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const Input = styled.input`
@@ -263,7 +268,7 @@ export const Account: FC = () => {
   };
 
   return (
-    <FlexBackground>
+    <Background>
       <DashboardSidebar name={user.name} affiliation={user.affiliation} cropState={false} />
       <AccountContainer>
         <CardContainer>
@@ -547,6 +552,6 @@ export const Account: FC = () => {
           </AccountCard>
         </CardContainer>
       </AccountContainer>
-    </FlexBackground>
+    </Background>
   );
 };

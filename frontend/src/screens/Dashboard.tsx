@@ -27,6 +27,7 @@ const OverflowFlexBackground = styled(FlexBackground)`
   overflow: hidden;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   height: 100vh;
+  background-color: ${({ theme }) => theme.background};
 `;
 
 const DashboardContent = styled.div`
@@ -57,11 +58,10 @@ const WelcomeMessage = styled.div`
   flex-direction: column;
   justify-content: space-between;
   margin-bottom: 20px;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const WelcomeText = styled.div`
-  color: ${({ theme }) => theme.fonts.color};
-`;
+const WelcomeText = styled.div``;
 
 const ActionButtons = styled.div`
   display: flex;
@@ -154,6 +154,7 @@ const FilterTagButton = styled.button`
   padding: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
+  margin-top: 10px;
   color: ${({ theme }) => theme.fonts.colour};
   border: none;
   cursor: auto;
@@ -171,9 +172,11 @@ const RemoveFilterIcon = styled(FaTimes)`
 const SearchInput = styled.input`
   max-width: 150px;
   max-height: 38px;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border: 1px solid ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;
   padding: 10px;
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
 `;
 
 const ContentArea = styled.div`

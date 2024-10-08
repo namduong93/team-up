@@ -13,7 +13,7 @@ interface CardProps {
 }
 
 const CompCardContainer = styled.div`
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
@@ -54,6 +54,7 @@ const CardMiddle = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const CardText = styled.div`
@@ -81,6 +82,7 @@ const Role = styled.div`
   border-radius: 20px;
   padding: 8px 10px;
   width: fit-content;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: ${({ theme }) => theme.fonts.fontSizes.small};
 `;
 
