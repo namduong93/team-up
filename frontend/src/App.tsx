@@ -20,6 +20,7 @@ import { InstitutionInformation } from './screens/login/InstitutionInformation';
 import { MultiStepRegoFormProvider } from'./screens/login/MultiStepRegoForm';
 import { TeamDisplay } from './screens/staff/CoachPage/TeamDisplay';
 import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
+import { TeamProfile } from './screens/student/TeamProfile';
 
 
 function App() {
@@ -170,6 +171,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/competition/:compId/:role" element={<Competition />} />
+          <Route path="/competition/participant" element={<TeamProfile />} />
         </Routes>
       </Router>
     </ThemeProvider>

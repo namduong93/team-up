@@ -106,12 +106,13 @@ const Progress = styled.div<{ width: number }>`
 export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, compId, compCreationDate }) => {
   const navigate = useNavigate();
 
+  // for demo A
   const roleUrl = (role: string) => {
     switch (role) {
       case "Participant":
-        return `/competition/${compId}/participant`;
+        return `/competition/participant`;
       case "Coach":
-        return `/competition/${compId}/coach`;
+        return `/coach/page`;
       case "Site-Coordinator":
         return `/competition/${compId}/site-coordinator`;
       case "Admin":
@@ -120,6 +121,21 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
         return `/competition/${compId}/participant`;
     }
   };
+
+  // const roleUrl = (role: string) => {
+  //   switch (role) {
+  //     case "Participant":
+  //       return `/competition/${compId}/participant`;
+  //     case "Coach":
+  //       return `/competition/${compId}/coach`;
+  //     case "Site-Coordinator":
+  //       return `/competition/${compId}/site-coordinator`;
+  //     case "Admin":
+  //       return `/competition/${compId}/admin`;
+  //     default:
+  //       return `/competition/${compId}/participant`;
+  //   }
+  // };
 
   const compDateFormatted = format(new Date(compDate), 'MMMM yyyy');
   const today = new Date(); // Today's date
