@@ -37,7 +37,7 @@ export const InstitutionInformation: FC = () => {
           label: university.name,
         }));
         
-        setInstitutionOptions(prevOptions => [...prevOptions, ...options]); 
+        setInstitutionOptions([{value: '', label: 'Please Select' }, ...options]);
       } catch (error) {
         console.error("Error fetching universities:", error);
       }
@@ -58,7 +58,7 @@ export const InstitutionInformation: FC = () => {
         ? '/staff/register' 
         : '/student/register';
   
-      await sendRequest.post(endpoint, {
+      const response =await sendRequest.post(endpoint, {
         name: `${formData.firstName} ${formData.lastName}`,
         password: formData.password,
         email: formData.email,
@@ -69,6 +69,7 @@ export const InstitutionInformation: FC = () => {
         universityId: formData.institution,
         studentId: formData.role === 'Student' ? formData.studentId : undefined,
       });
+      console.log(response);
   
       navigate('/dashboard');
     } catch (error) {

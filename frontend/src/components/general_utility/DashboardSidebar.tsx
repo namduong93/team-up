@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import styled from "styled-components";
+import { sendRequest } from "../../utility/request";
 
 interface SidebarProps {
   name: string;
@@ -98,7 +99,7 @@ const LogoutButton = styled.button`
   cursor: pointer;
   width: 95%;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
-  font-weight: ${({ theme }) => theme.fonts.bold}
+  font-weight: ${({ theme }) => theme.fonts.bold};
   border-radius: 40px;
   transition: background-color 0.3s;
   align-items: center;
@@ -122,6 +123,12 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation }) 
   const handleNavigation = (path: string) => {
     navigate(path);
   };
+
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    await sendRequest.post('/user/logout');
+    handleNavigation('/');
+  }
 
   return (
     <SidebarContainer>
@@ -155,7 +162,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation }) 
         </NavLinks>
       </SidebarContent>
 
-      <LogoutButton onClick={() => handleNavigation('/')}>
+      <LogoutButton onClick={handleLogout}>
         <FaSignOutAlt /> Logout
       </LogoutButton>
     </SidebarContainer>

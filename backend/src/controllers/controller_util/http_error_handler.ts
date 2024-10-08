@@ -30,8 +30,8 @@ export class AppError extends Error {
   }
 }
 
-export const TOKEN_NOT_FOUND = new AppError("Token not found");
-export const INVALID_TOKEN = new AppError("Invalid token");
-export const EXPIRED_TOKEN = new AppError("Expired token");
-export const BAD_REQUEST = new AppError("Bad request");
-export const USER_NOT_FOUND = new AppError("User is not existed");
+export const TOKEN_NOT_FOUND = createHttpError(403, "Token not found");
+export const INVALID_TOKEN = createHttpError(403, "Invalid token");
+export const EXPIRED_TOKEN = createHttpError(403, "Expired token");
+export const BAD_REQUEST = createHttpError(400, "Bad request");
+export const USER_NOT_FOUND = createHttpError(400, "User is not existed");

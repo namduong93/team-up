@@ -10,6 +10,7 @@ import { backendURL } from "../../config/backendURLConfig";
 export class sendRequest {
   public static get<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
     return axios.get<T>(`${backendURL.HOST}:${backendURL.PORT}${path}?${new URLSearchParams(params)}`, {
+      withCredentials: true,
       ...headers
     });
     // only reason ... spread is used is incase in the future we want to add some headers that
@@ -18,18 +19,21 @@ export class sendRequest {
 
   public static post<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
     return axios.post<T>(`${backendURL.HOST}:${backendURL.PORT}${path}`, params, {
+      withCredentials: true,
       ...headers
     });
   }
 
   public static put<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>>  {
     return axios.put<T>(`${backendURL.HOST}:${backendURL.PORT}${path}`, params, {
+      withCredentials: true,
       ...headers
     });
   }
 
   public static delete<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
     return axios.delete<T>(`${backendURL.HOST}:${backendURL.PORT}${path}?${new URLSearchParams(params)}`, {
+      withCredentials: true,
       ...headers
     });
   }
