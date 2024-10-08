@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import styled from "styled-components";
-import { TeamCard } from "./TeamCard";
+// import { TeamCard } from "./TeamCard";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 

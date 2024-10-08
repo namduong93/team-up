@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { FC, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
@@ -102,12 +102,7 @@ const TeamMemberDiv = styled.div`
 `
 
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
-<<<<<<< HEAD
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [status, setStatus] = useState(teamDetails.status);
-=======
   const [status, _ ] = useState(teamDetails.status);
->>>>>>> main
   const colorMap = {
     'pending': '#F48385',
     'unregistered': '#FDD386',

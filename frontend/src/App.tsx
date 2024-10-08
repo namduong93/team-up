@@ -19,7 +19,7 @@ import { SiteInformation } from './screens/login/SiteInformation';
 import { InstitutionInformation } from './screens/login/InstitutionInformation';
 import { MultiStepRegoFormProvider } from'./screens/login/MultiStepRegoForm';
 import { TeamDisplay } from './screens/staff/CoachPage/TeamDisplay';
-import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
+// import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
 
 
 function App() {
@@ -133,10 +133,6 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          {/* <Route path="/roleregistration" element={<RoleRegistration />} />
-            <Route path="/accountinformation" element={<AccountInformation />} />
-            <Route path="/siteinformation" element={<SiteInformation />} />
-            <Route path="/institutioninformation" element={<InstitutionInformation />} /> */}
           {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
               {/* <Route path="/coach/page" element={<TeamsView />} /> */}
 
@@ -164,7 +160,7 @@ function App() {
           <Route path="/coach/page" element={<CoachPage />}>
               <Route index element={ <Navigate to='/coach/page/teams' /> } />
               <Route path='teams' element={ <TeamDisplay /> } />
-              <Route path='students' element={ <StudentDisplay /> } />
+              {/* <Route path='students' element={ <StudentDisplay /> } /> */}
             </Route>
           <Route path="/dashboard" element={<Dashboard name={name} affiliation={affiliation} competitions={competitions} />} />
           <Route path="/account" element={<Account />} />
