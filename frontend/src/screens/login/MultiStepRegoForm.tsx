@@ -5,7 +5,8 @@ interface FormState {
   firstName: string;
   lastName: string;
   preferredName?: string;
-  preferredPronoun: string;
+  gender: string;
+  preferredPronoun?: string;
   email: string;
   password:string;
   tShirtSize: string;
@@ -21,7 +22,8 @@ const initialState: FormState = {
   firstName: '',
   lastName: '',
   preferredName: undefined,
-  preferredPronoun: '',
+  gender: '',
+  preferredPronoun: undefined,
   email: '',
   password: '',
   tShirtSize: '',

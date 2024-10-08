@@ -154,9 +154,8 @@ export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader =
   return (
     <StudentInfoContainerDiv style={style} {...props}>
       
-      <UserNameContainerDiv>
-
-      {isHeader ? <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan> :
+       <UserNameContainerDiv>
+       {isHeader ? <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan> :
       <UserNameGrid >
         <UserIcon />
         <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan>

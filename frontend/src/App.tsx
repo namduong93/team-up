@@ -133,10 +133,6 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          {/* <Route path="/roleregistration" element={<RoleRegistration />} />
-            <Route path="/accountinformation" element={<AccountInformation />} />
-            <Route path="/siteinformation" element={<SiteInformation />} />
-            <Route path="/institutioninformation" element={<InstitutionInformation />} /> */}
           {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
               {/* <Route path="/coach/page" element={<TeamsView />} /> */}
 
