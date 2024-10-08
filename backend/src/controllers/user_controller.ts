@@ -3,6 +3,7 @@ import { UserService } from "../services/user_service.js";
 import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
 import { Staff } from "../models/user/staff/staff.js";
+import { defaultCookieOptions } from "./controller_util/cookie_options.js";
 
 export class UserController {
   private userService: UserService;
@@ -26,10 +27,7 @@ export class UserController {
     };
 
     const sessionIdObject = await this.userService.studentRegister(new_student);
-    res.cookie('sessionId', sessionIdObject.sessionId, {
-      httpOnly: true,
-      // secure: true --- for ensuring it is only sent over https (for production)
-    });
+    res.cookie('sessionId', sessionIdObject.sessionId, defaultCookieOptions);
 
     res.json({});
     return;
@@ -48,10 +46,7 @@ export class UserController {
     };
 
     const sessionIdObject = await this.userService.staffRegister(new_staff);
-    res.cookie('sessionId', sessionIdObject.sessionId, {
-      httpOnly: true,
-      // secure: true --- for ensuring it is only sent over https (for production)
-    });
+    res.cookie('sessionId', sessionIdObject.sessionId, defaultCookieOptions);
     
     res.json({});
     return;
@@ -62,10 +57,7 @@ export class UserController {
     const password = req.body.password;
 
     const sessionIdObject = await this.userService.userLogin(email, password);
-    res.cookie('sessionId', sessionIdObject.sessionId, {
-      httpOnly: true,
-      // secure: true --- for ensuring it is only sent over https (for production)
-    });
+    res.cookie('sessionId', sessionIdObject.sessionId, defaultCookieOptions);
     res.json({});
 
     return;

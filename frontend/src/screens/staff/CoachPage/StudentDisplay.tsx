@@ -88,12 +88,23 @@
 //   white-space: normal;
 // `;
 
-// const EmailContainerDiv = styled.div`
+// const EmailContainerDiv = styled.div<{ isHeader: boolean }>`
 //   width: 15%;
 //   height: 100%;
 //   display: flex;
 //   align-items: center;
 //   overflow: hidden;
+//   position: relative;
+//   ${({ isHeader }) => !isHeader &&
+//   `&:hover {
+//     overflow: visible;
+//     justify-content: center;
+//   }
+//   &:hover span {
+//     border: 1px solid black;
+//     border-radius: 10px;
+//   }`
+//   }
 // `;
 
 // const StudentIdContainerDiv = styled.div`
@@ -130,25 +141,35 @@
 //   white-space: normal;
 // `;
 
+// const EmailSpan = styled.span<{ isHeader: boolean }>`
+//   height: 100%;
+//   background-color: ${({ isHeader }) => isHeader ? 'transparent' : 'white'};
+//   display: flex;
+//   align-items: center;
+//   position: absolute;
+// `;
+
 // export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader = false, ...props }) => {
 
 //   return (
-//     <StudentInfoContainerDiv style={style}>
+//     <StudentInfoContainerDiv style={style} {...props}>
       
-//       <UserNameContainerDiv>
+// //       <UserNameContainerDiv>
 
-//       {isHeader ? <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan> :
-//       <UserNameGrid >
-//         <UserIcon />
-//         <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan>
-//       </UserNameGrid>}
-//       </UserNameContainerDiv>
+// //       {isHeader ? <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan> :
+// //       <UserNameGrid >
+// //         <UserIcon />
+// //         <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan>
+// //       </UserNameGrid>}
+// //       </UserNameContainerDiv>
         
 //         <SmallContainerDiv>
 //             {studentInfo.sex}
 //         </SmallContainerDiv>
-//         <EmailContainerDiv>
+//         <EmailContainerDiv isHeader={isHeader}>
+//           <EmailSpan isHeader={isHeader}>
 //           {studentInfo.email}
+//           </EmailSpan>
 //         </EmailContainerDiv>
 
 //         <StudentIdContainerDiv>
