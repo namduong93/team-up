@@ -115,7 +115,7 @@ export class SqlDbUserRepository implements UserRepository {
     const newUserId = userResult.rows[0].id;
 
     const staffQuery = `
-      INSERT INTO staff (user_id, university_id)
+      INSERT INTO staffs (user_id, university_id)
       VALUES ($1, $2)
       RETURNING *;
     `;
@@ -144,7 +144,6 @@ export class SqlDbUserRepository implements UserRepository {
     if (userResult.rowCount === 0) {
       return undefined;
     }
-
     if (!await bcrypt.compare(password, userResult.rows[0].hashed_password)) {
       return undefined;
     }
@@ -186,9 +185,27 @@ export class SqlDbUserRepository implements UserRepository {
     };
   }
 
-  userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
+  userType = async (userId: number): Promise<UserTypeObject | undefined> => {
+    const staff = `
+      SELECT * FROM staffs WHERE user_id = $1;
+    `;
+    const staff_result = await this.pool.query(staff, [userId]);
 
-    return { type: 'student' };
+    if (!staff_result.rowCount) {
+      return { type: 'student' };
+    }
+    else {
+      const system_admin = `
+        SELECT * FROM system_admins WHERE staff_id = $1;
+      `;
+      const system_admin_result = await this.pool.query(system_admin, [userId]);
+      if (system_admin_result.rowCount > 0) {
+        return { type: 'system_admin' };
+      }
+      else {
+        return { type: 'staff' };
+      }
+    }
   }
 
   studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {

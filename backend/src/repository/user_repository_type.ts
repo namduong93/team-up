@@ -16,7 +16,7 @@ export interface UserRepository {
   userLogin(email: string, password: string): Promise<UserIdObject | undefined>;
 
   userProfileInfo(userId: number): Promise<UserProfileInfo | undefined>;
-  userType(sessionToken: string): Promise<UserTypeObject | undefined>;
+  userType(userId: number): Promise<UserTypeObject | undefined>;
   studentDashInfo(sessionToken: string): Promise<StudentDashInfo | undefined>;
   staffDashInfo(sessionToken: string): Promise<StaffDashInfo | undefined>;
   systemAdminDashInfo(sessionToken: string): Promise<SystemAdminDashInfo | undefined>;

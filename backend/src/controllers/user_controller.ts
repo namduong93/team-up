@@ -87,7 +87,9 @@ export class UserController {
   });
 
   userType = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ type: 'student' });
+    const userId = req.query.userId;
+    const userType = await this.userService.userType(Number(userId));
+    res.json(userType);
     return;
   });
 

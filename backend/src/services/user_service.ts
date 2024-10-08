@@ -98,9 +98,9 @@ export class UserService {
     return userProfileInfo;
   }
 
-  userType = async (sessionToken: string): Promise<UserTypeObject | undefined> => {
-    
-    return { type: 'student' };
+  userType = async (userId: number): Promise<UserTypeObject | undefined> => {
+    const userType = await this.userRepository.userType(userId);
+    return { type: userType.type };
   }
 
   studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {
