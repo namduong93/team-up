@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
 import { FaBell, FaFilter, FaSort, FaTimes } from "react-icons/fa";
@@ -8,6 +8,8 @@ import { FilterSelect } from "../components/general_utility/FilterSelect";
 import { ActionButton } from "../components/general_utility/ActionButton";
 import { SortSelect } from "../components/general_utility/SortSelect";
 import { Notifications } from "../components/general_utility/Notifications";
+import { sendRequest } from "../utility/request";
+import { useNavigate } from "react-router-dom";
 interface Competition {
   compName: string;
   location: string;
@@ -195,8 +197,10 @@ const CompetitionGrid = styled.div`
 `;
 
 export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions }) => {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -211,6 +215,25 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
   ];
 
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await sendRequest.get<{ preferredName: string }>('/student/dash_info');
+        // Can also store the preferredName from the response and use it in the sidebar.
+        // Request any personal info needed here and then if there's an auth error in any of them
+        // the page will redirect.
+        setIsLoaded(true);
+      } catch (error: unknown) {
+        sendRequest.handleErrorStatus(error, [403], () => {
+          setIsLoaded(false);
+          navigate('/');
+          console.log('Authentication Error: ', error);
+        });
+        // can handle other codes or types of errors here if needed.
+      }
+    })();
+  }, []);
 
   // "YYYY-MM-DD" format
   const today = new Date().toISOString().split("T")[0];
@@ -322,7 +345,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
     }
   });
   
-  return (
+  return (isLoaded &&
     <OverflowFlexBackground>
       <DashboardSidebar name={name} affiliation={affiliation} />
       <DashboardContent>

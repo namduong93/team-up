@@ -21,7 +21,7 @@ export const Landing: FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await sendRequest.post('/user/login');
+      await sendRequest.post('/user/login', { email, password });
       navigate('/dashboard')
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
     } catch (error: unknown) {

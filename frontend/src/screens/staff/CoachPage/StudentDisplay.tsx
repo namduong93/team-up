@@ -133,7 +133,7 @@ const UniversityContainerDiv = styled.div`
 export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader = false, ...props }) => {
 
   return (
-    <StudentInfoContainerDiv style={style}>
+    <StudentInfoContainerDiv style={style} {...props}>
       
       <UserNameContainerDiv>
 
