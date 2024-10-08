@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
-import { FaBell, FaFilter, FaSort, FaTimes } from "react-icons/fa";
+import { FaBell, FaFilter, FaTimes } from "react-icons/fa";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import { CompCard } from "../components/general_utility/CompCard";
 import { FilterSelect } from "../components/general_utility/FilterSelect";
@@ -10,6 +10,7 @@ import { SortSelect } from "../components/general_utility/SortSelect";
 import { Notifications } from "../components/general_utility/Notifications";
 import { sendRequest } from "../utility/request";
 import { useNavigate } from "react-router-dom";
+import { SortButtonResponsive, SortContainer } from "./staff/CoachPage/CoachPage";
 interface Competition {
   compName: string;
   location: string;
@@ -47,7 +48,7 @@ const DashboardHeader = styled.div`
   min-height: 117px;
   min-width: fit-content;
   align-items: center;
-  overflow-x: auto;
+  overflow-x: visible;
   min-width: 500px;
   gap: 30px;
   margin-right: 20px;
@@ -98,6 +99,8 @@ const SortFilterSearch = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
+  width: 100%;
+  max-width: 360px;
 `;
 
 const FilterButton = styled.button<{ isFilterOpen: boolean }>`
@@ -124,7 +127,7 @@ const FilterButton = styled.button<{ isFilterOpen: boolean }>`
   }
 `;
 
-const SortButton = styled.button<{ isSortOpen: boolean }>`
+export const SortButton = styled.button<{ isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colours.filterText};
@@ -367,18 +370,36 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
             </RegisterAlert>
             
             <SortFilterSearch>
-            <SortButton
-              isSortOpen={isSortOpen}
-              onClick={handleSortToggle}
-            >
-              <FaSort /> Sort
-            </SortButton>
-              <FilterButton
-                isFilterOpen={isFilterOpen}
-                onClick={handleFilterToggle}
-              >
-                <FaFilter /> Filter
-              </FilterButton>
+
+              <SortContainer>
+                <SortButtonResponsive
+                  isSortOpen={isSortOpen}
+                  onClick={handleSortToggle}
+                >
+                </SortButtonResponsive>
+                {isSortOpen && (
+                <SortSelect
+                  options={sortOptions}
+                  onSortChange={(selectedSort) => setSortOption(selectedSort)}
+                  isOpen={isSortOpen}
+                />
+                )}
+              </SortContainer>
+              
+              <div style={{ position: 'relative' }}>
+                <FilterButton
+                  isFilterOpen={isFilterOpen}
+                  onClick={handleFilterToggle}
+                >
+                  <FaFilter /> Filter
+                </FilterButton>
+                <FilterSelect
+                  options={filterOptions}
+                  onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
+                  isOpen={isFilterOpen}
+                  currentFilters={filters}
+                />
+              </div>
               <SearchInput
                 type="text"
                 placeholder="Search"
@@ -419,12 +440,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
           />
         </div> */}
 
-        <FilterSelect
-            options={filterOptions}
-            onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
-            isOpen={isFilterOpen}
-            currentFilters={filters}
-          />
+        
 
         {/* Sort Dropdown */}
         {/* <div ref={sortRef}>
@@ -436,14 +452,6 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
             />
           )}
         </div> */}
-
-          {isSortOpen && (
-            <SortSelect
-              options={sortOptions}
-              onSortChange={(selectedSort) => setSortOption(selectedSort)}
-              isOpen={isSortOpen}
-            />
-          )}
         
         <ContentArea>
           <CompetitionGrid>
