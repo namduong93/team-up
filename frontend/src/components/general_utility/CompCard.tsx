@@ -7,7 +7,7 @@ interface CardProps {
   compName: string;
   location: string;
   compDate: string;
-  role: string;
+  roles: string[];
   compId: string;
   compCreationDate: string;
 }
@@ -68,12 +68,19 @@ const CardBottom = styled.div`
   margin-top: 10px;
 `;
 
+const RoleContainer = styled.div`
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+`;
+
 const Role = styled.div`
   background-color: ${({ theme }) => theme.colours.primaryDark};
   color: ${({ theme }) => theme.background};
   border: none;
   border-radius: 20px;
   padding: 8px 10px;
+  width: fit-content;
   font-size: ${({ theme }) => theme.fonts.fontSizes.small};
 `;
 
@@ -96,7 +103,7 @@ const Progress = styled.div<{ width: number }>`
   width: ${({ width }) => `${width}%`};
 `;
 
-export const CompCard: FC<CardProps> = ({ compName, location, compDate, role, compId, compCreationDate }) => {
+export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, compId, compCreationDate }) => {
   const navigate = useNavigate();
 
   const roleUrl = (role: string) => {
@@ -125,7 +132,7 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, role, co
   // calculate the progress width
   const progressWidth = totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100; // set to 100% if no days left
   return (
-    <CompCardContainer onClick={() => navigate(roleUrl(role))}>
+    <CompCardContainer onClick={() => navigate(roleUrl(roles[0]))}>
       <CardHeader>
         <CardTop>
           <CompHeader>
@@ -140,7 +147,11 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, role, co
       </CardMiddle>
 
       <CardBottom>
-        <Role>{role}</Role>
+        <RoleContainer>
+          {roles.map((role, index) => (
+            <Role key={index}>{role}</Role>
+          ))}
+        </RoleContainer>
         <Countdown>{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</Countdown>
       </CardBottom>
 

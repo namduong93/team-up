@@ -12,7 +12,7 @@ interface Competition {
   compName: string;
   location: string;
   compDate: string; // format: "YYYY-MM-DD"
-  role: string;
+  roles: string[];
   compId: string;
   compCreationDate: string;
 }
@@ -218,7 +218,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
   // filter options based on the Competition fields (location, role, status, year)
   const filterOptions = {
     Location: Array.from(new Set(competitions.map(comp => comp.location))).sort(),
-    Role: Array.from(new Set(competitions.map(comp => comp.role))),
+    Role: Array.from(new Set(competitions.flatMap(comp => comp.roles))),
     Status: ["Completed", "Upcoming"],
     Year: Array.from(new Set(competitions.map(comp => comp.compDate.split("-")[0]))).sort((a, b) => parseInt(a) - parseInt(b)),
   };
@@ -258,7 +258,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
     return (
       comp.compName.toLowerCase().includes(searchLower) ||
       comp.location.toLowerCase().includes(searchLower) ||
-      comp.role.toLowerCase().includes(searchLower) ||
+      comp.roles.some(role => role.toLowerCase().includes(searchLower)) ||
       compDateMonth.includes(searchLower)
     );
   };
@@ -268,18 +268,24 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
       matchesSearch(comp) && // filter by search criteria
       Object.keys(filters).every((field) => {
         if (!filters[field].length) return true;
-
         if (field === "Status") {
-          const isCompleted = today > comp.compDate;
-          return filters.Status.includes(isCompleted ? "Completed" : "Upcoming");
+          return (
+            (comp.compDate < today && filters[field].includes("Completed")) ||
+            (comp.compDate >= today && filters[field].includes("Upcoming"))
+          );
         }
         if (field === "Year") {
-          const year = comp.compDate.split("-")[0];
-          return filters.Year.includes(year);
+          return filters[field].includes(comp.compDate.split("-")[0]);
         }
-
-        const fieldKey = field.toLowerCase() as keyof Competition;
-        return filters[field].includes(comp[fieldKey] as unknown as string);
+        return filters[field].some((filterValue) => {
+          if (field === "Location") {
+            return comp.location === filterValue;
+          }
+          if (field === "Role") {
+            return comp.roles.includes(filterValue);
+          }
+          return false;
+        });
       })
     );
   });
@@ -430,7 +436,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
                 compName={comp.compName}
                 location={comp.location}
                 compDate={comp.compDate}
-                role={comp.role}
+                roles={comp.roles}
                 compId={comp.compId}
                 compCreationDate={comp.compCreationDate}
               />
