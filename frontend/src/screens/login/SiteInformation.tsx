@@ -81,7 +81,7 @@ export const SiteInformation: FC = () => {
           label="Dietary Requirements"
           descriptor="Please select one or more options, or specify 'Other' if applicable"
         />
-        <p>Selected options: {formData.dietaryRequirements?.join(', ') || []}</p>
+        {/* <p>Selected options: {formData.dietaryRequirements?.join(', ') || []}</p> */}
 
         <DescriptiveTextInput
           label="Accessibility Requirements"
