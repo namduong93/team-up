@@ -20,6 +20,7 @@ import { InstitutionInformation } from './screens/login/InstitutionInformation';
 import { MultiStepRegoFormProvider } from'./screens/login/MultiStepRegoForm';
 import { TeamDisplay } from './screens/staff/CoachPage/TeamDisplay';
 import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
+import { TeamProfile } from './screens/student/TeamProfile';
 
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
         compName: 'ICPC 2024',
         location: 'Kazakhstan',
         compDate: new Date('2024-09-01').toISOString(),
-        role: 'Participant',
+        roles: ['Participant'],
         compId: 'abc1',
         compCreationDate: new Date('2024-04-01').toISOString(),
     },
@@ -40,7 +41,7 @@ function App() {
         compName: 'ICPC 2024',
         location: 'USA',
         compDate: new Date('2024-11-01').toISOString(),
-        role: 'Coach',
+        roles: ['Coach'],
         compId: 'abc2',
         compCreationDate: new Date('2024-07-01').toISOString(),
     },
@@ -48,7 +49,7 @@ function App() {
         compName: 'ICPC 2024',
         location: 'India',
         compDate: new Date('2024-12-01').toISOString(),
-        role: 'Admin',
+        roles: ['Admin'],
         compId: 'abc9',
         compCreationDate: new Date('2024-08-01').toISOString(),
     },
@@ -56,7 +57,7 @@ function App() {
         compName: 'ICPC 2025',
         location: 'Kazakhstan',
         compDate: new Date('2025-09-01').toISOString(),
-        role: 'Participant',
+        roles: ['Participant'],
         compId: 'abc3',
         compCreationDate: new Date('2024-10-07').toISOString(),
     },
@@ -64,7 +65,7 @@ function App() {
         compName: 'ICPC 2022',
         location: 'USA',
         compDate: new Date('2022-11-01').toISOString(),
-        role: 'Coach',
+        roles: ['Coach', 'Site-Coordinator'],
         compId: 'abc4',
         compCreationDate: new Date('2022-07-01').toISOString(),
     },
@@ -72,7 +73,7 @@ function App() {
         compName: 'ICPC 2023',
         location: 'India',
         compDate: new Date('2023-12-01').toISOString(),
-        role: 'Admin',
+        roles: ['Admin'],
         compId: 'abc5',
         compCreationDate: new Date('2023-08-01').toISOString(),
     },
@@ -80,7 +81,7 @@ function App() {
         compName: 'ICPC 2024',
         location: 'Kazakhstan',
         compDate: new Date('2024-09-01').toISOString(),
-        role: 'Participant',
+        roles: ['Participant'],
         compId: 'abc6',
         compCreationDate: new Date('2024-05-01').toISOString(),
     },
@@ -88,7 +89,7 @@ function App() {
         compName: 'ICPC 2024',
         location: 'USA',
         compDate: new Date('2024-11-01').toISOString(),
-        role: 'Site-Coordinator',
+        roles: ['Site-Coordinator'],
         compId: 'abc7',
         compCreationDate: new Date('2024-07-01').toISOString(),
     },
@@ -96,7 +97,7 @@ function App() {
         compName: 'ICPC 2024',
         location: 'India',
         compDate: new Date('2024-12-01').toISOString(),
-        role: 'Admin',
+        roles: ['Admin'],
         compId: 'abc8',
         compCreationDate: new Date('2024-08-01').toISOString(),
     }
@@ -166,6 +167,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/competition/:compId/:role" element={<Competition />} />
+          <Route path="/competition/participant" element={<TeamProfile />} />
         </Routes>
       </Router>
     </ThemeProvider>

@@ -49,7 +49,7 @@ const PopUpOverlay = styled.div`
 `;
 
 const PopUpContent = styled.div`
-  background: white;
+  background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
   padding: 20px;
   text-align: center;
@@ -59,15 +59,16 @@ const PopUpContent = styled.div`
 const Question = styled.div`
   padding: 20px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const ConfirmButton = styled.button`
   background-color: ${({ theme }) => theme.colours.confirm};
   color: ${({ theme }) => theme.fonts.colour};
-  padding: 15px;
+  padding: 10px 15px 10px 15px;
+  border-radius: 20px;
   border: none;
-  border-radius: 10px;
-  margin: 10px;
+  margin: 15px;
   cursor: pointer;
 
   &:hover {
@@ -79,10 +80,10 @@ const ConfirmButton = styled.button`
 const CancelButton = styled.button`
   background-color: ${({ theme }) => theme.colours.cancel};
   color: ${({ theme }) => theme.fonts.colour};
-  padding: 15px;
+  padding: 10px 15px 10px 15px;
+  border-radius: 20px;
   border: none;
-  border-radius: 10px;
-  margin: 10px;
+  margin: 15px;
   cursor: pointer;
 
   &:hover {

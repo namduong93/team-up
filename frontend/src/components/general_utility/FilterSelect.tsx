@@ -36,8 +36,8 @@ const FieldTitle = styled.h3`
 const OptionButton = styled.button<{ selected: boolean }>`
   background-color: ${({ selected, theme }) =>
     selected ? theme.colours.optionSelected : theme.colours.optionUnselected};
-  color: ${({ theme }) => theme.fonts.colour};
-  margin: 5px;
+  color: ${({ selected, theme }) =>
+    selected ? theme.background : theme.fonts.colour};  margin: 5px;
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -45,6 +45,7 @@ const OptionButton = styled.button<{ selected: boolean }>`
 
   &:hover {
     background-color: ${({ theme }) => theme.colours.optionSelected};
+    color: ${({ theme }) => theme.background};
   }
 `;
 

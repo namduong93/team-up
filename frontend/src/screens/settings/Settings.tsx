@@ -1,16 +1,50 @@
 import { FC, useState, useEffect } from "react";
+import { ThemeProvider } from "styled-components";
 import { FlexBackground } from "../../components/general_utility/Background";
-// import { useNavigate } from "react-router-dom";
 import { defaultTheme } from "../../themes/defaultTheme";
 import { darkTheme } from "../../themes/darkTheme";
 import { DashboardSidebar } from "../../components/general_utility/DashboardSidebar";
+import styled from "styled-components";
+
+const Background = styled(FlexBackground)`
+  background-color: ${({ theme }) => theme.background};
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+`;
+
+const ToggleButton = styled.button<{ isDarkTheme: boolean }>`
+  background-color: ${({ isDarkTheme, theme }) =>
+    isDarkTheme ? theme.colours.primaryDark : theme.colours.primaryLight};
+  color: ${({ isDarkTheme, theme }) =>
+    isDarkTheme ? theme.background : theme.fonts.colour };
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const Title = styled.h2`
+  margin-bottom: 20px;
+`;
+
+const SettingsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: ${({ theme }) => theme.fonts.colour};
+`;
 
 export const Settings: FC = () => {
-  // const navigate = useNavigate();
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const name = "Name";
   const affiliation = "UNSW";
 
+  // load saved theme from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
@@ -18,31 +52,25 @@ export const Settings: FC = () => {
     }
   }, []);
 
+  // toggle between dark and light theme
   const toggleTheme = () => {
     const newTheme = !isDarkTheme ? "dark" : "light";
     setIsDarkTheme(!isDarkTheme);
     localStorage.setItem("theme", newTheme);
-
-    // trigger app to update theme
     window.dispatchEvent(new Event("storage"));
   };
 
-
   return (
-  <FlexBackground>
-    <DashboardSidebar name={name} affiliation={affiliation} />
-    <h2>Settings Page</h2>
-    <div> 
-    <button 
-        onClick={toggleTheme} 
-        style={{
-          background: isDarkTheme ? darkTheme.colours.primaryDark : defaultTheme.colours.primaryLight,
-          color: isDarkTheme ? darkTheme.colours.primaryLight : defaultTheme.colours.primaryDark,
-        }}
-      >
-        Toggle to {isDarkTheme ? "Light" : "Dark"} Theme
-      </button>
-    </div>
-  </FlexBackground>
+    <ThemeProvider theme={isDarkTheme ? darkTheme : defaultTheme}>
+      <Background>
+        <DashboardSidebar name={name} affiliation={affiliation} cropState={false} />
+        <SettingsContainer>
+          <Title>Settings Page</Title>
+          <ToggleButton isDarkTheme={isDarkTheme} onClick={toggleTheme}>
+            Toggle to {isDarkTheme ? "Light" : "Dark"} Theme
+          </ToggleButton>
+        </SettingsContainer>
+      </Background>
+    </ThemeProvider>
   );
-}
+};

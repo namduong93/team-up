@@ -102,6 +102,7 @@ const TeamMemberDiv = styled.div`
 `
 
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, _ ] = useState(teamDetails.status);
   const colorMap = {
     'pending': '#F48385',

@@ -7,13 +7,13 @@ interface CardProps {
   compName: string;
   location: string;
   compDate: string;
-  role: string;
+  roles: string[];
   compId: string;
   compCreationDate: string;
 }
 
 const CompCardContainer = styled.div`
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
@@ -54,6 +54,7 @@ const CardMiddle = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const CardText = styled.div`
@@ -68,12 +69,20 @@ const CardBottom = styled.div`
   margin-top: 10px;
 `;
 
+const RoleContainer = styled.div`
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+`;
+
 const Role = styled.div`
   background-color: ${({ theme }) => theme.colours.primaryDark};
   color: ${({ theme }) => theme.background};
   border: none;
   border-radius: 20px;
   padding: 8px 10px;
+  width: fit-content;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: ${({ theme }) => theme.fonts.fontSizes.small};
 `;
 
@@ -96,15 +105,16 @@ const Progress = styled.div<{ width: number }>`
   width: ${({ width }) => `${width}%`};
 `;
 
-export const CompCard: FC<CardProps> = ({ compName, location, compDate, role, compId, compCreationDate }) => {
+export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, compId, compCreationDate }) => {
   const navigate = useNavigate();
 
+  // for demo A
   const roleUrl = (role: string) => {
     switch (role) {
       case "Participant":
-        return `/competition/${compId}/participant`;
+        return `/competition/participant`;
       case "Coach":
-        return `/competition/${compId}/coach`;
+        return `/coach/page`;
       case "Site-Coordinator":
         return `/competition/${compId}/site-coordinator`;
       case "Admin":
@@ -113,6 +123,21 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, role, co
         return `/competition/${compId}/participant`;
     }
   };
+
+  // const roleUrl = (role: string) => {
+  //   switch (role) {
+  //     case "Participant":
+  //       return `/competition/${compId}/participant`;
+  //     case "Coach":
+  //       return `/competition/${compId}/coach`;
+  //     case "Site-Coordinator":
+  //       return `/competition/${compId}/site-coordinator`;
+  //     case "Admin":
+  //       return `/competition/${compId}/admin`;
+  //     default:
+  //       return `/competition/${compId}/participant`;
+  //   }
+  // };
 
   const compDateFormatted = format(new Date(compDate), 'MMMM yyyy');
   const today = new Date(); // Today's date
@@ -125,7 +150,7 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, role, co
   // calculate the progress width
   const progressWidth = totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100; // set to 100% if no days left
   return (
-    <CompCardContainer onClick={() => navigate(roleUrl(role))}>
+    <CompCardContainer onClick={() => navigate(roleUrl(roles[0]))}>
       <CardHeader>
         <CardTop>
           <CompHeader>
@@ -140,7 +165,11 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, role, co
       </CardMiddle>
 
       <CardBottom>
-        <Role>{role}</Role>
+        <RoleContainer>
+          {roles.map((role, index) => (
+            <Role key={index}>{role}</Role>
+          ))}
+        </RoleContainer>
         <Countdown>{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</Countdown>
       </CardBottom>
 
