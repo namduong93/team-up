@@ -108,7 +108,7 @@ export const SortButtonResponsive: FC<ResponsiveSortButtonProps> = ({ onClick, s
       alignContent: 'center',
       minWidth: '29px',
       ...style
-    }} isSortOpen={isSortOpen} {...props}>
+    }} $isSortOpen={isSortOpen} {...props}>
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
           <FaSort style={{ height: '50%', flex: '0 0 auto' }} />

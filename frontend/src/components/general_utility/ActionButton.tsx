@@ -9,7 +9,7 @@ interface ActionButtonProps {
   actionType: "primary" | "secondary";
 };
 
-const Button = styled.button<{ actionType: "primary" | "secondary" }>`
+const Button = styled.button<{ $actionType: "primary" | "secondary" }>`
   border-radius: 10px;
   border: none;
   padding: 10px 20px;
@@ -17,7 +17,7 @@ const Button = styled.button<{ actionType: "primary" | "secondary" }>`
   width: 150px;
   letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
   
-  background-color: ${({ actionType, theme }) =>
+  background-color: ${({ $actionType: actionType, theme }) =>
     actionType === "primary" 
       ? theme.colours.primaryLight 
       : theme.colours.secondaryLight};
@@ -26,7 +26,7 @@ const Button = styled.button<{ actionType: "primary" | "secondary" }>`
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ actionType, theme }) =>
+    background-color: ${({ $actionType: actionType, theme }) =>
       actionType === "primary" 
         ? theme.colours.primaryDark 
         : theme.colours.secondaryDark};
@@ -102,7 +102,7 @@ export const ActionButton: FC<ActionButtonProps> = ({ actionName, question, redi
 
   return (
     <>
-      <Button actionType={actionType} onClick={() => setIsOpen(true)}>
+      <Button $actionType={actionType} onClick={() => setIsOpen(true)}>
         {actionName}
       </Button>
       {isOpen && (
