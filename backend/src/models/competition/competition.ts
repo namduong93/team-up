@@ -1,11 +1,12 @@
 
 export interface Competition {
-  id: number,
+  id?: number,
   name: string,
-  teamSize: number,
+  teamSize?: number,
   earlyRegDeadline: EpochTimeStamp,
   generalRegDeadline: EpochTimeStamp,
-  code: string
+  siteLocations: CompetitionSiteObject[],
+  code?: string
 }
 
 export const enum CompetitionUserType {
@@ -14,3 +15,7 @@ export const enum CompetitionUserType {
   SITE_COORDINATOR = 'site_coordinator',
   SYSTEM_ADMIN = 'system_admin'
 }
+
+export type CompetitionIdObject = { competitionId: number };
+
+export type CompetitionSiteObject = { universityId?: number | undefined, address?: string };

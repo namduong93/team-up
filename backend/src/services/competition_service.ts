@@ -1,7 +1,6 @@
+import { Competition, CompetitionIdObject, CompetitionSiteObject } from "../models/competition/competition.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
 
-export type CompetitionCodeObject = { code: string };
-export type UniversitySiteInput = { universityId: number, defaultSite: string };
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
 export type UniversityDisplayInfo = { id: number, name: string };
@@ -38,12 +37,10 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
   }
 
-  competitionsSystemAdminCreate = async (sessionToken: string, name: string,
-    earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
-    siteLocations: Array<UniversitySiteInput>): Promise<CompetitionCodeObject | undefined> => {
-
-    // Once the competition is created return the code of it
-    return { code: 'REG12345' };
+  competitionsSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
+    const competitionId = await this.competitionRepository.competitionsSystemAdminCreate(userId, competition);
+    
+    return competitionId;
   }
 
   competitionStudentJoin0 = async (sessionToken: string, code: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {

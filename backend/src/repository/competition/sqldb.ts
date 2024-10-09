@@ -1,6 +1,14 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo, UniversitySiteInput } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
+import { Competition, CompetitionIdObject } from "../../models/competition/competition.js";
+import ShortUniqueId from "short-unique-id";
+
+// Set up short-unique-id library for generating competition codes
+const { randomUUID } = new ShortUniqueId({
+  dictionary: 'alphanum_upper',
+  length: 8
+});
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -9,11 +17,40 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
-  competitionsSystemAdminCreate = async (sessionToken: string, name: string,
-    earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
-    siteLocations: Array<UniversitySiteInput>, competitionCode: string): Promise<void | undefined> => {
-    
-    return;
+  competitionsSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
+    // Set default team size to 3 if not provided
+    const teamSize = competition.teamSize ?? 3;
+
+    // Create new competition code
+    const competitionCode = randomUUID(); // TODO: check if code already exists
+
+    // Insert competition into competitions table
+    const competitionQuery = `
+      INSERT INTO competitions (name, team_size, early_reg_deadline, general_reg_deadline, code)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING id, code;
+    `;
+    const competitionValues = [
+      competition.name,
+      teamSize,
+      new Date(competition.earlyRegDeadline),
+      new Date(competition.generalRegDeadline),
+      competitionCode
+    ];
+
+    const competitionResult = await this.pool.query(competitionQuery, competitionValues);
+    const competitionId = competitionResult.rows[0].id;
+
+    // Insert user as competition admin into competition_admins table
+    const adminQuery = `
+      INSERT INTO competition_admins (staff_id, competition_id)
+      VALUES ($1, $2)
+      RETURNING *;
+    `;
+    await this.pool.query(adminQuery, [userId, competitionId]);
+
+    // Return the competition code
+    return { competitionId: competitionId };    
   }
 
   competitionStudentJoin0 = async (sessionToken: string,

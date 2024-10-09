@@ -118,7 +118,7 @@ app.get('/user/type', userController.userType);
 app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 
 // PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
-//          siteLocations: Array<{ universityId: number, defaultSite: string }> }
+//          siteLocations: Array<{ universityId: number, address?: string }> }
 // RESPONSE: { code: string }
 app.post('/competitions/system_admin/create', competitionController.competitionsSystemAdminCreate);
 

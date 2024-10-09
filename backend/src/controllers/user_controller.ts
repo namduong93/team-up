@@ -80,8 +80,8 @@ export class UserController {
 
   userType = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const userType = await this.userService.userType(Number(userId));
-    res.json(userType);
+    const userTypeObject = await this.userService.userType(Number(userId));
+    res.json(userTypeObject);
     return;
   });
 
