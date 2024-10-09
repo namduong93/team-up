@@ -41,7 +41,7 @@ const SortOption = styled.div<{ isSelected: boolean }>`
     background-color: ${({ theme }) => theme.colours.primaryLight};
   }
 `;
-export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, style, isOpen }) => {
+export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, isOpen }) => {
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   
   const handleSortChange = (value: string) => {
@@ -53,7 +53,7 @@ export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, style, 
   if (!isOpen) return null;
 
   return (
-    <SortContainer style={style} isOpen={isOpen}>
+    <SortContainer isOpen={isOpen}>
       {options.map((option) => (
         <SortOption
           key={option.value}

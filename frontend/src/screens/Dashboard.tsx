@@ -1,21 +1,18 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
-import { FaBell, FaFilter, FaTimes } from "react-icons/fa";
+import { FaBell, FaFilter, FaSort, FaTimes } from "react-icons/fa";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import { CompCard } from "../components/general_utility/CompCard";
 import { FilterSelect } from "../components/general_utility/FilterSelect";
 import { ActionButton } from "../components/general_utility/ActionButton";
 import { SortSelect } from "../components/general_utility/SortSelect";
 import { Notifications } from "../components/general_utility/Notifications";
-import { sendRequest } from "../utility/request";
-import { useNavigate } from "react-router-dom";
-import { SortButtonResponsive, SortContainer } from "./staff/CoachPage/CoachPage";
 interface Competition {
   compName: string;
   location: string;
   compDate: string; // format: "YYYY-MM-DD"
-  role: string;
+  roles: string[];
   compId: string;
   compCreationDate: string;
 }
@@ -30,6 +27,7 @@ const OverflowFlexBackground = styled(FlexBackground)`
   overflow: hidden;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   height: 100vh;
+  background-color: ${({ theme }) => theme.background};
 `;
 
 const DashboardContent = styled.div`
@@ -48,7 +46,7 @@ const DashboardHeader = styled.div`
   min-height: 117px;
   min-width: fit-content;
   align-items: center;
-  overflow-x: visible;
+  overflow-x: auto;
   min-width: 500px;
   gap: 30px;
   margin-right: 20px;
@@ -60,11 +58,10 @@ const WelcomeMessage = styled.div`
   flex-direction: column;
   justify-content: space-between;
   margin-bottom: 20px;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const WelcomeText = styled.div`
-  color: ${({ theme }) => theme.fonts.color};
-`;
+const WelcomeText = styled.div``;
 
 const ActionButtons = styled.div`
   display: flex;
@@ -99,8 +96,6 @@ const SortFilterSearch = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
-  width: 100%;
-  max-width: 360px;
 `;
 
 const FilterButton = styled.button<{ isFilterOpen: boolean }>`
@@ -159,6 +154,7 @@ const FilterTagButton = styled.button`
   padding: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
+  margin-top: 10px;
   color: ${({ theme }) => theme.fonts.colour};
   border: none;
   cursor: auto;
@@ -176,9 +172,11 @@ const RemoveFilterIcon = styled(FaTimes)`
 const SearchInput = styled.input`
   max-width: 150px;
   max-height: 38px;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border: 1px solid ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;
   padding: 10px;
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
 `;
 
 const ContentArea = styled.div`
@@ -200,10 +198,8 @@ const CompetitionGrid = styled.div`
 `;
 
 export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions }) => {
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -219,32 +215,13 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
 
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        await sendRequest.get<{ preferredName: string }>('/student/dash_info');
-        // Can also store the preferredName from the response and use it in the sidebar.
-        // Request any personal info needed here and then if there's an auth error in any of them
-        // the page will redirect.
-        setIsLoaded(true);
-      } catch (error: unknown) {
-        sendRequest.handleErrorStatus(error, [403], () => {
-          setIsLoaded(false);
-          navigate('/');
-          console.log('Authentication Error: ', error);
-        });
-        // can handle other codes or types of errors here if needed.
-      }
-    })();
-  }, []);
-
   // "YYYY-MM-DD" format
   const today = new Date().toISOString().split("T")[0];
 
   // filter options based on the Competition fields (location, role, status, year)
   const filterOptions = {
     Location: Array.from(new Set(competitions.map(comp => comp.location))).sort(),
-    Role: Array.from(new Set(competitions.map(comp => comp.role))),
+    Role: Array.from(new Set(competitions.flatMap(comp => comp.roles))),
     Status: ["Completed", "Upcoming"],
     Year: Array.from(new Set(competitions.map(comp => comp.compDate.split("-")[0]))).sort((a, b) => parseInt(a) - parseInt(b)),
   };
@@ -284,7 +261,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
     return (
       comp.compName.toLowerCase().includes(searchLower) ||
       comp.location.toLowerCase().includes(searchLower) ||
-      comp.role.toLowerCase().includes(searchLower) ||
+      comp.roles.some(role => role.toLowerCase().includes(searchLower)) ||
       compDateMonth.includes(searchLower)
     );
   };
@@ -294,18 +271,24 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
       matchesSearch(comp) && // filter by search criteria
       Object.keys(filters).every((field) => {
         if (!filters[field].length) return true;
-
         if (field === "Status") {
-          const isCompleted = today > comp.compDate;
-          return filters.Status.includes(isCompleted ? "Completed" : "Upcoming");
+          return (
+            (comp.compDate < today && filters[field].includes("Completed")) ||
+            (comp.compDate >= today && filters[field].includes("Upcoming"))
+          );
         }
         if (field === "Year") {
-          const year = comp.compDate.split("-")[0];
-          return filters.Year.includes(year);
+          return filters[field].includes(comp.compDate.split("-")[0]);
         }
-
-        const fieldKey = field.toLowerCase() as keyof Competition;
-        return filters[field].includes(comp[fieldKey] as unknown as string);
+        return filters[field].some((filterValue) => {
+          if (field === "Location") {
+            return comp.location === filterValue;
+          }
+          if (field === "Role") {
+            return comp.roles.includes(filterValue);
+          }
+          return false;
+        });
       })
     );
   });
@@ -348,9 +331,9 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
     }
   });
   
-  return (isLoaded &&
+  return (
     <OverflowFlexBackground>
-      <DashboardSidebar name={name} affiliation={affiliation} />
+      <DashboardSidebar name={name} affiliation={affiliation} cropState={false}/>
       <DashboardContent>
         <DashboardHeader>
           <WelcomeMessage>
@@ -370,36 +353,18 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
             </RegisterAlert>
             
             <SortFilterSearch>
-
-              <SortContainer>
-                <SortButtonResponsive
-                  isSortOpen={isSortOpen}
-                  onClick={handleSortToggle}
-                >
-                </SortButtonResponsive>
-                {isSortOpen && (
-                <SortSelect
-                  options={sortOptions}
-                  onSortChange={(selectedSort) => setSortOption(selectedSort)}
-                  isOpen={isSortOpen}
-                />
-                )}
-              </SortContainer>
-              
-              <div style={{ position: 'relative' }}>
-                <FilterButton
-                  isFilterOpen={isFilterOpen}
-                  onClick={handleFilterToggle}
-                >
-                  <FaFilter /> Filter
-                </FilterButton>
-                <FilterSelect
-                  options={filterOptions}
-                  onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
-                  isOpen={isFilterOpen}
-                  currentFilters={filters}
-                />
-              </div>
+            <SortButton
+              isSortOpen={isSortOpen}
+              onClick={handleSortToggle}
+            >
+              <FaSort /> Sort
+            </SortButton>
+              <FilterButton
+                isFilterOpen={isFilterOpen}
+                onClick={handleFilterToggle}
+              >
+                <FaFilter /> Filter
+              </FilterButton>
               <SearchInput
                 type="text"
                 placeholder="Search"
@@ -440,7 +405,12 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
           />
         </div> */}
 
-        
+        <FilterSelect
+            options={filterOptions}
+            onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
+            isOpen={isFilterOpen}
+            currentFilters={filters}
+          />
 
         {/* Sort Dropdown */}
         {/* <div ref={sortRef}>
@@ -452,6 +422,14 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
             />
           )}
         </div> */}
+
+          {isSortOpen && (
+            <SortSelect
+              options={sortOptions}
+              onSortChange={(selectedSort) => setSortOption(selectedSort)}
+              isOpen={isSortOpen}
+            />
+          )}
         
         <ContentArea>
           <CompetitionGrid>
@@ -461,7 +439,7 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
                 compName={comp.compName}
                 location={comp.location}
                 compDate={comp.compDate}
-                role={comp.role}
+                roles={comp.roles}
                 compId={comp.compId}
                 compCreationDate={comp.compCreationDate}
               />

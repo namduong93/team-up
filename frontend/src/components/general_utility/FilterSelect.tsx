@@ -9,8 +9,10 @@ interface FilterSelectProps {
 
 const FilterContainer = styled.div<{ isOpen: boolean }>`
   position: absolute;
-  top: 33px;
-  right: 0;
+  // top: 33px;
+  // right: 0;
+  top: 140px;
+  right: 30px;
   z-index: 1000;
   background-color: ${({ theme }) => theme.background};
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -18,7 +20,8 @@ const FilterContainer = styled.div<{ isOpen: boolean }>`
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   display: ${({ isOpen }) => (isOpen ? "block" : "none")};
   padding: 10px;
-  width: 250%;
+  // width: 250%;
+  width: fit-content;
   height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
@@ -36,8 +39,8 @@ const FieldTitle = styled.h3`
 const OptionButton = styled.button<{ selected: boolean }>`
   background-color: ${({ selected, theme }) =>
     selected ? theme.colours.optionSelected : theme.colours.optionUnselected};
-  color: ${({ theme }) => theme.fonts.colour};
-  margin: 5px;
+  color: ${({ selected, theme }) =>
+    selected ? theme.background : theme.fonts.colour};  margin: 5px;
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -45,6 +48,7 @@ const OptionButton = styled.button<{ selected: boolean }>`
 
   &:hover {
     background-color: ${({ theme }) => theme.colours.optionSelected};
+    color: ${({ theme }) => theme.background};
   }
 `;
 

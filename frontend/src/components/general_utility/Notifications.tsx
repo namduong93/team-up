@@ -13,7 +13,7 @@ const NotificationsContainer = styled.div`
   position: absolute;
   top: 58px;
   right: 30px;
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   width: 40%;
@@ -24,7 +24,7 @@ const NotificationsContainer = styled.div`
 
 const NotificationItem = styled.div`
   padding: 15px 20px;
-  border-bottom: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border-bottom: 1px solid ${({ theme }) => theme.background};
   display: flex;
   justify-content: space-between;
   align-items: center;
