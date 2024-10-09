@@ -16,12 +16,6 @@ export class CompetitionController {
   competitionsSystemAdminCreate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
 
-    // Verify system admin
-    const userTypeObject = await this.userService.userType(Number(userId));
-    if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
-      throw INVALID_TOKEN;
-    }
-
     const newCompetition: Competition = {
       name: req.body.name,
       earlyRegDeadline: req.body.earlyRegDeadline,
@@ -30,7 +24,7 @@ export class CompetitionController {
     };
 
     const competitionId = await this.competitionService.competitionsSystemAdminCreate(Number(userId), newCompetition);
-    
+
     res.json(competitionId);
 
     return;

@@ -1,5 +1,8 @@
+import { INVALID_TOKEN } from "../controllers/controller_util/http_error_handler.js";
 import { Competition, CompetitionIdObject, CompetitionSiteObject } from "../models/competition/competition.js";
+import { UserType } from "../models/user/user.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
+import { UserRepository } from "../repository/user_repository_type.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -32,12 +35,21 @@ export interface TeamMateData {
 
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
+  private userRepository: UserRepository;
 
-  constructor(competitionRepository: CompetitionRepository) {
+  constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository) {
     this.competitionRepository = competitionRepository;
+    this.userRepository = userRepository;
   }
 
   competitionsSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
+    // Verify system admin
+    const userTypeObject = await this.userRepository.userType(userId);
+    
+    if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
+      throw INVALID_TOKEN;
+    }
+    
     const competitionId = await this.competitionRepository.competitionsSystemAdminCreate(userId, competition);
     
     return competitionId;

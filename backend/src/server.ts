@@ -53,7 +53,7 @@ const userController = new UserController(userService);
 
 //Competition Registry
 const competitionRepository = new SqlDbCompetitionRepository(pool);
-const competitionService = new CompetitionService(competitionRepository);
+const competitionService = new CompetitionService(competitionRepository, userRepository);
 const competitionController = new CompetitionController(competitionService);
 
 const universityRepository = new SqlDbUniversityRepository(pool);
