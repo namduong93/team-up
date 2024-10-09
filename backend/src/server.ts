@@ -106,16 +106,7 @@ app.post('/user/logout', userController.userLogout);
 // RESPONSE: { name, email, university, gender, bio, tshirtSize, pronouns?, allergies?, accessibilityReqs? }
 app.get('/user/profile_info', userController.userProfileInfo);
 
-// PARAMS: {}
-// RESPONSE: { degree, degreeYear, ICPCEligible, boersenEligible, competitionLevel }
-// app.get('/student/profile_info', userController.studentProfileInfo);
-
-
-// PARAMS: {}
-// RESPONSE: {} --- DEV: all staff specific info.
-// app.get('/staff/profile_info', userController.staffProfileInfo);
-
-// Gets the type of user, 'staff', 'student' OR 'system_admin'
+// Gets the type of user, 'staff', 'student' OR 'system_admin' OR 'staff'
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
 // RESPONSE: { type: string }
 app.get('/user/type', userController.userType);

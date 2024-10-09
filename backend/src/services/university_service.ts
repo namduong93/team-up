@@ -2,8 +2,6 @@
 import { UniversityListObject } from "../models/university/university.js";
 import { UniversityRepository } from "../repository/university_repository_type.js";
 
-export type UserTypeObject = { type: string };
-
 export type SessionIdObject = { sessionId: string };
 
 export class UniversityService {
