@@ -29,6 +29,16 @@ export class CompetitionController {
     return;
   });
 
+  competitionsSystemAdminList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+
+    const competitions = await this.competitionService.competitionsSystemAdminList(Number(userId));
+
+    res.json(competitions);
+
+    return;
+  });
+
   competitionStudentJoin0 = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({ incompleteTeamId: 1 });
     return;

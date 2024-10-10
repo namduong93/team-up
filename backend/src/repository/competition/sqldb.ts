@@ -73,6 +73,49 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionId: competitionId };    
   }
 
+  competitionsSystemAdminList = async(userId: number): Promise<Array<Competition> | undefined> => {
+    // Find all competition ids that user is an admin for
+    const competitionIdsQuery = `
+      SELECT competition_id 
+      FROM competition_admins 
+      WHERE staff_id = $1
+    `;
+
+    const competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+    const competitionIdArray = competitionIdsResult.rows.map(row => row.competition_id);
+    
+    // Find competition details for each competition
+    let competitions: Competition[] = [];
+    for (const competitionId of competitionIdArray) {
+      // Find competition details
+      const competitionDetailsQuery = `
+        SELECT name, team_size, early_reg_deadline, general_reg_deadline, code
+        FROM competitions
+        WHERE id = $1
+      `;
+
+      const competitionDetailsResult = await this.pool.query(competitionDetailsQuery, [competitionId]);
+      const competition = competitionDetailsResult.rows[0];
+
+      // Find site details
+      const siteQuery = `
+        SELECT university_id, name
+        FROM competition_sites
+        WHERE competition_id = $1
+      `;
+
+      const siteResult = await this.pool.query(siteQuery, [competitionId]);
+      const siteLocations = siteResult.rows;
+
+      // Add site details to competition object
+      competition.siteLocations = siteLocations;
+
+      competitions.push(competition);
+    }
+
+    return competitions;
+  }
+
   competitionStudentJoin0 = async (sessionToken: string,
     individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {
 

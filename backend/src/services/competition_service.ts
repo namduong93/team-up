@@ -55,6 +55,18 @@ export class CompetitionService {
     return competitionId;
   }
 
+  competitionsSystemAdminList = async (userId: number): Promise<Array<Competition> | undefined> => {
+    // Verify system admin
+    const userTypeObject = await this.userRepository.userType(userId);
+
+    if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
+      throw INVALID_TOKEN;
+    }
+
+    const competitions = await this.competitionRepository.competitionsSystemAdminList(userId);
+    return competitions;
+  }
+
   competitionStudentJoin0 = async (sessionToken: string, code: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {
 
     return { incompleteTeamId: 1 };

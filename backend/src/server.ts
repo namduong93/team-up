@@ -124,6 +124,11 @@ app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 // RESPONSE: { code: string }
 app.post('/competitions/system_admin/create', competitionController.competitionsSystemAdminCreate);
 
+// Gets all competitions that this system admin has created
+// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
+// RESPONSE: { Competition[] }
+app.get('/competitions/system_admin/list', competitionController.competitionsSystemAdminList);
+
 // Student join competition with 0 friends
 // PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
