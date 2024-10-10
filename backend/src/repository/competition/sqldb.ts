@@ -73,6 +73,62 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionId: competitionId };    
   }
 
+  competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{} | undefined> => {
+    // Verify if userId is an admin of this competition
+    const adminCheckQuery = `
+      SELECT 1
+      FROM competition_admins
+      WHERE staff_id = $1 AND competition_id = $2
+    `;
+
+    const adminCheckResult = await this.pool.query(adminCheckQuery, [userId, competition.id]);
+
+    if (adminCheckResult.rowCount === 0) {
+      return undefined; // TODO: throw unique error
+    }
+
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [competition.id]);
+
+    if (competitionExistResult.rowCount === 0) {
+      return undefined; // TODO: throw unique error
+    }
+
+    // TODO: Handle prefilling empty fields with old info. This might have been done on the FE but we should handle it here as well
+    
+    // Update competition details
+    const competitionUpdateQuery = `
+      UPDATE competitions
+      SET name = $1, team_size = $2, early_reg_deadline = $3, general_reg_deadline = $4
+      WHERE id = $5;
+    `;
+
+    const competitionUpdateValues = [
+      competition.name,
+      competition.teamSize,
+      new Date(competition.earlyRegDeadline),
+      new Date(competition.generalRegDeadline),
+      competition.id
+    ];
+
+    await this.pool.query(competitionUpdateQuery, competitionUpdateValues);
+
+    // Skip updating site details if siteLocations is not provided
+    if (!competition.siteLocations) {
+      return {};
+    }
+
+    // TODO: handle site updates
+
+    return {};
+  }
+
   competitionsSystemAdminList = async(userId: number): Promise<Array<Competition> | undefined> => {
     // Find all competition ids that user is an admin for
     const competitionIdsQuery = `

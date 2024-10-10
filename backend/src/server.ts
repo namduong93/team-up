@@ -119,10 +119,17 @@ app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
-// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
+// PARAMS: { name: string, teamSize?: number, earlyRegDeadline, generalRegDeadline,
 //          siteLocations: Array<{ universityId: number, name: string }> }
 // RESPONSE: { competitionId: number }
 app.post('/competition/system_admin/create', competitionController.competitionsSystemAdminCreate);
+
+// Update a competition's details
+// TODO: Handle empty field cases (FE may prefill it, but if not we want to fill it with old info)
+// PARAMS: { id: number, name?: string, teamSize?: number, earlyRegDeadline?: Date, generalRegDeadline?: Date,
+//          siteLocations?: Array<{ universityId: number, name: string }> }
+// RESPONSE: {}
+app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
 // Gets all competitions that this system admin has created
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie

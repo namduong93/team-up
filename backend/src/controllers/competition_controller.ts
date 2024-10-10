@@ -29,6 +29,25 @@ export class CompetitionController {
     return;
   });
 
+  competitionSystemAdminUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+
+    const newCompetitionDetails: Competition = {
+      id: req.body.id,
+      name: req.body.name,
+      teamSize: req.body.teamSize,
+      earlyRegDeadline: req.body.earlyRegDeadline,
+      generalRegDeadline: req.body.generalRegDeadline,
+      siteLocations: req.body.siteLocations,
+    };
+
+    const competitionId = await this.competitionService.competitionSystemAdminUpdate(Number(userId), newCompetitionDetails);
+
+    res.json(competitionId);
+
+    return;
+  });
+
   competitionsSystemAdminList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
 

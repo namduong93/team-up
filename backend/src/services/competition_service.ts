@@ -1,4 +1,4 @@
-import { INVALID_TOKEN } from "../controllers/controller_util/http_error_handler.js";
+import { BAD_REQUEST, INVALID_TOKEN } from "../controllers/controller_util/http_error_handler.js";
 import { Competition, CompetitionIdObject, CompetitionSiteObject } from "../models/competition/competition.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
@@ -51,6 +51,24 @@ export class CompetitionService {
     }
     
     const competitionId = await this.competitionRepository.competitionSystemAdminCreate(userId, competition);
+    
+    return competitionId;
+  }
+
+  competitionSystemAdminUpdate = async (userId: number, competition: Competition): Promise<{} | undefined> => {
+    // Verify system admin
+    const userTypeObject = await this.userRepository.userType(userId);
+    
+    if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
+      throw INVALID_TOKEN;
+    }
+    
+    const competitionId = await this.competitionRepository.competitionSystemAdminUpdate(userId, competition);
+
+    // TODO: Handle different HTTP status codes after updating error handling
+    if (!competitionId) {
+      throw BAD_REQUEST;
+    }
     
     return competitionId;
   }

@@ -3,6 +3,7 @@ import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, Tea
 
 export interface CompetitionRepository {
   competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
+  competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{} | undefined>;
   competitionsSystemAdminList(userId: number): Promise<Array<Competition> | undefined>;
 
   competitionStudentJoin0(sessionToken: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined>;
