@@ -131,11 +131,6 @@ app.post('/competition/system_admin/create', competitionController.competitionsS
 // RESPONSE: {}
 app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
-// Gets all competitions that this system admin has created
-// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
-// RESPONSE: { Competition[] }
-app.get('/competitions/system_admin/list', competitionController.competitionsSystemAdminList);
-
 // Student join competition with 0 friends
 // PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
@@ -180,6 +175,11 @@ app.post('/competition/staff/join/admin', competitionController.competitionStaff
 // RESPONSW: {universities: Array<{id: number, name: string}>}
 // TODO: Add it into middleware
 app.get('/universities/list', universityController.universitiesList);
+
+// Gets all competitions that this user is a part of
+// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
+// RESPONSE: { Competition[] }
+app.get('/competitions/list', competitionController.competitionsList);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

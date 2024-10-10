@@ -3,6 +3,7 @@ import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, Tea
 import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionIdObject } from "../../models/competition/competition.js";
 import ShortUniqueId from "short-unique-id";
+import { UserType, UserTypeObject } from "../../models/user/user.js";
 
 // Set up short-unique-id library for generating competition codes
 const { randomUUID } = new ShortUniqueId({
@@ -129,23 +130,38 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
-  competitionsSystemAdminList = async(userId: number): Promise<Array<Competition> | undefined> => {
-    // Find all competition ids that user is an admin for
-    const competitionIdsQuery = `
-      SELECT competition_id 
-      FROM competition_admins 
-      WHERE staff_id = $1
-    `;
+  competitionsList = async(userId: number, userType: UserTypeObject): Promise<Array<Competition> | undefined> => {
+    let competitionIdsQuery: string;
+    let competitionIdsResult;
 
-    const competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+    if (userType.type === UserType.SYSTEM_ADMIN) {
+      // Find all competition ids that user is an admin for
+      competitionIdsQuery = `
+        SELECT competition_id 
+        FROM competition_admins 
+        WHERE staff_id = $1
+      `;
+      competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+    } else if (userType.type === 'student') {
+      // Find all competition ids that user is a participant in
+      competitionIdsQuery = `
+        SELECT competition_id 
+        FROM competition_participants 
+        WHERE student_id = $1
+      `;
+      competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+    } else {
+      return undefined; // TODO: handle cases where user is coach or site coordinator
+    }
+
     const competitionIdArray = competitionIdsResult.rows.map(row => row.competition_id);
-    
+
     // Find competition details for each competition
     let competitions: Competition[] = [];
     for (const competitionId of competitionIdArray) {
       // Find competition details
       const competitionDetailsQuery = `
-        SELECT name, team_size, early_reg_deadline, general_reg_deadline, code
+        SELECT id, name, team_size, early_reg_deadline, general_reg_deadline, code
         FROM competitions
         WHERE id = $1
       `;

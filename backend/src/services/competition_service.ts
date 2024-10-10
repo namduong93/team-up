@@ -73,15 +73,12 @@ export class CompetitionService {
     return competitionId;
   }
 
-  competitionsSystemAdminList = async (userId: number): Promise<Array<Competition> | undefined> => {
-    // Verify system admin
+  competitionsList = async (userId: number): Promise<Array<Competition> | undefined> => {
+    // Get user type for easier database queries
     const userTypeObject = await this.userRepository.userType(userId);
 
-    if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
-      throw INVALID_TOKEN;
-    }
-
-    const competitions = await this.competitionRepository.competitionsSystemAdminList(userId);
+    const competitions = await this.competitionRepository.competitionsList(userId, userTypeObject);
+    
     return competitions;
   }
 

@@ -48,10 +48,10 @@ export class CompetitionController {
     return;
   });
 
-  competitionsSystemAdminList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+  competitionsList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
 
-    const competitions = await this.competitionService.competitionsSystemAdminList(Number(userId));
+    const competitions = await this.competitionService.competitionsList(Number(userId));
 
     res.json(competitions);
 
