@@ -1,9 +1,10 @@
-import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo, UniversitySiteInput } from "../services/competition_service.js";
+import { Competition, CompetitionDetailsObject, CompetitionIdObject } from "../models/competition/competition.js";
+import { UserType } from "../models/user/user.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 
 export interface CompetitionRepository {
-  competitionsSystemAdminCreate(sessionToken: string, name: string,
-  earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
-  siteLocations: Array<UniversitySiteInput>, competitionCode: string): Promise<void | undefined>;
+  competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
+  competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{} | undefined>;
 
   competitionStudentJoin0(sessionToken: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined>;
   competitionStudentJoin1(sessionToken: string, individualInfo: IndividualTeamInfo,
@@ -15,4 +16,6 @@ export interface CompetitionRepository {
   competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;
   competitionStaffJoinAdmin(code: string): Promise<{} | undefined>;
   competitionUniversitiesList(competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
+
+  competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionDetailsObject> | undefined>;
 }

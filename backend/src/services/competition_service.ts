@@ -1,7 +1,9 @@
+import { BAD_REQUEST, INVALID_TOKEN } from "../controllers/controller_util/http_error_handler.js";
+import { Competition, CompetitionDetailsObject, CompetitionIdObject } from "../models/competition/competition.js";
+import { UserType } from "../models/user/user.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
+import { UserRepository } from "../repository/user_repository_type.js";
 
-export type CompetitionCodeObject = { code: string };
-export type UniversitySiteInput = { universityId: number, defaultSite: string };
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
 export type UniversityDisplayInfo = { id: number, name: string };
@@ -33,17 +35,51 @@ export interface TeamMateData {
 
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
+  private userRepository: UserRepository;
 
-  constructor(competitionRepository: CompetitionRepository) {
+  constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository) {
     this.competitionRepository = competitionRepository;
+    this.userRepository = userRepository;
   }
 
-  competitionsSystemAdminCreate = async (sessionToken: string, name: string,
-    earlyRegDeadline: EpochTimeStamp, generalRegDeadline: EpochTimeStamp,
-    siteLocations: Array<UniversitySiteInput>): Promise<CompetitionCodeObject | undefined> => {
+  competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
+    // Verify system admin
+    const userTypeObject = await this.userRepository.userType(userId);
+    
+    if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
+      throw INVALID_TOKEN;
+    }
+    
+    const competitionId = await this.competitionRepository.competitionSystemAdminCreate(userId, competition);
+    
+    return competitionId;
+  }
 
-    // Once the competition is created return the code of it
-    return { code: 'REG12345' };
+  competitionSystemAdminUpdate = async (userId: number, competition: Competition): Promise<{} | undefined> => {
+    // Verify system admin
+    const userTypeObject = await this.userRepository.userType(userId);
+    
+    if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
+      throw INVALID_TOKEN;
+    }
+    
+    const competitionId = await this.competitionRepository.competitionSystemAdminUpdate(userId, competition);
+
+    // TODO: Handle different HTTP status codes after updating error handling
+    if (!competitionId) {
+      throw BAD_REQUEST;
+    }
+    
+    return competitionId;
+  }
+
+  competitionsList = async (userId: number): Promise<Array<CompetitionDetailsObject> | undefined> => {
+    // Get user type for easier database queries
+    const userTypeObject = await this.userRepository.userType(userId);
+
+    const competitions = await this.competitionRepository.competitionsList(userId, userTypeObject.type);
+    
+    return competitions;
   }
 
   competitionStudentJoin0 = async (sessionToken: string, code: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {

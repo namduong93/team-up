@@ -53,7 +53,7 @@ const userController = new UserController(userService);
 
 //Competition Registry
 const competitionRepository = new SqlDbCompetitionRepository(pool);
-const competitionService = new CompetitionService(competitionRepository);
+const competitionService = new CompetitionService(competitionRepository, userRepository);
 const competitionController = new CompetitionController(competitionService);
 
 const universityRepository = new SqlDbUniversityRepository(pool);
@@ -117,10 +117,19 @@ app.get('/user/type', userController.userType);
 // RESPONSE: { preferredName: string }
 app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 
-// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
-//          siteLocations: Array<{ universityId: number, defaultSite: string }> }
-// RESPONSE: { code: string }
-app.post('/competitions/system_admin/create', competitionController.competitionsSystemAdminCreate);
+// DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
+// that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
+// PARAMS: { name: string, teamSize?: number, earlyRegDeadline, generalRegDeadline,
+//          siteLocations: Array<{ universityId: number, name: string }> }
+// RESPONSE: { competitionId: number }
+app.post('/competition/system_admin/create', competitionController.competitionsSystemAdminCreate);
+
+// Update a competition's details
+// TODO: Handle empty field cases (FE may prefill it, but if not we want to fill it with old info)
+// PARAMS: { id: number, name?: string, teamSize?: number, earlyRegDeadline?: Date, generalRegDeadline?: Date,
+//          siteLocations?: Array<{ universityId: number, name: string }> }
+// RESPONSE: {}
+app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
 // Student join competition with 0 friends
 // PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote } }
@@ -166,6 +175,11 @@ app.post('/competition/staff/join/admin', competitionController.competitionStaff
 // RESPONSW: {universities: Array<{id: number, name: string}>}
 // TODO: Add it into middleware
 app.get('/universities/list', universityController.universitiesList);
+
+// Gets all competitions that this user is a part of
+// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
+// RESPONSE: { Competition[] }
+app.get('/competitions/list', competitionController.competitionsList);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

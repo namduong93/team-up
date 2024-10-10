@@ -1,16 +1,25 @@
 
 export interface Competition {
-  id: number,
+  id?: number,
   name: string,
-  teamSize: number,
+  teamSize?: number,
   earlyRegDeadline: EpochTimeStamp,
   generalRegDeadline: EpochTimeStamp,
-  code: string
+  siteLocations: CompetitionSiteObject[],
+  code?: string
 }
 
 export const enum CompetitionUserType {
-  STUDENT = 'student',
+  PARTICIPANT = 'participant',
   COACH = 'coach',
   SITE_COORDINATOR = 'site_coordinator',
   SYSTEM_ADMIN = 'system_admin'
 }
+
+export type CompetitionIdObject = { competitionId: number };
+
+// Include both the user roles for the competition and the competition details
+export type CompetitionDetailsObject = { userType: CompetitionUserType[], competition: Competition };
+
+// TODO: Revise this type
+export type CompetitionSiteObject = { universityId: number, name: string, address?: string, capacity?: number };
