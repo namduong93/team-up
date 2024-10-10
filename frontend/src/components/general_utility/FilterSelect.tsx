@@ -7,7 +7,7 @@ interface FilterSelectProps {
   currentFilters: { [field: string]: string[] };
 }
 
-const FilterContainer = styled.div<{ isOpen: boolean }>`
+const FilterContainer = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   // top: 33px;
   // right: 0;
@@ -18,7 +18,7 @@ const FilterContainer = styled.div<{ isOpen: boolean }>`
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 10px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
   padding: 10px;
   // width: 250%;
   width: fit-content;
@@ -85,7 +85,7 @@ export const FilterSelect: FC<FilterSelectProps> = ({
   };
 
   return (
-    <FilterContainer isOpen={isOpen}>
+    <FilterContainer $isOpen={isOpen}>
       {Object.entries(options).map(([field, values]) => (
         <FilterField key={field}>
           <FieldTitle>{field}</FieldTitle>

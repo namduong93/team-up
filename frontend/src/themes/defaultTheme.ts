@@ -1,3 +1,8 @@
+
+declare module 'styled-components' {
+  export interface DefaultTheme extends Theme {}
+}
+
 export const defaultTheme = {
   background: "#FFFFFF",
   colours: {
@@ -51,3 +56,7 @@ export const defaultTheme = {
     colour: "#000000",
   },
 };
+
+
+// However the default Theme is structured will be the type of the theme
+export type Theme = typeof defaultTheme;

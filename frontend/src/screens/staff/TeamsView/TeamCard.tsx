@@ -67,8 +67,8 @@ const StyledHoverDiv = styled.div`
   }
 `
 
-const CardHeaderDiv = styled.div<{ statusColor: string }>`
-  background-color: ${({statusColor}) => statusColor};
+const CardHeaderDiv = styled.div<{ $statusColor: string }>`
+  background-color: ${({ $statusColor }) => $statusColor};
   height: 58px;
   width: 100%;
   border-radius: 20px 20px 0px 0px;
@@ -111,7 +111,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
   };
   return (
     <StyledHoverDiv>
-      <CardHeaderDiv statusColor={colorMap[status]}>
+      <CardHeaderDiv $statusColor={colorMap[status]}>
         <TitleSpan>{teamDetails.teamName}</TitleSpan>
       </CardHeaderDiv>
 
