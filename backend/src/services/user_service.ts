@@ -99,7 +99,7 @@ export class UserService {
 
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
     const userTypeObject = await this.userRepository.userType(userId);
-    return { type: userTypeObject.type };
+    return userTypeObject;
   }
 
   studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {
