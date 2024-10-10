@@ -4,6 +4,7 @@ import { FlexBackground } from "../../components/general_utility/Background";
 import TextInput from "../../components/general_utility/TextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
+import { RegoProgressBar } from "../../components/general_utility/RegoProgressBar";
 
 export const AccountInformation: FC = () => {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ export const AccountInformation: FC = () => {
 
   return (
     <FlexBackground style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+      <RegoProgressBar progressNumber={1} />
       <div style={{ flex: 1, marginLeft: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h1 style={{ marginBottom: '20px' }}>Account Information</h1>
 
