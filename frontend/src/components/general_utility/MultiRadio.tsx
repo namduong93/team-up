@@ -112,7 +112,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: 'Arial, Helvetica, sans-serif',
   },
   otherInput: {
-    marginLeft: '0.5rem',
+    // marginLeft: '0.5rem',
     padding: '10px',
     border: '1px solid #ccc',
     borderRadius: '10px',
