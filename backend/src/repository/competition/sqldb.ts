@@ -130,11 +130,11 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
-  competitionsList = async(userId: number, userType: UserTypeObject): Promise<Array<Competition> | undefined> => {
+  competitionsList = async(userId: number, userType: UserType): Promise<Array<Competition> | undefined> => {
     let competitionIdsQuery: string;
     let competitionIdsResult;
 
-    if (userType.type === UserType.SYSTEM_ADMIN) {
+    if (userType === UserType.SYSTEM_ADMIN) {
       // Find all competition ids that user is an admin for
       competitionIdsQuery = `
         SELECT competition_id 
@@ -142,7 +142,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         WHERE staff_id = $1
       `;
       competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
-    } else if (userType.type === 'student') {
+    } else if (userType === 'student') {
       // Find all competition ids that user is a participant in
       competitionIdsQuery = `
         SELECT competition_id 
@@ -151,7 +151,23 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       `;
       competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
     } else {
-      return undefined; // TODO: handle cases where user is coach or site coordinator
+      // Find all competition ids that user is a coach for
+      competitionIdsQuery = `
+        SELECT competition_id 
+        FROM competition_coaches 
+        WHERE staff_id = $1
+      `;
+      competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+
+      if (competitionIdsResult.rowCount === 0) {
+        // If not a coach, find all competition ids that user is a site coordinator for
+        competitionIdsQuery = `
+          SELECT competition_id 
+          FROM competition_site_coordinators 
+          WHERE staff_id = $1
+        `;
+        competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+      }
     }
 
     const competitionIdArray = competitionIdsResult.rows.map(row => row.competition_id);

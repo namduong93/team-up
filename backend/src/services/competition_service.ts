@@ -77,7 +77,7 @@ export class CompetitionService {
     // Get user type for easier database queries
     const userTypeObject = await this.userRepository.userType(userId);
 
-    const competitions = await this.competitionRepository.competitionsList(userId, userTypeObject);
+    const competitions = await this.competitionRepository.competitionsList(userId, userTypeObject.type);
     
     return competitions;
   }
