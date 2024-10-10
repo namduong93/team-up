@@ -10,8 +10,8 @@ interface SidebarProps {
   cropState: boolean;
 }
 
-const SidebarContainer = styled.div<{ cropState: boolean }>`
-  min-width: ${({ cropState }) => (cropState ? "40px" : "200px")}; /* Adjust min-width based on cropState */
+const SidebarContainer = styled.div<{ $cropState: boolean }>`
+  min-width: ${({ $cropState: cropState }) => (cropState ? "40px" : "200px")}; /* Adjust min-width based on cropState */
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   display: flex;
   flex-direction: column;
@@ -79,8 +79,8 @@ const NavLinks = styled.nav`
   align-items: center;
 `;
 
-const NavButton = styled.button<{ active: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.background : "transparent")};
+const NavButton = styled.button<{ $active: boolean }>`
+  background-color: ${({ theme, $active: active }) => (active ? theme.background : "transparent")};
   border: none;
   color: ${({ theme }) => theme.fonts.colour};
   cursor: pointer;
@@ -177,7 +177,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cr
   }
 
   return (
-    <SidebarContainer cropState={cropState}> {/* Pass cropState to SidebarContainer */}
+    <SidebarContainer $cropState={cropState}> {/* Pass cropState to SidebarContainer */}
       <SidebarContent>
         {!cropState && (
           <ProfileSection>
@@ -190,19 +190,19 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cr
 
         <NavLinks>
           <NavButton 
-            active={location.pathname === "/dashboard"}
+            $active={location.pathname === "/dashboard"}
             onClick={() => handleNavigation('/dashboard')}
           >
             <FaHome /> {!cropState && <span>Dashboard</span>}
           </NavButton>
           <NavButton 
-            active={location.pathname === "/account"}
+            $active={location.pathname === "/account"}
             onClick={() => handleNavigation('/account')}
           >
             <FaUser /> {!cropState && <span>Account</span>}
           </NavButton>
           <NavButton 
-            active={location.pathname === "/settings"}
+            $active={location.pathname === "/settings"}
             onClick={() => handleNavigation('/settings')}
           >
             <FaCog /> {!cropState && <span>Settings</span>}

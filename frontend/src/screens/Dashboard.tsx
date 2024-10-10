@@ -98,7 +98,7 @@ const SortFilterSearch = styled.div`
   align-items: center;
 `;
 
-const FilterButton = styled.button<{ isFilterOpen: boolean }>`
+const FilterButton = styled.button<{ $isFilterOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colours.filterText};
@@ -108,7 +108,7 @@ const FilterButton = styled.button<{ isFilterOpen: boolean }>`
   gap: 10px;
   align-items: center;
 
-  ${({ isFilterOpen, theme }) =>
+  ${({ $isFilterOpen: isFilterOpen, theme }) =>
     isFilterOpen &&
     `
     background-color: ${theme.colours.sidebarBackground};
@@ -122,7 +122,7 @@ const FilterButton = styled.button<{ isFilterOpen: boolean }>`
   }
 `;
 
-export const SortButton = styled.button<{ isSortOpen: boolean }>`
+export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colours.filterText};
@@ -132,7 +132,7 @@ export const SortButton = styled.button<{ isSortOpen: boolean }>`
   gap: 10px;
   align-items: center;
 
-  ${({ isSortOpen, theme }) =>
+  ${({ $isSortOpen: isSortOpen, theme }) =>
     isSortOpen &&
     `
     background-color: ${theme.colours.sidebarBackground};
@@ -354,13 +354,13 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
             
             <SortFilterSearch>
             <SortButton
-              isSortOpen={isSortOpen}
+              $isSortOpen={isSortOpen}
               onClick={handleSortToggle}
             >
               <FaSort /> Sort
             </SortButton>
               <FilterButton
-                isFilterOpen={isFilterOpen}
+                $isFilterOpen={isFilterOpen}
                 onClick={handleFilterToggle}
               >
                 <FaFilter /> Filter
