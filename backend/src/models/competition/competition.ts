@@ -18,4 +18,5 @@ export const enum CompetitionUserType {
 
 export type CompetitionIdObject = { competitionId: number };
 
-export type CompetitionSiteObject = { universityId?: number | undefined, address?: string };
+// TODO: Revise this type
+export type CompetitionSiteObject = { universityId: number, name: string, address?: string, capacity?: number };

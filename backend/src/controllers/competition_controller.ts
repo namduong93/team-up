@@ -3,7 +3,6 @@ import { CompetitionService } from "../services/competition_service.js";
 import { UserService } from "../services/user_service.js";
 import { httpErrorHandler, INVALID_TOKEN } from "./controller_util/http_error_handler.js";
 import { Competition } from "../models/competition/competition.js";
-import { UserType } from "../models/user/user.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;

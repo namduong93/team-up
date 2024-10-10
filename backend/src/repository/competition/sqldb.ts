@@ -30,6 +30,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       VALUES ($1, $2, $3, $4, $5)
       RETURNING id, code;
     `;
+
     const competitionValues = [
       competition.name,
       teamSize,
@@ -49,7 +50,26 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     `;
     await this.pool.query(adminQuery, [userId, competitionId]);
 
-    // Return the competition code
+    // Insert site-relevant details into tables
+    for (const siteObject of competition.siteLocations) {
+      // Create a site based on
+      const siteQuery = `
+        INSERT INTO competition_sites (competition_id, university_id, name, default_site)
+        VALUES ($1, $2, $3, $4);
+      `;
+
+      console.log(siteObject.universityId)
+      const siteValues = [
+        competitionId,
+        siteObject.universityId,
+        siteObject.name,
+        true // Set default_site to true since on the FE, the default site is the one that is created on competition creation
+      ];
+
+      await this.pool.query(siteQuery, siteValues);
+    }
+
+    // Return the competition id
     return { competitionId: competitionId };    
   }
 

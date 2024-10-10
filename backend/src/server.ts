@@ -117,8 +117,10 @@ app.get('/user/type', userController.userType);
 // RESPONSE: { preferredName: string }
 app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 
+// DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
+// that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
 // PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
-//          siteLocations: Array<{ universityId: number, address?: string }> }
+//          siteLocations: Array<{ universityId: number, name: string }> }
 // RESPONSE: { code: string }
 app.post('/competitions/system_admin/create', competitionController.competitionsSystemAdminCreate);
 
