@@ -1,5 +1,5 @@
 import { BAD_REQUEST, INVALID_TOKEN } from "../controllers/controller_util/http_error_handler.js";
-import { Competition, CompetitionIdObject, CompetitionSiteObject } from "../models/competition/competition.js";
+import { Competition, CompetitionDetailsObject, CompetitionIdObject } from "../models/competition/competition.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
@@ -73,7 +73,7 @@ export class CompetitionService {
     return competitionId;
   }
 
-  competitionsList = async (userId: number): Promise<Array<Competition> | undefined> => {
+  competitionsList = async (userId: number): Promise<Array<CompetitionDetailsObject> | undefined> => {
     // Get user type for easier database queries
     const userTypeObject = await this.userRepository.userType(userId);
 

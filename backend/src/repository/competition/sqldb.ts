@@ -1,9 +1,9 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
-import { Competition, CompetitionIdObject } from "../../models/competition/competition.js";
+import { Competition, CompetitionDetailsObject, CompetitionIdObject, CompetitionUserType } from "../../models/competition/competition.js";
 import ShortUniqueId from "short-unique-id";
-import { UserType, UserTypeObject } from "../../models/user/user.js";
+import { UserType } from "../../models/user/user.js";
 
 // Set up short-unique-id library for generating competition codes
 const { randomUUID } = new ShortUniqueId({
@@ -130,50 +130,51 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
-  competitionsList = async(userId: number, userType: UserType): Promise<Array<Competition> | undefined> => {
-    let competitionIdsQuery: string;
-    let competitionIdsResult;
+  competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionDetailsObject> | undefined> => {
+    const competitionMap: Map<number, { userType: Set<CompetitionUserType>, competition: Competition }> = new Map();
 
     if (userType === UserType.SYSTEM_ADMIN) {
       // Find all competition ids that user is an admin for
-      competitionIdsQuery = `
+      const competitionIdsQuery = `
         SELECT competition_id 
         FROM competition_admins 
         WHERE staff_id = $1
       `;
-      competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
-    } else if (userType === 'student') {
+      const competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+      this.addCompetitionIdsToMap(competitionIdsResult.rows, competitionMap, CompetitionUserType.SYSTEM_ADMIN);
+    } else if (userType === UserType.STUDENT) {
       // Find all competition ids that user is a participant in
-      competitionIdsQuery = `
+      const competitionIdsQuery = `
         SELECT competition_id 
         FROM competition_participants 
         WHERE student_id = $1
       `;
-      competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+      const competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+      this.addCompetitionIdsToMap(competitionIdsResult.rows, competitionMap, CompetitionUserType.PARTICIPANT);
     } else {
       // Find all competition ids that user is a coach for
-      competitionIdsQuery = `
+      let competitionIdsQuery = `
         SELECT competition_id 
         FROM competition_coaches 
         WHERE staff_id = $1
       `;
-      competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+      let competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+      this.addCompetitionIdsToMap(competitionIdsResult.rows, competitionMap, CompetitionUserType.COACH);
 
-      if (competitionIdsResult.rowCount === 0) {
-        // If not a coach, find all competition ids that user is a site coordinator for
-        competitionIdsQuery = `
-          SELECT competition_id 
-          FROM competition_site_coordinators 
-          WHERE staff_id = $1
-        `;
-        competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
-      }
+      // Find all competition ids that user is a site coordinator for
+      competitionIdsQuery = `
+        SELECT competition_id 
+        FROM competition_site_coordinators 
+        WHERE staff_id = $1
+      `;
+      competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+      this.addCompetitionIdsToMap(competitionIdsResult.rows, competitionMap, CompetitionUserType.SITE_COORDINATOR);
     }
 
-    const competitionIdArray = competitionIdsResult.rows.map(row => row.competition_id);
+    const competitionIdArray = Array.from(competitionMap.keys());
 
     // Find competition details for each competition
-    let competitions: Competition[] = [];
+    let competitions: Array<{ userType: CompetitionUserType[], competition: Competition }> = [];
     for (const competitionId of competitionIdArray) {
       // Find competition details
       const competitionDetailsQuery = `
@@ -198,7 +199,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       // Add site details to competition object
       competition.siteLocations = siteLocations;
 
-      competitions.push(competition);
+      const userTypeSet = competitionMap.get(competitionId)?.userType;
+      if (userTypeSet) {
+        competitions.push({ userType: Array.from(userTypeSet), competition });
+      }
     }
 
     return competitions;
@@ -240,5 +244,16 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {
 
     return [{ id: 1, name: 'Macquarie University' }]
+  }
+
+  // Helper function to add competition ids to map
+  private addCompetitionIdsToMap = (rows: any[], competitionMap: Map<number, { userType: Set<CompetitionUserType>, competition: Competition }>, userType: CompetitionUserType) => {
+    rows.forEach(row => {
+      if (!competitionMap.has(row.competition_id)) {
+        competitionMap.set(row.competition_id, { userType: new Set([userType]), competition: row });
+      } else {
+        competitionMap.get(row.competition_id)?.userType.add(userType);
+      }
+    });
   }
 }

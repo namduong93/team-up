@@ -1,5 +1,5 @@
-import { Competition, CompetitionIdObject } from "../models/competition/competition.js";
-import { UserType, UserTypeObject } from "../models/user/user.js";
+import { Competition, CompetitionDetailsObject, CompetitionIdObject } from "../models/competition/competition.js";
+import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 
 export interface CompetitionRepository {
@@ -17,5 +17,5 @@ export interface CompetitionRepository {
   competitionStaffJoinAdmin(code: string): Promise<{} | undefined>;
   competitionUniversitiesList(competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
-  competitionsList(userId: number, userType: UserType): Promise<Array<Competition> | undefined>;
+  competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionDetailsObject> | undefined>;
 }
