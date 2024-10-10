@@ -59,7 +59,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         VALUES ($1, $2, $3, $4);
       `;
 
-      console.log(siteObject.universityId)
       const siteValues = [
         competitionId,
         siteObject.universityId,
