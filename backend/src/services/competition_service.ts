@@ -42,7 +42,7 @@ export class CompetitionService {
     this.userRepository = userRepository;
   }
 
-  competitionsSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
+  competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
     // Verify system admin
     const userTypeObject = await this.userRepository.userType(userId);
     
@@ -50,7 +50,7 @@ export class CompetitionService {
       throw INVALID_TOKEN;
     }
     
-    const competitionId = await this.competitionRepository.competitionsSystemAdminCreate(userId, competition);
+    const competitionId = await this.competitionRepository.competitionSystemAdminCreate(userId, competition);
     
     return competitionId;
   }

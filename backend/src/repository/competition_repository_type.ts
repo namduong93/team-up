@@ -2,7 +2,7 @@ import { Competition, CompetitionIdObject } from "../models/competition/competit
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 
 export interface CompetitionRepository {
-  competitionsSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
+  competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
   competitionsSystemAdminList(userId: number): Promise<Array<Competition> | undefined>;
 
   competitionStudentJoin0(sessionToken: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined>;

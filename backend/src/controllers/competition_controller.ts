@@ -22,7 +22,7 @@ export class CompetitionController {
       siteLocations: req.body.siteLocations,
     };
 
-    const competitionId = await this.competitionService.competitionsSystemAdminCreate(Number(userId), newCompetition);
+    const competitionId = await this.competitionService.competitionSystemAdminCreate(Number(userId), newCompetition);
 
     res.json(competitionId);
 

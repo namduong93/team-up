@@ -121,8 +121,8 @@ app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
 // PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
 //          siteLocations: Array<{ universityId: number, name: string }> }
-// RESPONSE: { code: string }
-app.post('/competitions/system_admin/create', competitionController.competitionsSystemAdminCreate);
+// RESPONSE: { competitionId: number }
+app.post('/competition/system_admin/create', competitionController.competitionsSystemAdminCreate);
 
 // Gets all competitions that this system admin has created
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie

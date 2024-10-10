@@ -17,7 +17,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
-  competitionsSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
+  competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
     // Set default team size to 3 if not provided
     const teamSize = competition.teamSize ?? 3;
 
