@@ -58,7 +58,7 @@ const CardMiddle = styled.div`
 `;
 
 const CardText = styled.div`
-  color: ${({ theme }) => theme.fonts.colorLight};
+  color: ${({ theme }) => theme.fonts.colour};
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
 `;
 

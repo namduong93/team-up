@@ -1,9 +1,6 @@
+import { DefaultTheme } from 'styled-components';
 
-declare module 'styled-components' {
-  export interface DefaultTheme extends Theme {}
-}
-
-export const defaultTheme = {
+export const defaultTheme: DefaultTheme = {
   background: "#FFFFFF",
   colours: {
     primaryLight: "#BCCFF8",
@@ -18,7 +15,6 @@ export const defaultTheme = {
     optionUnselected: "#EBEBEB",
     optionSelected: "#BCCFF8",
     filterText: "#6c757d",
-    sideBarLine: "#7A7A7A",
   },
   teamView: {
     pending: "#F68486",
@@ -27,7 +23,7 @@ export const defaultTheme = {
   },
   roles: {
     coachText: "#6688D2",
-    coachBackgrond: "#BCCFF8",
+    coachBackground: "#BCCFF8",
     siteCoordinatorText: "#9747FF",
     siteCoordinatorBackground: "#ECDCFF",
     adminText: "#D268D1",
@@ -60,4 +56,4 @@ export const defaultTheme = {
 
 
 // However the default Theme is structured will be the type of the theme
-export type Theme = typeof defaultTheme;
+// export type Theme = typeof defaultTheme;

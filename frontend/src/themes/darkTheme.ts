@@ -1,6 +1,7 @@
-import { defaultTheme, Theme } from "./defaultTheme";
+import { DefaultTheme } from 'styled-components';
+import { defaultTheme } from './defaultTheme';
 
-export const darkTheme: Theme = {
+export const darkTheme: DefaultTheme = {
   fonts: {
     ...defaultTheme.fonts,
     colour: "#FFFFFF",
@@ -30,7 +31,7 @@ export const darkTheme: Theme = {
   roles: {
     ...defaultTheme.roles,
     coachText: "#6688D2",
-    coachBackgrond: "#BCCFF8",
+    coachBackground: "#BCCFF8",
     siteCoordinatorText: "#9747FF",
     siteCoordinatorBackground: "#ECDCFF",
     adminText: "#D268D1",

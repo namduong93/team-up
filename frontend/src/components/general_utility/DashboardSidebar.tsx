@@ -127,7 +127,7 @@ const LogoutButton = styled.button`
   cursor: pointer;
   width: 95%;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
-  font-weight: ${({ theme }) => theme.fonts.bold};
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   border-radius: 40px;
   transition: background-color 0.3s;
   align-items: center;

@@ -102,29 +102,29 @@ const SortFilterSearch = styled.div`
   max-width: 360px;
 `;
 
-const FilterButton = styled.button<{ $isFilterOpen: boolean }>`
-  background-color: ${({ theme }) => theme.background};
-  border-radius: 10px;
-  border: 1px solid ${({ theme }) => theme.colours.filterText};
-  color: ${({ theme }) => theme.colours.filterText};
-  padding: 8px 16px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
+// const FilterButton = styled.button<{ $isFilterOpen: boolean }>`
+//   background-color: ${({ theme }) => theme.background};
+//   border-radius: 10px;
+//   border: 1px solid ${({ theme }) => theme.colours.filterText};
+//   color: ${({ theme }) => theme.colours.filterText};
+//   padding: 8px 16px;
+//   display: flex;
+//   gap: 10px;
+//   align-items: center;
 
-  ${({ $isFilterOpen: isFilterOpen, theme }) =>
-    isFilterOpen &&
-    `
-    background-color: ${theme.colours.sidebarBackground};
-    color: ${theme.fonts.colours};
-  `}
+//   ${({ $isFilterOpen: isFilterOpen, theme }) =>
+//     isFilterOpen &&
+//     `
+//     background-color: ${theme.colours.sidebarBackground};
+//     color: ${theme.fonts.colour};
+//   `}
 
-  &:hover {
-    cursor: pointer;
-    background-color: ${({ theme }) => theme.colours.sidebarBackground};
-    color: ${({ theme }) => theme.fonts.colour};
-  }
-`;
+//   &:hover {
+//     cursor: pointer;
+//     background-color: ${({ theme }) => theme.colours.sidebarBackground};
+//     color: ${({ theme }) => theme.fonts.colour};
+//   }
+// `;
 
 export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};

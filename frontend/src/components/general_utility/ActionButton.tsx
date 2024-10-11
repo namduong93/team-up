@@ -32,7 +32,7 @@ const Button = styled.button<{ $actionType: "primary" | "secondary" }>`
         : theme.colours.secondaryDark};
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-    letter-spacing: ${({ theme }) => theme.fonts.spacing.wider};
+    letter-spacing: ${({ theme }) => theme.fonts.spacing.wide};
   }
 `;
 
