@@ -8,6 +8,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { SortIcon, SortSelect } from "../../../components/general_utility/SortSelect";
 import { SortButton } from "../../Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
+import { FilterIcon, FilterSelect } from "../../../components/general_utility/FilterSelect";
 
 const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
@@ -72,7 +73,7 @@ const ToggleOptionTextSpan = styled.div`
   font-size: 2em;
 `;
 
-export const SortFilterSearchContainerDiv = styled.div`
+export const MenuOptionsContainerDiv = styled.div`
   margin-right: min(20px, 2%);
   flex: 1;
   max-width: 360px;
@@ -86,7 +87,7 @@ export const SortContainer = styled.div`
   width: 19%;
   height: 33px;
   position: relative;
-
+  min-width: 29px;
 `;
 
 interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
@@ -94,6 +95,15 @@ interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonEleme
   icon: ReactNode;
   label: string;
 }
+
+export const SortFilterSearchContainerDiv = styled.div`
+  width: 100%;
+  /* min-width: 152px; */
+  height: 66px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+`;
 
 export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon, label, style, isOpen, ...props }) => {
   return (
@@ -103,11 +113,7 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon,
       overflow: 'hidden',
       padding: '0',
       display: 'flex',
-      justifyContent: 'center',
       flexWrap: 'wrap',
-      alignItems: 'center',
-      alignContent: 'center',
-      minWidth: '29px',
       ...style
     }} $isSortOpen={isOpen} {...props}>
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
@@ -140,6 +146,16 @@ export const CoachPage: FC = () => {
     { label: "Time Remaining", value: "timeRemaining" },
   ];
 
+  const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const filterOptions = {
+    Location: ['USA', 'UK'],
+    Role: ['Admin', 'Site-Coordinator', 'Coach'],
+    Status: ["Completed", "Upcoming"],
+    Year: ['2020', '2021', '2022', '2024'],
+  };
+
   const handleToggleTeams = (e: React.MouseEvent) => {
     e.preventDefault();
     navigate('/coach/page/teams');
@@ -161,18 +177,35 @@ export const CoachPage: FC = () => {
             <PageHeader>Coach Page</PageHeader>
             <PageDescriptionSpan>Manage Teams and Students for your Competition</PageDescriptionSpan>
           </div>
-          <SortFilterSearchContainerDiv>
-            <SortContainer>
-              <ResponsiveButton
-              icon={<SortIcon />}
-              label='Sort'
-              isOpen={isSortOpen}
-              onClick={() => setIsSortOpen((prev) => !prev)} />
-              {isSortOpen && 
-                <SortSelect isOpen={isSortOpen} onSortChange={(sortOption) => setSortOption(sortOption)}
-                options={sortOptions} />}
+          <MenuOptionsContainerDiv>
+            <SortFilterSearchContainerDiv>
+              <SortContainer>
+                <ResponsiveButton
+                icon={<SortIcon />}
+                label='Sort'
+                isOpen={isSortOpen}
+                onClick={() => setIsSortOpen((prev) => !prev)} />
+                {isSortOpen && 
+                  <SortSelect isOpen={isSortOpen} onSortChange={(sortOption) => setSortOption(sortOption)}
+                  options={sortOptions} />}
               </SortContainer>
-          </SortFilterSearchContainerDiv>
+              <SortContainer>
+                <ResponsiveButton
+                  icon={<FilterIcon />}
+                  label='Filter'
+                  isOpen={isFilterOpen}
+                  onClick={() => setIsFilterOpen((prev) => !prev)}/>
+                
+                {isFilterOpen &&
+                  <FilterSelect
+                    options={filterOptions}
+                    isOpen={isFilterOpen}
+                    onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
+                    currentFilters={filters} />}
+                
+              </SortContainer>
+            </SortFilterSearchContainerDiv>
+          </MenuOptionsContainerDiv>
         </PageHeaderContainerDiv>
 
         {/* Teams-Students page selection */}

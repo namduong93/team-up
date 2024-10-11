@@ -129,6 +129,7 @@ const SortFilterSearch = styled.div`
 export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
+  box-sizing: border-box;
   border: 1px solid ${({ theme }) => theme.colours.filterText};
   color: ${({ theme }) => theme.colours.filterText};
   padding: 8px 16px;
@@ -175,6 +176,7 @@ const RemoveFilterIcon = styled(FaTimes)`
 
 const SearchInput = styled.input`
   max-width: 150px;
+  width: 100%;
   max-height: 38px;
   border: 1px solid ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;
