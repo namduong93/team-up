@@ -20,7 +20,7 @@ const TextInput: React.FC<TextInputProps> = ({
   width = '300px',
 }) => {
   return (
-    <div style={styles.container}>
+    <div style={{...styles.container, width}}>
       <label style={styles.label}>
         {label}
         {required && <span style={styles.asterisk}>*</span>}
@@ -30,7 +30,7 @@ const TextInput: React.FC<TextInputProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        style={{ ...styles.input, width }}
+        style={{ ...styles.input }}
         required={required}
       />
     </div>
@@ -70,13 +70,14 @@ const styles: Record<string, React.CSSProperties> = {
   // },
   input: {
     padding: '10px 1.5% 10px 1.5%',
-    // width: '65%',
+    height: '100%',
+    boxSizing: 'border-box',
+    width: '100%',
     border: '1px solid #ccc',
     borderRadius: '10px',
     // marginTop: '5px',
     marginBottom: '5px',
     fontFamily: 'Arial, Helvetica, sans-serif',
-    height: '16px',
   }, 
 };
 

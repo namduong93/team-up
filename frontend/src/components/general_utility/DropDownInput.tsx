@@ -25,6 +25,7 @@ const RelativeSelectElement = styled.select`
   border: 1px solid #ccc;
   font-family: Arial, Helvetica, sans-serif;
   height: 100%;
+  width: 100%;
   padding: 10px 1.5%;
   padding-right: 30px;
   border-radius: 10px;
@@ -69,7 +70,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   descriptor, // Descriptive text added as an optional prop
 }) => {
   return (
-    <div style={styles.container}>
+    <div style={{...styles.container, width}}>
       <label style={styles.label}>
         {label}
         {required && <span style={styles.asterisk}>*</span>}
@@ -78,7 +79,6 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
       <RelativeSelect
         value={value}
         onChange={onChange}
-        style={{ width }}
         required={required}
       >
         {options.map((option) => (
