@@ -165,7 +165,6 @@ const SearchContainer = styled.div`
 
 const SearchCell = styled.div`
   min-width: 29px;
-  width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -178,19 +177,18 @@ const SearchCell = styled.div`
   color: ${({ theme }) => theme.colours.filterText};
 `;
 
-export const SearchBar: FC = () => {
+export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
   return (
   <SearchContainer>
-    <SearchInput type="input">
-    </SearchInput>
-    <SearchCell>
+    <SearchInput type="text" value={value} onChange={onChange} {...props} />
+    {!value && <SearchCell>
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
           <SearchIcon />
         </div>
           <span>Search</span>
       </div>
-    </SearchCell>
+    </SearchCell>}
   </SearchContainer>
   )
 }
@@ -212,6 +210,8 @@ export const CoachPage: FC = () => {
 
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const filterOptions = {
     Location: ['USA', 'UK'],
@@ -268,7 +268,8 @@ export const CoachPage: FC = () => {
                     currentFilters={filters} />}
               </SortContainer>
               <SortContainer style={{ flexBasis: '120px' }}>
-                <SearchBar />
+                <SearchBar value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)} />
               </SortContainer>
             </SortFilterSearchContainerDiv>
           </MenuOptionsContainerDiv>
