@@ -24,7 +24,8 @@ const SidebarContainer = styled.div<{ $cropState: boolean }>`
   overflow-y: auto;
 
   @media (max-width: 600px) {
-    min-width: 35px; /* Maintain this for mobile responsiveness */
+    min-width: 35px;
+    width: 35px; /* Maintain this for mobile responsiveness */
   }
 `;
 
@@ -134,6 +135,8 @@ const LogoutButton = styled.button`
   gap: 20px;
   padding: 20px;
   margin: 5px;
+  border-radius: 40px;
+  flex-shrink: 1;
   letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
   
   svg {

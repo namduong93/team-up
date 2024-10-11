@@ -1,15 +1,16 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
-import { FaBell, FaFilter, FaSort, FaTimes } from "react-icons/fa";
+import { FaBell, FaFilter, FaTimes } from "react-icons/fa";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import { CompCard } from "../components/general_utility/CompCard";
-import { FilterSelect } from "../components/general_utility/FilterSelect";
+import { FilterIcon, FilterSelect } from "../components/general_utility/FilterSelect";
 import { ActionButton } from "../components/general_utility/ActionButton";
-import { SortSelect } from "../components/general_utility/SortSelect";
+import { SortIcon, SortSelect } from "../components/general_utility/SortSelect";
 import { Notifications } from "../components/general_utility/Notifications";
 import { sendRequest } from "../utility/request";
 import { useNavigate } from "react-router-dom";
+import { ResponsiveButton, SortContainer } from "./staff/CoachPage/CoachPage";
 interface Competition {
   compName: string;
   location: string;
@@ -38,8 +39,8 @@ const DashboardContent = styled.div`
   width: 100%;
   height: 100%;
   min-height: 600px;
-  overflow-y: hidden;
-  overflow-x: auto;
+  /* overflow-y: hidden; */
+  overflow-x: visible;
 `;
 
 const DashboardHeader = styled.div`
@@ -48,8 +49,7 @@ const DashboardHeader = styled.div`
   min-height: 117px;
   min-width: fit-content;
   align-items: center;
-  overflow-x: auto;
-  min-width: 500px;
+  overflow-x: visible;
   gap: 30px;
   margin-right: 20px;
   margin-left: 20px;
@@ -98,6 +98,8 @@ const SortFilterSearch = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
+  width: 100%;
+  max-width: 360px;
 `;
 
 const FilterButton = styled.button<{ $isFilterOpen: boolean }>`
@@ -376,18 +378,39 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
             </RegisterAlert>
             
             <SortFilterSearch>
-            <SortButton
-              $isSortOpen={isSortOpen}
-              onClick={handleSortToggle}
-            >
-              <FaSort /> Sort
-            </SortButton>
-              <FilterButton
-                $isFilterOpen={isFilterOpen}
-                onClick={handleFilterToggle}
-              >
-                <FaFilter /> Filter
-              </FilterButton>
+            <SortContainer>
+                <ResponsiveButton
+                  icon={<SortIcon />}
+                  label='Sort'
+                  isOpen={isSortOpen}
+                  onClick={handleSortToggle}
+                >
+                </ResponsiveButton>
+                {isSortOpen && (
+                <SortSelect
+                  options={sortOptions}
+                  onSortChange={(selectedSort) => setSortOption(selectedSort)}
+                  isOpen={isSortOpen}
+                />
+                )}
+              </SortContainer>
+
+              <SortContainer>
+                <ResponsiveButton
+                  icon={<FilterIcon />}
+                  label='Filter'
+                  isOpen={isFilterOpen}
+                  onClick={handleFilterToggle}
+                >
+                  <FaFilter /> Filter
+                </ResponsiveButton>
+                <FilterSelect
+                  options={filterOptions}
+                  onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
+                  isOpen={isFilterOpen}
+                  currentFilters={filters}
+                />
+              </SortContainer>
               <SearchInput
                 type="text"
                 placeholder="Search"
@@ -428,13 +451,6 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
           />
         </div> */}
 
-        <FilterSelect
-            options={filterOptions}
-            onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
-            isOpen={isFilterOpen}
-            currentFilters={filters}
-          />
-
         {/* Sort Dropdown */}
         {/* <div ref={sortRef}>
           {isSortOpen && (
@@ -445,14 +461,6 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
             />
           )}
         </div> */}
-
-          {isSortOpen && (
-            <SortSelect
-              options={sortOptions}
-              onSortChange={(selectedSort) => setSortOption(selectedSort)}
-              isOpen={isSortOpen}
-            />
-          )}
         
         <ContentArea>
           <CompetitionGrid>
