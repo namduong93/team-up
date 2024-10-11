@@ -8,7 +8,7 @@ import { backendURL } from "../../config/backendURLConfig";
 // request.get(/student/details, { studentId: 5 });
 
 export class sendRequest {
-  public static get<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
+  public static get<T>(path: string, params: Record<string, never> = {}, headers: Record<string, never> = {}): Promise<AxiosResponse<T, unknown>> {
     return axios.get<T>(`${backendURL.HOST}:${backendURL.PORT}${path}?${new URLSearchParams(params)}`, {
       withCredentials: true,
       ...headers
@@ -17,21 +17,21 @@ export class sendRequest {
     // are sent everytime in every request.
   }
 
-  public static post<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
+  public static post<T>(path: string, params: Record<string, never> = {}, headers: Record<string, never> = {}): Promise<AxiosResponse<T, unknown>> {
     return axios.post<T>(`${backendURL.HOST}:${backendURL.PORT}${path}`, params, {
       withCredentials: true,
       ...headers
     });
   }
 
-  public static put<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>>  {
+  public static put<T>(path: string, params: Record<string, never> = {}, headers: Record<string, never> = {}): Promise<AxiosResponse<T, unknown>>  {
     return axios.put<T>(`${backendURL.HOST}:${backendURL.PORT}${path}`, params, {
       withCredentials: true,
       ...headers
     });
   }
 
-  public static delete<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
+  public static delete<T>(path: string, params: Record<string, never> = {}, headers: Record<string, never> = {}): Promise<AxiosResponse<T, unknown>> {
     return axios.delete<T>(`${backendURL.HOST}:${backendURL.PORT}${path}?${new URLSearchParams(params)}`, {
       withCredentials: true,
       ...headers
