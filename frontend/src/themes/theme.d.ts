@@ -16,6 +16,7 @@ declare module 'styled-components' {
         optionUnselected: string;
         optionSelected: string;
         filterText: string;
+        sidebarLine: string;
       };
       teamView: {
           pending: string;
