@@ -1,12 +1,13 @@
-import { defaultTheme } from "./defaultTheme";
+import { defaultTheme, Theme } from "./defaultTheme";
 
-export const darkTheme = {
+export const darkTheme: Theme = {
   fonts: {
     ...defaultTheme.fonts,
     colour: "#FFFFFF",
   },
   background: "#121212",
   colours: {
+    ...defaultTheme.colours,
     primaryLight: "#6688D2",
     primaryDark: "#BCCFF8",
     secondaryLight: "#EA9C0D",
@@ -21,11 +22,13 @@ export const darkTheme = {
     filterText: "#EBEBEB",
   },
   teamView: {
+    ...defaultTheme.teamView,
     pending: "#F68486",
     unregistered: "#FDD386",
     registered: "#8BDFA5",
   },
   roles: {
+    ...defaultTheme.roles,
     coachText: "#6688D2",
     coachBackgrond: "#BCCFF8",
     siteCoordinatorText: "#9747FF",

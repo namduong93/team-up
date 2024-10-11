@@ -7,7 +7,6 @@ import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSw
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { SortIcon, SortSelect } from "../../../components/general_utility/SortSelect";
 import { SortButton } from "../../Dashboard";
-import { FaSort } from "react-icons/fa";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 
 const OverflowFlexBackground = styled(FlexBackground)`
