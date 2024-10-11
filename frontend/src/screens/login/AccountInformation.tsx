@@ -70,126 +70,129 @@ export const AccountInformation: FC = () => {
   return (
     <FlexBackground style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
       <RegoProgressBar progressNumber={1} />
-      <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h1 style={{ marginBottom: '20px' }}>Account Information</h1>
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '600px', width: '100%', minWidth: '200px' }}>
+          <h1 style={{ marginBottom: '20px' }}>Account Information</h1>
 
-        <div style={styles.doubleInputContainer}>
+          <div style={styles.doubleInputContainer}>
+            <TextInput
+              label="First Name"
+              placeholder="John"
+              type="text"
+              required={true}
+              value={formData.firstName}  
+              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} 
+              width="45%"
+            />
+
+            <TextInput
+              label="Last Name"
+              placeholder="Smith"
+              type="text"
+              required={true}
+              value={formData.lastName}
+              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+              width="45%" 
+            />
+          </div>
+
           <TextInput
-            label="First Name"
-            placeholder="John"
+            label="Preferred Name"
+            placeholder="Please Enter"
             type="text"
-            required={true}
-            value={formData.firstName}  
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} 
-            width="270px" 
-          />
-
-          <TextInput
-            label="Last Name"
-            placeholder="Smith"
-            type="text"
-            required={true}
-            value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            width="270px" 
-          />
-        </div>
-
-        <TextInput
-          label="Preferred Name"
-          placeholder="Please Enter"
-          type="text"
-          required={false}
-          value={formData.preferredName || ""}
-          onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
-          width="600px" 
-        />
-
-        <div style={styles.doubleInputContainer}>
-          <DropDownInput
-            label="Gender"
-            options={genderOptions}
-            value={formData.gender}
-            required={true}
-            onChange={(e) => handleGenderChange(e.target.value)}
-            width="270px" 
-          />
-
-          <DropDownInput
-            label="Preferred Pronouns"
-            options={pronounOptions}
-            value={formData.preferredPronoun || ''}
             required={false}
-            onChange={(e) => setFormData({ ...formData, preferredPronoun: e.target.value })}
-            width="270px" 
+            value={formData.preferredName || ""}
+            onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
+            width="100%" 
           />
-        </div>
 
-        {/* Conditionally render the text input for "Other" gender */}
-        {showOtherGenderInput && (
+          <div style={styles.doubleInputContainer}>
+            <DropDownInput
+              label="Gender"
+              options={genderOptions}
+              value={formData.gender}
+              required={true}
+              onChange={(e) => handleGenderChange(e.target.value)}
+              width="45%" 
+            />
+            <div style={{ display: 'flex', width: '45%', minWidth: '172px' }}>
+            <DropDownInput
+              label="Preferred Pronouns"
+              options={pronounOptions}
+              value={formData.preferredPronoun || ''}
+              required={false}
+              onChange={(e) => setFormData({ ...formData, preferredPronoun: e.target.value })}
+              width="100%" 
+            />
+            </div>
+          </div>
+
+          {/* Conditionally render the text input for "Other" gender */}
+          {showOtherGenderInput && (
+            <TextInput
+              label="Please Specify Your Gender"
+              placeholder="Enter your gender"
+              type="text"
+              required={true}
+              value={formData.gender || ''}
+              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+              width="100%"
+            />
+          )}
+
           <TextInput
-            label="Please Specify Your Gender"
-            placeholder="Enter your gender"
+            label="Email"
+            placeholder="example@email.com"
             type="text"
             required={true}
-            value={formData.gender || ''}
-            onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-            width="600px"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            width="100%"
           />
-        )}
 
-        <TextInput
-          label="Email"
-          placeholder="example@email.com"
-          type="text"
-          required={true}
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          width="600px"
-        />
+          <TextInput
+            label="Password"
+            placeholder="Enter your password"
+            type="password"
+            required={true}
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            width="100%" 
+          />
 
-        <TextInput
-          label="Password"
-          placeholder="Enter your password"
-          type="password"
-          required={true}
-          value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          width="600px" 
-        />
+          <TextInput
+            label="Confirm Password"
+            placeholder="Re-enter your password"
+            type="password"
+            required={true}
+            value={confirmPassword}
+            onChange={(e) => handleConfirmPasswordChange(e.target.value)} 
+            width="100%" 
+          />
 
-        <TextInput
-          label="Confirm Password"
-          placeholder="Re-enter your password"
-          type="password"
-          required={true}
-          value={confirmPassword}
-          onChange={(e) => handleConfirmPasswordChange(e.target.value)} 
-          width="600px" 
-        />
+          {error && (
+            <p style={styles.errorMessage}>{error}</p>
+          )}
 
-        {error && (
-          <p style={styles.errorMessage}>{error}</p>
-        )}
+          <div style={styles.buttonContainer}>
+            <button
+              style={styles.button}
+              onClick={() => navigate('/roleregistration')}
+            >
+              Back
+            </button>
 
-        <div style={styles.buttonContainer}>
-          <button
-            style={styles.button}
-            onClick={() => navigate('/roleregistration')}
-          >
-            Back
-          </button>
-
-          <button
-            style={{
-              ...styles.button,
-              ...(isButtonDisabled() ? styles.buttonDisabled : {}),
-            }}
-            disabled={isButtonDisabled()}
-            onClick={handleNext}
-          >
-            Next
-          </button>
+            <button
+              style={{
+                ...styles.button,
+                ...(isButtonDisabled() ? styles.buttonDisabled : {}),
+              }}
+              disabled={isButtonDisabled()}
+              onClick={handleNext}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </FlexBackground>
@@ -200,8 +203,8 @@ const styles: Record<string, React.CSSProperties> = {
   doubleInputContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    width: '600px',
-    gap: '5px',
+    width: '100%',
+    gap: '0.8%',
   },
   errorMessage: {
     color: 'red',
@@ -212,12 +215,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
   buttonContainer: {
     display: 'flex',
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     gap: '90px',
   },
   button: {
-    width: '150px',
+    maxWidth: '150px',
+    width: '25%',
     height: '35px',
     border: '0px',
     borderRadius: '30px',
