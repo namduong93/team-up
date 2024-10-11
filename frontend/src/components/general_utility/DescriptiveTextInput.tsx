@@ -18,8 +18,8 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   required = false,
   value,
   onChange,
-  width = '600px', 
-  height = '100px', 
+  width = '600px', // Default width
+  height = '100px', // Default height for textarea
 }) => {
   return (
     <div style={styles.container}>

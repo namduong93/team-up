@@ -6,6 +6,7 @@ import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
 import { sendRequest } from "../../utility/request";
 import { RegoProgressBar } from "../../components/general_utility/ProgressBar";
+import { styled } from "styled-components";
 
 interface University {
   id: string;
@@ -88,9 +89,9 @@ export const InstitutionInformation: FC = () => {
       fontFamily: 'Arial, Helvetica, sans-serif',
     }}>
       <RegoProgressBar progressNumber={3} />
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-        <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '600px', width: '100%', minWidth: '200px'  }}>
-          <h1 style={{ marginBottom: '20px' }}>Institution Information</h1>
+      <Container>
+        <ContentContainer>
+          <Title>Institution Information</Title>
 
           <DropDownInput
             label="Institution"
@@ -123,53 +124,94 @@ export const InstitutionInformation: FC = () => {
             />
           )}
 
-          <div style={styles.buttonContainer}>
-            <button
-              style={{ ...styles.button }}
-              onClick={() => navigate('/siteinformation')}
-            >
+          <ButtonContainer>
+            <Button onClick={() => navigate('/siteinformation')}>
               Back
-            </button>
+            </Button>
 
-            <button
-              style={{ ...styles.button, ...(isButtonDisabled() ? styles.buttonDisabled : {}) }}
-              disabled={isButtonDisabled()}
-              onClick={handleSubmit}
-            >
+            <CreateAccountButton disabled={isButtonDisabled()} onClick={handleSubmit}>
               Create Account
-            </button>
-          </div>
-        </div>
-      </div>
+            </CreateAccountButton>
+          </ButtonContainer>
+        </ContentContainer>
+      </Container>
     </FlexBackground>
   );
 };
 
-const styles: Record<string, React.CSSProperties> = {
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    gap: '90px',
-  },
-  button: {
-    maxWidth: '150px',
-    width: '25%',
-    height: '35px',
-    border: '0px',
-    borderRadius: '30px',
-    backgroundColor: '#6688D2',
-    marginTop: '35px',
-    marginBottom: '40px',
-    color: '#ffffff',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-  },
-  buttonDisabled: {
-    backgroundColor: '#ccc',
-    cursor: 'not-allowed',
-  },
-};
+const Container = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+`
+
+const ContentContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  width: 100%;
+  min-width: 200px;
+`
+const Title = styled.h1`
+  margin-bottom: 20px;
+  margin-top: 30px;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 90px;
+`
+
+const Button = styled.button<{ disabled?: boolean }>`
+  max-width: 150px;
+  width: 25%;
+  height: 35px;
+  border: 0px;
+  border-radius: 30px;
+  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  margin-top: 35px;
+  margin-bottom: 40px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
+  font-family: Arial, Helvetica, sans-serif;
+`
+
+const CreateAccountButton = styled(Button)`
+  min-width: 100px;
+`
+
+// const styles: Record<string, React.CSSProperties> = {
+//   buttonContainer: {
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     width: '100%',
+//     gap: '90px',
+//   },
+//   button: {
+//     maxWidth: '150px',
+//     width: '25%',
+//     height: '35px',
+//     border: '0px',
+//     borderRadius: '30px',
+//     backgroundColor: '#6688D2',
+//     marginTop: '35px',
+//     marginBottom: '40px',
+//     color: '#ffffff',
+//     fontSize: '16px',
+//     fontWeight: 'bold',
+//     cursor: 'pointer',
+//     fontFamily: 'Arial, Helvetica, sans-serif',
+//   },
+//   buttonDisabled: {
+//     backgroundColor: '#ccc',
+//     cursor: 'not-allowed',
+//   },
+// };

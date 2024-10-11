@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm"; // Import the context
@@ -6,6 +6,7 @@ import DescriptiveTextInput from "../../components/general_utility/DescriptiveTe
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import MultiRadio from "../../components/general_utility/MultiRadio";
 import { RegoProgressBar } from "../../components/general_utility/ProgressBar";
+import { styled } from "styled-components";
 
 export const SiteInformation: FC = () => {
   const navigate = useNavigate();
@@ -46,9 +47,9 @@ export const SiteInformation: FC = () => {
   return (
     <FlexBackground style={{ justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
       <RegoProgressBar progressNumber={2} />
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-        <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '600px', width: '100%', minWidth: '200px' }}>
-          <h1 style={{ marginBottom: '20px' }}>Site Information</h1>
+      <Container>
+        <ContentContainer>
+          <Title>Site Information</Title>
 
           <DropDownInput
             label="T-Shirt Size"
@@ -89,55 +90,92 @@ export const SiteInformation: FC = () => {
             width="100%"
           />
 
-          <div style={styles.buttonContainer}>
-            <button
-              style={styles.button}
-              onClick={() => {navigate('/accountinformation')
-              console.log(formData)}}
-            >
+          <ButtonContainer>
+            <Button onClick={() => navigate('/accountinformation')}>
               Back
-            </button>
+            </Button>
 
-            <button
-              style={{
-                ...styles.button,
-                backgroundColor: formData.tShirtSize ? '#6688D2' : '#ccc',
-                cursor: formData.tShirtSize ? 'pointer' : 'not-allowed'
-              }}
-              disabled={!formData.tShirtSize}
-              onClick={handleNext}
-              >
+            <NextButton disabled={!formData.tShirtSize} onClick={handleNext}>
               Next
-            </button>
-          </div>
-        </div>
-      </div>
+            </NextButton>
+          </ButtonContainer>
+        </ContentContainer>
+      </Container>
     </FlexBackground>
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    gap: '90px',
-  },
-  button: {
-    maxWidth: '150px',
-    width: '25%',
-    height: '35px',
-    border: '0px',
-    borderRadius: '30px',
-    backgroundColor: '#6688D2',
-    marginTop: '35px',
-    marginBottom: '40px',
-    color: '#ffffff',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-  },
-};
+const Container = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+`
+
+const ContentContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  width: 100%;
+  min-width: 200px;
+`
+const Title = styled.h1`
+  margin-bottom: 20px;
+  margin-top: 30px;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 90px;
+`
+
+const Button = styled.button<{ disabled?: boolean }>`
+  max-width: 150px;
+  width: 25%;
+  height: 35px;
+  border: 0px;
+  border-radius: 30px;
+  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  margin-top: 35px;
+  margin-bottom: 40px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
+  font-family: Arial, Helvetica, sans-serif;
+`
+
+const NextButton = styled(Button)<{ disabled: boolean }>`
+  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+`;
+
+// const styles: Record<string, React.CSSProperties> = {
+//   buttonContainer: {
+//     display: 'flex',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     width: '100%',
+//     gap: '90px',
+//   },
+//   button: {
+//     maxWidth: '150px',
+//     width: '25%',
+//     height: '35px',
+//     border: '0px',
+//     borderRadius: '30px',
+//     backgroundColor: '#6688D2',
+//     marginTop: '35px',
+//     marginBottom: '40px',
+//     color: '#ffffff',
+//     fontSize: '16px',
+//     fontWeight: 'bold',
+//     cursor: 'pointer',
+//     fontFamily: 'Arial, Helvetica, sans-serif',
+//   },
+// };
 

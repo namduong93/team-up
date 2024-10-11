@@ -2,11 +2,11 @@ import { FC } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { useNavigate } from "react-router-dom";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
+import { styled } from "styled-components";
 
 export const RoleRegistration: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
-
 
   const handleRoleClick = (selectedRole: 'Student' | 'Staff') => {
     setFormData({ ...formData, role: selectedRole });
@@ -18,101 +18,98 @@ export const RoleRegistration: FC = () => {
       alert('Please select a role before proceeding');
       return;
     }
-
     navigate('/accountinformation');
   };
-  
+
   return (
     <FlexBackground style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <form onSubmit={handleSubmit} style={styles.formContainer}>
-        <h1 style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}>
-          What is your role?
-        </h1>
+      <FormContainer onSubmit={handleSubmit}>
+        <Title>What is your role?</Title>
 
-        <div style={styles.roleContainer}>
-          <button 
+        <RoleContainer>
+          <StudentButton
             type='button'
-            style={{
-              ...styles.roleButton, 
-              backgroundColor: '#BFF4BE',
-              color: '#558964',
-              border: formData.role === 'Student' ? '1.5px solid #558964' : '0px'
-            }}
+            isSelected={formData.role === 'Student'} // Pass isSelected prop
             onClick={() => handleRoleClick('Student')}
           >
             Student
-          </button>
+          </StudentButton>
 
-          <button
-            type='button' 
-            style={{
-              ...styles.roleButton,
-              backgroundColor: '#FEB1B1',
-              color: '#AD0B0B',
-              border: formData.role === 'Staff' ? '1.5px solid #AD0B0B' : '0px'
-            }}
+          <StaffButton
+            type='button'
+            isSelected={formData.role === 'Staff'} // Pass isSelected prop
             onClick={() => handleRoleClick('Staff')}
           >
             Staff
-          </button>
-        </div>
+          </StaffButton>
+        </RoleContainer>
 
-        <button 
-          type='submit' 
-          style={{
-            ...styles.button,
-            backgroundColor: formData.role ? '#6688D2' : '#ccc',
-            cursor: formData.role ? 'pointer' : 'not-allowed'
-          }}
-          disabled={!formData.role}
-        >
-          Next
-        </button>
-      </form>
+        <Button disabled={!formData.role}>Next</Button>
+      </FormContainer>
     </FlexBackground>
   );
-}
+};
 
-const styles: Record<string, React.CSSProperties> = {
-  formContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    maxWidth: '600px',
-    width: '100%',
-  },
-  roleContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    // flexWrap: 'wrap',
-    width: '100%',
-  },
-  roleButton: {
-    border: '0px',
-    borderRadius: '10px',
-    margin: '0 0 2.5% 2.5%',
-    width: '45%',
-    minWidth: '0px',
-    maxWidth: '300px',
-    // gap: '5px',
-    height: '270px', 
-    fontSize: '25px',
-    cursor: 'pointer',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-  },
-  button: {
-    maxWidth: '150px',
-    width: '25%',
-    height: '35px',
-    border: '0px',
-    borderRadius: '30px',
-    backgroundColor: '#6688D2',
-    marginTop: '35px',
-    marginBottom: '40px',
-    color: '#ffffff',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-  },
-}
+const FormContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  width: 100%;
+`;
+
+const Title = styled.h1`
+  font-family: Arial, Helvetica, sans-serif;
+`;
+
+const Button = styled.button`
+  max-width: 150px;
+  width: 25%;
+  height: 35px;
+  border: 0px;
+  border-radius: 30px;
+  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  margin-top: 35px;
+  margin-bottom: 40px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
+  font-family: Arial, Helvetica, sans-serif;
+`;
+
+const RoleContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
+const StudentButton = styled.button<{ isSelected: boolean }>`
+  border: ${({ isSelected }) => (isSelected ? '1.5px solid #558964' : 'none')}; // Border logic for Student
+  border-radius: 10px;
+  margin: 0 0 2.5% 2.5%;
+  width: 45%;
+  min-width: 0px;
+  max-width: 300px;
+  height: 270px; 
+  font-size: 25px;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #BFF4BE;
+  color: #558964;
+`;
+
+const StaffButton = styled.button<{ isSelected: boolean }>`
+  border: ${({ isSelected }) => (isSelected ? '1.5px solid #AD0B0B' : 'none')}; // Border logic for Staff
+  border-radius: 10px;
+  margin: 0 0 2.5% 2.5%;
+  width: 45%;
+  min-width: 0px;
+  max-width: 300px;
+  height: 270px; 
+  font-size: 25px;
+  cursor: pointer;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FEB1B1;
+  color: #AD0B0B;
+`
