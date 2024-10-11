@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import { FaFilter } from "react-icons/fa";
 import styled from "styled-components";
 interface FilterSelectProps {
   options: { [key: string]: string[] };
@@ -9,10 +10,8 @@ interface FilterSelectProps {
 
 const FilterContainer = styled.div<{ $isOpen: boolean }>`
   position: absolute;
-  // top: 33px;
-  // right: 0;
-  top: 140px;
-  right: 30px;
+  top: 33px;
+  right: 0;
   z-index: 1000;
   background-color: ${({ theme }) => theme.background};
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -20,8 +19,9 @@ const FilterContainer = styled.div<{ $isOpen: boolean }>`
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
   padding: 10px;
-  // width: 250%;
-  width: fit-content;
+  max-width: 300px;
+  width: 200px;
+  
   height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
@@ -29,6 +29,7 @@ const FilterContainer = styled.div<{ $isOpen: boolean }>`
 
 const FilterField = styled.div`
   margin-bottom: 20px;
+  width: 100%;
 `;
 
 const FieldTitle = styled.h3`
@@ -103,3 +104,8 @@ export const FilterSelect: FC<FilterSelectProps> = ({
     </FilterContainer>
   );
 };
+
+export const FilterIcon = styled(FaFilter)`
+  height: 50%;
+  flex: 0 0 auto;
+`;

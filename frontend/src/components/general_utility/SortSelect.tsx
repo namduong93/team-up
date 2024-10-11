@@ -1,4 +1,5 @@
 import { FC, useState} from "react";
+import { FaSort } from "react-icons/fa";
 import styled from "styled-components";
 
 interface SortOption {
@@ -41,6 +42,7 @@ const SortOption = styled.div<{ isSelected: boolean }>`
     background-color: ${({ theme }) => theme.colours.primaryLight};
   }
 `;
+
 export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, isOpen }) => {
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
   
@@ -66,3 +68,8 @@ export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, isOpen 
     </SortContainer>
   );
 };
+
+export const SortIcon = styled(FaSort)`
+  height: 50%;
+  flex: 0 0 auto;
+`;

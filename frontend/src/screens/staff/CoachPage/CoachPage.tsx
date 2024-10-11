@@ -1,13 +1,12 @@
-import React, { FC, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import styled from "styled-components";
 // import { TeamCard } from "./TeamCard";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { SortSelect } from "../../../components/general_utility/SortSelect";
+import { SortIcon, SortSelect } from "../../../components/general_utility/SortSelect";
 import { SortButton } from "../../Dashboard";
-import { FaSort } from "react-icons/fa";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 
 const OverflowFlexBackground = styled(FlexBackground)`
@@ -91,10 +90,12 @@ export const SortContainer = styled.div`
 `;
 
 interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
-  isSortOpen: boolean;
+  isOpen: boolean;
+  icon: ReactNode;
+  label: string;
 }
 
-export const SortButtonResponsive: FC<ResponsiveSortButtonProps> = ({ onClick, style, isSortOpen, ...props }) => {
+export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon, label, style, isOpen, ...props }) => {
   return (
     <SortButton onClick={onClick} style={{
       height: '100%',
@@ -108,12 +109,12 @@ export const SortButtonResponsive: FC<ResponsiveSortButtonProps> = ({ onClick, s
       alignContent: 'center',
       minWidth: '29px',
       ...style
-    }} $isSortOpen={isSortOpen} {...props}>
+    }} $isSortOpen={isOpen} {...props}>
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
-          <FaSort style={{ height: '50%', flex: '0 0 auto' }} />
+          {icon}
         </div>
-        <span>Sort</span>
+        <span>{label}</span>
       </div>
     </SortButton>
   )
@@ -162,7 +163,11 @@ export const CoachPage: FC = () => {
           </div>
           <SortFilterSearchContainerDiv>
             <SortContainer>
-              <SortButtonResponsive isSortOpen={isSortOpen} onClick={() => setIsSortOpen((prev) => !prev)} />
+              <ResponsiveButton
+              icon={<SortIcon />}
+              label='Sort'
+              isOpen={isSortOpen}
+              onClick={() => setIsSortOpen((prev) => !prev)} />
               {isSortOpen && 
                 <SortSelect isOpen={isSortOpen} onSortChange={(sortOption) => setSortOption(sortOption)}
                 options={sortOptions} />}

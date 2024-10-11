@@ -4,7 +4,7 @@ import { FlexBackground } from "../../components/general_utility/Background";
 import TextInput from "../../components/general_utility/TextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
-import { ProgressBar, RegoProgressBar } from "../../components/general_utility/ProgressBar";
+import { RegoProgressBar } from "../../components/general_utility/ProgressBar";
 
 export const AccountInformation: FC = () => {
   const navigate = useNavigate();
