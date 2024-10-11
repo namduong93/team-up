@@ -15,6 +15,7 @@ export const defaultTheme: DefaultTheme = {
     optionUnselected: "#EBEBEB",
     optionSelected: "#BCCFF8",
     filterText: "#6c757d",
+    sidebarLine: "rgba(122, 122, 122, 90%)",
   },
   teamView: {
     pending: "#F68486",
