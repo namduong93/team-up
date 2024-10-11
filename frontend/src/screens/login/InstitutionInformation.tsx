@@ -5,6 +5,7 @@ import TextInput from "../../components/general_utility/TextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
 import { sendRequest } from "../../utility/request";
+import { RegoProgressBar } from "../../components/general_utility/ProgressBar";
 
 interface University {
   id: string;
@@ -86,7 +87,8 @@ export const InstitutionInformation: FC = () => {
       alignItems: 'flex-start',
       fontFamily: 'Arial, Helvetica, sans-serif',
     }}>
-      <div style={{ flex: 1, marginLeft: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <RegoProgressBar progressNumber={3} />
+      <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h1 style={{ marginBottom: '20px' }}>Institution Information</h1>
 
         <DropDownInput

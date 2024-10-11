@@ -63,8 +63,8 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'red',
   },
   textarea: {
-    padding: '10px',
-    border: '1px solid #ccc',
+    // padding: '10px',
+    // border: '1px solid #ccc',
     borderRadius: '10px',
     resize: 'vertical', // Allow vertical resizing of the textarea
     fontFamily: 'Arial, Helvetica, sans-serif',

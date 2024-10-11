@@ -5,6 +5,7 @@ import { useMultiStepRegoForm } from "./MultiStepRegoForm"; // Import the contex
 import DescriptiveTextInput from "../../components/general_utility/DescriptiveTextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import MultiRadio from "../../components/general_utility/MultiRadio";
+import { RegoProgressBar } from "../../components/general_utility/ProgressBar";
 
 // const steps = [
 //   { label: 'User Type', active: false },
@@ -50,8 +51,9 @@ export const SiteInformation: FC = () => {
   ];
   // use flex for the other stuff
   return (
-    <FlexBackground style={{ justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
-      <div style={{ flex: 1, marginLeft: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <FlexBackground style={{ justifyContent: 'space-between', overflowX: 'hidden', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+      <RegoProgressBar progressNumber={2} />
+      <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h1 style={{ marginBottom: '20px' }}>Site Information</h1>
 
         <DropDownInput
