@@ -9,6 +9,7 @@ import { SortIcon, SortSelect } from "../../../components/general_utility/SortSe
 import { SortButton } from "../../Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { FilterIcon, FilterSelect } from "../../../components/general_utility/FilterSelect";
+import { FaSearch } from "react-icons/fa";
 
 const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
@@ -103,6 +104,7 @@ export const SortFilterSearchContainerDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
+  min-width: 58px;
 `;
 
 export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon, label, style, isOpen, ...props }) => {
@@ -129,6 +131,68 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon,
 const pathMap: Record<string, number> = {
   '/coach/page/teams': 0,
   '/coach/page/students': 1,
+}
+
+const SearchInput = styled.input`
+  height: 100%;
+  width: 100%;
+  min-width: 29px;
+  border: 1px solid ${({ theme }) => theme.fonts.colour};
+  border-radius: 10px;
+  padding: 0;
+  grid-row: 1 / 2;
+  grid-column: 1 / 3;
+  box-sizing: border-box;
+  padding-left: 5px;
+  &:focus + div {
+    display: none;
+  }
+`;
+
+const SearchIcon = styled(FaSearch)`
+  min-width: 29px;
+  pointer-events: none;
+`;
+
+const SearchContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+`;
+
+const SearchCell = styled.div`
+  min-width: 29px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  flex-wrap: wrap;
+  pointer-events: none;
+  overflow: hidden;
+  left: 0;
+  z-index: 1;
+  color: ${({ theme }) => theme.colours.filterText};
+`;
+
+export const SearchBar: FC = () => {
+  return (
+  <SearchContainer>
+    <SearchInput type="input">
+    </SearchInput>
+    <SearchCell>
+      <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
+        <div style={{ height: '200%' }}>
+          <SearchIcon />
+        </div>
+          <span>Search</span>
+      </div>
+    </SearchCell>
+  </SearchContainer>
+  )
 }
 
 export const CoachPage: FC = () => {
@@ -202,7 +266,9 @@ export const CoachPage: FC = () => {
                     isOpen={isFilterOpen}
                     onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
                     currentFilters={filters} />}
-                
+              </SortContainer>
+              <SortContainer style={{ flexBasis: '120px' }}>
+                <SearchBar />
               </SortContainer>
             </SortFilterSearchContainerDiv>
           </MenuOptionsContainerDiv>
