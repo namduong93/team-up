@@ -25,7 +25,7 @@ export const RoleRegistration: FC = () => {
   return (
     <FlexBackground style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
       <form onSubmit={handleSubmit} style={styles.formContainer}>
-        <h1 style={{ textAlign: 'center', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+        <h1 style={{ fontFamily: 'Arial, Helvetica, sans-serif' }}>
           What is your role?
         </h1>
 
@@ -78,24 +78,31 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    maxWidth: '600px',
+    width: '100%',
   },
   roleContainer: {
     display: 'flex',
     justifyContent: 'center',
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
+    width: '100%',
   },
   roleButton: {
     border: '0px',
     borderRadius: '10px',
-    margin: '50px',
-    width: '300px',
-    height: '300px',
+    margin: '0 0 2.5% 2.5%',
+    width: '45%',
+    minWidth: '0px',
+    maxWidth: '300px',
+    // gap: '5px',
+    height: '270px', 
     fontSize: '25px',
     cursor: 'pointer',
     fontFamily: 'Arial, Helvetica, sans-serif',
   },
   button: {
-    width: '150px',
+    maxWidth: '150px',
+    width: '25%',
     height: '35px',
     border: '0px',
     borderRadius: '30px',

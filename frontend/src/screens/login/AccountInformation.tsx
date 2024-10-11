@@ -1,10 +1,11 @@
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FlexBackground } from "../../components/general_utility/Background";
 import TextInput from "../../components/general_utility/TextInput";
 import DropDownInput from "../../components/general_utility/DropDownInput";
 import { useMultiStepRegoForm } from "./MultiStepRegoForm";
 import { RegoProgressBar } from "../../components/general_utility/ProgressBar";
+import { styled } from "styled-components";
 
 export const AccountInformation: FC = () => {
   const navigate = useNavigate();
@@ -51,11 +52,10 @@ export const AccountInformation: FC = () => {
     }
   };
 
-  // Handle changes to the gender dropdown
   const handleGenderChange = (value: string) => {
     if (value === 'other') {
-      setShowOtherGenderInput(true); // Show text input if "Other" is selected
-      setFormData({ ...formData, gender: '' }); // Clear gender value in formData initially
+      setShowOtherGenderInput(true); 
+      setFormData({ ...formData, gender: '' }); 
     } else {
       setShowOtherGenderInput(false);
       setFormData({ ...formData, gender: value });
@@ -70,11 +70,11 @@ export const AccountInformation: FC = () => {
   return (
     <FlexBackground style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
       <RegoProgressBar progressNumber={1} />
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '600px', width: '100%', minWidth: '200px' }}>
-          <h1 style={{ marginBottom: '20px' }}>Account Information</h1>
+      <Container>
+        <ContentContainer>
+          <Title>Account Information</Title>
 
-          <div style={styles.doubleInputContainer}>
+          <DoubleInputContainer>
             <TextInput
               label="First Name"
               placeholder="John"
@@ -94,7 +94,7 @@ export const AccountInformation: FC = () => {
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
               width="45%" 
             />
-          </div>
+          </DoubleInputContainer>
 
           <TextInput
             label="Preferred Name"
@@ -106,7 +106,7 @@ export const AccountInformation: FC = () => {
             width="100%" 
           />
 
-          <div style={styles.doubleInputContainer}>
+          <DoubleInputContainer>
             <DropDownInput
               label="Gender"
               options={genderOptions}
@@ -125,9 +125,8 @@ export const AccountInformation: FC = () => {
               width="100%" 
             />
             </div>
-          </div>
+          </DoubleInputContainer>
 
-          {/* Conditionally render the text input for "Other" gender */}
           {showOtherGenderInput && (
             <TextInput
               label="Please Specify Your Gender"
@@ -170,73 +169,120 @@ export const AccountInformation: FC = () => {
             width="100%" 
           />
 
-          {error && (
-            <p style={styles.errorMessage}>{error}</p>
-          )}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          <div style={styles.buttonContainer}>
-            <button
-              style={styles.button}
-              onClick={() => navigate('/roleregistration')}
-            >
+          <ButtonContainer>
+            <Button onClick={() => navigate('/roleregistration')}>
               Back
-            </button>
+            </Button>
 
-            <button
-              style={{
-                ...styles.button,
-                ...(isButtonDisabled() ? styles.buttonDisabled : {}),
-              }}
-              disabled={isButtonDisabled()}
-              onClick={handleNext}
-            >
+            <Button disabled={isButtonDisabled()} onClick={handleNext}>
               Next
-            </button>
-          </div>
-        </div>
-      </div>
+            </Button>
+          </ButtonContainer>
+        </ContentContainer>
+      </Container>
     </FlexBackground>
   );
 };
 
-const styles: Record<string, React.CSSProperties> = {
-  doubleInputContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    gap: '0.8%',
-  },
-  errorMessage: {
-    color: 'red',
-    fontSize: '14px',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-    marginTop: '-10px',
-    textAlign: 'center',
-  },
-  buttonContainer: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: '90px',
-  },
-  button: {
-    maxWidth: '150px',
-    width: '25%',
-    height: '35px',
-    border: '0px',
-    borderRadius: '30px',
-    backgroundColor: '#6688D2',
-    marginTop: '35px',
-    marginBottom: '40px',
-    color: '#ffffff',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-  },
-  buttonDisabled: {
-    backgroundColor: '#ccc',
-    cursor: 'not-allowed',
-  },
-};
+// const styles: Record<string, React.CSSProperties> = {
+//   doubleInputContainer: {
+//     display: 'flex',
+//     justifyContent: 'space-between',
+//     width: '100%',
+//     gap: '0.8%',
+//   },
+//   errorMessage: {
+//     color: 'red',
+//     fontSize: '14px',
+//     fontFamily: 'Arial, Helvetica, sans-serif',
+//     marginTop: '-10px',
+//     textAlign: 'center',
+//   },
+//   buttonContainer: {
+//     display: 'flex',
+//     width: '100%',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     gap: '90px',
+//   },
+//   button: {
+//     maxWidth: '150px',
+//     width: '25%',
+//     height: '35px',
+//     border: '0px',
+//     borderRadius: '30px',
+//     backgroundColor: '#6688D2',
+//     marginTop: '35px',
+//     marginBottom: '40px',
+//     color: '#ffffff',
+//     fontSize: '16px',
+//     fontWeight: 'bold',
+//     cursor: 'pointer',
+//     fontFamily: 'Arial, Helvetica, sans-serif',
+//   },
+//   buttonDisabled: {
+//     backgroundColor: '#ccc',
+//     cursor: 'not-allowed',
+//   },
+// };
+
+const Container = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+`
+
+const ContentContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  width: 100%;
+  min-width: 200px;
+`
+
+const DoubleInputContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.8%;
+`
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: -10px;
+  text-align: center;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 90px;
+`
+
+const Button = styled.button<{ disabled?: boolean }>`
+  max-width: 150px;
+  width: 25%;
+  height: 35px;
+  border: 0px;
+  border-radius: 30px;
+  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  margin-top: 35px;
+  margin-bottom: 40px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
+  font-family: Arial, Helvetica, sans-serif;
+`
+
+const Title = styled.h1`
+  margin-bottom: 20px;
+  margin-top: 30px;
+`

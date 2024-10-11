@@ -88,55 +88,57 @@ export const InstitutionInformation: FC = () => {
       fontFamily: 'Arial, Helvetica, sans-serif',
     }}>
       <RegoProgressBar progressNumber={3} />
-      <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h1 style={{ marginBottom: '20px' }}>Institution Information</h1>
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+        <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: '600px', width: '100%', minWidth: '200px'  }}>
+          <h1 style={{ marginBottom: '20px' }}>Institution Information</h1>
 
-        <DropDownInput
-          label="Institution"
-          options={institutionOptions}
-          value={formData.institution || (isCustomInstitution ? 'other' : '')}
-          required={true}
-          onChange={handleInstitutionChange}
-          width="600px"
-        />
-
-        {isCustomInstitution && (
-          <TextInput
-            label="Other Institution"
-            placeholder="Please type your institution"
+          <DropDownInput
+            label="Institution"
+            options={institutionOptions}
+            value={formData.institution || (isCustomInstitution ? 'other' : '')}
             required={true}
-            value={formData.institution}
-            onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-            width="600px"
+            onChange={handleInstitutionChange}
+            width="100%"
           />
-        )}
 
-        {formData.role === 'Student' && (
-          <TextInput
-            label="Student Identifier Number"
-            placeholder="Please type"
-            required={true}
-            value={formData.studentId || ""}
-            onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-            width="600px"
-          />
-        )}
+          {isCustomInstitution && (
+            <TextInput
+              label="Other Institution"
+              placeholder="Please type your institution"
+              required={true}
+              value={formData.institution}
+              onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
+              width="100%"
+            />
+          )}
 
-        <div style={styles.buttonContainer}>
-          <button
-            style={{ ...styles.button }}
-            onClick={() => navigate('/siteinformation')}
-          >
-            Back
-          </button>
+          {formData.role === 'Student' && (
+            <TextInput
+              label="Student Identifier Number"
+              placeholder="Please type"
+              required={true}
+              value={formData.studentId || ""}
+              onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+              width="100%"
+            />
+          )}
 
-          <button
-            style={{ ...styles.button, ...(isButtonDisabled() ? styles.buttonDisabled : {}) }}
-            disabled={isButtonDisabled()}
-            onClick={handleSubmit}
-          >
-            Create Account
-          </button>
+          <div style={styles.buttonContainer}>
+            <button
+              style={{ ...styles.button }}
+              onClick={() => navigate('/siteinformation')}
+            >
+              Back
+            </button>
+
+            <button
+              style={{ ...styles.button, ...(isButtonDisabled() ? styles.buttonDisabled : {}) }}
+              disabled={isButtonDisabled()}
+              onClick={handleSubmit}
+            >
+              Create Account
+            </button>
+          </div>
         </div>
       </div>
     </FlexBackground>
@@ -148,10 +150,12 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
     gap: '90px',
   },
   button: {
-    width: '150px',
+    maxWidth: '150px',
+    width: '25%',
     height: '35px',
     border: '0px',
     borderRadius: '30px',

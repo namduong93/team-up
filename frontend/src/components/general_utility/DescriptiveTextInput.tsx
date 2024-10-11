@@ -18,8 +18,8 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   required = false,
   value,
   onChange,
-  width = '600px', // Default width
-  height = '100px', // Default height for textarea
+  width = '600px', 
+  height = '100px', 
 }) => {
   return (
     <div style={styles.container}>
@@ -45,6 +45,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     marginBottom: '1rem',
     fontFamily: 'Arial, Helvetica, sans-serif',
+    width: '100%'
   },
   label: {
     display: 'block',
@@ -66,6 +67,7 @@ const styles: Record<string, React.CSSProperties> = {
     // padding: '10px',
     // border: '1px solid #ccc',
     borderRadius: '10px',
+    boxSizing: 'border-box',
     resize: 'vertical', // Allow vertical resizing of the textarea
     fontFamily: 'Arial, Helvetica, sans-serif',
     fontSize: '16px',

@@ -67,7 +67,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   value,
   onChange,
   width = '300px',
-  descriptor, // Descriptive text added as an optional prop
+  descriptor, 
 }) => {
   return (
     <div style={{...styles.container, width}}>

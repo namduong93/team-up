@@ -9,8 +9,8 @@ interface MultiSelectCheckboxGroupProps {
   options: CheckboxOption[];
   selectedValues: string[];
   onChange: (values: string[]) => void;
-  label: string; // Optional label for the group
-  descriptor?: string; // Optional descriptor text
+  label: string; 
+  descriptor?: string; 
 }
 
 const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
@@ -84,7 +84,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     marginBottom: '1rem',
     fontFamily: 'Arial, Helvetica, sans-serif',
-    width: '620px',
+    width: '100%',
   },
   label: {
     display: 'block',
