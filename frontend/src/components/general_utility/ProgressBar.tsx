@@ -42,7 +42,7 @@ const ProgressItemsContainer = styled.div`
     height: 100%;
     width: 2px;
     left: 20px;
-    background-color: ${({ theme }) => theme.colours.sidebarBackground};
+    background-color: ${({ theme }) => theme.colours.sidebarLine};
   }
 `;
 
