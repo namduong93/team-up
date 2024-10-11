@@ -33,7 +33,7 @@ describe('GET /user/profile_info', () => {
   });
   
   describe('successful cases', () => {
-    test('success', async () => {
+    test('student success', async () => {
       const mockStudent: Student = {
         name: 'Quan',
         email: 'hoangtungquan@gmail.com',
