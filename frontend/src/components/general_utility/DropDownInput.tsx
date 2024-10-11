@@ -1,6 +1,8 @@
 import React from 'react';
+import { IoIosArrowDown } from 'react-icons/io';
+import styled from 'styled-components';
 
-interface DropdownInputProps {
+interface DropdownInputProps extends React.HTMLAttributes<HTMLSelectElement> {
   label: string;
   options: Array<{ value: string; label: string }>; // Array of options for the dropdown
   required?: boolean;
@@ -8,6 +10,53 @@ interface DropdownInputProps {
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   width?: string; // Allow adjustable width
   descriptor?: string; // Optional descriptor text
+}
+
+const RelativeSelectGrid = styled.div`
+  width: 100%;
+  height: 38px;
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: 1fr 38px;
+`;
+
+const RelativeSelectElement = styled.select`
+  appearance: none;
+  border: 1px solid #ccc;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  padding: 10px 1.5%;
+  padding-right: 30px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  grid-row: 1 / 2;
+  grid-column: 1 / 3;
+`;
+
+const SelectDownArrow = styled(IoIosArrowDown)`
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  margin: auto 6px auto auto;
+  pointer-events: none;
+  height: 40%;
+  width: 40%;
+`;
+
+interface RelativeSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
+  value: string;
+  required: boolean;
+}
+
+const RelativeSelect: React.FC<RelativeSelectProps> = ({ children, value, onChange, required, ...props }) => {
+
+  return (
+    <RelativeSelectGrid>
+      <RelativeSelectElement value={value} onChange={onChange} required={required} {...props} >
+        { children }
+      </RelativeSelectElement>
+      <SelectDownArrow />
+    </RelativeSelectGrid>
+  )
 }
 
 const DropdownInput: React.FC<DropdownInputProps> = ({
@@ -26,10 +75,10 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
         {required && <span style={styles.asterisk}>*</span>}
       </label>
       {descriptor && <div style={styles.descriptor}>{descriptor}</div>} {/* Render descriptor if provided */}
-      <select
+      <RelativeSelect
         value={value}
         onChange={onChange}
-        style={{ ...styles.select, width }}
+        style={{ width }}
         required={required}
       >
         {options.map((option) => (
@@ -37,7 +86,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
             {option.label}
           </option>
         ))}
-      </select>
+      </RelativeSelect>
     </div>
   );
 };

@@ -70,7 +70,7 @@ export const AccountInformation: FC = () => {
   return (
     <FlexBackground style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
       <RegoProgressBar progressNumber={1} />
-      <div style={{ flex: 1, marginLeft: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ flex: 1, marginLeft: '0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h1 style={{ marginBottom: '20px' }}>Account Information</h1>
 
         <div style={styles.doubleInputContainer}>
