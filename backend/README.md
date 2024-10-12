@@ -10,3 +10,5 @@ docker compose up --build
 # Window 2 (in backend/ directory)
 npm test
 ```
+
+*Note: The test_db is currently commented out from being built in Docker. Go to docker-compose.yaml and delete the comments for that part.*
