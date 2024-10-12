@@ -57,19 +57,4 @@ export const deleteAllRecords = async () => {
   }
 };
 
-// Clean up user-relevant tables.
-// DEV: update this function as needed when new tables are added.
-export const deleteUserRecords = async () => {
-  const client = await pool.connect();
-  try {
-    await client.query('DELETE FROM system_admins');
-    await client.query('DELETE FROM staffs');
-    await client.query('DELETE FROM students');
-    await client.query('DELETE FROM sessions');
-    await client.query('DELETE FROM users');
-  } finally {
-    client.release();
-  }
-}
-
 export default pool;

@@ -11,13 +11,18 @@ describe('Postgres Test DB Connection', () => {
       database: 'capstone_db_test',
     });
 
-    // Attempt to connect to the database
-    const client = await pool.connect();
+    try {
+      // Attempt to connect to the database
+      const client = await pool.connect();
 
-    // Verify the connection
-    expect(client).toBeTruthy();
+      // Verify the connection
+      expect(client).toBeTruthy();
 
-    // Release the client
-    client.release();
+      // Release the client back to the pool
+      client.release();
+    } finally {
+      // Ensure the pool is closed
+      await pool.end();
+    }
   });
 });
