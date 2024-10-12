@@ -206,18 +206,19 @@ VALUES
 -- Hardcoded data for users
 INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
 VALUES 
-('System Admin', '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO', 'admin@examplecom', 'L', 'he/him', 'Peanuts', 'None'),
+('System Admin', '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO', 'admin@examplecom', 'L', 'he/him', 'Peanuts', 'None'), -- password is 'admin'
 ('Staff Account', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'bob@examplecom', 'M', 'he/him', 'None', 'None'),
+('Test Staff Account', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststaff@examplecom', 'M', 'he/him', 'None', 'None'), -- password is 'pleasechange'
 ('Student Account', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'charlie.brown@examplecom', 'S', 'they/them', 'None', 'Wheelchair Access'),
-('Student Account 2', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'daniel.brown@examplecom', 'S', 'they/them', 'None', 'None');
-
+('Student Account 2', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'daniel.brown@examplecom', 'S', 'they/them', 'None', 'None'),
+('Test Student Account', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent@examplecom', 'S', 'they/them', 'None', 'None'); -- password is 'pleasechange'
 
 -- Hardcoded data for staff
 INSERT INTO staffs (user_id, university_id)
 VALUES 
 (1, 1),
-(2, 2);
-;
+(2, 2),
+(3, 1);
 
 -- Hardcoded data for system admins
 INSERT INTO system_admins (staff_id)
@@ -228,5 +229,6 @@ VALUES
 INSERT INTO students (user_id, university_id, student_id)
 VALUES 
 (2, 1, '1234567'),
-(3, 2, '7654321'),
-(4, NULL, '1231231');
+(4, 2, '7654321'),
+(5, NULL, '1231231'),
+(6, 1, '1698432');
