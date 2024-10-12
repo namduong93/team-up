@@ -7,6 +7,6 @@ docker compose up --build
 ```
 
 ```bash
-# Window 2
+# Window 2 (in backend/ directory)
 npm test
 ```
