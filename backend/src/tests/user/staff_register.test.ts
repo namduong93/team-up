@@ -1,6 +1,6 @@
 import { UserService } from '../../services/user_service';
 import { Staff } from '../../models/user/staff/staff';
-import pool, { deleteUserRecords } from '../test_util/test_utilities';
+import pool from '../test_util/test_utilities';
 import HttpError from "http-errors";
 import { SqlDbUserRepository } from '../../repository/user/sqldb';
 import { SqlDbSessionRepository } from '../../repository/session/sqldb';
@@ -11,10 +11,6 @@ describe('POST /staff/register', () => {
   beforeAll(async () => {
     // Initialize the UserService with a real repository that connects to the test database
     userService = new UserService(new SqlDbUserRepository(pool), new SqlDbSessionRepository(pool));
-  });
-
-  beforeEach(async () => {
-    await deleteUserRecords();
   });
 
   afterAll(() => {
