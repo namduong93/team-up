@@ -2,7 +2,7 @@ import { FC, useState} from "react";
 import { FaSort } from "react-icons/fa";
 import styled from "styled-components";
 
-interface SortOption {
+export interface SortOption {
   label: string;
   value: string;
 }

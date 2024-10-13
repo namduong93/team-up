@@ -1,16 +1,14 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
-import { FaBell, FaFilter, FaTimes } from "react-icons/fa";
+import { FaBell, FaTimes } from "react-icons/fa";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import { CompCard } from "../components/general_utility/CompCard";
-import { FilterIcon, FilterSelect } from "../components/general_utility/FilterSelect";
 import { ActionButton } from "../components/general_utility/ActionButton";
-import { SortIcon, SortSelect } from "../components/general_utility/SortSelect";
 import { Notifications } from "../components/general_utility/Notifications";
 import { sendRequest } from "../utility/request";
 import { useNavigate } from "react-router-dom";
-import { ResponsiveButton, SortContainer } from "./staff/CoachPage/CoachPage";
+import { PageHeader } from "../components/sort_filter_search/PageHeader";
 interface Competition {
   compName: string;
   location: string;
@@ -43,45 +41,7 @@ const DashboardContent = styled.div`
   overflow-x: visible;
 `;
 
-const DashboardHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  min-height: 117px;
-  min-width: fit-content;
-  align-items: center;
-  overflow-x: visible;
-  gap: 30px;
-  margin-right: 20px;
-  margin-left: 20px;
-`;
-
-const WelcomeMessage = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
-const WelcomeText = styled.div``;
-
-const ActionButtons = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 10px;
-  width: 100%;
-  margin-right: 20px;
-`;
-
-const RegisterAlert = styled.div`
-  display: flex;
-  gap: 10px;
-  align-items: center;
-`;
-
-const AlertButton = styled.button`
+export const AlertButton = styled.button`
   border-radius: 10px;
   padding: 10px;
   background-color: ${({ theme }) => theme.colours.secondaryLight};
@@ -94,41 +54,10 @@ const AlertButton = styled.button`
   }
 `;
 
-const SortFilterSearch = styled.div`
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  width: 100%;
-  max-width: 360px;
-`;
-
-// const FilterButton = styled.button<{ $isFilterOpen: boolean }>`
-//   background-color: ${({ theme }) => theme.background};
-//   border-radius: 10px;
-//   border: 1px solid ${({ theme }) => theme.colours.filterText};
-//   color: ${({ theme }) => theme.colours.filterText};
-//   padding: 8px 16px;
-//   display: flex;
-//   gap: 10px;
-//   align-items: center;
-
-//   ${({ $isFilterOpen: isFilterOpen, theme }) =>
-//     isFilterOpen &&
-//     `
-//     background-color: ${theme.colours.sidebarBackground};
-//     color: ${theme.fonts.colour};
-//   `}
-
-//   &:hover {
-//     cursor: pointer;
-//     background-color: ${({ theme }) => theme.colours.sidebarBackground};
-//     color: ${({ theme }) => theme.fonts.colour};
-//   }
-// `;
-
 export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
+  box-sizing: border-box;
   border: 1px solid ${({ theme }) => theme.colours.filterText};
   color: ${({ theme }) => theme.colours.filterText};
   padding: 8px 16px;
@@ -150,7 +79,7 @@ export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   }
 `;
 
-const FilterTagButton = styled.button`
+export const FilterTagButton = styled.button`
   display: inline-flex;
   align-items: center;
   background-color: ${({ theme }) => theme.colours.secondaryLight};
@@ -164,23 +93,13 @@ const FilterTagButton = styled.button`
   cursor: auto;
 `;
 
-const RemoveFilterIcon = styled(FaTimes)`
+export const RemoveFilterIcon = styled(FaTimes)`
   margin-left: 5px;
   color: ${({ theme }) => theme.fonts.colour};
   cursor: pointer;
   &:hover {
     color: ${({ theme }) => theme.colours.cancelDark};
   }
-`;
-
-const SearchInput = styled.input`
-  max-width: 150px;
-  max-height: 38px;
-  border: 1px solid ${({ theme }) => theme.fonts.colour};
-  border-radius: 10px;
-  padding: 10px;
-  color: ${({ theme }) => theme.fonts.colour};
-  background-color: ${({ theme }) => theme.background};
 `;
 
 const ContentArea = styled.div`
@@ -203,11 +122,9 @@ const CompetitionGrid = styled.div`
 
 export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortOption, setSortOption] = useState<string | null>(null);
   const sortOptions = [
     { label: "Default", value: "original" },
@@ -264,10 +181,6 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
   //   };
   // }, []);
 
-  const handleFilterToggle = () => {
-    setIsFilterOpen(prev => !prev);
-  };
-
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
@@ -318,10 +231,6 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
     );
   });
 
-  const handleSortToggle = () => {
-    setIsSortOpen((prev) => !prev);
-  };
-
   // click outside sort to close popup
   // useEffect(() => {
   //   const handleClickOutside = (event: MouseEvent) => {
@@ -360,66 +269,23 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
     <OverflowFlexBackground>
       <DashboardSidebar name={name} affiliation={affiliation} cropState={false}/>
       <DashboardContent>
-        <DashboardHeader>
-          <WelcomeMessage>
-            <h1>Dashboard</h1>
-            <WelcomeText>Welcome back, {name}!</WelcomeText>
-          </WelcomeMessage>
-          
-          <ActionButtons>
-            <RegisterAlert>
-              <ActionButton 
-                actionName="Register" 
-                question="Register for a new competition?" 
-                redirectPath="/comp/register"
-                actionType="primary"
-              />
-              <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}><FaBell /></AlertButton>
-            </RegisterAlert>
-            
-            <SortFilterSearch>
-            <SortContainer>
-                <ResponsiveButton
-                  icon={<SortIcon />}
-                  label='Sort'
-                  isOpen={isSortOpen}
-                  onClick={handleSortToggle}
-                >
-                </ResponsiveButton>
-                {isSortOpen && (
-                <SortSelect
-                  options={sortOptions}
-                  onSortChange={(selectedSort) => setSortOption(selectedSort)}
-                  isOpen={isSortOpen}
-                />
-                )}
-              </SortContainer>
-
-              <SortContainer>
-                <ResponsiveButton
-                  icon={<FilterIcon />}
-                  label='Filter'
-                  isOpen={isFilterOpen}
-                  onClick={handleFilterToggle}
-                >
-                  <FaFilter /> Filter
-                </ResponsiveButton>
-                <FilterSelect
-                  options={filterOptions}
-                  onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
-                  isOpen={isFilterOpen}
-                  currentFilters={filters}
-                />
-              </SortContainer>
-              <SearchInput
-                type="text"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </SortFilterSearch>
-          </ActionButtons>
-        </DashboardHeader>
+        <PageHeader
+          pageTitle="Dashboard"
+          pageDescription={`Welcome back, ${name}!`}
+          sortOptions={sortOptions}
+          filterOptions={filterOptions}
+          sortOptionState={{ sortOption, setSortOption }}
+          filtersState={{ filters, setFilters }}
+          searchTermState={{ searchTerm, setSearchTerm }}
+        >
+          <ActionButton
+            actionName="Register"
+            question="Register for a new competition?"
+            redirectPath="/comp/register"
+            actionType="primary"
+          />
+          <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)} ><FaBell /></AlertButton>
+        </PageHeader>
 
         {/* Notifications Popup */}
         {isNotificationsVisible && <Notifications />}
