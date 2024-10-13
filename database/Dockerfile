@@ -10,6 +10,8 @@ COPY ./db_entrypoint.sh ./custom-entrypoint.sh
 RUN dos2unix ./custom-entrypoint.sh
 RUN chmod +x ./custom-entrypoint.sh
 
+EXPOSE 5432
+
 COPY db.sql ./
 
 ENTRYPOINT [ "./custom-entrypoint.sh" ]
