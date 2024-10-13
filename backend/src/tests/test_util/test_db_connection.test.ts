@@ -1,14 +1,14 @@
 import { Pool } from 'pg';
 
-describe('Postgres Test DB Connection', () => {
+describe('Postgres DB Connection', () => {
   test('should establish a successful pg db connection', async () => {
     // Create a new connection pool
     const pool = new Pool({
       user: 'postgres',
       password: 'ab',
       host: 'localhost',
-      port: 5433,
-      database: 'capstone_db_test',
+      port: 5432,
+      database: 'capstone_db',
     });
 
     try {

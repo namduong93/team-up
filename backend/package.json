@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "cross-env POSTGRES_DB=capstone_db_test jest --detectOpenHandles",
+    "test": "cross-env jest --detectOpenHandles",
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
     "start": "node dist/src/server.js",

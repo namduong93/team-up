@@ -1,13 +1,12 @@
 import { Pool } from 'pg';
-import { SessionRepository } from '../../repository/session_repository_type';
 
 // Establish a connection with the test database
 const pool = new Pool({
   user: 'postgres',
   password: 'ab',
   host: 'localhost',
-  port: 5433, // Test DB port
-  database: 'capstone_db_test',
+  port: 5432, // Test DB port
+  database: 'capstone_db',
 });
 
 export const getUserIdFromSessionId = async(sessionId: string): Promise<number | null> => {
