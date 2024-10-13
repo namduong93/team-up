@@ -12,7 +12,7 @@ interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   pageDescription: string;
   sortOptions: Array<SortOption>;
   filterOptions: Record<string, Array<string>>;
-  sortOptionState: { sortOption: string, setSortOption: React.Dispatch<SetStateAction<string | null>> };
+  sortOptionState: { sortOption: string | null, setSortOption: React.Dispatch<SetStateAction<string | null>> };
   filtersState: { filters: Filters, setFilters: React.Dispatch<SetStateAction<Filters>> };
   searchTermState: { searchTerm: string, setSearchTerm: React.Dispatch<SetStateAction<string>> };
 }
@@ -46,7 +46,7 @@ export const MenuOptionsContainerDiv = styled.div`
   flex-direction: column-reverse;
 `;
 
-export const SortContainer = styled.div`
+export const ButtonContainer = styled.div`
   width: 19%;
   height: 33px;
   position: relative;
@@ -128,7 +128,7 @@ export const PageHeader: FC<HeaderAttributes> = ({
   sortOptionState: { sortOption, setSortOption },
   filtersState: { filters, setFilters },
   searchTermState: { searchTerm, setSearchTerm },
-  style, ...props }) => {
+  children, style, ...props }) => {
 
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
@@ -142,7 +142,7 @@ export const PageHeader: FC<HeaderAttributes> = ({
 
     <MenuOptionsContainerDiv>
       <SortFilterSearchContainerDiv>
-        <SortContainer>
+        <ButtonContainer>
           
           <ResponsiveButton
             icon={<SortIcon />}
@@ -155,9 +155,9 @@ export const PageHeader: FC<HeaderAttributes> = ({
           <SortSelect isOpen={isSortOpen} onSortChange={(sortOption) => setSortOption(sortOption)}
           options={sortOptions} />}
 
-        </SortContainer>
+        </ButtonContainer>
         
-        <SortContainer>
+        <ButtonContainer>
           <ResponsiveButton
             icon={<FilterIcon />}
             label='Filter'
@@ -172,13 +172,16 @@ export const PageHeader: FC<HeaderAttributes> = ({
               onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
               currentFilters={filters} 
           />}
-        </SortContainer>
+        </ButtonContainer>
         
-        <SortContainer style={{ flexBasis: '120px' }}>
+        <ButtonContainer style={{ flex: '1 1 58px' }}>
           <SearchBar value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)} />
-        </SortContainer>
+        </ButtonContainer>
       </SortFilterSearchContainerDiv>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', columnGap: '2%' }}>
+        {children}
+      </div>
     </MenuOptionsContainerDiv>
   </PageHeaderContainerDiv>
   )

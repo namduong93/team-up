@@ -6,10 +6,12 @@ import styled from "styled-components";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { SortIcon, SortSelect } from "../../../components/general_utility/SortSelect";
-import { FilterTagButton, RemoveFilterIcon, SortButton } from "../../Dashboard";
+import { AlertButton, FilterTagButton, RemoveFilterIcon, SortButton } from "../../Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { FilterIcon, FilterSelect } from "../../../components/general_utility/FilterSelect";
-import { FaSearch } from "react-icons/fa";
+import { FaBell, FaSearch } from "react-icons/fa";
+import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
+import { ActionButton } from "../../../components/general_utility/ActionButton";
 
 const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
@@ -44,10 +46,10 @@ const PageHeaderContainerDiv = styled.div`
   width: 100%;
 `;
 
-const PageHeader = styled.h1`
-  margin-bottom: 0;
-  font-size: 2em;
-`;
+// const PageHeader = styled.h1`
+//   margin-bottom: 0;
+//   font-size: 2em;
+// `;
 
 const PageDescriptionSpan = styled.span`
   color: #525252;
@@ -247,44 +249,23 @@ export const CoachPage: FC = () => {
       <MainPageDiv>
 
         {/* Page header */}
-        <PageHeaderContainerDiv style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around' }}>
-            <PageHeader>Coach Page</PageHeader>
-            <PageDescriptionSpan>Manage Teams and Students for your Competition</PageDescriptionSpan>
-          </div>
-          <MenuOptionsContainerDiv>
-            <SortFilterSearchContainerDiv>
-              <SortContainer>
-                <ResponsiveButton
-                icon={<SortIcon />}
-                label='Sort'
-                isOpen={isSortOpen}
-                onClick={() => setIsSortOpen((prev) => !prev)} />
-                {isSortOpen && 
-                  <SortSelect isOpen={isSortOpen} onSortChange={(sortOption) => setSortOption(sortOption)}
-                  options={sortOptions} />}
-              </SortContainer>
-              <SortContainer>
-                <ResponsiveButton
-                  icon={<FilterIcon />}
-                  label='Filter'
-                  isOpen={isFilterOpen}
-                  onClick={() => setIsFilterOpen((prev) => !prev)}/>
-                
-                {isFilterOpen &&
-                  <FilterSelect
-                    options={filterOptions}
-                    isOpen={isFilterOpen}
-                    onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
-                    currentFilters={filters} />}
-              </SortContainer>
-              <SortContainer style={{ flexBasis: '120px' }}>
-                <SearchBar value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)} />
-              </SortContainer>
-            </SortFilterSearchContainerDiv>
-          </MenuOptionsContainerDiv>
-        </PageHeaderContainerDiv>
+        <PageHeader 
+          pageTitle="Coach Page"
+          pageDescription="Manage Teams and Students for your Competition"
+          sortOptions={sortOptions}
+          filterOptions={filterOptions}
+          sortOptionState={{ sortOption, setSortOption }}
+          filtersState={{ filters, setFilters }}
+          searchTermState={{ searchTerm, setSearchTerm }}
+        >
+          <ActionButton
+            actionName="Register"
+            question="Register for a new competition?"
+            redirectPath="/comp/register"
+            actionType="primary"
+          />
+          <AlertButton onClick={() => {}} ><FaBell /></AlertButton>
+        </PageHeader>
 
         {/* Teams-Students page selection */}
         <PageOptionsContainerDiv>

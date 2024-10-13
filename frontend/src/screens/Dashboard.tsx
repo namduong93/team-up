@@ -11,6 +11,7 @@ import { Notifications } from "../components/general_utility/Notifications";
 import { sendRequest } from "../utility/request";
 import { useNavigate } from "react-router-dom";
 import { ResponsiveButton, SortContainer } from "./staff/CoachPage/CoachPage";
+import { PageHeader } from "../components/sort_filter_search/PageHeader";
 interface Competition {
   compName: string;
   location: string;
@@ -81,7 +82,7 @@ const RegisterAlert = styled.div`
   align-items: center;
 `;
 
-const AlertButton = styled.button`
+export const AlertButton = styled.button`
   border-radius: 10px;
   padding: 10px;
   background-color: ${({ theme }) => theme.colours.secondaryLight};
@@ -266,10 +267,6 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
   //   };
   // }, []);
 
-  const handleFilterToggle = () => {
-    setIsFilterOpen(prev => !prev);
-  };
-
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
@@ -320,10 +317,6 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
     );
   });
 
-  const handleSortToggle = () => {
-    setIsSortOpen((prev) => !prev);
-  };
-
   // click outside sort to close popup
   // useEffect(() => {
   //   const handleClickOutside = (event: MouseEvent) => {
@@ -362,66 +355,23 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
     <OverflowFlexBackground>
       <DashboardSidebar name={name} affiliation={affiliation} cropState={false}/>
       <DashboardContent>
-        <DashboardHeader>
-          <WelcomeMessage>
-            <h1>Dashboard</h1>
-            <WelcomeText>Welcome back, {name}!</WelcomeText>
-          </WelcomeMessage>
-          
-          <ActionButtons>
-            <RegisterAlert>
-              <ActionButton 
-                actionName="Register" 
-                question="Register for a new competition?" 
-                redirectPath="/comp/register"
-                actionType="primary"
-              />
-              <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}><FaBell /></AlertButton>
-            </RegisterAlert>
-            
-            <SortFilterSearch>
-            <SortContainer>
-                <ResponsiveButton
-                  icon={<SortIcon />}
-                  label='Sort'
-                  isOpen={isSortOpen}
-                  onClick={handleSortToggle}
-                >
-                </ResponsiveButton>
-                {isSortOpen && (
-                <SortSelect
-                  options={sortOptions}
-                  onSortChange={(selectedSort) => setSortOption(selectedSort)}
-                  isOpen={isSortOpen}
-                />
-                )}
-              </SortContainer>
-
-              <SortContainer>
-                <ResponsiveButton
-                  icon={<FilterIcon />}
-                  label='Filter'
-                  isOpen={isFilterOpen}
-                  onClick={handleFilterToggle}
-                >
-                  <FaFilter /> Filter
-                </ResponsiveButton>
-                <FilterSelect
-                  options={filterOptions}
-                  onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
-                  isOpen={isFilterOpen}
-                  currentFilters={filters}
-                />
-              </SortContainer>
-              <SearchInput
-                type="text"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </SortFilterSearch>
-          </ActionButtons>
-        </DashboardHeader>
+        <PageHeader
+          pageTitle="Dashboard"
+          pageDescription={`Welcome back, ${name}!`}
+          sortOptions={sortOptions}
+          filterOptions={filterOptions}
+          sortOptionState={{ sortOption, setSortOption }}
+          filtersState={{ filters, setFilters }}
+          searchTermState={{ searchTerm, setSearchTerm }}
+        >
+          <ActionButton
+            actionName="Register"
+            question="Register for a new competition?"
+            redirectPath="/comp/register"
+            actionType="primary"
+          />
+          <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)} ><FaBell /></AlertButton>
+        </PageHeader>
 
         {/* Notifications Popup */}
         {isNotificationsVisible && <Notifications />}
