@@ -151,7 +151,7 @@ export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   }
 `;
 
-const FilterTagButton = styled.button`
+export const FilterTagButton = styled.button`
   display: inline-flex;
   align-items: center;
   background-color: ${({ theme }) => theme.colours.secondaryLight};
@@ -165,7 +165,7 @@ const FilterTagButton = styled.button`
   cursor: auto;
 `;
 
-const RemoveFilterIcon = styled(FaTimes)`
+export const RemoveFilterIcon = styled(FaTimes)`
   margin-left: 5px;
   color: ${({ theme }) => theme.fonts.colour};
   cursor: pointer;

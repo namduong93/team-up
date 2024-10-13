@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { SortIcon, SortSelect } from "../../../components/general_utility/SortSelect";
-import { SortButton } from "../../Dashboard";
+import { FilterTagButton, RemoveFilterIcon, SortButton } from "../../Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { FilterIcon, FilterSelect } from "../../../components/general_utility/FilterSelect";
 import { FaSearch } from "react-icons/fa";
@@ -228,6 +228,17 @@ export const CoachPage: FC = () => {
     e.preventDefault();
     navigate('/coach/page/students');
   }
+
+  const removeFilter = (field: string, value: string) => {
+    setFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters };
+      updatedFilters[field] = updatedFilters[field].filter((v) => v !== value);
+      if (updatedFilters[field].length === 0) {
+        delete updatedFilters[field];
+      }
+      return updatedFilters; // trigger render to update filter dropdown
+    });
+  };
   return (
   <OverflowFlexBackground>
     {/* Sidebar */}
@@ -295,7 +306,7 @@ export const CoachPage: FC = () => {
         </PageOptionsContainerDiv>
 
         {/* Display of Teams/Students */}
-        <Outlet />
+        <Outlet context={{ filters, sortOption, searchTerm, removeFilter }} />
         
       </MainPageDiv>
   </OverflowFlexBackground>
