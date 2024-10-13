@@ -2,8 +2,8 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Landing } from './screens/login/Landing';
-import { Login } from './screens/login/Login';
-import { SignUp } from './screens/login/SignUp';
+// import { Login } from './screens/login/Login';
+// import { SignUp } from './screens/login/SignUp';
 import { Dashboard } from './screens/Dashboard';
 import { Account } from './screens/Account';
 import { RoleRegistration } from './screens/login/RoleRegistration';
@@ -132,8 +132,8 @@ function App() {
         </div>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
+          {/* <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} /> */}
           {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
               {/* <Route path="/coach/page" element={<TeamsView />} /> */}
 

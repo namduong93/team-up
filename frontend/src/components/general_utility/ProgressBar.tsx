@@ -12,6 +12,9 @@ const RegoProgressContainer = styled.div`
   height: 100%;
   flex-direction: column;
   align-items: center;
+  border-radius: 10px;
+  /* margin-top: 10px;
+  margin-left: 10px; */
 
   @media (max-width: 600px) {
     min-width: 60px;

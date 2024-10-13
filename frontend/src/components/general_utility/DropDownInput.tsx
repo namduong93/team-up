@@ -4,13 +4,41 @@ import styled from 'styled-components';
 
 interface DropdownInputProps extends React.HTMLAttributes<HTMLSelectElement> {
   label: string;
-  options: Array<{ value: string; label: string }>; // Array of options for the dropdown
+  options: Array<{ value: string; label: string }>;
   required?: boolean;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  width?: string; // Allow adjustable width
-  descriptor?: string; // Optional descriptor text
+  width?: string;
+  descriptor?: string;
 }
+
+const Container = styled.div<{ width: string }>`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  width: ${({ width }) => width};
+`;
+
+const Label = styled.label`
+  display: block;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  margin-top: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+`;
+
+const Asterisk = styled.span`
+  color: red;
+`;
+
+const Descriptor = styled.div`
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
+`;
 
 const RelativeSelectGrid = styled.div`
   width: 100%;
@@ -48,18 +76,16 @@ interface RelativeSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
   required: boolean;
 }
 
-const RelativeSelect: React.FC<RelativeSelectProps> = ({ children, value, onChange, required, ...props }) => {
+const RelativeSelect: React.FC<RelativeSelectProps> = ({ children, value, onChange, required, ...props }) => (
+  <RelativeSelectGrid>
+    <RelativeSelectElement value={value} onChange={onChange} required={required} {...props}>
+      {children}
+    </RelativeSelectElement>
+    <SelectDownArrow />
+  </RelativeSelectGrid>
+);
 
-  return (
-    <RelativeSelectGrid>
-      <RelativeSelectElement value={value} onChange={onChange} required={required} {...props} >
-        { children }
-      </RelativeSelectElement>
-      <SelectDownArrow />
-    </RelativeSelectGrid>
-  )
-}
-
+// DropdownInput Component
 const DropdownInput: React.FC<DropdownInputProps> = ({
   label,
   options,
@@ -67,63 +93,24 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   value,
   onChange,
   width = '300px',
-  descriptor, // Descriptive text added as an optional prop
+  descriptor,
 }) => {
   return (
-    <div style={{...styles.container, width}}>
-      <label style={styles.label}>
+    <Container width={width}>
+      <Label>
         {label}
-        {required && <span style={styles.asterisk}>*</span>}
-      </label>
-      {descriptor && <div style={styles.descriptor}>{descriptor}</div>} {/* Render descriptor if provided */}
-      <RelativeSelect
-        value={value}
-        onChange={onChange}
-        required={required}
-      >
+        {required && <Asterisk>*</Asterisk>}
+      </Label>
+      {descriptor && <Descriptor>{descriptor}</Descriptor>}
+      <RelativeSelect value={value} onChange={onChange} required={required}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
       </RelativeSelect>
-    </div>
+    </Container>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: '1rem',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-  },
-  label: {
-    display: 'block',
-    textAlign: 'left',
-    marginBottom: '0.5rem',
-    marginTop: '10px',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-    fontWeight: 'bold',
-    fontSize: '18px',
-  },
-  asterisk: {
-    color: 'red',
-  },
-  select: {
-    padding: '10px 1.5%',
-    border: '1px solid #ccc',
-    borderRadius: '10px',
-    marginBottom: '5px',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-    height: '38px', 
-    paddingRight: '30px',
-  },
-  descriptor: {
-    marginBottom: '5px',
-    fontSize: '14px',
-    color: '#555',
-  },
 };
 
 export default DropdownInput;
