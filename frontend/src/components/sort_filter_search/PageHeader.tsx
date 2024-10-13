@@ -50,6 +50,7 @@ export const SortFilterSearchContainerDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
+  column-gap: 4px;
   min-width: 58px;
 `;
 
