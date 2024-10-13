@@ -86,17 +86,17 @@ export class UserController {
   });
 
   studentDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name' });
+    res.json({ preferredName: 'Name', affiliation: 'UNSW' });
     return;
   });
   
   staffDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name' });
+    res.json({ preferredName: 'Name', affiliation: 'UNSW' });
     return;
   });
 
   systemAdminDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name' });
+    res.json({ preferredName: 'Name', affiliation: 'ICPC' });
     return;
   });
 

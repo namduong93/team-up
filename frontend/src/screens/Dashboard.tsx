@@ -19,8 +19,6 @@ interface Competition {
 }
 
 interface DashboardsProps {
-  name: string;
-  affiliation: string;
   competitions: Competition[];
 }
 
@@ -120,7 +118,7 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-export const Dashboard: FC<DashboardsProps> = ({ affiliation, competitions }) => {
+export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -137,6 +135,7 @@ export const Dashboard: FC<DashboardsProps> = ({ affiliation, competitions }) =>
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [preferredName, setPreferredName] = useState<string>("");
+  const [affiliation, setAffiliation] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -146,11 +145,12 @@ export const Dashboard: FC<DashboardsProps> = ({ affiliation, competitions }) =>
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setIsAdmin(typeResponse.data.type === "system_admin");
         
-        const nameResponse = await sendRequest.get<{ preferredName: string }>(`/${typeResponse.data.type}/dash_info`);
+        const infoResponse = await sendRequest.get<{ preferredName: string, affiliation: string }>(`/${typeResponse.data.type}/dash_info`);
         // Can also store the preferredName from the response and use it in the sidebar.
         // Request any personal info needed here and then if there's an auth error in any of them
         // the page will redirect.
-        setPreferredName(nameResponse.data.preferredName);
+        setPreferredName(infoResponse.data.preferredName);
+        setAffiliation(infoResponse.data.affiliation);
         setIsLoaded(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {

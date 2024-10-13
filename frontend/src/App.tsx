@@ -163,7 +163,7 @@ function App() {
               <Route path='teams' element={ <TeamDisplay /> } />
               <Route path='students' element={ <StudentDisplay /> } />
             </Route>
-          <Route path="/dashboard" element={<Dashboard name={name} affiliation={affiliation} competitions={competitions} />} />
+          <Route path="/dashboard" element={<Dashboard competitions={competitions} />} />
           <Route path="/account" element={<Account />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/competition/:compId/:role" element={<Competition />} />
