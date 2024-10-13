@@ -130,79 +130,35 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   }
 
   competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionDetailsObject> | undefined> => {
-    const competitionMap: Map<number, { userType: Set<CompetitionUserType>, competition: Competition }> = new Map();
+    const competitionMap: Map<number, { userType: Array<CompetitionUserType>, competition: Competition }> = new Map();
+    
+    const participantComps = await this.pool.query(
+      `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
+        general_reg_deadline AS "generalRegDeadline" FROM competition_list_participants(${userId})`
+    );
+    this.addCompetitionIdsToMap(participantComps.rows, competitionMap, CompetitionUserType.PARTICIPANT);
+    
+    const coachComps = await this.pool.query(
+      `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
+      general_reg_deadline AS "generalRegDeadline" FROM competition_list_coaches(${userId})`
+    );
+    this.addCompetitionIdsToMap(coachComps.rows, competitionMap, CompetitionUserType.COACH);
 
-    if (userType === UserType.SYSTEM_ADMIN) {
-      // Find all competition ids that user is an admin for
-      const competitionIdsQuery = `
-        SELECT competition_id 
-        FROM competition_admins 
-        WHERE staff_id = $1
-      `;
-      const competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
-      this.addCompetitionIdsToMap(competitionIdsResult.rows, competitionMap, CompetitionUserType.SYSTEM_ADMIN);
-    } else if (userType === UserType.STUDENT) {
-      // Find all competition ids that user is a participant in
-      const competitionIdsQuery = `
-        SELECT competition_id 
-        FROM competition_participants 
-        WHERE student_id = $1
-      `;
-      const competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
-      this.addCompetitionIdsToMap(competitionIdsResult.rows, competitionMap, CompetitionUserType.PARTICIPANT);
-    } else {
-      // Find all competition ids that user is a coach for
-      let competitionIdsQuery = `
-        SELECT competition_id 
-        FROM competition_coaches 
-        WHERE staff_id = $1
-      `;
-      let competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
-      this.addCompetitionIdsToMap(competitionIdsResult.rows, competitionMap, CompetitionUserType.COACH);
+    const siteCoordinatorComps = await this.pool.query(
+      `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
+      general_reg_deadline AS "generalRegDeadline" FROM competition_list_site_coordinators(${userId})`
+    );
+    this.addCompetitionIdsToMap(siteCoordinatorComps.rows, competitionMap, CompetitionUserType.SITE_COORDINATOR);
 
-      // Find all competition ids that user is a site coordinator for
-      competitionIdsQuery = `
-        SELECT competition_id 
-        FROM competition_site_coordinators 
-        WHERE staff_id = $1
-      `;
-      competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
-      this.addCompetitionIdsToMap(competitionIdsResult.rows, competitionMap, CompetitionUserType.SITE_COORDINATOR);
-    }
+    const adminComps = await this.pool.query(
+      `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
+      general_reg_deadline AS "generalRegDeadline" FROM competition_list_admins(${userId})`
+    );
+    this.addCompetitionIdsToMap(adminComps.rows, competitionMap, CompetitionUserType.ADMIN);
 
-    const competitionIdArray = Array.from(competitionMap.keys());
-
-    // Find competition details for each competition
-    let competitions: Array<{ userType: CompetitionUserType[], competition: Competition }> = [];
-    for (const competitionId of competitionIdArray) {
-      // Find competition details
-      const competitionDetailsQuery = `
-        SELECT id, name, team_size, early_reg_deadline, general_reg_deadline, code
-        FROM competitions
-        WHERE id = $1
-      `;
-
-      const competitionDetailsResult = await this.pool.query(competitionDetailsQuery, [competitionId]);
-      const competition = competitionDetailsResult.rows[0];
-
-      // Find site details
-      const siteQuery = `
-        SELECT university_id, name
-        FROM competition_sites
-        WHERE competition_id = $1
-      `;
-
-      const siteResult = await this.pool.query(siteQuery, [competitionId]);
-      const siteLocations = siteResult.rows;
-
-      // Add site details to competition object
-      competition.siteLocations = siteLocations;
-
-      const userTypeSet = competitionMap.get(competitionId)?.userType;
-      if (userTypeSet) {
-        competitions.push({ userType: Array.from(userTypeSet), competition });
-      }
-    }
+    const competitions: Array<CompetitionDetailsObject> = [...competitionMap.values()];
+    console.log('map:', competitionMap);
+    console.log('array:', competitions);
 
     return competitions;
   }
@@ -246,12 +202,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   }
 
   // Helper function to add competition ids to map
-  private addCompetitionIdsToMap = (rows: any[], competitionMap: Map<number, { userType: Set<CompetitionUserType>, competition: Competition }>, userType: CompetitionUserType) => {
+  private addCompetitionIdsToMap = (rows: any[], competitionMap: Map<number, { userType: Array<CompetitionUserType>, competition: Competition }>, userType: CompetitionUserType) => {
     rows.forEach(row => {
-      if (!competitionMap.has(row.competition_id)) {
-        competitionMap.set(row.competition_id, { userType: new Set([userType]), competition: row });
+      if (!competitionMap.has(row.id)) {
+        competitionMap.set(row.id, { userType: [userType], competition: row });
       } else {
-        competitionMap.get(row.competition_id)?.userType.add(userType);
+        competitionMap.get(row.id)?.userType.push(userType);
       }
     });
   }
