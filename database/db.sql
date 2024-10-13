@@ -206,7 +206,7 @@ VALUES
 -- Hardcoded data for users
 INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
 VALUES 
-('System Admin', '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO', 'admin@examplecom', 'L', 'he/him', 'Peanuts', 'None'),
+('System Admin', '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO', 'admin@examplecom', 'L', 'he/him', 'Peanuts', 'None'), -- password is 'admin'
 ('Staff Account', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'bob@examplecom', 'M', 'he/him', 'None', 'None'),
 ('Student Account', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'charlie.brown@examplecom', 'S', 'they/them', 'None', 'Wheelchair Access'),
 ('Student Account 2', '$2y$10$abcdefgh1234567890abcdefgh1234567890abcdefgh', 'daniel.brown@examplecom', 'S', 'they/them', 'None', 'None');

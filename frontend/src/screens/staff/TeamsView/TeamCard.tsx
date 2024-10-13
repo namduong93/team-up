@@ -1,7 +1,7 @@
 // import React from "react";
 import { FC, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 interface TeamCardProps {
   teamDetails: {
@@ -104,10 +104,11 @@ const TeamMemberDiv = styled.div`
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, _ ] = useState(teamDetails.status);
+  const theme = useTheme();
   const colorMap = {
-    'pending': '#F48385',
-    'unregistered': '#FDD386',
-    'registered': '#8BDFA5',
+    'pending': theme.teamView.pending,
+    'unregistered': theme.teamView.unregistered,
+    'registered': theme.teamView.registered,
   };
   return (
     <StyledHoverDiv>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
 interface CheckboxOption {
   value: string;
@@ -9,9 +10,57 @@ interface MultiSelectCheckboxGroupProps {
   options: CheckboxOption[];
   selectedValues: string[];
   onChange: (values: string[]) => void;
-  label: string; // Optional label for the group
-  descriptor?: string; // Optional descriptor text
+  label: string;
+  descriptor?: string;
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+`;
+
+const Label = styled.label`
+  display: block;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 18px;
+`;
+
+const Descriptor = styled.div`
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
+`;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+`;
+
+const CheckboxInput = styled.input`
+  margin-right: 0.5rem;
+`;
+
+const CheckboxLabel = styled.label`
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+`;
+
+const OtherInput = styled.input`
+  width: 100%;
+  margin-left: 0.5rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  flex-grow: 1;
+`;
 
 const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
   options,
@@ -24,101 +73,49 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
 
   const handleChange = (value: string) => {
     const newSelectedValues = selectedValues.includes(value)
-      ? selectedValues.filter((val) => val !== value) 
+      ? selectedValues.filter((val) => val !== value)
       : [...selectedValues, value];
     onChange(newSelectedValues);
   };
 
   return (
-    <div style={styles.container}>
-      {label && <label style={styles.label}>{label}</label>}
-      {descriptor && <div style={styles.descriptor}>{descriptor}</div>}
+    <Container>
+      {label && <Label>{label}</Label>}
+      {descriptor && <Descriptor>{descriptor}</Descriptor>}
       {options.map((option) => (
-        <div key={option.value} style={styles.checkboxContainer}>
-          <input
+        <CheckboxContainer key={option.value}>
+          <CheckboxInput
             type="checkbox"
             id={option.value}
-            name="checkbox-group" 
             value={option.value}
             checked={selectedValues.includes(option.value)}
             onChange={() => handleChange(option.value)}
-            style={styles.checkboxInput}
           />
-          <label htmlFor={option.value} style={styles.checkboxLabel}>
-            {option.label}
-          </label>
-        </div>
+          <CheckboxLabel htmlFor={option.value}>{option.label}</CheckboxLabel>
+        </CheckboxContainer>
       ))}
-      <div style={styles.checkboxContainer}>
-        <input
+      <CheckboxContainer>
+        <CheckboxInput
           type="checkbox"
           id="other"
-          name="checkbox-group"
           value="other"
           checked={selectedValues.includes('other')}
           onChange={() => handleChange('other')}
-          style={styles.checkboxInput}
         />
-        <label htmlFor="other" style={styles.checkboxLabel}>
-          Other:
-        </label>
-        <input
+        <CheckboxLabel htmlFor="other">Other:</CheckboxLabel>
+        <OtherInput
           type="text"
           value={otherValue}
           onChange={(e) => setOtherValue(e.target.value)}
           onBlur={() => {
             if (otherValue) {
-              onChange([...selectedValues, otherValue]); 
+              onChange([...selectedValues, otherValue]);
             }
-          }} 
-          style={styles.otherInput}
+          }}
         />
-      </div>
-    </div>
+      </CheckboxContainer>
+    </Container>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: '1rem',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-    width: '620px',
-  },
-  label: {
-    display: 'block',
-    textAlign: 'left',
-    marginBottom: '0.5rem',
-    marginTop: '10px',
-    fontWeight: 'bold',
-    fontSize: '18px',
-  },
-  descriptor: {
-    marginBottom: '5px',
-    fontSize: '14px',
-    color: '#555',
-  },
-  checkboxContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '0.5rem',
-  },
-  checkboxInput: {
-    marginRight: '0.5rem',
-  },
-  checkboxLabel: {
-    fontSize: '16px',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-  },
-  otherInput: {
-    marginLeft: '0.5rem',
-    padding: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '10px',
-    fontSize: '16px',
-    flexGrow: 1, 
-  },
 };
 
 export default MultiRadio;

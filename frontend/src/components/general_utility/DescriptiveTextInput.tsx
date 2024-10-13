@@ -45,6 +45,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     marginBottom: '1rem',
     fontFamily: 'Arial, Helvetica, sans-serif',
+    width: '100%'
   },
   label: {
     display: 'block',
@@ -66,6 +67,7 @@ const styles: Record<string, React.CSSProperties> = {
     // padding: '10px',
     // border: '1px solid #ccc',
     borderRadius: '10px',
+    boxSizing: 'border-box',
     resize: 'vertical', // Allow vertical resizing of the textarea
     fontFamily: 'Arial, Helvetica, sans-serif',
     fontSize: '16px',
