@@ -120,7 +120,7 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions }) => {
+export const Dashboard: FC<DashboardsProps> = ({ affiliation, competitions }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -136,15 +136,21 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
 
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [preferredName, setPreferredName] = useState<string>("");
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
       try {
-        await sendRequest.get<{ preferredName: string }>('/student/dash_info');
+        const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
+        setIsAdmin(typeResponse.data.type === "system_admin");
+        
+        const nameResponse = await sendRequest.get<{ preferredName: string }>(`/${typeResponse.data.type}/dash_info`);
         // Can also store the preferredName from the response and use it in the sidebar.
         // Request any personal info needed here and then if there's an auth error in any of them
         // the page will redirect.
+        setPreferredName(nameResponse.data.preferredName);
         setIsLoaded(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
@@ -267,17 +273,25 @@ export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions
   
   return (isLoaded &&
     <OverflowFlexBackground>
-      <DashboardSidebar name={name} affiliation={affiliation} cropState={false}/>
+      <DashboardSidebar name={preferredName} affiliation={affiliation} cropState={false}/>
       <DashboardContent>
         <PageHeader
           pageTitle="Dashboard"
-          pageDescription={`Welcome back, ${name}!`}
+          pageDescription={`Welcome back, ${preferredName}!`}
           sortOptions={sortOptions}
           filterOptions={filterOptions}
           sortOptionState={{ sortOption, setSortOption }}
           filtersState={{ filters, setFilters }}
           searchTermState={{ searchTerm, setSearchTerm }}
         >
+          {isAdmin && 
+            <ActionButton
+              actionName="Create"
+              question="Create a new competition?"
+              redirectPath="/comp/create"
+              actionType="secondary"
+            />
+          }
           <ActionButton
             actionName="Register"
             question="Register for a new competition?"
