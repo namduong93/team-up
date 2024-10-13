@@ -288,7 +288,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
             <ActionButton
               actionName="Create"
               question="Create a new competition?"
-              redirectPath="/comp/create"
+              redirectPath="/competitiondetails"
               actionType="secondary"
             />
           }
