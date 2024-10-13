@@ -1,16 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
-import { FaBell, FaFilter, FaTimes } from "react-icons/fa";
+import { FaBell, FaTimes } from "react-icons/fa";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import { CompCard } from "../components/general_utility/CompCard";
-import { FilterIcon, FilterSelect } from "../components/general_utility/FilterSelect";
 import { ActionButton } from "../components/general_utility/ActionButton";
-import { SortIcon, SortSelect } from "../components/general_utility/SortSelect";
 import { Notifications } from "../components/general_utility/Notifications";
 import { sendRequest } from "../utility/request";
 import { useNavigate } from "react-router-dom";
-import { ResponsiveButton, SortContainer } from "./staff/CoachPage/CoachPage";
 import { PageHeader } from "../components/sort_filter_search/PageHeader";
 interface Competition {
   compName: string;
@@ -44,44 +41,6 @@ const DashboardContent = styled.div`
   overflow-x: visible;
 `;
 
-const DashboardHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  min-height: 117px;
-  min-width: fit-content;
-  align-items: center;
-  overflow-x: visible;
-  gap: 30px;
-  margin-right: 20px;
-  margin-left: 20px;
-`;
-
-const WelcomeMessage = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
-const WelcomeText = styled.div``;
-
-const ActionButtons = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 10px;
-  width: 100%;
-  margin-right: 20px;
-`;
-
-const RegisterAlert = styled.div`
-  display: flex;
-  gap: 10px;
-  align-items: center;
-`;
-
 export const AlertButton = styled.button`
   border-radius: 10px;
   padding: 10px;
@@ -94,38 +53,6 @@ export const AlertButton = styled.button`
     color: ${({ theme }) => theme.background};
   }
 `;
-
-const SortFilterSearch = styled.div`
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  width: 100%;
-  max-width: 360px;
-`;
-
-// const FilterButton = styled.button<{ $isFilterOpen: boolean }>`
-//   background-color: ${({ theme }) => theme.background};
-//   border-radius: 10px;
-//   border: 1px solid ${({ theme }) => theme.colours.filterText};
-//   color: ${({ theme }) => theme.colours.filterText};
-//   padding: 8px 16px;
-//   display: flex;
-//   gap: 10px;
-//   align-items: center;
-
-//   ${({ $isFilterOpen: isFilterOpen, theme }) =>
-//     isFilterOpen &&
-//     `
-//     background-color: ${theme.colours.sidebarBackground};
-//     color: ${theme.fonts.colour};
-//   `}
-
-//   &:hover {
-//     cursor: pointer;
-//     background-color: ${({ theme }) => theme.colours.sidebarBackground};
-//     color: ${({ theme }) => theme.fonts.colour};
-//   }
-// `;
 
 export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
@@ -175,17 +102,6 @@ export const RemoveFilterIcon = styled(FaTimes)`
   }
 `;
 
-const SearchInput = styled.input`
-  max-width: 150px;
-  width: 100%;
-  max-height: 38px;
-  border: 1px solid ${({ theme }) => theme.fonts.colour};
-  border-radius: 10px;
-  padding: 10px;
-  color: ${({ theme }) => theme.fonts.colour};
-  background-color: ${({ theme }) => theme.background};
-`;
-
 const ContentArea = styled.div`
   margin-top: 32px;
   overflow-y: auto;
@@ -206,11 +122,9 @@ const CompetitionGrid = styled.div`
 
 export const Dashboard: FC<DashboardsProps> = ({ name, affiliation, competitions }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortOption, setSortOption] = useState<string | null>(null);
   const sortOptions = [
     { label: "Default", value: "original" },

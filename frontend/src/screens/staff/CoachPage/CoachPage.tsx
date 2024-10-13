@@ -5,10 +5,8 @@ import styled from "styled-components";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { SortIcon, SortSelect } from "../../../components/general_utility/SortSelect";
-import { AlertButton, FilterTagButton, RemoveFilterIcon, SortButton } from "../../Dashboard";
+import { AlertButton, SortButton } from "../../Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
-import { FilterIcon, FilterSelect } from "../../../components/general_utility/FilterSelect";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { ActionButton } from "../../../components/general_utility/ActionButton";
@@ -35,25 +33,6 @@ const MainPageDiv = styled.div`
   height: 100%;
   min-height: 600px;
   flex-direction: column;
-`;
-
-const PageHeaderContainerDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-  min-height: 117px;
-  width: 100%;
-`;
-
-// const PageHeader = styled.h1`
-//   margin-bottom: 0;
-//   font-size: 2em;
-// `;
-
-const PageDescriptionSpan = styled.span`
-  color: #525252;
-  font-size: 1em;
 `;
 
 const PageOptionsContainerDiv = styled.div`
@@ -199,7 +178,6 @@ export const CoachPage: FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortOption, setSortOption] = useState<string | null>(null);
   console.log(sortOption);
   const sortOptions = [
@@ -211,7 +189,6 @@ export const CoachPage: FC = () => {
   ];
 
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState<string>('');
 

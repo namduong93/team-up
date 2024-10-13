@@ -7,16 +7,6 @@ import { SearchBar } from "../../screens/staff/CoachPage/CoachPage";
 
 type Filters = Record<string, Array<string>>;
 
-interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
-  pageTitle: string;
-  pageDescription: string;
-  sortOptions: Array<SortOption>;
-  filterOptions: Record<string, Array<string>>;
-  sortOptionState: { sortOption: string | null, setSortOption: React.Dispatch<SetStateAction<string | null>> };
-  filtersState: { filters: Filters, setFilters: React.Dispatch<SetStateAction<Filters>> };
-  searchTermState: { searchTerm: string, setSearchTerm: React.Dispatch<SetStateAction<string>> };
-}
-
 const PageHeaderContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -120,7 +110,27 @@ export const SortIcon = styled(FaSort)`
   flex: 0 0 auto;
 `;
 
+interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
+  pageTitle: string;
+  pageDescription: string;
+  sortOptions: Array<SortOption>;
+  filterOptions: Record<string, Array<string>>;
+  sortOptionState: { sortOption: string | null, setSortOption: React.Dispatch<SetStateAction<string | null>> };
+  filtersState: { filters: Filters, setFilters: React.Dispatch<SetStateAction<Filters>> };
+  searchTermState: { searchTerm: string, setSearchTerm: React.Dispatch<SetStateAction<string>> };
+}
 
+// ACCEPTS PROPS:
+// - pageTitle --- The large header to appear at the top of the page
+// - pageDescription --- The subheading
+// - filterOptions --- The different filters that can be chosen for the page
+// - sortOptions --- The different sorting methods that can be chosen for the page
+// - sortOptionState --- sortOption: state variable representing current selected option, setSortOption: the setState function for sortOption
+// - filtersState --- filters: state variable of current filters, setFilters: setState function for filters
+// - searchTermState --- searchTerm: state variable of current search query, setSearchTerm: setState for searchTerm
+// - children --- IMPORTANT, contains any extra page-specific buttons to appear in the top-right
+// - style --- extra styling for the outermost container of PageHeader if needed
+// - props --- extra props for the outermost container of PageHeader if needed
 export const PageHeader: FC<HeaderAttributes> = ({
   pageTitle, pageDescription,
   filterOptions,
