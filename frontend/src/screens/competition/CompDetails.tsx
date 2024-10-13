@@ -51,6 +51,7 @@ const LocationList = styled.div`
   width: 60%;
   grid-template-columns: 1fr 1fr auto;
   margin-top: 20px;
+  gap: 10px;
 `;
 
 const LocationItem = styled.div`
@@ -144,12 +145,12 @@ export const CompetitionDetails: FC = () => {
   const isButtonDisabled = () => {
     const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, siteLocations } = competitionInfo;
     return (
-      name !== '' ||
+      name === '' ||
       earlyBirdDate === '' ||
       earlyBirdTime === '' ||
       generalDate === '' ||
       generalTime === '' ||
-      siteLocations.length > 0
+      siteLocations.length === 0
     );
   };
 

@@ -133,7 +133,7 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
         />
 
         <TextInputLight
-          label="Competition Name"
+          label="Default Site Location"
           placeholder="Please type"
           type="text"
           required={true}
