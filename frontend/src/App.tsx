@@ -22,6 +22,7 @@ import { TeamDisplay } from './screens/staff/CoachPage/TeamDisplay';
 import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
 import { TeamProfile } from './screens/student/TeamProfile';
 import { CompetitionDetails } from './screens/competition/CompDetails';
+import { CompetitionConfirmation } from './screens/competition/CompConfirmation';
 
 
 function App() {
@@ -171,6 +172,7 @@ function App() {
           <Route path="/competition/participant" element={<TeamProfile />} />
 
           <Route path="/competitiondetails" element={<CompetitionDetails />} />
+          <Route path="/competitionconfirmation" element={<CompetitionConfirmation />} />
         </Routes>
       </Router>
     </ThemeProvider>

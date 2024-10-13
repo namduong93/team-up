@@ -1,11 +1,12 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompCreationProgressBar } from "../../components/general_utility/ProgressBar";
 import TextInput from "../../components/general_utility/TextInput";
 import TextInputLight from "../../components/general_utility/TextInputLight";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SiteLocationForm from "./SiteLocationForm";
+import { sendRequest } from "../../utility/request";
 
 const Container = styled.div`
   flex: 1;
@@ -109,17 +110,25 @@ interface CompetitionInformation {
   siteLocations: SiteLocation[];
 }
 
+interface University {
+  id: string;
+  name: string;
+}
+
 export const CompetitionDetails: FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [competitionInfo, setCompetitionInfo] = useState<CompetitionInformation>({
-    name: "",
-    earlyBirdDate: "",
-    earlyBirdTime: "",
-    generalDate: "",
-    generalTime: "",
-    siteLocations: [],
-  });
+  const [competitionInfo, setCompetitionInfo] = useState<CompetitionInformation>(
+    location.state?.competitionInfo || {
+      name: "",
+      earlyBirdDate: "",
+      earlyBirdTime: "",
+      generalDate: "",
+      generalTime: "",
+      siteLocations: [],
+    }
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -159,6 +168,29 @@ export const CompetitionDetails: FC = () => {
     e.preventDefault();
     navigate("/competitionconfirmation", {state: { competitionInfo }});
   };
+
+  const [institutionOptions, setInstitutionOptions] = useState<{ value: string; label: string; }[]>([]);
+
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      try {
+        const response = await sendRequest.get<{ universities: University[] }>('/universities/list');
+        const universities = response.data;
+  
+        const options = universities.universities.map((university) => ({
+          value: university.id,
+          label: university.name,
+        }));
+  
+        setInstitutionOptions(options); 
+      } catch (error) {
+        console.error("Error fetching universities:", error);
+      }
+    };
+  
+    fetchUniversities();
+  }, []);
+  
 
   return (
     <FlexBackground
@@ -235,13 +267,17 @@ export const CompetitionDetails: FC = () => {
           <SiteLocationForm onAddLocation={handleAddSiteLocation} />
 
           <LocationList>
-            {competitionInfo.siteLocations.map((location, index) => (
-              <LocationItem key={index}>
-                <div>{location.university}</div>
-                <div>{location.defaultSite}</div>
-                <DeleteIcon onClick={() => handleDeleteSiteLocation(index)}>x</DeleteIcon> 
-              </LocationItem>
-            ))}
+            {competitionInfo.siteLocations.map((location, index) => {
+              console.log(institutionOptions)
+              const universityName = institutionOptions.find(option => option.value.toString() === location.university)?.label || 'Unknown';
+              return (
+                <LocationItem key={index}>
+                  <div>{universityName}</div>
+                  <div>{location.defaultSite}</div>
+                  <DeleteIcon onClick={() => handleDeleteSiteLocation(index)}>x</DeleteIcon> 
+                </LocationItem>
+              );
+            })}
           </LocationList>
 
           <ButtonContainer>

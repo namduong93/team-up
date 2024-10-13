@@ -112,14 +112,6 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
     fetchUniversities();
   }, []);
 
-  // const universityOptions = [
-  //   { value: '', label: 'Please Select' },
-  //   { value: 'MXS', label: 'Mens XS' },
-  //   { value: 'MS', label: 'Mens S' },
-  //   { value: 'MM', label: 'Mens M' },
-  //   { value: 'ML', label: 'Mens L' },
-  // ];
-
   return (
     <Container>
       <Title>Site Locations</Title>
