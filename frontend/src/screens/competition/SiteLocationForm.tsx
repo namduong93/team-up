@@ -82,11 +82,12 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
   const [defaultSite, setDefaultSite] = useState('');
   const [institutionOptions, setInstitutionOptions] = useState([{ value: '', label: 'Please Select' }]);
 
-  const handleAddLocation = () => {
+  const handleAddLocation = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     if (university && defaultSite) {
       onAddLocation({ university, defaultSite });
-      setUniversity("");
-      setDefaultSite("");
+      setUniversity('');
+      setDefaultSite('');
     }
   };
 
@@ -127,7 +128,7 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
           label="Institution"
           options={institutionOptions}
           value={university}
-          required={true}
+          required={false}
           onChange={(e) => setUniversity(e.target.value)}
           width="45%"
         />
@@ -136,7 +137,7 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
           label="Default Site Location"
           placeholder="Please type"
           type="text"
-          required={true}
+          required={false}
           value={defaultSite}
           onChange={(e) => setDefaultSite(e.target.value)}
           width="45%"

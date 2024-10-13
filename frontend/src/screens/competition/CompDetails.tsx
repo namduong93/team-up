@@ -132,7 +132,7 @@ export const CompetitionDetails: FC = () => {
     setCompetitionInfo((prev) => ({
       ...prev,
       siteLocations: [...prev.siteLocations, location],
-    }));
+    })); 
   };
 
   const handleDeleteSiteLocation = (index: number) => {
