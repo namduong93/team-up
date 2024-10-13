@@ -5,9 +5,11 @@ import styled from "styled-components";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { SortIcon, SortSelect } from "../../../components/general_utility/SortSelect";
-import { SortButton } from "../../Dashboard";
+import { AlertButton, SortButton } from "../../Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
+import { FaBell, FaSearch } from "react-icons/fa";
+import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
+import { ActionButton } from "../../../components/general_utility/ActionButton";
 
 const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
@@ -33,25 +35,6 @@ const MainPageDiv = styled.div`
   flex-direction: column;
 `;
 
-const PageHeaderContainerDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-  min-height: 117px;
-  width: 100%;
-`;
-
-const PageHeader = styled.h1`
-  margin-bottom: 0;
-  font-size: 2em;
-`;
-
-const PageDescriptionSpan = styled.span`
-  color: #525252;
-  font-size: 1em;
-`;
-
 const PageOptionsContainerDiv = styled.div`
   min-height: 78px;
   width: 100%;
@@ -72,7 +55,7 @@ const ToggleOptionTextSpan = styled.div`
   font-size: 2em;
 `;
 
-export const SortFilterSearchContainerDiv = styled.div`
+export const MenuOptionsContainerDiv = styled.div`
   margin-right: min(20px, 2%);
   flex: 1;
   max-width: 360px;
@@ -86,7 +69,7 @@ export const SortContainer = styled.div`
   width: 19%;
   height: 33px;
   position: relative;
-
+  min-width: 29px;
 `;
 
 interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
@@ -94,6 +77,16 @@ interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonEleme
   icon: ReactNode;
   label: string;
 }
+
+export const SortFilterSearchContainerDiv = styled.div`
+  width: 100%;
+  /* min-width: 152px; */
+  height: 66px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  min-width: 58px;
+`;
 
 export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon, label, style, isOpen, ...props }) => {
   return (
@@ -103,11 +96,7 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon,
       overflow: 'hidden',
       padding: '0',
       display: 'flex',
-      justifyContent: 'center',
       flexWrap: 'wrap',
-      alignItems: 'center',
-      alignContent: 'center',
-      minWidth: '29px',
       ...style
     }} $isSortOpen={isOpen} {...props}>
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
@@ -125,11 +114,70 @@ const pathMap: Record<string, number> = {
   '/coach/page/students': 1,
 }
 
+const SearchInput = styled.input`
+  height: 100%;
+  width: 100%;
+  min-width: 29px;
+  border: 1px solid ${({ theme }) => theme.fonts.colour};
+  border-radius: 10px;
+  padding: 0;
+  grid-row: 1 / 2;
+  grid-column: 1 / 3;
+  box-sizing: border-box;
+  padding-left: 5px;
+  &:focus + div {
+    display: none;
+  }
+`;
+
+const SearchIcon = styled(FaSearch)`
+  min-width: 29px;
+  pointer-events: none;
+`;
+
+const SearchContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+`;
+
+const SearchCell = styled.div`
+  min-width: 29px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  flex-wrap: wrap;
+  pointer-events: none;
+  overflow: hidden;
+  left: 0;
+  z-index: 1;
+  color: ${({ theme }) => theme.colours.filterText};
+`;
+
+export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
+  return (
+  <SearchContainer>
+    <SearchInput type="text" value={value} onChange={onChange} {...props} />
+    {!value && <SearchCell>
+      <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
+        <div style={{ height: '200%' }}>
+          <SearchIcon />
+        </div>
+          <span>Search</span>
+      </div>
+    </SearchCell>}
+  </SearchContainer>
+  )
+}
+
 export const CoachPage: FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const [isSortOpen, setIsSortOpen] = useState(false);
   const [sortOption, setSortOption] = useState<string | null>(null);
   console.log(sortOption);
   const sortOptions = [
@@ -140,6 +188,17 @@ export const CoachPage: FC = () => {
     { label: "Time Remaining", value: "timeRemaining" },
   ];
 
+  const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const filterOptions = {
+    Location: ['USA', 'UK'],
+    Role: ['Admin', 'Site-Coordinator', 'Coach'],
+    Status: ["Completed", "Upcoming"],
+    Year: ['2020', '2021', '2022', '2024'],
+  };
+
   const handleToggleTeams = (e: React.MouseEvent) => {
     e.preventDefault();
     navigate('/coach/page/teams');
@@ -148,6 +207,17 @@ export const CoachPage: FC = () => {
     e.preventDefault();
     navigate('/coach/page/students');
   }
+
+  const removeFilter = (field: string, value: string) => {
+    setFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters };
+      updatedFilters[field] = updatedFilters[field].filter((v) => v !== value);
+      if (updatedFilters[field].length === 0) {
+        delete updatedFilters[field];
+      }
+      return updatedFilters; // trigger render to update filter dropdown
+    });
+  };
   return (
   <OverflowFlexBackground>
     {/* Sidebar */}
@@ -156,24 +226,23 @@ export const CoachPage: FC = () => {
       <MainPageDiv>
 
         {/* Page header */}
-        <PageHeaderContainerDiv style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around' }}>
-            <PageHeader>Coach Page</PageHeader>
-            <PageDescriptionSpan>Manage Teams and Students for your Competition</PageDescriptionSpan>
-          </div>
-          <SortFilterSearchContainerDiv>
-            <SortContainer>
-              <ResponsiveButton
-              icon={<SortIcon />}
-              label='Sort'
-              isOpen={isSortOpen}
-              onClick={() => setIsSortOpen((prev) => !prev)} />
-              {isSortOpen && 
-                <SortSelect isOpen={isSortOpen} onSortChange={(sortOption) => setSortOption(sortOption)}
-                options={sortOptions} />}
-              </SortContainer>
-          </SortFilterSearchContainerDiv>
-        </PageHeaderContainerDiv>
+        <PageHeader 
+          pageTitle="Coach Page"
+          pageDescription="Manage Teams and Students for your Competition"
+          sortOptions={sortOptions}
+          filterOptions={filterOptions}
+          sortOptionState={{ sortOption, setSortOption }}
+          filtersState={{ filters, setFilters }}
+          searchTermState={{ searchTerm, setSearchTerm }}
+        >
+          <ActionButton
+            actionName="Register"
+            question="Register for a new competition?"
+            redirectPath="/comp/register"
+            actionType="primary"
+          />
+          <AlertButton onClick={() => {}} ><FaBell /></AlertButton>
+        </PageHeader>
 
         {/* Teams-Students page selection */}
         <PageOptionsContainerDiv>
@@ -195,7 +264,7 @@ export const CoachPage: FC = () => {
         </PageOptionsContainerDiv>
 
         {/* Display of Teams/Students */}
-        <Outlet />
+        <Outlet context={{ filters, sortOption, searchTerm, removeFilter }} />
         
       </MainPageDiv>
   </OverflowFlexBackground>
