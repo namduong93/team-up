@@ -21,6 +21,7 @@ import { MultiStepRegoFormProvider } from'./screens/login/MultiStepRegoForm';
 import { TeamDisplay } from './screens/staff/CoachPage/TeamDisplay';
 import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
 import { TeamProfile } from './screens/student/TeamProfile';
+import { CompetitionDetails } from './screens/competition/CompDetails';
 
 
 function App() {
@@ -168,6 +169,8 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/competition/:compId/:role" element={<Competition />} />
           <Route path="/competition/participant" element={<TeamProfile />} />
+
+          <Route path="/competitiondetails" element={<CompetitionDetails />} />
         </Routes>
       </Router>
     </ThemeProvider>

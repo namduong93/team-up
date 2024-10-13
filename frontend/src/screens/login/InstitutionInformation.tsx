@@ -161,10 +161,10 @@ const Title = styled.h1`
 
 const ButtonContainer = styled.div`
   display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    gap: 90px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 90px;
 `
 
 const Button = styled.button<{ disabled?: boolean }>`
