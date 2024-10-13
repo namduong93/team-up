@@ -6,6 +6,10 @@ const StudentDisplayDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
 `;
 
 interface StudentInfo extends React.HTMLAttributes<HTMLDivElement> {
@@ -54,7 +58,8 @@ const StudentInfoContainerDiv = styled.div`
   box-sizing: border-box;
   border-bottom: 1px solid #D9D9D9;
   display: flex;
-  font-size: 14px;
+  font-size: 13px;
+  gap: 0.5%;
 `;
 
 const UserNameContainerDiv = styled.div`
@@ -95,6 +100,7 @@ const EmailContainerDiv = styled.div<{ isHeader: boolean }>`
   align-items: center;
   overflow: hidden;
   position: relative;
+  box-sizing: border-box;
   ${({ isHeader }) => !isHeader &&
   `&:hover {
     overflow: visible;
@@ -103,6 +109,7 @@ const EmailContainerDiv = styled.div<{ isHeader: boolean }>`
   &:hover span {
     border: 1px solid black;
     border-radius: 10px;
+    padding: 0 5px 0 5px;
   }`
   }
 `;
