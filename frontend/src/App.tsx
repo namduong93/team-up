@@ -23,6 +23,7 @@ import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
 import { TeamProfile } from './screens/student/TeamProfile';
 import { CompetitionDetails } from './screens/competition/CompDetails';
 import { CompetitionConfirmation } from './screens/competition/CompConfirmation';
+import { EmailRecoverForm, PasswordCodeRecoverForm, PasswordRecovery } from './screens/login/PasswordRecovery';
 
 
 function App() {
@@ -160,6 +161,10 @@ function App() {
             </MultiStepRegoFormProvider>
           } />
           {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
+          <Route path='/password/recovery' element={<PasswordRecovery />}>
+            <Route path='email' element={ <EmailRecoverForm /> } />
+            <Route path='code' element={ <PasswordCodeRecoverForm /> } />
+          </Route>
           <Route path="/coach/page" element={<CoachPage />}>
               <Route index element={ <Navigate to='/coach/page/teams' /> } />
               <Route path='teams' element={ <TeamDisplay /> } />
