@@ -193,6 +193,43 @@ CREATE TABLE competition_participants (
 
 );
 
+CREATE OR REPLACE FUNCTION competition_list_participants(u_id INT)
+RETURNS TABLE(id INT, name TEXT, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
+AS $$
+  SELECT c.id AS id, c.name AS name, early_reg_deadline, general_reg_deadline
+  FROM competition_participants AS cp
+  JOIN competitions AS c ON c.id = cp.competition_id
+  WHERE cp.user_id = u_id;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION competition_list_coaches(u_id INT)
+RETURNS TABLE(id INT, name TEXT, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
+AS $$
+  SELECT c.id AS id, c.name AS name, early_reg_deadline, general_reg_deadline
+  FROM competition_coaches AS cc
+  JOIN competitions AS c ON c.id = cc.competition_id
+  WHERE cc.staff_id = u_id;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION competition_list_admins(u_id INT)
+RETURNS TABLE(id INT, name TEXT, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
+AS $$
+  SELECT c.id AS id, c.name AS name, early_reg_deadline, general_reg_deadline
+  FROM competition_admins AS ca
+  JOIN competitions AS c ON c.id = ca.competition_id
+  WHERE ca.staff_id = u_id;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION competition_list_site_coordinators(u_id INT)
+RETURNS TABLE(id INT, name TEXT, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
+AS $$
+  SELECT c.id AS id, c.name AS name, early_reg_deadline, general_reg_deadline
+  FROM competition_site_coordinators AS csc
+  JOIN competitions AS c ON c.id = csc.competition_id
+  WHERE csc.staff_id = u_id;
+$$ LANGUAGE sql;
+
+
 -- TEST DATA
 -- TODO: This is hard code for some university, we will delete it later when we get into Admin and University api
 INSERT INTO universities (name) 
