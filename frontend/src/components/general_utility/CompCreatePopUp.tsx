@@ -1,8 +1,6 @@
-// Modal.tsx
-
 import styled from "styled-components";
 
-interface ModalProps {
+interface CompCreatePopUpProps {
   isOpen: boolean;
   onClose: () => void;
   message: string;
@@ -22,7 +20,7 @@ const Overlay = styled.div`
   z-index: 1000;
 `;
 
-const ModalContainer = styled.div`
+const Container = styled.div`
   background-color: #fff;
   padding: 30px;
   border-radius: 10px;
@@ -77,20 +75,20 @@ const Code = styled.p`
 //   }
 // `;
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message, code }) => {
+const CompCreatePopUp: React.FC<CompCreatePopUpProps> = ({ isOpen, onClose, message, code }) => {
   if (!isOpen) return null;
 
   return (
     <Overlay onClick={onClose}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
+      <Container onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>✖</CloseButton>
         <Title>{message}</Title>
         <Title>The code is:</Title>
         <Code>{code}</Code>
         {/* <Button onClick={onClose}>Close</Button> */}
-      </ModalContainer>
+      </Container>
     </Overlay>
   );
 };
 
-export default Modal;
+export default CompCreatePopUp;

@@ -9,6 +9,7 @@ interface TextInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   width?: string;
+  descriptor?: string;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -19,6 +20,7 @@ const TextInput: React.FC<TextInputProps> = ({
   value,
   onChange,
   width = '300px',
+  descriptor,
 }) => {
   return (
     <Container width={width}>
@@ -26,6 +28,7 @@ const TextInput: React.FC<TextInputProps> = ({
         {label}
         {required && <Asterisk>*</Asterisk>}
       </Label>
+      {descriptor && <Descriptor>{descriptor}</Descriptor>}
       <Input
         type={type}
         placeholder={placeholder}
@@ -68,6 +71,12 @@ const Input = styled.input`
   border-radius: 10px;
   margin-bottom: 5px;
   font-family: Arial, Helvetica, sans-serif;
+`;
+
+const Descriptor = styled.div`
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
 `;
 
 export default TextInput;

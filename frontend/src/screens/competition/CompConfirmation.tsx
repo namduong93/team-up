@@ -121,6 +121,7 @@ interface CompetitionInformation {
   earlyBirdTime: string;
   generalDate: string;
   generalTime: string;
+  code: string;
   siteLocations: SiteLocation[];
 }
 
@@ -162,12 +163,12 @@ export const CompetitionConfirmation: FC = () => {
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, siteLocations } = competitionInfo;
-
+    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations } = competitionInfo;
     const payload = {
         name,
         earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
-        generalRegDeadline: `${generalDate}T${generalTime}:00`, 
+        generalRegDeadline: `${generalDate}T${generalTime}:00`,
+        code,
         siteLocations: siteLocations.map(location => ({
           universityId: location.university, 
           name: location.defaultSite, 
@@ -233,6 +234,9 @@ export const CompetitionConfirmation: FC = () => {
             <HalfText><em>{competitionInfo?.generalDate}</em></HalfText>
             <HalfText><em>{competitionInfo?.generalTime}</em></HalfText>
           </DoubleInputContainer>
+
+          <Label>Competition Code</Label>
+          <Text><em>{competitionInfo?.code}</em></Text>
 
           <Label>Site Locations</Label>
 

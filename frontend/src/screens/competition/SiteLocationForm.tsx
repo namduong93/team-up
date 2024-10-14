@@ -43,23 +43,6 @@ const AddButton = styled.button`
   }
 `;
 
-// const CenteredListContainer = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   margin-top: 20px;
-// `;
-
-// const LocationList = styled.ul`
-//   list-style-type: none;
-//   padding: 0;
-//   text-align: center; /* Optional to align text in the center */
-// `;
-
-// const LocationItem = styled.li`
-//   padding: 5px 0;
-//   font-size: 16px;
-// `;
-
 const DoubleInputContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -76,15 +59,18 @@ interface University {
   name: string;
 }
 
-
 const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) => {
   const [university, setUniversity] = useState('');
   const [defaultSite, setDefaultSite] = useState('');
+  const [otherInstitution, setOtherInstitution] = useState('');
   const [institutionOptions, setInstitutionOptions] = useState([{ value: '', label: 'Please Select' }]);
 
   const handleAddLocation = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (university && defaultSite) {
+
+    const selectedUniversity = university === 'other' ? otherInstitution : university;
+
+    if (selectedUniversity && defaultSite) {
       onAddLocation({ university, defaultSite });
       setUniversity('');
       setDefaultSite('');
@@ -135,6 +121,18 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
           width="45%"
         />
       </DoubleInputContainer>
+
+      {university === 'other' && (
+        <TextInputLight
+        label="Other Institution"
+        placeholder="Please specify"
+        type="text"
+        required={false}
+        value={otherInstitution}
+        onChange={(e) => setOtherInstitution(e.target.value)}
+        width="45%"
+        />
+      )}
 
       <AddButtonContainer>
         <AddButton onClick={handleAddLocation}>+</AddButton>

@@ -101,18 +101,25 @@ interface SiteLocation {
   defaultSite: string;
 }
 
+// interface OtherSiteLocation {
+//   id: string;
+//   name: string;
+// }
+
+interface University {
+  id: number;
+  name: string;
+}
+
 interface CompetitionInformation {
   name: string;
   earlyBirdDate: string;
   earlyBirdTime: string;
   generalDate: string;
   generalTime: string;
+  code: string;
   siteLocations: SiteLocation[];
-}
-
-interface University {
-  id: string;
-  name: string;
+  // otherSiteLocations: OtherSiteLocation[];
 }
 
 export const CompetitionDetails: FC = () => {
@@ -126,7 +133,9 @@ export const CompetitionDetails: FC = () => {
       earlyBirdTime: "",
       generalDate: "",
       generalTime: "",
+      code: "",
       siteLocations: [],
+      // otherSiteLocations: [],
     }
   );
 
@@ -152,13 +161,14 @@ export const CompetitionDetails: FC = () => {
   };
 
   const isButtonDisabled = () => {
-    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, siteLocations } = competitionInfo;
+    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations } = competitionInfo;
     return (
       name === '' ||
       earlyBirdDate === '' ||
       earlyBirdTime === '' ||
       generalDate === '' ||
       generalTime === '' ||
+      code === '' ||
       siteLocations.length === 0
     );
   };
@@ -169,7 +179,7 @@ export const CompetitionDetails: FC = () => {
     navigate("/competition/confirmation", {state: { competitionInfo }});
   };
 
-  const [institutionOptions, setInstitutionOptions] = useState<{ value: string; label: string; }[]>([]);
+  const [institutionOptions, setInstitutionOptions] = useState<{ value: number; label: string; }[]>([]);
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -263,6 +273,17 @@ export const CompetitionDetails: FC = () => {
               width="45%"
             />
           </DoubleInputContainer>
+
+          <TextInput
+            label="Competition Code"
+            placeholder="COMP1234"
+            type="text"
+            required={true}
+            value={competitionInfo.code}
+            onChange={(e) => handleChange(e, "code")}
+            width="100%"
+            descriptor="Please type a unique code that will be used to identify your Competition"
+          />
 
           <SiteLocationForm onAddLocation={handleAddSiteLocation} />
 
