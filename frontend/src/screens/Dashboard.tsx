@@ -9,7 +9,9 @@ import { Notifications } from "../components/general_utility/Notifications";
 import { sendRequest } from "../utility/request";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../components/sort_filter_search/PageHeader";
-interface Competition {
+// import CompCreatePopUp from "../components/general_utility/CompCreatePopUp";
+
+interface Competition { 
   compName: string;
   location: string;
   compDate: string; // format: "YYYY-MM-DD"
@@ -270,11 +272,33 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
         return 0;
     }
   });
+
+  // TO-DO: uncomment when the admin page is created
+
+  // const location = useLocation();
+  // const showPopUp = location.state?.showPopUp || false;
+  // const message = location.state?.message || "You have created a new competition!";
+  // const code = location.state?.code || "COMP_CODE";
+  // const [isPopUpOpen, setIsPopUpOpen] = useState(showPopUp);
+  
+  // const handleClosePopUp = () => {
+  //   setIsPopUpOpen(false);
+  // }
+
+  // useEffect(() => {
+  //   if (showPopUp) {
+  //     setIsPopUpOpen(true);
+  //   }
+  // }, [showPopUp]);
   
   return (isLoaded &&
     <OverflowFlexBackground>
       <DashboardSidebar name={preferredName} affiliation={affiliation} cropState={false}/>
       <DashboardContent>
+
+        
+        {/* <CompCreatePopUp isOpen={isPopUpOpen} onClose={handleClosePopUp} message={message} code={code} /> */}
+
         <PageHeader
           pageTitle="Dashboard"
           pageDescription={`Welcome back, ${preferredName}!`}
@@ -288,7 +312,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
             <ActionButton
               actionName="Create"
               question="Create a new competition?"
-              redirectPath="/competitiondetails"
+              redirectPath="/competition/create"
               actionType="secondary"
             />
           }

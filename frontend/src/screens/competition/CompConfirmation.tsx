@@ -169,8 +169,8 @@ export const CompetitionConfirmation: FC = () => {
         earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
         generalRegDeadline: `${generalDate}T${generalTime}:00`, 
         siteLocations: siteLocations.map(location => ({
-            universityId: location.university, 
-            name: location.defaultSite, 
+          universityId: location.university, 
+          name: location.defaultSite, 
         })),
     };
 
@@ -178,7 +178,16 @@ export const CompetitionConfirmation: FC = () => {
       const response = await sendRequest.post('/competition/system_admin/create', payload);
       console.log("Response:", response.data);
 
-      navigate("/dashboard"); 
+      navigate("/admin/page"); 
+
+      // TO-DO: uncomment when pop-up is implemented on Admin Page
+      // navigate("/admin/page", { 
+      //   state: { 
+      //     showPopUp: true, 
+      //     message: "You have created a new Competition", 
+      //     code: "COMP_12345"
+      //   }
+      // }); 
     } catch (error) {
         console.error("Error creating competition:", error);
     }
