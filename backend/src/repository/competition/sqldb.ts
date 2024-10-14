@@ -157,8 +157,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.addCompetitionIdsToMap(adminComps.rows, competitionMap, CompetitionUserType.ADMIN);
 
     const competitions: Array<CompetitionDetailsObject> = [...competitionMap.values()];
-    console.log('map:', competitionMap);
-    console.log('array:', competitions);
+    // console.log('map:', competitionMap);
+    // console.log('array:', competitions);
 
     return competitions;
   }
