@@ -51,7 +51,7 @@ export const SortFilterSearchContainerDiv = styled.div`
   flex-wrap: wrap;
   align-items: flex-end;
   column-gap: 4px;
-  min-width: 58px;
+  min-width: 62px;
 `;
 
 interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
