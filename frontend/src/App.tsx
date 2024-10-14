@@ -171,8 +171,8 @@ function App() {
           <Route path="/competition/:compId/:role" element={<Competition />} />
           <Route path="/competition/participant" element={<TeamProfile />} />
 
-          <Route path="/competitiondetails" element={<CompetitionDetails />} />
-          <Route path="/competitionconfirmation" element={<CompetitionConfirmation />} />
+          <Route path="/competition/create" element={<CompetitionDetails />} />
+          <Route path="/competition/confirmation" element={<CompetitionConfirmation />} />
         </Routes>
       </Router>
     </ThemeProvider>

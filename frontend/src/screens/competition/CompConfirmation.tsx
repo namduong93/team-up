@@ -156,7 +156,7 @@ export const CompetitionConfirmation: FC = () => {
   }, []);
 
   const handleBack = () => {
-    navigate("/competitiondetails", { state: { competitionInfo } });
+    navigate("/competition/create", { state: { competitionInfo } });
   };
 
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {

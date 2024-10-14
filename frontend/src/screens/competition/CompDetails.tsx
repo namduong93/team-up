@@ -49,10 +49,10 @@ const Label = styled.label`
 
 const LocationList = styled.div`
   display: grid;
-  width: 60%;
+  width: 65%;
   grid-template-columns: 1fr 1fr auto;
   margin-top: 20px;
-  gap: 10px;
+  gap: 5px;
 `;
 
 const LocationItem = styled.div`
@@ -166,7 +166,7 @@ export const CompetitionDetails: FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/competitionconfirmation", {state: { competitionInfo }});
+    navigate("/competition/confirmation", {state: { competitionInfo }});
   };
 
   const [institutionOptions, setInstitutionOptions] = useState<{ value: string; label: string; }[]>([]);
