@@ -1,8 +1,9 @@
 import React, { FC } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
+import { StudentInfoCard } from "./StudentInfoCard";
 
-const StudentDisplayDiv = styled.div`
+const WideStudentDisplayDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -12,7 +13,7 @@ const StudentDisplayDiv = styled.div`
   }
 `;
 
-interface StudentInfo extends React.HTMLAttributes<HTMLDivElement> {
+export interface StudentInfo extends React.HTMLAttributes<HTMLDivElement> {
   studentInfo: {
     name: string,
     sex: string,
@@ -207,47 +208,73 @@ export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader =
   )
 }
 
+const NarrowStudentDisplaydiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  @media (min-width: 1001px) {
+    display: none;
+  }
+`;
+
+
 export const StudentDisplay = () => {
   return (
-    <div style={ { flex: '1' } }>
-  <StudentDisplayDiv>
-    <StudentInfoDiv isHeader style={{
-      backgroundColor: '#D6D6D6',
-      fontWeight: 'bold'
-    }} studentInfo={{
-      name: 'Full Name',
-      sex: 'Sex',
-      email: 'Email',
-      studentId: 'Identifier',
-      status: 'Status',
-      teamName: 'Team Name',
-      level: 'Level',
-      tshirtShize: 'Shirt-Size',
-      siteName: 'Site'
-    }}></StudentInfoDiv>
-    <StudentInfoDiv studentInfo={{
-      name: 'Leticia James',
-      sex: 'F',
-      email: 'thisisemailepic@gmail.com',
-      studentId: 'z0000000',
-      status: 'Unmatched',
-      teamName: 'The Goofy Goobers',
-      level: 'A',
-      tshirtShize: 'XS',
-      siteName: 'The University of Sydney'
-      }} ></StudentInfoDiv>
-    <StudentInfoDiv studentInfo={{
-      name: 'Michael Chonk',
-      sex: 'NB',
-      email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
-      studentId: 'z0000000',
-      teamName: 'GoogleGURLies ✨',
-      status: 'Matched',
-      level: 'B',
-      tshirtShize: '10XL',
-      siteName: 'UNSW Sydney'
-      }} ></StudentInfoDiv>
-  </StudentDisplayDiv>
+  <div style={ { flex: '1' } }>
+    <NarrowStudentDisplaydiv>
+    <StudentInfoCard studentInfo={{
+        name: 'Leticia James',
+        sex: 'F',
+        email: 'thisisemailepic@gmail.com',
+        studentId: 'z0000000',
+        status: 'Unmatched',
+        teamName: 'The Goofy Goobers',
+        level: 'A',
+        tshirtShize: 'XS',
+        siteName: 'The University of Sydney'
+        }} />
+
+    </NarrowStudentDisplaydiv>
+    <WideStudentDisplayDiv>
+      <StudentInfoDiv isHeader style={{
+        backgroundColor: '#D6D6D6',
+        fontWeight: 'bold'
+      }} studentInfo={{
+        name: 'Full Name',
+        sex: 'Sex',
+        email: 'Email',
+        studentId: 'Identifier',
+        status: 'Status',
+        teamName: 'Team Name',
+        level: 'Level',
+        tshirtShize: 'Shirt-Size',
+        siteName: 'Site'
+      }}></StudentInfoDiv>
+      <StudentInfoDiv studentInfo={{
+        name: 'Leticia James',
+        sex: 'F',
+        email: 'thisisemailepic@gmail.com',
+        studentId: 'z0000000',
+        status: 'Unmatched',
+        teamName: 'The Goofy Goobers',
+        level: 'A',
+        tshirtShize: 'XS',
+        siteName: 'The University of Sydney'
+        }} ></StudentInfoDiv>
+      <StudentInfoDiv studentInfo={{
+        name: 'Michael Chonk',
+        sex: 'NB',
+        email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
+        studentId: 'z0000000',
+        teamName: 'GoogleGURLies ✨',
+        status: 'Matched',
+        level: 'B',
+        tshirtShize: '10XL',
+        siteName: 'UNSW Sydney'
+        }} ></StudentInfoDiv>
+    </WideStudentDisplayDiv>
   </div>
   );
 }
