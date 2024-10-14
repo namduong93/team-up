@@ -175,7 +175,19 @@ export class SqlDbUserRepository implements UserRepository {
     `;
 
     const universityResult = await this.pool.query(universityQuery, [userId]);
-    const universityName = universityResult.rowCount > 0 ? universityResult.rows[0].name : undefined;
+
+    let universityName : string;
+    if (universityResult.rowCount > 0) {
+      universityName = universityResult.rows[0].name;
+    } else {
+      const staffUniversityQuery = `
+        SELECT name 
+        FROM universities 
+        WHERE id = (SELECT university_id FROM staffs WHERE user_id = $1);
+      `;
+      const staffUniversityResult = await this.pool.query(staffUniversityQuery, [userId]);
+      universityName = staffUniversityResult.rows[0].name;
+    }
 
     // TODO: Add more fields to return
     return {
