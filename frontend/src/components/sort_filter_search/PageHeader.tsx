@@ -114,11 +114,11 @@ export const SortIcon = styled(FaSort)`
 interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   pageTitle: string;
   pageDescription: string;
-  sortOptions: Array<SortOption>;
-  filterOptions: Record<string, Array<string>>;
-  sortOptionState: { sortOption: string | null, setSortOption: React.Dispatch<SetStateAction<string | null>> };
-  filtersState: { filters: Filters, setFilters: React.Dispatch<SetStateAction<Filters>> };
-  searchTermState: { searchTerm: string, setSearchTerm: React.Dispatch<SetStateAction<string>> };
+  sortOptions?: Array<SortOption>;
+  filterOptions?: Record<string, Array<string>>;
+  sortOptionState?: { sortOption: string | null, setSortOption: React.Dispatch<SetStateAction<string | null>> };
+  filtersState?: { filters: Filters, setFilters: React.Dispatch<SetStateAction<Filters>> };
+  searchTermState?: { searchTerm: string, setSearchTerm: React.Dispatch<SetStateAction<string>> };
 }
 
 // ACCEPTS PROPS:
@@ -136,9 +136,9 @@ export const PageHeader: FC<HeaderAttributes> = ({
   pageTitle, pageDescription,
   filterOptions,
   sortOptions,
-  sortOptionState: { sortOption, setSortOption },
-  filtersState: { filters, setFilters },
-  searchTermState: { searchTerm, setSearchTerm },
+  sortOptionState /*{ sortOption, setSortOption }*/,
+  filtersState /*{ filters, setFilters } */,
+  searchTermState /*{ searchTerm, setSearchTerm }*/,
   children, style, ...props }) => {
 
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
@@ -153,6 +153,7 @@ export const PageHeader: FC<HeaderAttributes> = ({
 
     <MenuOptionsContainerDiv>
       <SortFilterSearchContainerDiv>
+        {sortOptions && sortOptionState &&
         <ButtonContainer>
           
           <ResponsiveButton
@@ -163,11 +164,15 @@ export const PageHeader: FC<HeaderAttributes> = ({
           />
 
           {isSortOpen && 
-          <SortSelect isOpen={isSortOpen} onSortChange={(sortOption) => setSortOption(sortOption)}
-          options={sortOptions} />}
+          <SortSelect
+            isOpen={isSortOpen}
+            onSortChange={(sortOption) => sortOptionState.setSortOption(sortOption)}
+            options={sortOptions} 
+          />}
 
-        </ButtonContainer>
+        </ButtonContainer>}
         
+        {filterOptions && filtersState &&
         <ButtonContainer>
           <ResponsiveButton
             icon={<FilterIcon />}
@@ -180,15 +185,16 @@ export const PageHeader: FC<HeaderAttributes> = ({
             <FilterSelect
               options={filterOptions}
               isOpen={isFilterOpen}
-              onFilterChange={(selectedFilters) => setFilters(selectedFilters)}
-              currentFilters={filters} 
+              onFilterChange={(selectedFilters) => filtersState.setFilters(selectedFilters)}
+              currentFilters={filtersState.filters} 
           />}
-        </ButtonContainer>
+        </ButtonContainer>}
         
+        {searchTermState &&
         <ButtonContainer style={{ flex: '1 1 58px' }}>
-          <SearchBar value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} />
-        </ButtonContainer>
+          <SearchBar value={searchTermState.searchTerm}
+            onChange={(e) => searchTermState.setSearchTerm(e.target.value)} />
+        </ButtonContainer>}
       </SortFilterSearchContainerDiv>
       <div style={{ display: 'flex', justifyContent: 'flex-end', columnGap: '2%' }}>
         {children}
