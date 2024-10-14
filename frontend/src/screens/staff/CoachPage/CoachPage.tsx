@@ -235,12 +235,6 @@ export const CoachPage: FC = () => {
           filtersState={{ filters, setFilters }}
           searchTermState={{ searchTerm, setSearchTerm }}
         >
-          <ActionButton
-            actionName="Register"
-            question="Register for a new competition?"
-            redirectPath="/comp/register"
-            actionType="primary"
-          />
           <AlertButton onClick={() => {}} ><FaBell /></AlertButton>
         </PageHeader>
 

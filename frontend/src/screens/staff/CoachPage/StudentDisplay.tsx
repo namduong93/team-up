@@ -1,14 +1,19 @@
 import React, { FC } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
+import { StudentInfoCard } from "./StudentInfoCard";
 
-const StudentDisplayDiv = styled.div`
+const WideStudentDisplayDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
 `;
 
-interface StudentInfo extends React.HTMLAttributes<HTMLDivElement> {
+export interface StudentInfo extends React.HTMLAttributes<HTMLDivElement> {
   studentInfo: {
     name: string,
     sex: string,
@@ -27,7 +32,7 @@ interface StudentStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   isMatched: boolean;
 }
 
-const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = false, ...props }) => {
+export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = false, style, ...props }) => {
 
   return (
     <div style={{
@@ -42,6 +47,7 @@ const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = false, ..
       alignItems: 'center',
       justifyContent: 'center',
       boxSizing: 'border-box',
+      ...style,
     }} {...props}>
       {children}
     </div>
@@ -54,7 +60,8 @@ const StudentInfoContainerDiv = styled.div`
   box-sizing: border-box;
   border-bottom: 1px solid #D9D9D9;
   display: flex;
-  font-size: 14px;
+  font-size: 13px;
+  gap: 0.5%;
 `;
 
 const UserNameContainerDiv = styled.div`
@@ -95,6 +102,7 @@ const EmailContainerDiv = styled.div<{ isHeader: boolean }>`
   align-items: center;
   overflow: hidden;
   position: relative;
+  box-sizing: border-box;
   ${({ isHeader }) => !isHeader &&
   `&:hover {
     overflow: visible;
@@ -103,6 +111,7 @@ const EmailContainerDiv = styled.div<{ isHeader: boolean }>`
   &:hover span {
     border: 1px solid black;
     border-radius: 10px;
+    padding: 0 5px 0 5px;
   }`
   }
 `;
@@ -200,47 +209,86 @@ export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader =
   )
 }
 
+const NarrowStudentDisplaydiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  row-gap: 20px;
+
+  @media (min-width: 1001px) {
+    display: none;
+  }
+`;
+
+
 export const StudentDisplay = () => {
   return (
-    <div style={ { flex: '1' } }>
-  <StudentDisplayDiv>
-    <StudentInfoDiv isHeader style={{
-      backgroundColor: '#D6D6D6',
-      fontWeight: 'bold'
-    }} studentInfo={{
-      name: 'Full Name',
-      sex: 'Sex',
-      email: 'Email',
-      studentId: 'Identifier',
-      status: 'Status',
-      teamName: 'Team Name',
-      level: 'Level',
-      tshirtShize: 'Shirt-Size',
-      siteName: 'Site'
-    }}></StudentInfoDiv>
-    <StudentInfoDiv studentInfo={{
-      name: 'Leticia James',
-      sex: 'F',
-      email: 'thisisemailepic@gmail.com',
-      studentId: 'z0000000',
-      status: 'Unmatched',
-      teamName: 'The Goofy Goobers',
-      level: 'A',
-      tshirtShize: 'XS',
-      siteName: 'The University of Sydney'
-      }} ></StudentInfoDiv>
-    <StudentInfoDiv studentInfo={{
-      name: 'Michael Chonk',
-      sex: 'NB',
-      email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
-      studentId: 'z0000000',
-      teamName: 'GoogleGURLies ✨',
-      status: 'Matched',
-      level: 'B',
-      tshirtShize: '10XL',
-      siteName: 'UNSW Sydney'
-      }} ></StudentInfoDiv>
-  </StudentDisplayDiv>
+  <div style={ { flex: '1', width: '100%', height: '100%' } }>
+    <NarrowStudentDisplaydiv>
+      <StudentInfoCard studentInfo={{
+          name: 'Leticia James',
+          sex: 'F',
+          email: 'thisisemailepic@gmail.com',
+          studentId: 'z0000000',
+          status: 'Unmatched',
+          teamName: 'The Goofy Goobers',
+          level: 'A',
+          tshirtShize: 'XS',
+          siteName: 'The University of Sydney'
+      }} />
+
+      <StudentInfoCard studentInfo={{
+        name: 'Michael Chonk',
+        sex: 'NB',
+        email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
+        studentId: 'z0000000',
+        teamName: 'GoogleGURLies ✨',
+        status: 'Matched',
+        level: 'B',
+        tshirtShize: '10XL',
+        siteName: 'UNSW Sydney'
+      }} />
+
+    </NarrowStudentDisplaydiv>
+    <WideStudentDisplayDiv>
+      <StudentInfoDiv isHeader style={{
+        backgroundColor: '#D6D6D6',
+        fontWeight: 'bold'
+      }} studentInfo={{
+        name: 'Full Name',
+        sex: 'Sex',
+        email: 'Email',
+        studentId: 'Identifier',
+        status: 'Status',
+        teamName: 'Team Name',
+        level: 'Level',
+        tshirtShize: 'Shirt Size',
+        siteName: 'Site'
+      }}></StudentInfoDiv>
+      <StudentInfoDiv studentInfo={{
+        name: 'Leticia James',
+        sex: 'F',
+        email: 'thisisemailepic@gmail.com',
+        studentId: 'z0000000',
+        status: 'Unmatched',
+        teamName: 'The Goofy Goobers',
+        level: 'A',
+        tshirtShize: 'XS',
+        siteName: 'The University of Sydney'
+        }} ></StudentInfoDiv>
+      <StudentInfoDiv studentInfo={{
+        name: 'Michael Chonk',
+        sex: 'NB',
+        email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
+        studentId: 'z0000000',
+        teamName: 'GoogleGURLies ✨',
+        status: 'Matched',
+        level: 'B',
+        tshirtShize: '10XL',
+        siteName: 'UNSW Sydney'
+        }} ></StudentInfoDiv>
+    </WideStudentDisplayDiv>
   </div>
   );
 }
