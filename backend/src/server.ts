@@ -77,7 +77,7 @@ app.post('/student/register', userController.studentRegister);
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
 // PARAMS: --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { preferredName: string }
+// RESPONSE: { preferredName: string, affiliation: string }
 app.get('/student/dash_info', userController.studentDashInfo);
 
 // This is used when the staff registers with a code or once the staff has been approved by admin.
@@ -91,7 +91,7 @@ app.post('/staff/register', userController.staffRegister);
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { preferredName: string }
+// RESPONSE: { preferredName: string, affiliation: string }
 app.get('/staff/dash_info', userController.staffDashInfo);
 
 // PARAMS: { email, password }
@@ -114,7 +114,7 @@ app.get('/user/type', userController.userType);
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { preferredName: string }
+// RESPONSE: { preferredName: string, affiliation: string }
 app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
