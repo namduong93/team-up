@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface TextInputProps {
+interface TextInputLightProps {
   label: string;
   placeholder: string;
   type?: string;
@@ -11,7 +11,7 @@ interface TextInputProps {
   width?: string;
 }
 
-const TextInput: React.FC<TextInputProps> = ({
+const TextInputLight: React.FC<TextInputLightProps> = ({
   label,
   placeholder,
   type = 'text',
@@ -51,8 +51,7 @@ const Label = styled.label`
   margin-bottom: 0.5rem;
   margin-top: 10px;
   font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  font-size: 18px;
+  font-size: 14px;
 `;
 
 const Asterisk = styled.span`
@@ -70,4 +69,4 @@ const Input = styled.input`
   font-family: Arial, Helvetica, sans-serif;
 `;
 
-export default TextInput;
+export default TextInputLight;
