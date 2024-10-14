@@ -29,19 +29,23 @@ CREATE TABLE users (
 
   -- Don't know if there should be constraints on name lol
   name TEXT NOT NULL,
-  
-  -- Enforces EXACTLY 60 length hashed_password (bcrypt hashed pass is always 60 chars)
-  hashed_password CHAR(60) NOT NULL,
+
+  preferred_name TEXT,
 
   -- Maximum email address length is 320 chars set by IETF
   email VARCHAR(320) NOT NULL UNIQUE,
 
+  -- Enforces EXACTLY 60 length hashed_password (bcrypt hashed pass is always 60 chars)
+  hashed_password CHAR(60) NOT NULL,
+
+  gender TEXT,
+  pronouns TEXT,
   tshirt_size TEXT NOT NULL,
 
   -- Optional field
-  pronouns TEXT,
   allergies TEXT,
-  accessibility_reqs TEXT
+  dietary_reqs TEXT[],
+  accessibility_reqs TEXT,
 );
 
 CREATE TABLE staffs (

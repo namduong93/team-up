@@ -9,7 +9,7 @@ import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import createHttpError from "http-errors";
 import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
-import { UserTypeObject } from "../models/user/user.js";
+import { convertGenderToP, UserTypeObject } from "../models/user/user.js";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -21,6 +21,9 @@ export class UserService {
   }
 
   studentRegister = async (student: Student): Promise<SessionTokenObject | undefined> => {
+    if (!student.pronouns) { 
+      student.pronouns = convertGenderToP(student.gender);
+    }
     const validated = validateStudent(student);
     if (validated) {
       throw createHttpError(400, validated);
@@ -41,6 +44,9 @@ export class UserService {
   }
 
   staffRegister = async (staff: Staff): Promise<SessionTokenObject | undefined> => {
+    if (!staff.pronouns) { 
+      staff.pronouns = convertGenderToP(staff.gender);
+    }
     const validated = validateStaff(staff);
     if (validated) {
       throw createHttpError(400, validated);

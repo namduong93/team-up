@@ -22,8 +22,11 @@ describe('GET /user/profile_info', () => {
     test('student success', async () => {
       const mockStudent: Student = {
         name: 'test student profile',
+        preferredName: 'test student profile',
         email: 'teststudentprofileinfo@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
         studentId: 'z5296486'
@@ -45,8 +48,11 @@ describe('GET /user/profile_info', () => {
     test('staff success', async () => {
       const mockStaff = {
         name: 'test staff profile',
+        preferredName: 'test staff profile',
         email: 'teststaffprofileinfo@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 2,
       };

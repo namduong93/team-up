@@ -64,12 +64,14 @@ export const InstitutionInformation: FC = () => {
 
       await sendRequest.post(endpoint, {
         name: `${formData.firstName} ${formData.lastName}`,
+        preferredName: formData.preferredName,
         password: formData.password,
         email: formData.email,
         tshirtSize: formData.tShirtSize,
-        // gender: formData.gender,
+        gender: formData.gender,
         pronouns: formData.preferredPronoun,
         allergies: formData.foodAllergies,
+        dietaryReqs: formData.dietaryRequirements,
         accessibilityReqs: formData.accessibilityRequirements,
         universityId: formData.institution,
         studentId: formData.role === 'Student' ? formData.studentId : undefined,
