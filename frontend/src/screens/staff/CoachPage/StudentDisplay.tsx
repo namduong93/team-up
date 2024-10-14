@@ -32,7 +32,7 @@ interface StudentStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   isMatched: boolean;
 }
 
-const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = false, ...props }) => {
+export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = false, style, ...props }) => {
 
   return (
     <div style={{
@@ -47,6 +47,7 @@ const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = false, ..
       alignItems: 'center',
       justifyContent: 'center',
       boxSizing: 'border-box',
+      ...style,
     }} {...props}>
       {children}
     </div>
@@ -212,7 +213,8 @@ const NarrowStudentDisplaydiv = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%;
+  overflow: auto;
+  row-gap: 20px;
 
   @media (min-width: 1001px) {
     display: none;
@@ -222,19 +224,31 @@ const NarrowStudentDisplaydiv = styled.div`
 
 export const StudentDisplay = () => {
   return (
-  <div style={ { flex: '1' } }>
+  <div style={ { flex: '1', width: '100%', height: '100%' } }>
     <NarrowStudentDisplaydiv>
-    <StudentInfoCard studentInfo={{
-        name: 'Leticia James',
-        sex: 'F',
-        email: 'thisisemailepic@gmail.com',
+      <StudentInfoCard studentInfo={{
+          name: 'Leticia James',
+          sex: 'F',
+          email: 'thisisemailepic@gmail.com',
+          studentId: 'z0000000',
+          status: 'Unmatched',
+          teamName: 'The Goofy Goobers',
+          level: 'A',
+          tshirtShize: 'XS',
+          siteName: 'The University of Sydney'
+      }} />
+
+      <StudentInfoCard studentInfo={{
+        name: 'Michael Chonk',
+        sex: 'NB',
+        email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
         studentId: 'z0000000',
-        status: 'Unmatched',
-        teamName: 'The Goofy Goobers',
-        level: 'A',
-        tshirtShize: 'XS',
-        siteName: 'The University of Sydney'
-        }} />
+        teamName: 'GoogleGURLies ✨',
+        status: 'Matched',
+        level: 'B',
+        tshirtShize: '10XL',
+        siteName: 'UNSW Sydney'
+      }} />
 
     </NarrowStudentDisplaydiv>
     <WideStudentDisplayDiv>
@@ -249,7 +263,7 @@ export const StudentDisplay = () => {
         status: 'Status',
         teamName: 'Team Name',
         level: 'Level',
-        tshirtShize: 'Shirt-Size',
+        tshirtShize: 'Shirt Size',
         siteName: 'Site'
       }}></StudentInfoDiv>
       <StudentInfoDiv studentInfo={{
