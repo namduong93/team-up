@@ -181,6 +181,14 @@ app.get('/universities/list', universityController.universitiesList);
 // RESPONSE: { Competition[] }
 app.get('/competitions/list', competitionController.competitionsList);
 
+// PARAMS: { email: string }
+// RESPONSE: {} --- NOTE: emails them a 6 character code e.g '123456'
+app.post('/user/password_recovery/generate_code', userController.userPasswordRecoveryGenerateCode);
+
+// PARAMS: { code: string }
+// RESPONSE: {} --- NOTE: No error if successful, error if not successful
+app.post('/user/password_recovery/input_code', userController.userPasswordRecoveryInputCode);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

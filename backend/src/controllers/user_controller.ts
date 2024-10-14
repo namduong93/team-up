@@ -100,4 +100,16 @@ export class UserController {
     return;
   });
 
+  userPasswordRecoveryGenerateCode = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    //  send them 6 character code e.g. '123456' via email
+    res.json({});
+    return;
+  });
+
+  userPasswordRecoveryInputCode = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { code, password } = req.body;
+    // set the new password
+    res.json({});
+    return;
+  })
 }
