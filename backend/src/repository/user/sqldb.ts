@@ -45,7 +45,7 @@ export class SqlDbUserRepository implements UserRepository {
 
     //Add user to users table
     const userQuery = `
-      INSERT INTO users (name, preferredName, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs)
+      INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING id;
     `;
@@ -107,7 +107,7 @@ export class SqlDbUserRepository implements UserRepository {
     }
 
     const userQuery = `
-      INSERT INTO users (name, preferredName, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs)
+      INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING id;
     `;
