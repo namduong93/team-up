@@ -50,15 +50,16 @@ const DoubleInputContainer = styled.div`
   gap: 0.8%;
 `;
 
+// pass the a boolean too and receive on CompDetails
 interface SiteLocationFormProps {
-  onAddLocation: (location: { university: string; defaultSite: string }) => void;
+  onAddLocation: (location: { university: string; defaultSite: string }, isOther: boolean) => void;
 }
 
 interface University {
   id: string;
   name: string;
 }
-
+ 
 const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) => {
   const [university, setUniversity] = useState('');
   const [defaultSite, setDefaultSite] = useState('');
@@ -71,9 +72,10 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
     const selectedUniversity = university === 'other' ? otherInstitution : university;
 
     if (selectedUniversity && defaultSite) {
-      onAddLocation({ university, defaultSite });
+      onAddLocation({ university: selectedUniversity, defaultSite }, university === 'other');
       setUniversity('');
       setDefaultSite('');
+      setOtherInstitution('');
     }
   };
 
@@ -111,27 +113,44 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
           width="45%"
         />
 
-        <TextInputLight
-          label="Default Site Location"
-          placeholder="Please type"
-          type="text"
-          required={false}
-          value={defaultSite}
-          onChange={(e) => setDefaultSite(e.target.value)}
-          width="45%"
-        />
+        {university !== 'other' && (
+          <TextInputLight
+            label="Default Site Location"
+            placeholder="Please type"
+            type="text"
+            required={false}
+            value={defaultSite}
+            onChange={(e) => setDefaultSite(e.target.value)}
+            width="45%"
+          />
+        )}
       </DoubleInputContainer>
 
+
+
       {university === 'other' && (
-        <TextInputLight
-        label="Other Institution"
-        placeholder="Please specify"
-        type="text"
-        required={false}
-        value={otherInstitution}
-        onChange={(e) => setOtherInstitution(e.target.value)}
-        width="45%"
-        />
+
+        <DoubleInputContainer>
+          <TextInputLight
+            label="Other Institution"
+            placeholder="Please specify"
+            type="text"
+            required={false}
+            value={otherInstitution}
+            onChange={(e) => setOtherInstitution(e.target.value)}
+            width="45%"
+          />
+
+          <TextInputLight
+            label="Default Site Location"
+            placeholder="Please type"
+            type="text"
+            required={false}
+            value={defaultSite}
+            onChange={(e) => setDefaultSite(e.target.value)}
+            width="45%"
+          />
+        </DoubleInputContainer>
       )}
 
       <AddButtonContainer>

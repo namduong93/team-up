@@ -52,7 +52,7 @@ const LocationList = styled.div`
   width: 65%;
   grid-template-columns: 1fr 1fr auto;
   margin-top: 20px;
-  gap: 5px;
+  gap: 25px;
 `;
 
 const LocationItem = styled.div`
@@ -97,14 +97,14 @@ const Button = styled.button<{ disabled?: boolean }>`
 `;
 
 interface SiteLocation {
-  university: string;
+  university: number;
   defaultSite: string;
 }
 
-// interface OtherSiteLocation {
-//   id: string;
-//   name: string;
-// }
+interface OtherSiteLocation {
+  university: string;
+  defaultSite: string;
+}
 
 interface University {
   id: number;
@@ -119,7 +119,7 @@ interface CompetitionInformation {
   generalTime: string;
   code: string;
   siteLocations: SiteLocation[];
-  // otherSiteLocations: OtherSiteLocation[];
+  otherSiteLocations: OtherSiteLocation[];
 }
 
 export const CompetitionDetails: FC = () => {
@@ -135,7 +135,7 @@ export const CompetitionDetails: FC = () => {
       generalTime: "",
       code: "",
       siteLocations: [],
-      // otherSiteLocations: [],
+      otherSiteLocations: [],
     }
   );
 
@@ -146,17 +146,47 @@ export const CompetitionDetails: FC = () => {
     setCompetitionInfo({ ...competitionInfo, [field]: e.target.value });
   };
 
-  const handleAddSiteLocation = (location: SiteLocation) => {
-    setCompetitionInfo((prev) => ({
-      ...prev,
-      siteLocations: [...prev.siteLocations, location],
-    })); 
+  const handleAddSiteLocation = (location: OtherSiteLocation, isOther: boolean) => {
+    if (isOther) {
+      const exists = competitionInfo.otherSiteLocations.some(
+        (site) => site.university === location.university
+      );
+      
+      if (!exists) {
+        setCompetitionInfo((prev) => ({
+          ...prev,
+          otherSiteLocations: [...prev.otherSiteLocations, location],
+        })); 
+      } else {
+        alert("This Institution already exists")
+      }
+    } else {
+      const exists = competitionInfo.siteLocations.some(
+        (site) => site.university === parseInt(location.university)
+      );
+      
+      if (!exists) {
+        setCompetitionInfo((prev) => ({
+          ...prev,
+          siteLocations: [...prev.siteLocations, { university: parseInt(location.university), defaultSite: location.defaultSite }],
+        })); 
+      } else {
+        alert("This Institution already exists")
+      }
+    }
   };
 
   const handleDeleteSiteLocation = (index: number) => {
     setCompetitionInfo((prev) => ({
       ...prev,
       siteLocations: prev.siteLocations.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleDeleteOtherSiteLocation = (index: number) => {
+    setCompetitionInfo((prev) => ({
+      ...prev,
+      otherSiteLocations: prev.otherSiteLocations.filter((_, i) => i !== index),
     }));
   };
 
@@ -285,12 +315,13 @@ export const CompetitionDetails: FC = () => {
             descriptor="Please type a unique code that will be used to identify your Competition"
           />
 
+          
           <SiteLocationForm onAddLocation={handleAddSiteLocation} />
 
           <LocationList>
             {competitionInfo.siteLocations.map((location, index) => {
               console.log(institutionOptions)
-              const universityName = institutionOptions.find(option => option.value.toString() === location.university)?.label || 'Unknown';
+              const universityName = institutionOptions.find(option => option.value === location.university)?.label || 'Unknown';
               return (
                 <LocationItem key={index}>
                   <div>{universityName}</div>
@@ -299,6 +330,14 @@ export const CompetitionDetails: FC = () => {
                 </LocationItem>
               );
             })}
+
+            {competitionInfo.otherSiteLocations.map((location, index) => (
+                <LocationItem key={`other-${index}`}>
+                  <div>{location.university}</div>
+                  <div>{location.defaultSite}</div>
+                  <DeleteIcon onClick={() => handleDeleteOtherSiteLocation(index)}>x</DeleteIcon>
+                </LocationItem>
+              ))}
           </LocationList>
 
           <ButtonContainer>
