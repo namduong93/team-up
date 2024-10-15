@@ -1,8 +1,9 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import defaultProfile from "../components/assets/default-profile.jpg";
+import { sendRequest } from "../utility/request";
 
 interface User {
   role: "student" | "staff"
@@ -266,6 +267,18 @@ export const Account: FC = () => {
       reader.readAsDataURL(photoFile);
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const infoResponse = await sendRequest.get<User>('/user/profile_info');
+        setUser(infoResponse.data);
+        console.log("User details fetched:", infoResponse.data);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    })();
+  }, []);
 
   return (
     <Background>
