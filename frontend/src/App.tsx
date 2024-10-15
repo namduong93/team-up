@@ -134,8 +134,6 @@ function App() {
         </div>
         <Routes>
           <Route path="/" element={<Landing />} />
-          {/* <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} /> */}
           {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
               {/* <Route path="/coach/page" element={<TeamsView />} /> */}
 
@@ -171,8 +169,8 @@ function App() {
           <Route path="/competition/:compId/:role" element={<Competition />} />
           <Route path="/competition/participant" element={<TeamProfile />} />
 
-          <Route path="/competitiondetails" element={<CompetitionDetails />} />
-          <Route path="/competitionconfirmation" element={<CompetitionConfirmation />} />
+          <Route path="/competition/create" element={<CompetitionDetails />} />
+          <Route path="/competition/confirmation" element={<CompetitionConfirmation />} />
         </Routes>
       </Router>
     </ThemeProvider>

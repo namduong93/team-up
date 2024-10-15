@@ -49,10 +49,10 @@ const Label = styled.label`
 
 const LocationList = styled.div`
   display: grid;
-  width: 60%;
+  width: 65%;
   grid-template-columns: 1fr 1fr auto;
   margin-top: 20px;
-  gap: 10px;
+  gap: 25px;
 `;
 
 const LocationItem = styled.div`
@@ -97,8 +97,18 @@ const Button = styled.button<{ disabled?: boolean }>`
 `;
 
 interface SiteLocation {
+  university: number;
+  defaultSite: string;
+}
+
+interface OtherSiteLocation {
   university: string;
   defaultSite: string;
+}
+
+interface University {
+  id: number;
+  name: string;
 }
 
 interface CompetitionInformation {
@@ -107,17 +117,15 @@ interface CompetitionInformation {
   earlyBirdTime: string;
   generalDate: string;
   generalTime: string;
+  code: string;
   siteLocations: SiteLocation[];
-}
-
-interface University {
-  id: string;
-  name: string;
+  otherSiteLocations: OtherSiteLocation[];
 }
 
 export const CompetitionDetails: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [locationError, setLocationError] = useState<boolean>(false);
 
   const [competitionInfo, setCompetitionInfo] = useState<CompetitionInformation>(
     location.state?.competitionInfo || {
@@ -126,7 +134,9 @@ export const CompetitionDetails: FC = () => {
       earlyBirdTime: "",
       generalDate: "",
       generalTime: "",
+      code: "",
       siteLocations: [],
+      otherSiteLocations: [],
     }
   );
 
@@ -137,11 +147,36 @@ export const CompetitionDetails: FC = () => {
     setCompetitionInfo({ ...competitionInfo, [field]: e.target.value });
   };
 
-  const handleAddSiteLocation = (location: SiteLocation) => {
-    setCompetitionInfo((prev) => ({
-      ...prev,
-      siteLocations: [...prev.siteLocations, location],
-    })); 
+  const handleAddSiteLocation = (location: OtherSiteLocation, isOther: boolean) => {
+    if (isOther) {
+      const exists = competitionInfo.otherSiteLocations.some(
+        (site) => site.university === location.university
+      );
+      
+      if (!exists) {
+        setCompetitionInfo((prev) => ({
+          ...prev,
+          otherSiteLocations: [...prev.otherSiteLocations, location],
+        })); 
+        setLocationError(false);
+      } else {
+        setLocationError(true);
+      }
+    } else {
+      const exists = competitionInfo.siteLocations.some(
+        (site) => site.university === parseInt(location.university)
+      );
+      
+      if (!exists) {
+        setCompetitionInfo((prev) => ({
+          ...prev,
+          siteLocations: [...prev.siteLocations, { university: parseInt(location.university), defaultSite: location.defaultSite }],
+        })); 
+        setLocationError(false);
+      } else {
+        setLocationError(true);
+      }
+    }
   };
 
   const handleDeleteSiteLocation = (index: number) => {
@@ -151,14 +186,22 @@ export const CompetitionDetails: FC = () => {
     }));
   };
 
+  const handleDeleteOtherSiteLocation = (index: number) => {
+    setCompetitionInfo((prev) => ({
+      ...prev,
+      otherSiteLocations: prev.otherSiteLocations.filter((_, i) => i !== index),
+    }));
+  };
+
   const isButtonDisabled = () => {
-    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, siteLocations } = competitionInfo;
+    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations } = competitionInfo;
     return (
       name === '' ||
       earlyBirdDate === '' ||
       earlyBirdTime === '' ||
       generalDate === '' ||
       generalTime === '' ||
+      code === '' ||
       siteLocations.length === 0
     );
   };
@@ -166,10 +209,10 @@ export const CompetitionDetails: FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/competitionconfirmation", {state: { competitionInfo }});
+    navigate("/competition/confirmation", {state: { competitionInfo }});
   };
 
-  const [institutionOptions, setInstitutionOptions] = useState<{ value: string; label: string; }[]>([]);
+  const [institutionOptions, setInstitutionOptions] = useState<{ value: number; label: string; }[]>([]);
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -264,12 +307,31 @@ export const CompetitionDetails: FC = () => {
             />
           </DoubleInputContainer>
 
+          <TextInput
+            label="Competition Code"
+            placeholder="COMP1234"
+            type="text"
+            required={true}
+            value={competitionInfo.code}
+            onChange={(e) => handleChange(e, "code")}
+            width="100%"
+            descriptor="Please type a unique code that will be used to identify your Competition"
+          />
+
+          
           <SiteLocationForm onAddLocation={handleAddSiteLocation} />
+
+          {locationError && (
+            <p style={{ color: "red", marginTop: "30px", textAlign: 'center' }}>
+              You have already entered a default site location for this institution<br />
+              Please delete your previous entry or select a different institution
+            </p>
+          )}
 
           <LocationList>
             {competitionInfo.siteLocations.map((location, index) => {
               console.log(institutionOptions)
-              const universityName = institutionOptions.find(option => option.value.toString() === location.university)?.label || 'Unknown';
+              const universityName = institutionOptions.find(option => option.value === location.university)?.label || 'Unknown';
               return (
                 <LocationItem key={index}>
                   <div>{universityName}</div>
@@ -278,6 +340,14 @@ export const CompetitionDetails: FC = () => {
                 </LocationItem>
               );
             })}
+
+            {competitionInfo.otherSiteLocations.map((location, index) => (
+                <LocationItem key={`other-${index}`}>
+                  <div>{location.university}</div>
+                  <div>{location.defaultSite}</div>
+                  <DeleteIcon onClick={() => handleDeleteOtherSiteLocation(index)}>x</DeleteIcon>
+                </LocationItem>
+              ))}
           </LocationList>
 
           <ButtonContainer>
