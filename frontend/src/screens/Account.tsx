@@ -223,6 +223,7 @@ export const Account: FC = () => {
   const [newCompDetails, setNewCompDetails] = useState<CompetitionDetails>(compDetails);
 
   const handleEditUser = () => {
+    setNewDetails(user);
     setIsEditingUser(true);
   };
 
