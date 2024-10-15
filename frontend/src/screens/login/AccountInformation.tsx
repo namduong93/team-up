@@ -278,6 +278,7 @@ export const Button = styled.button<{ $disabled?: boolean }>`
   color: #ffffff;
   font-size: 16px;
   font-weight: bold;
+  pointer-events: ${({ $disabled: disabled }) => disabled ? 'none' : 'auto'};
   cursor: ${({ $disabled: disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
   font-family: Arial, Helvetica, sans-serif;
 `
