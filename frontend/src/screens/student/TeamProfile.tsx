@@ -9,13 +9,9 @@ const Background = styled(FlexBackground)`
 `;
 
 export const TeamProfile: FC = () => {
-  const name = "Name";
-  const affiliation = "UNSW";
-
-
   return (
   <Background>
-    <DashboardSidebar name={name} affiliation={affiliation} cropState={false}/>
+    <DashboardSidebar cropState={false}/>
     <h2>Team profile Page</h2>
     <div> 
     

@@ -1,12 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { sendRequest } from "../../utility/request";
 
 interface SidebarProps {
-  name: string;
-  affiliation: string;
   cropState: boolean;
 }
 
@@ -166,12 +164,34 @@ const LogoutButton = styled.button`
   }
 `;
 
-export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cropState }) => {
+export const DashboardSidebar: React.FC<SidebarProps> = ({ cropState }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
     navigate(path);
   };
+
+  const [preferredName, setPreferredName] = useState<string>("");
+  const [affiliation, setAffiliation] = useState<string>("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const infoResponse = await sendRequest.get<{ preferredName: string, affiliation: string }>(`/user/dash_info`);
+        // Can also store the preferredName from the response and use it in the sidebar.
+        // Request any personal info needed here and then if there's an auth error in any of them
+        // the page will redirect.
+        setPreferredName(infoResponse.data.preferredName);
+        setAffiliation(infoResponse.data.affiliation);
+      } catch (error: unknown) {
+        sendRequest.handleErrorStatus(error, [403], () => {
+          navigate('/');
+          console.log('Authentication Error: ', error);
+        });
+        // can handle other codes or types of errors here if needed.
+      }
+    })();
+  }, []);
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -186,7 +206,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cr
           <ProfileSection>
             <ProfilePic />
             <div>Hello</div>
-            <Name>{name}</Name>
+            <Name>{preferredName}</Name>
             <div>{affiliation}</div>
           </ProfileSection>
         )}

@@ -293,7 +293,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
   
   return (isLoaded &&
     <OverflowFlexBackground>
-      <DashboardSidebar name={preferredName} affiliation={affiliation} cropState={false}/>
+      <DashboardSidebar cropState={false}/>
       <DashboardContent>
 
         

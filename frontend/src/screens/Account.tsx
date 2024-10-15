@@ -269,7 +269,7 @@ export const Account: FC = () => {
 
   return (
     <Background>
-      <DashboardSidebar name={user.name} affiliation={user.affiliation} cropState={false} />
+      <DashboardSidebar cropState={false} />
       <AccountContainer>
         <CardContainer>
           <AccountCard>

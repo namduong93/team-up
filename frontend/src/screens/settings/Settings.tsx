@@ -41,8 +41,6 @@ const SettingsContainer = styled.div`
 
 export const Settings: FC = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const name = "Name";
-  const affiliation = "UNSW";
 
   // load saved theme from localStorage
   useEffect(() => {
@@ -63,7 +61,7 @@ export const Settings: FC = () => {
   return (
     <ThemeProvider theme={isDarkTheme ? darkTheme : defaultTheme}>
       <Background>
-        <DashboardSidebar name={name} affiliation={affiliation} cropState={false} />
+        <DashboardSidebar cropState={false} />
         <SettingsContainer>
           <Title>Settings Page</Title>
           <ToggleButton isDarkTheme={isDarkTheme} onClick={toggleTheme}>

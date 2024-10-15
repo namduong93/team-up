@@ -221,7 +221,7 @@ export const CoachPage: FC = () => {
   return (
   <OverflowFlexBackground>
     {/* Sidebar */}
-    <DashboardSidebar name={"Name"} affiliation={"UNSW"} cropState={false} />
+    <DashboardSidebar cropState={false} />
 
       <MainPageDiv>
 
