@@ -185,10 +185,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ cropState, reload }) 
         setPreferredName(infoResponse.data.preferredName);
         setAffiliation(infoResponse.data.affiliation);
       } catch (error: unknown) {
-        sendRequest.handleErrorStatus(error, [403], () => {
-          navigate('/');
-          console.log('Authentication Error: ', error);
-        });
+        console.log('Error fetching dashboard info:', error);
         // can handle other codes or types of errors here if needed.
       }
     })();
