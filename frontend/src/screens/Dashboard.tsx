@@ -137,7 +137,6 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [preferredName, setPreferredName] = useState<string>("");
-  const [affiliation, setAffiliation] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -152,7 +151,6 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
         // Request any personal info needed here and then if there's an auth error in any of them
         // the page will redirect.
         setPreferredName(infoResponse.data.preferredName);
-        setAffiliation(infoResponse.data.affiliation);
         setIsLoaded(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {

@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useState } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import styled from "styled-components";
 // import { TeamCard } from "./TeamCard";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AlertButton, SortButton } from "../../Dashboard";
@@ -16,7 +16,7 @@ const OverflowFlexBackground = styled(FlexBackground)`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 // const SideBarDiv = styled.div`
 //   background-color: #D9D9D9;
 //   width: 78px;
