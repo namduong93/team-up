@@ -43,7 +43,7 @@ const HalfText = styled.label`
   margin-bottom: 0.5rem;
   margin-top: 10px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: normal;
   width: 45%;
 `;
@@ -61,7 +61,7 @@ const Text = styled.label`
   margin-bottom: 20px;
   margin-top: 10px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   width: 100%;
 `;
 
@@ -69,7 +69,7 @@ const Text = styled.label`
 const LocationList = styled.div`
   display: grid;
   width: 60%;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: repeat(2, 1fr);
   margin-top: 20px;
   gap: 10px;
 `;
@@ -78,6 +78,9 @@ const LocationItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center; 
+  font-style: italic;
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 
 
@@ -106,11 +109,16 @@ const Button = styled.button<{ disabled?: boolean }>`
 `;
 
 interface University {
-  id: string;
+  id: number;
   name: string;
 }
 
 interface SiteLocation {
+  university: number;
+  defaultSite: string;
+}
+
+interface OtherSiteLocation {
   university: string;
   defaultSite: string;
 }
@@ -121,7 +129,9 @@ interface CompetitionInformation {
   earlyBirdTime: string;
   generalDate: string;
   generalTime: string;
+  code: string;
   siteLocations: SiteLocation[];
+  otherSiteLocations: OtherSiteLocation[];
 }
 
 interface LocationState {
@@ -133,7 +143,7 @@ export const CompetitionConfirmation: FC = () => {
   const location = useLocation();
   
   const { competitionInfo } = location.state as LocationState|| {};
-  const [institutionOptions, setInstitutionOptions] = useState<{ value: string; label: string; }[]>([]);
+  const [institutionOptions, setInstitutionOptions] = useState<{ value: number; label: string; }[]>([]);
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -156,29 +166,42 @@ export const CompetitionConfirmation: FC = () => {
   }, []);
 
   const handleBack = () => {
-    navigate("/competitiondetails", { state: { competitionInfo } });
+    navigate("/competition/create", { state: { competitionInfo } });
   };
 
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, siteLocations } = competitionInfo;
-
+    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations, otherSiteLocations } = competitionInfo;
     const payload = {
         name,
         earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
-        generalRegDeadline: `${generalDate}T${generalTime}:00`, 
+        generalRegDeadline: `${generalDate}T${generalTime}:00`,
+        code,
         siteLocations: siteLocations.map(location => ({
-            universityId: location.university, 
-            name: location.defaultSite, 
+          universityId: location.university, 
+          name: location.defaultSite, 
         })),
+        // otherSiteLocations: otherSiteLocations.map(location => ({
+        //   universityId: location.university, 
+        //   name: location.defaultSite, 
+        // })),
     };
 
     try {
       const response = await sendRequest.post('/competition/system_admin/create', payload);
       console.log("Response:", response.data);
 
-      navigate("/dashboard"); 
+      navigate("/admin/page"); 
+
+      // TO-DO: uncomment when pop-up is implemented on Admin Page
+      // navigate("/admin/page", { 
+      //   state: { 
+      //     showPopUp: true, 
+      //     message: "You have created a new Competition", 
+      //     code: "COMP_12345"
+      //   }
+      // }); 
     } catch (error) {
         console.error("Error creating competition:", error);
     }
@@ -225,18 +248,29 @@ export const CompetitionConfirmation: FC = () => {
             <HalfText><em>{competitionInfo?.generalTime}</em></HalfText>
           </DoubleInputContainer>
 
+          <Label>Competition Code</Label>
+          <Text><em>{competitionInfo?.code}</em></Text>
+
           <Label>Site Locations</Label>
 
           <LocationList>
-            {competitionInfo?.siteLocations.map((location, index) => {
-              const universityName = institutionOptions.find(option => option.value.toString() === location.university)?.label || 'Unknown';
+            {competitionInfo.siteLocations.map((location, index) => {
+              console.log(institutionOptions)
+              const universityName = institutionOptions.find(option => option.value === location.university)?.label || 'Unknown';
               return (
                 <LocationItem key={index}>
-                  <div><em>{universityName}</em></div>
-                  <div><em>{location.defaultSite}</em></div>
+                  <div>{universityName}</div>
+                  <div>{location.defaultSite}</div>
                 </LocationItem>
               );
             })}
+
+            {competitionInfo.otherSiteLocations.map((location, index) => (
+                <LocationItem key={`other-${index}`}>
+                  <div>{location.university}</div>
+                  <div>{location.defaultSite}</div>
+                </LocationItem>
+              ))}
           </LocationList>
 
           <ButtonContainer>
