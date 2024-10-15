@@ -1,5 +1,5 @@
 
 export interface UserDashInfo {
   preferredName: string;
-  affiliation?: string | undefined;
+  affiliation: string;
 }

@@ -20,7 +20,6 @@ export class SqlDbUserRepository implements UserRepository {
   // TODO: handle sessionTimestamp
   studentRegister = async (student: Student): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
-    student.email = await this.trimDotsForEmail(student.email);
 
     let name = student.name;
     let preferredName = student.preferredName;
@@ -84,7 +83,6 @@ export class SqlDbUserRepository implements UserRepository {
   // TODO: Handle sessionTimestamp
   staffRegister = async (staff: Staff): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
-    staff.email = await this.trimDotsForEmail(staff.email);
 
     let name = staff.name;
     let preferredName = staff.preferredName;
@@ -147,8 +145,6 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userLogin = async (email: string, password: string): Promise<UserIdObject | undefined> => {
-    email = await this.trimDotsForEmail(email);
-
     const userQuery = `
       SELECT * FROM users WHERE email = $1;
     `;
@@ -165,20 +161,37 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
+    let returnUserProfInfo: UserProfileInfo = {
+      name: "",
+      preferredName: "",
+      email: "",
+      affiliation: "",
+      gender: "",
+      pronouns: "",
+      tshirtSize: "",
+      allergies: "",
+      dietaryReqs: [],
+      accessibilityReqs: "",
+    };
     // Query to get user profile info
     const userQuery = `
-      SELECT name, email
-      FROM users
-      WHERE id = $1;
+      SELECT * FROM users WHERE id = $1 LIMIT 1;
     `;
-
     const userResult = await this.pool.query(userQuery, [userId]);
-
     if (userResult.rowCount === 0) {
       return undefined; // User not found
     }
-
     const userInfo = userResult.rows[0];
+
+    returnUserProfInfo.name = userInfo.name;
+    returnUserProfInfo.preferredName = userInfo.preferred_name;
+    returnUserProfInfo.email = userInfo.email;
+    returnUserProfInfo.gender = userInfo.gender;
+    returnUserProfInfo.pronouns = userInfo.pronouns;
+    returnUserProfInfo.tshirtSize = userInfo.tshirt_size;
+    returnUserProfInfo.allergies = userInfo.allergies;
+    returnUserProfInfo.dietaryReqs = userInfo.dietary_reqs;
+    returnUserProfInfo.accessibilityReqs = userInfo.accessibility_reqs;
 
     // Get the university name
     const universityQuery = `
@@ -186,9 +199,7 @@ export class SqlDbUserRepository implements UserRepository {
       FROM universities 
       WHERE id = (SELECT university_id FROM students WHERE user_id = $1);
     `;
-
     const universityResult = await this.pool.query(universityQuery, [userId]);
-
     let universityName : string;
     if (universityResult.rowCount > 0) {
       universityName = universityResult.rows[0].name;
@@ -202,12 +213,9 @@ export class SqlDbUserRepository implements UserRepository {
       universityName = staffUniversityResult.rows[0].name;
     }
 
+    returnUserProfInfo.affiliation = universityName;
     // TODO: Add more fields to return
-    return {
-      name: userInfo.name,
-      email: userInfo.email,
-      university: universityName,
-    };
+    return returnUserProfInfo;
   }
 
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
@@ -248,32 +256,25 @@ export class SqlDbUserRepository implements UserRepository {
     }
     userDashInfo.preferredName = userResult.rows[0].preferred_name;
 
-    const studentQuery = `
-      SELECT * FROM students WHERE user_id = $1 LIMIT 1;
+    const universityQuery = `
+      SELECT name 
+      FROM universities 
+      WHERE id = (SELECT university_id FROM students WHERE user_id = $1);
     `;
-    const studentResult = await this.pool.query(studentQuery, [userId]);
+    const universityResult = await this.pool.query(universityQuery, [userId]);
 
-    if (studentResult.rowCount > 0) {
-      const universityQuery = `
-        SELECT name FROM universities WHERE id = $1 LIMIT 1;
-      `;
-      const universityResult = await this.pool.query(universityQuery, [studentResult.rows[0].university_id]);
+    if (universityResult.rowCount > 0) {
       userDashInfo.affiliation = universityResult.rows[0].name;
     } else {
-      const staffQuery = `
-        SELECT * FROM staffs WHERE user_id = $1 LIMIT 1;
+      const staffUniversityQuery = `
+        SELECT name 
+        FROM universities 
+        WHERE id = (SELECT university_id FROM staffs WHERE user_id = $1);
       `;
-      const staffResult = await this.pool.query(staffQuery, [userId]);
-      const universityQuery = `
-        SELECT name FROM universities WHERE id = $1 LIMIT 1;
-      `;
-      const universityResult = await this.pool.query(universityQuery, [staffResult.rows[0].university_id]);
-      userDashInfo.affiliation = universityResult.rows[0].name;
+      const staffUniversityResult = await this.pool.query(staffUniversityQuery, [userId]);
+      userDashInfo.affiliation = staffUniversityResult.rows[0].name;
     }
     return userDashInfo;
   }
 
-  async trimDotsForEmail(email: string): Promise<string> {
-    return email.replace(/\./g, "");
-  }
 }
