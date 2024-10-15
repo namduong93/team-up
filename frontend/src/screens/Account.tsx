@@ -273,9 +273,8 @@ export const Account: FC = () => {
       try {
         const infoResponse = await sendRequest.get<User>('/user/profile_info');
         setUser(infoResponse.data);
-        console.log("User details fetched:", infoResponse.data);
-      } catch (error) {
-        console.error("Error fetching user details:", error);
+      } catch (error: unknown) {
+        console.log('Error fetching user info:', error);
       }
     })();
   }, []);
