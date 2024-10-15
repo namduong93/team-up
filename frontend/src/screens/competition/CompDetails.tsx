@@ -125,6 +125,7 @@ interface CompetitionInformation {
 export const CompetitionDetails: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [locationError, setLocationError] = useState<boolean>(false);
 
   const [competitionInfo, setCompetitionInfo] = useState<CompetitionInformation>(
     location.state?.competitionInfo || {
@@ -157,8 +158,9 @@ export const CompetitionDetails: FC = () => {
           ...prev,
           otherSiteLocations: [...prev.otherSiteLocations, location],
         })); 
+        setLocationError(false);
       } else {
-        alert("This Institution already exists")
+        setLocationError(true);
       }
     } else {
       const exists = competitionInfo.siteLocations.some(
@@ -170,8 +172,9 @@ export const CompetitionDetails: FC = () => {
           ...prev,
           siteLocations: [...prev.siteLocations, { university: parseInt(location.university), defaultSite: location.defaultSite }],
         })); 
+        setLocationError(false);
       } else {
-        alert("This Institution already exists")
+        setLocationError(true);
       }
     }
   };
@@ -317,6 +320,13 @@ export const CompetitionDetails: FC = () => {
 
           
           <SiteLocationForm onAddLocation={handleAddSiteLocation} />
+
+          {locationError && (
+            <p style={{ color: "red", marginTop: "30px", textAlign: 'center' }}>
+              You have already entered a default site location for this institution<br />
+              Please delete your previous entry or select a different institution
+            </p>
+          )}
 
           <LocationList>
             {competitionInfo.siteLocations.map((location, index) => {
