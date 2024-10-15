@@ -16,11 +16,14 @@ export class UserController {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
     const new_student: Student = {
       name: req.body.name,
-      password: req.body.password,
+      preferredName: req.body.preferredName,
       email: req.body.email,
-      tshirtSize: req.body.tshirtSize,
+      password: req.body.password,
+      gender: req.body.gender,
       pronouns: req.body.pronouns,
+      tshirtSize: req.body.tshirtSize,
       allergies: req.body.allergies,
+      dietaryReqs: req.body.dietaryReqs,
       accessibilityReqs: req.body.accessibilityReqs,
       universityId: req.body.universityId,
       studentId: req.body.studentId,
@@ -36,11 +39,14 @@ export class UserController {
   staffRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const new_staff: Staff = {
       name: req.body.name,
-      password: req.body.password,
+      preferredName: req.body.preferredName,
       email: req.body.email,
-      tshirtSize: req.body.tshirtSize,
+      password: req.body.password,
+      gender: req.body.gender,
       pronouns: req.body.pronouns,
+      tshirtSize: req.body.tshirtSize,
       allergies: req.body.allergies,
+      dietaryReqs: req.body.dietaryReqs,
       accessibilityReqs: req.body.accessibilityReqs,
       universityId: req.body.universityId,
     };

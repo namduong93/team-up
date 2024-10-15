@@ -22,11 +22,14 @@ export class SqlDbUserRepository implements UserRepository {
     student.email = await this.trimDotsForEmail(student.email);
 
     let name = student.name;
-    let hashed_password = await bcrypt.hash(student.password, 10);
+    let preferredName = student.preferredName;
     let email = student.email;
-    let tshirtSize = student.tshirtSize;
+    let hashed_password = await bcrypt.hash(student.password, 10);
+    let gender = student.gender;
     let pronouns = student.pronouns;
+    let tshirtSize = student.tshirtSize;
     let allergies = student.allergies;
+    let dietaryReqs = student.dietaryReqs;
     let accessibilityReqs = student.accessibilityReqs;
     let universityId = student.universityId;
     let studentId = student.studentId;
@@ -42,17 +45,20 @@ export class SqlDbUserRepository implements UserRepository {
 
     //Add user to users table
     const userQuery = `
-      INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING id;
     `;
     const userValues = [
       name,
-      hashed_password,
+      preferredName,
       email,
-      tshirtSize,
+      hashed_password,
+      gender,
       pronouns,
+      tshirtSize,
       allergies,
+      dietaryReqs,
       accessibilityReqs,
     ];
     const userResult = await this.pool.query(userQuery, userValues);
@@ -80,11 +86,14 @@ export class SqlDbUserRepository implements UserRepository {
     staff.email = await this.trimDotsForEmail(staff.email);
 
     let name = staff.name;
-    let hashed_password = await bcrypt.hash(staff.password, 10);
+    let preferredName = staff.preferredName;
     let email = staff.email;
-    let tshirtSize = staff.tshirtSize;
+    let hashed_password = await bcrypt.hash(staff.password, 10);
+    let gender = staff.gender;
     let pronouns = staff.pronouns;
+    let tshirtSize = staff.tshirtSize;
     let allergies = staff.allergies;
+    let dietaryReqs = staff.dietaryReqs;
     let accessibilityReqs = staff.accessibilityReqs;
     let universityId = staff.universityId;
 
@@ -98,17 +107,20 @@ export class SqlDbUserRepository implements UserRepository {
     }
 
     const userQuery = `
-      INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING id;
     `;
     const userValues = [
       name,
-      hashed_password,
+      preferredName,
       email,
-      tshirtSize,
+      hashed_password,
+      gender,
       pronouns,
+      tshirtSize,
       allergies,
+      dietaryReqs,
       accessibilityReqs,
     ];
     const userResult = await this.pool.query(userQuery, userValues);

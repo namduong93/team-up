@@ -1,11 +1,14 @@
 export interface User {
   id?: number;
   name: string;
-  password: string;
+  preferredName?: string | undefined;
   email: string;
+  password: string;
+  gender: string;
+  pronouns: string;
   tshirtSize: string;
-  pronouns?: string | undefined;
   allergies?: string | undefined;
+  dietaryReqs?: string[] | undefined;
   accessibilityReqs?: string | undefined;
 };
 
@@ -27,6 +30,14 @@ export function validateUser(user: User): string {
     return "Tshirt size is required";
   }
 
+  if(!user.gender || user.gender.length === 0) {
+    return "Gender is required";
+  }
+
+  if(!user.pronouns || user.pronouns.length === 0) {
+    return "Pronouns is required";
+  }
+
   return "";
 }
 
@@ -37,4 +48,15 @@ export const enum UserType {
 }
 
 export type UserTypeObject = { type: UserType };
+
+export function convertGenderToP(gender: string) {
+  switch (gender) {
+    case "Male":
+      return "He/Him";
+    case "Female":
+      return "She/Her";
+    default:
+      return "They/Them";
+  }
+}
 

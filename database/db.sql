@@ -29,18 +29,22 @@ CREATE TABLE users (
 
   -- Don't know if there should be constraints on name lol
   name TEXT NOT NULL,
-  
-  -- Enforces EXACTLY 60 length hashed_password (bcrypt hashed pass is always 60 chars)
-  hashed_password CHAR(60) NOT NULL,
+
+  preferred_name TEXT,
 
   -- Maximum email address length is 320 chars set by IETF
   email VARCHAR(320) NOT NULL UNIQUE,
 
+  -- Enforces EXACTLY 60 length hashed_password (bcrypt hashed pass is always 60 chars)
+  hashed_password CHAR(60) NOT NULL,
+
+  gender TEXT,
+  pronouns TEXT,
   tshirt_size TEXT NOT NULL,
 
   -- Optional field
-  pronouns TEXT,
   allergies TEXT,
+  dietary_reqs TEXT[],
   accessibility_reqs TEXT
 );
 
@@ -242,15 +246,15 @@ VALUES
 
 -- Users
 -- Staffs
-INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
+INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs) 
 VALUES 
-('System Admin', '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO', 'admin@examplecom', 'L', 'he/him', 'Peanuts', 'None'), -- password is 'admin'
-('Test Staff Account', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststaff@examplecom', 'M', 'he/him', 'None', 'None'), -- password is 'pleasechange'
-('Coach 1', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'testcoach1@examplecom', 'XL', 'he/him', 'None', 'Stairs Access'), -- password is 'pleasechange'
-('Coach 2', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'testcoach2@examplecom', 'S', 'she/her', 'Water', 'None'), -- password is 'pleasechange'
-('Site Coordinator 1', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'testsitecoor1@examplecom', 'L', 'she/her', 'None', 'None'), -- password is 'pleasechange'
-('Site Coordinator 2', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'testsitecoor2@examplecom', 'XS', 'they/them', 'Tomato', 'Wheelchair Access'), -- password is 'pleasechange'
-('Site Coordinator 3', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'testsitecoor3@examplecom', 'S', 'they/them', 'None', 'None'); -- password is 'pleasechange'
+('System Admin', 'Admin', 'admin@example.com', '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO', 'Male', 'he/him', 'L', 'Peanuts', ARRAY[], 'None'), -- password is 'admin'
+('Test Staff Account', 'Staff', 'teststaff@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'he/him', 'M', 'None', ARRAY[], 'None'), -- password is 'pleasechange'
+('Coach 1', 'Coach One', 'testcoach1@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'he/him', 'XL', 'None', ARRAY[], 'Stairs Access'), -- password is 'pleasechange'
+('Coach 2', 'Coach Two', 'testcoach2@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Female', 'she/her', 'S', 'Water', ARRAY[], 'None'), -- password is 'pleasechange'
+('Site Coordinator 1', 'Site Coord 1', 'testsitecoor1@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Female', 'she/her', 'L', 'None', ARRAY[], 'None'), -- password is 'pleasechange'
+('Site Coordinator 2', 'Site Coord 2', 'testsitecoor2@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Non-binary', 'they/them', 'XS', 'Tomato', ARRAY[], 'Wheelchair Access'), -- password is 'pleasechange'
+('Site Coordinator 3', 'Site Coord 3', 'testsitecoor3@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Non-binary', 'they/them', 'S', 'None', ARRAY[], 'None'); -- password is 'pleasechange'
 
 INSERT INTO staffs (user_id, university_id)
 VALUES 
@@ -267,17 +271,17 @@ VALUES
 (1);
 
 -- Students
-INSERT INTO users (name, hashed_password, email, tshirt_size, pronouns, allergies, accessibility_reqs)
+INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs) 
 VALUES
-('Test Student Account 1', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent1@examplecom', 'S', 'they/them', 'None', 'Wheelchair Access'), -- password is 'pleasechange'
-('Test Student Account 2', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent2@examplecom', 'M', 'he/him', 'None', 'None'), -- password is 'pleasechange'
-('Test Student Account 3', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent3@examplecom', 'L', 'she/her', 'Milk', 'None'), -- password is 'pleasechange'
-('Test Student Account 4', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent4@examplecom', 'M', 'he/him', 'None', 'None'), -- password is 'pleasechange'
-('Test Student Account 5', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent5@examplecom', 'L', 'she/her', 'None', 'None'), -- password is 'pleasechange'
-('Test Student Account 6', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent6@examplecom', 'S', 'they/them', 'Orange', 'None'), -- password is 'pleasechange'
-('Test Student Account 7', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent7@examplecom', 'XL', 'he/him', 'None', 'None'), -- password is 'pleasechange'
-('Test Student Account 8', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent8@examplecom', 'XS', 'she/her', 'Peanuts', 'None'), -- password is 'pleasechange'
-('Test Student Account 9', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'teststudent9@examplecom', 'M', 'they/them', 'None', 'Wheelchair Access'); -- password is 'pleasechange'
+('Test Student Account 1', 'Test Account', 'teststudent1@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'They/them', 'S', 'None', ARRAY['VEGAN'], 'Wheelchair Access'), 
+('Test Student Account 2', 'Test Account 2', 'teststudent2@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'he/him', 'M', 'None', ARRAY[], 'None'), 
+('Test Student Account 3', 'Test Account 3', 'teststudent3@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Female', 'she/her', 'L', 'Milk', ARRAY[], 'None'), 
+('Test Student Account 4', 'Test Account 4', 'teststudent4@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'he/him', 'M', 'None', ARRAY[], 'None'), 
+('Test Student Account 5', 'Test Account 5', 'teststudent5@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Female', 'she/her', 'L', 'None', ARRAY[], 'None'), 
+('Test Student Account 6', 'Test Account 6', 'teststudent6@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Non-binary', 'they/them', 'S', 'Orange', ARRAY[], 'None'), 
+('Test Student Account 7', 'Test Account 7', 'teststudent7@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'he/him', 'XL', 'None', ARRAY[], 'None'), 
+('Test Student Account 8', 'Test Account 8', 'teststudent8@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Female', 'she/her', 'XS', 'Peanuts', ARRAY[], 'None'), 
+('Test Student Account 9', 'Test Account 9', 'teststudent9@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Non-binary', 'they/them', 'M', 'None', ARRAY[], 'Wheelchair Access'); -- password is 'pleasechange'
 
 INSERT INTO students (user_id, university_id, student_id)
 VALUES 

@@ -21,9 +21,12 @@ describe('POST /student/register', () => {
   describe('successful cases', () => {
     test('success', async () => {
       const mockStudent: Student = {
-        name: 'Quan',
+        name: 'Quan Hoang',
+        preferredName: 'Quan',
         email: 'hoangtungquan@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
         studentId: 'z5296486'
@@ -38,8 +41,11 @@ describe('POST /student/register', () => {
     test('missing name', async () => {
       const newStudent: Student = {
         name: '',
+        preferredName: 'Quan',
         email: 'hoangtungquan1@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
         studentId: 'z5296486'
@@ -53,6 +59,8 @@ describe('POST /student/register', () => {
         name: 'Quan',
         email: '',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
         studentId: 'z5296486'
@@ -66,6 +74,8 @@ describe('POST /student/register', () => {
         name: 'Quan',
         email: 'hoangtungquan2@gmail.com',
         password: '',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
         studentId: 'z5296486'
@@ -79,6 +89,8 @@ describe('POST /student/register', () => {
         name: 'Quan',
         email: 'hoangtungquan3@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: '',
         universityId: 1,
         studentId: 'z5296486'
@@ -92,6 +104,8 @@ describe('POST /student/register', () => {
         name: 'Quan',
         email: 'hoangtungquan4@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
         studentId: 'z5296486'
@@ -101,6 +115,8 @@ describe('POST /student/register', () => {
         name: 'Not Quan',
         email: 'hoangtungquan4@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
         studentId: 'z5296486'
