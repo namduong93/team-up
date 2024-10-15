@@ -91,18 +91,10 @@ export class UserController {
     return;
   });
 
-  studentDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name', affiliation: 'UNSW' });
-    return;
-  });
-  
-  staffDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name', affiliation: 'UNSW' });
-    return;
-  });
-
-  systemAdminDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name', affiliation: 'ICPC' });
+  userDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const userDashInfo = await this.userService.userDashInfo(Number(userId));
+    res.json(userDashInfo);
     return;
   });
 

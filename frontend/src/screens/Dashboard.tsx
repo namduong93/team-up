@@ -147,12 +147,12 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setIsAdmin(typeResponse.data.type === "system_admin");
         
-        const infoResponse = await sendRequest.get<{ preferredName: string, affiliation: string }>(`/${typeResponse.data.type}/dash_info`);
+        const infoResponse = await sendRequest.get<{ preferredName: string, university: string }>(`/user/dash_info`);
         // Can also store the preferredName from the response and use it in the sidebar.
         // Request any personal info needed here and then if there's an auth error in any of them
         // the page will redirect.
         setPreferredName(infoResponse.data.preferredName);
-        setAffiliation(infoResponse.data.affiliation);
+        setAffiliation(infoResponse.data.university);
         setIsLoaded(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {

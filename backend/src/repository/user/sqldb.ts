@@ -8,6 +8,7 @@ import bcrypt from 'bcryptjs';
 import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 import { Staff } from "../../models/user/staff/staff.js";
 import { UserType, UserTypeObject } from "../../models/user/user.js";
+import { UserDashInfo } from "../../models/user/user_dash_info.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -232,19 +233,44 @@ export class SqlDbUserRepository implements UserRepository {
     }
   }
 
-  studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {
+  userDashInfo = async(userId: number): Promise<UserDashInfo | undefined> =>{
+    const userDashInfo : UserDashInfo = {
+      preferredName: "",
+      university: "",
+    };
+    
+    const userQuery = `
+      SELECT * FROM users WHERE id = $1 LIMIT 1;
+    `;
+    const userResult = await this.pool.query(userQuery, [userId]);
+    if (!userResult.rowCount) {
+      return undefined;
+    }
+    userDashInfo.preferredName = userResult.rows[0].preferred_name;
 
-    return { preferredName: 'Name' };
-  }
+    const studentQuery = `
+      SELECT * FROM students WHERE user_id = $1 LIMIT 1;
+    `;
+    const studentResult = await this.pool.query(studentQuery, [userId]);
 
-  staffDashInfo = async (sessionToken: string): Promise<StaffDashInfo | undefined> => {
-
-    return { preferredName: 'Name' };
-  }
-
-  systemAdminDashInfo = async (sessionToken: string): Promise<SystemAdminDashInfo | undefined> => {
-
-    return { preferredName: 'Name' };
+    if (studentResult.rowCount > 0) {
+      const universityQuery = `
+        SELECT name FROM universities WHERE id = $1 LIMIT 1;
+      `;
+      const universityResult = await this.pool.query(universityQuery, [studentResult.rows[0].university_id]);
+      userDashInfo.university = universityResult.rows[0].name;
+    } else {
+      const staffQuery = `
+        SELECT * FROM staffs WHERE user_id = $1 LIMIT 1;
+      `;
+      const staffResult = await this.pool.query(staffQuery, [userId]);
+      const universityQuery = `
+        SELECT name FROM universities WHERE id = $1 LIMIT 1;
+      `;
+      const universityResult = await this.pool.query(universityQuery, [staffResult.rows[0].university_id]);
+      userDashInfo.university = universityResult.rows[0].name;
+    }
+    return userDashInfo;
   }
 
   async trimDotsForEmail(email: string): Promise<string> {

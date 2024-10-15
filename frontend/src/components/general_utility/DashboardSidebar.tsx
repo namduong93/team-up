@@ -185,7 +185,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cr
         {!cropState && (
           <ProfileSection>
             <ProfilePic />
-            <div>Hello,</div>
+            <div>Hello</div>
             <Name>{name}</Name>
             <div>{affiliation}</div>
           </ProfileSection>
