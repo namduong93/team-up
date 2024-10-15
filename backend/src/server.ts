@@ -96,7 +96,7 @@ app.get('/user/profile_info', userController.userProfileInfo);
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
 // PARAMS: --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { preferredName: string, university: string }
+// RESPONSE: { preferredName: string, affiliation: string }
 app.get('/user/dash_info', userController.userDashInfo);
 
 // Gets the type of user, 'staff', 'student' OR 'system_admin' OR 'staff'

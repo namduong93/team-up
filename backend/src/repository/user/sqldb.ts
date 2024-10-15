@@ -236,7 +236,7 @@ export class SqlDbUserRepository implements UserRepository {
   userDashInfo = async(userId: number): Promise<UserDashInfo | undefined> =>{
     const userDashInfo : UserDashInfo = {
       preferredName: "",
-      university: "",
+      affiliation: "",
     };
     
     const userQuery = `
@@ -258,7 +258,7 @@ export class SqlDbUserRepository implements UserRepository {
         SELECT name FROM universities WHERE id = $1 LIMIT 1;
       `;
       const universityResult = await this.pool.query(universityQuery, [studentResult.rows[0].university_id]);
-      userDashInfo.university = universityResult.rows[0].name;
+      userDashInfo.affiliation = universityResult.rows[0].name;
     } else {
       const staffQuery = `
         SELECT * FROM staffs WHERE user_id = $1 LIMIT 1;
@@ -268,7 +268,7 @@ export class SqlDbUserRepository implements UserRepository {
         SELECT name FROM universities WHERE id = $1 LIMIT 1;
       `;
       const universityResult = await this.pool.query(universityQuery, [staffResult.rows[0].university_id]);
-      userDashInfo.university = universityResult.rows[0].name;
+      userDashInfo.affiliation = universityResult.rows[0].name;
     }
     return userDashInfo;
   }
