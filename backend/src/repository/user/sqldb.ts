@@ -154,8 +154,6 @@ export class SqlDbUserRepository implements UserRepository {
     const userResult = await this.pool.query(userQuery, [email]);
 
     if (userResult.rowCount === 0) {
-      console.log(email, password);
-      console.log('hi');
       return undefined;
     }
     if (!await bcrypt.compare(password, userResult.rows[0].hashed_password)) {
