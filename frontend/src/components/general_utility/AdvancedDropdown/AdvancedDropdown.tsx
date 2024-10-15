@@ -127,6 +127,20 @@ const DropdownOptions: FC<OptionsProps> = ({ options, display, searchTerm, handl
   )
 }
 
+
+// PROPS:
+// - optionsState ---[ options -- state variable list of { value: string, label: string }, setOptions -- setSate for the options state variable ]
+// - setCurrentSelected --- setState function that should track the currently selected option ({ value: string, label: string })
+// - style --- additional styling to apply to the dropdown container
+// - props --- additional props to apply to the dropdown container
+// 
+// INSTRUCTIONS:
+// To use the advanced dropdown create a state variable [<optionList>, set<OptionList>] of some kind that contains the list of options
+// that can be chosen from in the dropdown, then create a state variable [currentSelected, setCurrentSelected] that should store
+// the currently selected option (of type { value: string, label: string }). Then provide the optionsState prop containing the
+// optionList and setOptionList, along with the setCurrentSelected setState as props to the advanced dropdown
+// Then, the currentSelected state variable will have the currently selected option loaded into it, if the user creates their own
+// option then the value of that new option will be an empty string '' but the label will be the name they inserted for their own option
 export const AdvancedDropdown: FC<DropdownProps> = ({ optionsState: [options, setOptions], setCurrentSelected, style, ...props }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
