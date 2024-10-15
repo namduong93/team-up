@@ -104,6 +104,11 @@ export class UserService {
     return userProfileInfo;
   }
 
+  userUpdateProfile = async (userId:number, userProfile : UserProfileInfo): Promise<void> => {
+    await this.userRepository.userUpdateProfile(userId, userProfile);
+    return ;
+  }
+
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
     const userTypeObject = await this.userRepository.userType(userId);
     return userTypeObject;

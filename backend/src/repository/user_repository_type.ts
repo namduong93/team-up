@@ -13,6 +13,8 @@ export interface UserRepository {
   userLogin(email: string, password: string): Promise<UserIdObject | undefined>;
 
   userProfileInfo(userId: number): Promise<UserProfileInfo | undefined>;
+  userUpdateProfile(userId: number, userProfile: UserProfileInfo): Promise<void>;
+
   userType(userId: number): Promise<UserTypeObject | undefined>;
   userDashInfo(userId: number): Promise<UserDashInfo | undefined>;
 };

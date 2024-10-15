@@ -231,9 +231,10 @@ export const Account: FC = () => {
     setIsEditingComp(true);
   };
 
-  const handleSaveUser = () => {
+  const handleSaveUser = async () => {
     setUser(newDetails);
     setIsEditingUser(false);
+    await sendRequest.put('/user/profile_info', newDetails);
   };
 
   const handleSaveComp = () => {

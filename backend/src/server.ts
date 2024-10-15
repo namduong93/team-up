@@ -89,8 +89,12 @@ app.post('/user/login', userController.userLogin);
 app.post('/user/logout', userController.userLogout);
 
 // PARAMS: {}
-// RESPONSE: { name, email, university, gender, bio, tshirtSize, pronouns?, allergies?, accessibilityReqs? }
+// RESPONSE: { name, preferredName, email, affiliation, gender, pronouns, tshirtSize, allergies, dietaryReqs, accessibilityReqs}
 app.get('/user/profile_info', userController.userProfileInfo);
+
+// PARAMS: { name, preferredName, email, affiliation, gender, pronouns, tshirtSize, allergies, dietaryReqs, accessibilityReqs }
+// RESPONSE: {}
+app.put('/user/profile_info', userController.userUpdateProfile);
 
 // This should return things that need to be displayed on the dash
 // DEV: If you need this to return more things, you can just start assuming it does

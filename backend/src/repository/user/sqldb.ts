@@ -218,6 +218,37 @@ export class SqlDbUserRepository implements UserRepository {
     return returnUserProfInfo;
   }
 
+  userUpdateProfile = async (userId : number, userProfile: UserProfileInfo): Promise<void> => {
+    const userQuery = `
+      UPDATE users 
+      SET 
+        name = $2,
+        preferred_name = $3,
+        email = $4,
+        gender = $5,
+        pronouns = $6,
+        tshirt_size = $7,
+        allergies = $8,
+        dietary_reqs = $9,
+        accessibility_reqs = $10
+      WHERE id = $1;
+    `;
+    const userValues = [
+      userId,
+      userProfile.name,
+      userProfile.preferredName,
+      userProfile.email,
+      userProfile.gender,
+      userProfile.pronouns,
+      userProfile.tshirtSize,
+      userProfile.allergies,
+      userProfile.dietaryReqs,
+      userProfile.accessibilityReqs,
+    ];
+    await this.pool.query(userQuery, userValues);
+    return ;
+  }
+
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
     const staff = `
       SELECT * FROM staffs WHERE user_id = $1;
