@@ -45,7 +45,7 @@ const Container = styled.div<{ width: string }>`
   width: ${({ width }) => width};
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
