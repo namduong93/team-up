@@ -94,6 +94,7 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
+  min-width: 80px;
   width: 25%;
   height: 35px;
   border: 0px;
@@ -166,6 +167,7 @@ export const CompetitionConfirmation: FC = () => {
   }, []);
 
   const handleBack = () => {
+    console.log(competitionInfo)
     navigate("/competition/create", { state: { competitionInfo } });
   };
 
