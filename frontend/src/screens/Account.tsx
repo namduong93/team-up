@@ -215,6 +215,7 @@ export const Account: FC = () => {
 
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [isEditingComp, setIsEditingComp] = useState(false);
+  const [reloadDashboard, setReloadDashboard] = useState(false);
   
   const [newDetails, setNewDetails] = useState<User>({
     ...user,
@@ -235,6 +236,7 @@ export const Account: FC = () => {
     setUser(newDetails);
     setIsEditingUser(false);
     await sendRequest.put('/user/profile_info', newDetails);
+    setReloadDashboard(!reloadDashboard);
   };
 
   const handleSaveComp = () => {
@@ -283,7 +285,7 @@ export const Account: FC = () => {
 
   return (
     <Background>
-      <DashboardSidebar cropState={false} />
+      <DashboardSidebar cropState={false} reload={reloadDashboard} />
       <AccountContainer>
         <CardContainer>
           <AccountCard>

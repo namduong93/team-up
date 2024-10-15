@@ -6,6 +6,7 @@ import { sendRequest } from "../../utility/request";
 
 interface SidebarProps {
   cropState: boolean;
+  reload?: boolean;
 }
 
 const SidebarContainer = styled.div<{ $cropState: boolean }>`
@@ -164,7 +165,7 @@ const LogoutButton = styled.button`
   }
 `;
 
-export const DashboardSidebar: React.FC<SidebarProps> = ({ cropState }) => {
+export const DashboardSidebar: React.FC<SidebarProps> = ({ cropState, reload }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
@@ -191,7 +192,7 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ cropState }) => {
         // can handle other codes or types of errors here if needed.
       }
     })();
-  }, []);
+  }, [reload]);
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
