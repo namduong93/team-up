@@ -41,13 +41,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     // Create new competition code
     const competitionCode = randomUUID(); // TODO: check if code already exists
 
+    
     // Insert competition into competitions table
-    const competitionQuery = `
-      INSERT INTO competitions (name, team_size, early_reg_deadline, general_reg_deadline, code)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING id, code;
+    const competitionQuery =
+    `INSERT INTO competitions (name, team_size, early_reg_deadline, general_reg_deadline, code)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id, code;
     `;
-
+    
     const competitionValues = [
       competition.name,
       teamSize,
@@ -55,37 +56,22 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       new Date(competition.generalRegDeadline),
       competitionCode
     ];
-
+    
     const competitionResult = await this.pool.query(competitionQuery, competitionValues);
     const competitionId = competitionResult.rows[0].id;
-
-    // Insert user as competition admin into competition_admins table
-    const adminQuery = `
-      INSERT INTO competition_admins (staff_id, competition_id)
-      VALUES ($1, $2)
-      RETURNING *;
-    `;
-    await this.pool.query(adminQuery, [userId, competitionId]);
-
-    // Insert site-relevant details into tables
-    for (const siteObject of competition.siteLocations) {
-      // Create a site based on
-      const siteQuery = `
-        INSERT INTO competition_sites (competition_id, university_id, name, default_site)
-        VALUES ($1, $2, $3, $4);
-      `;
-
-      const siteValues = [
-        competitionId,
-        siteObject.universityId,
-        siteObject.name,
-        true // Set default_site to true since on the FE, the default site is the one that is created on competition creation
-      ];
-
-      await this.pool.query(siteQuery, siteValues);
-    }
-
-    // Return the competition id
+    
+    await this.pool.query(
+      `INSERT INTO competition_users (user_id, competition_id, competition_roles)
+      VALUES (${userId}, ${competitionId}, ARRAY['admin']::competition_role_enum[])`
+    );
+    
+    // for the normal siteLocations that have university Ids:
+    competition.siteLocations.forEach(async ({ universityId, name }) => {
+      await this.pool.query(
+        `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
+        VALUES (${competitionId}, ${universityId}, '${name}', 0)`
+      );
+    });
     return { competitionId: competitionId };    
   }
 
@@ -148,33 +134,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionDetailsObject> | undefined> => {
     const competitionMap: Map<number, { userType: Array<CompetitionUserType>, competition: Competition }> = new Map();
     
-    const participantComps = await this.pool.query(
+    const comps = await this.pool.query(
       `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
-        general_reg_deadline AS "generalRegDeadline" FROM competition_list_participants(${userId})`
+        general_reg_deadline AS "generalRegDeadline" FROM competition_list(${userId})`
     );
-    this.addCompetitionIdsToMap(participantComps.rows, competitionMap, CompetitionUserType.PARTICIPANT);
-    
-    const coachComps = await this.pool.query(
-      `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
-      general_reg_deadline AS "generalRegDeadline" FROM competition_list_coaches(${userId})`
-    );
-    this.addCompetitionIdsToMap(coachComps.rows, competitionMap, CompetitionUserType.COACH);
-
-    const siteCoordinatorComps = await this.pool.query(
-      `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
-      general_reg_deadline AS "generalRegDeadline" FROM competition_list_site_coordinators(${userId})`
-    );
-    this.addCompetitionIdsToMap(siteCoordinatorComps.rows, competitionMap, CompetitionUserType.SITE_COORDINATOR);
-
-    const adminComps = await this.pool.query(
-      `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
-      general_reg_deadline AS "generalRegDeadline" FROM competition_list_admins(${userId})`
-    );
-    this.addCompetitionIdsToMap(adminComps.rows, competitionMap, CompetitionUserType.ADMIN);
+    // TODO: Change the db query to also get the user competition roles and return those too.
+    this.addCompetitionIdsToMap(comps.rows, competitionMap, CompetitionUserType.PARTICIPANT);
 
     const competitions: Array<CompetitionDetailsObject> = [...competitionMap.values()];
-    // console.log('map:', competitionMap);
-    // console.log('array:', competitions);
 
     return competitions;
   }
