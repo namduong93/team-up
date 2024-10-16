@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { Landing } from './screens/login/Landing';
 // import { Login } from './screens/login/Login';
 // import { SignUp } from './screens/login/SignUp';
@@ -24,6 +24,8 @@ import { TeamProfile } from './screens/student/TeamProfile';
 import { CompetitionDetails } from './screens/competition/CompDetails';
 import { CompetitionConfirmation } from './screens/competition/CompConfirmation';
 import { EmailRecoverForm, EmailSuccess, PasswordCodeRecoverForm, PasswordRecovery } from './screens/login/PasswordRecovery';
+import { AdminPage } from './screens/staff/AdminPage/AdminPage';
+import { CompIdNavigate } from './screens/staff/AdminPage/CompIdNavigate';
 
 
 function App() {
@@ -164,11 +166,24 @@ function App() {
             <Route path='email/success' element={ <EmailSuccess /> } />
             <Route path='reset/:code' element={ <PasswordCodeRecoverForm /> } />
           </Route>
-          <Route path="/coach/page" element={<CoachPage />}>
-              <Route index element={ <Navigate to='/coach/page/teams' /> } />
-              <Route path='teams' element={ <TeamDisplay /> } />
-              <Route path='students' element={ <StudentDisplay /> } />
-            </Route>
+
+          <Route path='/coach/page/:compId' element={ <CompIdNavigate route='/coach/page/teams' /> } />
+          <Route path="/coach/page/" element={<CoachPage />}>
+            <Route index element={ <Navigate to='/dashboard' /> } />
+            <Route path='teams/:compId' element={ <TeamDisplay /> } />
+            <Route path='students/:compId' element={ <StudentDisplay /> } />
+          </Route>
+
+          <Route path='/admin/page/:compId' element={ <CompIdNavigate route='/admin/page/teams' /> } />
+          <Route path='/admin/page' element={ <Navigate to='/dashboard' /> } />
+          <Route path='/admin/page/' element={ <AdminPage /> }>
+            <Route index element={ <Navigate to='/dashboard' /> } />
+            <Route path='teams/:compId' element={<TeamDisplay />} />
+            <Route path='students/:compId' element={<StudentDisplay />} />
+            <Route path='staff/:compId' element={<div>Staff</div>} />
+            <Route path='site/:compId' element={<div>Site</div>} />
+          </Route>
+
           <Route path="/dashboard" element={<Dashboard competitions={competitions} />} />
           <Route path="/account" element={<Account />} />
           <Route path="/settings" element={<Settings />} />
