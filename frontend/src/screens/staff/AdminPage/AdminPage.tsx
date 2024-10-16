@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../CoachPage/CoachPage";
-import { useDashInfo } from "../../Dashboard/useDashInfo";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
@@ -20,7 +19,6 @@ const AdminToggleOptionDiv = styled(ToggleOptionDiv)`
 export const AdminPage: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
-  const [dashInfo, _] = useDashInfo();
   const [sortOption, setSortOption] = useState<string | null>(null);
   const sortOptions = TEAM_DISPLAY_SORT_OPTIONS;
 
@@ -42,7 +40,6 @@ export const AdminPage: FC = () => {
 
   return (
     <OverflowFlexBackground>
-      <DashboardSidebar sidebarInfo={dashInfo} cropState={false} />
 
       <MainPageDiv>
         <PageHeader

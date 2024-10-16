@@ -1,10 +1,9 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
-import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import defaultProfile from "../components/assets/default-profile.jpg";
 import { sendRequest } from "../utility/request";
-import { useDashInfo } from "./Dashboard/useDashInfo";
+import { DashInfo } from "./Dashboard/useDashInfo";
 
 interface User {
   role: "student" | "staff";
@@ -40,8 +39,8 @@ const AccountContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
@@ -187,7 +186,11 @@ const Textarea = styled.textarea`
   resize: vertical;
 `;
 
-export const Account: FC = () => {
+interface AccountProps {
+  setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;
+}
+
+export const Account: FC<AccountProps> = ({ setDashInfo }) => {
   const [user, setUser] = useState<User>({
     role: "student",
     name: "John Doe",
@@ -216,7 +219,6 @@ export const Account: FC = () => {
 
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [isEditingComp, setIsEditingComp] = useState(false);
-  const [dashInfo, setDashInfo] = useDashInfo();
   
   const [newDetails, setNewDetails] = useState<User>({
     ...user,
@@ -286,7 +288,6 @@ export const Account: FC = () => {
 
   return (
     <Background>
-      <DashboardSidebar sidebarInfo={dashInfo} cropState={false}  />
       <AccountContainer>
         <CardContainer>
           <AccountCard>

@@ -6,6 +6,11 @@ import { sendRequest } from "../../utility/request";
 //   cropState: boolean;
 // }
 
+export interface DashInfo {
+  preferredName: string;
+  affiliation: string;
+}
+
 export const useDashInfo = (): [{ preferredName: string, affiliation: string }, React.Dispatch<React.SetStateAction<{ preferredName: string, affiliation: string }>>] => {
 
   const [dashInfo, setDashInfo] = useState({ preferredName: '', affiliation: '' });

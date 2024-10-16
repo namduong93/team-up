@@ -6,10 +6,8 @@ import styled from "styled-components";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { AlertButton, SortButton } from "../../Dashboard/Dashboard";
-import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
-import { useDashInfo } from "../../Dashboard/useDashInfo";
 import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "./TeamDisplay";
 
 export const OverflowFlexBackground = styled(FlexBackground)`
@@ -186,7 +184,6 @@ export const CoachPage: FC = () => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [dashInfo, _] = useDashInfo();
 
   const filterOptions = TEAM_DISPLAY_FILTER_OPTIONS;
 
@@ -212,7 +209,6 @@ export const CoachPage: FC = () => {
   return (
   <OverflowFlexBackground>
     {/* Sidebar */}
-    <DashboardSidebar sidebarInfo={dashInfo} cropState={false} />
 
       <MainPageDiv>
 

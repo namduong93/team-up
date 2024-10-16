@@ -26,6 +26,8 @@ import { CompetitionConfirmation } from './screens/competition/CompConfirmation'
 import { EmailRecoverForm, EmailSuccess, PasswordCodeRecoverForm, PasswordRecovery } from './screens/login/PasswordRecovery';
 import { AdminPage } from './screens/staff/AdminPage/AdminPage';
 import { CompIdNavigate } from './screens/staff/AdminPage/CompIdNavigate';
+import { SidebarLayout } from './screens/SidebarLayout';
+import { useDashInfo } from './screens/Dashboard/useDashInfo';
 
 
 function App() {
@@ -129,6 +131,8 @@ function App() {
 
   useEffect(() => setTheme(isDarkTheme ? darkTheme : defaultTheme), [isDarkTheme]);
 
+  const [dashInfo, setDashInfo] = useDashInfo();
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -167,28 +171,30 @@ function App() {
             <Route path='reset/:code' element={ <PasswordCodeRecoverForm /> } />
           </Route>
 
-          <Route path='/coach/page/:compId' element={ <CompIdNavigate route='/coach/page/teams' /> } />
-          <Route path="/coach/page/" element={<CoachPage />}>
-            <Route index element={ <Navigate to='/dashboard' /> } />
-            <Route path='teams/:compId' element={ <TeamDisplay /> } />
-            <Route path='students/:compId' element={ <StudentDisplay /> } />
-          </Route>
+          <Route element={<SidebarLayout cropState={false} sidebarInfo={dashInfo} />}>
+            <Route path='/coach/page/:compId' element={ <CompIdNavigate route='/coach/page/teams' /> } />
+            <Route path="/coach/page/" element={<CoachPage />}>
+              <Route index element={ <Navigate to='/dashboard' /> } />
+              <Route path='teams/:compId' element={ <TeamDisplay /> } />
+              <Route path='students/:compId' element={ <StudentDisplay /> } />
+            </Route>
 
-          <Route path='/admin/page/:compId' element={ <CompIdNavigate route='/admin/page/teams' /> } />
-          <Route path='/admin/page' element={ <Navigate to='/dashboard' /> } />
-          <Route path='/admin/page/' element={ <AdminPage /> }>
-            <Route index element={ <Navigate to='/dashboard' /> } />
-            <Route path='teams/:compId' element={<TeamDisplay />} />
-            <Route path='students/:compId' element={<StudentDisplay />} />
-            <Route path='staff/:compId' element={<div>Staff</div>} />
-            <Route path='site/:compId' element={<div>Site</div>} />
-          </Route>
+            <Route path='/admin/page/:compId' element={ <CompIdNavigate route='/admin/page/teams' /> } />
+            <Route path='/admin/page' element={ <Navigate to='/dashboard' /> } />
+            <Route path='/admin/page/' element={ <AdminPage /> }>
+              <Route index element={ <Navigate to='/dashboard' /> } />
+              <Route path='teams/:compId' element={<TeamDisplay />} />
+              <Route path='students/:compId' element={<StudentDisplay />} />
+              <Route path='staff/:compId' element={<div>Staff</div>} />
+              <Route path='site/:compId' element={<div>Site</div>} />
+            </Route>
 
-          <Route path="/dashboard" element={<Dashboard competitions={competitions} />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/competition/:compId/:role" element={<Competition />} />
-          <Route path="/competition/participant" element={<TeamProfile />} />
+            <Route path="/dashboard" element={<Dashboard dashInfo={dashInfo} competitions={competitions} />} />
+            <Route path="/account" element={<Account setDashInfo={setDashInfo} />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/competition/:compId/:role" element={<Competition />} />
+            <Route path="/competition/participant" element={<TeamProfile />} />
+          </Route>
 
           <Route path="/competition/create" element={<CompetitionDetails />} />
           <Route path="/competition/confirmation" element={<CompetitionConfirmation />} />
