@@ -81,6 +81,7 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
+  min-width: 70px;
   width: 25%;
   height: 35px;
   border: 0px;
@@ -178,7 +179,7 @@ export const CompetitionDetails: FC = () => {
     }
 
     if (competitionInfo.siteLocations.some((site) => String(site.universityId) === currentOption.value)
-    || competitionInfo.otherSiteLocations.some((otherSite) => otherSite.universityName === currentOption.value)) {
+    || competitionInfo.otherSiteLocations.some((otherSite) => otherSite.universityName === currentOption.label)) {
         
       setLocationError(<p>You have already entered a default site location for this institution<br />
       Please delete your previous entry or select a different institution</p>);

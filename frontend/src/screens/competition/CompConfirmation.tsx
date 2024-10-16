@@ -115,12 +115,12 @@ interface University {
 }
 
 interface SiteLocation {
-  university: number;
+  universityId: number;
   defaultSite: string;
 }
 
 interface OtherSiteLocation {
-  university: string;
+  universityName: string;
   defaultSite: string;
 }
 
@@ -181,11 +181,11 @@ export const CompetitionConfirmation: FC = () => {
         generalRegDeadline: `${generalDate}T${generalTime}:00`,
         code,
         siteLocations: siteLocations.map(location => ({
-          universityId: location.university, 
+          universityId: location.universityId, 
           name: location.defaultSite, 
         })),
         // otherSiteLocations: otherSiteLocations.map(location => ({
-        //   universityId: location.university, 
+        //   universityName: location.universityName, 
         //   name: location.defaultSite, 
         // })),
     };
