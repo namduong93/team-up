@@ -233,6 +233,30 @@ AS $$
   WHERE csc.staff_id = u_id;
 $$ LANGUAGE sql;
 
+CREATE OR REPLACE VIEW indexed_competition_participants AS
+SELECT cp.user_id as user_id,
+  cp.competition_team_id AS competition_team_id,
+  ROW_NUMBER() OVER (PARTITION BY cp.competition_team_id ORDER BY cp.id) AS row_index
+FROM competition_participants as cp;
+
+
+CREATE OR REPLACE FUNCTION competition_team_list(u_id INT, c_id INT)
+RETURNS TABLE(team_name TEXT, member_name1 TEXT, member_name2 TEXT, member_name3 TEXT, status TEXT)
+AS $$
+  SELECT ct.name AS team_name,
+    MAX(CASE WHEN icp.row_index = 1 THEN u.name END) AS member_name1,
+    MAX(CASE WHEN icp.row_index = 2 THEN u.name END) AS member_name2,
+    MAX(CASE WHEN icp.row_index = 3 THEN u.name END) AS member_name3,
+    'pending' AS status
+  FROM competition_teams as ct -- got team_name
+  JOIN indexed_competition_participants AS icp ON icp.competition_team_id = ct.id
+
+  JOIN users AS u ON icp.user_id = u.id
+  JOIN competition_coaches AS cc ON cc.id = ct.competition_coach_id
+  WHERE cc.staff_id = u_id AND ct.competition_id = c_id
+  GROUP BY ct.id, ct.name
+$$ LANGUAGE sql;
+
 
 -- TEST DATA
 -- TODO: This is hard code for some university, we will delete it later when we get into Admin and University api
