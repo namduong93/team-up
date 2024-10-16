@@ -9,6 +9,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const ContentContainer = styled.div`
@@ -31,9 +32,9 @@ const Label = styled.label`
   text-align: left;
   margin-bottom: 0.5rem;
   margin-top: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 18px;
-  font-weight: bold;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   width: 100%;
 `;
 
@@ -42,9 +43,9 @@ const HalfText = styled.label`
   text-align: left;
   margin-bottom: 0.5rem;
   margin-top: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 16px;
-  font-weight: normal;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.regular};
   width: 45%;
 `;
 
@@ -60,7 +61,7 @@ const Text = styled.label`
   text-align: left;
   margin-bottom: 20px;
   margin-top: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 16px;
   width: 100%;
 `;
@@ -78,7 +79,7 @@ const LocationItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center; 
-  font-style: italic;
+  font-style: ${({ theme }) => theme.fonts.style};
   margin-top: 20px;
   margin-bottom: 20px;
 `;
@@ -99,14 +100,14 @@ const Button = styled.button<{ disabled?: boolean }>`
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ disabled }) => (disabled ? "#ccc" : "#6688D2")};
+  background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
   margin-top: 35px;
   margin-bottom: 40px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
-  font-weight: bold;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 interface University {
