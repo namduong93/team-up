@@ -12,12 +12,12 @@ interface DropdownInputLightProps extends React.HTMLAttributes<HTMLSelectElement
   descriptor?: string;
 }
 
-const Container = styled.div<{ width: string }>`
+const Container = styled.div<{ $width: string }>`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
   font-family: Arial, Helvetica, sans-serif;
-  width: ${({ width }) => width};
+  width: ${({ $width: width }) => width};
 `;
 
 const Label = styled.label`
@@ -95,7 +95,7 @@ const DropdownInputLight: React.FC<DropdownInputLightProps> = ({
   descriptor,
 }) => {
   return (
-    <Container width={width}>
+    <Container $width={width}>
       <Label>
         {label}
         {required && <Asterisk>*</Asterisk>}

@@ -30,11 +30,11 @@ const SortContainer = styled.div<{ $isOpen: boolean }>`
   overflow-y: auto; 
 `;
 
-const SortOption = styled.div<{ isSelected: boolean }>`
+const SortOption = styled.div<{ $isSelected: boolean }>`
   padding: 10px;
   cursor: pointer;
   border-radius: 10px;
-  background-color: ${({ isSelected, theme }) =>
+  background-color: ${({ $isSelected: isSelected, theme }) =>
     isSelected ? theme.colours.primaryLight : "transparent"};
   color: ${({ theme }) => theme.fonts.colour};
   margin: 5px;
@@ -59,7 +59,7 @@ export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, isOpen 
       {options.map((option) => (
         <SortOption
           key={option.value}
-          isSelected={selectedSort === option.value}
+          $isSelected={selectedSort === option.value}
           onClick={() => handleSortChange(option.value)}
         >
           {option.label}

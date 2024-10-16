@@ -95,7 +95,7 @@ const SmallContainerDiv = styled.div`
   white-space: normal;
 `;
 
-const EmailContainerDiv = styled.div<{ isHeader: boolean }>`
+const EmailContainerDiv = styled.div<{ $isHeader: boolean }>`
   width: 15%;
   height: 100%;
   display: flex;
@@ -103,7 +103,7 @@ const EmailContainerDiv = styled.div<{ isHeader: boolean }>`
   overflow: hidden;
   position: relative;
   box-sizing: border-box;
-  ${({ isHeader }) => !isHeader &&
+  ${({ $isHeader: isHeader }) => !isHeader &&
   `&:hover {
     overflow: visible;
     justify-content: center;
@@ -174,7 +174,7 @@ export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader =
         <SmallContainerDiv>
             {studentInfo.sex}
         </SmallContainerDiv>
-        <EmailContainerDiv isHeader={isHeader}>
+        <EmailContainerDiv $isHeader={isHeader}>
           <EmailSpan isHeader={isHeader}>
           {studentInfo.email}
           </EmailSpan>

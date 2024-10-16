@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useOutletContext, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
 import { sendRequest } from "../../../utility/request";
+import Fuse from "fuse.js";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;
@@ -17,7 +18,7 @@ const TeamCardGridDisplay = styled.div`
 
 interface CoachPageContext {
   filters: Record<string, Array<string>>;
-  sortOption: { label: string, value: string };
+  sortOption: string;
   searchTerm: string;
   removeFilter: (field: string, value: string) => Record<string, string>;
 }
@@ -33,7 +34,7 @@ export const TeamDisplay: FC = () => {
       try {
         const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
         const { teamList } = response.data
-        setTeamList(teamList);
+        setTeamList([...teamList, { teamName: 'ab', memberName1: 'member1', memberName2: 'mem2', memberName3: 'threed member', status: 'registered' }]);
 
       } catch (error: unknown) {
 
@@ -44,6 +45,41 @@ export const TeamDisplay: FC = () => {
     fetchCompetitionTeams();
     
   }, []);
+  
+  const filteredTeamList = teamList.filter((team: TeamDetails) => {
+    if (!filters.Status) {
+      return true;
+    }
+
+    return filters.Status.some((status) => status.toLocaleLowerCase() === team.status);
+  });
+
+
+  const sortedTeamList = filteredTeamList.sort((team1, team2) => {
+    if (!sortOption) {
+      return 0;
+    }
+
+    if (sortOption === 'name') {
+      return team1.teamName.localeCompare(team2.teamName);
+    }
+
+    return 0;
+  });
+
+  const fuse = new Fuse(sortedTeamList, {
+    keys: ['teamName', 'memberName1', 'memberName2', 'memberName3'],
+    threshold: 0.5
+  });
+
+  
+
+  let searchedCompetitions;
+  if (searchTerm) {
+    searchedCompetitions = fuse.search(searchTerm);
+  } else {
+    searchedCompetitions = sortedTeamList.map((team) => { return { item: team } });
+  }
 
   return (
     <>
@@ -63,10 +99,8 @@ export const TeamDisplay: FC = () => {
       )}
     </div>
     <TeamCardGridDisplay>
-      {teamList.map((teamDetails: TeamDetails, index) => {
-        console.log(teamList);
-        console.log(teamDetails);
-        return (<TeamCard key={index} teamDetails={teamDetails} />)
+      {searchedCompetitions.map(({item: teamDetails}, index) => {
+        return (<TeamCard key={`${teamDetails.teamName}${teamDetails.status}${index}`} teamDetails={teamDetails} />)
       })}
     </TeamCardGridDisplay>
     </>

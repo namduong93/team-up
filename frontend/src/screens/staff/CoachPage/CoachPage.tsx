@@ -183,9 +183,6 @@ export const CoachPage: FC = () => {
   const sortOptions = [
     { label: "Default", value: "original" },
     { label: "Alphabetical (Name)", value: "name" },
-    { label: "Competition Date", value: "date" },
-    { label: "Alphabetical (Location)", value: "location" },
-    { label: "Time Remaining", value: "timeRemaining" },
   ];
 
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
@@ -194,10 +191,7 @@ export const CoachPage: FC = () => {
   const [dashInfo, _] = useDashInfo();
 
   const filterOptions = {
-    Location: ['USA', 'UK'],
-    Role: ['Admin', 'Site-Coordinator', 'Coach'],
-    Status: ["Completed", "Upcoming"],
-    Year: ['2020', '2021', '2022', '2024'],
+    Status: ['Pending', 'Unregistered', 'Registered'] 
   };
 
   const handleToggleTeams = (e: React.MouseEvent) => {
