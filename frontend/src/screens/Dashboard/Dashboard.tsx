@@ -2,14 +2,13 @@ import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { FaBell, FaTimes } from "react-icons/fa";
-import { DashboardSidebar } from "../../components/general_utility/DashboardSidebar";
 import { CompCard } from "../../components/general_utility/CompCard";
 import { ActionButton } from "../../components/general_utility/ActionButton";
 import { Notifications } from "../../components/general_utility/Notifications";
 import { sendRequest } from "../../utility/request";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/sort_filter_search/PageHeader";
-import { useDashInfo } from "./useDashInfo";
+import { DashInfo } from "./useDashInfo";
 // import CompCreatePopUp from "../components/general_utility/CompCreatePopUp";
 
 interface Competition { 
@@ -23,6 +22,7 @@ interface Competition {
 
 interface DashboardsProps {
   competitions: Competition[];
+  dashInfo: DashInfo
 }
 
 const OverflowFlexBackground = styled(FlexBackground)`
@@ -121,7 +121,7 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
+export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -140,7 +140,6 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const [dashInfo, _] = useDashInfo();
 
   useEffect(() => {
     (async () => {
@@ -288,7 +287,6 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
   
   return (isLoaded &&
     <OverflowFlexBackground>
-      <DashboardSidebar sidebarInfo={dashInfo} cropState={false}/>
       <DashboardContent>
 
         

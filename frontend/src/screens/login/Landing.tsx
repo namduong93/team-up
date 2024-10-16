@@ -68,7 +68,7 @@ export const Landing: FC = () => {
     e.preventDefault();
     try {
       await sendRequest.post('/user/login', { email, password });
-      navigate('/dashboard');
+      window.location.href = '/dashboard';
     } catch (error: unknown) {
       console.error('Login failed', error);
     }

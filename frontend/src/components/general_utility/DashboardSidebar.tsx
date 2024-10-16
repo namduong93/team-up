@@ -4,7 +4,7 @@ import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { sendRequest } from "../../utility/request";
 
-interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   cropState: boolean;
   sidebarInfo: { preferredName: string, affiliation: string };
 }
