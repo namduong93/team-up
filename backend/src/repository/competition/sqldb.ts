@@ -11,12 +11,28 @@ const { randomUUID } = new ShortUniqueId({
   length: 8
 });
 
+interface CompetitionTeam {
+  teamName: string;
+  memberName1?: string;
+  memberName2?: string;
+  memberName3?: string;
+  status: 'pending' | 'registered' | 'unregistered';
+}
+
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
 
   constructor(pool: Pool) {
     this.pool = pool;
   }
+
+  competitionTeams = async (userId: number, compId: number): Promise<Array<CompetitionTeam>> => {
+    const dbResult = await this.pool.query(
+      `SELECT team_name AS "teamName", member_name1 AS "memberName1", member_name2 AS "memberName2", member_name3 AS "memberName3", status
+      FROM competition_team_list(${userId}, ${compId})`);
+    
+    return dbResult.rows;
+  };
 
   competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
     // Set default team size to 3 if not provided

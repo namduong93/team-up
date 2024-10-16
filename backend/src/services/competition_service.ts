@@ -36,12 +36,15 @@ export interface TeamMateData {
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
-
+  
   constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
   }
-
+  
+  competitionTeams = async (userId: number, compId: number) => {
+    return await this.competitionRepository.competitionTeams(userId, compId);
+  }
   competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
     // Verify system admin
     const userTypeObject = await this.userRepository.userType(userId);

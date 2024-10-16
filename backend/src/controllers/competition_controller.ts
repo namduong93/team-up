@@ -7,10 +7,20 @@ import { Competition } from "../models/competition/competition.js";
 export class CompetitionController {
   private competitionService: CompetitionService;
   private userService: UserService;
-
+  
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+  
+  competitionTeams = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const teamList = await this.competitionService.competitionTeams(
+      parseInt(userId as string), parseInt(compId as string));
+
+    res.json({ teamList })
+
+  });
 
   competitionsSystemAdminCreate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
