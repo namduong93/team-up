@@ -180,7 +180,6 @@ export const CoachPage: FC = () => {
   const { pathname } = useLocation();
 
   const [sortOption, setSortOption] = useState<string | null>(null);
-  console.log(sortOption);
   const sortOptions = [
     { label: "Default", value: "original" },
     { label: "Alphabetical (Name)", value: "name" },
