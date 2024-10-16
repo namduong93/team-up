@@ -149,6 +149,20 @@ AS $$
   WHERE cu.user_id = u_id;
 $$ LANGUAGE sql;
 
+CREATE OR REPLACE FUNCTION competition_team_list(u_id INT, c_id INT)
+RETURNS TABLE(team_name TEXT, member_name1 TEXT, member_name2 TEXT, member_name3 TEXT, status competition_team_status)
+AS $$
+  SELECT ct.name AS team_name, 
+  (SELECT u.name FROM users AS u WHERE u.id = ct.participants[1]) AS member_name1,
+  (SELECT u.name FROM users AS u WHERE u.id = ct.participants[2]) AS member_name2,
+  (SELECT u.name FROM users AS u WHERE u.id = ct.participants[3]) AS member_name3,
+  ct.team_status AS status
+  FROM competition_teams AS ct
+  JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
+  JOIN users AS u ON u.id = cu.user_id
+  WHERE u.id = u_id AND ct.competition_id = c_id;
+$$ LANGUAGE sql;
+
 CREATE OR REPLACE VIEW user_profile_info AS
 SELECT u.id AS id, u.name, preferred_name, email, uni.name AS affiliation, gender,
       pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs
@@ -377,3 +391,10 @@ VALUES
 (8, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2),
 (9, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2),
 (10, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2);
+
+INSERT INTO competition_teams (
+  competition_coach_id, name, team_status, team_name_approved, team_size, participants, university_id, competition_id
+)
+VALUES
+(2, 'Team Zeta', 'registered', FALSE, 3, ARRAY[8, 9, 10], 2, 1),
+(2, 'Team Alpha', 'pending', FALSE, 3, ARRAY[5, 6, 7], 2, 1);
