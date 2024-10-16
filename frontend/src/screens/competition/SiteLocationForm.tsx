@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import TextInputLight from '../../components/general_utility/TextInputLight';
+import TextInputLight, { Label } from '../../components/general_utility/TextInputLight';
 import DropDownInputLight from '../../components/general_utility/DropDownLight';
 import { sendRequest } from '../../utility/request';
+import { AdvancedDropdown } from '../../components/general_utility/AdvancedDropdown/AdvancedDropdown';
 
 const Container = styled.div`
   /* padding: 20px; */
@@ -52,7 +53,10 @@ const DoubleInputContainer = styled.div`
 
 // pass the a boolean too and receive on CompDetails
 interface SiteLocationFormProps {
-  onAddLocation: (location: { university: string; defaultSite: string }, isOther: boolean) => void;
+  onAddLocation: (currentOption: {
+    value: string;
+    label: string;
+}, defaultSite: string) => void;
 }
 
 interface University {
@@ -61,21 +65,16 @@ interface University {
 }
  
 const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) => {
-  const [university, setUniversity] = useState('');
   const [defaultSite, setDefaultSite] = useState('');
-  const [otherInstitution, setOtherInstitution] = useState('');
-  const [institutionOptions, setInstitutionOptions] = useState([{ value: '', label: 'Please Select' }]);
+  const [institutionOptions, setInstitutionOptions] = useState<Array<{ value: string, label: string }>>([]);
+
+  const [currentOption, setCurrentOption] = useState({ value: '', label: '' });
 
   const handleAddLocation = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const selectedUniversity = university === 'other' ? otherInstitution : university;
-
-    if (selectedUniversity && defaultSite) {
-      onAddLocation({ university: selectedUniversity, defaultSite }, university === 'other');
-      setUniversity('');
-      setDefaultSite('');
-      setOtherInstitution('');
+    if (currentOption.label) {
+      onAddLocation(currentOption, defaultSite);
     }
   };
 
@@ -86,12 +85,11 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
         const universities = response.data;
 
         const options = universities.universities.map((university) => ({
-          value: university.id,
+          value: String(university.id), // String conversion needed since backend sends as number
           label: university.name,
         }));
 
-        const otherOption = { value: 'other', label: 'Other' };
-        setInstitutionOptions([...institutionOptions, ...options, otherOption]);
+        setInstitutionOptions(options);
       } catch (error) {
         console.error("Error fetching universities:", error);
       }
@@ -104,54 +102,35 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
     <Container>
       <Title>Site Locations</Title>
       <DoubleInputContainer>
-        <DropDownInputLight
+        {/* <DropDownInputLight
           label="Institution"
           options={institutionOptions}
           value={university}
           required={false}
           onChange={(e) => setUniversity(e.target.value)}
           width="45%"
+        /> */}
+        <div style={{ display: 'flex', flexDirection: 'column', width: '45%' }}>
+          <Label>
+            Institution
+          </Label>
+          <AdvancedDropdown
+            setCurrentSelected={setCurrentOption}
+            optionsState={[institutionOptions, setInstitutionOptions]}
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        <TextInputLight
+          label="Default Site Location"
+          placeholder="Please type"
+          type="text"
+          required={false}
+          value={defaultSite}
+          onChange={(e) => setDefaultSite(e.target.value)}
+          width="45%"
         />
-
-        {university !== 'other' && (
-          <TextInputLight
-            label="Default Site Location"
-            placeholder="Please type"
-            type="text"
-            required={false}
-            value={defaultSite}
-            onChange={(e) => setDefaultSite(e.target.value)}
-            width="45%"
-          />
-        )}
       </DoubleInputContainer>
-
-
-
-      {university === 'other' && (
-
-        <DoubleInputContainer>
-          <TextInputLight
-            label="Other Institution"
-            placeholder="Please specify"
-            type="text"
-            required={false}
-            value={otherInstitution}
-            onChange={(e) => setOtherInstitution(e.target.value)}
-            width="45%"
-          />
-
-          <TextInputLight
-            label="Default Site Location"
-            placeholder="Please type"
-            type="text"
-            required={false}
-            value={defaultSite}
-            onChange={(e) => setDefaultSite(e.target.value)}
-            width="45%"
-          />
-        </DoubleInputContainer>
-      )}
 
       <AddButtonContainer>
         <AddButton onClick={handleAddLocation}>+</AddButton>

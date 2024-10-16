@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompCreationProgressBar } from "../../components/general_utility/ProgressBar";
@@ -6,7 +6,6 @@ import TextInput from "../../components/general_utility/TextInput";
 import TextInputLight from "../../components/general_utility/TextInputLight";
 import { useLocation, useNavigate } from "react-router-dom";
 import SiteLocationForm from "./SiteLocationForm";
-import { sendRequest } from "../../utility/request";
 
 const Container = styled.div`
   flex: 1;
@@ -97,18 +96,13 @@ const Button = styled.button<{ disabled?: boolean }>`
 `;
 
 interface SiteLocation {
-  university: number;
+  universityId: number;
   defaultSite: string;
 }
 
 interface OtherSiteLocation {
-  university: string;
+  universityName: string;
   defaultSite: string;
-}
-
-interface University {
-  id: number;
-  name: string;
 }
 
 interface CompetitionInformation {
@@ -125,7 +119,11 @@ interface CompetitionInformation {
 export const CompetitionDetails: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [locationError, setLocationError] = useState<boolean>(false);
+  const [locationError, setLocationError] = useState<ReactNode>('');
+  
+  const [optionDisplayList, setOptionDisplayList] = useState<Array<{ value: string, label: string, defaultSite: string }>>(
+    location.state?.optionDisplayList || []
+  );
 
   const [competitionInfo, setCompetitionInfo] = useState<CompetitionInformation>(
     location.state?.competitionInfo || {
@@ -147,50 +145,78 @@ export const CompetitionDetails: FC = () => {
     setCompetitionInfo({ ...competitionInfo, [field]: e.target.value });
   };
 
-  const handleAddSiteLocation = (location: OtherSiteLocation, isOther: boolean) => {
-    if (isOther) {
-      const exists = competitionInfo.otherSiteLocations.some(
-        (site) => site.university === location.university
-      );
-      
-      if (!exists) {
-        setCompetitionInfo((prev) => ({
-          ...prev,
-          otherSiteLocations: [...prev.otherSiteLocations, location],
-        })); 
-        setLocationError(false);
-      } else {
-        setLocationError(true);
-      }
-    } else {
-      const exists = competitionInfo.siteLocations.some(
-        (site) => site.university === parseInt(location.university)
-      );
-      
-      if (!exists) {
-        setCompetitionInfo((prev) => ({
-          ...prev,
-          siteLocations: [...prev.siteLocations, { university: parseInt(location.university), defaultSite: location.defaultSite }],
-        })); 
-        setLocationError(false);
-      } else {
-        setLocationError(true);
-      }
+  const addSite = (option: { value: string, label: string }, defaultSite: string) => {
+    setCompetitionInfo((prev) => ({
+      ...prev,
+      siteLocations: [...prev.siteLocations, { universityId: parseInt(option.value), defaultSite }]
+      // convert universityId to number before we send to backend;
+    }));
+
+    setOptionDisplayList((prev) => ([
+      ...prev,
+      { value: option.value, label: option.label, defaultSite }
+    ]));
+  }
+
+  const addOtherSite = (option: { value: string, label: string }, defaultSite: string) => {
+    setCompetitionInfo((prev) => ({
+      ...prev,
+      otherSiteLocations: [...prev.otherSiteLocations, { universityName: option.label, defaultSite }]
+    }));
+
+    setOptionDisplayList((prev) => ([
+      ...prev,
+      { value: option.value, label: option.label, defaultSite }
+    ]));
+  }
+
+  const handleAddSiteLocation = (currentOption: { value: string, label: string }, defaultSite: string) => {
+    if (!defaultSite) {
+      console.log('hi');
+      setLocationError(<p>No site name provided</p>);
+      return;
     }
+
+    if (competitionInfo.siteLocations.some((site) => String(site.universityId) === currentOption.value)
+    || competitionInfo.otherSiteLocations.some((otherSite) => otherSite.universityName === currentOption.value)) {
+        
+      setLocationError(<p>You have already entered a default site location for this institution<br />
+      Please delete your previous entry or select a different institution</p>);
+      return;
+    }
+
+    setLocationError('');
+
+    // if currentOptions value is empty which will be the case when it's a custom option.
+    if (!currentOption.value) {
+      addOtherSite(currentOption, defaultSite);
+
+      return;
+    }
+
+    addSite(currentOption, defaultSite);
+
   };
 
-  const handleDeleteSiteLocation = (index: number) => {
-    setCompetitionInfo((prev) => ({
-      ...prev,
-      siteLocations: prev.siteLocations.filter((_, i) => i !== index),
-    }));
-  };
+  const handleDeleteSiteLocation = (deleteObject: { value: string, label: string, defaultSite: string }) => {
+    setOptionDisplayList((prev) => ([
+      ...prev.filter((elem) => !(elem.value === deleteObject.value && elem.label === deleteObject.label))
+    ]));
+    
+    if (!deleteObject.value) {
+      setCompetitionInfo((prev) => ({
+        ...prev,
+        otherSiteLocations: prev.otherSiteLocations.filter((elem) => (elem.universityName !== deleteObject.label)),
+      }));
 
-  const handleDeleteOtherSiteLocation = (index: number) => {
+      return;
+    }
+
     setCompetitionInfo((prev) => ({
       ...prev,
-      otherSiteLocations: prev.otherSiteLocations.filter((_, i) => i !== index),
+      siteLocations: prev.siteLocations.filter((elem) => elem.universityId !== Number(deleteObject.value))
     }));
+
   };
 
   const isButtonDisabled = () => {
@@ -209,30 +235,9 @@ export const CompetitionDetails: FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/competition/confirmation", {state: { competitionInfo }});
+    navigate("/competition/confirmation", {state: { competitionInfo, optionDisplayList }});
   };
 
-  const [institutionOptions, setInstitutionOptions] = useState<{ value: number; label: string; }[]>([]);
-
-  useEffect(() => {
-    const fetchUniversities = async () => {
-      try {
-        const response = await sendRequest.get<{ universities: University[] }>('/universities/list');
-        const universities = response.data;
-  
-        const options = universities.universities.map((university) => ({
-          value: university.id,
-          label: university.name,
-        }));
-  
-        setInstitutionOptions(options); 
-      } catch (error) {
-        console.error("Error fetching universities:", error);
-      }
-    };
-  
-    fetchUniversities();
-  }, []);
   
 
   return (
@@ -317,37 +322,26 @@ export const CompetitionDetails: FC = () => {
             width="100%"
             descriptor="Please type a unique code that will be used to identify your Competition"
           />
-
           
           <SiteLocationForm onAddLocation={handleAddSiteLocation} />
 
-          {locationError && (
-            <p style={{ color: "red", marginTop: "30px", textAlign: 'center' }}>
-              You have already entered a default site location for this institution<br />
-              Please delete your previous entry or select a different institution
-            </p>
-          )}
+          {locationError &&
+            <div style={{ color: "red", marginTop: "30px", textAlign: 'center' }}>
+              {locationError}
+            </div>
+          }
 
           <LocationList>
-            {competitionInfo.siteLocations.map((location, index) => {
-              console.log(institutionOptions)
-              const universityName = institutionOptions.find(option => option.value === location.university)?.label || 'Unknown';
+            {optionDisplayList.map((displayObject, index) => {
               return (
                 <LocationItem key={index}>
-                  <div>{universityName}</div>
-                  <div>{location.defaultSite}</div>
-                  <DeleteIcon onClick={() => handleDeleteSiteLocation(index)}>x</DeleteIcon> 
+                  <div>{displayObject.label}</div>
+                  <div>{displayObject.defaultSite}</div>
+                  <DeleteIcon onClick={() => handleDeleteSiteLocation(displayObject)}>x</DeleteIcon> 
                 </LocationItem>
               );
             })}
 
-            {competitionInfo.otherSiteLocations.map((location, index) => (
-                <LocationItem key={`other-${index}`}>
-                  <div>{location.university}</div>
-                  <div>{location.defaultSite}</div>
-                  <DeleteIcon onClick={() => handleDeleteOtherSiteLocation(index)}>x</DeleteIcon>
-                </LocationItem>
-              ))}
           </LocationList>
 
           <ButtonContainer>

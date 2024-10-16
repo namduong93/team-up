@@ -146,7 +146,7 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userLogin = async (email: string, password: string): Promise<UserIdObject | undefined> => {
-    email = await this.trimDotsForEmail(email);
+    // email = await this.trimDotsForEmail(email);
 
     const userQuery = `
       SELECT * FROM users WHERE email = $1;
