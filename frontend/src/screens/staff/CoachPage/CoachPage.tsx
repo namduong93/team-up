@@ -4,14 +4,14 @@ import styled from "styled-components";
 // import { TeamCard } from "./TeamCard";
  
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { AlertButton, SortButton } from "../../Dashboard/Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { useDashInfo } from "../../Dashboard/useDashInfo";
 
-const OverflowFlexBackground = styled(FlexBackground)`
+export const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
@@ -26,7 +26,7 @@ const OverflowFlexBackground = styled(FlexBackground)`
 //   margin: auto 1rem auto 1rem;
 // `;
 
-const MainPageDiv = styled.div`
+export const MainPageDiv = styled.div`
   flex: 0 1 auto;
   display: flex;
   width: 100%;
@@ -35,7 +35,7 @@ const MainPageDiv = styled.div`
   flex-direction: column;
 `;
 
-const PageOptionsContainerDiv = styled.div`
+export const PageOptionsContainerDiv = styled.div`
   min-height: 78px;
   width: 100%;
   display: flex;
@@ -44,7 +44,7 @@ const PageOptionsContainerDiv = styled.div`
   z-index: 0;
 `;
 
-const ToggleOptionDiv = styled.div`
+export const ToggleOptionDiv = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
@@ -176,10 +176,10 @@ export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ val
 
 export const CoachPage: FC = () => {
   const navigate = useNavigate();
+  const { compId } = useParams();
   const { pathname } = useLocation();
 
   const [sortOption, setSortOption] = useState<string | null>(null);
-  console.log(sortOption);
   const sortOptions = [
     { label: "Default", value: "original" },
     { label: "Alphabetical (Name)", value: "name" },
@@ -202,11 +202,11 @@ export const CoachPage: FC = () => {
 
   const handleToggleTeams = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigate('/coach/page/teams');
+    navigate(`/coach/page/teams/${compId}`);
   }
   const handleToggleStudents = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigate('/coach/page/students');
+    navigate(`/coach/page/students/${compId}`);
   }
 
   const removeFilter = (field: string, value: string) => {

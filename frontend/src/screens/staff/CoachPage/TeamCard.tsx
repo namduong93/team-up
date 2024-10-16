@@ -2,15 +2,17 @@ import { FC, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
 
+export interface TeamDetails {
+  teamName: string;
+  memberName1?: string;
+  memberName2?: string;
+  memberName3?: string;
+  status: 'pending' | 'registered' | 'unregistered';
+};
+
 interface TeamCardProps {
-  teamDetails: {
-    teamName: string;
-    memberName1?: string;
-    memberName2?: string;
-    memberName3?: string;
-    status: 'pending' | 'registered' | 'unregistered';
-  }
-}
+  teamDetails: TeamDetails;
+};
 
 const TeamMemberContainerDiv = styled.div`
   width: 100%;

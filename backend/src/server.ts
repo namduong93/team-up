@@ -180,6 +180,8 @@ app.post('/user/password_recovery/generate_code', userController.userPasswordRec
 // RESPONSE: {} --- NOTE: No error if successful, error if not successful
 app.post('/user/password_recovery/input_code', userController.userPasswordRecoveryInputCode);
 
+app.get('/competition/teams', competitionController.competitionTeams)
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

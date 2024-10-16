@@ -1,8 +1,9 @@
-import { FC } from "react";
-import { TeamCard } from "./TeamCard";
+import { FC, useEffect, useState } from "react";
+import { TeamCard, TeamDetails } from "./TeamCard";
 import styled from "styled-components";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
+import { sendRequest } from "../../../utility/request";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;
@@ -22,7 +23,28 @@ interface CoachPageContext {
 }
 
 export const TeamDisplay: FC = () => {
+  const { compId } = useParams();
   const { filters, sortOption, searchTerm, removeFilter } = useOutletContext<CoachPageContext>();
+
+  const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
+
+  useEffect(() => {
+    const fetchCompetitionTeams = async () => {
+      try {
+        const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
+        const { teamList } = response.data
+        setTeamList(teamList);
+
+      } catch (error: unknown) {
+
+      }
+
+    };
+
+    fetchCompetitionTeams();
+    
+  }, []);
+
   return (
     <>
     <div>
@@ -41,13 +63,11 @@ export const TeamDisplay: FC = () => {
       )}
     </div>
     <TeamCardGridDisplay>
-      {Array(50).fill(0).map((_, index) => (<TeamCard key={index} teamDetails={{
-        teamName: 'Team Name',
-        status: (index % 3) === 0 ? 'unregistered' : (index % 3) === 1 ? 'registered' : 'pending',
-        memberName1: 'Team Member 1',
-        memberName2: 'Team Member 2',
-        memberName3: 'Team Member 3'
-      }} />))}
+      {teamList.map((teamDetails: TeamDetails, index) => {
+        console.log(teamList);
+        console.log(teamDetails);
+        return (<TeamCard key={index} teamDetails={teamDetails} />)
+      })}
     </TeamCardGridDisplay>
     </>
   )

@@ -29,6 +29,7 @@ const ToggleDivOptionDiv = styled.div`
   flex: 1;
   cursor: pointer;
   background-color: white;
+  overflow: hidden;
 `;
 
 export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style, defaultBorderIndex = 0 }) => {
