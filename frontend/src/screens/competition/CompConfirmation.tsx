@@ -136,13 +136,14 @@ interface CompetitionInformation {
 
 interface LocationState {
   competitionInfo: CompetitionInformation;
+  optionDisplayList: Array<{ value: string, label: string, defaultSite: string }>;
 }
 
 export const CompetitionConfirmation: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const { competitionInfo } = location.state as LocationState|| {};
+  const { competitionInfo, optionDisplayList } = location.state as LocationState|| {};
   const [institutionOptions, setInstitutionOptions] = useState<{ value: number; label: string; }[]>([]);
 
   useEffect(() => {
@@ -166,7 +167,7 @@ export const CompetitionConfirmation: FC = () => {
   }, []);
 
   const handleBack = () => {
-    navigate("/competition/create", { state: { competitionInfo } });
+    navigate("/competition/create", { state: { competitionInfo, optionDisplayList } });
   };
 
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -254,23 +255,15 @@ export const CompetitionConfirmation: FC = () => {
           <Label>Site Locations</Label>
 
           <LocationList>
-            {competitionInfo.siteLocations.map((location, index) => {
+            {optionDisplayList.map((displayObject, index) => {
               console.log(institutionOptions)
-              const universityName = institutionOptions.find(option => option.value === location.university)?.label || 'Unknown';
               return (
                 <LocationItem key={index}>
-                  <div>{universityName}</div>
-                  <div>{location.defaultSite}</div>
+                  <div>{displayObject.label}</div>
+                  <div>{displayObject.defaultSite}</div>
                 </LocationItem>
               );
             })}
-
-            {competitionInfo.otherSiteLocations.map((location, index) => (
-                <LocationItem key={`other-${index}`}>
-                  <div>{location.university}</div>
-                  <div>{location.defaultSite}</div>
-                </LocationItem>
-              ))}
           </LocationList>
 
           <ButtonContainer>

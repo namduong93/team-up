@@ -3,7 +3,7 @@ import { FlexBackground } from "../../components/general_utility/Background"
 import styled from "styled-components"
 import TextInput from "../../components/general_utility/TextInput";
 import { CustomButton } from "./Landing";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { ErrorMessage } from "./AccountInformation";
 import { TimeoutButton } from "../../components/general_utility/TimeoutButton";
 
@@ -41,7 +41,7 @@ export const EmailRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ st
 
 
       // IF THE EMAIL WAS SUCCESSFULLY SENT FROM THE BACKEND TO THE CLIENT:
-      navigate('/password/recovery/code')
+      navigate('/password/recovery/email/success');
     } catch (error: unknown) {
 
     }
@@ -67,7 +67,7 @@ export const EmailRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ st
 }
 
 export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ...props }) => {
-  const [code, setCode] = useState('');
+  const { code } = useParams();
   const navigate = useNavigate();
   
   const [password, setPassword] = useState('');
@@ -98,27 +98,12 @@ export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> 
     }
   };
 
-  const handleResend = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    // TODO: resend here
-  };
-
   return (
     <FormContainer onSubmit={handleCodeSubmit} style={style} {...props}>
       <h1>Verification Code</h1>
 
       <div style={{ width: '68%' }}>
-        <TextInput
-          label="Code"
-          placeholder="000000"
-          type="text"
-          required={true}
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          width="100%"
-          maxLength={6}
-        />
+        <h2 style={{ color: 'red' }}>DEV: code = {code}</h2>
       </div>
 
       <div style={{ width: '68%' }}>
@@ -146,9 +131,25 @@ export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> 
       </div>
       {error && <ErrorMessage>{error}</ErrorMessage>}
       <div style={{ width: '68%', display: 'flex', justifyContent: 'space-around' }}>
-        <TimeoutButton onClick={handleResend}>Resend Code</TimeoutButton>
-        <CustomButton style={{ minWidth: '80px' }}>Submit Code</CustomButton>
+        <CustomButton style={{ minWidth: '80px' }}>Change Password</CustomButton>
       </div>
+    </FormContainer>
+  )
+}
+
+export const EmailSuccess: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ...props }) => {
+  
+  const handleResend = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    // handle resend email.
+  }
+  return (
+    <FormContainer style={{ justifyContent: 'center', ...style }} {...props}>
+      <div style={{
+        fontSize: '24px',
+      }}>An email has been sent to your address with password recovery steps</div>
+      <TimeoutButton onClick={handleResend} >Resend Email</TimeoutButton>
     </FormContainer>
   )
 }
