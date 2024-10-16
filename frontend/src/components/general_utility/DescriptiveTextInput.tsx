@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 interface DescriptiveTextInputProps {
   label: string;
@@ -8,8 +9,47 @@ interface DescriptiveTextInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   width?: string;
-  height?: string; // Add a height prop to control height
+  height?: string;
 }
+
+const Container = styled.div<{ width: string }>`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  width: ${({ width }) => width};
+`;
+
+const Label = styled.label`
+  display: block;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  margin-top: 10px;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+  font-size: 18px;
+`;
+
+const Descriptor = styled.div`
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.fonts.descriptor};
+`;
+
+const Asterisk = styled.span`
+  color: ${({ theme }) => theme.colours.error};
+`;
+
+const StyledTextarea = styled.textarea<{ $height: string }>`
+  border-radius: 10px;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
+  font-size: 16px;
+  height: ${({ $height }) => $height};
+  width: 100%;
+`;
 
 const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   label,
@@ -18,60 +58,25 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   required = false,
   value,
   onChange,
-  width = '600px', // Default width
-  height = '100px', // Default height for textarea
+  width = '600px',
+  height = '100px',
 }) => {
   return (
-    <div style={styles.container}>
-      <label style={styles.label}>
+    <Container width={width}>
+      <Label>
         {label}
-        {required && <span style={styles.asterisk}>*</span>}
-      </label>
-      <div style={styles.descriptor}>{descriptor}</div>
-      <textarea
+        {required && <Asterisk>*</Asterisk>}
+      </Label>
+      <Descriptor>{descriptor}</Descriptor>
+      <StyledTextarea
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        style={{ ...styles.textarea, width, height }} // Apply dynamic width and height
+        $height={height}
         required={required}
       />
-    </div>
+    </Container>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: '1rem',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-    width: '100%'
-  },
-  label: {
-    display: 'block',
-    textAlign: 'left',
-    marginBottom: '0.5rem',
-    marginTop: '10px',
-    fontWeight: 'bold',
-    fontSize: '18px',
-  },
-  descriptor: {
-    marginBottom: '5px',
-    fontSize: '14px',
-    color: '#555',
-  },
-  asterisk: {
-    color: 'red',
-  },
-  textarea: {
-    // padding: '10px',
-    // border: '1px solid #ccc',
-    borderRadius: '10px',
-    boxSizing: 'border-box',
-    resize: 'vertical', // Allow vertical resizing of the textarea
-    fontFamily: 'Arial, Helvetica, sans-serif',
-    fontSize: '16px',
-  },
 };
 
 export default DescriptiveTextInput;

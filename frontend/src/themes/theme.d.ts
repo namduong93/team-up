@@ -58,6 +58,7 @@ declare module 'styled-components' {
             wide: string;
           };
           colour: string;
+          descriptor: string;
           style: string;
       };
     }

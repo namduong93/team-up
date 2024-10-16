@@ -5,6 +5,7 @@ export const darkTheme: DefaultTheme = {
   fonts: {
     ...defaultTheme.fonts,
     colour: "#FFFFFF",
+    descriptor: "#EBEBEB",
   },
   background: "#121212",
   colours: {

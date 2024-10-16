@@ -1,14 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { sendRequest } from '../../utility/request';
-import {
-  FaTimes,
-  FaUserMinus,
-  FaCalendarAlt,
-  FaUsers,
-  FaMapMarkerAlt,
-  FaUserEdit,
-} from 'react-icons/fa';
+import { FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, FaUserEdit } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 interface Notification {
   id: string;
@@ -16,6 +10,12 @@ interface Notification {
   message: string;
   decision?: 'substitution' | 'replacement';
   date: Date;
+  teamName?: string;
+  studentName?: string;
+  competitionName?: string;
+  newTeamName?: string;
+  siteLocation?: string;
+  compId?: string;
 }
 
 const NotificationsContainer = styled.div`
@@ -50,6 +50,12 @@ const NotificationItem = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   color: ${({ theme }) => theme.fonts.colour};
+  font-size: ${({ theme }) => theme.fonts.fontSizes.small};;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.background};
+  }
 `;
 
 const NotificationMsg = styled.div`
@@ -86,7 +92,6 @@ const NotificationDate = styled.small`
   font-size: 0.85rem;
 `;
 
-// For each type of notification, use to correct icon
 const iconMap: { [key in Notification['type']]: JSX.Element } = {
   withdrawal: <FaUserMinus />,
   name: <FaUserEdit />,
@@ -97,33 +102,57 @@ const iconMap: { [key in Notification['type']]: JSX.Element } = {
 
 export const Notifications: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [isStaff, setIsStaff] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Mock notification data
+    // Check user type (coach or student)
+    (async () => {
+      try {
+        const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
+        setIsStaff(typeResponse.data.type !== "student");
+      } catch (error: unknown) {
+        sendRequest.handleErrorStatus(error, [403], () => {
+          navigate('/');
+          console.log('Notification Error: ', error);
+        });
+      }
+    })();
+  }, [navigate]);
+
+  useEffect(() => {
     const fetchedNotifications: Notification[] = [
       {
         id: '1',
         type: 'withdrawal',
-        message: 'John Doe has withdrawn from the ICPC competition.',
-        decision: 'replacement',
+        message: 'John Doe from team Team A has withdrawn from competition ICPC 2024. They have opted for: substitution.',
+        decision: 'substitution',
+        studentName: 'John Doe',
+        teamName: 'Team A',
+        competitionName: 'ICPC 2024',
         date: new Date('2024-10-15T10:00:00Z'),
       },
       {
         id: '2',
         type: 'name',
-        message: 'Your team name has been approved.',
+        message: 'Your coach has approved your team name change to New Team Name for competition ICPC 2024.',
+        newTeamName: 'New Team Name',
+        competitionName: 'ICPC 2024',
         date: new Date('2024-10-14T09:30:00Z'),
       },
       {
         id: '3',
         type: 'site',
-        message: 'The competition will take place at Sydney University.',
+        message: 'Competition ICPC 2024 will take place at Sydney University.',
+        siteLocation: 'Sydney University',
+        competitionName: 'ICPC 2024',
         date: new Date('2024-10-16T08:00:00Z'),
       },
       {
         id: '4',
         type: 'deadline',
-        message: 'The registration deadline is on 24th October.',
+        message: 'The early registration deadline for competition ICPC 2024 is closing soon on 24th October. Register now!',
+        competitionName: 'ICPC 2024',
         date: new Date('2024-10-13T12:00:00Z'),
       },
       {
@@ -137,28 +166,27 @@ export const Notifications: FC = () => {
     setNotifications(fetchedNotifications);
   }, []);
 
-  // stub to requestion notifications
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await sendRequest.get<{ notifications: Notification[] }>('/user/notifications');
-        const notifications = response.data;
+  const handleNavigate = (notification: Notification) => {
+    const { type, decision, studentName, teamName, compId } = notification;
 
-        const notifs = notifications.notifications.map((notif) => ({
-          id: notif.id,
-          type: notif.type,
-          message: notif.message,
-          date: notif.date,
-        }));
-
-        setNotifications(notifs);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
+    if (isStaff) {
+      // Notification navigation for staff
+      if (type === 'withdrawal') {
+        if (decision === 'substitution') {
+          navigate(`/coach/page/students/${compId}/${studentName}`); // go to student pop-out
+        } else {
+          navigate(`/coach/page/teams/${compId}/${teamName}`); // go to team pop-out
+        }
+      } else if (type === 'name' || type === 'site' || type === 'teamStatus') {
+        navigate(`/coach/page/teams/${teamName}`); // go to team pop-out to change team details OR teams page + search autofilled for team name
+      } else if (type === 'deadline') {
+        navigate(`/coach/page/teams/`); // go to teams to register them
       }
-    };
-
-    fetchNotifications();
-  }, []);
+    } else {
+      // Notification navigation for students
+      navigate(`/competition/participant/${compId}`); //student's team profile view
+    }
+  };
 
   const handleRemoveNotification = (id: string) => {
     setNotifications((prev) => prev.filter((notif) => notif.id !== id));
@@ -177,7 +205,7 @@ export const Notifications: FC = () => {
   return (
     <NotificationsContainer>
       {notifications.map((notification) => (
-        <NotificationItem key={notification.id}>
+        <NotificationItem key={notification.id} onClick={() => handleNavigate(notification)}>
           <NotificationIcon>{iconMap[notification.type]}</NotificationIcon>
           <NotificationMsg>
             <div>{notification.message}</div>
@@ -186,7 +214,7 @@ export const Notifications: FC = () => {
             )}
             <NotificationDate>{formatDate(notification.date)}</NotificationDate>
           </NotificationMsg>
-          <CloseButton onClick={() => handleRemoveNotification(notification.id)} />
+          <CloseButton onClick={(e) => { e.stopPropagation(); handleRemoveNotification(notification.id); }} />
         </NotificationItem>
       ))}
     </NotificationsContainer>

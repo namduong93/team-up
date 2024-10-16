@@ -37,7 +37,7 @@ const Asterisk = styled.span`
 const Descriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
-  color: #555;
+  color: ${({ theme }) => theme.fonts.descriptor};
 `;
 
 const RelativeSelectGrid = styled.div`
@@ -52,6 +52,8 @@ const RelativeSelectElement = styled.select`
   appearance: none;
   border: 1px solid #ccc;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};;
   height: 100%;
   width: 100%;
   padding: 10px 1.5%;
@@ -69,7 +71,7 @@ const SelectDownArrow = styled(IoIosArrowDown)`
   pointer-events: none;
   height: 40%;
   width: 40%;
-  color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 interface RelativeSelectProps extends React.HTMLAttributes<HTMLSelectElement> {

@@ -67,7 +67,7 @@ const Input = styled.input`
   border-radius: 10px;
   margin-bottom: 5px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
-  background-color: ${({ theme }) => theme.colours.sidebarBackground};
+  background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 

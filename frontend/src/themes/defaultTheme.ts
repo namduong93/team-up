@@ -57,6 +57,7 @@ export const defaultTheme: DefaultTheme = {
       wide: "1px",
     },
     colour: "#000000",
+    descriptor: "#333333",
     style: "italic",
   },
 };
