@@ -112,9 +112,9 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   const roleUrl = (role: string) => {
     switch (role) {
       case "Participant":
-        return `/competition/participant`;
+        return `/competition/participant/${compId}`;
       case "Coach":
-        return `/coach/page`;
+        return `/coach/page/${compId}`;
       case "Site-Coordinator":
         return `/competition/${compId}/site-coordinator`;
       case "Admin":
