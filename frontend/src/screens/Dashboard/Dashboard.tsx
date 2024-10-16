@@ -44,7 +44,7 @@ const DashboardContent = styled.div`
 
 export const AlertButton = styled.button`
   border-radius: 10px;
-  padding: 10px;
+  padding: 9px;
   background-color: ${({ theme }) => theme.colours.notifLight};
   color: ${({ theme }) => theme.colours.notifDark};
   border: none;

@@ -203,7 +203,7 @@ export const PageHeader: FC<HeaderAttributes> = ({
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         {children}
         <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}>
-          <FaBell size={20} />
+          <FaBell size={15} />
         </AlertButton>
         {isNotificationsVisible && <Notifications />}
       </div>
