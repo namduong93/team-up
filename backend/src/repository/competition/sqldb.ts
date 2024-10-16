@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
-import { Competition, CompetitionDetailsObject, CompetitionIdObject, CompetitionUserType } from "../../models/competition/competition.js";
+import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, CompetitionUserType, CompetitionDetails } from "../../models/competition/competition.js";
 import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
 
@@ -65,9 +65,44 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       VALUES ($1, $2)
       RETURNING *;
     `;
+
     await this.pool.query(adminQuery, [userId, competitionId]);
 
-    // Insert site-relevant details in bulk using UNNEST for batch insertion
+    // Precondition: We assume that the admin only insert otherSiteLocations that are not already in the universities table
+    // Therefore, there is no need to check if the university already exists in the universities table
+    // Insert new universities from otherSiteLocations directly into universities table
+    const otherSiteNames = competition.otherSiteLocations.map(site => site.universityName);
+
+    let newUniversities = [];
+    if (otherSiteNames.length > 0) {
+      const newUniversitiesQuery = `
+        INSERT INTO universities (name)
+        SELECT unnest($1::text[])
+        RETURNING id, name;
+      `;
+
+      const newUniversitiesResult = await this.pool.query(newUniversitiesQuery, [otherSiteNames]);
+
+      // Map newly inserted university IDs with their names
+      newUniversities = newUniversitiesResult.rows.map(row => ({
+        universityId: row.id,
+        universityName: row.name
+      }));
+    }
+
+    // Combine siteLocations and otherSiteLocations for a single batch insert
+    const allSites = [
+      ...competition.siteLocations.map(site => ({
+        universityId: site.universityId,
+        name: site.name
+      })),
+      ...competition.otherSiteLocations.map(site => ({
+        universityId: newUniversities.find(uni => uni.universityName === site.universityName)?.universityId,
+        name: site.name
+      }))
+    ];
+
+    // Batch insert all site locations into competition_sites
     const siteQuery = `
       INSERT INTO competition_sites (competition_id, university_id, name, default_site)
       SELECT $1, unnest($2::int[]), unnest($3::text[]), unnest($4::boolean[]);
@@ -75,15 +110,15 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     const siteValues = [
       competitionId,
-      competition.siteLocations.map(site => site.universityId),   // Array of universityIds
-      competition.siteLocations.map(site => site.name),           // Array of names
-      competition.siteLocations.map(() => true)                   // Array of true for defaultSite
+      allSites.map(site => site.universityId),
+      allSites.map(site => site.name),
+      allSites.map(() => true) // Set default_site to true for all sites
     ];
 
     await this.pool.query(siteQuery, siteValues);
 
     // Return the competition id
-    return { competitionId: competitionId };    
+    return { competitionId: competitionId };
   }
 
   competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{} | undefined> => {
@@ -142,8 +177,54 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
-  competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionDetailsObject> | undefined> => {
-    const competitionMap: Map<number, { userType: Array<CompetitionUserType>, competition: Competition }> = new Map();
+  competitionGetDetails = async(competitionId: number): Promise<CompetitionDetails | undefined> => {
+    const competitionQuery = `
+      SELECT id, name, team_size, early_reg_deadline, general_reg_deadline, code
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionResult = await this.pool.query(competitionQuery, [competitionId]);
+    
+    // Verify if competition exists
+    if (competitionResult.rowCount === 0) {
+      return undefined; // TODO: throw unique error
+    }
+  
+    const competitionData = competitionResult.rows[0];
+  
+    // Query to get site locations related to the competition
+    const siteLocationsQuery = `
+      SELECT university_id, name, address, capacity
+      FROM competition_sites
+      WHERE competition_id = $1
+    `;
+    const siteLocationsResult = await this.pool.query(siteLocationsQuery, [competitionId]);
+  
+    const siteLocations: Array<CompetitionSiteObject> = siteLocationsResult.rows.map(row => ({
+      universityId: row.university_id,
+      name: row.name,
+      address: row.address,
+      capacity: row.capacity,
+    }));
+  
+    // Constructing the competition object
+    const competitionDetails: CompetitionDetails = {
+      id: competitionData.id,
+      name: competitionData.name,
+      teamSize: competitionData.team_size,
+      earlyRegDeadline: competitionData.early_reg_deadline,
+      generalRegDeadline: competitionData.general_reg_deadline,
+      code: competitionData.code,
+      siteLocations,
+    };
+  
+    return competitionDetails;
+  }
+
+  // Returns only shortened competition details that are displayed on a dashboard. Sites details are not included.
+  // Returns competitions that the user is a part of.
+  competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined> => {
+    const competitionMap: Map<number, { userType: Array<CompetitionUserType>, competition: CompetitionDetails }> = new Map();
     
     const participantComps = await this.pool.query(
       `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
@@ -169,7 +250,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     );
     this.addCompetitionIdsToMap(adminComps.rows, competitionMap, CompetitionUserType.ADMIN);
 
-    const competitions: Array<CompetitionDetailsObject> = [...competitionMap.values()];
+    const competitions: Array<CompetitionShortDetailsObject> = [...competitionMap.values()];
     // console.log('map:', competitionMap);
     // console.log('array:', competitions);
 

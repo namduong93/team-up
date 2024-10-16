@@ -122,6 +122,11 @@ app.post('/competition/system_admin/create', competitionController.competitionsS
 // RESPONSE: {}
 app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
+// Get a competition's details
+// PARAMS: { id: number }
+// RESPONSE: { competitionDetails: CompetitionDetails}
+app.get('/competition/details', competitionController.competitionGetDetails)
+
 // Student join competition with 0 friends
 // PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
