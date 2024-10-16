@@ -75,11 +75,11 @@ const AccountCard = styled.div`
   max-height: 90%;
 `;
 
-const ProfilePic = styled.div<{ imageUrl: string }>`
+const ProfilePic = styled.div<{ $imageUrl: string }>`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-image: url(${(props) => props.imageUrl || defaultProfile});
+  background-image: url(${(props) => props.$imageUrl || defaultProfile});
   background-size: cover;
   background-position: center;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -290,7 +290,7 @@ export const Account: FC = () => {
       <AccountContainer>
         <CardContainer>
           <AccountCard>
-            <ProfilePic imageUrl={newDetails.profilePic || defaultProfile } />
+            <ProfilePic $imageUrl={newDetails.profilePic || defaultProfile } />
             <DetailsCard>
               <AccountItem>
                 <Label>Profile Picture:</Label>

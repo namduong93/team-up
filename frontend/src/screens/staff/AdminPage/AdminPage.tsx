@@ -6,6 +6,7 @@ import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import styled from "styled-components";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "../CoachPage/TeamDisplay";
 
 const ToggleOptionTextSpan = styled.span`
   font-size: clamp(0.9em, 3.5vw, 2em);
@@ -21,21 +22,10 @@ export const AdminPage: FC = () => {
   const { compId } = useParams();
   const [dashInfo, _] = useDashInfo();
   const [sortOption, setSortOption] = useState<string | null>(null);
-  const sortOptions = [
-    { label: "Default", value: "original" },
-    { label: "Alphabetical (Name)", value: "name" },
-    { label: "Competition Date", value: "date" },
-    { label: "Alphabetical (Location)", value: "location" },
-    { label: "Time Remaining", value: "timeRemaining" },
-  ];
+  const sortOptions = TEAM_DISPLAY_SORT_OPTIONS;
 
   const [filters, setFilters] = useState<Record<string, Array<string>>>({});
-  const filterOptions = {
-    Location: ['USA', 'UK'],
-    Role: ['Admin', 'Site-Coordinator', 'Coach'],
-    Status: ["Completed", "Upcoming"],
-    Year: ['2020', '2021', '2022', '2024'],
-  };
+  const filterOptions = TEAM_DISPLAY_FILTER_OPTIONS;
 
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {

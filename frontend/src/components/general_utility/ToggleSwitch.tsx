@@ -8,18 +8,18 @@ interface ToggleSwitchProps {
   defaultBorderIndex: number;
 }
 
-const StyledToggleDiv = styled.div<{ numElems: number, borderIndex: number }>`
+const StyledToggleDiv = styled.div<{ $numElems: number, $borderIndex: number }>`
   display: flex;
   position: relative;
   user-select: none;
   &::after {
     content: '';
     height: 100%;
-    width: ${(props) => 100 / props.numElems}%;
+    width: ${(props) => 100 / props.$numElems}%;
     position: absolute;
     background-color: black;
     z-index: -1;
-    translate: ${(props) => 100 * props.borderIndex}% 0;
+    translate: ${(props) => 100 * props.$borderIndex}% 0;
     padding-bottom: 2px;
     transition: translate 200ms;
   }
@@ -45,7 +45,7 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style, def
 
   const numChildren = React.Children.count(children);
   return (
-    <StyledToggleDiv borderIndex={borderIndex} numElems={numChildren} style={{ ...style }}>
+    <StyledToggleDiv $borderIndex={borderIndex} $numElems={numChildren} style={{ ...style }}>
       {React.Children.map(children, (child, index) => {
         return (
         <ToggleDivOptionDiv onClick={handleClick} data-index={index} key={index}>

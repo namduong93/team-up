@@ -99,10 +99,10 @@ const ProgressBar = styled.div`
   margin-top: 20px;
 `;
 
-const Progress = styled.div<{ width: number }>`
+const Progress = styled.div<{ $width: number }>`
   background-color: ${({ theme }) => theme.colours.primaryDark};
   height: 100%;
-  width: ${({ width }) => `${width}%`};
+  width: ${({ $width: width }) => `${width}%`};
 `;
 
 export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, compId, compCreationDate }) => {
@@ -174,7 +174,7 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
       </CardBottom>
 
       <ProgressBar>
-        <Progress width={progressWidth} />
+        <Progress $width={progressWidth} />
       </ProgressBar>
     </CompCardContainer>
   );
