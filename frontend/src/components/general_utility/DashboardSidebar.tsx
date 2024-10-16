@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { sendRequest } from "../../utility/request";
 
-interface SidebarProps {
+interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   cropState: boolean;
-  reload?: boolean;
+  sidebarInfo: { preferredName: string, affiliation: string };
 }
 
 const SidebarContainer = styled.div<{ $cropState: boolean }>`
@@ -165,31 +165,12 @@ const LogoutButton = styled.button`
   }
 `;
 
-export const DashboardSidebar: React.FC<SidebarProps> = ({ cropState, reload }) => {
+export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, sidebarInfo, style, ...props }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
     navigate(path);
   };
-
-  const [preferredName, setPreferredName] = useState<string>("");
-  const [affiliation, setAffiliation] = useState<string>("");
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const infoResponse = await sendRequest.get<{ preferredName: string, affiliation: string }>(`/user/dash_info`);
-        // Can also store the preferredName from the response and use it in the sidebar.
-        // Request any personal info needed here and then if there's an auth error in any of them
-        // the page will redirect.
-        setPreferredName(infoResponse.data.preferredName);
-        setAffiliation(infoResponse.data.affiliation);
-      } catch (error: unknown) {
-        console.log('Error fetching dashboard info:', error);
-        // can handle other codes or types of errors here if needed.
-      }
-    })();
-  }, [reload]);
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -198,14 +179,14 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ cropState, reload }) 
   }
 
   return (
-    <SidebarContainer $cropState={cropState}> {/* Pass cropState to SidebarContainer */}
+    <SidebarContainer $cropState={cropState} style={style} {...props}> {/* Pass cropState to SidebarContainer */}
       <SidebarContent>
         {!cropState && (
           <ProfileSection>
             <ProfilePic />
             <div>Hello</div>
-            <Name>{preferredName}</Name>
-            <div>{affiliation}</div>
+            <Name>{sidebarInfo.preferredName}</Name>
+            <div>{sidebarInfo.affiliation}</div>
           </ProfileSection>
         )}
 

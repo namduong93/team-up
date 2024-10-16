@@ -2,7 +2,7 @@ import { FC } from "react";
 import { TeamCard } from "./TeamCard";
 import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
-import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard";
+import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;

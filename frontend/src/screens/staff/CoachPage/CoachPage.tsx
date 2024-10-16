@@ -5,11 +5,11 @@ import styled from "styled-components";
  
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { AlertButton, SortButton } from "../../Dashboard";
+import { AlertButton, SortButton } from "../../Dashboard/Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
-import { ActionButton } from "../../../components/general_utility/ActionButton";
+import { useDashInfo } from "../../Dashboard/useDashInfo";
 
 const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
@@ -191,6 +191,7 @@ export const CoachPage: FC = () => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [dashInfo, _] = useDashInfo();
 
   const filterOptions = {
     Location: ['USA', 'UK'],
@@ -221,7 +222,7 @@ export const CoachPage: FC = () => {
   return (
   <OverflowFlexBackground>
     {/* Sidebar */}
-    <DashboardSidebar cropState={false} />
+    <DashboardSidebar sidebarInfo={dashInfo} cropState={false} />
 
       <MainPageDiv>
 

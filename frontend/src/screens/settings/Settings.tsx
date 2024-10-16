@@ -5,6 +5,7 @@ import { defaultTheme } from "../../themes/defaultTheme";
 import { darkTheme } from "../../themes/darkTheme";
 import { DashboardSidebar } from "../../components/general_utility/DashboardSidebar";
 import styled from "styled-components";
+import { useDashInfo } from "../Dashboard/useDashInfo";
 
 const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
@@ -41,6 +42,7 @@ const SettingsContainer = styled.div`
 
 export const Settings: FC = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [dashInfo, _] = useDashInfo();
 
   // load saved theme from localStorage
   useEffect(() => {
@@ -61,7 +63,7 @@ export const Settings: FC = () => {
   return (
     <ThemeProvider theme={isDarkTheme ? darkTheme : defaultTheme}>
       <Background>
-        <DashboardSidebar cropState={false} />
+        <DashboardSidebar sidebarInfo={dashInfo} cropState={false} />
         <SettingsContainer>
           <Title>Settings Page</Title>
           <ToggleButton isDarkTheme={isDarkTheme} onClick={toggleTheme}>

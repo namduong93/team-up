@@ -1,14 +1,15 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { FlexBackground } from "../components/general_utility/Background";
+import { FlexBackground } from "../../components/general_utility/Background";
 import { FaBell, FaTimes } from "react-icons/fa";
-import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
-import { CompCard } from "../components/general_utility/CompCard";
-import { ActionButton } from "../components/general_utility/ActionButton";
-import { Notifications } from "../components/general_utility/Notifications";
-import { sendRequest } from "../utility/request";
+import { DashboardSidebar } from "../../components/general_utility/DashboardSidebar";
+import { CompCard } from "../../components/general_utility/CompCard";
+import { ActionButton } from "../../components/general_utility/ActionButton";
+import { Notifications } from "../../components/general_utility/Notifications";
+import { sendRequest } from "../../utility/request";
 import { useNavigate } from "react-router-dom";
-import { PageHeader } from "../components/sort_filter_search/PageHeader";
+import { PageHeader } from "../../components/sort_filter_search/PageHeader";
+import { useDashInfo } from "./useDashInfo";
 // import CompCreatePopUp from "../components/general_utility/CompCreatePopUp";
 
 interface Competition { 
@@ -136,21 +137,16 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
 
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [preferredName, setPreferredName] = useState<string>("");
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const [dashInfo, _] = useDashInfo();
 
   useEffect(() => {
     (async () => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setIsAdmin(typeResponse.data.type === "system_admin");
-        
-        const infoResponse = await sendRequest.get<{ preferredName: string, affiliation: string }>(`/user/dash_info`);
-        // Can also store the preferredName from the response and use it in the sidebar.
-        // Request any personal info needed here and then if there's an auth error in any of them
-        // the page will redirect.
-        setPreferredName(infoResponse.data.preferredName);
         setIsLoaded(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
@@ -288,10 +284,11 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
   //     setIsPopUpOpen(true);
   //   }
   // }, [showPopUp]);
+
   
   return (isLoaded &&
     <OverflowFlexBackground>
-      <DashboardSidebar cropState={false}/>
+      <DashboardSidebar sidebarInfo={dashInfo} cropState={false}/>
       <DashboardContent>
 
         
@@ -299,7 +296,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
 
         <PageHeader
           pageTitle="Dashboard"
-          pageDescription={`Welcome back, ${preferredName}!`}
+          pageDescription={`Welcome back, ${dashInfo.preferredName}!`}
           sortOptions={sortOptions}
           filterOptions={filterOptions}
           sortOptionState={{ sortOption, setSortOption }}
