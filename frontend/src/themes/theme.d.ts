@@ -20,6 +20,8 @@ declare module 'styled-components' {
         staffOption: string;
         error: string;
         notifDate: string;
+        notifLight: string;
+        notifDark: string;
       };
       teamView: {
           pending: string;

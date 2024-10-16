@@ -19,6 +19,8 @@ export const defaultTheme: DefaultTheme = {
     staffOption: "#FEB1B1",
     error: "red",
     notifDate: "#6688D2",
+    notifLight: "#EBEBEB",
+    notifDark: "#333333",
   },
   teamView: {
     pending: "#F68486",

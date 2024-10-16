@@ -1,9 +1,11 @@
 import React, { FC, ReactNode, SetStateAction, useState } from "react";
-import { FaSort } from "react-icons/fa";
+import { FaBell, FaSort } from "react-icons/fa";
 import styled from "styled-components";
 import { SortOption, SortSelect } from "../general_utility/SortSelect";
 import { FilterIcon, FilterSelect } from "../general_utility/FilterSelect";
 import { SearchBar } from "../../screens/staff/CoachPage/CoachPage";
+import { Notifications } from "../general_utility/Notifications";
+import { AlertButton } from "../../screens/Dashboard/Dashboard";
 
 type Filters = Record<string, Array<string>>;
 
@@ -34,6 +36,7 @@ export const MenuOptionsContainerDiv = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column-reverse;
+  align-items: flex-end;
 `;
 
 export const ButtonContainer = styled.div`
@@ -143,6 +146,7 @@ export const PageHeader: FC<HeaderAttributes> = ({
 
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+  const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
 
   return (
   <PageHeaderContainerDiv style={{ flexDirection: 'row', justifyContent: 'space-between', ...style }} {...props}>
@@ -196,8 +200,12 @@ export const PageHeader: FC<HeaderAttributes> = ({
             onChange={(e) => searchTermState.setSearchTerm(e.target.value)} />
         </ButtonContainer>}
       </SortFilterSearchContainerDiv>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', columnGap: '2%' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         {children}
+        <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}>
+          <FaBell size={20} />
+        </AlertButton>
+        {isNotificationsVisible && <Notifications />}
       </div>
     </MenuOptionsContainerDiv>
   </PageHeaderContainerDiv>

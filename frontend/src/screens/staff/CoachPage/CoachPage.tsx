@@ -5,8 +5,8 @@ import styled from "styled-components";
  
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { AlertButton, SortButton } from "../../Dashboard/Dashboard";
-import { FaBell, FaSearch } from "react-icons/fa";
+import { SortButton } from "../../Dashboard/Dashboard";
+import { FaSearch } from "react-icons/fa";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "./TeamDisplay";
 
@@ -224,7 +224,6 @@ export const CoachPage: FC = () => {
           filtersState={{ filters, setFilters }}
           searchTermState={{ searchTerm, setSearchTerm }}
         >
-          <AlertButton onClick={() => {}} ><FaBell /></AlertButton>
         </PageHeader>
 
         {/* Teams-Students page selection */}
