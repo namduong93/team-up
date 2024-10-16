@@ -67,23 +67,20 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     `;
     await this.pool.query(adminQuery, [userId, competitionId]);
 
-    // Insert site-relevant details into tables
-    for (const siteObject of competition.siteLocations) {
-      // Create a site based on
-      const siteQuery = `
-        INSERT INTO competition_sites (competition_id, university_id, name, default_site)
-        VALUES ($1, $2, $3, $4);
-      `;
+    // Insert site-relevant details in bulk using UNNEST for batch insertion
+    const siteQuery = `
+      INSERT INTO competition_sites (competition_id, university_id, name, default_site)
+      SELECT $1, unnest($2::int[]), unnest($3::text[]), unnest($4::boolean[]);
+    `;
 
-      const siteValues = [
-        competitionId,
-        siteObject.universityId,
-        siteObject.name,
-        true // Set default_site to true since on the FE, the default site is the one that is created on competition creation
-      ];
+    const siteValues = [
+      competitionId,
+      competition.siteLocations.map(site => site.universityId),   // Array of universityIds
+      competition.siteLocations.map(site => site.name),           // Array of names
+      competition.siteLocations.map(() => true)                   // Array of true for defaultSite
+    ];
 
-      await this.pool.query(siteQuery, siteValues);
-    }
+    await this.pool.query(siteQuery, siteValues);
 
     // Return the competition id
     return { competitionId: competitionId };    
