@@ -19,6 +19,7 @@ declare module 'styled-components' {
         sidebarLine: string;
         staffOption: string;
         error: string;
+        notifDate: string;
       };
       teamView: {
           pending: string;

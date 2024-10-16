@@ -143,6 +143,7 @@ const SearchContainer = styled.div`
   position: relative;
   overflow: hidden;
   flex-wrap: wrap;
+  color: ${({ theme }) => theme.colours.filterText};
 `;
 
 const SearchCell = styled.div`

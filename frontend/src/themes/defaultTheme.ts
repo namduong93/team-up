@@ -18,6 +18,7 @@ export const defaultTheme: DefaultTheme = {
     sidebarLine: "rgba(122, 122, 122, 90%)",
     staffOption: "#FEB1B1",
     error: "red",
+    notifDate: "#6688D2",
   },
   teamView: {
     pending: "#F68486",

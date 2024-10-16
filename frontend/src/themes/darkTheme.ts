@@ -21,6 +21,7 @@ export const darkTheme: DefaultTheme = {
     optionUnselected: "#333333",
     optionSelected: "#BCCFF8",
     filterText: "#EBEBEB",
+    notifDate: "#BCCFF8",
   },
   teamView: {
     ...defaultTheme.teamView,
