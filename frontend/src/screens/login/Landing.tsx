@@ -16,7 +16,7 @@ const FormContainer = styled.form`
   text-align: center;
 `;
 
-const CustomButton = styled.button`
+export const CustomButton = styled.button`
   width: 30%;
   min-width: 74px;
   height: 35px;
@@ -106,7 +106,7 @@ export const Landing: FC = () => {
           />
         </InputContainer>
 
-        <ForgotPassword>Forgot Password?</ForgotPassword>
+        <ForgotPassword onClick={() => navigate('/password/recovery/email')}>Forgot Password?</ForgotPassword>
 
         <CustomButton type="submit">Login</CustomButton>
 

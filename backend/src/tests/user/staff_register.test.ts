@@ -22,8 +22,11 @@ describe('POST /staff/register', () => {
     test('success', async () => {
       const mockStaff: Staff = {
         name: 'Quan',
+        preferredName: 'Quan',
         email: 'tungquanhoang@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
       };
@@ -37,8 +40,11 @@ describe('POST /staff/register', () => {
     test('missing name', async () => {
       const newStaff: Staff = {
         name: '',
+        preferredName: 'Quan',
         email: 'tungquanhoang1@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
       };
@@ -49,8 +55,11 @@ describe('POST /staff/register', () => {
     test('missing email', async () => {
       const newStaff: Staff = {
         name: 'Quan',
+        preferredName: 'Quan',
         email: '',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
       };
@@ -61,8 +70,11 @@ describe('POST /staff/register', () => {
     test('missing password', async () => {
       const newStaff: Staff = {
         name: 'Quan',
+        preferredName: 'Quan',
         email: 'tungquanhoang2@gmail.com',
         password: '',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
       };
@@ -73,8 +85,11 @@ describe('POST /staff/register', () => {
     test('missing t-shirt size', async () => {
       const newStaff: Staff = {
         name: 'Quan',
+        preferredName: 'Quan',
         email: 'tungquanhoang3@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: '',
         universityId: 1,
       };
@@ -85,16 +100,22 @@ describe('POST /staff/register', () => {
     test('duplicated email', async () => {
       const mockStaff1: Staff = {
         name: 'Quan',
+        preferredName: 'Quan',
         email: 'tungquanhoang4@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
       };
 
       const mockStaff2: Staff = {
         name: 'Not Quan',
+        preferredName: 'Not Quan',
         email: 'tungquanhoang4@gmail.com',
         password: 'testPassword',
+        gender: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
       };

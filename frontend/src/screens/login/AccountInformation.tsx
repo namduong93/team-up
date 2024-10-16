@@ -176,7 +176,7 @@ export const AccountInformation: FC = () => {
               Back
             </Button>
 
-            <Button disabled={isButtonDisabled()} onClick={handleNext}>
+            <Button $disabled={isButtonDisabled()} onClick={handleNext}>
               Next
             </Button>
           </ButtonContainer>
@@ -250,7 +250,7 @@ const DoubleInputContainer = styled.div`
   width: 100%;
   gap: 0.8%;
 `
-const ErrorMessage = styled.p`
+export const ErrorMessage = styled.p`
   color: red;
   font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
@@ -266,19 +266,20 @@ const ButtonContainer = styled.div`
   gap: 90px;
 `
 
-const Button = styled.button<{ disabled?: boolean }>`
+export const Button = styled.button<{ $disabled?: boolean }>`
   max-width: 150px;
   width: 25%;
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  background-color: ${({ $disabled: disabled }) => (disabled ? '#ccc' : '#6688D2')};
   margin-top: 35px;
   margin-bottom: 40px;
   color: #ffffff;
   font-size: 16px;
   font-weight: bold;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
+  pointer-events: ${({ $disabled: disabled }) => disabled ? 'none' : 'auto'};
+  cursor: ${({ $disabled: disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
   font-family: Arial, Helvetica, sans-serif;
 `
 

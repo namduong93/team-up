@@ -68,8 +68,8 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 
-// PARAMS: { name, password, email, tshirtSize, pronouns?,
-// 	allergies?, accessibilityReqs?, universityId?, studentId? }
+// PARAMS: { name, preferredName, email, password, gender, pronouns?, tshirtSize,
+// 	allergies?, dietaryReqs, accessibilityReqs?, universityId?, studentId? }
 // RESPONSE: { }
 app.post('/student/register', userController.studentRegister);
 
@@ -82,7 +82,7 @@ app.get('/student/dash_info', userController.studentDashInfo);
 
 // This is used when the staff registers with a code or once the staff has been approved by admin.
 // DEV: For now it is ok to just call this straight away and we can implement the codes etc. later.
-// PARAMS: { name, password, email, tshirtSize, pronouns?,
+// PARAMS: { name, preferredName, email, password, tshirtSize, pronouns?,
 // 	allergies?, accessibilityReqs?, universityId?}
 // RESPONSE: { }
 app.post('/staff/register', userController.staffRegister);
@@ -119,8 +119,8 @@ app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
-// PARAMS: { name: string, teamSize?: number, earlyRegDeadline, generalRegDeadline,
-//          siteLocations: Array<{ universityId: number, name: string }> }
+// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
+//  siteLocations: Array<{ universityId: number, defaultSite: string }>, otherSiteLocations: Array<{ universityName: string, defaultSite: string } }
 // RESPONSE: { competitionId: number }
 app.post('/competition/system_admin/create', competitionController.competitionsSystemAdminCreate);
 
@@ -180,6 +180,14 @@ app.get('/universities/list', universityController.universitiesList);
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
 // RESPONSE: { Competition[] }
 app.get('/competitions/list', competitionController.competitionsList);
+
+// PARAMS: { email: string }
+// RESPONSE: {} --- NOTE: emails them a 6 character code e.g '123456'
+app.post('/user/password_recovery/generate_code', userController.userPasswordRecoveryGenerateCode);
+
+// PARAMS: { code: string }
+// RESPONSE: {} --- NOTE: No error if successful, error if not successful
+app.post('/user/password_recovery/input_code', userController.userPasswordRecoveryInputCode);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

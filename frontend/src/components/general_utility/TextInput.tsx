@@ -9,6 +9,7 @@ interface TextInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   width?: string;
+  maxLength?: number;
   descriptor?: string;
 }
 
@@ -20,6 +21,7 @@ const TextInput: React.FC<TextInputProps> = ({
   value,
   onChange,
   width = '300px',
+  maxLength,
   descriptor,
 }) => {
   return (
@@ -35,6 +37,7 @@ const TextInput: React.FC<TextInputProps> = ({
         value={value}
         onChange={onChange}
         required={required}
+        maxLength={maxLength}
       />
     </Container>
   );
