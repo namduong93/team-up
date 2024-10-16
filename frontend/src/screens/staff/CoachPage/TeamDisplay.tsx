@@ -23,6 +23,15 @@ interface CoachPageContext {
   removeFilter: (field: string, value: string) => Record<string, string>;
 }
 
+export const TEAM_DISPLAY_SORT_OPTIONS = [
+  { label: "Default", value: "original" },
+  { label: "Alphabetical (Name)", value: "name" },
+];
+
+export const TEAM_DISPLAY_FILTER_OPTIONS = {
+  Status: ['Pending', 'Unregistered', 'Registered'] 
+};
+
 export const TeamDisplay: FC = () => {
   const { compId } = useParams();
   const { filters, sortOption, searchTerm, removeFilter } = useOutletContext<CoachPageContext>();

@@ -10,6 +10,7 @@ import { DashboardSidebar } from "../../../components/general_utility/DashboardS
 import { FaBell, FaSearch } from "react-icons/fa";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { useDashInfo } from "../../Dashboard/useDashInfo";
+import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "./TeamDisplay";
 
 export const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
@@ -180,19 +181,14 @@ export const CoachPage: FC = () => {
   const { pathname } = useLocation();
 
   const [sortOption, setSortOption] = useState<string | null>(null);
-  const sortOptions = [
-    { label: "Default", value: "original" },
-    { label: "Alphabetical (Name)", value: "name" },
-  ];
+  const sortOptions = TEAM_DISPLAY_SORT_OPTIONS;
 
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [dashInfo, _] = useDashInfo();
 
-  const filterOptions = {
-    Status: ['Pending', 'Unregistered', 'Registered'] 
-  };
+  const filterOptions = TEAM_DISPLAY_FILTER_OPTIONS;
 
   const handleToggleTeams = (e: React.MouseEvent) => {
     e.preventDefault();
