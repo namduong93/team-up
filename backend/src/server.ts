@@ -73,26 +73,12 @@ app.get('/', async (req: Request, res: Response) => {
 // RESPONSE: { }
 app.post('/student/register', userController.studentRegister);
 
-// This should return things that need to be displayed on the dash
-// DEV: If you need this to return more things, you can just start assuming it does
-// on the frontend and then tell the backend team which more things you need it to return
-// PARAMS: --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { preferredName: string, affiliation: string }
-app.get('/student/dash_info', userController.studentDashInfo);
-
 // This is used when the staff registers with a code or once the staff has been approved by admin.
 // DEV: For now it is ok to just call this straight away and we can implement the codes etc. later.
 // PARAMS: { name, preferredName, email, password, tshirtSize, pronouns?,
 // 	allergies?, accessibilityReqs?, universityId?}
 // RESPONSE: { }
 app.post('/staff/register', userController.staffRegister);
-
-// This should return things that need to be displayed on the dash
-// DEV: If you need this to return more things, you can just start assuming it does
-// on the frontend and then tell the backend team which more things you need it to return
-// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { preferredName: string, affiliation: string }
-app.get('/staff/dash_info', userController.staffDashInfo);
 
 // PARAMS: { email, password }
 // RESPONSE: {} --- NOTE: response will set sessionId cookie in the browser.
@@ -103,19 +89,24 @@ app.post('/user/login', userController.userLogin);
 app.post('/user/logout', userController.userLogout);
 
 // PARAMS: {}
-// RESPONSE: { name, email, university, gender, bio, tshirtSize, pronouns?, allergies?, accessibilityReqs? }
+// RESPONSE: { name, preferredName, email, affiliation, gender, pronouns, tshirtSize, allergies, dietaryReqs, accessibilityReqs}
 app.get('/user/profile_info', userController.userProfileInfo);
+
+// PARAMS: { name, preferredName, email, affiliation, gender, pronouns, tshirtSize, allergies, dietaryReqs, accessibilityReqs }
+// RESPONSE: {}
+app.put('/user/profile_info', userController.userUpdateProfile);
+
+// This should return things that need to be displayed on the dash
+// DEV: If you need this to return more things, you can just start assuming it does
+// on the frontend and then tell the backend team which more things you need it to return
+// PARAMS: --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
+// RESPONSE: { preferredName: string, affiliation: string }
+app.get('/user/dash_info', userController.userDashInfo);
 
 // Gets the type of user, 'staff', 'student' OR 'system_admin' OR 'staff'
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
 // RESPONSE: { type: string }
 app.get('/user/type', userController.userType);
-
-// DEV: If you need this to return more things, you can just start assuming it does
-// on the frontend and then tell the backend team which more things you need it to return
-// PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { preferredName: string, affiliation: string }
-app.get('/system_admin/dash_info', userController.systemAdminDashInfo);
 
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Landing } from './screens/login/Landing';
 // import { Login } from './screens/login/Login';
 // import { SignUp } from './screens/login/SignUp';
-import { Dashboard } from './screens/Dashboard';
+import { Dashboard } from './screens/Dashboard/Dashboard';
 import { Account } from './screens/Account';
 import { RoleRegistration } from './screens/login/RoleRegistration';
 import { CoachPage } from './screens/staff/CoachPage/CoachPage';
