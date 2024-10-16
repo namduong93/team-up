@@ -248,6 +248,7 @@ VALUES
 -- Staffs
 INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs) 
 VALUES 
+
 ('System Admin', 'Admin', 'admin@example.com', '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO', 'Male', 'he/him', 'L', 'Peanuts', '{}', 'None'), -- password is 'admin'
 ('Test Staff Account', 'Staff', 'teststaff@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'he/him', 'M', 'None', '{}', 'None'), -- password is 'pleasechange'
 ('Coach 1', 'Coach One', 'testcoach1@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'he/him', 'XL', 'None', '{}', 'Stairs Access'), -- password is 'pleasechange'
@@ -273,6 +274,7 @@ VALUES
 -- Students
 INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs) 
 VALUES
+
 ('Test Student Account 1', 'Test Account', 'teststudent1@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'They/them', 'S', 'None', '{}', 'Wheelchair Access'), 
 ('Test Student Account 2', 'Test Account 2', 'teststudent2@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Male', 'he/him', 'M', 'None', '{}', 'None'), 
 ('Test Student Account 3', 'Test Account 3', 'teststudent3@example.com', '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.', 'Female', 'she/her', 'L', 'Milk', '{}', 'None'), 

@@ -4,6 +4,8 @@ import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
 import { Staff } from "../models/user/staff/staff.js";
 import { defaultCookieOptions } from "./controller_util/cookie_options.js";
+import { User } from "../models/user/user.js";
+import { UserProfileInfo } from "../models/user/user_profile_info.js";
 
 export class UserController {
   private userService: UserService;
@@ -84,6 +86,25 @@ export class UserController {
     return;
   });
 
+  userUpdateProfile = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const userProfile : UserProfileInfo = {
+      name: req.body.name,
+      preferredName: req.body.preferredName,
+      email: req.body.email,
+      affiliation: req.body.affiliation,
+      gender: req.body.gender,
+      pronouns: req.body.pronouns,
+      tshirtSize: req.body.tshirtSize,
+      allergies: req.body.allergies,
+      dietaryReqs: req.body.dietaryReqs,
+      accessibilityReqs: req.body.accessibilityReqs,
+    };
+    await this.userService.userUpdateProfile(Number(userId), userProfile);
+    res.json({});
+    return;
+  });
+
   userType = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const userTypeObject = await this.userService.userType(Number(userId));
@@ -91,18 +112,10 @@ export class UserController {
     return;
   });
 
-  studentDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name', affiliation: 'UNSW' });
-    return;
-  });
-  
-  staffDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name', affiliation: 'UNSW' });
-    return;
-  });
-
-  systemAdminDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ preferredName: 'Name', affiliation: 'ICPC' });
+  userDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const userDashInfo = await this.userService.userDashInfo(Number(userId));
+    res.json(userDashInfo);
     return;
   });
 

@@ -10,6 +10,7 @@ import createHttpError from "http-errors";
 import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
 import { convertGenderToP, UserTypeObject } from "../models/user/user.js";
+import { UserDashInfo } from "../models/user/user_dash_info.js";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -103,25 +104,22 @@ export class UserService {
     return userProfileInfo;
   }
 
+  userUpdateProfile = async (userId:number, userProfile : UserProfileInfo): Promise<void> => {
+    await this.userRepository.userUpdateProfile(userId, userProfile);
+    return ;
+  }
+
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
     const userTypeObject = await this.userRepository.userType(userId);
     return userTypeObject;
   }
 
-  studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {
-    
-    return { preferredName: 'Name' };
+  userDashInfo = async (userId: number): Promise<UserDashInfo | undefined> => {
+    const userDashInfo = await this.userRepository.userDashInfo(userId);
+    if (!userDashInfo) {
+      throw createHttpError(400, 'User not found');
+    }
+    return userDashInfo;
   }
-
-  staffDashInfo = async (sessionToken: string): Promise<StaffDashInfo | undefined> => {
-    
-    return { preferredName: 'Name' };
-  }
-
-  systemAdminDashInfo = async (sessionToken: string): Promise<SystemAdminDashInfo | undefined> => {
-
-    return { preferredName: 'Name' };
-  }
-
   
 }

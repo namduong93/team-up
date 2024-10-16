@@ -8,6 +8,7 @@ import bcrypt from 'bcryptjs';
 import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 import { Staff } from "../../models/user/staff/staff.js";
 import { UserType, UserTypeObject } from "../../models/user/user.js";
+import { UserDashInfo } from "../../models/user/user_dash_info.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -19,7 +20,6 @@ export class SqlDbUserRepository implements UserRepository {
   // TODO: handle sessionTimestamp
   studentRegister = async (student: Student): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
-    student.email = await this.trimDotsForEmail(student.email);
 
     let name = student.name;
     let preferredName = student.preferredName;
@@ -83,7 +83,6 @@ export class SqlDbUserRepository implements UserRepository {
   // TODO: Handle sessionTimestamp
   staffRegister = async (staff: Staff): Promise<UserIdObject | undefined> => {
     // Use the params to run an sql insert on the db
-    staff.email = await this.trimDotsForEmail(staff.email);
 
     let name = staff.name;
     let preferredName = staff.preferredName;
@@ -146,7 +145,6 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userLogin = async (email: string, password: string): Promise<UserIdObject | undefined> => {
-    // email = await this.trimDotsForEmail(email);
 
     const userQuery = `
       SELECT * FROM users WHERE email = $1;
@@ -164,20 +162,37 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
+    let returnUserProfInfo: UserProfileInfo = {
+      name: "",
+      preferredName: "",
+      email: "",
+      affiliation: "",
+      gender: "",
+      pronouns: "",
+      tshirtSize: "",
+      allergies: "",
+      dietaryReqs: [],
+      accessibilityReqs: "",
+    };
     // Query to get user profile info
     const userQuery = `
-      SELECT name, email
-      FROM users
-      WHERE id = $1;
+      SELECT * FROM users WHERE id = $1 LIMIT 1;
     `;
-
     const userResult = await this.pool.query(userQuery, [userId]);
-
     if (userResult.rowCount === 0) {
       return undefined; // User not found
     }
-
     const userInfo = userResult.rows[0];
+
+    returnUserProfInfo.name = userInfo.name;
+    returnUserProfInfo.preferredName = userInfo.preferred_name;
+    returnUserProfInfo.email = userInfo.email;
+    returnUserProfInfo.gender = userInfo.gender;
+    returnUserProfInfo.pronouns = userInfo.pronouns;
+    returnUserProfInfo.tshirtSize = userInfo.tshirt_size;
+    returnUserProfInfo.allergies = userInfo.allergies;
+    returnUserProfInfo.dietaryReqs = userInfo.dietary_reqs;
+    returnUserProfInfo.accessibilityReqs = userInfo.accessibility_reqs;
 
     // Get the university name
     const universityQuery = `
@@ -185,9 +200,7 @@ export class SqlDbUserRepository implements UserRepository {
       FROM universities 
       WHERE id = (SELECT university_id FROM students WHERE user_id = $1);
     `;
-
     const universityResult = await this.pool.query(universityQuery, [userId]);
-
     let universityName : string;
     if (universityResult.rowCount > 0) {
       universityName = universityResult.rows[0].name;
@@ -201,12 +214,40 @@ export class SqlDbUserRepository implements UserRepository {
       universityName = staffUniversityResult.rows[0].name;
     }
 
+    returnUserProfInfo.affiliation = universityName;
     // TODO: Add more fields to return
-    return {
-      name: userInfo.name,
-      email: userInfo.email,
-      university: universityName,
-    };
+    return returnUserProfInfo;
+  }
+
+  userUpdateProfile = async (userId : number, userProfile: UserProfileInfo): Promise<void> => {
+    const userQuery = `
+      UPDATE users 
+      SET 
+        name = $2,
+        preferred_name = $3,
+        email = $4,
+        gender = $5,
+        pronouns = $6,
+        tshirt_size = $7,
+        allergies = $8,
+        dietary_reqs = $9,
+        accessibility_reqs = $10
+      WHERE id = $1;
+    `;
+    const userValues = [
+      userId,
+      userProfile.name,
+      userProfile.preferredName,
+      userProfile.email,
+      userProfile.gender,
+      userProfile.pronouns,
+      userProfile.tshirtSize,
+      userProfile.allergies,
+      userProfile.dietaryReqs,
+      userProfile.accessibilityReqs,
+    ];
+    await this.pool.query(userQuery, userValues);
+    return ;
   }
 
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
@@ -232,22 +273,40 @@ export class SqlDbUserRepository implements UserRepository {
     }
   }
 
-  studentDashInfo = async (sessionToken: string): Promise<StudentDashInfo | undefined> => {
+  userDashInfo = async(userId: number): Promise<UserDashInfo | undefined> =>{
+    const userDashInfo : UserDashInfo = {
+      preferredName: "",
+      affiliation: "",
+    };
+    
+    const userQuery = `
+      SELECT * FROM users WHERE id = $1 LIMIT 1;
+    `;
+    const userResult = await this.pool.query(userQuery, [userId]);
+    if (!userResult.rowCount) {
+      return undefined;
+    }
+    userDashInfo.preferredName = userResult.rows[0].preferred_name;
 
-    return { preferredName: 'Name' };
+    const universityQuery = `
+      SELECT name 
+      FROM universities 
+      WHERE id = (SELECT university_id FROM students WHERE user_id = $1);
+    `;
+    const universityResult = await this.pool.query(universityQuery, [userId]);
+
+    if (universityResult.rowCount > 0) {
+      userDashInfo.affiliation = universityResult.rows[0].name;
+    } else {
+      const staffUniversityQuery = `
+        SELECT name 
+        FROM universities 
+        WHERE id = (SELECT university_id FROM staffs WHERE user_id = $1);
+      `;
+      const staffUniversityResult = await this.pool.query(staffUniversityQuery, [userId]);
+      userDashInfo.affiliation = staffUniversityResult.rows[0].name;
+    }
+    return userDashInfo;
   }
 
-  staffDashInfo = async (sessionToken: string): Promise<StaffDashInfo | undefined> => {
-
-    return { preferredName: 'Name' };
-  }
-
-  systemAdminDashInfo = async (sessionToken: string): Promise<SystemAdminDashInfo | undefined> => {
-
-    return { preferredName: 'Name' };
-  }
-
-  async trimDotsForEmail(email: string): Promise<string> {
-    return email.replace(/\./g, "");
-  }
 }

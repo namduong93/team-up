@@ -4,10 +4,9 @@ import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { sendRequest } from "../../utility/request";
 
-interface SidebarProps {
-  name: string;
-  affiliation: string;
+interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   cropState: boolean;
+  sidebarInfo: { preferredName: string, affiliation: string };
 }
 
 const SidebarContainer = styled.div<{ $cropState: boolean }>`
@@ -166,7 +165,7 @@ const LogoutButton = styled.button`
   }
 `;
 
-export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cropState }) => {
+export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, sidebarInfo, style, ...props }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
@@ -180,14 +179,14 @@ export const DashboardSidebar: React.FC<SidebarProps> = ({ name, affiliation, cr
   }
 
   return (
-    <SidebarContainer $cropState={cropState}> {/* Pass cropState to SidebarContainer */}
+    <SidebarContainer $cropState={cropState} style={style} {...props}> {/* Pass cropState to SidebarContainer */}
       <SidebarContent>
         {!cropState && (
           <ProfileSection>
             <ProfilePic />
-            <div>Hello,</div>
-            <Name>{name}</Name>
-            <div>{affiliation}</div>
+            <div>Hello</div>
+            <Name>{sidebarInfo.preferredName}</Name>
+            <div>{sidebarInfo.affiliation}</div>
           </ProfileSection>
         )}
 

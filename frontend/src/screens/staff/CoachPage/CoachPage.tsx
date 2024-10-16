@@ -2,21 +2,21 @@ import React, { FC, ReactNode, useState } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import styled from "styled-components";
 // import { TeamCard } from "./TeamCard";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { AlertButton, SortButton } from "../../Dashboard";
+import { AlertButton, SortButton } from "../../Dashboard/Dashboard";
 import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
-import { ActionButton } from "../../../components/general_utility/ActionButton";
+import { useDashInfo } from "../../Dashboard/useDashInfo";
 
 const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 // const SideBarDiv = styled.div`
 //   background-color: #D9D9D9;
 //   width: 78px;
@@ -191,6 +191,7 @@ export const CoachPage: FC = () => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [dashInfo, _] = useDashInfo();
 
   const filterOptions = {
     Location: ['USA', 'UK'],
@@ -221,7 +222,7 @@ export const CoachPage: FC = () => {
   return (
   <OverflowFlexBackground>
     {/* Sidebar */}
-    <DashboardSidebar name={"Name"} affiliation={"UNSW"} cropState={false} />
+    <DashboardSidebar sidebarInfo={dashInfo} cropState={false} />
 
       <MainPageDiv>
 

@@ -1,22 +1,24 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../components/general_utility/Background";
 import { DashboardSidebar } from "../components/general_utility/DashboardSidebar";
 import defaultProfile from "../components/assets/default-profile.jpg";
+import { sendRequest } from "../utility/request";
+import { useDashInfo } from "./Dashboard/useDashInfo";
 
 interface User {
-  role: "student" | "staff"
+  role: "student" | "staff";
+  profilePic: string;
   name: string;
   preferredName: string;
   email: string;
   affiliation: string;
   gender: "Male" | "Female" | "Other";
-  preferredPronouns: "She/Her" | "He/Him" | "They/Them" | "Other";
-  profilePic: string;
+  pronouns: "She/Her" | "He/Him" | "They/Them" | "Other";
   tshirtSize: string;
-  dietaryPreferences: string;
-  allergyPreferences: string;
-  accessibilityPreferences: string;
+  allergies: string;
+  dietaryReqs: string[];
+  accessibilityReqs: string;
 };
 
 interface CompetitionDetails {
@@ -193,12 +195,12 @@ export const Account: FC = () => {
     email: "john.doe@example.com",
     affiliation: "UNSW",
     gender: "Male",
-    preferredPronouns: "He/Him",
+    pronouns: "He/Him",
     profilePic: "../components/assets/default-profile.jpg",
     tshirtSize: "Male L",
-    dietaryPreferences: "N/A",
-    allergyPreferences: "N/A",
-    accessibilityPreferences: "N/A",
+    allergies: "None",
+    dietaryReqs: ["Vegetarian"],
+    accessibilityReqs: "None",
   });
 
   const [compDetails, setCompDetails] = useState<CompetitionDetails>({
@@ -214,6 +216,7 @@ export const Account: FC = () => {
 
   const [isEditingUser, setIsEditingUser] = useState(false);
   const [isEditingComp, setIsEditingComp] = useState(false);
+  const [dashInfo, setDashInfo] = useDashInfo();
   
   const [newDetails, setNewDetails] = useState<User>({
     ...user,
@@ -222,6 +225,7 @@ export const Account: FC = () => {
   const [newCompDetails, setNewCompDetails] = useState<CompetitionDetails>(compDetails);
 
   const handleEditUser = () => {
+    setNewDetails(user);
     setIsEditingUser(true);
   };
 
@@ -229,9 +233,11 @@ export const Account: FC = () => {
     setIsEditingComp(true);
   };
 
-  const handleSaveUser = () => {
+  const handleSaveUser = async () => {
     setUser(newDetails);
     setIsEditingUser(false);
+    await sendRequest.put('/user/profile_info', newDetails);
+    setDashInfo({ preferredName: newDetails.preferredName, affiliation: newDetails.affiliation });
   };
 
   const handleSaveComp = () => {
@@ -267,9 +273,20 @@ export const Account: FC = () => {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const infoResponse = await sendRequest.get<User>('/user/profile_info');
+        setUser(infoResponse.data);
+      } catch (error: unknown) {
+        console.log('Error fetching user info:', error);
+      }
+    })();
+  }, []);
+
   return (
     <Background>
-      <DashboardSidebar name={user.name} affiliation={user.affiliation} cropState={false} />
+      <DashboardSidebar sidebarInfo={dashInfo} cropState={false}  />
       <AccountContainer>
         <CardContainer>
           <AccountCard>
@@ -348,8 +365,8 @@ export const Account: FC = () => {
                 <Label>Preferred Pronouns:</Label>
                 {isEditingUser ? (
                   <Select
-                    value={newDetails.preferredPronouns}
-                    onChange={(e) => setNewDetails({ ...newDetails, preferredPronouns: e.target.value as User["preferredPronouns"] })}
+                    value={newDetails.pronouns}
+                    onChange={(e) => setNewDetails({ ...newDetails, pronouns: e.target.value as User["pronouns"] })}
                   >
                     <Option value="She/Her">She/Her</Option>
                     <Option value="He/Him">He/Him</Option>
@@ -357,7 +374,7 @@ export const Account: FC = () => {
                     <Option value="Other">Other</Option>
                   </Select>
                 ) : (
-                  <DetailsText>{user.preferredPronouns}</DetailsText>
+                  <DetailsText>{user.pronouns}</DetailsText>
                 )}
               </AccountItem>
               <AccountItem>
@@ -384,11 +401,11 @@ export const Account: FC = () => {
                 {isEditingUser ? (
                   <Input
                     type="text"
-                    value={newDetails.dietaryPreferences}
-                    onChange={(e) => setNewDetails({ ...newDetails, dietaryPreferences: e.target.value })}
+                    value={newDetails.dietaryReqs.join(', ')}
+                    onChange={(e) => setNewDetails({ ...newDetails, dietaryReqs: e.target.value.split(',').map((item) => item.trim()) })}
                   />
                 ) : (
-                  <DetailsText>{user.dietaryPreferences}</DetailsText>
+                  <DetailsText>{user.dietaryReqs}</DetailsText>
                 )}
               </AccountItem>
               <AccountItem>
@@ -396,11 +413,11 @@ export const Account: FC = () => {
                 {isEditingUser ? (
                   <Input
                     type="text"
-                    value={newDetails.allergyPreferences}
-                    onChange={(e) => setNewDetails({ ...newDetails, allergyPreferences: e.target.value })}
+                    value={newDetails.allergies}
+                    onChange={(e) => setNewDetails({ ...newDetails, allergies: e.target.value })}
                   />
                 ) : (
-                  <DetailsText>{user.allergyPreferences}</DetailsText>
+                  <DetailsText>{user.allergies}</DetailsText>
                 )}
               </AccountItem>
               <AccountItem>
@@ -408,11 +425,11 @@ export const Account: FC = () => {
                 {isEditingUser ? (
                   <Input
                     type="text"
-                    value={newDetails.accessibilityPreferences}
-                    onChange={(e) => setNewDetails({ ...newDetails, accessibilityPreferences: e.target.value })}
+                    value={newDetails.accessibilityReqs}
+                    onChange={(e) => setNewDetails({ ...newDetails, accessibilityReqs: e.target.value })}
                   />
                 ) : (
-                  <DetailsText>{user.accessibilityPreferences}</DetailsText>
+                  <DetailsText>{user.accessibilityReqs}</DetailsText>
                 )}
               </AccountItem>
             </DetailsCard>
