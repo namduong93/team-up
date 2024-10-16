@@ -4,7 +4,6 @@ import { httpErrorHandler } from "./controller_util/http_error_handler.js";
 import { Student } from "../models/user/student/student.js";
 import { Staff } from "../models/user/staff/staff.js";
 import { defaultCookieOptions } from "./controller_util/cookie_options.js";
-import { User } from "../models/user/user.js";
 import { UserProfileInfo } from "../models/user/user_profile_info.js";
 
 export class UserController {

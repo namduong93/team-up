@@ -44,9 +44,10 @@ export class SqlDbUserRepository implements UserRepository {
     }
 
     //Add user to users table
-    const userQuery = `
-      INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    const userQuery =
+    `INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs,
+      user_type, university_id, student_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING id;
     `;
     const userValues = [
@@ -60,23 +61,13 @@ export class SqlDbUserRepository implements UserRepository {
       allergies,
       dietaryReqs,
       accessibilityReqs,
+      'student',
+      student.universityId,
+      student.studentId
     ];
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id;
 
-    // Add student to students table
-    const studentQuery = `
-      INSERT INTO students (user_id, university_id, student_id)
-      VALUES ($1, $2, $3)
-      RETURNING *;
-    `;
-    const studentValues = [
-      newUserId,
-      universityId,
-      studentId
-    ];
-
-    const studentResult = await this.pool.query(studentQuery, studentValues);
     return { userId: newUserId };
   }
 
@@ -105,9 +96,9 @@ export class SqlDbUserRepository implements UserRepository {
       return undefined;
     }
 
-    const userQuery = `
-      INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    const userQuery = `INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs,
+      user_type, university_id, student_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING id;
     `;
     const userValues = [
@@ -121,21 +112,13 @@ export class SqlDbUserRepository implements UserRepository {
       allergies,
       dietaryReqs,
       accessibilityReqs,
+      'staff',
+      staff.universityId,
+      null
     ];
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id;
 
-    const staffQuery = `
-      INSERT INTO staffs (user_id, university_id)
-      VALUES ($1, $2)
-      RETURNING *;
-    `;
-    const staffValues = [
-      newUserId,
-      universityId
-    ];
-
-    const staffResult = await this.pool.query(staffQuery, staffValues);
     return { userId: newUserId };
   }
 
@@ -146,9 +129,7 @@ export class SqlDbUserRepository implements UserRepository {
 
   userLogin = async (email: string, password: string): Promise<UserIdObject | undefined> => {
 
-    const userQuery = `
-      SELECT * FROM users WHERE email = $1;
-    `;
+    const userQuery = `SELECT id, hashed_password FROM users WHERE email = $1;`;
     const userResult = await this.pool.query(userQuery, [email]);
 
     if (userResult.rowCount === 0) {
@@ -162,61 +143,15 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
-    let returnUserProfInfo: UserProfileInfo = {
-      name: "",
-      preferredName: "",
-      email: "",
-      affiliation: "",
-      gender: "",
-      pronouns: "",
-      tshirtSize: "",
-      allergies: "",
-      dietaryReqs: [],
-      accessibilityReqs: "",
-    };
-    // Query to get user profile info
-    const userQuery = `
-      SELECT * FROM users WHERE id = $1 LIMIT 1;
-    `;
+    const userQuery = 
+    `SELECT id, name, preferred_name AS "preferredName", email, affiliation, gender, pronouns,
+      tshirt_size AS "tshirtSize", allergies, dietary_reqs AS "dietaryReqs",
+      accessibility_reqs AS "accessibilityReqs" FROM user_profile_info WHERE id = $1 LIMIT 1`;
     const userResult = await this.pool.query(userQuery, [userId]);
     if (userResult.rowCount === 0) {
       return undefined; // User not found
     }
-    const userInfo = userResult.rows[0];
-
-    returnUserProfInfo.name = userInfo.name;
-    returnUserProfInfo.preferredName = userInfo.preferred_name;
-    returnUserProfInfo.email = userInfo.email;
-    returnUserProfInfo.gender = userInfo.gender;
-    returnUserProfInfo.pronouns = userInfo.pronouns;
-    returnUserProfInfo.tshirtSize = userInfo.tshirt_size;
-    returnUserProfInfo.allergies = userInfo.allergies;
-    returnUserProfInfo.dietaryReqs = userInfo.dietary_reqs;
-    returnUserProfInfo.accessibilityReqs = userInfo.accessibility_reqs;
-
-    // Get the university name
-    const universityQuery = `
-      SELECT name 
-      FROM universities 
-      WHERE id = (SELECT university_id FROM students WHERE user_id = $1);
-    `;
-    const universityResult = await this.pool.query(universityQuery, [userId]);
-    let universityName : string;
-    if (universityResult.rowCount > 0) {
-      universityName = universityResult.rows[0].name;
-    } else {
-      const staffUniversityQuery = `
-        SELECT name 
-        FROM universities 
-        WHERE id = (SELECT university_id FROM staffs WHERE user_id = $1);
-      `;
-      const staffUniversityResult = await this.pool.query(staffUniversityQuery, [userId]);
-      universityName = staffUniversityResult.rows[0].name;
-    }
-
-    returnUserProfInfo.affiliation = universityName;
-    // TODO: Add more fields to return
-    return returnUserProfInfo;
+    return userResult.rows[0];
   }
 
   userUpdateProfile = async (userId : number, userProfile: UserProfileInfo): Promise<void> => {
@@ -251,62 +186,21 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
-    const staff = `
-      SELECT * FROM staffs WHERE user_id = $1;
-    `;
-    const staff_result = await this.pool.query(staff, [userId]);
+    
+    const dbResult = await this.pool.query(
+      `SELECT user_type AS "userType" FROM users WHERE id = ${userId}`
+    );
 
-    if (!staff_result.rowCount) {
-      return { type: UserType.STUDENT };
-    }
-    else {
-      const system_admin = `
-        SELECT * FROM system_admins WHERE staff_id = $1;
-      `;
-      const system_admin_result = await this.pool.query(system_admin, [userId]);
-      if (system_admin_result.rowCount > 0) {
-        return { type: UserType.SYSTEM_ADMIN };
-      }
-      else {
-        return { type: UserType.STAFF };
-      }
-    }
+    return { type: dbResult.rows[0].userType };
   }
 
   userDashInfo = async(userId: number): Promise<UserDashInfo | undefined> =>{
-    const userDashInfo : UserDashInfo = {
-      preferredName: "",
-      affiliation: "",
-    };
     
-    const userQuery = `
-      SELECT * FROM users WHERE id = $1 LIMIT 1;
-    `;
-    const userResult = await this.pool.query(userQuery, [userId]);
-    if (!userResult.rowCount) {
-      return undefined;
-    }
-    userDashInfo.preferredName = userResult.rows[0].preferred_name;
+    const dbResult = await this.pool.query(
+      `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = ${userId}`
+    );
 
-    const universityQuery = `
-      SELECT name 
-      FROM universities 
-      WHERE id = (SELECT university_id FROM students WHERE user_id = $1);
-    `;
-    const universityResult = await this.pool.query(universityQuery, [userId]);
-
-    if (universityResult.rowCount > 0) {
-      userDashInfo.affiliation = universityResult.rows[0].name;
-    } else {
-      const staffUniversityQuery = `
-        SELECT name 
-        FROM universities 
-        WHERE id = (SELECT university_id FROM staffs WHERE user_id = $1);
-      `;
-      const staffUniversityResult = await this.pool.query(staffUniversityQuery, [userId]);
-      userDashInfo.affiliation = staffUniversityResult.rows[0].name;
-    }
-    return userDashInfo;
+    return dbResult.rows[0];
   }
 
 }
