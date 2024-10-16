@@ -40,6 +40,7 @@ const DashboardContent = styled.div`
   min-height: 600px;
   /* overflow-y: hidden; */
   overflow-x: visible;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 export const AlertButton = styled.button`

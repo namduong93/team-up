@@ -16,6 +16,8 @@ export const defaultTheme: DefaultTheme = {
     optionSelected: "#BCCFF8",
     filterText: "#6c757d",
     sidebarLine: "rgba(122, 122, 122, 90%)",
+    staffOption: "#FEB1B1",
+    error: "red",
   },
   teamView: {
     pending: "#F68486",
@@ -52,6 +54,7 @@ export const defaultTheme: DefaultTheme = {
       wide: "1px",
     },
     colour: "#000000",
+    style: "italic",
   },
 };
 
