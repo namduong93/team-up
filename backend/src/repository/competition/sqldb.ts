@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
-import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, CompetitionUserType } from "../../models/competition/competition.js";
+import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject } from "../../models/competition/competition.js";
 
 import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
@@ -228,7 +228,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   // Returns only shortened competition details that are displayed on a dashboard. Sites details are not included.
   // Returns competitions that the user is a part of.
   competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined> => {
-    const competitionMap: Map<number, { userType: Array<CompetitionUserType>, competition: Competition }> = new Map();
+    const competitionMap: Map<number, { userType: Array<CompetitionUserRole>, competition: Competition }> = new Map();
     
     const comps = await this.pool.query(
       `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",

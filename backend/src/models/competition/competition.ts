@@ -16,18 +16,10 @@ export enum CompetitionLevel {
   LEVELB = 'B'
 }
 
-
-export const enum CompetitionUserType {
-  PARTICIPANT = 'participant',
-  COACH = 'coach',
-  SITE_COORDINATOR = 'site_coordinator',
-  ADMIN = 'admin'
-}
-
 export type CompetitionIdObject = { competitionId: number };
 
 // Include both the user roles for the competition and the competition details
-export type CompetitionShortDetailsObject = { userType: Array<CompetitionUserType>, competition: Competition };
+export type CompetitionShortDetailsObject = { userType: Array<CompetitionUserRole>, competition: Competition };
 
 // TODO: Revise this type
 export type CompetitionSiteObject = { universityId: number, name: string, capacity?: number };

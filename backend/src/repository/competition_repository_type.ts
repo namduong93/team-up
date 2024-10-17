@@ -1,4 +1,4 @@
-import { Competition, CompetitionDetailsObject, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
