@@ -3,9 +3,10 @@ import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
 import { StudentInfoCard } from "./StudentInfoCard";
 import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { CompetitionPageContext } from "./TeamDisplay";
 import Fuse from "fuse.js";
+import { sendRequest } from "../../../utility/request";
 
 const WideStudentDisplayDiv = styled.div`
   flex: 1;
@@ -243,39 +244,24 @@ export const StudentDisplay = () => {
     setFilterOptions, setSortOptions
   } = useOutletContext<CompetitionPageContext>();
   
+  const { compId } = useParams();
+
   setSortOptions(STUDENT_DISPLAY_SORT_OPTIONS);
   setFilterOptions(STUDENT_DISPLAY_FILTER_OPTIONS);
 
   const [students, setStudents] = useState<Array<StudentInfo>>([]);
 
   useEffect(() => {
+    if (!compId) {
+      return;
+    }
 
-    // request student info:
-
-    setStudents([
-      {
-        name: 'Leticia James',
-        sex: 'F',
-        email: 'thisisemailepic@gmail.com',
-        studentId: 'z0000000',
-        status: 'Unmatched',
-        teamName: 'The Goofy Goobers',
-        level: 'A',
-        tshirtSize: 'XS',
-        siteName: 'The University of Sydney'
-      },
-      {
-        name: 'Michael Chonk',
-        sex: 'NB',
-        email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
-        studentId: 'z0000000',
-        teamName: 'GoogleGURLies ✨',
-        status: 'Matched',
-        level: 'B',
-        tshirtSize: '10XL',
-        siteName: 'UNSW Sydney'
-      }
-    ]);
+    const fetchStudents = async () => {
+    const studentsResponse = await sendRequest.get<{ students: Array<StudentInfo>}>('/competition/students', { compId: parseInt(compId as string) });
+      const { students } = studentsResponse.data;
+      setStudents(students);
+    }
+    fetchStudents();
 
   }, []);
 

@@ -71,7 +71,7 @@ export const CompetitionPage: FC = () => {
         <PageOptionsContainerDiv>
           <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
             
-            {(roles.includes('admin') || roles.includes('coach')) &&
+            {(roles.includes('admin') || roles.includes('coach') || roles.includes('site-coordinator')) &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/teams/${compId}`) }}>
               <ToggleOptionTextSpan>Teams</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
@@ -86,9 +86,14 @@ export const CompetitionPage: FC = () => {
               <ToggleOptionTextSpan>Staff</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
             
-            {(roles.includes('site-coordinator') || roles.includes('admin')) &&
+            {roles.includes('admin') &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/site/${compId}`) }}>
               <ToggleOptionTextSpan>Site</ToggleOptionTextSpan>
+            </AdminToggleOptionDiv>}
+
+            {roles.includes('site-coordinator') &&
+            <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/site/${compId}`) }}>
+              <ToggleOptionTextSpan>Attendees</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
 
           </CustomToggleSwitch>
