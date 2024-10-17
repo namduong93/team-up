@@ -194,10 +194,10 @@ export const CompetitionConfirmation: FC = () => {
       const response = await sendRequest.post('/competition/system_admin/create', payload);
       console.log("Response:", response.data);
 
-      navigate("/admin/page"); 
+      navigate("/competition/page"); 
 
       // TO-DO: uncomment when pop-up is implemented on Admin Page
-      // navigate("/admin/page", { 
+      // navigate("/competition/page", { 
       //   state: { 
       //     showPopUp: true, 
       //     message: "You have created a new Competition", 

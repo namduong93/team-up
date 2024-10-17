@@ -1,14 +1,10 @@
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import styled from "styled-components";
 // import { TeamCard } from "./TeamCard";
  
-import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { AlertButton, SortButton } from "../../Dashboard/Dashboard";
-import { FaBell, FaSearch } from "react-icons/fa";
-import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
-import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "./TeamDisplay";
+import { SortButton } from "../../Dashboard/Dashboard";
+import { FaSearch } from "react-icons/fa";
 
 export const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
@@ -49,9 +45,6 @@ export const ToggleOptionDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-const ToggleOptionTextSpan = styled.div`
-  font-size: 2em;
 `;
 
 export const MenuOptionsContainerDiv = styled.div`
@@ -106,11 +99,6 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon,
       </div>
     </SortButton>
   )
-}
-
-const pathMap: Record<string, number> = {
-  '/coach/page/teams': 0,
-  '/coach/page/students': 1,
 }
 
 const SearchInput = styled.input`
@@ -171,83 +159,4 @@ export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ val
     </SearchCell>}
   </SearchContainer>
   )
-}
-
-export const CoachPage: FC = () => {
-  const navigate = useNavigate();
-  const { compId } = useParams();
-  const { pathname } = useLocation();
-
-  const [sortOption, setSortOption] = useState<string | null>(null);
-  const sortOptions = TEAM_DISPLAY_SORT_OPTIONS;
-
-  const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
-
-  const [searchTerm, setSearchTerm] = useState<string>('');
-
-  const filterOptions = TEAM_DISPLAY_FILTER_OPTIONS;
-
-  const handleToggleTeams = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate(`/coach/page/teams/${compId}`);
-  }
-  const handleToggleStudents = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate(`/coach/page/students/${compId}`);
-  }
-
-  const removeFilter = (field: string, value: string) => {
-    setFilters((prevFilters) => {
-      const updatedFilters = { ...prevFilters };
-      updatedFilters[field] = updatedFilters[field].filter((v) => v !== value);
-      if (updatedFilters[field].length === 0) {
-        delete updatedFilters[field];
-      }
-      return updatedFilters; // trigger render to update filter dropdown
-    });
-  };
-  return (
-  <OverflowFlexBackground>
-    {/* Sidebar */}
-
-      <MainPageDiv>
-
-        {/* Page header */}
-        <PageHeader 
-          pageTitle="Coach Page"
-          pageDescription="Manage Teams and Students for your Competition"
-          sortOptions={sortOptions}
-          filterOptions={filterOptions}
-          sortOptionState={{ sortOption, setSortOption }}
-          filtersState={{ filters, setFilters }}
-          searchTermState={{ searchTerm, setSearchTerm }}
-        >
-          <AlertButton onClick={() => {}} ><FaBell /></AlertButton>
-        </PageHeader>
-
-        {/* Teams-Students page selection */}
-        <PageOptionsContainerDiv>
-
-          {/* Dimensions setting is probably fine like this because the way the toggleSwitch is setup
-              Dimension setting is all you need to do for it to work.
-          */}
-          <CustomToggleSwitch defaultBorderIndex={pathMap[pathname] ?? 0} style={{ height: '100%', width: '100%', maxWidth: '300px' }}>
-            
-            <ToggleOptionDiv onClick={handleToggleTeams}>
-              <ToggleOptionTextSpan>Teams</ToggleOptionTextSpan>
-            </ToggleOptionDiv>
-            
-            <ToggleOptionDiv onClick={handleToggleStudents}>
-              <ToggleOptionTextSpan>Students</ToggleOptionTextSpan>
-            </ToggleOptionDiv>
-          </CustomToggleSwitch>
-          
-        </PageOptionsContainerDiv>
-
-        {/* Display of Teams/Students */}
-        <Outlet context={{ filters, sortOption, searchTerm, removeFilter }} />
-        
-      </MainPageDiv>
-  </OverflowFlexBackground>
-  );
 }

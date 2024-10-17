@@ -109,19 +109,8 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   const navigate = useNavigate();
 
   // for demo A
-  const roleUrl = (role: string) => {
-    switch (role) {
-      case "Participant":
-        return `/competition/participant/${compId}`;
-      case "Coach":
-        return `/coach/page/${compId}`;
-      case "Site-Coordinator":
-        return `/competition/${compId}/site-coordinator`;
-      case "Admin":
-        return `/competition/${compId}/admin`;
-      default:
-        return `/competition/${compId}/participant`;
-    }
+  const roleUrl = (_: string) => {
+    return `/competition/page/${compId}`;
   };
 
   // const roleUrl = (role: string) => {
