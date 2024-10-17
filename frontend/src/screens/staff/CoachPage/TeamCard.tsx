@@ -52,7 +52,7 @@ export const TeamCardMember = ({ memberName }: { memberName: string }) => {
 }
 
 const StyledHoverDiv = styled.div`
-  transition: transform 100ms;
+  transition: transform 0.2s ease-in-out !important;
   display: flex;
   flex: 0 1 auto;
   flex-wrap: wrap;
