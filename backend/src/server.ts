@@ -122,6 +122,11 @@ app.post('/competition/system_admin/create', competitionController.competitionsS
 // RESPONSE: {}
 app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
+// Get a competition's details
+// PARAMS: { id: number }
+// RESPONSE: { competitionDetails: CompetitionDetails}
+app.get('/competition/details', competitionController.competitionGetDetails)
+
 // Student join competition with 0 friends
 // PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
@@ -181,6 +186,15 @@ app.post('/user/password_recovery/generate_code', userController.userPasswordRec
 app.post('/user/password_recovery/input_code', userController.userPasswordRecoveryInputCode);
 
 app.get('/competition/teams', competitionController.competitionTeams)
+
+// PARAMS: { compId: number }
+// RESPONSE: { roles: Array<'participant' | 'coach' | 'admin' | 'site-coordinator'> }
+app.get('/competition/roles', competitionController.competitionRoles);
+
+// PARAMS: { compId: number }
+// RESPONSE: { students: Array<{ name, sex, email, studentId, status, level, tshirtSize, siteName, teamName? }> }
+// all the above are strings
+app.get('/competition/students', competitionController.competitionStudents);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

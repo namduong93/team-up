@@ -1,5 +1,5 @@
 import { BAD_REQUEST, INVALID_TOKEN } from "../controllers/controller_util/http_error_handler.js";
-import { Competition, CompetitionDetailsObject, CompetitionIdObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
@@ -34,6 +34,18 @@ export interface TeamMateData {
   teamMateDegree: string;
 };
 
+export interface StudentInfo {
+  name: string;
+  sex: string;
+  email: string;
+  studentId: string;
+  status: string;
+  level: string;
+  tshirtSize: string;
+  siteName: string;
+  teamName?: string;
+};
+
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
@@ -41,6 +53,24 @@ export class CompetitionService {
   constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
+  }
+
+  competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+    if (roles.includes('admin')) {
+      return [];
+    }
+
+    if (roles.includes('coach')) {
+
+      return await this.competitionRepository.competitionStudents(userId, compId);
+    }
+
+    return [];
+  }
+
+  competitionRoles = async (userId: number, compId: number) => {
+    return await this.competitionRepository.competitionRoles(userId, compId);
   }
   
   competitionTeams = async (userId: number, compId: number) => {
@@ -77,7 +107,21 @@ export class CompetitionService {
     return competitionId;
   }
 
-  competitionsList = async (userId: number): Promise<Array<CompetitionDetailsObject> | undefined> => {
+  competitionGetDetails = async (competitionId: number): Promise<Competition | undefined> => {
+    if (!competitionId) {
+      throw BAD_REQUEST;
+    }
+    
+    const competitionDetails = await this.competitionRepository.competitionGetDetails(competitionId);
+
+    if (!competitionDetails) {
+      throw BAD_REQUEST;
+    }
+    
+    return competitionDetails;
+  }
+
+  competitionsList = async (userId: number): Promise<Array<CompetitionShortDetailsObject> | undefined> => {
     // Get user type for easier database queries
     const userTypeObject = await this.userRepository.userType(userId);
 

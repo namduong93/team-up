@@ -11,18 +11,17 @@ interface ActionButtonProps {
 
 const Button = styled.button<{ $actionType: "primary" | "secondary" }>`
   border-radius: 10px;
+  padding: 10px;
   border: none;
-  /* padding: 10px 20px; */
   white-space: nowrap;
   max-width: 150px;
   width: 100%;
-  letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
   
   background-color: ${({ $actionType: actionType, theme }) =>
     actionType === "primary" 
       ? theme.colours.primaryLight 
       : theme.colours.secondaryLight};
-  
+
   color: ${({ theme }) => theme.fonts.colour};
 
   &:hover {
@@ -33,9 +32,9 @@ const Button = styled.button<{ $actionType: "primary" | "secondary" }>`
         : theme.colours.secondaryDark};
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-    letter-spacing: ${({ theme }) => theme.fonts.spacing.wide};
   }
 `;
+
 
 const PopUpOverlay = styled.div`
   position: fixed;

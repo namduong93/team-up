@@ -11,6 +11,22 @@ export class CompetitionController {
     this.competitionService = competitionService;
   }
   
+  competitionStudents = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+    const students = await this.competitionService.competitionStudents(
+      parseInt(userId as string), parseInt(compId as string));
+
+    res.json({ students });
+  });
+
+  competitionRoles = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+    const roles = await this.competitionService.competitionRoles(
+      parseInt(userId as string), parseInt(compId as string));
+    
+    res.json({ roles });
+  });
+  
   competitionTeams = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 
@@ -29,6 +45,7 @@ export class CompetitionController {
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
       siteLocations: req.body.siteLocations,
+      otherSiteLocations: req.body.otherSiteLocations,
     };
 
     const competitionId = await this.competitionService.competitionSystemAdminCreate(Number(userId), newCompetition);
@@ -53,6 +70,17 @@ export class CompetitionController {
     const competitionId = await this.competitionService.competitionSystemAdminUpdate(Number(userId), newCompetitionDetails);
 
     res.json(competitionId);
+
+    return;
+  });
+
+  competitionGetDetails = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const competitionId = req.body.id;
+    console.log(competitionId);
+
+    const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
+
+    res.json(competitionDetails);
 
     return;
   });
