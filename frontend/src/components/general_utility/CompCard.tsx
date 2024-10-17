@@ -99,29 +99,18 @@ const ProgressBar = styled.div`
   margin-top: 20px;
 `;
 
-const Progress = styled.div<{ width: number }>`
+const Progress = styled.div<{ $width: number }>`
   background-color: ${({ theme }) => theme.colours.primaryDark};
   height: 100%;
-  width: ${({ width }) => `${width}%`};
+  width: ${({ $width: width }) => `${width}%`};
 `;
 
 export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, compId, compCreationDate }) => {
   const navigate = useNavigate();
 
   // for demo A
-  const roleUrl = (role: string) => {
-    switch (role) {
-      case "Participant":
-        return `/competition/participant/${compId}`;
-      case "Coach":
-        return `/coach/page/${compId}`;
-      case "Site-Coordinator":
-        return `/competition/${compId}/site-coordinator`;
-      case "Admin":
-        return `/competition/${compId}/admin`;
-      default:
-        return `/competition/${compId}/participant`;
-    }
+  const roleUrl = (_: string) => {
+    return `/competition/page/${compId}`;
   };
 
   // const roleUrl = (role: string) => {
@@ -174,7 +163,7 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
       </CardBottom>
 
       <ProgressBar>
-        <Progress width={progressWidth} />
+        <Progress $width={progressWidth} />
       </ProgressBar>
     </CompCardContainer>
   );

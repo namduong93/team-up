@@ -1,15 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../../components/general_utility/Background";
-import { FaBell, FaTimes } from "react-icons/fa";
-import { DashboardSidebar } from "../../components/general_utility/DashboardSidebar";
+import { FaTimes } from "react-icons/fa";
 import { CompCard } from "../../components/general_utility/CompCard";
 import { ActionButton } from "../../components/general_utility/ActionButton";
-import { Notifications } from "../../components/general_utility/Notifications";
 import { sendRequest } from "../../utility/request";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/sort_filter_search/PageHeader";
-import { useDashInfo } from "./useDashInfo";
+import { DashInfo } from "./useDashInfo";
 // import CompCreatePopUp from "../components/general_utility/CompCreatePopUp";
 
 interface Competition { 
@@ -23,6 +21,7 @@ interface Competition {
 
 interface DashboardsProps {
   competitions: Competition[];
+  dashInfo: DashInfo
 }
 
 const OverflowFlexBackground = styled(FlexBackground)`
@@ -40,18 +39,25 @@ const DashboardContent = styled.div`
   min-height: 600px;
   /* overflow-y: hidden; */
   overflow-x: visible;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 export const AlertButton = styled.button`
   border-radius: 10px;
-  padding: 10px;
-  background-color: ${({ theme }) => theme.colours.secondaryLight};
-  color: ${({ theme }) => theme.fonts.colour};
+  padding: 9px;
+  background-color: ${({ theme }) => theme.colours.notifLight};
+  color: ${({ theme }) => theme.colours.notifDark};
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
   &:hover {
     cursor: pointer;
-    background-color: ${({ theme }) => theme.colours.secondaryDark};
-    color: ${({ theme }) => theme.background};
+    background-color: ${({ theme }) => theme.colours.notifDark};
+    color: ${({ theme }) => theme.colours.notifLight};
   }
 `;
 
@@ -121,7 +127,7 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
+export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -135,12 +141,10 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
     { label: "Time Remaining", value: "timeRemaining" },
   ];
 
-  const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const [dashInfo, _] = useDashInfo();
 
   useEffect(() => {
     (async () => {
@@ -288,7 +292,6 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
   
   return (isLoaded &&
     <OverflowFlexBackground>
-      <DashboardSidebar sidebarInfo={dashInfo} cropState={false}/>
       <DashboardContent>
 
         
@@ -317,11 +320,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions }) => {
             redirectPath="/comp/register"
             actionType="primary"
           />
-          <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)} ><FaBell /></AlertButton>
         </PageHeader>
-
-        {/* Notifications Popup */}
-        {isNotificationsVisible && <Notifications />}
   
         {/* Active Filters Display */}
         <div>

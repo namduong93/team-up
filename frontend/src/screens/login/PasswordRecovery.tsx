@@ -14,16 +14,17 @@ const FormContainer = styled.form`
   width: 500px;
   flex: 0 1 auto;
   align-items: center;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const CenteredFormBackground = styled(FlexBackground)`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};;
 
   & h1 {
-    font-style: italic;
+    font-style: ${({ theme }) => theme.fonts.style};;
   }
 `;
 
@@ -42,9 +43,8 @@ export const EmailRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ st
 
       // IF THE EMAIL WAS SUCCESSFULLY SENT FROM THE BACKEND TO THE CLIENT:
       navigate('/password/recovery/email/success');
-    } catch (error: unknown) {
-
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) { /* empty */ }
   }
 
   return (
@@ -83,9 +83,8 @@ export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> 
       
       // ON SUCCESS FROM BACKEND
       navigate('/');
-    } catch (error: unknown) {
-
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) { /* empty */ }
   
   }
 

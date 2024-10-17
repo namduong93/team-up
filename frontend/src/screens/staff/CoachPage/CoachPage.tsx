@@ -1,15 +1,10 @@
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import styled from "styled-components";
 // import { TeamCard } from "./TeamCard";
  
-import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { AlertButton, SortButton } from "../../Dashboard/Dashboard";
-import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
-import { FaBell, FaSearch } from "react-icons/fa";
-import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
-import { useDashInfo } from "../../Dashboard/useDashInfo";
+import { SortButton } from "../../Dashboard/Dashboard";
+import { FaSearch } from "react-icons/fa";
 
 export const OverflowFlexBackground = styled(FlexBackground)`
   overflow: auto;
@@ -50,9 +45,6 @@ export const ToggleOptionDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-const ToggleOptionTextSpan = styled.div`
-  font-size: 2em;
 `;
 
 export const MenuOptionsContainerDiv = styled.div`
@@ -109,16 +101,13 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon,
   )
 }
 
-const pathMap: Record<string, number> = {
-  '/coach/page/teams': 0,
-  '/coach/page/students': 1,
-}
-
 const SearchInput = styled.input`
   height: 100%;
   width: 100%;
   min-width: 29px;
   border: 1px solid ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;
   padding: 0;
   grid-row: 1 / 2;
@@ -142,6 +131,7 @@ const SearchContainer = styled.div`
   position: relative;
   overflow: hidden;
   flex-wrap: wrap;
+  color: ${({ theme }) => theme.colours.filterText};
 `;
 
 const SearchCell = styled.div`
@@ -155,7 +145,6 @@ const SearchCell = styled.div`
   overflow: hidden;
   left: 0;
   z-index: 1;
-  color: ${({ theme }) => theme.colours.filterText};
 `;
 
 export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
@@ -172,96 +161,4 @@ export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ val
     </SearchCell>}
   </SearchContainer>
   )
-}
-
-export const CoachPage: FC = () => {
-  const navigate = useNavigate();
-  const { compId } = useParams();
-  const { pathname } = useLocation();
-
-  const [sortOption, setSortOption] = useState<string | null>(null);
-  const sortOptions = [
-    { label: "Default", value: "original" },
-    { label: "Alphabetical (Name)", value: "name" },
-    { label: "Competition Date", value: "date" },
-    { label: "Alphabetical (Location)", value: "location" },
-    { label: "Time Remaining", value: "timeRemaining" },
-  ];
-
-  const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
-
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [dashInfo, _] = useDashInfo();
-
-  const filterOptions = {
-    Location: ['USA', 'UK'],
-    Role: ['Admin', 'Site-Coordinator', 'Coach'],
-    Status: ["Completed", "Upcoming"],
-    Year: ['2020', '2021', '2022', '2024'],
-  };
-
-  const handleToggleTeams = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate(`/coach/page/teams/${compId}`);
-  }
-  const handleToggleStudents = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate(`/coach/page/students/${compId}`);
-  }
-
-  const removeFilter = (field: string, value: string) => {
-    setFilters((prevFilters) => {
-      const updatedFilters = { ...prevFilters };
-      updatedFilters[field] = updatedFilters[field].filter((v) => v !== value);
-      if (updatedFilters[field].length === 0) {
-        delete updatedFilters[field];
-      }
-      return updatedFilters; // trigger render to update filter dropdown
-    });
-  };
-  return (
-  <OverflowFlexBackground>
-    {/* Sidebar */}
-    <DashboardSidebar sidebarInfo={dashInfo} cropState={false} />
-
-      <MainPageDiv>
-
-        {/* Page header */}
-        <PageHeader 
-          pageTitle="Coach Page"
-          pageDescription="Manage Teams and Students for your Competition"
-          sortOptions={sortOptions}
-          filterOptions={filterOptions}
-          sortOptionState={{ sortOption, setSortOption }}
-          filtersState={{ filters, setFilters }}
-          searchTermState={{ searchTerm, setSearchTerm }}
-        >
-          <AlertButton onClick={() => {}} ><FaBell /></AlertButton>
-        </PageHeader>
-
-        {/* Teams-Students page selection */}
-        <PageOptionsContainerDiv>
-
-          {/* Dimensions setting is probably fine like this because the way the toggleSwitch is setup
-              Dimension setting is all you need to do for it to work.
-          */}
-          <CustomToggleSwitch defaultBorderIndex={pathMap[pathname] ?? 0} style={{ height: '100%', width: '100%', maxWidth: '300px' }}>
-            
-            <ToggleOptionDiv onClick={handleToggleTeams}>
-              <ToggleOptionTextSpan>Teams</ToggleOptionTextSpan>
-            </ToggleOptionDiv>
-            
-            <ToggleOptionDiv onClick={handleToggleStudents}>
-              <ToggleOptionTextSpan>Students</ToggleOptionTextSpan>
-            </ToggleOptionDiv>
-          </CustomToggleSwitch>
-          
-        </PageOptionsContainerDiv>
-
-        {/* Display of Teams/Students */}
-        <Outlet context={{ filters, sortOption, searchTerm, removeFilter }} />
-        
-      </MainPageDiv>
-  </OverflowFlexBackground>
-  );
 }

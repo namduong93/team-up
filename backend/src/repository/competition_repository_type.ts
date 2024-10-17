@@ -3,6 +3,7 @@ import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 
 export interface CompetitionRepository {
+  competitionRoles(userId: number, compId: number): unknown;
   competitionTeams(userId: number, compId: number): unknown;
   competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
   competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{} | undefined>;

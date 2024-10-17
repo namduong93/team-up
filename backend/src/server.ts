@@ -187,6 +187,10 @@ app.post('/user/password_recovery/input_code', userController.userPasswordRecove
 
 app.get('/competition/teams', competitionController.competitionTeams)
 
+// PARAMS: { compId: number }
+// RESPONE { roles: Array<'participant' | 'coach' | 'admin' | 'site-coordinator'> }
+app.get('/competition/roles', competitionController.competitionRoles);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

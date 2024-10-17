@@ -109,6 +109,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
+  color: ${({ theme }) => theme.fonts.colour};
 `
 
 const ContentContainer = styled.div`
@@ -139,18 +140,18 @@ const Button = styled.button<{ disabled?: boolean }>`
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
   margin-top: 35px;
   margin-bottom: 40px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
-  font-weight: bold;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `
 
 const NextButton = styled(Button)<{ disabled: boolean }>`
-  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;
 

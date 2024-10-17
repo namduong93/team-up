@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompCreationProgressBar } from "../../components/general_utility/ProgressBar";
@@ -11,6 +11,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const FormContainer = styled.form`
@@ -40,9 +41,9 @@ const Label = styled.label`
   text-align: left;
   margin-bottom: 0.5rem;
   margin-top: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 18px;
-  font-weight: bold;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   width: 100%;
 `;
 
@@ -63,11 +64,11 @@ const LocationItem = styled.div`
 const DeleteIcon = styled.span`
   cursor: pointer;
   font-size: 18px; 
-  color: #ccc;
+  color: ${({ theme }) => theme.fonts.colour};
   margin-left: 30px;
 
   &:hover {
-    color: #ff0000; 
+    color: ${({ theme }) => theme.colours.error};
   }
 `;
 
@@ -86,14 +87,14 @@ const Button = styled.button<{ disabled?: boolean }>`
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ disabled }) => (disabled ? "#ccc" : "#6688D2")};
+  background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
   margin-top: 35px;
   margin-bottom: 40px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
-  font-weight: bold;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 interface SiteLocation {

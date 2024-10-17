@@ -1,41 +1,47 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../CoachPage/CoachPage";
-import { useDashInfo } from "../../Dashboard/useDashInfo";
-import { DashboardSidebar } from "../../../components/general_utility/DashboardSidebar";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import styled from "styled-components";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "../CoachPage/TeamDisplay";
+import { sendRequest } from "../../../utility/request";
 
 const ToggleOptionTextSpan = styled.span`
-  font-size: clamp(0.9em, 3.5vw, 2em);
+  
 `;
 
 const AdminToggleOptionDiv = styled(ToggleOptionDiv)`
   box-sizing: border-box;
 `;
 
+export type CompetitionRole = 'participant' | 'coach' | 'admin' | 'site-coordinator';
 
-export const AdminPage: FC = () => {
+export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
-  const [dashInfo, _] = useDashInfo();
   const [sortOption, setSortOption] = useState<string | null>(null);
-  const sortOptions = [
-    { label: "Default", value: "original" },
-    { label: "Alphabetical (Name)", value: "name" },
-    { label: "Competition Date", value: "date" },
-    { label: "Alphabetical (Location)", value: "location" },
-    { label: "Time Remaining", value: "timeRemaining" },
-  ];
+  const sortOptions = TEAM_DISPLAY_SORT_OPTIONS;
 
   const [filters, setFilters] = useState<Record<string, Array<string>>>({});
-  const filterOptions = {
-    Location: ['USA', 'UK'],
-    Role: ['Admin', 'Site-Coordinator', 'Coach'],
-    Status: ["Completed", "Upcoming"],
-    Year: ['2020', '2021', '2022', '2024'],
-  };
+  const filterOptions = TEAM_DISPLAY_FILTER_OPTIONS;
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      
+      const roleResponse = await sendRequest.get<{ roles: Array<CompetitionRole> }>('/competition/roles', { compId });
+
+      const { roles } = roleResponse.data;
+      setRoles(roles);
+
+    }
+
+    fetchRoles();
+
+  }, [])
 
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {
@@ -48,11 +54,9 @@ export const AdminPage: FC = () => {
     });
   };
 
-  const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <OverflowFlexBackground>
-      <DashboardSidebar sidebarInfo={dashInfo} cropState={false} />
 
       <MainPageDiv>
         <PageHeader
@@ -65,23 +69,27 @@ export const AdminPage: FC = () => {
           searchTermState={{ searchTerm, setSearchTerm }}
           />
         <PageOptionsContainerDiv>
-          <CustomToggleSwitch style={{ width: '100%', height: '100%', maxWidth: '600px' }} defaultBorderIndex={0}>
+          <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
             
-            <AdminToggleOptionDiv onClick={() => { navigate(`/admin/page/teams/${compId}`) }}>
+            {(roles.includes('admin') || roles.includes('coach')) &&
+            <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/teams/${compId}`) }}>
               <ToggleOptionTextSpan>Teams</ToggleOptionTextSpan>
-            </AdminToggleOptionDiv>
+            </AdminToggleOptionDiv>}
 
-            <AdminToggleOptionDiv onClick={() => { navigate(`/admin/page/students/${compId}`) }}>
+            {(roles.includes('admin') || roles.includes('coach')) &&
+              <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/students/${compId}`) }}>
               <ToggleOptionTextSpan>Students</ToggleOptionTextSpan>
-            </AdminToggleOptionDiv>
+            </AdminToggleOptionDiv>}
 
-            <AdminToggleOptionDiv onClick={() => { navigate(`/admin/page/staff/${compId}`) }}>
+            {(roles.includes('admin')) &&
+            <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/staff/${compId}`) }}>
               <ToggleOptionTextSpan>Staff</ToggleOptionTextSpan>
-            </AdminToggleOptionDiv>
-
-            <AdminToggleOptionDiv onClick={() => { navigate(`/admin/page/site/${compId}`) }}>
+            </AdminToggleOptionDiv>}
+            
+            {(roles.includes('site-coordinator') || roles.includes('admin')) &&
+            <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/site/${compId}`) }}>
               <ToggleOptionTextSpan>Site</ToggleOptionTextSpan>
-            </AdminToggleOptionDiv>
+            </AdminToggleOptionDiv>}
 
           </CustomToggleSwitch>
         </PageOptionsContainerDiv>

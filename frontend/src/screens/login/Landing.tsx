@@ -14,6 +14,7 @@ const FormContainer = styled.form`
   flex-direction: column;
   align-items: center; 
   text-align: center;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 export const CustomButton = styled.button`
@@ -22,10 +23,10 @@ export const CustomButton = styled.button`
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: #6688D2;
+  background-color: ${({ theme }) => theme.colours.primaryLight};
   margin-top: 35px;
   margin-bottom: 40px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
@@ -34,8 +35,8 @@ export const CustomButton = styled.button`
 const SignUpLink = styled.span`
   cursor: pointer;
   text-decoration: underline;
-  color: #6688D2;
-  font-family: Arial, Helvetica, sans-serif;
+  color: ${({ theme }) => theme.colours.primaryLight};
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 const Image = styled.img`
@@ -43,8 +44,8 @@ const Image = styled.img`
 `;
 
 const Title = styled.h1`
-  font-family: Arial, Helvetica, sans-serif;
-  font-style: italic;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  font-style: ${({ theme }) => theme.fonts.style};
 `;
 
 const InputContainer = styled.div`
@@ -53,7 +54,7 @@ const InputContainer = styled.div`
 
 const ForgotPassword = styled.label`
   text-decoration: underline;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 12px;
   cursor: pointer;
   margin-top: -16px;
@@ -68,7 +69,7 @@ export const Landing: FC = () => {
     e.preventDefault();
     try {
       await sendRequest.post('/user/login', { email, password });
-      navigate('/dashboard');
+      window.location.href = '/dashboard';
     } catch (error: unknown) {
       console.error('Login failed', error);
     }

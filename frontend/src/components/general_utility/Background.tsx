@@ -1,18 +1,14 @@
-import React, { FC } from 'react';
+import styled from "styled-components";
 
-export const FlexBackground: FC<React.HTMLAttributes<HTMLDivElement>> = ({
-  style,
-  ...props
-}) => {
-  return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        ...style,
-      }}
-      {...props}
-    />
-  );
-};
+export const FlexBackground = styled.div`
+  flex: 1;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: ${({ theme }) => theme.background};
+  transition: background-color 0.5s ease;
+  & * {
+    transition: background-color 0.5s ease;
+  }
+`;

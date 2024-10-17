@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TextInputLight, { Label } from '../../components/general_utility/TextInputLight';
-import DropDownInputLight from '../../components/general_utility/DropDownLight';
+// import DropDownInputLight from '../../components/general_utility/DropDownLight';
 import { sendRequest } from '../../utility/request';
 import { AdvancedDropdown } from '../../components/general_utility/AdvancedDropdown/AdvancedDropdown';
 
@@ -9,11 +9,11 @@ const Container = styled.div`
   /* padding: 20px; */
   max-width: 600px;
   width: 100%;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 const Title = styled.h2`
-  font-weight: bold;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
   margin-bottom: 0.5rem;
 `;
@@ -25,7 +25,7 @@ const AddButtonContainer = styled.div`
 `;
 
 const AddButton = styled.button`
-  border: 2px solid #ccc;
+  border: 2px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 50%;
   width: 35px;
   height: 35px;
@@ -34,13 +34,14 @@ const AddButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-weight: bold;
-  color: #ccc;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+  color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.fonts.colour};
 
   &:hover {
-    background-color: #6688D2;
-    color: white;
-    border-color: #6688D2;
+    background-color: ${({ theme }) => theme.colours.primaryLight};
+    color: ${({ theme }) => theme.fonts.colour};
+    border-color: ${({ theme }) => theme.colours.primaryLight};
   }
 `;
 
@@ -49,6 +50,7 @@ const DoubleInputContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   gap: 0.8%;
+  
 `;
 
 // pass the a boolean too and receive on CompDetails

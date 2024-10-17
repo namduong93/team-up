@@ -5,6 +5,7 @@ export const darkTheme: DefaultTheme = {
   fonts: {
     ...defaultTheme.fonts,
     colour: "#FFFFFF",
+    descriptor: "#EBEBEB",
   },
   background: "#121212",
   colours: {
@@ -15,12 +16,15 @@ export const darkTheme: DefaultTheme = {
     secondaryDark: "#FDD386",
     cancel: "#F68486",
     cancelDark: "#AD0B0B",
-    confirm: "#558964",
-    confirmDark: "#6AC38A",
+    confirmDark: "#558964",
+    confirm: "#8BDFA5",
     sidebarBackground: "#333333",
     optionUnselected: "#333333",
     optionSelected: "#BCCFF8",
     filterText: "#EBEBEB",
+    notifDate: "#BCCFF8",
+    notifLight: "#333333",
+    notifDark: "#EBEBEB",
   },
   teamView: {
     ...defaultTheme.teamView,

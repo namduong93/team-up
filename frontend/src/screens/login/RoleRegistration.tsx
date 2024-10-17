@@ -56,10 +56,11 @@ const FormContainer = styled.form`
   align-items: center;
   max-width: 600px;
   width: 100%;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const Title = styled.h1`
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 const Button = styled.button`
@@ -68,14 +69,14 @@ const Button = styled.button`
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  background-color: ${({ theme, disabled }) => (disabled ? theme.colours.optionUnselected : theme.colours.primaryLight)};
   margin-top: 35px;
   margin-bottom: 40px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
   font-weight: bold;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 const RoleContainer = styled.div`
@@ -85,7 +86,7 @@ const RoleContainer = styled.div`
 `;
 
 const StudentButton = styled.button<{ isSelected: boolean }>`
-  border: ${({ isSelected }) => (isSelected ? '1.5px solid #558964' : 'none')}; // Border logic for Student
+  border: ${({ theme, isSelected }) => (isSelected ? `2px solid ${theme.colours.confirmDark}` : 'none')}; // Border logic for Student
   border-radius: 10px;
   margin: 0 0 2.5% 2.5%;
   width: 45%;
@@ -94,13 +95,13 @@ const StudentButton = styled.button<{ isSelected: boolean }>`
   height: 270px; 
   font-size: 25px;
   cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #BFF4BE;
-  color: #558964;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  background-color: ${({ theme }) => theme.colours.confirm};
+  color: ${({ theme }) => theme.colours.confirmDark};
 `;
 
 const StaffButton = styled.button<{ isSelected: boolean }>`
-  border: ${({ isSelected }) => (isSelected ? '1.5px solid #AD0B0B' : 'none')}; // Border logic for Staff
+  border: ${({ theme, isSelected }) => (isSelected ? `1.5px solid ${theme.colours.cancelDark}` : 'none')}; // Border logic for Staff
   border-radius: 10px;
   margin: 0 0 2.5% 2.5%;
   width: 45%;
@@ -109,7 +110,7 @@ const StaffButton = styled.button<{ isSelected: boolean }>`
   height: 270px; 
   font-size: 25px;
   cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #FEB1B1;
-  color: #AD0B0B;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  background-color: ${({ theme }) => theme.colours.staffOption};
+  color: ${({ theme }) => theme.colours.cancelDark};
 `
