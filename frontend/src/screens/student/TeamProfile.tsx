@@ -37,7 +37,7 @@ export const TeamProfile: FC = () => {
     {
       name: "Student2",
       email: "email2@email.com",
-      bio: "My favourite language is java",
+      bio: "My favourite language is java. My favourite language is java. My favourite language is java. ",
     },
     {
       name: "Student3",

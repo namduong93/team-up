@@ -141,6 +141,8 @@ const StudentBio = styled.p`
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 12px;
   padding: 10px;
+  overflow-wrap: break-word;
+  white-space: normal;
 `;
 
 const StudentImage = styled.img`
