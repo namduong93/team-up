@@ -1,9 +1,12 @@
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionDetails } from "../models/competition/competition.js";
 import { UserType } from "../models/user/user.js";
-import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
+
+export type CompetitionRole = 'participant' | 'coach' | 'admin' | 'site-coordinator';
 
 export interface CompetitionRepository {
-  competitionRoles(userId: number, compId: number): unknown;
+  competitionStudents(userId: number, compId: number): Promise<StudentInfo[]>;
+  competitionRoles(userId: number, compId: number): Promise<Array<CompetitionRole>>;
   competitionTeams(userId: number, compId: number): unknown;
   competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
   competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{} | undefined>;

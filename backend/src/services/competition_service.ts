@@ -33,6 +33,18 @@ export interface TeamMateData {
   teamMateDegree: string;
 };
 
+export interface StudentInfo {
+  name: string;
+  sex: string;
+  email: string;
+  studentId: string;
+  status: string;
+  level: string;
+  tshirtSize: string;
+  siteName: string;
+  teamName?: string;
+};
+
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
@@ -40,6 +52,20 @@ export class CompetitionService {
   constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
+  }
+
+  competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+    if (roles.includes('admin')) {
+      return [];
+    }
+
+    if (roles.includes('coach')) {
+
+      return await this.competitionRepository.competitionStudents(userId, compId);
+    }
+
+    return [];
   }
 
   competitionRoles = async (userId: number, compId: number) => {
