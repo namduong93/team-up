@@ -232,6 +232,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
+  color: ${({ theme }) => theme.fonts.colour};
 `
 
 const ContentContainer = styled.div`
@@ -251,9 +252,9 @@ const DoubleInputContainer = styled.div`
   gap: 0.8%;
 `
 export const ErrorMessage = styled.p`
-  color: red;
+  color: ${({ theme }) => theme.colours.error};
   font-size: 14px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.colour};
   margin-top: -10px;
   text-align: center;
 `
@@ -272,15 +273,15 @@ export const Button = styled.button<{ $disabled?: boolean }>`
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ $disabled: disabled }) => (disabled ? '#ccc' : '#6688D2')};
+  background-color: ${({ $disabled: disabled, theme }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
   margin-top: 35px;
   margin-bottom: 40px;
-  color: #ffffff;
+  color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
-  font-weight: bold;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   pointer-events: ${({ $disabled: disabled }) => disabled ? 'none' : 'auto'};
   cursor: ${({ $disabled: disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `
 
 const Title = styled.h1`

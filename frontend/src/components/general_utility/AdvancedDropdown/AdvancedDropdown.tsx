@@ -8,6 +8,8 @@ const DropdownContainerDiv = styled.div`
   border-radius: 10px;
   box-sizing: border-box;
   position: relative;
+  color: ${({ theme }) => theme.fonts.colour};
+  
 `;
 
 const DropdownTextInput = styled.input`
@@ -16,10 +18,12 @@ const DropdownTextInput = styled.input`
   width: 100%;
   border-radius: 10px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  background-color: ${({ theme }) => theme.colours.sidebarBackground};
+  color: ${({ theme }) => theme.fonts.colour};
 
   &:focus + div {
-    border-color: black;
+    border-color: ${({ theme }) => theme.fonts.colour};
   }
 
 `;
@@ -31,7 +35,7 @@ const DropdownIconDiv = styled.div`
   z-index: 5;
   right: 0;
   top: 0;
-  border-left: 1px solid #ccc;
+  border-left: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,10 +58,10 @@ const DropdownOptionsDiv = styled.div`
   position: absolute;
   width: 100%;
   min-height: 36px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.background};
   top: calc(100% + 3px);
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   box-sizing: border-box;
   max-height: 150px;
   overflow: auto;
@@ -69,7 +73,7 @@ const DropdownOptionsDiv = styled.div`
     border-radius: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #ccc;
+    background-color: ${({ theme }) => theme.colours.sidebarBackground};
     border-radius: 10px;
   }
 `;
@@ -82,12 +86,13 @@ const OptionContainerDiv = styled.button<{ $isLast: boolean }>`
   overflow: hidden;
   align-items: center;
   box-sizing: border-box;
-  border-right: 1px solid #ccc;
-  ${({$isLast}) => $isLast ? '' : 'border-bottom: 1px solid #ccc'};
+  border-right: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  ${({$isLast, theme}) => $isLast ? '' : `border-bottom: 1px solid ${theme.colours.sidebarBackground}`};
   user-select: none;
 
   &:hover {
-    background-color: #cccccc7b;
+    background-color: ${({ theme }) => theme.colours.primaryLight};
+    cursor: pointer;
   }
 `;
 

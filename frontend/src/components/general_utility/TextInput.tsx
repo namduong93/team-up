@@ -47,7 +47,7 @@ const Container = styled.div<{ $width: string }>`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
   width: ${({ $width: width }) => width};
 `;
 
@@ -56,13 +56,13 @@ const Label = styled.label`
   text-align: left;
   margin-bottom: 0.5rem;
   margin-top: 10px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
 `;
 
 const Asterisk = styled.span`
-  color: red;
+  color: ${({ theme }) => theme.colours.error};
 `;
 
 const Input = styled.input`
@@ -70,16 +70,18 @@ const Input = styled.input`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;
   margin-bottom: 5px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 const Descriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
-  color: #555;
+  color: ${({ theme }) => theme.colours.filterText};
 `;
 
 export default TextInput;

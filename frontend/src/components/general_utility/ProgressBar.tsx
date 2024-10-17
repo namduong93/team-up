@@ -7,6 +7,7 @@ interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const RegoProgressContainer = styled.div`
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
+  color: ${({ theme }) => theme.fonts.colour};
   display: flex;
   min-width: 170px;
   height: 100%;

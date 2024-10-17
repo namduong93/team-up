@@ -106,6 +106,8 @@ const SearchInput = styled.input`
   width: 100%;
   min-width: 29px;
   border: 1px solid ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;
   padding: 0;
   grid-row: 1 / 2;
@@ -129,6 +131,7 @@ const SearchContainer = styled.div`
   position: relative;
   overflow: hidden;
   flex-wrap: wrap;
+  color: ${({ theme }) => theme.colours.filterText};
 `;
 
 const SearchCell = styled.div`
@@ -142,7 +145,6 @@ const SearchCell = styled.div`
   overflow: hidden;
   left: 0;
   z-index: 1;
-  color: ${({ theme }) => theme.colours.filterText};
 `;
 
 export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
