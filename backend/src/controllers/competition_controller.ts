@@ -11,6 +11,14 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionRoles = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+    const roles = await this.competitionService.competitionRoles(
+      parseInt(userId as string), parseInt(compId as string));
+    
+    res.json({ roles });
+  });
   
   competitionTeams = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
