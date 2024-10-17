@@ -22,7 +22,7 @@ const StyledToggleDiv = styled.div<{ $numElems: number, $borderIndex: number }>`
     z-index: -1;
     translate: ${(props) => 100 * props.$borderIndex}% 0;
     transition: translate 200ms;
-    border-bottom: solid 2px black;
+    border-bottom: solid 2px ${({ theme }) => theme.fonts.colour};
   }
 `;
 

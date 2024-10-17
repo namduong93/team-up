@@ -25,6 +25,9 @@ export const darkTheme: DefaultTheme = {
     notifDate: "#BCCFF8",
     notifLight: "#333333",
     notifDark: "#EBEBEB",
+    progressEnd: "#283e6c",
+    progressStart: "#6688D2",
+    progressBackground: "#EBEBEB",
   },
   teamView: {
     ...defaultTheme.teamView,

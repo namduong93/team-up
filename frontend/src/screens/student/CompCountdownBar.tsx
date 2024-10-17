@@ -19,6 +19,7 @@ const Container = styled.div`
   max-width: 600px;
   background-color: ${({ theme }) => theme.background};
   box-sizing: border-box;
+  color: ${({ theme }) => theme.fonts.colour};
 
   @media (max-width: 600px) {
     padding: 12px;
@@ -45,7 +46,7 @@ const ProgressWrapper = styled.div`
 const ProgressBarContainer = styled.div`
   flex: 1;
   height: 12px;
-  background-color: ${({ theme }) => theme.colours.primaryLight};
+  background-color: ${({ theme }) => theme.colours.progressBackground};
   border-radius: 6px;
   overflow: hidden;
 `;

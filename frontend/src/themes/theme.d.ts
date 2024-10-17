@@ -24,6 +24,7 @@ declare module 'styled-components' {
         notifDark: string;
         progressStart: string;
         progressEnd: string;
+        progressBackground: string;
       };
       teamView: {
           pending: string;
@@ -61,6 +62,7 @@ declare module 'styled-components' {
           };
           colour: string;
           descriptor: string;
+          email: string;
           style: string;
       };
     }

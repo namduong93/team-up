@@ -23,6 +23,7 @@ export const defaultTheme: DefaultTheme = {
     notifDark: "#333333",
     progressStart: "#283e6c",
     progressEnd: "#6688D2",
+    progressBackground: "#BCCFF8",
   },
   teamView: {
     pending: "#F68486",
@@ -60,6 +61,7 @@ export const defaultTheme: DefaultTheme = {
     },
     colour: "#000000",
     descriptor: "#333333",
+    email: "blue",
     style: "italic",
   },
 };

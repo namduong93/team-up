@@ -1,10 +1,9 @@
 import { FC  } from "react";
 import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../staff/CoachPage/CoachPage";
-// import { PageHeader } from "../../components/sort_filter_search/PageHeader";
 import { CustomToggleSwitch } from "../../components/general_utility/ToggleSwitch";
 import styled from "styled-components";
 // import { sendRequest } from "../../utility/request";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Outlet } from "react-router-dom";
 import { TeamHeader } from "./TeamHeader";
 
 const TeamToggleOptionDiv = styled(ToggleOptionDiv)`
@@ -12,6 +11,7 @@ const TeamToggleOptionDiv = styled(ToggleOptionDiv)`
 
 const ToggleOptionTextSpan = styled.span`
   font-size: ${({ theme }) => theme.fonts.fontSizes.subheading};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const TeamOverflowFlexBackground = styled(OverflowFlexBackground)`
@@ -25,6 +25,40 @@ export const TeamProfile: FC = () => {
   const compName = "ICPC Regional Championships 2024";
   const teamName = "UNSWKoalas";
   const compCountdown = 34; // days to go
+
+  const teamSite = "UNSW Kensington Campus";
+  const teamLevel = "A";
+  const students = [
+    {
+      name: "Student1",
+      email: "email1@email.com",
+      bio: "I love coding!",
+    },
+    {
+      name: "Student2",
+      email: "email2@email.com",
+      bio: "My favourite language is java",
+    },
+    {
+      name: "Student3",
+      email: "email3@email.com",
+      bio: "First time competing :/",
+    },
+  ];
+  const coach = {
+    name: "Coach1",
+    email: "coach@email.com",
+    office: "Level 304 K17",
+  };
+
+  const teamOutletProps = {
+    teamName,
+    teamSite,
+    teamLevel,
+    students,
+    coach,
+    compId,
+  };
 
   return (
   <TeamOverflowFlexBackground>
@@ -40,6 +74,7 @@ export const TeamProfile: FC = () => {
           </TeamToggleOptionDiv>
         </CustomToggleSwitch>
       </PageOptionsContainerDiv>
+      <Outlet context={teamOutletProps}/>
     </MainPageDiv>
   </TeamOverflowFlexBackground>
   );
