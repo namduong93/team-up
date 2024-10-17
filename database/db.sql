@@ -150,13 +150,16 @@ AS $$
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION competition_team_list(u_id INT, c_id INT)
-RETURNS TABLE(team_name TEXT, member_name1 TEXT, member_name2 TEXT, member_name3 TEXT, status competition_team_status)
+RETURNS TABLE(
+  team_name TEXT, member_name1 TEXT, member_name2 TEXT, member_name3 TEXT,
+  status competition_team_status, team_name_approved BOOLEAN)
 AS $$
   SELECT ct.name AS team_name, 
-  (SELECT u.name FROM users AS u WHERE u.id = ct.participants[1]) AS member_name1,
-  (SELECT u.name FROM users AS u WHERE u.id = ct.participants[2]) AS member_name2,
-  (SELECT u.name FROM users AS u WHERE u.id = ct.participants[3]) AS member_name3,
-  ct.team_status AS status
+    (SELECT u.name FROM users AS u WHERE u.id = ct.participants[1]) AS member_name1,
+    (SELECT u.name FROM users AS u WHERE u.id = ct.participants[2]) AS member_name2,
+    (SELECT u.name FROM users AS u WHERE u.id = ct.participants[3]) AS member_name3,
+    ct.team_status AS status,
+    ct.team_name_approved AS team_name_approved
   FROM competition_teams AS ct
   JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
   JOIN users AS u ON u.id = cu.user_id
