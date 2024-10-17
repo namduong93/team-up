@@ -6,7 +6,6 @@ import { Competition } from "../models/competition/competition.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
-  private userService: UserService;
   
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
@@ -68,8 +67,11 @@ export class CompetitionController {
     return;
   });
 
-  competitionStudentJoin0 = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ incompleteTeamId: 1 });
+  competitionStudentJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const code = req.query.code;
+    const competitionUserInfo = req.body.competitionUser;
+    competitionUserInfo.userId = Number(req.query.userId);
+    await this.competitionService.competitionStudentJoin(String(code), competitionUserInfo);
     return;
   });
 

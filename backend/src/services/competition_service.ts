@@ -1,5 +1,6 @@
 import { BAD_REQUEST, INVALID_TOKEN } from "../controllers/controller_util/http_error_handler.js";
 import { Competition, CompetitionDetailsObject, CompetitionIdObject } from "../models/competition/competition.js";
+import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
@@ -85,9 +86,23 @@ export class CompetitionService {
     return competitions;
   }
 
-  competitionStudentJoin0 = async (sessionToken: string, code: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {
-
-    return { incompleteTeamId: 1 };
+  competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
+    const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);
+    if(userTypeObject.type !== UserType.STUDENT) {
+      throw "User is not a student";
+    }
+    const competitionId = await this.competitionRepository.competitionIdFromCode(code);
+    if(!competitionId) {
+      throw "Invalid competition code";
+    }
+    competitionUserInfo.competitionId = competitionId;
+    const competitionRoles = await this.competitionRepository.competitionUserRoles(competitionUserInfo.userId, competitionId);
+    if(competitionRoles.length > 0) { // either they are already a participant or a staff
+      throw "User can not join competition as participant";
+    }
+    competitionUserInfo.competitionRoles = [CompetitionUserRole.PARTICIPANT];
+    await this.competitionRepository.competitionStudentJoin(competitionUserInfo);
+    return;
   }
 
   competitionStudentJoin1 = async (sessionToken: string, code: string, individualInfo: IndividualTeamInfo, teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined> => {

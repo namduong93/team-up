@@ -1,4 +1,5 @@
 import { Competition, CompetitionDetailsObject, CompetitionIdObject } from "../models/competition/competition.js";
+import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 
@@ -7,7 +8,7 @@ export interface CompetitionRepository {
   competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
   competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{} | undefined>;
 
-  competitionStudentJoin0(sessionToken: string, individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined>;
+  competitionStudentJoin(competitionUserInfo: CompetitionUser): Promise<{} | undefined>;
   competitionStudentJoin1(sessionToken: string, individualInfo: IndividualTeamInfo,
     teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined>;
   competitionStudentJoin2(sessionToken: string, teamInfo: TeamInfo,
@@ -19,4 +20,6 @@ export interface CompetitionRepository {
   competitionUniversitiesList(competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionDetailsObject> | undefined>;
+  competitionUserRoles(userId: number, competitionId: number): Promise<Array<CompetitionUserRole> | undefined>;
+  competitionIdFromCode(code: string): Promise<number | undefined>;
 }

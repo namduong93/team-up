@@ -22,14 +22,6 @@ export function httpErrorHandler(httpFunction: HTTPFunction) {
   };
 }
 
-export class AppError extends Error {
-  constructor(message: string) {
-    super(message);
-
-    Object.setPrototypeOf(this, AppError.prototype);
-  }
-}
-
 export const TOKEN_NOT_FOUND = createHttpError(403, "Token not found");
 export const INVALID_TOKEN = createHttpError(403, "Invalid token");
 export const EXPIRED_TOKEN = createHttpError(403, "Expired token");

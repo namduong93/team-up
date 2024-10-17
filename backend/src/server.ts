@@ -123,10 +123,10 @@ app.post('/competition/system_admin/create', competitionController.competitionsS
 app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
 // Student join competition with 0 friends
-// PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote } }
+// PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { incompleteTeamId }
-app.post('/competition/student/join/0', competitionController.competitionStudentJoin0);
+// RESPONSE: { }
+app.post('/competition/student/join', competitionController.competitionStudentJoin);
 
 // Student join competition with 1 friend
 // PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote },

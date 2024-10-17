@@ -85,6 +85,8 @@ CREATE TABLE competition_sites (
   CONSTRAINT unique_site_competition UNIQUE (competition_id, name)
 );
 
+CREATE TABLE competition_default
+
 CREATE TYPE competition_role_enum AS ENUM ('participant', 'coach', 'admin', 'site-coordinator');
 CREATE TYPE competition_level_enum AS ENUM ('A', 'B');
 
@@ -106,7 +108,7 @@ CREATE TABLE competition_users (
 
   national_prizes TEXT[],
   international_prizes TEXT[],
-  codeforces_rating TEXT[],
+  codeforces_rating INT,
   university_courses TEXT[],
   
   competition_coach_id INT REFERENCES competition_users (id),
