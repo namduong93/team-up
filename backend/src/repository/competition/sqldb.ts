@@ -18,6 +18,7 @@ interface CompetitionTeam {
   memberName2?: string;
   memberName3?: string;
   status: 'pending' | 'registered' | 'unregistered';
+  teamNameApproved: boolean;
 }
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
@@ -37,7 +38,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   competitionTeams = async (userId: number, compId: number): Promise<Array<CompetitionTeam>> => {
     const dbResult = await this.pool.query(
-      `SELECT team_name AS "teamName", member_name1 AS "memberName1", member_name2 AS "memberName2", member_name3 AS "memberName3", status
+      `SELECT team_name AS "teamName",
+        member_name1 AS "memberName1", member_name2 AS "memberName2", member_name3 AS "memberName3",
+        status, team_name_approved AS "teamNameApproved"
       FROM competition_team_list(${userId}, ${compId})`);
     
     return dbResult.rows;
