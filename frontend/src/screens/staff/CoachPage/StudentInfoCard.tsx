@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from "react"
-import { StudentInfo, StudentStatus } from "./StudentDisplay"
+import { StudentCardProps, StudentStatus } from "./StudentDisplay"
 import styled from "styled-components"
 
 const StudentInfoContainerDiv = styled.div`
@@ -63,7 +63,7 @@ const Field: FC<FieldContainerProps> = ({ label, value, style, ...props }) => {
   )
 }
 
-export const StudentInfoCard: FC<StudentInfo> = ({ style, studentInfo, isHeader = false, ...props }) => {
+export const StudentInfoCard: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
 
   return (
     <StudentInfoContainerDiv style={style} {...props}>
@@ -83,7 +83,7 @@ export const StudentInfoCard: FC<StudentInfo> = ({ style, studentInfo, isHeader 
       <Field label="Identifier" value={studentInfo.studentId} style={{ width: '10%', minWidth: '70px' }} />
       <Field label="Team Name" value={studentInfo.teamName} style={{ width: '25%', minWidth: '163px' }}/>
       <Field label="Level" value={studentInfo.level} style={{ width: '5%', minWidth: '37px' }} />
-      <Field label="Shirt Size" value={studentInfo.tshirtShize} style={{ width: '5%', minWidth: '37px' }}/>
+      <Field label="Shirt Size" value={studentInfo.tshirtSize} style={{ width: '5%', minWidth: '37px' }}/>
       <Field label="Site" value={studentInfo.siteName} style={{ width: '25%', minWidth: '163px' }} />
 
       

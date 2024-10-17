@@ -1,6 +1,6 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
-import { CompetitionRepository } from "../competition_repository_type.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
+import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
 import { Competition, CompetitionDetailsObject, CompetitionIdObject, CompetitionUserType } from "../../models/competition/competition.js";
 import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
@@ -18,6 +18,7 @@ interface CompetitionTeam {
   memberName2?: string;
   memberName3?: string;
   status: 'pending' | 'registered' | 'unregistered';
+  teamNameApproved: boolean;
 }
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
@@ -27,17 +28,36 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
-  competitionRoles = async (userId: number, compId: number) => {
+  name: string;
+  sex: string;
+  email: string;
+  studentId: string;
+  status: string;
+  level: string;
+  tshirtSize: string;
+  siteName: string;
+  teamName?: string;
+  competitionStudents = async(userId: number, compId: number): Promise<Array<StudentInfo>> => {
+    const dbResult = await this.pool.query(
+      `SELECT * FROM competition_coach_students(${userId}, ${compId})`
+    );
+
+    return dbResult.rows;
+  }
+
+  competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionRole>> => {
     const dbResult = await this.pool.query(
       `SELECT cu.competition_roles AS roles
       FROM competition_users AS cu WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}`
     );
-    return parse(dbResult.rows[0].roles);
+    return parse(dbResult.rows[0].roles) as Array<CompetitionRole>;
   }
 
   competitionTeams = async (userId: number, compId: number): Promise<Array<CompetitionTeam>> => {
     const dbResult = await this.pool.query(
-      `SELECT team_name AS "teamName", member_name1 AS "memberName1", member_name2 AS "memberName2", member_name3 AS "memberName3", status
+      `SELECT team_name AS "teamName",
+        member_name1 AS "memberName1", member_name2 AS "memberName2", member_name3 AS "memberName3",
+        status, team_name_approved AS "teamNameApproved"
       FROM competition_team_list(${userId}, ${compId})`);
     
     return dbResult.rows;

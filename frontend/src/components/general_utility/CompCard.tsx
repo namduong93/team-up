@@ -23,7 +23,7 @@ const CompCardContainer = styled.div`
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out !important;
 
   &:hover {
     transform: translateY(-5px);
