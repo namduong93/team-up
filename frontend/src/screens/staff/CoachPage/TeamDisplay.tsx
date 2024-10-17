@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { TeamCard, TeamDetails } from "./TeamCard";
 import styled from "styled-components";
 import { useOutletContext, useParams } from "react-router-dom";
@@ -16,11 +16,13 @@ const TeamCardGridDisplay = styled.div`
   overflow: auto;
 `;
 
-interface CoachPageContext {
+export interface CompetitionPageContext {
   filters: Record<string, Array<string>>;
   sortOption: string;
   searchTerm: string;
   removeFilter: (field: string, value: string) => Record<string, string>;
+  setFilterOptions: React.Dispatch<React.SetStateAction<Record<string, Array<string>>>>;
+  setSortOptions: React.Dispatch<React.SetStateAction<Array<{ label: string, value: string }>>>;
 }
 
 export const TEAM_DISPLAY_SORT_OPTIONS = [
@@ -29,21 +31,31 @@ export const TEAM_DISPLAY_SORT_OPTIONS = [
 ];
 
 export const TEAM_DISPLAY_FILTER_OPTIONS = {
-  Status: ['Pending', 'Unregistered', 'Registered'] 
+  Status: ['Pending', 'Unregistered', 'Registered'],
+  "Team Name Approval": ['Approved', 'Unapproved'], 
 };
 
 export const TeamDisplay: FC = () => {
   const { compId } = useParams();
-  const { filters, sortOption, searchTerm, removeFilter } = useOutletContext<CoachPageContext>();
+  const { filters, sortOption, searchTerm, removeFilter,
+          setFilterOptions, setSortOptions } = useOutletContext<CompetitionPageContext>();
 
   const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
+  setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
+  setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
 
   useEffect(() => {
     const fetchCompetitionTeams = async () => {
       try {
         const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
         const { teamList } = response.data
-        setTeamList([...teamList, { teamName: 'ab', memberName1: 'member1', memberName2: 'mem2', memberName3: 'threed member', status: 'registered' }]);
+        setTeamList([...teamList, { 
+          teamName: 'ab',
+          memberName1: 'member1',
+          memberName2: 'mem2',
+          memberName3: 'threed member',
+          status: 'registered',
+          teamNameApproved: true }]);
 
       } catch (error: unknown) {
 
@@ -52,15 +64,28 @@ export const TeamDisplay: FC = () => {
     };
 
     fetchCompetitionTeams();
-    
+
+
   }, []);
   
   const filteredTeamList = teamList.filter((team: TeamDetails) => {
-    if (!filters.Status) {
-      return true;
+    if (filters.Status) {
+      if (!filters.Status.some((status) => status.toLocaleLowerCase() === team.status)) {
+        return false;
+      }
     }
 
-    return filters.Status.some((status) => status.toLocaleLowerCase() === team.status);
+    if (filters["Team Name Approval"]) {
+
+      if (!filters["Team Name Approval"].some((approvalString) => 
+        (approvalString === 'Approved') === team.teamNameApproved
+      )) {
+        return false;
+      }
+
+    }
+    
+    return true;
   });
 
 

@@ -1,7 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
 import { StudentInfoCard } from "./StudentInfoCard";
+import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
+import { useOutletContext } from "react-router-dom";
+import { CompetitionPageContext } from "./TeamDisplay";
+import Fuse from "fuse.js";
 
 const WideStudentDisplayDiv = styled.div`
   flex: 1;
@@ -13,18 +17,21 @@ const WideStudentDisplayDiv = styled.div`
   }
 `;
 
-export interface StudentInfo extends React.HTMLAttributes<HTMLDivElement> {
-  studentInfo: {
-    name: string,
-    sex: string,
-    email: string,
-    studentId: string,
-    status: string,
-    level: string,
-    tshirtShize: string,
-    siteName: string,
-    teamName?: string,
-  };
+
+interface StudentInfo {
+  name: string;
+  sex: string;
+  email: string;
+  studentId: string;
+  status: string;
+  level: string;
+  tshirtSize: string;
+  siteName: string;
+  teamName?: string;
+};
+
+export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  studentInfo: StudentInfo;
   isHeader?: boolean;
 }
 
@@ -158,7 +165,7 @@ const EmailSpan = styled.span<{ isHeader: boolean }>`
   position: absolute;
 `;
 
-export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader = false, ...props }) => {
+export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
 
   return (
     <StudentInfoContainerDiv style={style} {...props}>
@@ -196,7 +203,7 @@ export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader =
         <SmallContainerDiv>{studentInfo.level}</SmallContainerDiv>
 
         <SmallContainerDiv>
-          {studentInfo.tshirtShize}
+          {studentInfo.tshirtSize}
         </SmallContainerDiv>
 
         <UniversityContainerDiv>
@@ -221,24 +228,43 @@ const NarrowStudentDisplaydiv = styled.div`
   }
 `;
 
+const STUDENT_DISPLAY_SORT_OPTIONS = [
+  { label: "Default", value: "original" },
+  { label: "Alphabetical (Name)", value: "name" },
+  { label: "Alphabetical (Team Name)", value: "teamName" },
+]
+
+const STUDENT_DISPLAY_FILTER_OPTIONS = {
+  Status: ['Matched', 'Unmatched'],
+};
 
 export const StudentDisplay = () => {
-  return (
-  <div style={ { flex: '1', width: '100%', height: '100%' } }>
-    <NarrowStudentDisplaydiv>
-      <StudentInfoCard studentInfo={{
-          name: 'Leticia James',
-          sex: 'F',
-          email: 'thisisemailepic@gmail.com',
-          studentId: 'z0000000',
-          status: 'Unmatched',
-          teamName: 'The Goofy Goobers',
-          level: 'A',
-          tshirtShize: 'XS',
-          siteName: 'The University of Sydney'
-      }} />
+  const { filters, sortOption, searchTerm, removeFilter,
+    setFilterOptions, setSortOptions
+  } = useOutletContext<CompetitionPageContext>();
+  
+  setSortOptions(STUDENT_DISPLAY_SORT_OPTIONS);
+  setFilterOptions(STUDENT_DISPLAY_FILTER_OPTIONS);
 
-      <StudentInfoCard studentInfo={{
+  const [students, setStudents] = useState<Array<StudentInfo>>([]);
+
+  useEffect(() => {
+
+    // request student info:
+
+    setStudents([
+      {
+        name: 'Leticia James',
+        sex: 'F',
+        email: 'thisisemailepic@gmail.com',
+        studentId: 'z0000000',
+        status: 'Unmatched',
+        teamName: 'The Goofy Goobers',
+        level: 'A',
+        tshirtSize: 'XS',
+        siteName: 'The University of Sydney'
+      },
+      {
         name: 'Michael Chonk',
         sex: 'NB',
         email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
@@ -246,9 +272,84 @@ export const StudentDisplay = () => {
         teamName: 'GoogleGURLies ✨',
         status: 'Matched',
         level: 'B',
-        tshirtShize: '10XL',
+        tshirtSize: '10XL',
         siteName: 'UNSW Sydney'
-      }} />
+      }
+    ]);
+
+  }, []);
+
+  const filteredStudents = students.filter((studentInfo) =>{
+    if (filters.Status) {
+      if (!filters.Status.some((status) => status === studentInfo.status)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  const sortedStudents = filteredStudents.sort((student1, student2) => {
+    if (!sortOption) {
+      return 0;
+    }
+
+    if (sortOption === 'name') {
+      return student1.name.localeCompare(student2.name);
+    }
+
+    if (sortOption === 'teamName') {
+      if (student1.teamName) {
+        if (!student2.teamName) {
+          return 1;
+        }
+
+        if (student2.teamName) {
+          return student1.teamName?.localeCompare(student2.teamName as string);
+        }
+      } else {
+        if (student2.teamName) {
+          return -1;
+        }
+      }
+    }
+    return 0;
+
+  });
+
+  const fuse = new Fuse(sortedStudents, {
+    keys: ['name', 'sex', 'email', 'studentId', 'status', 'teamName', 'level', 'tshirtSize', 'siteName'],
+    threshold: 0.5
+  });
+  
+  let searchedStudents;
+  if (searchTerm) {
+    searchedStudents = fuse.search(searchTerm);
+  } else {
+    searchedStudents = sortedStudents.map((student) => { return { item: student } });
+  }
+
+  return (
+  <>
+  <div>
+      {Object.entries(filters).map(([field, values]) =>
+        values.map((value) => (
+        <FilterTagButton key={`${field}-${value}`}>
+          {value} 
+          <RemoveFilterIcon
+            onClick={(e) => {
+            e.stopPropagation();
+            removeFilter(field, value);
+            }} 
+          />
+        </FilterTagButton>
+        ))
+      )}
+    </div>
+  <div style={ { flex: '1', width: '100%', height: '100%' } }>
+    <NarrowStudentDisplaydiv>
+      {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
+        (<StudentInfoCard key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
 
     </NarrowStudentDisplaydiv>
     <WideStudentDisplayDiv>
@@ -263,32 +364,13 @@ export const StudentDisplay = () => {
         status: 'Status',
         teamName: 'Team Name',
         level: 'Level',
-        tshirtShize: 'Shirt Size',
+        tshirtSize: 'Shirt Size',
         siteName: 'Site'
       }}></StudentInfoDiv>
-      <StudentInfoDiv studentInfo={{
-        name: 'Leticia James',
-        sex: 'F',
-        email: 'thisisemailepic@gmail.com',
-        studentId: 'z0000000',
-        status: 'Unmatched',
-        teamName: 'The Goofy Goobers',
-        level: 'A',
-        tshirtShize: 'XS',
-        siteName: 'The University of Sydney'
-        }} ></StudentInfoDiv>
-      <StudentInfoDiv studentInfo={{
-        name: 'Michael Chonk',
-        sex: 'NB',
-        email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
-        studentId: 'z0000000',
-        teamName: 'GoogleGURLies ✨',
-        status: 'Matched',
-        level: 'B',
-        tshirtShize: '10XL',
-        siteName: 'UNSW Sydney'
-        }} ></StudentInfoDiv>
+      {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
+        (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
     </WideStudentDisplayDiv>
   </div>
+  </>
   );
 }

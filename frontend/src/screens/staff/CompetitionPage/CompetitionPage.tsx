@@ -4,8 +4,8 @@ import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import styled from "styled-components";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "../CoachPage/TeamDisplay";
 import { sendRequest } from "../../../utility/request";
+import { SortOption } from "../../../components/general_utility/SortSelect";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -21,10 +21,10 @@ export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
   const [sortOption, setSortOption] = useState<string | null>(null);
-  const sortOptions = TEAM_DISPLAY_SORT_OPTIONS;
+  const [sortOptions, setSortOptions] = useState<Array<SortOption>>([]);
 
   const [filters, setFilters] = useState<Record<string, Array<string>>>({});
-  const filterOptions = TEAM_DISPLAY_FILTER_OPTIONS;
+  const [filterOptions, setFilterOptions] = useState<Record<string, Array<string>>>({});
   const [searchTerm, setSearchTerm] = useState('');
   
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
@@ -94,7 +94,8 @@ export const CompetitionPage: FC = () => {
           </CustomToggleSwitch>
         </PageOptionsContainerDiv>
 
-        <Outlet context={{ filters, sortOption, searchTerm, removeFilter }}/>
+        <Outlet context={{ filters, sortOption, searchTerm, removeFilter,
+          setFilterOptions, setSortOptions }}/>
 
       </MainPageDiv>
     </OverflowFlexBackground>

@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { CiCircleAlert } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
 
@@ -8,6 +9,7 @@ export interface TeamDetails {
   memberName2?: string;
   memberName3?: string;
   status: 'pending' | 'registered' | 'unregistered';
+  teamNameApproved: boolean;
 };
 
 interface TeamCardProps {
@@ -76,6 +78,7 @@ const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   border-radius: 20px 20px 0px 0px;
   display: flex;
   align-items: center;
+  gap: 2.5%;
 `;
 
 const TitleSpan = styled.span`
@@ -101,7 +104,13 @@ const TeamMemberDiv = styled.div`
   border: 1px solid rgb(200, 200, 200);
   width: 85.37%;
   height: 20.79%;
-`
+`;
+
+const RedTeamNameAlert = styled(CiCircleAlert)`
+  color: red;
+  min-height: 32px;
+  min-width: 32px;
+`;
 
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -115,6 +124,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
     <StyledHoverDiv>
       <CardHeaderDiv $statusColor={colorMap[status]}>
         <TitleSpan>{teamDetails.teamName}</TitleSpan>
+        {!teamDetails.teamNameApproved && <RedTeamNameAlert />}
       </CardHeaderDiv>
 
       <TeamMatesContainerDiv>
