@@ -110,7 +110,7 @@ app.get('/user/type', userController.userType);
 
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
-// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline,
+// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline, code,
 //  siteLocations: Array<{ universityId: number, defaultSite: string }>, otherSiteLocations: Array<{ universityName: string, defaultSite: string } }
 // RESPONSE: { competitionId: number }
 app.post('/competition/system_admin/create', competitionController.competitionsSystemAdminCreate);

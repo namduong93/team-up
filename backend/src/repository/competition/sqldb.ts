@@ -68,11 +68,18 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
     // Set default team size to 3 if not provided
-    const teamSize = competition.teamSize ?? 3;
+    const teamSize = competition.teamSize ?? DEFAULT_TEAM_SIZE;
 
-    // Create new competition code
-    const competitionCode = randomUUID(); // TODO: check if code already exists
-
+    //Check if the code is already in use
+    const codeCheckQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE code = $1
+    `;
+    const codeCheckResult = await this.pool.query(codeCheckQuery, [competition.code]);
+    if (codeCheckResult.rowCount > 0) {
+      return undefined; // TODO: throw unique error
+    }
     
     // Insert competition into competitions table
     const competitionQuery =
@@ -86,7 +93,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       teamSize,
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
-      competitionCode
+      competition.code
     ];
     
     const competitionResult = await this.pool.query(competitionQuery, competitionValues);

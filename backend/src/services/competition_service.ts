@@ -85,6 +85,10 @@ export class CompetitionService {
     }
     
     const competitionId = await this.competitionRepository.competitionSystemAdminCreate(userId, competition);
+
+    if (!competitionId) {
+      throw "The code is already in use";
+    }
     
     return competitionId;
   }

@@ -44,6 +44,7 @@ export class CompetitionController {
       name: req.body.name,
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
+      code : req.body.code,
       siteLocations: req.body.siteLocations,
       otherSiteLocations: req.body.otherSiteLocations,
     };
