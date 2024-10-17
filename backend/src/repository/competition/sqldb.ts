@@ -226,7 +226,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       earlyRegDeadline: competitionData.early_reg_deadline,
       generalRegDeadline: competitionData.general_reg_deadline,
       code: competitionData.code,
-      siteLocations,
+      siteLocations: siteLocations,
     };
   
     return competitionDetails;
@@ -262,10 +262,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let degreeYear = competitionUserInfo.degreeYear;
     let degree = competitionUserInfo.degree;
     let isRemote = competitionUserInfo.isRemote;
-    let nationalPrizes = competitionUserInfo.nationalPrizes;
-    let internationalPrizes = competitionUserInfo.internationalPrizes;
-    let codeforcesRating = competitionUserInfo.codeforcesRating;
-    let universityCourses = competitionUserInfo.universityCourses;
+    let nationalPrizes = competitionUserInfo.nationalPrizes || [];
+    let internationalPrizes = competitionUserInfo.internationalPrizes || [];
+    let codeforcesRating = competitionUserInfo.codeforcesRating || 0;
+    let universityCourses = competitionUserInfo.universityCourses || [];
 
     const competitionJoinQuery = `
       INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses)
