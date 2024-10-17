@@ -17,6 +17,11 @@ declare module 'styled-components' {
         optionSelected: string;
         filterText: string;
         sidebarLine: string;
+        staffOption: string;
+        error: string;
+        notifDate: string;
+        notifLight: string;
+        notifDark: string;
       };
       teamView: {
           pending: string;
@@ -53,6 +58,8 @@ declare module 'styled-components' {
             wide: string;
           };
           colour: string;
+          descriptor: string;
+          style: string;
       };
     }
 }

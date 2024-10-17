@@ -5,8 +5,8 @@ import styled from "styled-components";
  
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { AlertButton, SortButton } from "../../Dashboard/Dashboard";
-import { FaBell, FaSearch } from "react-icons/fa";
+import { SortButton } from "../../Dashboard/Dashboard";
+import { FaSearch } from "react-icons/fa";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "./TeamDisplay";
 
@@ -118,6 +118,8 @@ const SearchInput = styled.input`
   width: 100%;
   min-width: 29px;
   border: 1px solid ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;
   padding: 0;
   grid-row: 1 / 2;
@@ -141,6 +143,7 @@ const SearchContainer = styled.div`
   position: relative;
   overflow: hidden;
   flex-wrap: wrap;
+  color: ${({ theme }) => theme.colours.filterText};
 `;
 
 const SearchCell = styled.div`
@@ -154,7 +157,6 @@ const SearchCell = styled.div`
   overflow: hidden;
   left: 0;
   z-index: 1;
-  color: ${({ theme }) => theme.colours.filterText};
 `;
 
 export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
@@ -222,7 +224,6 @@ export const CoachPage: FC = () => {
           filtersState={{ filters, setFilters }}
           searchTermState={{ searchTerm, setSearchTerm }}
         >
-          <AlertButton onClick={() => {}} ><FaBell /></AlertButton>
         </PageHeader>
 
         {/* Teams-Students page selection */}
