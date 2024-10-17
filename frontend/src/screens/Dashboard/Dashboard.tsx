@@ -143,6 +143,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [userType, setUserType] = useState<string>('');
   const navigate = useNavigate();
 
 
@@ -150,7 +151,8 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
     (async () => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
-        setIsAdmin(typeResponse.data.type === "system_admin");
+        setUserType(typeResponse.data.type);
+        setIsAdmin(userType === "system_admin");
         setIsLoaded(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
@@ -317,7 +319,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
           <ActionButton
             actionName="Register"
             question="Register for a new competition?"
-            redirectPath="/comp/register"
+            redirectPath="/competition/register"
             actionType="primary"
           />
         </PageHeader>

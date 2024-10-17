@@ -6,10 +6,10 @@ interface ActionButtonProps {
   actionName: string;
   question: string;
   redirectPath: string;
-  actionType: "primary" | "secondary";
+  actionType: "primary" | "secondary" | "error";
 };
 
-const Button = styled.button<{ $actionType: "primary" | "secondary" }>`
+const Button = styled.button<{ $actionType: "primary" | "secondary" | "error" }>`
   border-radius: 10px;
   padding: 10px;
   border: none;
@@ -17,19 +17,41 @@ const Button = styled.button<{ $actionType: "primary" | "secondary" }>`
   max-width: 150px;
   width: 100%;
   
-  background-color: ${({ $actionType: actionType, theme }) =>
-    actionType === "primary" 
-      ? theme.colours.primaryLight 
-      : theme.colours.secondaryLight};
+  background-color: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "primary") {
+      return theme.colours.primaryLight;
+    } else if (actionType === "secondary") {
+      return theme.colours.secondaryLight;
+    } else {
+      return theme.colours.error;
+    }
+  }};
 
-  color: ${({ theme }) => theme.fonts.colour};
+  color: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "error") {
+      return theme.background;
+    } else {
+      return theme.fonts.colour;
+    }
+  }};
+
+  font-weight: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "error") {
+      return theme.fonts.fontWeights.bold;
+    };
+  }};
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ $actionType: actionType, theme }) =>
-      actionType === "primary" 
-        ? theme.colours.primaryDark 
-        : theme.colours.secondaryDark};
+    background-color: ${({ $actionType: actionType, theme }) => {
+      if (actionType === "primary") {
+        return theme.colours.primaryDark;
+      } else if (actionType === "secondary") {
+        return theme.colours.secondaryDark;
+      } else {
+        return theme.colours.cancelDark;
+      }
+    }};
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   }

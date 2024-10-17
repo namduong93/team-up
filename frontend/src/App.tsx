@@ -27,7 +27,8 @@ import { CompetitionPage } from './screens/staff/CompetitionPage/CompetitionPage
 import { CompIdNavigate } from './screens/staff/CompetitionPage/CompIdNavigate';
 import { SidebarLayout } from './screens/SidebarLayout';
 import { useDashInfo } from './screens/Dashboard/useDashInfo';
-
+import { TeamDetails } from './screens/student/TeamDetails';
+import { TeamManage } from './screens/student/TeamManage';
 
 function App() {
   const [theme, setTheme ] = useState(defaultTheme)
@@ -179,11 +180,15 @@ function App() {
               <Route path='site/:compId' element={<div>Site</div>} />
             </Route>
 
+            <Route path='/competition/page/participant/:compId' element={<TeamProfile />} />
+            <Route path='/competition/page/participant/:compId/' element={<TeamProfile />}>
+              <Route path='details' element={<TeamDetails />} />
+              <Route path='manage' element={<TeamManage />} />
+            </Route>
+
             <Route path="/dashboard" element={<Dashboard dashInfo={dashInfo} competitions={competitions} />} />
             <Route path="/account" element={<Account setDashInfo={setDashInfo} />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/competition/:compId/:role" element={<Competition />} />
-            <Route path="/competition/participant" element={<TeamProfile />} />
           </Route>
 
           <Route path="/competition/create" element={<CompetitionDetails />} />

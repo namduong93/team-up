@@ -22,6 +22,8 @@ declare module 'styled-components' {
         notifDate: string;
         notifLight: string;
         notifDark: string;
+        progressStart: string;
+        progressEnd: string;
       };
       teamView: {
           pending: string;

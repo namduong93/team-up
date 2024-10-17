@@ -18,18 +18,18 @@ const StyledToggleDiv = styled.div<{ $numElems: number, $borderIndex: number }>`
     height: 100%;
     width: ${(props) => 100 / props.$numElems}%;
     position: absolute;
-    background-color: black;
+    background-color: transparent;
     z-index: -1;
     translate: ${(props) => 100 * props.$borderIndex}% 0;
-    padding-bottom: 2px;
     transition: translate 200ms;
+    border-bottom: solid 2px black;
   }
 `;
 
 const ToggleDivOptionDiv = styled.div`
   flex: 1;
   cursor: pointer;
-  background-color: white;
+  background-color: transparent;
   overflow: hidden;
 `;
 
