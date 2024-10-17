@@ -81,6 +81,25 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         VALUES (${competitionId}, ${universityId}, '${name}', 0)`
       );
     });
+
+    // handle otherSiteLocations with universityName
+    competition.otherSiteLocations?.forEach(async ({ universityName, name }) => {
+      // Insert new university and get the universityId
+      const insertUniversityResult = await this.pool.query(`
+        INSERT INTO universities (name)
+        VALUES ($1)
+        RETURNING id
+      `, [universityName]);
+
+      const universityId = insertUniversityResult.rows[0].id;
+
+      // Insert the new site location with the new universityId
+      await this.pool.query(`
+        INSERT INTO competition_sites (competition_id, university_id, name, capacity)
+        VALUES ($1, $2, $3, 0)
+      `, [competitionId, universityId, name]);
+    });
+    
     return { competitionId: competitionId };    
   }
 
@@ -157,7 +176,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   
     // Query to get site locations related to the competition
     const siteLocationsQuery = `
-      SELECT university_id, name, address, capacity
+      SELECT university_id, name, capacity
       FROM competition_sites
       WHERE competition_id = $1
     `;
@@ -166,7 +185,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const siteLocations: Array<CompetitionSiteObject> = siteLocationsResult.rows.map(row => ({
       universityId: row.university_id,
       name: row.name,
-      address: row.address,
       capacity: row.capacity,
     }));
   

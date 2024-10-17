@@ -33,6 +33,6 @@ export type CompetitionIdObject = { competitionId: number };
 export type CompetitionShortDetailsObject = { userType: Array<CompetitionUserType>, competition: CompetitionDetails };
 
 // TODO: Revise this type
-export type CompetitionSiteObject = { universityId: number, name: string, address?: string, capacity?: number };
+export type CompetitionSiteObject = { universityId: number, name: string, capacity?: number };
 
-export type CompetitionOtherSiteObject = { universityName: number, name: string, address?: string, capacity?: number };
+export type CompetitionOtherSiteObject = { universityName: number, name: string, capacity?: number };
