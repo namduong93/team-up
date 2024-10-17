@@ -8,7 +8,7 @@ import { TEAM_DISPLAY_FILTER_OPTIONS, TEAM_DISPLAY_SORT_OPTIONS } from "../Coach
 import { sendRequest } from "../../../utility/request";
 
 const ToggleOptionTextSpan = styled.span`
-  font-size: clamp(0.9em, 3.5vw, 2em);
+  
 `;
 
 const AdminToggleOptionDiv = styled(ToggleOptionDiv)`

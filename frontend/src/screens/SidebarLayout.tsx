@@ -3,8 +3,8 @@ import { DashboardSidebar, DashboardSidebarProps } from "../components/general_u
 import styled from "styled-components";
 
 const SharedBackground = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   background-color: ${({ theme }) => theme.background};
   transition: background-color 0.5s ease;
