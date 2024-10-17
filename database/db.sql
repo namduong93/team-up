@@ -85,8 +85,6 @@ CREATE TABLE competition_sites (
   CONSTRAINT unique_site_competition UNIQUE (competition_id, name)
 );
 
-CREATE TABLE competition_default
-
 CREATE TYPE competition_role_enum AS ENUM ('participant', 'coach', 'admin', 'site-coordinator');
 CREATE TYPE competition_level_enum AS ENUM ('A', 'B');
 
@@ -373,9 +371,9 @@ INSERT INTO competition_users (
   competition_coach_id
 )
 VALUES
-(5, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2),
-(6, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2),
-(7, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2),
-(8, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2),
-(9, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2),
-(10, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2);
+    (5, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, ARRAY[]::TEXT[], ARRAY[]::TEXT[], NULL, ARRAY[]::TEXT[], 2),
+    (6, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, ARRAY[]::TEXT[], ARRAY[]::TEXT[], NULL, ARRAY[]::TEXT[], 2),
+    (7, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, ARRAY[]::TEXT[], ARRAY[]::TEXT[], NULL, ARRAY[]::TEXT[], 2),
+    (8, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, ARRAY[]::TEXT[], ARRAY[]::TEXT[], NULL, ARRAY[]::TEXT[], 2),
+    (9, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, ARRAY[]::TEXT[], ARRAY[]::TEXT[], NULL, ARRAY[]::TEXT[], 2),
+    (10, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, ARRAY[]::TEXT[], ARRAY[]::TEXT[], NULL, ARRAY[]::TEXT[], 2);

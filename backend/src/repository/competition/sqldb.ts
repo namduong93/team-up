@@ -206,11 +206,11 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     let teamNameQuery = `
       INSERT INTO competition_teams (name, team_status, team_name_approved, team_size, participants, university_id, competition_id)
-      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1,  $2, $3, $4, $5)
+      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1,  $2, $3, $4, $5, $6)
       RETURNING id
     `;
+    console.log(teamNameQuery);
     const teamNameValues = [
-      userId,  
       teamStatus,
       teamNameApproved,
       teamSize,
@@ -220,7 +220,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     ];
 
     // Insert the team into competition_teams table
-    await this.pool.query(teamNameQuery, teamNameValues);
+    let checkId = await this.pool.query(teamNameQuery, teamNameValues);
     return {};
   }
 
@@ -262,12 +262,16 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       `SELECT competition_roles FROM competition_users WHERE user_id = $1 AND competition_id = $2`,
       [userId, competitionId]
     );
+    if (userTypeObject.rowCount === 0) {
+      return [];
+    }
     return userTypeObject.rows[0].competition_roles;
   }
 
   competitionIdFromCode = async (code: string): Promise<number | undefined> => {
     const competitionIdQuery = `SELECT id FROM competitions WHERE code = $1 LIMIT 1`;
     const competitionIdResult = await this.pool.query(competitionIdQuery, [code]);
+    console.log(code);
     if (competitionIdResult.rowCount === 0) {
       return undefined; 
     }

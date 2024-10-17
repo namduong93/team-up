@@ -68,7 +68,7 @@ export class CompetitionController {
   });
 
   competitionStudentJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const code = req.query.code;
+    const code = req.body.code;
     const competitionUserInfo = req.body.competitionUser;
     competitionUserInfo.userId = Number(req.query.userId);
     await this.competitionService.competitionStudentJoin(String(code), competitionUserInfo);
