@@ -115,6 +115,7 @@ app.get('/user/type', userController.userType);
 // RESPONSE: { competitionId: number }
 app.post('/competition/system_admin/create', competitionController.competitionsSystemAdminCreate);
 
+// TODO: Add competition code and other site locations, but lets wait for FE design
 // Update a competition's details
 // TODO: Handle empty field cases (FE may prefill it, but if not we want to fill it with old info)
 // PARAMS: { id: number, name?: string, teamSize?: number, earlyRegDeadline?: Date, generalRegDeadline?: Date,
