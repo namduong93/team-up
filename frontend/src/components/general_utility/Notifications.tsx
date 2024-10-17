@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { sendRequest } from '../../utility/request';
-import { FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, FaUserEdit } from 'react-icons/fa';
+import { FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, FaUserEdit, FaThumbsUp, FaUserPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 interface Notification {
   id: string;
-  type: 'withdrawal' | 'name' | 'site' | 'deadline' | 'teamStatus';
+  type: 'withdrawal' | 'name' | 'site' | 'deadline' | 'teamStatus' | 'cheer' | 'invite';
   message: string;
   decision?: 'substitution' | 'replacement';
   date: Date;
@@ -98,6 +98,8 @@ const iconMap: { [key in Notification['type']]: JSX.Element } = {
   site: <FaMapMarkerAlt />,
   deadline: <FaCalendarAlt />,
   teamStatus: <FaUsers />,
+  cheer: <FaThumbsUp />,
+  invite: <FaUserPlus />,
 };
 
 export const Notifications: FC = () => {
@@ -159,6 +161,21 @@ export const Notifications: FC = () => {
         id: '5',
         type: 'teamStatus',
         message: 'Your team has been successfully formed!',
+        date: new Date('2024-10-16T11:45:00Z'),
+      },
+      {
+        id: '6',
+        type: 'invite',
+        competitionName: 'ICPC 2024', // after each participant registers, should send this notification (student only)
+        message: 'Welcome to ICPC 2024! Start inviting your friends or join an existing team via the team code.',
+        date: new Date('2024-10-16T11:45:00Z'),
+      },
+      {
+        id: '7',
+        type: 'cheer',
+        teamName: 'Team A',
+        competitionName: 'ICPC 2024',
+        message: 'Good luck in ICPC 2024 Team A!', // coach sends a cheer message when comp rego ends (student only)
         date: new Date('2024-10-16T11:45:00Z'),
       },
     ];
