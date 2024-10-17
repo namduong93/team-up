@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Landing } from './screens/login/Landing';
 // import { Login } from './screens/login/Login';
 // import { SignUp } from './screens/login/SignUp';
 import { Dashboard } from './screens/Dashboard/Dashboard';
 import { Account } from './screens/Account';
 import { RoleRegistration } from './screens/login/RoleRegistration';
-import { CoachPage } from './screens/staff/CoachPage/CoachPage';
 import { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from './themes/defaultTheme';
@@ -24,8 +23,8 @@ import { TeamProfile } from './screens/student/TeamProfile';
 import { CompetitionDetails } from './screens/competition/CompDetails';
 import { CompetitionConfirmation } from './screens/competition/CompConfirmation';
 import { EmailRecoverForm, EmailSuccess, PasswordCodeRecoverForm, PasswordRecovery } from './screens/login/PasswordRecovery';
-import { AdminPage } from './screens/staff/AdminPage/AdminPage';
-import { CompIdNavigate } from './screens/staff/AdminPage/CompIdNavigate';
+import { CompetitionPage } from './screens/staff/CompetitionPage/CompetitionPage';
+import { CompIdNavigate } from './screens/staff/CompetitionPage/CompIdNavigate';
 import { SidebarLayout } from './screens/SidebarLayout';
 import { useDashInfo } from './screens/Dashboard/useDashInfo';
 
@@ -141,8 +140,6 @@ function App() {
         </div>
         <Routes>
           <Route path="/" element={<Landing />} />
-          {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
-              {/* <Route path="/coach/page" element={<TeamsView />} /> */}
 
           <Route path="/roleregistration" element={
             <MultiStepRegoFormProvider>
@@ -172,16 +169,9 @@ function App() {
           </Route>
 
           <Route element={<SidebarLayout cropState={false} sidebarInfo={dashInfo} />}>
-            <Route path='/coach/page/:compId' element={ <CompIdNavigate route='/coach/page/teams' /> } />
-            <Route path="/coach/page/" element={<CoachPage />}>
-              <Route index element={ <Navigate to='/dashboard' /> } />
-              <Route path='teams/:compId' element={ <TeamDisplay /> } />
-              <Route path='students/:compId' element={ <StudentDisplay /> } />
-            </Route>
-
-            <Route path='/admin/page/:compId' element={ <CompIdNavigate route='/admin/page/teams' /> } />
-            <Route path='/admin/page' element={ <Navigate to='/dashboard' /> } />
-            <Route path='/admin/page/' element={ <AdminPage /> }>
+            <Route path='/competition/page/:compId' element={ <CompIdNavigate route='/competition/page/teams' /> } />
+            <Route path='/competition/page' element={ <Navigate to='/dashboard' /> } />
+            <Route path='/competition/page/' element={ <CompetitionPage /> }>
               <Route index element={ <Navigate to='/dashboard' /> } />
               <Route path='teams/:compId' element={<TeamDisplay />} />
               <Route path='students/:compId' element={<StudentDisplay />} />

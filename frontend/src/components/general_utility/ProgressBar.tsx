@@ -9,6 +9,7 @@ const RegoProgressContainer = styled.div`
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   color: ${({ theme }) => theme.fonts.colour};
   display: flex;
+  position: fixed;
   min-width: 170px;
   height: 100%;
   flex-direction: column;
@@ -109,6 +110,7 @@ export const CompCreationProgressBar: FC<ProgressBarProps> = ({ progressNumber =
 export const ProgressBar: FC<ProgressBarProps> = ({ progressNumber = 0, children, style, ...props }) => {
 
   return (
+  <RegoProgressContainer style={{ position: 'relative', ...style }} {...props}>
     <RegoProgressContainer style={{...style}} {...props} >
       <ProgressItemsContainer>
         {React.Children.map(children, (child, index) => {
@@ -120,5 +122,5 @@ export const ProgressBar: FC<ProgressBarProps> = ({ progressNumber = 0, children
         })}
       </ProgressItemsContainer>
     </RegoProgressContainer>
-  )
+  </RegoProgressContainer>)
 }

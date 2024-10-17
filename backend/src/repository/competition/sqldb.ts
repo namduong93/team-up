@@ -4,6 +4,7 @@ import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionDetailsObject, CompetitionIdObject, CompetitionUserType } from "../../models/competition/competition.js";
 import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
+import { parse } from "postgres-array";
 
 // Set up short-unique-id library for generating competition codes
 const { randomUUID } = new ShortUniqueId({
@@ -24,6 +25,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   constructor(pool: Pool) {
     this.pool = pool;
+  }
+
+  competitionRoles = async (userId: number, compId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT cu.competition_roles AS roles
+      FROM competition_users AS cu WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}`
+    );
+    return parse(dbResult.rows[0].roles);
   }
 
   competitionTeams = async (userId: number, compId: number): Promise<Array<CompetitionTeam>> => {

@@ -12,6 +12,7 @@ const StyledToggleDiv = styled.div<{ $numElems: number, $borderIndex: number }>`
   display: flex;
   position: relative;
   user-select: none;
+  font-size: clamp(0.9em, calc(7.5vw - ${({ $numElems }) => `${$numElems}vw`}), 2em);
   &::after {
     content: '';
     height: 100%;
@@ -42,11 +43,13 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style, def
     const ind = target.getAttribute('data-index');
     setBorderIndex(Number(ind));
   }
-
-  const numChildren = React.Children.count(children);
+  
+  const realChildren = React.Children.toArray(children).filter((child) => child !== null)
+  const numChildren = realChildren.length;
+  console.log(numChildren);
   return (
-    <StyledToggleDiv $borderIndex={borderIndex} $numElems={numChildren} style={{ ...style }}>
-      {React.Children.map(children, (child, index) => {
+    <StyledToggleDiv $borderIndex={borderIndex} $numElems={numChildren} style={{ maxWidth: `${150 * numChildren}px`, ...style }}>
+      {realChildren.map((child, index) => {
         return (
         <ToggleDivOptionDiv onClick={handleClick} data-index={index} key={index}>
           {child}
