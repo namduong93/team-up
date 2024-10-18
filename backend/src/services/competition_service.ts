@@ -84,10 +84,10 @@ export class CompetitionService {
       throw COMPETITION_ADMIN_REQUIRED;
     }
 
-    const uniqueNames = this.checkUniqueSiteNames(competition);
-    if (!uniqueNames) {
-      throw SITE_NAMES_MUST_BE_UNIQUE;
-    }
+    // const uniqueNames = this.checkUniqueSiteNames(competition);
+    // if (!uniqueNames) {
+    //   throw SITE_NAMES_MUST_BE_UNIQUE;
+    // }
     
     const competitionId = await this.competitionRepository.competitionSystemAdminCreate(userId, competition);
 
@@ -106,10 +106,10 @@ export class CompetitionService {
       throw COMPETITION_ADMIN_REQUIRED;
     }
 
-    const uniqueNames = this.checkUniqueSiteNames(competition);
-    if (!uniqueNames) {
-      throw SITE_NAMES_MUST_BE_UNIQUE;
-    }
+    // const uniqueNames = this.checkUniqueSiteNames(competition);
+    // if (!uniqueNames) {
+    //   throw SITE_NAMES_MUST_BE_UNIQUE;
+    // }
     
     const competitionId = await this.competitionRepository.competitionSystemAdminUpdate(userId, competition);
 
@@ -196,25 +196,25 @@ export class CompetitionService {
   }
 
   // Check to make sure every competition name is unique
-  checkUniqueSiteNames = (competition: Competition): boolean => {
-    const allLocations = [];
+  // checkUniqueSiteNames = (competition: Competition): boolean => {
+  //   const allLocations = [];
   
-    if (competition.siteLocations) {
-      allLocations.push(...competition.siteLocations.map(site => site.name));
-    }
-      if (competition.otherSiteLocations) {
-      allLocations.push(...competition.otherSiteLocations.map(site => site.name));
-    }
+  //   if (competition.siteLocations) {
+  //     allLocations.push(...competition.siteLocations.map(site => site.name));
+  //   }
+  //     if (competition.otherSiteLocations) {
+  //     allLocations.push(...competition.otherSiteLocations.map(site => site.name));
+  //   }
   
-    // Use a Set to ensure unique names
-    const nameSet = new Set();
-    for (const name of allLocations) {
-      if (nameSet.has(name)) {
-        return false; // Duplicate found
-      }
-      nameSet.add(name);
-    }
-    return true; 
-  }
+  //   // Use a Set to ensure unique names
+  //   const nameSet = new Set();
+  //   for (const name of allLocations) {
+  //     if (nameSet.has(name)) {
+  //       return false; // Duplicate found
+  //     }
+  //     nameSet.add(name);
+  //   }
+  //   return true; 
+  // }
   
 }

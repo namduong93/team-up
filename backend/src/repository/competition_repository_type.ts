@@ -3,7 +3,7 @@ import { CompetitionUser, CompetitionUserRole } from "../models/competition/comp
 import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 
-export type CompetitionRole = 'participant' | 'coach' | 'admin' | 'site-coordinator';
+export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
   competitionStudents(userId: number, compId: number): Promise<StudentInfo[]>;

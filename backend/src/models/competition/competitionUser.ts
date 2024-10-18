@@ -16,8 +16,8 @@ export interface CompetitionUser {
 }
 
 export const enum CompetitionUserRole {
-  PARTICIPANT = 'participant',
-  COACH = 'coach',
-  ADMIN = 'admin',
-  SITE_COORDINATOR = 'site_coordinator'
+  PARTICIPANT = 'Participant',
+  COACH = 'Coach',
+  ADMIN = 'Admin',
+  SITE_COORDINATOR = 'Site-Coordinator'
 }

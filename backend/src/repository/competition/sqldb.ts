@@ -65,7 +65,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         member_name1 AS "memberName1", member_name2 AS "memberName2", member_name3 AS "memberName3",
         status, team_name_approved AS "teamNameApproved"
       FROM competition_team_list(${userId}, ${compId})`);
-    
+      
     return dbResult.rows;
   };
 
@@ -105,7 +105,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     
     await this.pool.query(
       `INSERT INTO competition_users (user_id, competition_id, competition_roles)
-      VALUES (${userId}, ${competitionId}, ARRAY['admin']::competition_role_enum[])`
+      VALUES (${userId}, ${competitionId}, ARRAY['Admin']::competition_role_enum[])`
     );
     
     // for the normal siteLocations that have university Ids:
