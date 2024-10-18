@@ -185,10 +185,10 @@ export const CompetitionConfirmation: FC = () => {
           universityId: location.universityId, 
           name: location.defaultSite, 
         })),
-        // otherSiteLocations: otherSiteLocations.map(location => ({
-        //   universityName: location.universityName, 
-        //   name: location.defaultSite, 
-        // })),
+        otherSiteLocations: otherSiteLocations.map(location => ({
+          universityName: location.universityName, 
+          name: location.defaultSite, 
+        })),
     };
 
     try {

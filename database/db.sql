@@ -82,7 +82,7 @@ CREATE TABLE competition_sites (
 
   capacity INT,
 
-  CONSTRAINT unique_site_competition UNIQUE (competition_id, name)
+  CONSTRAINT unique_site_competition UNIQUE (competition_id, name) 
 );
 
 CREATE TYPE competition_role_enum AS ENUM ('participant', 'coach', 'admin', 'site-coordinator');
