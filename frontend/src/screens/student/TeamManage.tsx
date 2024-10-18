@@ -5,9 +5,11 @@ import { FaRegUser, FaInfoCircle, FaClipboard } from "react-icons/fa";
 const ManageContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 20px;
+  max-width: 100%;
   width: 100%;
   height: 100%;
+  background-color: red;
+  max-height: 70%;
 `;
 
 const ActionsContainer = styled.div`

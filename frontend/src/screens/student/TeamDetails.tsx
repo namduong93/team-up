@@ -1,22 +1,26 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
-import { FaRegCopy  } from "react-icons/fa";
+import { FaEdit, FaRegCopy } from "react-icons/fa";
+import { EditCompPreferences } from "./EditCompPreferences";
+import { StudentDetails } from "./EditCompPreferences";
 import defaultProfile from "./default-profile.jpg";
 
-interface Student {
+export interface Student {
   name: string;
   email: string;
   bio: string;
   image: string;
+  id: string; // to fetch student details
 };
 
 const DetailsContainer = styled.div`
   display: flex;
-  justify-content: space-around;
-  width: 100%;
-  height: 75%;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  max-height: 70%;
+  gap: 5%;
 `;
 
 const TeamDetailsContainer = styled.div`
@@ -60,64 +64,59 @@ const TeamField = styled.p`
 
 const StudentsContainer = styled.div`
   width: 100%;
-  max-width: 45%;
+  max-width: 90%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 16px;
-  height: 100%;
-  justify-content: space-around;
 `;
 
-const StudentCard = styled.div`
+const StudentCard = styled.div<{ $isFirst?: boolean }>`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  border: 1px solid ${({ theme }) => theme.colours.primaryLight};
+  align-items: flex-start; 
+  border: 2px solid ${({ theme, $isFirst }) => ($isFirst ? theme.colours.secondaryLight : theme.colours.primaryLight)};
   border-radius: 12px;
   background-color: ${({ theme }) => theme.background};
   width: 100%;
-  padding: 15px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  margin: 10px 0;
+  position: relative;
+  overflow: hidden;
 `;
 
 const StudentCardContent = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
   flex: 1;
-  margin-left: 5%;
+  margin: 5%;
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 5%;
 `;
 
 const StudentInfo = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 80%;
-  justify-content: space-around;
+  justify-content: flex-start;
   width: 100%;
-  max-width: 75%;
-
-  @media (max-width: 768px) {
-    margin-left: 0;
-  }
 `;
 
 const StudentName = styled.p`
   margin: 0;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
+  font-size: 1rem;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const StudentEmail = styled.p`
   margin: 0;
-  font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
+  font-size: 1rem;
   text-decoration: underline;
   color: ${({ theme }) => theme.colours.primaryDark};
   display: flex;
@@ -126,6 +125,8 @@ const StudentEmail = styled.p`
 
 const CopyIcon = styled(FaRegCopy)`
   margin-left: 5%;
+  width: 15px;
+  height: 15px;
   cursor: pointer;
   color: ${({ theme }) => theme.colours.primaryDark};
   transition: color 0.2s;
@@ -136,20 +137,38 @@ const CopyIcon = styled(FaRegCopy)`
 `;
 
 const StudentBio = styled.p`
-  font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
+  font-size: 0.9rem;
   color: ${({ theme }) => theme.fonts.descriptor};
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 12px;
   padding: 10px;
-  overflow-wrap: break-word;
+  overflow: hidden;
   white-space: normal;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  flex-grow: 1;
 `;
 
 const StudentImage = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 20%;
+  max-width: 50px;
+  height: auto;
   border-radius: 50%;
   object-fit: cover;
+`;
+
+const EditIcon = styled(FaEdit)`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colours.secondaryDark};
+
+  &:hover {
+    color: ${({ theme }) => theme.colours.secondaryLight};
+  }
 `;
 
 export const TeamDetails: FC = () => {
@@ -159,10 +178,37 @@ export const TeamDetails: FC = () => {
     teamLevel: "A" | "B" | "AB";
     students: Student[];
   }>();
+  const [editingPreferences, setEditingPreferences] = useState<StudentDetails | null>(null);
 
   const copyToClipboard = (email: string) => {
     navigator.clipboard.writeText(email);
     alert(`${email} copied to clipboard!`);
+  };
+
+  const handleSave = (updatedStudent: StudentDetails) => {
+    alert(`Saved details for: ${updatedStudent.name}`);
+  };
+
+  const fetchStudentDetails = (id: string): StudentDetails => {
+    const stubData: StudentDetails = {
+      name: "John Doe",
+      email: "john.doe@example.com",
+      bio: "Passionate coder and team player.",
+      image: defaultProfile,
+      id,
+      degreeYear: 3,
+      degree: "Computer Science",
+      ICPCEligibility: true,
+      isRemote: false,
+      competitionLevel: "A",
+      boersenEligible: true,
+      courses: ["COMP1511", "COMP3121"],
+      codeforce: 1652,
+      regional: false,
+      nationalPrizes: "",
+      internationalPrizes: "",
+    };
+    return stubData;
   };
 
   return (
@@ -185,23 +231,44 @@ export const TeamDetails: FC = () => {
       </TeamDetailsContainer>
       <StudentsContainer>
         {students.map((student, index) => (
-          <StudentCard key={index}>
+          <StudentCard key={student.id} $isFirst={index === 0}>
             <StudentCardContent>
-              <StudentImage src={student.image || defaultProfile} alt={`${student.name}'s profile`} />
-              <StudentInfo>
-                <div>
-                  <StudentName>{student.name}</StudentName>
-                  <StudentEmail>
-                    {student.email}
-                    <CopyIcon onClick={() => copyToClipboard(student.email)} />
-                  </StudentEmail>
-                </div>
-                <StudentBio>{student.bio}</StudentBio>
-              </StudentInfo>
+              <ContentContainer>
+                <StudentImage
+                  src={student.image || defaultProfile}
+                  onError={(e) => (e.currentTarget.src = defaultProfile)}
+                  alt={`${student.name}'s profile`}
+                />
+                <StudentInfo>
+                  <div>
+                    <StudentName>{student.name}</StudentName>
+                    <StudentEmail>
+                      {student.email}
+                      <CopyIcon onClick={() => copyToClipboard(student.email)} />
+                    </StudentEmail>
+                  </div>
+                  <StudentBio>{student.bio}</StudentBio>
+                </StudentInfo>
+              </ContentContainer>
+              {index === 0 && ( // Render EditIcon only for the first student card
+                <EditIcon
+                  onClick={async () => {
+                    const studentDetails = await fetchStudentDetails(student.id);
+                    setEditingPreferences(studentDetails);
+                  }}
+                />
+              )}
             </StudentCardContent>
           </StudentCard>
         ))}
       </StudentsContainer>
+      {editingPreferences && (
+        <EditCompPreferences
+          student={editingPreferences}
+          onClose={() => setEditingPreferences(null)}
+          onSave={handleSave}
+        />
+      )}
     </DetailsContainer>
   );
 };

@@ -20,16 +20,16 @@ interface User {
   accessibilityReqs: string;
 };
 
-interface CompetitionDetails {
-  degree: string;
-  year: number;
-  isICPCEligible: boolean;
-  competitionLevel: "A" | "B" | "AB";
-  isBoersenEligible: boolean;
-  bio: string;
-  previousCompetitions: string; 
-  competitionResults: string; 
-};
+// interface CompetitionDetails {
+//   degree: string;
+//   year: number;
+//   isICPCEligible: boolean;
+//   competitionLevel: "A" | "B" | "AB";
+//   isBoersenEligible: boolean;
+//   bio: string;
+//   previousCompetitions: string; 
+//   competitionResults: string; 
+// };
 
 const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
@@ -176,15 +176,15 @@ const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
   }
 `;
 
-const Textarea = styled.textarea`
-  width: 100%;
-  padding: 0.8rem;
-  margin-top: 0.5rem;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  border-radius: 1rem;
-  font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
-  resize: vertical;
-`;
+// const Textarea = styled.textarea`
+//   width: 100%;
+//   padding: 0.8rem;
+//   margin-top: 0.5rem;
+//   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+//   border-radius: 1rem;
+//   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
+//   resize: vertical;
+// `;
 
 interface AccountProps {
   setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;
@@ -206,34 +206,34 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     accessibilityReqs: "None",
   });
 
-  const [compDetails, setCompDetails] = useState<CompetitionDetails>({
-    degree: "Computer Science",
-    year: 3,
-    isICPCEligible: true,
-    competitionLevel: "A",
-    isBoersenEligible: false,
-    bio: "I am super passionate about coding problem solving!",
-    previousCompetitions: "None",
-    competitionResults: "N/A",
-  });
+  // const [compDetails, setCompDetails] = useState<CompetitionDetails>({
+  //   degree: "Computer Science",
+  //   year: 3,
+  //   isICPCEligible: true,
+  //   competitionLevel: "A",
+  //   isBoersenEligible: false,
+  //   bio: "I am super passionate about coding problem solving!",
+  //   previousCompetitions: "None",
+  //   competitionResults: "N/A",
+  // });
 
   const [isEditingUser, setIsEditingUser] = useState(false);
-  const [isEditingComp, setIsEditingComp] = useState(false);
+  // const [isEditingComp, setIsEditingComp] = useState(false);
   
   const [newDetails, setNewDetails] = useState<User>({
     ...user,
     profilePic: defaultProfile,
   });
-  const [newCompDetails, setNewCompDetails] = useState<CompetitionDetails>(compDetails);
+  // const [newCompDetails, setNewCompDetails] = useState<CompetitionDetails>(compDetails);
 
   const handleEditUser = () => {
     setNewDetails(user);
     setIsEditingUser(true);
   };
 
-  const handleEditComp = () => {
-    setIsEditingComp(true);
-  };
+  // const handleEditComp = () => {
+  //   setIsEditingComp(true);
+  // };
 
   const handleSaveUser = async () => {
     setUser(newDetails);
@@ -242,20 +242,20 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     setDashInfo({ preferredName: newDetails.preferredName, affiliation: newDetails.affiliation });
   };
 
-  const handleSaveComp = () => {
-    setCompDetails(newCompDetails);
-    setIsEditingComp(false);
-  };
+  // const handleSaveComp = () => {
+  //   setCompDetails(newCompDetails);
+  //   setIsEditingComp(false);
+  // };
 
   const handleCancelUser = () => {
     setNewDetails(user);
     setIsEditingUser(false);
   };
 
-  const handleCancelComp = () => {
-    setNewCompDetails(compDetails);
-    setIsEditingComp(false);
-  };
+  // const handleCancelComp = () => {
+  //   setNewCompDetails(compDetails);
+  //   setIsEditingComp(false);
+  // };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const photoFile = e.target.files?.[0];
@@ -450,7 +450,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
             </ActionButtons>
           </AccountCard>
           
-          <AccountCard>
+          {/* <AccountCard>
             <DetailsCard>
               <AccountItem>
                 <Label>Degree:</Label>
@@ -567,7 +567,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 <Button type="primary" onClick={handleEditComp}>Edit</Button>
               )}
             </ActionButtons>
-          </AccountCard>
+          </AccountCard> */}
         </CardContainer>
       </AccountContainer>
     </Background>

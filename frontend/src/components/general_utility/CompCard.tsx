@@ -111,7 +111,7 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   // for demo A
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const roleUrl = (_: string) => {
-    return `/competition/page/${roles[0].toLowerCase()}/${compId}`;
+    return `/competition/${roles[0].toLowerCase()}/${compId}`;
   };
 
   // const roleUrl = (role: string) => {

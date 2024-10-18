@@ -180,7 +180,7 @@ function App() {
               <Route path='site/:compId' element={<div>Site</div>} />
             </Route>
 
-            <Route path='/competition/page/participant/:compId/' element={<TeamProfile />}>
+            <Route path='/competition/participant/:compId/' element={<TeamProfile />}>
               <Route index element={<TeamDetails />} />
               <Route path='details' element={<TeamDetails />} />
               <Route path='manage' element={<TeamManage />} />

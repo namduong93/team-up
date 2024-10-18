@@ -19,6 +19,10 @@ const TeamOverflowFlexBackground = styled(OverflowFlexBackground)`
   height: 98%;
 `;
 
+const TeamProfileViews = styled(Outlet)`
+  /* box-sizing: border-box; */
+`;
+
 export const TeamProfile: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
@@ -32,7 +36,7 @@ export const TeamProfile: FC = () => {
     {
       name: "Student1",
       email: "email1@email.com",
-      bio: "I love coding!",
+      bio: "I love coding! I love coding! I love coding! I love coding! I love coding! I love coding!",
     },
     {
       name: "Student2",
@@ -66,15 +70,15 @@ export const TeamProfile: FC = () => {
       <TeamHeader compName={compName} teamName={teamName} compCountdown={compCountdown} />
       <PageOptionsContainerDiv>
         <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
-          <TeamToggleOptionDiv onClick={() => { navigate(`/competition/page/participant/${compId}/details`) }}>
+          <TeamToggleOptionDiv onClick={() => { navigate(`/competition/participant/${compId}/details`) }}>
             <ToggleOptionTextSpan>Details</ToggleOptionTextSpan>
           </TeamToggleOptionDiv>
-          <TeamToggleOptionDiv onClick={() => { navigate(`/competition/page/participant/${compId}/manage`) }}>
+          <TeamToggleOptionDiv onClick={() => { navigate(`/competition/participant/${compId}/manage`) }}>
             <ToggleOptionTextSpan>Manage</ToggleOptionTextSpan>
           </TeamToggleOptionDiv>
         </CustomToggleSwitch>
       </PageOptionsContainerDiv>
-      <Outlet context={teamOutletProps}/>
+      <TeamProfileViews context={teamOutletProps}/>
     </MainPageDiv>
   </TeamOverflowFlexBackground>
   );
