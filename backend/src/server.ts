@@ -18,6 +18,9 @@ import { UniversityService } from './services/university_service.js';
 import { UniversityController } from './controllers/university_controller.js';
 import { SqlDbSessionRepository } from './repository/session/sqldb.js';
 import { SqlDbUniversityRepository } from './repository/university/sqldb.js';
+import { NotificationController } from './controllers/notification_controller.js';
+import { SqlDbNotificationRepository } from './repository/notification/sqldb.js';
+import { NotificationService } from './services/notification_service.js';
 
 const { HOST, PORT } = serverAddress;
 const app = express();
@@ -42,7 +45,7 @@ const pool = new Pool({
 //Middleware to authenticate request
 const authenticator = new Authenticator();
 
-//User Registry
+// User Registry
 const sessionRepository = new SqlDbSessionRepository(pool);
 app.use(authenticator.authenticationMiddleware(sessionRepository));
 // use authenticator middleware with the sessionRepository for getting session id
@@ -51,14 +54,20 @@ const userRepository = new SqlDbUserRepository(pool);
 const userService = new UserService(userRepository, sessionRepository);
 const userController = new UserController(userService);
 
-//Competition Registry
+// Competition Registry
 const competitionRepository = new SqlDbCompetitionRepository(pool);
 const competitionService = new CompetitionService(competitionRepository, userRepository);
 const competitionController = new CompetitionController(competitionService);
 
+// University Registry
 const universityRepository = new SqlDbUniversityRepository(pool);
 const universityService = new UniversityService(universityRepository);
 const universityController = new UniversityController(universityService);
+
+// Notification Registry
+const notificationRepository = new SqlDbNotificationRepository(pool);
+const notificationService = new NotificationService(notificationRepository);
+const notificationController = new NotificationController(notificationService);
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
@@ -195,6 +204,12 @@ app.get('/competition/roles', competitionController.competitionRoles);
 // RESPONSE: { students: Array<{ name, sex, email, studentId, status, level, tshirtSize, siteName, teamName? }> }
 // all the above are strings
 app.get('/competition/students', competitionController.competitionStudents);
+
+// Create and post a notification
+app.post('/notification', notificationController.notificationCreate);
+
+// Get all notifications for a user
+app.get('/notification', notificationController.notificationsList);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
