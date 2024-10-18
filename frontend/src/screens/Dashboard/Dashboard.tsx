@@ -161,7 +161,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
           compDate: new Date(comp.compDate).toISOString().split('T')[0],
           compCreatedDate: new Date(comp.compCreatedDate).toISOString().split('T')[0]
         }));
-        console.log(formattedCompetitions);
         setCompetitions(formattedCompetitions);
   
       } catch (error: unknown) {
