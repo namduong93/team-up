@@ -9,6 +9,7 @@ const ManageContainer = styled.div`
   max-width: 100%;
   width: 100%;
   height: 100%;
+  max-height: 70%;
   align-items: center;
 `;
 
@@ -45,6 +46,7 @@ const InfoLabel = styled.h3`
 const InfoText = styled.p`
   font-size: ${({ theme }) => theme.fonts.fontSizes.small};
   margin: 4px 0 0;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const InfoLink = styled.a`
@@ -175,7 +177,7 @@ export const TeamManage: React.FC = () => {
 
   return (
     <ManageContainer>
-      <TeamActionCard numMembers={3} />
+      <TeamActionCard numMembers={1} />
       <InfoContainer>
         <InfoCard>
           <StyledUserTieIcon />

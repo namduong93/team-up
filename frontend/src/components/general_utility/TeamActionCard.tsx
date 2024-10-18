@@ -21,6 +21,7 @@ const ActionsContainer = styled.div`
   gap: 5%;
   width: 100%;
   margin: 5% 5%;
+  
 `;
 
 const ActionCard = styled.button<ActionCardProps>`
@@ -47,9 +48,11 @@ const ActionCard = styled.button<ActionCardProps>`
   }
 `;
 
-const CardIcon = styled.div`
+const CardIcon = styled.div<{ $disabled: boolean }>`
   font-size: 32px;
   margin-bottom: 10px;
+  color: ${({ theme, $disabled }) =>
+    $disabled ? theme.colours.notifDark : theme.fonts.colour};
 `;
 
 const CardText = styled.p<{ $disabled: boolean }>`
@@ -111,7 +114,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
             $actionType={action.type}
             $disabled={isDisabled(action.type)}
           >
-            <CardIcon as={action.icon} />
+            <CardIcon $disabled={isDisabled(action.type)} as={action.icon} />
             <CardText $disabled={isDisabled(action.type)}>
               {action.text}
             </CardText>

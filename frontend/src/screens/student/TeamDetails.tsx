@@ -170,6 +170,13 @@ const EditIcon = styled(FaEdit)`
   }
 `;
 
+const CheckIcon = styled(FaCheck)`
+  color: ${({ theme }) => theme.colours.confirm};
+  margin-left: 5%;
+  width: 15px;
+  height: 15px;
+`;
+
 export const TeamDetails: FC = () => {
   const { teamName, teamSite, teamLevel, students } = useOutletContext<{
     teamName: string;
@@ -246,7 +253,7 @@ export const TeamDetails: FC = () => {
                     <StudentEmail>
                       {student.email}
                       {copiedEmailIndex === index ? (
-                        <FaCheck style={{ color: 'green', marginLeft: '5%', width: '15px', height: '15px' }} />
+                        <CheckIcon />
                       ) : (
                         <CopyIcon
                           $copied={copiedEmailIndex === index}

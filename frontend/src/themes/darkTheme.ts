@@ -48,5 +48,13 @@ export const darkTheme: DefaultTheme = {
   },
   teamProfile: {
     ...defaultTheme.teamProfile,
+    inviteBorder: "#DFE8FB",
+    invite: "#6688D2",
+    joinBorder: "#FEEBC8",
+    join: "#EA9C0D",
+    nameBorder: "#FDE2FC",
+    name: "#F19EDC",
+    siteBorder: "#E1FAFC",
+    site: "#35B4C2",
   }
 };
