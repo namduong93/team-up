@@ -282,7 +282,7 @@ VALUES
 ( -- id: 5
   'Test Student Account 1',
   'Test Account',
-  'teststudent1@example.com',
+  'student@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
