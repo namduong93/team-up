@@ -1,11 +1,12 @@
 export interface Notification {
   id?: number;
-  userId?: number;
-  competitionId: number;
+  userId: number;
+  teamId?: number;
+  competitionId?: number;
   type: NotificationType;
   message: string;
   decision?: DecisionType;
-  date: Date;
+  createdAt: Date;
   teamName?: string;
   studentName?: string;
   competitionName?: string;
@@ -14,6 +15,7 @@ export interface Notification {
 }
 
 export const enum NotificationType {
+  ANNOUNCEMENT = 'announcement',
   WITHDRAWL = 'withdrawal',
   NAME = 'name',
   SITE = 'site',

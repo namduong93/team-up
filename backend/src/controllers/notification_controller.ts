@@ -16,7 +16,7 @@ export class NotificationController {
       competitionId: req.body.competitionId,
       type: req.body.type,
       message: req.body.message,
-      date: req.body.date,
+      createdAt: req.body.createdAt,
     };
 
     const result = await this.notificationService.notificationCreate(notification);
@@ -25,13 +25,10 @@ export class NotificationController {
     return;
   });
 
-  notificationsList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const userId = parseInt(req.params.userId);
-
-    const notifications = await this.notificationService.notificationsList(userId);
-
+  userNotificationsList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const notifications = await this.notificationService.userNotificationsList(Number(userId));
     res.json(notifications);
-
     return;
   })
 }

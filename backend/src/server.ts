@@ -208,8 +208,9 @@ app.get('/competition/students', competitionController.competitionStudents);
 // Create and post a notification
 app.post('/notification', notificationController.notificationCreate);
 
+// PARAMS: {}
 // Get all notifications for a user
-app.get('/notification', notificationController.notificationsList);
+app.get('/user/notification', notificationController.userNotificationsList);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

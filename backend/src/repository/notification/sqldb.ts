@@ -13,7 +13,16 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return undefined;
   }
 
-  notificationsList = async(userId: number): Promise<Notification[] | undefined> => {
-    throw new Error("Method not implemented.");
+  userNotificationsList = async(userId: number): Promise<Array<Notification> | undefined> => {
+    const notifications = await this.pool.query(
+      `SELECT id, message, created_at AS "createdAt" FROM notifications WHERE user_id = $1`,
+      [userId]
+    );
+
+    if (notifications.rowCount === 0) {
+      return undefined;
+    }
+
+    return notifications.rows;
   }
 }
