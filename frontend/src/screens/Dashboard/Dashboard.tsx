@@ -142,6 +142,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [competitions, setCompetitions] = useState<Competition[]>([]);
+  const [userType, setUserType] = useState<string>('');
   const navigate = useNavigate();
 
 
@@ -149,7 +150,8 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     (async () => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
-        setIsAdmin(typeResponse.data.type === "system_admin");
+        setUserType(typeResponse.data.type);
+        setIsAdmin(userType === "system_admin");
         setIsLoaded(true);
 
         const fakeComps = await sendRequest.get<{ competitions: Competition[] }>('/competitions/list');

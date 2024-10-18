@@ -1,21 +1,34 @@
 import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { sendRequest } from '../../utility/request';
-import { FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, FaUserEdit } from 'react-icons/fa';
+import { 
+  FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, 
+  FaUserEdit, FaThumbsUp, FaUserPlus, FaClipboardList, 
+  FaTrophy, FaHandshake 
+} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 interface Notification {
   id: string;
-  type: 'withdrawal' | 'name' | 'site' | 'deadline' | 'teamStatus';
+  type:
+    | 'withdrawal'
+    | 'name'
+    | 'site'
+    | 'deadline'
+    | 'teamStatus'
+    | 'cheer'
+    | 'invite'
+    | 'welcomeAccount'
+    | 'welcomeCompetition';
   message: string;
-  decision?: 'substitution' | 'replacement';
   date: Date;
+  compId?: string;
+  competitionName?: string;
+  decision?: 'substitution' | 'replacement';
   teamName?: string;
   studentName?: string;
-  competitionName?: string;
   newTeamName?: string;
   siteLocation?: string;
-  compId?: string;
 }
 
 const NotificationsContainer = styled.div`
@@ -50,7 +63,7 @@ const NotificationItem = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   color: ${({ theme }) => theme.fonts.colour};
-  font-size: ${({ theme }) => theme.fonts.fontSizes.small};;
+  font-size: ${({ theme }) => theme.fonts.fontSizes.small};
   cursor: pointer;
 
   &:hover {
@@ -92,12 +105,29 @@ const NotificationDate = styled.small`
   font-size: 0.85rem;
 `;
 
-const iconMap: { [key in Notification['type']]: JSX.Element } = {
-  withdrawal: <FaUserMinus />,
-  name: <FaUserEdit />,
-  site: <FaMapMarkerAlt />,
-  deadline: <FaCalendarAlt />,
-  teamStatus: <FaUsers />,
+const getNotificationIcon = (type: Notification['type']) => {
+  switch (type) {
+    case 'withdrawal':
+      return <FaUserMinus />;
+    case 'name':
+      return <FaUserEdit />;
+    case 'site':
+      return <FaMapMarkerAlt />;
+    case 'deadline':
+      return <FaCalendarAlt />;
+    case 'teamStatus':
+      return <FaUsers />;
+    case 'cheer':
+      return <FaThumbsUp />;
+    case 'invite':
+      return <FaUserPlus />;
+    case 'welcomeAccount':
+      return <FaHandshake />;
+    case 'welcomeCompetition':
+      return <FaTrophy />;
+    default:
+      return <FaClipboardList />;
+  }
 };
 
 export const Notifications: FC = () => {
@@ -106,11 +136,10 @@ export const Notifications: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check user type (coach or student)
     (async () => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
-        setIsStaff(typeResponse.data.type !== "student");
+        setIsStaff(typeResponse.data.type !== 'student');
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           navigate('/');
@@ -161,30 +190,62 @@ export const Notifications: FC = () => {
         message: 'Your team has been successfully formed!',
         date: new Date('2024-10-16T11:45:00Z'),
       },
+      {
+        id: '6',
+        type: 'invite',
+        message: 'Welcome to ICPC 2024! Start inviting your friends or join an existing team via the team code.',
+        competitionName: 'ICPC 2024',
+        date: new Date('2024-10-16T11:45:00Z'),
+      },
+      {
+        id: '7',
+        type: 'cheer',
+        message: 'Good luck in ICPC 2024 Team A!',
+        teamName: 'Team A',
+        competitionName: 'ICPC 2024',
+        date: new Date('2024-10-16T11:45:00Z'),
+      },
+      {
+        id: '8',
+        type: 'welcomeAccount',
+        message: isStaff
+          ? 'Welcome to TeamUP! Start managing competitions and teams.'
+          : 'Welcome to TeamUP! Start joining competitions and forming your teams.',
+        date: new Date(),
+      },
+      {
+        id: '9',
+        type: 'welcomeCompetition',
+        message: isStaff
+          ? 'Welcome to ICPC 2024! Prepare to manage your teams effectively.'
+          : 'Welcome to ICPC 2024! Start preparing and building your team.',
+        competitionName: 'ICPC 2024',
+        date: new Date(),
+      },
     ];
 
     setNotifications(fetchedNotifications);
-  }, []);
+  }, [isStaff]);
 
   const handleNavigate = (notification: Notification) => {
     const { type, decision, studentName, teamName, compId } = notification;
 
     if (isStaff) {
-      // Notification navigation for staff
       if (type === 'withdrawal') {
         if (decision === 'substitution') {
-          navigate(`/coach/page/students/${compId}/${studentName}`); // go to student pop-out
+          navigate(`/coach/page/students/${compId}/${studentName}`);
         } else {
-          navigate(`/coach/page/teams/${compId}/${teamName}`); // go to team pop-out
+          navigate(`/coach/page/teams/${compId}/${teamName}`);
         }
       } else if (type === 'name' || type === 'site' || type === 'teamStatus') {
-        navigate(`/coach/page/teams/${teamName}`); // go to team pop-out to change team details OR teams page + search autofilled for team name
-      } else if (type === 'deadline') {
-        navigate(`/coach/page/teams/`); // go to teams to register them
+        navigate(`/coach/page/teams/${teamName}`);
+      } else if (type === 'deadline' || type === 'welcomeCompetition') {
+        navigate(`/coach/page/teams/`);
+      } else if (type === 'welcomeAccount') {
+        navigate('/dashboard');
       }
     } else {
-      // Notification navigation for students
-      navigate(`/competition/participant/${compId}`); //student's team profile view
+      navigate(`/competition/participant/${compId}`);
     }
   };
 
@@ -205,8 +266,11 @@ export const Notifications: FC = () => {
   return (
     <NotificationsContainer>
       {notifications.map((notification) => (
-        <NotificationItem key={notification.id} onClick={() => handleNavigate(notification)}>
-          <NotificationIcon>{iconMap[notification.type]}</NotificationIcon>
+        <NotificationItem
+          key={notification.id}
+          onClick={() => handleNavigate(notification)}
+        >
+          <NotificationIcon>{getNotificationIcon(notification.type)}</NotificationIcon>
           <NotificationMsg>
             <div>{notification.message}</div>
             {notification.type === 'withdrawal' && notification.decision && (
@@ -214,7 +278,12 @@ export const Notifications: FC = () => {
             )}
             <NotificationDate>{formatDate(notification.date)}</NotificationDate>
           </NotificationMsg>
-          <CloseButton onClick={(e) => { e.stopPropagation(); handleRemoveNotification(notification.id); }} />
+          <CloseButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemoveNotification(notification.id);
+            }}
+          />
         </NotificationItem>
       ))}
     </NotificationsContainer>

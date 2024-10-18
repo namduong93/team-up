@@ -27,6 +27,8 @@ import { CompetitionPage } from './screens/staff/CompetitionPage/CompetitionPage
 import { CompIdNavigate } from './screens/staff/CompetitionPage/CompIdNavigate';
 import { SidebarLayout } from './screens/SidebarLayout';
 import { useDashInfo } from './screens/Dashboard/useDashInfo';
+import { TeamDetails } from './screens/student/TeamDetails';
+import { TeamManage } from './screens/student/TeamManage';
 import { CompetitionInformation } from './screens/competition/CompInformation';
 import { CompetitionIndividual } from './screens/competition/CompIndividual';
 import { MultiStepCompRegoFormProvider } from './screens/competition/MultiStepCompRegoForm';
@@ -183,11 +185,15 @@ function App() {
               <Route path='site/:compId' element={<div>Site</div>} />
             </Route>
 
+            <Route path='/competition/participant/:compId/' element={<TeamProfile />}>
+              <Route index element={<TeamDetails />} />
+              <Route path='details' element={<TeamDetails />} />
+              <Route path='manage' element={<TeamManage />} />
+            </Route>
+
             <Route path="/dashboard" element={<Dashboard dashInfo={dashInfo} />} />
             <Route path="/account" element={<Account setDashInfo={setDashInfo} />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/competition/:compId/:role" element={<Competition />} />
-            <Route path="/competition/participant" element={<TeamProfile />} />
           </Route>
 
           <Route path="/competition/create" element={<CompetitionDetails />} />
