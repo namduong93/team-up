@@ -46,4 +46,7 @@ export const darkTheme: DefaultTheme = {
     studentText: "#35B4C2",
     studentBackground: "#E1FAFC",
   },
+  teamProfile: {
+    ...defaultTheme.teamProfile,
+  }
 };

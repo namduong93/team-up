@@ -7,7 +7,8 @@ interface ActionButtonProps {
   question: string;
   redirectPath: string;
   actionType: "primary" | "secondary" | "error";
-};
+  handleClick?: () => void; // Optional function prop for a custom click handler
+}
 
 const Button = styled.button<{ $actionType: "primary" | "secondary" | "error" }>`
   border-radius: 10px;
@@ -16,7 +17,7 @@ const Button = styled.button<{ $actionType: "primary" | "secondary" | "error" }>
   white-space: nowrap;
   max-width: 150px;
   width: 100%;
-  
+
   background-color: ${({ $actionType: actionType, theme }) => {
     if (actionType === "primary") {
       return theme.colours.primaryLight;
@@ -38,7 +39,7 @@ const Button = styled.button<{ $actionType: "primary" | "secondary" | "error" }>
   font-weight: ${({ $actionType: actionType, theme }) => {
     if (actionType === "error") {
       return theme.fonts.fontWeights.bold;
-    };
+    }
   }};
 
   &:hover {
@@ -56,7 +57,6 @@ const Button = styled.button<{ $actionType: "primary" | "secondary" | "error" }>
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   }
 `;
-
 
 const PopUpOverlay = styled.div`
   position: fixed;
@@ -88,7 +88,7 @@ const Question = styled.div`
 const ConfirmButton = styled.button`
   background-color: ${({ theme }) => theme.colours.confirm};
   color: ${({ theme }) => theme.fonts.colour};
-  padding: 10px 15px 10px 15px;
+  padding: 10px 15px;
   border-radius: 20px;
   border: none;
   margin: 15px;
@@ -103,7 +103,7 @@ const ConfirmButton = styled.button`
 const CancelButton = styled.button`
   background-color: ${({ theme }) => theme.colours.cancel};
   color: ${({ theme }) => theme.fonts.colour};
-  padding: 10px 15px 10px 15px;
+  padding: 10px 15px;
   border-radius: 20px;
   border: none;
   margin: 15px;
@@ -115,17 +115,25 @@ const CancelButton = styled.button`
   }
 `;
 
-export const ActionButton: FC<ActionButtonProps> = ({ actionName, question, redirectPath, actionType }) => {
+export const ActionButton: FC<ActionButtonProps> = ({ actionName, question, redirectPath, actionType, handleClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleConfirm = () => {
-    navigate(redirectPath); // go to the correct redirected path
+    navigate(redirectPath); // Go to the correct redirected path
+  };
+
+  const handleButtonClick = () => {
+    if (handleClick) {
+      handleClick(); // Call the custom click handler if provided
+    } else {
+      setIsOpen(true); // Open the confirmation pop-up
+    }
   };
 
   return (
     <>
-      <Button $actionType={actionType} onClick={() => setIsOpen(true)}>
+      <Button $actionType={actionType} onClick={handleButtonClick}>
         {actionName}
       </Button>
       {isOpen && (

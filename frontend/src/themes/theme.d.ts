@@ -26,6 +26,16 @@ declare module 'styled-components' {
         progressEnd: string;
         progressBackground: string;
       };
+      teamProfile: {
+        invite: string;
+        inviteBorder: string;
+        join: string;
+        joinBorder: string;
+        name: string;
+        nameBorder: string;
+        site: string;
+        siteBorder: string;
+      };
       teamView: {
           pending: string;
           unregistered: string;
