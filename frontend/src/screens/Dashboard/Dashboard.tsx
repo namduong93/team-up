@@ -8,7 +8,7 @@ import { sendRequest } from "../../utility/request";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/sort_filter_search/PageHeader";
 import { DashInfo } from "./useDashInfo";
-// import CompCreatePopUp from "../components/general_utility/CompCreatePopUp";
+import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 
 interface Competition { 
   compName: string;
@@ -291,6 +291,16 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
   //   }
   // }, [showPopUp]);
 
+  const [isRegisterPopUpOpen, setIsRegisterPopUpOpen] = useState(false);
+
+  const handleRegisterClick = () => {
+    setIsRegisterPopUpOpen(true);
+  }
+
+  const handleClosePopUp = () => {
+    setIsRegisterPopUpOpen(false);
+  }
+
   
   return (isLoaded &&
     <OverflowFlexBackground>
@@ -321,6 +331,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
             question="Register for a new competition?"
             redirectPath="/competition/information"
             actionType="primary"
+            handleClick={handleRegisterClick}
           />
         </PageHeader>
   
@@ -376,6 +387,13 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
               />
             ))}
           </CompetitionGrid>
+
+          {/* Register Pop-Up */}
+          {isRegisterPopUpOpen && (
+            <RegisterPopUp isOpen={isRegisterPopUpOpen} onClose={handleClosePopUp} message="Please enter the Competition Code"/>
+          )}
+
+
         </ContentArea>
       </DashboardContent>
     </OverflowFlexBackground>

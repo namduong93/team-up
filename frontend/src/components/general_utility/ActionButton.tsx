@@ -17,7 +17,6 @@ const Button = styled.button<{ $actionType: "primary" | "secondary" | "error" }>
   white-space: nowrap;
   max-width: 150px;
   width: 100%;
-  font-size: 1rem;
 
   background-color: ${({ $actionType: actionType, theme }) => {
     if (actionType === "primary") {
