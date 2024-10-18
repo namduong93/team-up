@@ -1,4 +1,4 @@
-import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED, INVALID_TOKEN, SITE_NAMES_MUST_BE_UNIQUE } from "../controllers/controller_util/http_error_handler.js";
+import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED, INVALID_TOKEN } from "../controllers/controller_util/http_error_handler.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
@@ -102,11 +102,6 @@ export class CompetitionService {
     if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
       throw COMPETITION_ADMIN_REQUIRED;
     }
-
-    const uniqueNames = this.checkUniqueSiteNames(competition);
-    if (!uniqueNames) {
-      throw SITE_NAMES_MUST_BE_UNIQUE;
-    }
     
     const competitionId = await this.competitionRepository.competitionSystemAdminUpdate(userId, competition);
 
@@ -190,28 +185,6 @@ export class CompetitionService {
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {
 
     return [{ id: 1, name: 'Macquarie University' }]
-  }
-
-  // Check to make sure every competition name is unique
-  checkUniqueSiteNames = (competition: Competition): boolean => {
-    const allLocations = [];
-  
-    if (competition.siteLocations) {
-      allLocations.push(...competition.siteLocations.map(site => site.name));
-    }
-      if (competition.otherSiteLocations) {
-      allLocations.push(...competition.otherSiteLocations.map(site => site.name));
-    }
-  
-    // Use a Set to ensure unique names
-    const nameSet = new Set();
-    for (const name of allLocations) {
-      if (nameSet.has(name)) {
-        return false; // Duplicate found
-      }
-      nameSet.add(name);
-    }
-    return true; 
   }
   
 }

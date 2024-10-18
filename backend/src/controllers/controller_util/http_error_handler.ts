@@ -31,7 +31,6 @@ export const USER_NOT_FOUND = createHttpError(400, "User is not existed");
 // competition error
 export const COMPETITION_NOT_FOUND = createHttpError(400, "Competition not found");
 export const COMPETITION_CODE_EXISTED = createHttpError(400, "Competition code existed");
-export const SITE_NAMES_MUST_BE_UNIQUE = createHttpError(400, "Site names must be unique");
 
 export const COMPETITION_ADMIN_REQUIRED = createHttpError(400, "User is not an admin");
 export const COMPETITION_COACH_REQUIRED = createHttpError(400, "User is not a coach");
