@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
-import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject } from "../../models/competition/competition.js";
+import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY } from "../../models/competition/competition.js";
 
 import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
@@ -48,12 +48,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return dbResult.rows;
   }
 
-  competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionRole>> => {
+  competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
     const dbResult = await this.pool.query(
       `SELECT cu.competition_roles AS roles
       FROM competition_users AS cu WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}`
     );
-    return parse(dbResult.rows[0].roles) as Array<CompetitionRole>;
+    return parse(dbResult.rows[0].roles) as Array<CompetitionUserRole>;
   }
 
   competitionTeams = async (userId: number, compId: number): Promise<Array<CompetitionTeam>> => {
@@ -235,16 +235,21 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   // Returns only shortened competition details that are displayed on a dashboard. Sites details are not included.
   // Returns competitions that the user is a part of.
   competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined> => {
-    const competitionMap: Map<number, { userType: Array<CompetitionUserRole>, competition: Competition }> = new Map();
-    
     const comps = await this.pool.query(
       `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
         general_reg_deadline AS "generalRegDeadline" FROM competition_list(${userId})`
     );
-    // TODO: Change the db query to also get the user competition roles and return those too.
-    this.addCompetitionIdsToMap(comps.rows, competitionMap, CompetitionUserRole.PARTICIPANT);
+    let competitions: Array<CompetitionShortDetailsObject> = [];
+    for (let row of comps.rows) {
+      let compId = row.id;
+      let compName = row.name;
+      let location = DEFAULT_COUNTRY;
+      let compDate = row.earlyRegDeadline;
+      let roles = await this.competitionRoles(userId, compId);
+      competitions.push({ compId, compName, location, compDate, roles });
+    }
 
-    const competitions: Array<CompetitionShortDetailsObject> = [...competitionMap.values()];
+
 
     return competitions;
   }
@@ -354,18 +359,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {
 
     return [{ id: 1, name: 'Macquarie University' }]
-  }
-
-  //Helper function to get the user's competition roles
-  competitionUserRoles = async (userId: number, competitionId: number): Promise<Array<CompetitionUserRole> | undefined> => {
-    const userTypeObject = await this.pool.query(
-      `SELECT competition_roles FROM competition_users WHERE user_id = $1 AND competition_id = $2`,
-      [userId, competitionId]
-    );
-    if (userTypeObject.rowCount === 0) {
-      return [];
-    }
-    return userTypeObject.rows[0].competition_roles;
   }
 
   competitionIdFromCode = async (code: string): Promise<number | undefined> => {

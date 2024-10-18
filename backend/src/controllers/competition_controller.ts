@@ -89,8 +89,7 @@ export class CompetitionController {
 
     const competitions = await this.competitionService.competitionsList(Number(userId));
 
-    res.json(competitions);
-
+    res.json({competitions: competitions});
     return;
   });
 

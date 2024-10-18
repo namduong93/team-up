@@ -16,7 +16,6 @@ interface Competition {
   compDate: string; // format: "YYYY-MM-DD"
   roles: string[];
   compId: string;
-  compCreationDate: string;
 }
 
 interface DashboardsProps {
@@ -143,6 +142,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [fakeCompetitions, setFakeCompetitions] = useState<Competition[]>([]);
   const navigate = useNavigate();
 
 
@@ -152,6 +152,14 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setIsAdmin(typeResponse.data.type === "system_admin");
         setIsLoaded(true);
+        console.log("what");
+
+        const fakeComps = await sendRequest.get<{ competitions: Competition[] }>('/competitions/list');
+        setFakeCompetitions(fakeComps.data.competitions);
+
+        console.log('here', fakeComps.data.competitions);
+        console.log('here Fake Competitions: ', fakeCompetitions);
+
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           setIsLoaded(false);
@@ -370,7 +378,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
                 compDate={comp.compDate}
                 roles={comp.roles}
                 compId={comp.compId}
-                compCreationDate={comp.compCreationDate}
+                compCreationDate={comp.compDate}
               />
             ))}
           </CompetitionGrid>

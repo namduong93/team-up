@@ -175,7 +175,7 @@ app.get('/universities/list', universityController.universitiesList);
 
 // Gets all competitions that this user is a part of
 // PARAMS: {} --- NOTE: will require the sessionToken cookie in browser DEV: assumie it has the cookie
-// RESPONSE: { Competition[] }
+// RESPONSE: { competitions: Competition[] }
 app.get('/competitions/list', competitionController.competitionsList);
 
 // PARAMS: { email: string }

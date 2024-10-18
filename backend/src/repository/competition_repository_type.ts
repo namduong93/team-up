@@ -7,7 +7,7 @@ export type CompetitionRole = 'participant' | 'coach' | 'admin' | 'site-coordina
 
 export interface CompetitionRepository {
   competitionStudents(userId: number, compId: number): Promise<StudentInfo[]>;
-  competitionRoles(userId: number, compId: number): Promise<Array<CompetitionRole>>;
+  competitionRoles(userId: number, compId: number): Promise<Array<CompetitionUserRole>>;
   competitionTeams(userId: number, compId: number): unknown;
   competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
   competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{} | undefined>;
@@ -24,7 +24,6 @@ export interface CompetitionRepository {
   competitionStaffJoinAdmin(code: string): Promise<{} | undefined>;
   competitionUniversitiesList(competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
-  competitionUserRoles(userId: number, competitionId: number): Promise<Array<CompetitionUserRole> | undefined>;
   competitionIdFromCode(code: string): Promise<number | undefined>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined>;
 }

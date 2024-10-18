@@ -57,11 +57,11 @@ export class CompetitionService {
 
   competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
-    if (roles.includes('admin')) {
+    if (roles.includes(CompetitionUserRole.ADMIN)) {
       return [];
     }
 
-    if (roles.includes('coach')) {
+    if (roles.includes(CompetitionUserRole.COACH)) {
 
       return await this.competitionRepository.competitionStudents(userId, compId);
     }
@@ -155,7 +155,7 @@ export class CompetitionService {
       throw COMPETITION_NOT_FOUND;
     }
     competitionUserInfo.competitionId = competitionId;
-    const competitionRoles = await this.competitionRepository.competitionUserRoles(competitionUserInfo.userId, competitionId);
+    const competitionRoles = await this.competitionRepository.competitionRoles(competitionUserInfo.userId, competitionId);
     if(competitionRoles.length > 0) { // either they are already a participant or a staff
       throw COMPETITION_USER_REGISTERED;
     }
