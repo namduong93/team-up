@@ -77,8 +77,6 @@ export class CompetitionController {
 
   competitionGetDetails = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const competitionId = req.body.id;
-    console.log(competitionId);
-
     const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
 
     res.json(competitionDetails);

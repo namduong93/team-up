@@ -310,7 +310,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1,  $2, $3, $4, $5, $6)
       RETURNING id
     `;
-    console.log(teamNameQuery);
     const teamNameValues = [
       teamStatus,
       teamNameApproved,
@@ -372,7 +371,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionIdFromCode = async (code: string): Promise<number | undefined> => {
     const competitionIdQuery = `SELECT id FROM competitions WHERE code = $1 LIMIT 1`;
     const competitionIdResult = await this.pool.query(competitionIdQuery, [code]);
-    console.log(code);
     if (competitionIdResult.rowCount === 0) {
       return undefined; 
     }
