@@ -198,15 +198,15 @@ function App() {
 
           <Route path="/competition/create" element={<CompetitionDetails />} />
           <Route path="/competition/confirmation" element={<CompetitionConfirmation />} />
-          <Route path="/competition/information" element={
+          <Route path="/competition/information/:code?" element={
             <MultiStepCompRegoFormProvider>
               <CompetitionInformation />
             </MultiStepCompRegoFormProvider>} />
-          <Route path="/competition/individual" element={
+          <Route path="/competition/individual/:code?" element={
             <MultiStepCompRegoFormProvider>
               <CompetitionIndividual />
             </MultiStepCompRegoFormProvider>} />
-          <Route path="/competition/experience" element={
+          <Route path="/competition/experience/:code?" element={
           <MultiStepCompRegoFormProvider>
             <CompetitionExperience />
           </MultiStepCompRegoFormProvider>} />

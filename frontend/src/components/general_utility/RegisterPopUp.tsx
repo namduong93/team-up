@@ -99,7 +99,7 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({ isOpen, onClose, m
   const navigate = useNavigate();
 
   const handleRegister = () => {
-    navigate("/competition/information");
+    navigate(`/competition/information/${inputValue}`);
   }
 
   function isButtonDisabled(): boolean | undefined {

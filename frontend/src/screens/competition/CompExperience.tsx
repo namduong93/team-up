@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../components/general_utility/ProgressBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMultiStepCompRegoForm } from "./MultiStepCompRegoForm";
 import MultiRadio from "../../components/general_utility/MultiRadio";
 import TextInput from "../../components/general_utility/TextInput";
@@ -91,13 +91,14 @@ const Descriptor = styled.div`
 
 export const CompetitionExperience: FC = () => {
   const navigate = useNavigate();
+  const {code} = useParams<{code?: string}>();
   const { formData, setFormData } = useMultiStepCompRegoForm();
   const [hasNationalPrize, setHasNationalPrize] = useState<boolean | undefined>(undefined)
   const [hasInternationalPrize, setHasInternationalPrize] = useState<boolean | undefined>(undefined)
   // const [courseOptions, setCourseOptions] = useState<Array<{ value: string; label: string }>>([]);
 
   const handleBack = () => {
-    navigate("/competition/individual");
+    navigate(`/competition/individual/${code}`);
   };
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -120,7 +121,7 @@ export const CompetitionExperience: FC = () => {
     }
 
     const payload = {
-      code: "SPRG2024",
+      code: code,
       competitionUser,
     }
 

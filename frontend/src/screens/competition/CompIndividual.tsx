@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../components/general_utility/ProgressBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DropdownInputLight from "../../components/general_utility/DropDownLight";
 import { useMultiStepCompRegoForm } from "./MultiStepCompRegoForm";
 import TextInputLight from "../../components/general_utility/TextInputLight";
@@ -98,15 +98,14 @@ interface User {
 export const CompetitionIndividual: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepCompRegoForm();
+  const { code } = useParams<{code?: string}>();
   
   const handleBack = () => {
-    console.log(user)
-    navigate("/competition/information");
+    navigate(`/competition/information/${code}`);
   };
 
   const handleNext = () => {
-
-    navigate("/competition/experience"); 
+    navigate(`/competition/experience/${code}`); 
   };
 
   const yearOptions = [
