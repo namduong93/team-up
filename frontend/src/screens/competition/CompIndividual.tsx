@@ -222,12 +222,12 @@ export const CompetitionIndividual: FC = () => {
           />
 
           <Label>Site Attendance<Asterisk>*</Asterisk></Label>
-          <Text>The default site for your Instution is:</Text>
+          {/* <Text>Please contact your coach for site location information</Text> */}
 
-          <div style={{display:'flex', alignContent:'center'}}>
+          {/* <div style={{display:'flex', alignContent:'center'}}>
             <Text><em>SITE LOCATION</em></Text>
           </div>
-          {/* TODO: add site location */}
+          TODO: add site location */}
 
 
           <RadioButton
@@ -245,7 +245,7 @@ export const CompetitionIndividual: FC = () => {
               setFormData({ ...formData, isRemote });
             }}
             required={true}
-            descriptor="Will you be attending on site or remotely?"
+            descriptor={["Will you be attending on site or remotely?", "(Please contact your coach for site location information.)"]}
             width="100%"
           />
 
