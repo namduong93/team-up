@@ -152,7 +152,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setUserType(typeResponse.data.type);
-        setIsAdmin(userType === "system_admin");
+        setIsAdmin(typeResponse.data.type === "system_admin");
         setIsLoaded(true);
 
         const fakeComps = await sendRequest.get<{ competitions: Competition[] }>('/competitions/list');
