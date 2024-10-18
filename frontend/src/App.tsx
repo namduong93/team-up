@@ -37,6 +37,7 @@ import { CompetitionExperience } from './screens/competition/CompExperience';
 function App() {
   const [theme, setTheme ] = useState(defaultTheme)
   
+  // TODO: remove this hardcoding after demo pls
   const name = "Name";
   const affiliation = "UNSW";
   const competitions = [
@@ -190,22 +191,22 @@ function App() {
               <Route path='manage' element={<TeamManage />} />
             </Route>
 
-            <Route path="/dashboard" element={<Dashboard dashInfo={dashInfo} competitions={competitions} />} />
+            <Route path="/dashboard" element={<Dashboard dashInfo={dashInfo} />} />
             <Route path="/account" element={<Account setDashInfo={setDashInfo} />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
 
           <Route path="/competition/create" element={<CompetitionDetails />} />
           <Route path="/competition/confirmation" element={<CompetitionConfirmation />} />
-          <Route path="/competition/information" element={
+          <Route path="/competition/information/:code?" element={
             <MultiStepCompRegoFormProvider>
               <CompetitionInformation />
             </MultiStepCompRegoFormProvider>} />
-          <Route path="/competition/individual" element={
+          <Route path="/competition/individual/:code?" element={
             <MultiStepCompRegoFormProvider>
               <CompetitionIndividual />
             </MultiStepCompRegoFormProvider>} />
-          <Route path="/competition/experience" element={
+          <Route path="/competition/experience/:code?" element={
           <MultiStepCompRegoFormProvider>
             <CompetitionExperience />
           </MultiStepCompRegoFormProvider>} />

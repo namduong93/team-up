@@ -16,11 +16,10 @@ interface Competition {
   compDate: string; // format: "YYYY-MM-DD"
   roles: string[];
   compId: string;
-  compCreationDate: string;
+  compCreatedDate: string;
 }
 
 interface DashboardsProps {
-  competitions: Competition[];
   dashInfo: DashInfo
 }
 
@@ -127,7 +126,7 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
+export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -143,6 +142,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [competitions, setCompetitions] = useState<Competition[]>([]);
   const [userType, setUserType] = useState<string>('');
   const navigate = useNavigate();
 
@@ -152,8 +152,17 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setUserType(typeResponse.data.type);
-        setIsAdmin(userType === "system_admin");
+        setIsAdmin(typeResponse.data.type === "system_admin");
         setIsLoaded(true);
+
+        const fakeComps = await sendRequest.get<{ competitions: Competition[] }>('/competitions/list');
+        const formattedCompetitions = fakeComps.data.competitions.map(comp => ({
+          ...comp,
+          compDate: new Date(comp.compDate).toISOString().split('T')[0],
+          compCreatedDate: new Date(comp.compCreatedDate).toISOString().split('T')[0]
+        }));
+        setCompetitions(formattedCompetitions);
+  
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           setIsLoaded(false);
@@ -383,7 +392,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
                 compDate={comp.compDate}
                 roles={comp.roles}
                 compId={comp.compId}
-                compCreationDate={comp.compCreationDate}
+                compCreationDate={comp.compCreatedDate}
               />
             ))}
           </CompetitionGrid>

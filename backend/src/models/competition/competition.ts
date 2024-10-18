@@ -1,36 +1,36 @@
+import { CompetitionUserRole } from "./competitionUser";
 
 export interface Competition {
   id?: number,
   name: string,
   teamSize?: number,
+  createdDate: EpochTimeStamp,
   earlyRegDeadline: EpochTimeStamp,
   generalRegDeadline: EpochTimeStamp,
   siteLocations?: CompetitionSiteObject[],
   otherSiteLocations?: CompetitionOtherSiteObject[],
-  code?: string
+  code?: string,
 }
 
-export interface CompetitionDetails {
-  id?: number,
-  name: string,
-  teamSize: number,
-  earlyRegDeadline: EpochTimeStamp,
-  generalRegDeadline: EpochTimeStamp,
-  siteLocations: CompetitionSiteObject[],
-  code: string
+export enum CompetitionLevel {
+  LEVELA = 'Level A',
+  LEVELB = 'Level B',
+  NOPREFERENCE = 'No Preference'
 }
 
-export const enum CompetitionUserType {
-  PARTICIPANT = 'participant',
-  COACH = 'coach',
-  SITE_COORDINATOR = 'site_coordinator',
-  ADMIN = 'admin'
-}
+export const DEFAULT_COUNTRY = 'Australia';
 
 export type CompetitionIdObject = { competitionId: number };
 
 // Include both the user roles for the competition and the competition details
-export type CompetitionShortDetailsObject = { userType: Array<CompetitionUserType>, competition: CompetitionDetails };
+export type CompetitionShortDetailsObject = { 
+  compId: number,
+  compName: string,
+  location: string,
+  compDate: string,
+  roles: CompetitionUserRole[],
+  compCreatedDate: string
+ };
 
 // TODO: Revise this type
 export type CompetitionSiteObject = { universityId: number, name: string, capacity?: number };

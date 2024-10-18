@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../components/general_utility/ProgressBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DropdownInputLight from "../../components/general_utility/DropDownLight";
 import { useMultiStepCompRegoForm } from "./MultiStepCompRegoForm";
 import TextInputLight from "../../components/general_utility/TextInputLight";
@@ -98,15 +98,14 @@ interface User {
 export const CompetitionIndividual: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepCompRegoForm();
+  const { code } = useParams<{code?: string}>();
   
   const handleBack = () => {
-    console.log(user)
-    navigate("/competition/information");
+    navigate(`/competition/information/${code}`);
   };
 
   const handleNext = () => {
-
-    navigate("/competition/experience"); 
+    navigate(`/competition/experience/${code}`); 
   };
 
   const yearOptions = [
@@ -198,7 +197,7 @@ export const CompetitionIndividual: FC = () => {
           />
 
           <RadioButton
-            label="ICPC Officiality"
+            label="ICPC Eligibility"
             options={['Yes', 'No']}
             selectedOption={
               formData.ICPCEligibility === undefined ? '' : formData.ICPCEligibility ? 'Yes' : 'No'
@@ -223,12 +222,12 @@ export const CompetitionIndividual: FC = () => {
           />
 
           <Label>Site Attendance<Asterisk>*</Asterisk></Label>
-          <Text>The default site for your Instution is:</Text>
+          {/* <Text>Please contact your coach for site location information</Text> */}
 
-          <div style={{display:'flex', alignContent:'center'}}>
+          {/* <div style={{display:'flex', alignContent:'center'}}>
             <Text><em>SITE LOCATION</em></Text>
           </div>
-          {/* TODO: add site location */}
+          TODO: add site location */}
 
 
           <RadioButton
@@ -246,30 +245,9 @@ export const CompetitionIndividual: FC = () => {
               setFormData({ ...formData, isRemote });
             }}
             required={true}
-            descriptor="Will you be attending on site or remotely?"
+            descriptor={["Will you be attending on site or remotely?", "(Please contact your coach for site location information.)"]}
             width="100%"
           />
-          
-          { (user.gender !== "M") && (
-            <RadioButton
-            label="Boersen Prize Eligibility"
-            options={['Yes', 'No']}
-            selectedOption={
-              formData.boersenEligible === undefined 
-                ? '' 
-                : formData.boersenEligible 
-                ? 'Yes' 
-                : 'No'
-            }
-            onOptionChange={(e) => {
-              const isBoersenEligible = e.target.value === 'Yes';
-              setFormData({ ...formData, boersenEligible: isBoersenEligible });
-            }}
-            required={false}
-            descriptor="Are you a female or non-binary participant who would like to compete for the Boersen Prize?"
-            width="100%"
-          />
-          )}
 
           <ButtonContainer>
             <Button onClick={handleBack}>Back</Button>

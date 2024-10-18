@@ -138,7 +138,8 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   
   // calculate the width of the progress bar as a percentage of the total days
   const compCreationDateFormatted = new Date(compCreationDate);
-  const totalDays = differenceInDays(new Date(compDate), compCreationDateFormatted);
+  let totalDays = differenceInDays(new Date(compDate), compCreationDateFormatted);
+  totalDays = Math.max(totalDays, daysRemaining);
   
   // calculate the progress width
   const progressWidth = totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100; // set to 100% if no days left

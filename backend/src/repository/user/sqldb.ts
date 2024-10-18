@@ -29,7 +29,7 @@ export class SqlDbUserRepository implements UserRepository {
     let pronouns = student.pronouns;
     let tshirtSize = student.tshirtSize;
     let allergies = student.allergies;
-    let dietaryReqs = student.dietaryReqs;
+    let dietaryReqs = student.dietaryReqs || [];
     let accessibilityReqs = student.accessibilityReqs;
     let universityId = student.universityId;
     let studentId = student.studentId;
@@ -83,7 +83,7 @@ export class SqlDbUserRepository implements UserRepository {
     let pronouns = staff.pronouns;
     let tshirtSize = staff.tshirtSize;
     let allergies = staff.allergies;
-    let dietaryReqs = staff.dietaryReqs;
+    let dietaryReqs = staff.dietaryReqs || [];
     let accessibilityReqs = staff.accessibilityReqs;
     let universityId = staff.universityId;
 
@@ -178,7 +178,7 @@ export class SqlDbUserRepository implements UserRepository {
       userProfile.pronouns,
       userProfile.tshirtSize,
       userProfile.allergies,
-      userProfile.dietaryReqs,
+      userProfile.dietaryReqs || [],
       userProfile.accessibilityReqs,
     ];
     await this.pool.query(userQuery, userValues);

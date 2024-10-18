@@ -6,7 +6,6 @@ import { Competition } from "../models/competition/competition.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
-  private userService: UserService;
   
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
@@ -43,8 +42,10 @@ export class CompetitionController {
 
     const newCompetition: Competition = {
       name: req.body.name,
+      createdDate: Date.now(),
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
+      code : req.body.code,
       siteLocations: req.body.siteLocations,
       otherSiteLocations: req.body.otherSiteLocations,
     };
@@ -63,6 +64,7 @@ export class CompetitionController {
       id: req.body.id,
       name: req.body.name,
       teamSize: req.body.teamSize,
+      createdDate: Date.now(),
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
       siteLocations: req.body.siteLocations,
@@ -77,8 +79,6 @@ export class CompetitionController {
 
   competitionGetDetails = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const competitionId = req.body.id;
-    console.log(competitionId);
-
     const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
 
     res.json(competitionDetails);
@@ -91,13 +91,16 @@ export class CompetitionController {
 
     const competitions = await this.competitionService.competitionsList(Number(userId));
 
-    res.json(competitions);
-
+    res.json({competitions: competitions});
     return;
   });
 
-  competitionStudentJoin0 = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ incompleteTeamId: 1 });
+  competitionStudentJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const code = req.body.code;
+    const competitionUserInfo = req.body.competitionUser;
+    competitionUserInfo.userId = Number(req.query.userId);
+    await this.competitionService.competitionStudentJoin(String(code), competitionUserInfo);
+    res.json({});
     return;
   });
 

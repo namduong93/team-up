@@ -2,7 +2,7 @@ import { FC } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../components/general_utility/ProgressBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 const Container = styled.div`
   flex: 1;
@@ -53,14 +53,14 @@ export const Button = styled.button<{ $disabled?: boolean }>`
 
 export const CompetitionInformation: FC = () => {
   const navigate = useNavigate();
+  const { code } = useParams<{ code?: string }>();
   
   const handleBack = () => {
     navigate("/dashboard");
   };
 
   const handleNext = () => {
-
-    navigate("/competition/individual"); 
+    navigate(`/competition/individual/${code}`);
   };
 
   return (

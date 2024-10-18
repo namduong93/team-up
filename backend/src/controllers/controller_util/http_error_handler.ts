@@ -22,16 +22,18 @@ export function httpErrorHandler(httpFunction: HTTPFunction) {
   };
 }
 
-export class AppError extends Error {
-  constructor(message: string) {
-    super(message);
-
-    Object.setPrototypeOf(this, AppError.prototype);
-  }
-}
-
 export const TOKEN_NOT_FOUND = createHttpError(403, "Token not found");
 export const INVALID_TOKEN = createHttpError(403, "Invalid token");
 export const EXPIRED_TOKEN = createHttpError(403, "Expired token");
 export const BAD_REQUEST = createHttpError(400, "Bad request");
 export const USER_NOT_FOUND = createHttpError(400, "User is not existed");
+
+// competition error
+export const COMPETITION_NOT_FOUND = createHttpError(400, "Competition not found");
+export const COMPETITION_CODE_EXISTED = createHttpError(400, "Competition code existed");
+export const SITE_NAMES_MUST_BE_UNIQUE = createHttpError(400, "Site names must be unique");
+export const COMPETITION_ADMIN_REQUIRED = createHttpError(400, "User is not an admin");
+export const COMPETITION_COACH_REQUIRED = createHttpError(400, "User is not a coach");
+export const COMPETITION_STUDENT_REQUIRED = createHttpError(400, "User is not a student");
+
+export const COMPETITION_USER_REGISTERED = createHttpError(400, "User already registered in competition");
