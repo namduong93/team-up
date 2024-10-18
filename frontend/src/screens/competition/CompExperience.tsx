@@ -145,7 +145,7 @@ export const CompetitionExperience: FC = () => {
   };
 
   const courseOptions = [
-    { value: '1511', label: 'COMP1511  Porgramming Fundamentals' },
+    { value: '1511', label: 'COMP1511  Programming Fundamentals' },
     { value: '2521', label: 'COMP2521  Data Structures and Algorithms' },
     { value: '3121', label: 'COMP3121  Algorithm Design and Analysis' },
     { value: '3821', label: 'COMP3821  Extended Algorithm Design and Analysis' },
