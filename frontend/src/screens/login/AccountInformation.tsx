@@ -186,47 +186,6 @@ export const AccountInformation: FC = () => {
   );
 };
 
-// const styles: Record<string, React.CSSProperties> = {
-//   doubleInputContainer: {
-//     display: 'flex',
-//     justifyContent: 'space-between',
-//     width: '100%',
-//     gap: '0.8%',
-//   },
-//   errorMessage: {
-//     color: 'red',
-//     fontSize: '14px',
-//     fontFamily: 'Arial, Helvetica, sans-serif',
-//     marginTop: '-10px',
-//     textAlign: 'center',
-//   },
-//   buttonContainer: {
-//     display: 'flex',
-//     width: '100%',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     gap: '90px',
-//   },
-//   button: {
-//     maxWidth: '150px',
-//     width: '25%',
-//     height: '35px',
-//     border: '0px',
-//     borderRadius: '30px',
-//     backgroundColor: '#6688D2',
-//     marginTop: '35px',
-//     marginBottom: '40px',
-//     color: '#ffffff',
-//     fontSize: '16px',
-//     fontWeight: 'bold',
-//     cursor: 'pointer',
-//     fontFamily: 'Arial, Helvetica, sans-serif',
-//   },
-//   buttonDisabled: {
-//     backgroundColor: '#ccc',
-//     cursor: 'not-allowed',
-//   },
-// };
 
 const Container = styled.div`
   flex: 1;
