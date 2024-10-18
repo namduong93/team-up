@@ -27,7 +27,10 @@ import { CompetitionPage } from './screens/staff/CompetitionPage/CompetitionPage
 import { CompIdNavigate } from './screens/staff/CompetitionPage/CompIdNavigate';
 import { SidebarLayout } from './screens/SidebarLayout';
 import { useDashInfo } from './screens/Dashboard/useDashInfo';
-
+import { CompetitionInformation } from './screens/competition/CompInformation';
+import { CompetitionIndividual } from './screens/competition/CompIndividual';
+import { MultiStepCompRegoFormProvider } from './screens/competition/MultiStepCompRegoForm';
+import { CompetitionExperience } from './screens/competition/CompExperience';
 
 function App() {
   const [theme, setTheme ] = useState(defaultTheme)
@@ -188,6 +191,18 @@ function App() {
 
           <Route path="/competition/create" element={<CompetitionDetails />} />
           <Route path="/competition/confirmation" element={<CompetitionConfirmation />} />
+          <Route path="/competition/information" element={
+            <MultiStepCompRegoFormProvider>
+              <CompetitionInformation />
+            </MultiStepCompRegoFormProvider>} />
+          <Route path="/competition/individual" element={
+            <MultiStepCompRegoFormProvider>
+              <CompetitionIndividual />
+            </MultiStepCompRegoFormProvider>} />
+          <Route path="/competition/experience" element={
+          <MultiStepCompRegoFormProvider>
+            <CompetitionExperience />
+          </MultiStepCompRegoFormProvider>} />
         </Routes>
       </Router>
     </ThemeProvider>

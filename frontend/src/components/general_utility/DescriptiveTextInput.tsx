@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface DescriptiveTextInputProps {
-  label: string;
+  label?: string;
   descriptor: string;
   placeholder: string;
   required?: boolean;
@@ -63,10 +63,12 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
 }) => {
   return (
     <Container width={width}>
-      <Label>
-        {label}
-        {required && <Asterisk>*</Asterisk>}
-      </Label>
+       {label && (
+        <Label>
+          {label}
+          {required && <Asterisk>*</Asterisk>}
+        </Label>
+      )}
       <Descriptor>{descriptor}</Descriptor>
       <StyledTextarea
         placeholder={placeholder}
