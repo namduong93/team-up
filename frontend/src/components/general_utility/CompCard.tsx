@@ -109,9 +109,10 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   const navigate = useNavigate();
 
   // for demo A
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const roleUrl = (_: string) => {
     if (roles.includes('Participant')) {
-      return `/competition/page/${compId}`;
+      return `/competition/participant/${compId}`;
     }
     return `/competition/page/1`;
   };

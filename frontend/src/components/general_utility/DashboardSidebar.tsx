@@ -10,7 +10,7 @@ export interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivEleme
 }
 
 const SidebarContainer = styled.div<{ $cropState: boolean }>`
-  min-width: ${({ $cropState: cropState }) => (cropState ? "40px" : "200px")}; /* Adjust min-width based on cropState */
+  min-width: ${({ $cropState: cropState }) => (cropState ? "40px" : "200px")};
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@ const SidebarContainer = styled.div<{ $cropState: boolean }>`
 
   @media (max-width: 600px) {
     min-width: 35px;
-    width: 35px; /* Maintain this for mobile responsiveness */
+    width: 35px;
   }
 `;
 
@@ -179,7 +179,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, s
   }
 
   return (
-    <SidebarContainer $cropState={cropState} style={style} {...props}> {/* Pass cropState to SidebarContainer */}
+    <SidebarContainer $cropState={cropState} style={style} {...props}>
       <SidebarContent>
         {!cropState && (
           <ProfileSection>

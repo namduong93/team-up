@@ -6,35 +6,58 @@ interface ActionButtonProps {
   actionName: string;
   question: string;
   redirectPath: string;
-  actionType: "primary" | "secondary";
-};
+  actionType: "primary" | "secondary" | "error";
+  handleClick?: () => void; // Optional function prop for a custom click handler
+}
 
-const Button = styled.button<{ $actionType: "primary" | "secondary" }>`
+const Button = styled.button<{ $actionType: "primary" | "secondary" | "error" }>`
   border-radius: 10px;
   padding: 10px;
   border: none;
   white-space: nowrap;
   max-width: 150px;
   width: 100%;
-  
-  background-color: ${({ $actionType: actionType, theme }) =>
-    actionType === "primary" 
-      ? theme.colours.primaryLight 
-      : theme.colours.secondaryLight};
+  font-size: 1rem;
 
-  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "primary") {
+      return theme.colours.primaryLight;
+    } else if (actionType === "secondary") {
+      return theme.colours.secondaryLight;
+    } else {
+      return theme.colours.error;
+    }
+  }};
+
+  color: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "error") {
+      return theme.background;
+    } else {
+      return theme.fonts.colour;
+    }
+  }};
+
+  font-weight: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "error") {
+      return theme.fonts.fontWeights.bold;
+    }
+  }};
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ $actionType: actionType, theme }) =>
-      actionType === "primary" 
-        ? theme.colours.primaryDark 
-        : theme.colours.secondaryDark};
+    background-color: ${({ $actionType: actionType, theme }) => {
+      if (actionType === "primary") {
+        return theme.colours.primaryDark;
+      } else if (actionType === "secondary") {
+        return theme.colours.secondaryDark;
+      } else {
+        return theme.colours.cancelDark;
+      }
+    }};
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   }
 `;
-
 
 const PopUpOverlay = styled.div`
   position: fixed;
@@ -46,6 +69,7 @@ const PopUpOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 `;
 
 const PopUpContent = styled.div`
@@ -65,7 +89,7 @@ const Question = styled.div`
 const ConfirmButton = styled.button`
   background-color: ${({ theme }) => theme.colours.confirm};
   color: ${({ theme }) => theme.fonts.colour};
-  padding: 10px 15px 10px 15px;
+  padding: 10px 15px;
   border-radius: 20px;
   border: none;
   margin: 15px;
@@ -80,7 +104,7 @@ const ConfirmButton = styled.button`
 const CancelButton = styled.button`
   background-color: ${({ theme }) => theme.colours.cancel};
   color: ${({ theme }) => theme.fonts.colour};
-  padding: 10px 15px 10px 15px;
+  padding: 10px 15px;
   border-radius: 20px;
   border: none;
   margin: 15px;
@@ -92,17 +116,25 @@ const CancelButton = styled.button`
   }
 `;
 
-export const ActionButton: FC<ActionButtonProps> = ({ actionName, question, redirectPath, actionType }) => {
+export const ActionButton: FC<ActionButtonProps> = ({ actionName, question, redirectPath, actionType, handleClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleConfirm = () => {
-    navigate(redirectPath); // go to the correct redirected path
+    navigate(redirectPath); // Go to the correct redirected path
+  };
+
+  const handleButtonClick = () => {
+    if (handleClick) {
+      handleClick(); // Call the custom click handler if provided
+    } else {
+      setIsOpen(true); // Open the confirmation pop-up
+    }
   };
 
   return (
     <>
-      <Button $actionType={actionType} onClick={() => setIsOpen(true)}>
+      <Button $actionType={actionType} onClick={handleButtonClick}>
         {actionName}
       </Button>
       {isOpen && (

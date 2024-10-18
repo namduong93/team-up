@@ -24,7 +24,7 @@ export const OverflowFlexBackground = styled(FlexBackground)`
 export const MainPageDiv = styled.div`
   flex: 0 1 auto;
   display: flex;
-  width: 100%;
+  width: 97%;
   height: 100%;
   min-height: 600px;
   flex-direction: column;

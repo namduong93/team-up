@@ -21,6 +21,19 @@ export const defaultTheme: DefaultTheme = {
     notifDate: "#6688D2",
     notifLight: "#EBEBEB",
     notifDark: "#333333",
+    progressStart: "#283e6c",
+    progressEnd: "#6688D2",
+    progressBackground: "#BCCFF8",
+  },
+  teamProfile: {
+    invite: "#DFE8FB",
+    inviteBorder: "#6688D2",
+    join: "#FEEBC8",
+    joinBorder: "#EA9C0D",
+    name: "#FDE2FC",
+    nameBorder: "#F19EDC",
+    site: "#E1FAFC",
+    siteBorder: "#35B4C2",
   },
   teamView: {
     pending: "#F68486",
@@ -58,6 +71,7 @@ export const defaultTheme: DefaultTheme = {
     },
     colour: "#000000",
     descriptor: "#333333",
+    email: "blue",
     style: "italic",
   },
 };

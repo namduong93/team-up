@@ -9,7 +9,7 @@ import { AlertButton } from "../../screens/Dashboard/Dashboard";
 
 type Filters = Record<string, Array<string>>;
 
-const PageHeaderContainerDiv = styled.div`
+export const PageHeaderContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -18,12 +18,12 @@ const PageHeaderContainerDiv = styled.div`
   width: 100%;
 `;
 
-const PageTitle = styled.h1`
+export const PageTitle = styled.h1`
   margin-bottom: 0;
   font-size: 2em;
 `;
 
-const PageDescriptionSpan = styled.span`
+export const PageDescriptionSpan = styled.span`
   color: #525252;
   font-size: 1em;
 `;
