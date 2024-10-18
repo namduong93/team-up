@@ -109,6 +109,7 @@ CREATE TABLE competition_users (
   international_prizes TEXT,
   codeforces_rating INT,
   university_courses TEXT[],
+  past_regional BOOLEAN,
   
   competition_coach_id INT REFERENCES competition_users (id),
 
@@ -392,7 +393,7 @@ VALUES
 (2, 3, ARRAY['coach']::competition_role_enum[]);
 
 -- Competition Site Coordinator(s)
-INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, site_attending_id)
 VALUES
 (4, 1, ARRAY['site-coordinator']::competition_role_enum[], 1);
 
@@ -409,15 +410,16 @@ INSERT INTO competition_users (
   international_prizes,
   codeforces_rating,
   university_courses,
-  site_attending_id
+  site_attending_id,
+  past_regional
 )
 VALUES
-    (5, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2),
-    (6, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2),
-    (7, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2),
-    (8, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2),
-    (9, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2),
-    (10, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2);
+    (5, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (6, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (7, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (8, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (9, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (10, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE);
 
 INSERT INTO competition_teams (
   competition_coach_id, name, team_status, team_name_approved, team_size, participants, university_id, competition_id

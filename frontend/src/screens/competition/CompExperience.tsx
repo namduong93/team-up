@@ -104,7 +104,7 @@ export const CompetitionExperience: FC = () => {
 
     e.preventDefault();
 
-    const { degreeYear, degree, ICPCEligibility, isRemote, competitionLevel, boersenEligible, codeforce, nationalPrizes, internationalPrizes, courses, regional } = formData;
+    const { degreeYear, degree, ICPCEligibility, isRemote, competitionLevel, boersenEligible, codeforce, nationalPrizes, internationalPrizes, courses, pastRegional } = formData;
     const competitionUser = {
       ICPCEligible: ICPCEligibility,
       competitionLevel: competitionLevel,
@@ -116,7 +116,7 @@ export const CompetitionExperience: FC = () => {
       internationalPrizes: internationalPrizes,
       codeforcesRating: codeforce,
       universityCourses: courses,
-      regional: regional,
+      pastRegional: pastRegional,
     }
 
     const payload = {
@@ -174,7 +174,7 @@ export const CompetitionExperience: FC = () => {
 
 
   function isButtonDisabled(): boolean | undefined {
-    const { courses, nationalPrizes, internationalPrizes, regional, degreeYear } = formData;
+    const { courses, nationalPrizes, internationalPrizes, pastRegional, degreeYear } = formData;
     if ( formData.competitionLevel === "Level B" ) { 
       return (
         courses.length === 0 
@@ -187,7 +187,7 @@ export const CompetitionExperience: FC = () => {
         (hasNationalPrize && nationalPrizes === "") ||
         hasInternationalPrize === undefined ||
         (hasInternationalPrize && internationalPrizes === "") ||
-        (degreeYear !== 1 && regional === undefined)
+        (degreeYear !== 1 && pastRegional === undefined)
       );
     }
   }
@@ -241,11 +241,11 @@ export const CompetitionExperience: FC = () => {
             label="ICPC Regional Participation"
             options={['Yes', 'No']}
             selectedOption={
-              formData.regional === undefined ? '' : formData.regional ? 'Yes' : 'No'
+              formData.pastRegional === undefined ? '' : formData.pastRegional ? 'Yes' : 'No'
             }
             onOptionChange={(e) => {
-              const regional = e.target.value === 'Yes';
-              setFormData({ ...formData, regional: regional });
+              const pastRegional = e.target.value === 'Yes';
+              setFormData({ ...formData, pastRegional: pastRegional });
             }}
             required={true}
             descriptor="Have you ever competed in a regional ICPC round?"

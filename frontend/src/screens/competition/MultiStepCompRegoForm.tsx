@@ -9,7 +9,7 @@ interface FormState {
   boersenEligible?: boolean;
   courses: string[];
   codeforce?: number;
-  regional?: boolean | undefined;
+  pastRegional?: boolean | undefined;
   nationalPrizes?: string;
   internationalPrizes?: string;
 }
@@ -23,7 +23,7 @@ const initialState: FormState = {
   boersenEligible: undefined,
   courses: [],
   codeforce: undefined,
-  regional: undefined,
+  pastRegional: undefined,
   nationalPrizes: "",
   internationalPrizes: "",
 }

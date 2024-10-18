@@ -281,8 +281,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let pastRegional = competitionUserInfo.pastRegional || false;
 
     const competitionJoinQuery = `
-      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING id
     `;
     const competitionJoinValues = [
@@ -298,11 +298,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       nationalPrizes,
       internationalPrizes,
       codeforcesRating,
-      universityCourses
+      universityCourses,
+      pastRegional
     ];
-
-    console.log(competitionJoinValues);
-
+    
     // Insert user into competition_users table and get competition_user_id
     const result = await this.pool.query(competitionJoinQuery, competitionJoinValues);
     const competitionUserId = result.rows[0].id;
