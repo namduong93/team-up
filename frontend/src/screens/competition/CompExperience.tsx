@@ -120,13 +120,13 @@ export const CompetitionExperience: FC = () => {
     }
 
     const payload = {
-      code: "TSTC1",
+      code: "SPRG2024",
       competitionUser,
     }
 
     try {
-      // const response = await sendRequest.post('/competition/student/join ', payload);
-      // console.log("Response:", response.data);
+      const response = await sendRequest.post('/competition/student/join ', payload);
+      console.log("Response:", response.data);
 
       navigate("/dashboard"); 
 
@@ -175,16 +175,21 @@ export const CompetitionExperience: FC = () => {
 
   function isButtonDisabled(): boolean | undefined {
     const { courses, nationalPrizes, internationalPrizes, regional, degreeYear } = formData;
-    console.log(hasNationalPrize)
-    console.log(nationalPrizes)
-    return (
-      courses.length === 0 ||
-      hasNationalPrize === undefined ||
-      (hasNationalPrize && nationalPrizes === "") ||
-      hasInternationalPrize === undefined ||
-      (hasInternationalPrize && internationalPrizes === "") ||
-      (degreeYear !== 1 && regional === undefined)
-    );
+    if ( formData.competitionLevel === "Level B" ) { 
+      return (
+        courses.length === 0 
+      );
+    }
+    else {
+      return (
+        courses.length === 0 ||
+        hasNationalPrize === undefined ||
+        (hasNationalPrize && nationalPrizes === "") ||
+        hasInternationalPrize === undefined ||
+        (hasInternationalPrize && internationalPrizes === "") ||
+        (degreeYear !== 1 && regional === undefined)
+      );
+    }
   }
 
   return (
@@ -215,21 +220,23 @@ export const CompetitionExperience: FC = () => {
             showOther={false}
           />
 
-          <TextInput
-            label="Codeforces Score"
-            placeholder="Please enter"
-            type="numeric"
-            required={false}
-            value={formData.codeforce?.toString() || ''} 
-            onChange={(e) => {
-              const value = e.target.value;
-              setFormData({ ...formData, codeforce: Number(value)});
-            }}
-            width="100%" 
-            descriptor="Please enter your current Codeforce score if applicable"
-          />
+          {formData.competitionLevel !== "Level B" && (
+            <TextInput
+              label="Codeforces Score"
+              placeholder="Please enter"
+              type="numeric"
+              required={false}
+              value={formData.codeforce?.toString() || ''} 
+              onChange={(e) => {
+                const value = e.target.value;
+                setFormData({ ...formData, codeforce: Number(value)});
+              }}
+              width="100%" 
+              descriptor="Please enter your current Codeforce score if applicable"
+            /> 
+          )}
 
-          {formData.degreeYear.toString() !== "1" && (
+          {formData.degreeYear.toString() !== "1" && formData.competitionLevel !== "Level B" && (
             <RadioButton
             label="ICPC Regional Participation"
             options={['Yes', 'No']}
@@ -246,20 +253,22 @@ export const CompetitionExperience: FC = () => {
            />
           )}
 
-          <RadioButton
-            label="National Olympiad Prizes in Mathematics or Informatics"
-            options={['Yes', 'No']}
-            selectedOption={
-              hasNationalPrize === undefined ? '' : hasNationalPrize ? 'Yes' : 'No'
-            }
-            onOptionChange={(e) => {
-              const nationalPrize = e.target.value === 'Yes';
-              setHasNationalPrize(nationalPrize);
-            }}
-            required={true}
-            descriptor="Have you ever won any related National Olympiad in Mathematics or Informatics prizes?"
-            width="100%"
-          />
+          {formData.competitionLevel !== "Level B" && (
+            <RadioButton
+              label="National Olympiad Prizes in Mathematics or Informatics"
+              options={['Yes', 'No']}
+              selectedOption={
+                hasNationalPrize === undefined ? '' : hasNationalPrize ? 'Yes' : 'No'
+              }
+              onOptionChange={(e) => {
+                const nationalPrize = e.target.value === 'Yes';
+                setHasNationalPrize(nationalPrize);
+              }}
+              required={true}
+              descriptor="Have you ever won any related National Olympiad in Mathematics or Informatics prizes?"
+              width="100%"
+            />
+          )}
 
           {hasNationalPrize && (
             <DescriptiveTextInput
@@ -272,20 +281,22 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          <RadioButton
-            label="International Olympiad Prizes in Mathematics or Informatics"
-            options={['Yes', 'No']}
-            selectedOption={
-              hasInternationalPrize === undefined ? '' : hasInternationalPrize ? 'Yes' : 'No'
-            }
-            onOptionChange={(e) => {
-              const internationalPrize = e.target.value === 'Yes';
-              setHasInternationalPrize(internationalPrize);
-            }}
-            required={true}
-            descriptor="Have you ever won any related International Olympiad prizes?"
-            width="100%"
-          />
+          {formData.competitionLevel !== "Level B" && (
+            <RadioButton
+              label="International Olympiad Prizes in Mathematics or Informatics"
+              options={['Yes', 'No']}
+              selectedOption={
+                hasInternationalPrize === undefined ? '' : hasInternationalPrize ? 'Yes' : 'No'
+              }
+              onOptionChange={(e) => {
+                const internationalPrize = e.target.value === 'Yes';
+                setHasInternationalPrize(internationalPrize);
+              }}
+              required={true}
+              descriptor="Have you ever won any related International Olympiad prizes?"
+              width="100%"
+            />
+          )}
 
           {hasInternationalPrize && (
             <DescriptiveTextInput
@@ -295,6 +306,31 @@ export const CompetitionExperience: FC = () => {
               value={formData.internationalPrizes || ""}
               onChange={(e) => setFormData({ ...formData, internationalPrizes: e.target.value })}
               width="100%"
+            />
+          )}
+
+          {formData.competitionLevel !== "Level B" && (
+            <RadioButton
+            label="Boersen Prize Eligibility"
+            options={['Yes', 'No']}
+            selectedOption={
+              formData.boersenEligible === undefined 
+                ? '' 
+                : formData.boersenEligible 
+                ? 'Yes' 
+                : 'No'
+            }
+            onOptionChange={(e) => {
+              const isBoersenEligible = e.target.value === 'Yes';
+              setFormData({ ...formData, boersenEligible: isBoersenEligible });
+            }}
+            required={false}
+            descriptor={[
+              "This prize celebrates the work of Ms. Raewyn Boersen, previous South Pacific Director, Founder, and recipient of the Mark Measures Distinguished Service Award.",
+              "The prize is awarded to the top team of all women or non-binary students. If this team places in the top half of level A, then they qualify to the Regional Finals.","",
+              "Select 'Yes' if you are women or non-binary, or 'No' otherwise."
+            ]}
+            width="100%"
             />
           )}
 

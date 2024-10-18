@@ -53,6 +53,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       `SELECT cu.competition_roles AS roles
       FROM competition_users AS cu WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}`
     );
+    if (dbResult.rows.length === 0) {
+      return [];
+    }
     return parse(dbResult.rows[0].roles) as Array<CompetitionUserRole>;
   }
 
@@ -267,14 +270,15 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let competitionRoles = competitionUserInfo.competitionRoles;
     let ICPCEligible = competitionUserInfo.ICPCEligible;
     let competitionLevel = competitionUserInfo.competitionLevel;
-    let boersenEligible = competitionUserInfo.boersenEligible;
+    let boersenEligible = competitionUserInfo.boersenEligible || false;
     let degreeYear = competitionUserInfo.degreeYear;
     let degree = competitionUserInfo.degree;
     let isRemote = competitionUserInfo.isRemote;
-    let nationalPrizes = competitionUserInfo.nationalPrizes || [];
-    let internationalPrizes = competitionUserInfo.internationalPrizes || [];
+    let nationalPrizes = competitionUserInfo.nationalPrizes || "";
+    let internationalPrizes = competitionUserInfo.internationalPrizes || "";
     let codeforcesRating = competitionUserInfo.codeforcesRating || 0;
     let universityCourses = competitionUserInfo.universityCourses || [];
+    let pastRegional = competitionUserInfo.pastRegional || false;
 
     const competitionJoinQuery = `
       INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses)
@@ -296,6 +300,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       codeforcesRating,
       universityCourses
     ];
+
+    console.log(competitionJoinValues);
 
     // Insert user into competition_users table and get competition_user_id
     const result = await this.pool.query(competitionJoinQuery, competitionJoinValues);

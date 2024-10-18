@@ -13,8 +13,9 @@ export interface Competition {
 }
 
 export enum CompetitionLevel {
-  LEVELA = 'A',
-  LEVELB = 'B'
+  LEVELA = 'Level A',
+  LEVELB = 'Level B',
+  NOPREFERENCE = 'No Preference'
 }
 
 export const DEFAULT_COUNTRY = 'Australia';

@@ -24,8 +24,8 @@ const initialState: FormState = {
   courses: [],
   codeforce: undefined,
   regional: undefined,
-  nationalPrizes: undefined,
-  internationalPrizes: undefined,
+  nationalPrizes: "",
+  internationalPrizes: "",
 }
 
 interface MultiStepCompRegoFormContextType {

@@ -198,7 +198,7 @@ export const CompetitionIndividual: FC = () => {
           />
 
           <RadioButton
-            label="ICPC Officiality"
+            label="ICPC Eligibility"
             options={['Yes', 'No']}
             selectedOption={
               formData.ICPCEligibility === undefined ? '' : formData.ICPCEligibility ? 'Yes' : 'No'
@@ -249,27 +249,6 @@ export const CompetitionIndividual: FC = () => {
             descriptor="Will you be attending on site or remotely?"
             width="100%"
           />
-          
-          { (user.gender !== "M") && (
-            <RadioButton
-            label="Boersen Prize Eligibility"
-            options={['Yes', 'No']}
-            selectedOption={
-              formData.boersenEligible === undefined 
-                ? '' 
-                : formData.boersenEligible 
-                ? 'Yes' 
-                : 'No'
-            }
-            onOptionChange={(e) => {
-              const isBoersenEligible = e.target.value === 'Yes';
-              setFormData({ ...formData, boersenEligible: isBoersenEligible });
-            }}
-            required={false}
-            descriptor="Are you a female or non-binary participant who would like to compete for the Boersen Prize?"
-            width="100%"
-          />
-          )}
 
           <ButtonContainer>
             <Button onClick={handleBack}>Back</Button>
