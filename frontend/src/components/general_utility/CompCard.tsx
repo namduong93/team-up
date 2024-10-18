@@ -114,7 +114,7 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
     if (roles.includes('Participant')) {
       return `/competition/participant/${compId}`;
     }
-    return `/competition/page/1`;
+    return `/competition/page/${compId}`;
   };
 
   // const roleUrl = (role: string) => {
