@@ -368,7 +368,7 @@ INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, gen
 VALUES 
 ('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024'),
 ('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024'),
-('ICPC World Final', 3, '2024-10-19 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025');
+('ICPC World Final', 3, '2024-10-10 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025');
 
 -- Competition Sites
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
