@@ -110,7 +110,10 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
 
   // for demo A
   const roleUrl = (_: string) => {
-    return `/competition/page/${compId}`;
+    if (roles.includes('Participant')) {
+      return `/competition/page/${compId}`;
+    }
+    return `/competition/page/1`;
   };
 
   // const roleUrl = (role: string) => {
