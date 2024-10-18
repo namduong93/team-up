@@ -177,18 +177,18 @@ export const CompetitionConfirmation: FC = () => {
 
     const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations, otherSiteLocations } = competitionInfo;
     const payload = {
-        name,
-        earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
-        generalRegDeadline: `${generalDate}T${generalTime}:00`,
-        code,
-        siteLocations: siteLocations.map(location => ({
-          universityId: location.universityId, 
-          name: location.defaultSite, 
-        })),
-        // otherSiteLocations: otherSiteLocations.map(location => ({
-        //   universityName: location.universityName, 
-        //   name: location.defaultSite, 
-        // })),
+      name,
+      earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
+      generalRegDeadline: `${generalDate}T${generalTime}:00`,
+      code,
+      siteLocations: siteLocations.map(location => ({
+        universityId: location.universityId, 
+        name: location.defaultSite, 
+      })),
+      // otherSiteLocations: otherSiteLocations.map(location => ({
+      //   universityName: location.universityName, 
+      //   name: location.defaultSite, 
+      // })),
     };
 
     try {

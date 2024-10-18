@@ -101,6 +101,22 @@ export const CompCreationProgressBar: FC<ProgressBarProps> = ({ progressNumber =
   )
 }
 
+export const CompRegistrationProgressBar: FC<ProgressBarProps> = ({ progressNumber = 0 }) => {
+  return (
+    <ProgressBar progressNumber={progressNumber}>
+      <span>
+        Competition Information
+      </span>
+      <span>
+        Individual Information
+      </span>
+      <span>
+        Competitive Experience Information
+      </span>
+    </ProgressBar>
+  )
+}
+
 // ACCEPTS PROPS:
 //  - progressNumber: number --- The index to specify the currently highlighted progress circle
 //  - children --- Any ReactNodes that should appear next to the progress circle. (for every 

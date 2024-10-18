@@ -189,32 +189,3 @@ const Button = styled.button<{ disabled?: boolean }>`
 const CreateAccountButton = styled(Button)`
   min-width: 100px;
 `
-
-// const styles: Record<string, React.CSSProperties> = {
-//   buttonContainer: {
-//     display: 'flex',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     width: '100%',
-//     gap: '90px',
-//   },
-//   button: {
-//     maxWidth: '150px',
-//     width: '25%',
-//     height: '35px',
-//     border: '0px',
-//     borderRadius: '30px',
-//     backgroundColor: '#6688D2',
-//     marginTop: '35px',
-//     marginBottom: '40px',
-//     color: '#ffffff',
-//     fontSize: '16px',
-//     fontWeight: 'bold',
-//     cursor: 'pointer',
-//     fontFamily: 'Arial, Helvetica, sans-serif',
-//   },
-//   buttonDisabled: {
-//     backgroundColor: '#ccc',
-//     cursor: 'not-allowed',
-//   },
-// };
