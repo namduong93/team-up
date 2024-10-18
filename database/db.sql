@@ -83,10 +83,10 @@ CREATE TABLE competition_sites (
 
   capacity INT,
 
-  CONSTRAINT unique_site_competition UNIQUE (competition_id, name) 
+  CONSTRAINT unique_site_competition UNIQUE (competition_id, name, university_id)
 );
 
-CREATE TYPE competition_role_enum AS ENUM ('participant', 'coach', 'admin', 'site-coordinator');
+CREATE TYPE competition_role_enum AS ENUM ('Participant', 'Coach', 'Admin', 'Site-Coordinator');
 CREATE TYPE competition_level_enum AS ENUM ('Level A', 'Level B', 'No Preference');
 
 CREATE TABLE competition_users (
@@ -240,7 +240,7 @@ VALUES
 ( -- id: 2
   'Coach 1',
   'Coach One',
-  'testcoach1@example.com',
+  'coach@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
@@ -381,25 +381,26 @@ VALUES
 -- Competition Admin(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles)
 VALUES
-(1, 1, ARRAY['admin']::competition_role_enum[]),
-(1, 2, ARRAY['admin']::competition_role_enum[]),
-(1, 3, ARRAY['admin']::competition_role_enum[]);
+(1, 1, ARRAY['Admin']::competition_role_enum[]),
+(1, 2, ARRAY['Admin']::competition_role_enum[]),
+(1, 3, ARRAY['Admin']::competition_role_enum[]);
 
 -- Competition Coach(es)
 INSERT INTO competition_users (user_id, competition_id, competition_roles)
 VALUES
-(2, 1, ARRAY['coach']::competition_role_enum[]),
-(2, 2, ARRAY['coach']::competition_role_enum[]),
-(2, 3, ARRAY['coach']::competition_role_enum[]);
+(2, 1, ARRAY['Coach']::competition_role_enum[]),
+(2, 2, ARRAY['Coach']::competition_role_enum[]),
+(2, 3, ARRAY['Coach']::competition_role_enum[]);
 
 -- Competition Site Coordinator(s)
-INSERT INTO competition_users (user_id, competition_id, competition_roles, site_attending_id)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id)
 VALUES
-(4, 1, ARRAY['site-coordinator']::competition_role_enum[], 1);
+(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 1);
 
 -- Competition Participants
 INSERT INTO competition_users (
   user_id, competition_id, competition_roles,
+  competition_coach_id,
   icpc_eligible,
   competition_level,
   boersen_eligible,
@@ -414,16 +415,16 @@ INSERT INTO competition_users (
   past_regional
 )
 VALUES
-    (5, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (6, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (7, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (8, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (9, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (10, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE);
+    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE);
 
 INSERT INTO competition_teams (
   competition_coach_id, name, team_status, team_name_approved, team_size, participants, university_id, competition_id
 )
 VALUES
-(2, 'Team Zeta', 'registered', FALSE, 3, ARRAY[8, 9, 10], 2, 1),
-(2, 'Team Alpha', 'pending', FALSE, 3, ARRAY[5, 6, 7], 2, 1);
+(4, 'Team Zeta', 'registered', FALSE, 3, ARRAY[8, 9, 10], 2, 1),
+(4, 'Team Alpha', 'pending', FALSE, 3, ARRAY[5, 6, 7], 2, 1);
