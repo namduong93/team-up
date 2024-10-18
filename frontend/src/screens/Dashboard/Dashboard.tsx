@@ -16,6 +16,7 @@ interface Competition {
   compDate: string; // format: "YYYY-MM-DD"
   roles: string[];
   compId: string;
+  compCreatedDate: string;
 }
 
 interface DashboardsProps {
@@ -157,7 +158,8 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
         const fakeComps = await sendRequest.get<{ competitions: Competition[] }>('/competitions/list');
         const formattedCompetitions = fakeComps.data.competitions.map(comp => ({
           ...comp,
-          compDate: new Date(comp.compDate).toISOString().split('T')[0]
+          compDate: new Date(comp.compDate).toISOString().split('T')[0],
+          compCreatedDate: new Date(comp.compCreatedDate).toISOString().split('T')[0]
         }));
         console.log(formattedCompetitions);
         setCompetitions(formattedCompetitions);
@@ -380,7 +382,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                 compDate={comp.compDate}
                 roles={comp.roles}
                 compId={comp.compId}
-                compCreationDate={comp.compDate}
+                compCreationDate={comp.compCreatedDate}
               />
             ))}
           </CompetitionGrid>

@@ -4,11 +4,12 @@ export interface Competition {
   id?: number,
   name: string,
   teamSize?: number,
+  createdDate: EpochTimeStamp,
   earlyRegDeadline: EpochTimeStamp,
   generalRegDeadline: EpochTimeStamp,
   siteLocations?: CompetitionSiteObject[],
   otherSiteLocations?: CompetitionOtherSiteObject[],
-  code?: string
+  code?: string,
 }
 
 export enum CompetitionLevel {
@@ -26,7 +27,8 @@ export type CompetitionShortDetailsObject = {
   compName: string,
   location: string,
   compDate: string,
-  roles: CompetitionUserRole[]
+  roles: CompetitionUserRole[],
+  compCreatedDate: string
  };
 
 // TODO: Revise this type

@@ -42,6 +42,7 @@ export class CompetitionController {
 
     const newCompetition: Competition = {
       name: req.body.name,
+      createdDate: Date.now(),
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
       code : req.body.code,
@@ -63,6 +64,7 @@ export class CompetitionController {
       id: req.body.id,
       name: req.body.name,
       teamSize: req.body.teamSize,
+      createdDate: Date.now(),
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
       siteLocations: req.body.siteLocations,

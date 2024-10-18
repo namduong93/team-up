@@ -66,6 +66,7 @@ CREATE TABLE competitions (
   
   name TEXT NOT NULL,
   team_size INT NOT NULL,
+  created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   early_reg_deadline TIMESTAMP NOT NULL,
   general_reg_deadline TIMESTAMP NOT NULL,
   code VARCHAR(8) NOT NULL
@@ -143,9 +144,9 @@ CREATE TABLE competition_teams (
 );
 
 CREATE OR REPLACE FUNCTION competition_list(u_id INT)
-RETURNS TABLE(id INT, name TEXT, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
+RETURNS TABLE(id INT, name TEXT, created_date TIMESTAMP, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
 AS $$
-  SELECT c.id AS id, c.name AS name, early_reg_deadline, general_reg_deadline
+  SELECT c.id AS id, c.name AS name, created_date, early_reg_deadline, general_reg_deadline
   FROM competition_users as cu
   JOIN competitions AS c ON c.id = cu.competition_id
   WHERE cu.user_id = u_id;
@@ -363,11 +364,11 @@ VALUES
   'z000006');
 
 -- Competitions
-INSERT INTO competitions (name, team_size, early_reg_deadline, general_reg_deadline, code)
+INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code)
 VALUES 
-('Test Competition 1', 3, '2024-10-20 00:00:00', '2024-10-15 00:00:00', 'TSTC1'),
-('Test Competition 2', 3, '2024-10-25 00:00:00', '2024-10-20 00:00:00', 'TSTC2'),
-('Test Competition 3', 3, '2024-11-10 00:00:00', '2024-11-01 00:00:00', 'TSTC3');
+('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024'),
+('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024'),
+('ICPC World Final', 3, '2024-10-19 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025');
 
 -- Competition Sites
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
@@ -379,13 +380,16 @@ VALUES
 -- Competition Admin(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles)
 VALUES
-(1, 1, ARRAY['admin']::competition_role_enum[]);
+(1, 1, ARRAY['admin']::competition_role_enum[]),
+(1, 2, ARRAY['admin']::competition_role_enum[]),
+(1, 3, ARRAY['admin']::competition_role_enum[]);
 
 -- Competition Coach(es)
 INSERT INTO competition_users (user_id, competition_id, competition_roles)
 VALUES
 (2, 1, ARRAY['coach']::competition_role_enum[]),
-(2, 2, ARRAY['coach']::competition_role_enum[]);
+(2, 2, ARRAY['coach']::competition_role_enum[]),
+(2, 3, ARRAY['coach']::competition_role_enum[]);
 
 -- Competition Site Coordinator(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id)
