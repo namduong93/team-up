@@ -35,6 +35,7 @@ import { CompetitionExperience } from './screens/competition/CompExperience';
 function App() {
   const [theme, setTheme ] = useState(defaultTheme)
   
+  // TODO: remove this hardcoding after demo pls
   const name = "Name";
   const affiliation = "UNSW";
   const competitions = [
