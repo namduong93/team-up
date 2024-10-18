@@ -15,7 +15,7 @@ const AdminToggleOptionDiv = styled(ToggleOptionDiv)`
   box-sizing: border-box;
 `;
 
-export type CompetitionRole = 'participant' | 'coach' | 'admin' | 'site-coordinator';
+export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
@@ -71,27 +71,27 @@ export const CompetitionPage: FC = () => {
         <PageOptionsContainerDiv>
           <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
             
-            {(roles.includes('admin') || roles.includes('coach') || roles.includes('site-coordinator')) &&
+            {(roles.includes('Admin') || roles.includes('Coach') || roles.includes('Site-Coordinator')) &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/teams/${compId}`) }}>
               <ToggleOptionTextSpan>Teams</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
 
-            {(roles.includes('admin') || roles.includes('coach')) &&
+            {(roles.includes('Admin') || roles.includes('Coach')) &&
               <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/students/${compId}`) }}>
               <ToggleOptionTextSpan>Students</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
 
-            {(roles.includes('admin')) &&
+            {(roles.includes('Admin')) &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/staff/${compId}`) }}>
               <ToggleOptionTextSpan>Staff</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
             
-            {roles.includes('admin') &&
+            {roles.includes('Admin') &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/site/${compId}`) }}>
               <ToggleOptionTextSpan>Site</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
 
-            {roles.includes('site-coordinator') &&
+            {roles.includes('Site-Coordinator') &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/site/${compId}`) }}>
               <ToggleOptionTextSpan>Attendees</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
