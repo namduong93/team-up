@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
-import { FaEdit, FaRegCopy } from "react-icons/fa";
+import { FaEdit, FaRegCopy, FaCheck } from "react-icons/fa";
 import { EditCompPreferences } from "./EditCompPreferences";
 import { StudentDetails } from "./EditCompPreferences";
 import defaultProfile from "./default-profile.jpg";
@@ -95,7 +95,6 @@ const ContentContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 5%;
 `;
 
@@ -123,16 +122,16 @@ const StudentEmail = styled.p`
   align-items: center;
 `;
 
-const CopyIcon = styled(FaRegCopy)`
+const CopyIcon = styled(FaRegCopy)<{ $copied: boolean }>`
   margin-left: 5%;
   width: 15px;
   height: 15px;
   cursor: pointer;
-  color: ${({ theme }) => theme.colours.primaryDark};
+  color: ${({ theme, $copied: copied }) => (copied ? theme.colours.confirm : theme.colours.primaryDark)};
   transition: color 0.2s;
 
   &:hover {
-    color: ${({ theme }) => theme.colours.secondaryDark};
+      color: ${({ theme }) => theme.colours.secondaryDark};
   }
 `;
 
@@ -179,10 +178,12 @@ export const TeamDetails: FC = () => {
     students: Student[];
   }>();
   const [editingPreferences, setEditingPreferences] = useState<StudentDetails | null>(null);
+  const [copiedEmailIndex, setCopiedEmailIndex] = useState<number | null>(null);
 
-  const copyToClipboard = (email: string) => {
+  const copyToClipboard = (email: string, index: number) => {
     navigator.clipboard.writeText(email);
-    alert(`${email} copied to clipboard!`);
+    setCopiedEmailIndex(index);
+    setTimeout(() => setCopiedEmailIndex(null), 2000);
   };
 
   const handleSave = (updatedStudent: StudentDetails) => {
@@ -244,13 +245,20 @@ export const TeamDetails: FC = () => {
                     <StudentName>{student.name}</StudentName>
                     <StudentEmail>
                       {student.email}
-                      <CopyIcon onClick={() => copyToClipboard(student.email)} />
+                      {copiedEmailIndex === index ? (
+                        <FaCheck style={{ color: 'green', marginLeft: '5%', width: '15px', height: '15px' }} />
+                      ) : (
+                        <CopyIcon
+                          $copied={copiedEmailIndex === index}
+                          onClick={() => copyToClipboard(student.email, index)}
+                        />
+                      )}
                     </StudentEmail>
                   </div>
                   <StudentBio>{student.bio}</StudentBio>
                 </StudentInfo>
               </ContentContainer>
-              {index === 0 && ( // Render EditIcon only for the first student card
+              {index === 0 && ( // Render Edit functionality only for the first student card
                 <EditIcon
                   onClick={async () => {
                     const studentDetails = await fetchStudentDetails(student.id);
@@ -265,8 +273,8 @@ export const TeamDetails: FC = () => {
       {editingPreferences && (
         <EditCompPreferences
           student={editingPreferences}
-          onClose={() => setEditingPreferences(null)}
           onSave={handleSave}
+          onCancel={() => setEditingPreferences(null)}
         />
       )}
     </DetailsContainer>

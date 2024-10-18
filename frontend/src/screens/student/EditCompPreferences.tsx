@@ -20,9 +20,9 @@ export interface StudentDetails extends Student {
 
 interface EditCompPreferencesProps {
   student: StudentDetails;
-  onClose: () => void;
   onSave: (updatedStudent: StudentDetails) => void;
-}
+  onCancel: () => void;
+};
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -100,8 +100,8 @@ const Button = styled.button`
 
 export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   student,
-  onClose,
   onSave,
+  onCancel, // Use onCancel prop
 }) => {
   const [formData, setFormData] = useState<StudentDetails>(student);
 
@@ -126,7 +126,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSave(formData);
-    onClose();
+    onCancel(); // Call onCancel after saving
   };
 
   return (
@@ -240,7 +240,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Input type="text" value={formData.boersenEligible ? "Yes" : "No"} readOnly />
           </Field>
           <Button type="submit">Save</Button>
-          <Button type="button" onClick={onClose}>
+          <Button type="button" onClick={onCancel}> {/* Call onCancel when Cancel is clicked */}
             Cancel
           </Button>
         </Form>
