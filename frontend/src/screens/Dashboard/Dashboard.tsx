@@ -19,7 +19,6 @@ interface Competition {
 }
 
 interface DashboardsProps {
-  competitions: Competition[];
   dashInfo: DashInfo
 }
 
@@ -126,7 +125,7 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
+export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -142,7 +141,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [fakeCompetitions, setFakeCompetitions] = useState<Competition[]>([]);
+  const [competitions, setCompetitions] = useState<Competition[]>([]);
   const navigate = useNavigate();
 
 
@@ -152,14 +151,15 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setIsAdmin(typeResponse.data.type === "system_admin");
         setIsLoaded(true);
-        console.log("what");
 
         const fakeComps = await sendRequest.get<{ competitions: Competition[] }>('/competitions/list');
-        setFakeCompetitions(fakeComps.data.competitions);
-
-        console.log('here', fakeComps.data.competitions);
-        console.log('here Fake Competitions: ', fakeCompetitions);
-
+        const formattedCompetitions = fakeComps.data.competitions.map(comp => ({
+          ...comp,
+          compDate: new Date(comp.compDate).toISOString().split('T')[0]
+        }));
+        console.log(formattedCompetitions);
+        setCompetitions(formattedCompetitions);
+  
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           setIsLoaded(false);

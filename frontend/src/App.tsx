@@ -182,7 +182,7 @@ function App() {
               <Route path='site/:compId' element={<div>Site</div>} />
             </Route>
 
-            <Route path="/dashboard" element={<Dashboard dashInfo={dashInfo} competitions={competitions} />} />
+            <Route path="/dashboard" element={<Dashboard dashInfo={dashInfo} />} />
             <Route path="/account" element={<Account setDashInfo={setDashInfo} />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/competition/:compId/:role" element={<Competition />} />

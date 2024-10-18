@@ -365,9 +365,9 @@ VALUES
 -- Competitions
 INSERT INTO competitions (name, team_size, early_reg_deadline, general_reg_deadline, code)
 VALUES 
-('Test Competition 1', 3, '204-10-20 00:00:00', '2024-10-15 00:00:00', 'TSTC1'),
-('Test Competition 2', 3, '204-10-25 00:00:00', '2024-10-20 00:00:00', 'TSTC2'),
-('Test Competition 3', 3, '204-11-10 00:00:00', '2024-11-01 00:00:00', 'TSTC3');
+('Test Competition 1', 3, '2024-10-20 00:00:00', '2024-10-15 00:00:00', 'TSTC1'),
+('Test Competition 2', 3, '2024-10-25 00:00:00', '2024-10-20 00:00:00', 'TSTC2'),
+('Test Competition 3', 3, '2024-11-10 00:00:00', '2024-11-01 00:00:00', 'TSTC3');
 
 -- Competition Sites
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
