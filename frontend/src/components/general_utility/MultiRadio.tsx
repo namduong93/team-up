@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface CheckboxOption {
@@ -10,8 +10,9 @@ interface MultiSelectCheckboxGroupProps {
   options: CheckboxOption[];
   selectedValues: string[];
   onChange: (values: string[]) => void;
-  label: string;
+  label: string | React.ReactNode;
   descriptor?: string;
+  showOther?: boolean;  // New prop to control "Other" visibility
 }
 
 const Container = styled.div`
@@ -68,14 +69,37 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
   onChange,
   label,
   descriptor,
+  showOther = true,  
 }) => {
   const [otherValue, setOtherValue] = useState('');
 
-  const handleChange = (value: string) => {
-    const newSelectedValues = selectedValues.includes(value)
-      ? selectedValues.filter((val) => val !== value)
-      : [...selectedValues, value];
-    onChange(newSelectedValues);
+  useEffect(() => {
+    if (!otherValue && selectedValues.includes('other')) {
+      onChange(selectedValues.filter((val) => val !== 'other'));
+    }
+  }, [otherValue, selectedValues, onChange]);
+
+  const handleCheckboxChange = (value: string) => {
+    if (selectedValues.includes(value)) {
+      onChange(selectedValues.filter((val) => val !== value));
+    } else {
+      onChange([...selectedValues, value]);
+    }
+  };
+
+  const handleOtherBlur = () => {
+    if (otherValue && !selectedValues.includes(otherValue)) {
+      onChange([...selectedValues.filter((val) => val !== 'other'), otherValue]);
+    }
+  };
+
+  const handleOtherCheckboxChange = () => {
+    if (selectedValues.includes('other')) {
+      setOtherValue(''); 
+      onChange(selectedValues.filter((val) => val !== 'other'));
+    } else {
+      onChange([...selectedValues, 'other']);
+    }
   };
 
   return (
@@ -89,31 +113,29 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
             id={option.value}
             value={option.value}
             checked={selectedValues.includes(option.value)}
-            onChange={() => handleChange(option.value)}
+            onChange={() => handleCheckboxChange(option.value)}
           />
           <CheckboxLabel htmlFor={option.value}>{option.label}</CheckboxLabel>
         </CheckboxContainer>
       ))}
-      <CheckboxContainer>
-        <CheckboxInput
-          type="checkbox"
-          id="other"
-          value="other"
-          checked={selectedValues.includes('other')}
-          onChange={() => handleChange('other')}
-        />
-        <CheckboxLabel htmlFor="other">Other:</CheckboxLabel>
-        <OtherInput
-          type="text"
-          value={otherValue}
-          onChange={(e) => setOtherValue(e.target.value)}
-          onBlur={() => {
-            if (otherValue) {
-              onChange([...selectedValues, otherValue]);
-            }
-          }}
-        />
-      </CheckboxContainer>
+      {showOther && (
+        <CheckboxContainer>
+          <CheckboxInput
+            type="checkbox"
+            id="other"
+            value="other"
+            checked={selectedValues.includes('other')}
+            onChange={handleOtherCheckboxChange}
+          />
+          <CheckboxLabel htmlFor="other">Other:</CheckboxLabel>
+          <OtherInput
+            type="text"
+            value={otherValue}
+            onChange={(e) => setOtherValue(e.target.value)}
+            onBlur={handleOtherBlur}
+          />
+        </CheckboxContainer>
+      )}
     </Container>
   );
 };

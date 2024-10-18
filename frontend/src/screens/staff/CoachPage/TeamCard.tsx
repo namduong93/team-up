@@ -110,6 +110,7 @@ const RedTeamNameAlert = styled(CiCircleAlert)`
   color: red;
   min-height: 32px;
   min-width: 32px;
+  margin-right: 5%;
 `;
 
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
