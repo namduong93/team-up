@@ -1,7 +1,12 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
 import { StudentInfoCard } from "./StudentInfoCard";
+import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
+import { useOutletContext, useParams } from "react-router-dom";
+import { CompetitionPageContext } from "./TeamDisplay";
+import Fuse from "fuse.js";
+import { sendRequest } from "../../../utility/request";
 
 const WideStudentDisplayDiv = styled.div`
   flex: 1;
@@ -13,18 +18,21 @@ const WideStudentDisplayDiv = styled.div`
   }
 `;
 
-export interface StudentInfo extends React.HTMLAttributes<HTMLDivElement> {
-  studentInfo: {
-    name: string,
-    sex: string,
-    email: string,
-    studentId: string,
-    status: string,
-    level: string,
-    tshirtShize: string,
-    siteName: string,
-    teamName?: string,
-  };
+
+interface StudentInfo {
+  name: string;
+  sex: string;
+  email: string;
+  studentId: string;
+  status: string;
+  level: string;
+  tshirtSize: string;
+  siteName: string;
+  teamName?: string;
+};
+
+export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  studentInfo: StudentInfo;
   isHeader?: boolean;
 }
 
@@ -158,7 +166,7 @@ const EmailSpan = styled.span<{ isHeader: boolean }>`
   position: absolute;
 `;
 
-export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader = false, ...props }) => {
+export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
 
   return (
     <StudentInfoContainerDiv style={style} {...props}>
@@ -196,7 +204,7 @@ export const StudentInfoDiv: FC<StudentInfo> = ({ style, studentInfo, isHeader =
         <SmallContainerDiv>{studentInfo.level}</SmallContainerDiv>
 
         <SmallContainerDiv>
-          {studentInfo.tshirtShize}
+          {studentInfo.tshirtSize}
         </SmallContainerDiv>
 
         <UniversityContainerDiv>
@@ -221,34 +229,269 @@ const NarrowStudentDisplaydiv = styled.div`
   }
 `;
 
+const STUDENT_DISPLAY_SORT_OPTIONS = [
+  { label: "Default", value: "original" },
+  { label: "Alphabetical (Name)", value: "name" },
+  { label: "Alphabetical (Team Name)", value: "teamName" },
+]
+
+const STUDENT_DISPLAY_FILTER_OPTIONS = {
+  Status: ['Matched', 'Unmatched'],
+};
 
 export const StudentDisplay = () => {
+  const { filters, sortOption, searchTerm, removeFilter,
+    setFilterOptions, setSortOptions
+  } = useOutletContext<CompetitionPageContext>();
+  
+  const { compId } = useParams();
+
+  setSortOptions(STUDENT_DISPLAY_SORT_OPTIONS);
+  setFilterOptions(STUDENT_DISPLAY_FILTER_OPTIONS);
+
+  const [students, setStudents] = useState<Array<StudentInfo>>([]);
+
+  useEffect(() => {
+    if (!compId) {
+      return;
+    }
+
+    const fetchStudents = async () => {
+    const studentsResponse = await sendRequest.get<{ students: Array<StudentInfo>}>('/competition/students', { compId: parseInt(compId as string) });
+      const { students } = studentsResponse.data;
+      setStudents([ ...students,
+        {
+          name: 'Ernest Perkins',
+          sex: 'F',
+          email: 'lofvo@ajugip.bm',
+          studentId: '5717686',
+          status: 'Unmatched',
+          level: 'A',
+          tshirtSize: 'XS',
+          siteName: 'eat grown coal ',
+          teamName: 'ask diagram slightly',
+        },
+        {
+          name: 'Rena Powers',
+          sex: 'F',
+          email: 'rog@we.bg',
+          studentId: '9579323',
+          status: 'Unmatched',
+          level: 'A',
+          tshirtSize: 'M',
+          siteName: 'development few way ',
+          teamName: 'seeing cowboy easily',
+        },
+        {
+          name: 'Brent Johnston',
+          sex: 'M',
+          email: 'ilusonu@fiwjeka.bh',
+          studentId: '7122240',
+          status: 'Matched',
+          level: 'A',
+          tshirtSize: 'M',
+          siteName: 'share beauty game ',
+          teamName: 'rocky butter nuts',
+        },
+        {
+          name: 'Leonard Holmes',
+          sex: 'NB',
+          email: 'jisufov@wis.vn',
+          studentId: '2116157',
+          status: 'Matched',
+          level: 'A',
+          tshirtSize: 'M',
+          siteName: 'sure fresh contain ',
+          teamName: 'season layers skin',
+        },
+        {
+          name: 'Phillip Soto',
+          sex: 'F',
+          email: 'inosi@ijmajhij.io',
+          studentId: '9061298',
+          status: 'Matched',
+          level: 'B',
+          tshirtSize: '5XL',
+          siteName: 'percent generally noon ',
+          teamName: 'star differ birthday',
+        },
+        {
+          name: 'Jordan Allison',
+          sex: 'M',
+          email: 'ucaip@ote.tc',
+          studentId: '2722497',
+          status: 'Unmatched',
+          level: 'A',
+          tshirtSize: 'XS',
+          siteName: 'blew language piano ',
+          teamName: 'swam fish attention',
+        },
+        {
+          name: 'Cody Tran',
+          sex: 'F',
+          email: 'hewos@ja.wf',
+          studentId: '4852517',
+          status: 'Unmatched',
+          level: 'B',
+          tshirtSize: 'XS',
+          siteName: 'blue rather cattle ',
+          teamName: 'ought telephone rule',
+        },
+        {
+          name: 'Jonathan Turner',
+          sex: 'F',
+          email: 'odjuf@vebar.be',
+          studentId: '1046450',
+          status: 'Matched',
+          level: 'B',
+          tshirtSize: 'XS',
+          siteName: 'contrast halfway sheet ',
+          teamName: 'offer golden just',
+        },
+        {
+          name: 'Ada Wolfe',
+          sex: 'F',
+          email: 'luf@soralogob.nl',
+          studentId: '9066512',
+          status: 'Matched',
+          level: 'A',
+          tshirtSize: 'L',
+          siteName: 'sort flag final ',
+          teamName: 'noon although feet',
+        },
+        {
+          name: 'Patrick Glover',
+          sex: 'M',
+          email: 'jaz@umedufed.ms',
+          studentId: '8753821',
+          status: 'Unmatched',
+          level: 'A',
+          tshirtSize: 'L',
+          siteName: 'forgot idea muscle ',
+          teamName: 'able story melted',
+        },
+        {
+          name: 'Jeanette Sharp',
+          sex: 'M',
+          email: 'ricfu@nudu.mg',
+          studentId: '9045028',
+          status: 'Unmatched',
+          level: 'A',
+          tshirtSize: 'XL',
+          siteName: 'powder another question ',
+          teamName: 'average first disease',
+        },
+        {
+          name: 'Danny Fields',
+          sex: 'NB',
+          email: 'wil@dihij.cz',
+          studentId: '4361756',
+          status: 'Unmatched',
+          level: 'B',
+          tshirtSize: 'L',
+          siteName: 'became melted thought ',
+          teamName: 'does spread job',
+        },
+        {
+          name: 'Gary Quinn',
+          sex: 'F',
+          email: 'towzawco@how.ki',
+          studentId: '6143079',
+          status: 'Matched',
+          level: 'A',
+          tshirtSize: 'L',
+          siteName: 'walk out baseball ',
+          teamName: 'globe read lungs',
+        },
+        {
+          name: 'Adam Blake',
+          sex: 'NB',
+          email: 'damennok@iv.us',
+          studentId: '2886120',
+          status: 'Unmatched',
+          level: 'A',
+          tshirtSize: 'XS',
+          siteName: 'even basic opportunity ',
+          teamName: 'send mice close',
+        }
+        
+       ]);
+    }
+    fetchStudents();
+
+  }, []);
+
+  const filteredStudents = students.filter((studentInfo) =>{
+    if (filters.Status) {
+      if (!filters.Status.some((status) => status === studentInfo.status)) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  const sortedStudents = filteredStudents.sort((student1, student2) => {
+    if (!sortOption) {
+      return 0;
+    }
+
+    if (sortOption === 'name') {
+      return student1.name.localeCompare(student2.name);
+    }
+
+    if (sortOption === 'teamName') {
+      if (student1.teamName) {
+        if (!student2.teamName) {
+          return 1;
+        }
+
+        if (student2.teamName) {
+          return student1.teamName?.localeCompare(student2.teamName as string);
+        }
+      } else {
+        if (student2.teamName) {
+          return -1;
+        }
+      }
+    }
+    return 0;
+
+  });
+
+  const fuse = new Fuse(sortedStudents, {
+    keys: ['name', 'sex', 'email', 'studentId', 'status', 'teamName', 'level', 'tshirtSize', 'siteName'],
+    threshold: 0.5
+  });
+  
+  let searchedStudents;
+  if (searchTerm) {
+    searchedStudents = fuse.search(searchTerm);
+  } else {
+    searchedStudents = sortedStudents.map((student) => { return { item: student } });
+  }
+
   return (
+  <>
+  <div>
+      {Object.entries(filters).map(([field, values]) =>
+        values.map((value) => (
+        <FilterTagButton key={`${field}-${value}`}>
+          {value} 
+          <RemoveFilterIcon
+            onClick={(e) => {
+            e.stopPropagation();
+            removeFilter(field, value);
+            }} 
+          />
+        </FilterTagButton>
+        ))
+      )}
+    </div>
   <div style={ { flex: '1', width: '100%', height: '100%' } }>
     <NarrowStudentDisplaydiv>
-      <StudentInfoCard studentInfo={{
-          name: 'Leticia James',
-          sex: 'F',
-          email: 'thisisemailepic@gmail.com',
-          studentId: 'z0000000',
-          status: 'Unmatched',
-          teamName: 'The Goofy Goobers',
-          level: 'A',
-          tshirtShize: 'XS',
-          siteName: 'The University of Sydney'
-      }} />
-
-      <StudentInfoCard studentInfo={{
-        name: 'Michael Chonk',
-        sex: 'NB',
-        email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
-        studentId: 'z0000000',
-        teamName: 'GoogleGURLies ✨',
-        status: 'Matched',
-        level: 'B',
-        tshirtShize: '10XL',
-        siteName: 'UNSW Sydney'
-      }} />
+      {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
+        (<StudentInfoCard key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
 
     </NarrowStudentDisplaydiv>
     <WideStudentDisplayDiv>
@@ -263,32 +506,13 @@ export const StudentDisplay = () => {
         status: 'Status',
         teamName: 'Team Name',
         level: 'Level',
-        tshirtShize: 'Shirt Size',
+        tshirtSize: 'Shirt Size',
         siteName: 'Site'
       }}></StudentInfoDiv>
-      <StudentInfoDiv studentInfo={{
-        name: 'Leticia James',
-        sex: 'F',
-        email: 'thisisemailepic@gmail.com',
-        studentId: 'z0000000',
-        status: 'Unmatched',
-        teamName: 'The Goofy Goobers',
-        level: 'A',
-        tshirtShize: 'XS',
-        siteName: 'The University of Sydney'
-        }} ></StudentInfoDiv>
-      <StudentInfoDiv studentInfo={{
-        name: 'Michael Chonk',
-        sex: 'NB',
-        email: 'reallyaverylongemailthatcanpossiblyexistinthesystem@gmail.com',
-        studentId: 'z0000000',
-        teamName: 'GoogleGURLies ✨',
-        status: 'Matched',
-        level: 'B',
-        tshirtShize: '10XL',
-        siteName: 'UNSW Sydney'
-        }} ></StudentInfoDiv>
+      {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
+        (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
     </WideStudentDisplayDiv>
   </div>
+  </>
   );
 }

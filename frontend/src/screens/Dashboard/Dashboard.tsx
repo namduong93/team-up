@@ -319,7 +319,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
           <ActionButton
             actionName="Register"
             question="Register for a new competition?"
-            redirectPath="/competition/register"
+            redirectPath="/competition/information"
             actionType="primary"
           />
         </PageHeader>

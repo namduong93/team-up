@@ -23,7 +23,7 @@ const CompCardContainer = styled.div`
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out !important;
 
   &:hover {
     transform: translateY(-5px);
@@ -111,7 +111,10 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   // for demo A
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const roleUrl = (_: string) => {
-    return `/competition/${roles[0].toLowerCase()}/${compId}`;
+    if (roles.includes('Participant')) {
+      return `/competition/participant/${compId}`;
+    }
+    return `/competition/page/1`;
   };
 
   // const roleUrl = (role: string) => {
