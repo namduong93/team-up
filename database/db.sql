@@ -262,18 +262,36 @@ JOIN universities AS uni ON uni.id = u.university_id;
 
 CREATE OR REPLACE FUNCTION competition_coach_students(u_id INT, c_id INT)
 RETURNS TABLE(
-  name TEXT, sex TEXT, email TEXT, "studentId" TEXT,
+  "userId" INT, "universityId" INT, name TEXT, sex TEXT, email TEXT, "studentId" TEXT,
   status TEXT, level TEXT, "tshirtSize" TEXT, "siteName" TEXT, "teamName" TEXT)
 AS $$
-  SELECT u.name, u.gender AS sex, u.email, u.student_id AS "studentId", 'Matched' AS status,
-      cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName", ct.name AS "teamName"
-      FROM competition_users AS cu_coach
-      JOIN users AS u_coach ON cu_coach.user_id = u_coach.id
-      JOIN competition_users AS cu ON cu.competition_coach_id = cu_coach.id
-      JOIN users AS u ON u.id = cu.user_id
-      JOIN competition_sites AS cs ON cs.id = cu.site_attending_id
-      JOIN competition_teams AS ct ON (ct.participants[1] = u.id OR ct.participants[2] = u.id OR ct.participants[3] = u.id)
-      WHERE cu.competition_id = c_id AND cu_coach.user_id = u_id;
+  SELECT
+    u.id AS "userId", u.university_id AS "universityId", u.name,
+    u.gender AS sex, u.email, u.student_id AS "studentId", 'Matched' AS status,
+    cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName", ct.name AS "teamName"
+  FROM competition_users AS cu_coach
+  JOIN users AS u_coach ON cu_coach.user_id = u_coach.id
+  JOIN competition_users AS cu ON cu.competition_coach_id = cu_coach.id
+  JOIN users AS u ON u.id = cu.user_id
+  JOIN competition_sites AS cs ON cs.id = cu.site_attending_id
+  JOIN competition_teams AS ct ON (ct.participants[1] = u.id OR ct.participants[2] = u.id OR ct.participants[3] = u.id)
+  WHERE cu.competition_id = c_id AND cu_coach.user_id = u_id;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION competition_admin_students(c_id INT)
+RETURNS TABLE(
+  "userId" INT, "universityId" INT, name TEXT, sex TEXT, email TEXT, "studentId" TEXT,
+  status TEXT, level TEXT, "tshirtSize" TEXT, "siteName" TEXT, "teamName" TEXT)
+AS $$
+  SELECT
+    u.id AS "userId", u.university_id AS "universityId", u.name,
+    u.gender AS sex, u.email, u.student_id AS "studentId", 'Matched' AS status,
+    cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName", ct.name AS "teamName"
+  FROM competition_users AS cu
+  JOIN users AS u ON u.id = cu.user_id
+  JOIN competition_sites AS cs ON cs.id = cu.site_attending_id
+  JOIN competition_teams AS ct ON (ct.participants[1] = u.id OR ct.participants[2] = u.id OR ct.participants[3] = u.id)
+  WHERE cu.competition_id = c_id;
 $$ LANGUAGE sql;
 
 INSERT INTO universities (name) 
