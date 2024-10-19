@@ -88,6 +88,7 @@ CREATE TABLE competition_sites (
 
 CREATE TYPE competition_role_enum AS ENUM ('Participant', 'Coach', 'Admin', 'Site-Coordinator');
 CREATE TYPE competition_level_enum AS ENUM ('Level A', 'Level B', 'No Preference');
+CREATE TYPE competition_access_enum AS ENUM ('Accepted', 'Pending', 'Rejected');
 
 CREATE TABLE competition_users (
   id SERIAL PRIMARY KEY,
@@ -121,6 +122,9 @@ CREATE TABLE competition_users (
 
   -- site-coordinator info
   site_id INT REFERENCES competition_sites (id),
+
+  -- staff info
+  access_level competition_access_enum,
 
   CONSTRAINT unique_competition_user UNIQUE (user_id, competition_id)
 );
@@ -294,6 +298,20 @@ AS $$
   WHERE cu.competition_id = c_id;
 $$ LANGUAGE sql;
 
+CREATE OR REPLACE FUNCTION competition_staff(c_id INT)
+RETURNS TABLE(
+  "userId" INT, "name" TEXT, "roles" JSON,
+  "universityName" TEXT, "access" competition_access_enum, email TEXT )
+AS $$
+  SELECT
+    u.id AS "userId", u.name AS "name", TO_JSON(cu.competition_roles) AS "roles",
+    uni.name AS "universityName", cu.access_level AS "access", u.email AS "email"
+  FROM competition_users AS cu
+  JOIN users AS u ON cu.user_id = u.id
+  JOIN universities AS uni ON uni.id = u.university_id
+  WHERE cu.competition_id = c_id AND cu.competition_roles <> ARRAY['Participant']::competition_role_enum[];
+$$ LANGUAGE sql;
+
 INSERT INTO universities (name) 
 VALUES 
 ('University of Melbourne'),
@@ -457,7 +475,21 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000006');
+  'z000006'),
+  ( -- id: 11
+  'Coach 3',
+  'Coach Three',
+  'testcoach3@example.com',
+  '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
+  'M',
+  'he/him',
+  'XL',
+  'None',
+  '{}',
+  'Stairs Access',
+  'staff',
+  3,
+  NULL); -- password is 'pleasechange'
 
 -- Competitions
 INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code)
@@ -474,23 +506,24 @@ VALUES
 (3, 5, 'K7', 300);
 
 -- Competition Admin(s)
-INSERT INTO competition_users (user_id, competition_id, competition_roles)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
 VALUES
-(1, 1, ARRAY['Admin']::competition_role_enum[]),
-(1, 2, ARRAY['Admin']::competition_role_enum[]),
-(1, 3, ARRAY['Admin']::competition_role_enum[]);
+(1, 1, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
+(1, 2, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
+(1, 3, ARRAY['Admin']::competition_role_enum[], 'Accepted');
 
 -- Competition Coach(es)
-INSERT INTO competition_users (user_id, competition_id, competition_roles)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
 VALUES
-(2, 1, ARRAY['Coach']::competition_role_enum[]),
-(2, 2, ARRAY['Coach']::competition_role_enum[]),
-(2, 3, ARRAY['Coach']::competition_role_enum[]);
+(2, 1, ARRAY['Coach']::competition_role_enum[], 'Accepted'),
+(2, 2, ARRAY['Coach']::competition_role_enum[], 'Accepted'),
+(2, 3, ARRAY['Coach']::competition_role_enum[], 'Accepted');
 
 -- Competition Site Coordinator(s)
-INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
 VALUES
-(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 1);
+(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 1, 'Accepted');
+
 
 -- Competition Participants
 INSERT INTO competition_users (
@@ -516,6 +549,12 @@ VALUES
     (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
     (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
     (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE);
+
+-- Non-access coaches
+INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
+VALUES
+(3, 1, ARRAY['Coach']::competition_role_enum[], 1, 'Pending'),
+(11, 1, ARRAY['Coach']::competition_role_enum[], 1, 'Rejected');
 
 INSERT INTO competition_teams (
   competition_coach_id, name, team_status, team_name_approved, team_size, participants, university_id, competition_id
