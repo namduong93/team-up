@@ -470,6 +470,10 @@ VALUES
   NULL, NULL, NULL, NULL, NULL
 ),
 (
+  5, NULL, NULL, ARRAY['welcomeAccount']::notification_type_enum[], 'Welcome to TeamUP!', NULL, NOW(),
+  NULL, NULL, NULL, NULL, NULL
+),
+(
   6, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
