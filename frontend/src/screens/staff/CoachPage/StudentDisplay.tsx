@@ -8,7 +8,7 @@ import { CompetitionPageContext } from "./TeamDisplay";
 import Fuse from "fuse.js";
 import { sendRequest } from "../../../utility/request";
 
-const WideStudentDisplayDiv = styled.div`
+export const WideDisplayDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -35,6 +35,7 @@ export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = fa
       width: '80%',
       height: '50%',
       maxWidth: '130px',
+      lineHeight: '1',
       backgroundColor: isMatched ? 'rgba(139, 223, 165, 54%)' : 'rgba(255, 29, 32, 28%)',
       color: isMatched ? '#63A577' : '#ED1E21',
       border: `1px solid ${isMatched ? '#63A577' :'#FF1D20'}`,
@@ -50,7 +51,7 @@ export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = fa
   )
 }
 
-const StudentInfoContainerDiv = styled.div`
+export const WideInfoContainerDiv = styled.div`
   width: 100%;
   height: 54px;
   box-sizing: border-box;
@@ -60,14 +61,14 @@ const StudentInfoContainerDiv = styled.div`
   gap: 0.5%;
 `;
 
-const UserNameContainerDiv = styled.div`
+export const UserNameContainerDiv = styled.div`
   width: 15%;
   height: 100%;
   display: flex;
   align-items: center;
 `;
 
-const UserNameGrid = styled.div`
+export const UserNameGrid = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
@@ -75,11 +76,11 @@ const UserNameGrid = styled.div`
   grid-template-columns: 20% 80%;
 `;
 
-const UserIcon = styled(FaRegUser)`
+export const UserIcon = styled(FaRegUser)`
   margin: auto 0 auto 25%;
 `;
 
-const UsernameTextSpan = styled.span`
+export const UsernameTextSpan = styled.span`
   margin: auto 0 auto 5%;
 `;
 
@@ -157,7 +158,7 @@ const EmailSpan = styled.span<{ isHeader: boolean }>`
 export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
 
   return (
-    <StudentInfoContainerDiv style={style} {...props}>
+    <WideInfoContainerDiv style={style} {...props}>
       
        <UserNameContainerDiv>
        {isHeader ? <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan> :
@@ -201,11 +202,11 @@ export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHea
 
         <SmallContainerDiv></SmallContainerDiv>
 
-      </StudentInfoContainerDiv>
+      </WideInfoContainerDiv>
   )
 }
 
-const NarrowStudentDisplaydiv = styled.div`
+export const NarrowDisplayDiv = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -505,12 +506,12 @@ export const StudentDisplay = () => {
       )}
     </div>
   <div style={ { flex: '1', width: '100%', height: '100%' } }>
-    <NarrowStudentDisplaydiv>
+    <NarrowDisplayDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoCard key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
+    </NarrowDisplayDiv>
 
-    </NarrowStudentDisplaydiv>
-    <WideStudentDisplayDiv>
+    <WideDisplayDiv>
       <StudentInfoDiv isHeader style={{
         backgroundColor: '#D6D6D6',
         fontWeight: 'bold'
@@ -527,7 +528,7 @@ export const StudentDisplay = () => {
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
-    </WideStudentDisplayDiv>
+    </WideDisplayDiv>
   </div>
   </>
   );

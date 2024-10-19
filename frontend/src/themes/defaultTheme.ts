@@ -24,6 +24,7 @@ export const defaultTheme: DefaultTheme = {
     progressStart: "#283e6c",
     progressEnd: "#6688D2",
     progressBackground: "#BCCFF8",
+    userInfoCardHeader: "#D6D6D6",
   },
   teamProfile: {
     invite: "#DFE8FB",
@@ -49,6 +50,14 @@ export const defaultTheme: DefaultTheme = {
     adminBackground: "#FDE2FC",
     studentText: "#35B4C2",
     studentBackground: "#E1FAFC",
+  },
+  access: {
+    acceptedBackground: 'rgba(139, 223, 165, 54%)',
+    acceptedText: '#63A577',
+    rejectedBackground: 'rgba(255, 29, 32, 28%)',
+    rejectedText: '#ED1E21',
+    pendingBackground: 'rgb(253, 211, 134, 31%)',
+    pendingText: '#EA9C0D',
   },
   fonts: {
     fontFamily: "Arial, Helvetica, sans-serif",
