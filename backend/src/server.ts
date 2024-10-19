@@ -197,6 +197,8 @@ app.get('/competition/roles', competitionController.competitionRoles);
 // all the above are strings
 app.get('/competition/students', competitionController.competitionStudents);
 
+app.get('/competition/staff', competitionController.competitionStaff);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

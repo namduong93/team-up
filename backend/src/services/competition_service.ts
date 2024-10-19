@@ -3,7 +3,7 @@ import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMP
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
-import { CompetitionRepository } from "../repository/competition_repository_type.js";
+import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
@@ -69,6 +69,20 @@ export interface StudentInfo {
   teamName?: string;
 };
 
+export enum StaffAccess {
+  Accepted = 'Accepted',
+  Pending = 'Pending',
+  Rejected = 'Rejected',
+}
+export interface StaffInfo {
+  userId: number;
+  name: string;
+  roles: CompetitionRole[];
+  universityName: string;
+  access: StaffAccess;
+  email: string;
+}
+
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
@@ -76,6 +90,10 @@ export class CompetitionService {
   constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
+  }
+
+  competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
+    return await this.competitionRepository.competitionStaff(userId, compId);
   }
 
   competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {

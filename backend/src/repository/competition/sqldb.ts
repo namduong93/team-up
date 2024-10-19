@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo } from "../../services/competition_service.js";
 import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY } from "../../models/competition/competition.js";
 
@@ -21,7 +21,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   constructor(pool: Pool) {
     this.pool = pool;
   }
-  
+
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
     const dbResult = await this.pool.query(
       `SELECT cu.competition_roles AS roles
@@ -31,6 +31,21 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       return [];
     }
     return parse(dbResult.rows[0].roles) as Array<CompetitionUserRole>;
+  }
+  
+  competitionStaff = async (userId: number, compId: number): Promise<StaffInfo[]> => {
+    const roles = await this.competitionRoles(userId, compId);
+
+    if (roles.includes(CompetitionUserRole.ADMIN)) {
+      const dbResult = await this.pool.query(
+        `SELECT * FROM competition_staff(${compId})`
+      );
+
+      return dbResult.rows;
+    }
+
+
+    return [];
   }
 
   competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {
