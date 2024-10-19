@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../components/general_utility/ProgressBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMultiStepCompRegoForm } from "./MultiStepCompRegoForm";
 import MultiRadio from "../../components/general_utility/MultiRadio";
 import TextInput from "../../components/general_utility/TextInput";
@@ -91,20 +91,21 @@ const Descriptor = styled.div`
 
 export const CompetitionExperience: FC = () => {
   const navigate = useNavigate();
+  const {code} = useParams<{code?: string}>();
   const { formData, setFormData } = useMultiStepCompRegoForm();
   const [hasNationalPrize, setHasNationalPrize] = useState<boolean | undefined>(undefined)
   const [hasInternationalPrize, setHasInternationalPrize] = useState<boolean | undefined>(undefined)
   // const [courseOptions, setCourseOptions] = useState<Array<{ value: string; label: string }>>([]);
 
   const handleBack = () => {
-    navigate("/competition/individual");
+    navigate(`/competition/individual/${code}`);
   };
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
     e.preventDefault();
 
-    const { degreeYear, degree, ICPCEligibility, isRemote, competitionLevel, boersenEligible, codeforce, nationalPrizes, internationalPrizes, courses, regional } = formData;
+    const { degreeYear, degree, ICPCEligibility, isRemote, competitionLevel, boersenEligible, codeforce, nationalPrizes, internationalPrizes, courses, pastRegional } = formData;
     const competitionUser = {
       ICPCEligible: ICPCEligibility,
       competitionLevel: competitionLevel,
@@ -116,17 +117,17 @@ export const CompetitionExperience: FC = () => {
       internationalPrizes: internationalPrizes,
       codeforcesRating: codeforce,
       universityCourses: courses,
-      regional: regional,
+      pastRegional: pastRegional,
     }
 
     const payload = {
-      code: "TSTC1",
+      code: code,
       competitionUser,
     }
 
     try {
-      // const response = await sendRequest.post('/competition/student/join ', payload);
-      // console.log("Response:", response.data);
+      const response = await sendRequest.post('/competition/student/join ', payload);
+      console.log("Response:", response.data);
 
       navigate("/dashboard"); 
 
@@ -174,17 +175,22 @@ export const CompetitionExperience: FC = () => {
 
 
   function isButtonDisabled(): boolean | undefined {
-    const { courses, nationalPrizes, internationalPrizes, regional, degreeYear } = formData;
-    console.log(hasNationalPrize)
-    console.log(nationalPrizes)
-    return (
-      courses.length === 0 ||
-      hasNationalPrize === undefined ||
-      (hasNationalPrize && nationalPrizes === "") ||
-      hasInternationalPrize === undefined ||
-      (hasInternationalPrize && internationalPrizes === "") ||
-      (degreeYear !== 1 && regional === undefined)
-    );
+    const { courses, nationalPrizes, internationalPrizes, pastRegional, degreeYear } = formData;
+    if ( formData.competitionLevel === "Level B" ) { 
+      return (
+        courses.length === 0 
+      );
+    }
+    else {
+      return (
+        courses.length === 0 ||
+        hasNationalPrize === undefined ||
+        (hasNationalPrize && nationalPrizes === "") ||
+        hasInternationalPrize === undefined ||
+        (hasInternationalPrize && internationalPrizes === "") ||
+        (degreeYear !== 1 && pastRegional === undefined)
+      );
+    }
   }
 
   return (
@@ -215,30 +221,32 @@ export const CompetitionExperience: FC = () => {
             showOther={false}
           />
 
-          <TextInput
-            label="Codeforces Score"
-            placeholder="Please enter"
-            type="numeric"
-            required={false}
-            value={formData.codeforce?.toString() || ''} 
-            onChange={(e) => {
-              const value = e.target.value;
-              setFormData({ ...formData, codeforce: Number(value)});
-            }}
-            width="100%" 
-            descriptor="Please enter your current Codeforce score if applicable"
-          />
+          {formData.competitionLevel !== "Level B" && (
+            <TextInput
+              label="Codeforces Score"
+              placeholder="Please enter"
+              type="numeric"
+              required={false}
+              value={formData.codeforce?.toString() || ''} 
+              onChange={(e) => {
+                const value = e.target.value;
+                setFormData({ ...formData, codeforce: Number(value)});
+              }}
+              width="100%" 
+              descriptor="Please enter your current Codeforce score if applicable"
+            /> 
+          )}
 
-          {formData.degreeYear.toString() !== "1" && (
+          {formData.degreeYear.toString() !== "1" && formData.competitionLevel !== "Level B" && (
             <RadioButton
             label="ICPC Regional Participation"
             options={['Yes', 'No']}
             selectedOption={
-              formData.regional === undefined ? '' : formData.regional ? 'Yes' : 'No'
+              formData.pastRegional === undefined ? '' : formData.pastRegional ? 'Yes' : 'No'
             }
             onOptionChange={(e) => {
-              const regional = e.target.value === 'Yes';
-              setFormData({ ...formData, regional: regional });
+              const pastRegional = e.target.value === 'Yes';
+              setFormData({ ...formData, pastRegional: pastRegional });
             }}
             required={true}
             descriptor="Have you ever competed in a regional ICPC round?"
@@ -246,20 +254,22 @@ export const CompetitionExperience: FC = () => {
            />
           )}
 
-          <RadioButton
-            label="National Olympiad Prizes in Mathematics or Informatics"
-            options={['Yes', 'No']}
-            selectedOption={
-              hasNationalPrize === undefined ? '' : hasNationalPrize ? 'Yes' : 'No'
-            }
-            onOptionChange={(e) => {
-              const nationalPrize = e.target.value === 'Yes';
-              setHasNationalPrize(nationalPrize);
-            }}
-            required={true}
-            descriptor="Have you ever won any related National Olympiad in Mathematics or Informatics prizes?"
-            width="100%"
-          />
+          {formData.competitionLevel !== "Level B" && (
+            <RadioButton
+              label="National Olympiad Prizes in Mathematics or Informatics"
+              options={['Yes', 'No']}
+              selectedOption={
+                hasNationalPrize === undefined ? '' : hasNationalPrize ? 'Yes' : 'No'
+              }
+              onOptionChange={(e) => {
+                const nationalPrize = e.target.value === 'Yes';
+                setHasNationalPrize(nationalPrize);
+              }}
+              required={true}
+              descriptor="Have you ever won any related National Olympiad in Mathematics or Informatics prizes?"
+              width="100%"
+            />
+          )}
 
           {hasNationalPrize && (
             <DescriptiveTextInput
@@ -272,20 +282,22 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          <RadioButton
-            label="International Olympiad Prizes in Mathematics or Informatics"
-            options={['Yes', 'No']}
-            selectedOption={
-              hasInternationalPrize === undefined ? '' : hasInternationalPrize ? 'Yes' : 'No'
-            }
-            onOptionChange={(e) => {
-              const internationalPrize = e.target.value === 'Yes';
-              setHasInternationalPrize(internationalPrize);
-            }}
-            required={true}
-            descriptor="Have you ever won any related International Olympiad prizes?"
-            width="100%"
-          />
+          {formData.competitionLevel !== "Level B" && (
+            <RadioButton
+              label="International Olympiad Prizes in Mathematics or Informatics"
+              options={['Yes', 'No']}
+              selectedOption={
+                hasInternationalPrize === undefined ? '' : hasInternationalPrize ? 'Yes' : 'No'
+              }
+              onOptionChange={(e) => {
+                const internationalPrize = e.target.value === 'Yes';
+                setHasInternationalPrize(internationalPrize);
+              }}
+              required={true}
+              descriptor="Have you ever won any related International Olympiad prizes?"
+              width="100%"
+            />
+          )}
 
           {hasInternationalPrize && (
             <DescriptiveTextInput
@@ -295,6 +307,31 @@ export const CompetitionExperience: FC = () => {
               value={formData.internationalPrizes || ""}
               onChange={(e) => setFormData({ ...formData, internationalPrizes: e.target.value })}
               width="100%"
+            />
+          )}
+
+          {formData.competitionLevel !== "Level B" && (
+            <RadioButton
+            label="Boersen Prize Eligibility"
+            options={['Yes', 'No']}
+            selectedOption={
+              formData.boersenEligible === undefined 
+                ? '' 
+                : formData.boersenEligible 
+                ? 'Yes' 
+                : 'No'
+            }
+            onOptionChange={(e) => {
+              const isBoersenEligible = e.target.value === 'Yes';
+              setFormData({ ...formData, boersenEligible: isBoersenEligible });
+            }}
+            required={false}
+            descriptor={[
+              "This prize celebrates the work of Ms. Raewyn Boersen, previous South Pacific Director, Founder, and recipient of the Mark Measures Distinguished Service Award.",
+              "The prize is awarded to the top team of all women or non-binary students. If this team places in the top half of level A, then they qualify to the Regional Finals.","",
+              "Select 'Yes' if you are women or non-binary, or 'No' otherwise."
+            ]}
+            width="100%"
             />
           )}
 

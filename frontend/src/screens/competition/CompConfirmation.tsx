@@ -185,17 +185,18 @@ export const CompetitionConfirmation: FC = () => {
         universityId: location.universityId, 
         name: location.defaultSite, 
       })),
-      // otherSiteLocations: otherSiteLocations.map(location => ({
-      //   universityName: location.universityName, 
-      //   name: location.defaultSite, 
-      // })),
+      otherSiteLocations: otherSiteLocations.map(location => ({
+        universityName: location.universityName, 
+        name: location.defaultSite, 
+      })),
     };
 
     try {
-      const response = await sendRequest.post('/competition/system_admin/create', payload);
+      const response = await sendRequest.post<{competitionId: number }>('/competition/system_admin/create', payload);
       console.log("Response:", response.data);
 
-      navigate("/competition/page"); 
+      const compId = response.data.competitionId;
+      navigate(`/competition/page/${compId}`); 
 
       // TO-DO: uncomment when pop-up is implemented on Admin Page
       // navigate("/competition/page", { 

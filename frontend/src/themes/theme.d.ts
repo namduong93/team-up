@@ -22,6 +22,19 @@ declare module 'styled-components' {
         notifDate: string;
         notifLight: string;
         notifDark: string;
+        progressStart: string;
+        progressEnd: string;
+        progressBackground: string;
+      };
+      teamProfile: {
+        invite: string;
+        inviteBorder: string;
+        join: string;
+        joinBorder: string;
+        name: string;
+        nameBorder: string;
+        site: string;
+        siteBorder: string;
       };
       teamView: {
           pending: string;
@@ -59,6 +72,7 @@ declare module 'styled-components' {
           };
           colour: string;
           descriptor: string;
+          email: string;
           style: string;
       };
     }

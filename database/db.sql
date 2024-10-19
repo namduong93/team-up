@@ -66,6 +66,7 @@ CREATE TABLE competitions (
   
   name TEXT NOT NULL,
   team_size INT NOT NULL,
+  created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   early_reg_deadline TIMESTAMP NOT NULL,
   general_reg_deadline TIMESTAMP NOT NULL,
   code VARCHAR(8) NOT NULL
@@ -82,11 +83,11 @@ CREATE TABLE competition_sites (
 
   capacity INT,
 
-  CONSTRAINT unique_site_competition UNIQUE (competition_id, name)
+  CONSTRAINT unique_site_competition UNIQUE (competition_id, name, university_id)
 );
 
-CREATE TYPE competition_role_enum AS ENUM ('participant', 'coach', 'admin', 'site-coordinator');
-CREATE TYPE competition_level_enum AS ENUM ('A', 'B');
+CREATE TYPE competition_role_enum AS ENUM ('Participant', 'Coach', 'Admin', 'Site-Coordinator');
+CREATE TYPE competition_level_enum AS ENUM ('Level A', 'Level B', 'No Preference');
 
 CREATE TABLE competition_users (
   id SERIAL PRIMARY KEY,
@@ -104,10 +105,11 @@ CREATE TABLE competition_users (
   degree TEXT,
   is_remote BOOLEAN,
 
-  national_prizes TEXT[],
-  international_prizes TEXT[],
-  codeforces_rating TEXT[],
+  national_prizes TEXT,
+  international_prizes TEXT,
+  codeforces_rating INT,
   university_courses TEXT[],
+  past_regional BOOLEAN,
   
   competition_coach_id INT REFERENCES competition_users (id),
 
@@ -172,9 +174,9 @@ CREATE TABLE notifications (
 );
 
 CREATE OR REPLACE FUNCTION competition_list(u_id INT)
-RETURNS TABLE(id INT, name TEXT, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
+RETURNS TABLE(id INT, name TEXT, created_date TIMESTAMP, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
 AS $$
-  SELECT c.id AS id, c.name AS name, early_reg_deadline, general_reg_deadline
+  SELECT c.id AS id, c.name AS name, created_date, early_reg_deadline, general_reg_deadline
   FROM competition_users as cu
   JOIN competitions AS c ON c.id = cu.competition_id
   WHERE cu.user_id = u_id;
@@ -204,7 +206,9 @@ FROM users AS u
 JOIN universities AS uni ON uni.id = u.university_id;
 
 CREATE OR REPLACE VIEW user_dash_info AS
-SELECT u.id AS id, u.preferred_name, uni.name AS affiliation
+SELECT u.id AS id, 
+      COALESCE(u.preferred_name, u.name) AS preferred_name, 
+      uni.name AS affiliation
 FROM users AS u
 JOIN universities AS uni ON uni.id = u.university_id;
 
@@ -265,7 +269,7 @@ VALUES
 ( -- id: 2
   'Coach 1',
   'Coach One',
-  'testcoach1@example.com',
+  'coach@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
@@ -307,7 +311,7 @@ VALUES
 ( -- id: 5
   'Test Student Account 1',
   'Test Account',
-  'teststudent1@example.com',
+  'student@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
@@ -390,11 +394,11 @@ VALUES
   'z000006');
 
 -- Competitions
-INSERT INTO competitions (name, team_size, early_reg_deadline, general_reg_deadline, code)
+INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code)
 VALUES 
-('Test Competition 1', 3, '204-10-20 00:00:00', '2024-10-15 00:00:00', 'TSTC1'),
-('Test Competition 2', 3, '204-10-25 00:00:00', '2024-10-20 00:00:00', 'TSTC2'),
-('Test Competition 3', 3, '204-11-10 00:00:00', '2024-11-01 00:00:00', 'TSTC3');
+('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024'),
+('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024'),
+('ICPC World Final', 3, '2024-10-10 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025');
 
 -- Competition Sites
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
@@ -406,22 +410,26 @@ VALUES
 -- Competition Admin(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles)
 VALUES
-(1, 1, ARRAY['admin']::competition_role_enum[]);
+(1, 1, ARRAY['Admin']::competition_role_enum[]),
+(1, 2, ARRAY['Admin']::competition_role_enum[]),
+(1, 3, ARRAY['Admin']::competition_role_enum[]);
 
 -- Competition Coach(es)
 INSERT INTO competition_users (user_id, competition_id, competition_roles)
 VALUES
-(2, 1, ARRAY['coach']::competition_role_enum[]),
-(2, 2, ARRAY['coach']::competition_role_enum[]);
+(2, 1, ARRAY['Coach']::competition_role_enum[]),
+(2, 2, ARRAY['Coach']::competition_role_enum[]),
+(2, 3, ARRAY['Coach']::competition_role_enum[]);
 
 -- Competition Site Coordinator(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id)
 VALUES
-(4, 1, ARRAY['site-coordinator']::competition_role_enum[], 1);
+(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 1);
 
 -- Competition Participants
 INSERT INTO competition_users (
   user_id, competition_id, competition_roles,
+  competition_coach_id,
   icpc_eligible,
   competition_level,
   boersen_eligible,
@@ -432,23 +440,23 @@ INSERT INTO competition_users (
   international_prizes,
   codeforces_rating,
   university_courses,
-  competition_coach_id,
-  site_attending_id
+  site_attending_id,
+  past_regional
 )
 VALUES
-(5, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2, 1),
-(6, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2, 1),
-(7, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'A', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2, 1),
-(8, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2, 1),
-(9, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2, 1),
-(10, 1, ARRAY['participant']::competition_role_enum[], TRUE, 'B', TRUE, 3, 'CompSci', FALSE, '{}', '{}', '{}', '{}', 2, 1);
+    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
+    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE);
 
 INSERT INTO competition_teams (
   competition_coach_id, name, team_status, team_name_approved, team_size, participants, university_id, competition_id
 )
 VALUES
-(2, 'Team Zeta', 'registered', FALSE, 3, ARRAY[8, 9, 10], 2, 1),
-(2, 'Team Alpha', 'pending', FALSE, 3, ARRAY[5, 6, 7], 2, 1);
+(4, 'Team Zeta', 'registered', FALSE, 3, ARRAY[8, 9, 10], 2, 1),
+(4, 'Team Alpha', 'pending', FALSE, 3, ARRAY[5, 6, 7], 2, 1);
 
 -- Notifications
 INSERT INTO notifications (

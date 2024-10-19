@@ -187,6 +187,15 @@ export const CompetitionDetails: FC = () => {
       return;
     }
 
+    // const isDuplicateSite = competitionInfo.siteLocations.some((site) => site.defaultSite === defaultSite)
+    //   || competitionInfo.otherSiteLocations.some((otherSite) => otherSite.defaultSite === defaultSite);
+
+    // if (isDuplicateSite) {
+    //   setLocationError(<p>This site location name already exists in either default sites or other sites.<br />
+    //   Please provide a unique site location name.</p>);
+    //   return;
+    // }
+
     setLocationError('');
 
     // if currentOptions value is empty which will be the case when it's a custom option.
@@ -222,7 +231,7 @@ export const CompetitionDetails: FC = () => {
   };
 
   const isButtonDisabled = () => {
-    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations } = competitionInfo;
+    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations, otherSiteLocations } = competitionInfo;
     return (
       name === '' ||
       earlyBirdDate === '' ||
@@ -230,7 +239,8 @@ export const CompetitionDetails: FC = () => {
       generalDate === '' ||
       generalTime === '' ||
       code === '' ||
-      siteLocations.length === 0
+      (siteLocations.length === 0 &&
+      otherSiteLocations.length === 0)
     );
   };
 

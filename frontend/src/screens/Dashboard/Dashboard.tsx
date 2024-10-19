@@ -8,7 +8,7 @@ import { sendRequest } from "../../utility/request";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/sort_filter_search/PageHeader";
 import { DashInfo } from "./useDashInfo";
-// import CompCreatePopUp from "../components/general_utility/CompCreatePopUp";
+import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 
 interface Competition { 
   compName: string;
@@ -16,11 +16,10 @@ interface Competition {
   compDate: string; // format: "YYYY-MM-DD"
   roles: string[];
   compId: string;
-  compCreationDate: string;
+  compCreatedDate: string;
 }
 
 interface DashboardsProps {
-  competitions: Competition[];
   dashInfo: DashInfo
 }
 
@@ -127,7 +126,7 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
+export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -143,6 +142,8 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [competitions, setCompetitions] = useState<Competition[]>([]);
+  const [userType, setUserType] = useState<string>('');
   const navigate = useNavigate();
 
 
@@ -150,8 +151,18 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
     (async () => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
+        setUserType(typeResponse.data.type);
         setIsAdmin(typeResponse.data.type === "system_admin");
         setIsLoaded(true);
+
+        const fakeComps = await sendRequest.get<{ competitions: Competition[] }>('/competitions/list');
+        const formattedCompetitions = fakeComps.data.competitions.map(comp => ({
+          ...comp,
+          compDate: new Date(comp.compDate).toISOString().split('T')[0],
+          compCreatedDate: new Date(comp.compCreatedDate).toISOString().split('T')[0]
+        }));
+        setCompetitions(formattedCompetitions);
+  
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           setIsLoaded(false);
@@ -289,6 +300,16 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
   //   }
   // }, [showPopUp]);
 
+  const [isRegisterPopUpOpen, setIsRegisterPopUpOpen] = useState(false);
+
+  const handleRegisterClick = () => {
+    setIsRegisterPopUpOpen(true);
+  }
+
+  const handleClosePopUp = () => {
+    setIsRegisterPopUpOpen(false);
+  }
+
   
   return (isLoaded &&
     <OverflowFlexBackground>
@@ -319,6 +340,7 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
             question="Register for a new competition?"
             redirectPath="/competition/information"
             actionType="primary"
+            handleClick={handleRegisterClick}
           />
         </PageHeader>
   
@@ -370,10 +392,17 @@ export const Dashboard: FC<DashboardsProps> = ({ competitions, dashInfo }) => {
                 compDate={comp.compDate}
                 roles={comp.roles}
                 compId={comp.compId}
-                compCreationDate={comp.compCreationDate}
+                compCreationDate={comp.compCreatedDate}
               />
             ))}
           </CompetitionGrid>
+
+          {/* Register Pop-Up */}
+          {isRegisterPopUpOpen && (
+            <RegisterPopUp isOpen={isRegisterPopUpOpen} onClose={handleClosePopUp} message="Please enter the Competition Code"/>
+          )}
+
+
         </ContentArea>
       </DashboardContent>
     </OverflowFlexBackground>

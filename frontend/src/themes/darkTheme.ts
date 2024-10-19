@@ -25,6 +25,9 @@ export const darkTheme: DefaultTheme = {
     notifDate: "#BCCFF8",
     notifLight: "#333333",
     notifDark: "#EBEBEB",
+    progressEnd: "#283e6c",
+    progressStart: "#6688D2",
+    progressBackground: "#EBEBEB",
   },
   teamView: {
     ...defaultTheme.teamView,
@@ -43,4 +46,15 @@ export const darkTheme: DefaultTheme = {
     studentText: "#35B4C2",
     studentBackground: "#E1FAFC",
   },
+  teamProfile: {
+    ...defaultTheme.teamProfile,
+    inviteBorder: "#DFE8FB",
+    invite: "#6688D2",
+    joinBorder: "#FEEBC8",
+    join: "#EA9C0D",
+    nameBorder: "#FDE2FC",
+    name: "#F19EDC",
+    siteBorder: "#E1FAFC",
+    site: "#35B4C2",
+  }
 };

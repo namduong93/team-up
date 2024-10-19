@@ -57,7 +57,7 @@ interface RadioButtonGroupProps {
   selectedOption: string;
   onOptionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
-  descriptor?: string; 
+  descriptor?: string | string[]; 
   width?: string; // Optional width field
 }
 
@@ -78,7 +78,19 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
           {required && <Asterisk>*</Asterisk>}
         </Label>
       )}
-      {descriptor && <Descriptor>{descriptor}</Descriptor>} {/* Display the descriptor if provided */}
+      {descriptor && (
+        <Descriptor>
+          {Array.isArray(descriptor) 
+            ? descriptor.map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  {index < descriptor.length - 1 && <br />}
+                </React.Fragment>
+              ))
+            : descriptor
+          }
+        </Descriptor>
+      )}
       <OptionsContainer>
         {options.map((option) => (
           <RadioButtonLabel key={option}>

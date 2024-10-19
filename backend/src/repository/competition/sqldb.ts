@@ -1,11 +1,13 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
-import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, CompetitionUserType, CompetitionDetails } from "../../models/competition/competition.js";
+import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY } from "../../models/competition/competition.js";
 
 import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
+import { CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
+import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 
 // Set up short-unique-id library for generating competition codes
 const { randomUUID } = new ShortUniqueId({
@@ -46,12 +48,15 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return dbResult.rows;
   }
 
-  competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionRole>> => {
+  competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
     const dbResult = await this.pool.query(
       `SELECT cu.competition_roles AS roles
       FROM competition_users AS cu WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}`
     );
-    return parse(dbResult.rows[0].roles) as Array<CompetitionRole>;
+    if (dbResult.rows.length === 0) {
+      return [];
+    }
+    return parse(dbResult.rows[0].roles) as Array<CompetitionUserRole>;
   }
 
   competitionTeams = async (userId: number, compId: number): Promise<Array<CompetitionTeam>> => {
@@ -60,31 +65,39 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         member_name1 AS "memberName1", member_name2 AS "memberName2", member_name3 AS "memberName3",
         status, team_name_approved AS "teamNameApproved"
       FROM competition_team_list(${userId}, ${compId})`);
-    
+      
     return dbResult.rows;
   };
 
   competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
     // Set default team size to 3 if not provided
-    const teamSize = competition.teamSize ?? 3;
+    const teamSize = competition.teamSize ?? DEFAULT_TEAM_SIZE;
 
-    // Create new competition code
-    const competitionCode = randomUUID(); // TODO: check if code already exists
-
+    //Check if the code is already in use
+    const codeCheckQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE code = $1
+    `;
+    const codeCheckResult = await this.pool.query(codeCheckQuery, [competition.code]);
+    if (codeCheckResult.rowCount > 0) {
+      return undefined; // TODO: throw unique error
+    }
     
     // Insert competition into competitions table
     const competitionQuery =
-    `INSERT INTO competitions (name, team_size, early_reg_deadline, general_reg_deadline, code)
-    VALUES ($1, $2, $3, $4, $5)
+    `INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code)
+    VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING id, code;
     `;
     
     const competitionValues = [
       competition.name,
       teamSize,
+      new Date(competition.createdDate),
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
-      competitionCode
+      competition.code
     ];
     
     const competitionResult = await this.pool.query(competitionQuery, competitionValues);
@@ -92,7 +105,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     
     await this.pool.query(
       `INSERT INTO competition_users (user_id, competition_id, competition_roles)
-      VALUES (${userId}, ${competitionId}, ARRAY['admin']::competition_role_enum[])`
+      VALUES (${userId}, ${competitionId}, ARRAY['Admin']::competition_role_enum[])`
     );
     
     // for the normal siteLocations that have university Ids:
@@ -156,13 +169,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     // Update competition details
     const competitionUpdateQuery = `
       UPDATE competitions
-      SET name = $1, team_size = $2, early_reg_deadline = $3, general_reg_deadline = $4
-      WHERE id = $5;
+      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5
+      WHERE id = $6;
     `;
 
     const competitionUpdateValues = [
       competition.name,
       competition.teamSize,
+      new Date(competition.createdDate),
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
       competition.id
@@ -180,9 +194,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
-  competitionGetDetails = async(competitionId: number): Promise<CompetitionDetails | undefined> => {
+  competitionGetDetails = async(competitionId: number): Promise<Competition | undefined> => {
     const competitionQuery = `
-      SELECT id, name, team_size, early_reg_deadline, general_reg_deadline, code
+      SELECT id, name, team_size, created_date, early_reg_deadline, general_reg_deadline, code
       FROM competitions
       WHERE id = $1
     `;
@@ -210,14 +224,15 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }));
   
     // Constructing the competition object
-    const competitionDetails: CompetitionDetails = {
+    const competitionDetails: Competition = {
       id: competitionData.id,
       name: competitionData.name,
       teamSize: competitionData.team_size,
+      createdDate: competitionData.created_date,
       earlyRegDeadline: competitionData.early_reg_deadline,
       generalRegDeadline: competitionData.general_reg_deadline,
       code: competitionData.code,
-      siteLocations,
+      siteLocations: siteLocations,
     };
   
     return competitionDetails;
@@ -226,24 +241,101 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   // Returns only shortened competition details that are displayed on a dashboard. Sites details are not included.
   // Returns competitions that the user is a part of.
   competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined> => {
-    const competitionMap: Map<number, { userType: Array<CompetitionUserType>, competition: CompetitionDetails }> = new Map();
-    
     const comps = await this.pool.query(
-      `SELECT id, name, early_reg_deadline AS "earlyRegDeadline",
+      `SELECT id, name, created_date AS "createdDate", early_reg_deadline AS "earlyRegDeadline",
         general_reg_deadline AS "generalRegDeadline" FROM competition_list(${userId})`
     );
-    // TODO: Change the db query to also get the user competition roles and return those too.
-    this.addCompetitionIdsToMap(comps.rows, competitionMap, CompetitionUserType.PARTICIPANT);
+    let competitions: Array<CompetitionShortDetailsObject> = [];
+    for (let row of comps.rows) {
+      let compId = row.id;
+      let compName = row.name;
+      let location = DEFAULT_COUNTRY;
+      let compDate = row.earlyRegDeadline;
+      let compCreatedDate = row.createdDate;
+      let roles = await this.competitionRoles(userId, compId);
+      competitions.push({ compId, compName, location, compDate, roles, compCreatedDate });
+    }
 
-    const competitions: Array<CompetitionShortDetailsObject> = [...competitionMap.values()];
+
 
     return competitions;
   }
 
-  competitionStudentJoin0 = async (sessionToken: string,
-    individualInfo: IndividualTeamInfo): Promise<IncompleteTeamIdObject | undefined> => {
 
-    return { incompleteTeamId: 1 };
+
+  competitionStudentJoin = async (competitionUserInfo: CompetitionUser): Promise<{} | undefined> => {
+    // First insert the user into the competition_users table
+    let userId = competitionUserInfo.userId;
+    let competitionId = competitionUserInfo.competitionId;
+    let competitionRoles = competitionUserInfo.competitionRoles;
+    let ICPCEligible = competitionUserInfo.ICPCEligible;
+    let competitionLevel = competitionUserInfo.competitionLevel;
+    let boersenEligible = competitionUserInfo.boersenEligible || false;
+    let degreeYear = competitionUserInfo.degreeYear;
+    let degree = competitionUserInfo.degree;
+    let isRemote = competitionUserInfo.isRemote;
+    let nationalPrizes = competitionUserInfo.nationalPrizes || "";
+    let internationalPrizes = competitionUserInfo.internationalPrizes || "";
+    let codeforcesRating = competitionUserInfo.codeforcesRating || 0;
+    let universityCourses = competitionUserInfo.universityCourses || [];
+    let pastRegional = competitionUserInfo.pastRegional || false;
+
+    const competitionJoinQuery = `
+      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      RETURNING id
+    `;
+    const competitionJoinValues = [
+      userId,
+      competitionId,
+      competitionRoles,
+      ICPCEligible,
+      competitionLevel,
+      boersenEligible,
+      degreeYear,
+      degree,
+      isRemote,
+      nationalPrizes,
+      internationalPrizes,
+      codeforcesRating,
+      universityCourses,
+      pastRegional
+    ];
+    
+    // Insert user into competition_users table and get competition_user_id
+    const result = await this.pool.query(competitionJoinQuery, competitionJoinValues);
+    const competitionUserId = result.rows[0].id;
+
+    // Retrieve university_id from the users table
+    const universityQuery = `
+      SELECT university_id FROM users WHERE id = $1
+    `;
+    const universityResult = await this.pool.query(universityQuery, [userId]);
+    const universityId = universityResult.rows[0].university_id;
+
+    // Generate the team name (e.g., "Team#ID") and insert into competition_teams
+    let teamStatus = TeamStatus.PENDING;
+    let teamNameApproved = false;
+    let teamSize = DEFAULT_TEAM_SIZE;
+    let participants = [userId];
+
+    let teamNameQuery = `
+      INSERT INTO competition_teams (name, team_status, team_name_approved, team_size, participants, university_id, competition_id)
+      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1,  $2, $3, $4, $5, $6)
+      RETURNING id
+    `;
+    const teamNameValues = [
+      teamStatus,
+      teamNameApproved,
+      teamSize,
+      participants,
+      universityId,  // university_id from users table
+      competitionId
+    ];
+
+    // Insert the team into competition_teams table
+    let checkId = await this.pool.query(teamNameQuery, teamNameValues);
+    return {};
   }
 
   competitionStudentJoin1 = async (sessionToken: string, individualInfo: IndividualTeamInfo,
@@ -278,8 +370,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return [{ id: 1, name: 'Macquarie University' }]
   }
 
+  competitionIdFromCode = async (code: string): Promise<number | undefined> => {
+    const competitionIdQuery = `SELECT id FROM competitions WHERE code = $1 LIMIT 1`;
+    const competitionIdResult = await this.pool.query(competitionIdQuery, [code]);
+    if (competitionIdResult.rowCount === 0) {
+      return undefined; 
+    }
+    return competitionIdResult.rows[0].id;
+  }
+
   // Helper function to add competition ids to map
-  private addCompetitionIdsToMap = (rows: any[], competitionMap: Map<number, { userType: Array<CompetitionUserType>, competition: Competition }>, userType: CompetitionUserType) => {
+  private addCompetitionIdsToMap = (rows: any[], competitionMap: Map<number, { userType: Array<CompetitionUserRole>, competition: Competition }>, userType: CompetitionUserRole) => {
     rows.forEach(row => {
       if (!competitionMap.has(row.id)) {
         competitionMap.set(row.id, { userType: [userType], competition: row });
