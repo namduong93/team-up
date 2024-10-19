@@ -3,7 +3,7 @@ import { FaBell, FaSort } from "react-icons/fa";
 import styled from "styled-components";
 import { SortOption, SortSelect } from "../general_utility/SortSelect";
 import { FilterIcon, FilterSelect } from "../general_utility/FilterSelect";
-import { SearchBar } from "../../screens/staff/CoachPage/CoachPage";
+import { SearchBar } from "../../screens/staff/CoachPage/PageUtils";
 import { Notifications } from "../general_utility/Notifications";
 import { AlertButton } from "../../screens/Dashboard/Dashboard";
 

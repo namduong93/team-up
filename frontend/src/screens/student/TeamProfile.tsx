@@ -1,5 +1,5 @@
 import { FC  } from "react";
-import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../staff/CoachPage/CoachPage";
+import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../staff/CoachPage/PageUtils";
 import { CustomToggleSwitch } from "../../components/general_utility/ToggleSwitch";
 import styled from "styled-components";
 // import { sendRequest } from "../../utility/request";

@@ -33,6 +33,7 @@ import { CompetitionInformation } from './screens/competition/CompInformation';
 import { CompetitionIndividual } from './screens/competition/CompIndividual';
 import { MultiStepCompRegoFormProvider } from './screens/competition/MultiStepCompRegoForm';
 import { CompetitionExperience } from './screens/competition/CompExperience';
+import { StaffDisplay } from './screens/staff/StaffDisplay/StaffDisplay';
 
 function App() {
   const [theme, setTheme ] = useState(defaultTheme)
@@ -181,7 +182,7 @@ function App() {
               <Route index element={ <Navigate to='/dashboard' /> } />
               <Route path='teams/:compId' element={<TeamDisplay />} />
               <Route path='students/:compId' element={<StudentDisplay />} />
-              <Route path='staff/:compId' element={<div>Staff</div>} />
+              <Route path='staff/:compId' element={<StaffDisplay />} />
               <Route path='site/:compId' element={<div>Site</div>} />
             </Route>
 

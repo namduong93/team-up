@@ -118,7 +118,7 @@ const ContentArea = styled.div`
 
 const CompetitionGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(294px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(294px, 1fr));
   gap: 20px;
   width: 100%;
   min-height: 500px;

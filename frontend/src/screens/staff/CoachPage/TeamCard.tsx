@@ -3,11 +3,30 @@ import { CiCircleAlert } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
 
+export type MemberDetails = [
+  name: string,
+  siteId: number,
+  ICPCEligible: boolean,
+  level: string,
+  boersenEligible: boolean,
+  isRemote: boolean
+];
+
+export enum Member {
+  name = 0,
+  siteId = 1,
+  ICPCEligible = 2,
+  level = 3,
+  boersenEligible = 4,
+  isRemote = 5,
+}
 export interface TeamDetails {
+  teamId: number;
+  universityId: number;
   teamName: string;
-  memberName1?: string;
-  memberName2?: string;
-  memberName3?: string;
+  member1?: MemberDetails;
+  member2?: MemberDetails;
+  member3?: MemberDetails;
   status: 'pending' | 'registered' | 'unregistered';
   teamNameApproved: boolean;
 };
@@ -121,6 +140,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
     'unregistered': '#FDD386',
     'registered': '#8BDFA5',
   };
+  console.log(teamDetails);
   return (
     <StyledHoverDiv>
       <CardHeaderDiv $statusColor={colorMap[status]}>
@@ -130,19 +150,19 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
 
       <TeamMatesContainerDiv>
 
-        {teamDetails.memberName1 && 
+        {teamDetails.member1 && 
         <TeamMemberDiv>
-          <TeamCardMember memberName={teamDetails.memberName1} />
+          <TeamCardMember memberName={teamDetails.member1[Member.name]} />
         </TeamMemberDiv>}
 
-        {teamDetails.memberName2 && 
+        {teamDetails.member2 && 
         <TeamMemberDiv>
-          <TeamCardMember memberName={teamDetails.memberName2} />
+          <TeamCardMember memberName={teamDetails.member2[Member.name]} />
         </TeamMemberDiv>}
 
-        {teamDetails.memberName3 && 
+        {teamDetails.member3 && 
         <TeamMemberDiv>
-          <TeamCardMember memberName={teamDetails.memberName3} />
+          <TeamCardMember memberName={teamDetails.member3[Member.name]} />
         </TeamMemberDiv>}
 
       </TeamMatesContainerDiv>

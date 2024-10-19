@@ -1,14 +1,14 @@
 import React, { FC, useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
-import { StudentInfoCard } from "./StudentInfoCard";
+import { StudentCardInfo, StudentCardProps, StudentInfoCard } from "./StudentInfoCard";
 import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
 import { useOutletContext, useParams } from "react-router-dom";
 import { CompetitionPageContext } from "./TeamDisplay";
 import Fuse from "fuse.js";
 import { sendRequest } from "../../../utility/request";
 
-const WideStudentDisplayDiv = styled.div`
+export const WideDisplayDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -19,22 +19,10 @@ const WideStudentDisplayDiv = styled.div`
 `;
 
 
-interface StudentInfo {
-  name: string;
-  sex: string;
-  email: string;
-  studentId: string;
-  status: string;
-  level: string;
-  tshirtSize: string;
-  siteName: string;
-  teamName?: string;
+interface StudentInfo extends StudentCardInfo {
+  userId: number;
+  universityId: number;
 };
-
-export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  studentInfo: StudentInfo;
-  isHeader?: boolean;
-}
 
 interface StudentStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   isMatched: boolean;
@@ -47,6 +35,7 @@ export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = fa
       width: '80%',
       height: '50%',
       maxWidth: '130px',
+      lineHeight: '1',
       backgroundColor: isMatched ? 'rgba(139, 223, 165, 54%)' : 'rgba(255, 29, 32, 28%)',
       color: isMatched ? '#63A577' : '#ED1E21',
       border: `1px solid ${isMatched ? '#63A577' :'#FF1D20'}`,
@@ -62,7 +51,7 @@ export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = fa
   )
 }
 
-const StudentInfoContainerDiv = styled.div`
+export const WideInfoContainerDiv = styled.div`
   width: 100%;
   height: 54px;
   box-sizing: border-box;
@@ -72,14 +61,14 @@ const StudentInfoContainerDiv = styled.div`
   gap: 0.5%;
 `;
 
-const UserNameContainerDiv = styled.div`
+export const UserNameContainerDiv = styled.div`
   width: 15%;
   height: 100%;
   display: flex;
   align-items: center;
 `;
 
-const UserNameGrid = styled.div`
+export const UserNameGrid = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
@@ -87,11 +76,11 @@ const UserNameGrid = styled.div`
   grid-template-columns: 20% 80%;
 `;
 
-const UserIcon = styled(FaRegUser)`
+export const UserIcon = styled(FaRegUser)`
   margin: auto 0 auto 25%;
 `;
 
-const UsernameTextSpan = styled.span`
+export const UsernameTextSpan = styled.span`
   margin: auto 0 auto 5%;
 `;
 
@@ -169,7 +158,7 @@ const EmailSpan = styled.span<{ isHeader: boolean }>`
 export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
 
   return (
-    <StudentInfoContainerDiv style={style} {...props}>
+    <WideInfoContainerDiv style={style} {...props}>
       
        <UserNameContainerDiv>
        {isHeader ? <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan> :
@@ -213,11 +202,11 @@ export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHea
 
         <SmallContainerDiv></SmallContainerDiv>
 
-      </StudentInfoContainerDiv>
+      </WideInfoContainerDiv>
   )
 }
 
-const NarrowStudentDisplaydiv = styled.div`
+export const NarrowDisplayDiv = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -261,6 +250,8 @@ export const StudentDisplay = () => {
       const { students } = studentsResponse.data;
       setStudents([ ...students,
         {
+          userId: 999,
+          universityId: 1,
           name: 'Ernest Perkins',
           sex: 'F',
           email: 'lofvo@ajugip.bm',
@@ -272,6 +263,8 @@ export const StudentDisplay = () => {
           teamName: 'ask diagram slightly',
         },
         {
+          userId: 999,
+          universityId: 1,
           name: 'Rena Powers',
           sex: 'F',
           email: 'rog@we.bg',
@@ -283,6 +276,8 @@ export const StudentDisplay = () => {
           teamName: 'seeing cowboy easily',
         },
         {
+          userId: 999,
+          universityId: 1,
           name: 'Brent Johnston',
           sex: 'M',
           email: 'ilusonu@fiwjeka.bh',
@@ -294,6 +289,8 @@ export const StudentDisplay = () => {
           teamName: 'rocky butter nuts',
         },
         {
+          userId: 999,
+          universityId: 2,
           name: 'Leonard Holmes',
           sex: 'NB',
           email: 'jisufov@wis.vn',
@@ -305,6 +302,8 @@ export const StudentDisplay = () => {
           teamName: 'season layers skin',
         },
         {
+          userId: 999,
+          universityId: 1,
           name: 'Phillip Soto',
           sex: 'F',
           email: 'inosi@ijmajhij.io',
@@ -316,6 +315,8 @@ export const StudentDisplay = () => {
           teamName: 'star differ birthday',
         },
         {
+          userId: 999,
+          universityId: 2,
           name: 'Jordan Allison',
           sex: 'M',
           email: 'ucaip@ote.tc',
@@ -327,6 +328,8 @@ export const StudentDisplay = () => {
           teamName: 'swam fish attention',
         },
         {
+          userId: 999,
+          universityId: 1,
           name: 'Cody Tran',
           sex: 'F',
           email: 'hewos@ja.wf',
@@ -338,6 +341,8 @@ export const StudentDisplay = () => {
           teamName: 'ought telephone rule',
         },
         {
+          userId: 999,
+          universityId: 2,
           name: 'Jonathan Turner',
           sex: 'F',
           email: 'odjuf@vebar.be',
@@ -349,6 +354,8 @@ export const StudentDisplay = () => {
           teamName: 'offer golden just',
         },
         {
+          userId: 999,
+          universityId: 1,
           name: 'Ada Wolfe',
           sex: 'F',
           email: 'luf@soralogob.nl',
@@ -360,6 +367,8 @@ export const StudentDisplay = () => {
           teamName: 'noon although feet',
         },
         {
+          userId: 999,
+          universityId: 1,
           name: 'Patrick Glover',
           sex: 'M',
           email: 'jaz@umedufed.ms',
@@ -371,6 +380,8 @@ export const StudentDisplay = () => {
           teamName: 'able story melted',
         },
         {
+          userId: 999,
+          universityId: 2,
           name: 'Jeanette Sharp',
           sex: 'M',
           email: 'ricfu@nudu.mg',
@@ -382,6 +393,8 @@ export const StudentDisplay = () => {
           teamName: 'average first disease',
         },
         {
+          userId: 999,
+          universityId: 2,
           name: 'Danny Fields',
           sex: 'NB',
           email: 'wil@dihij.cz',
@@ -393,6 +406,8 @@ export const StudentDisplay = () => {
           teamName: 'does spread job',
         },
         {
+          userId: 999,
+          universityId: 1,
           name: 'Gary Quinn',
           sex: 'F',
           email: 'towzawco@how.ki',
@@ -404,6 +419,8 @@ export const StudentDisplay = () => {
           teamName: 'globe read lungs',
         },
         {
+          userId: 999,
+          universityId: 1,
           name: 'Adam Blake',
           sex: 'NB',
           email: 'damennok@iv.us',
@@ -489,12 +506,12 @@ export const StudentDisplay = () => {
       )}
     </div>
   <div style={ { flex: '1', width: '100%', height: '100%' } }>
-    <NarrowStudentDisplaydiv>
+    <NarrowDisplayDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoCard key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
+    </NarrowDisplayDiv>
 
-    </NarrowStudentDisplaydiv>
-    <WideStudentDisplayDiv>
+    <WideDisplayDiv>
       <StudentInfoDiv isHeader style={{
         backgroundColor: '#D6D6D6',
         fontWeight: 'bold'
@@ -511,7 +528,7 @@ export const StudentDisplay = () => {
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
-    </WideStudentDisplayDiv>
+    </WideDisplayDiv>
   </div>
   </>
   );

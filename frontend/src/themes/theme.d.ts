@@ -25,7 +25,8 @@ declare module 'styled-components' {
         progressStart: string;
         progressEnd: string;
         progressBackground: string;
-      };
+        userInfoCardHeader: string,
+  };
       teamProfile: {
         invite: string;
         inviteBorder: string;
@@ -51,6 +52,14 @@ declare module 'styled-components' {
           studentText: string;
           studentBackground: string;
       };
+      access: {
+        acceptedBackground: string;
+        acceptedText: string;
+        rejectedBackground: string;
+        rejectedText: string;
+        pendingBackground: string;
+        pendingText: string;
+      },
       fonts: {
           fontFamily: string;
           fontSizes: {

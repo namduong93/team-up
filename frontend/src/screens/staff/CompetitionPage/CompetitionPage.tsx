@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../CoachPage/CoachPage";
+import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../CoachPage/PageUtils";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
 import styled from "styled-components";
@@ -15,7 +15,12 @@ const AdminToggleOptionDiv = styled(ToggleOptionDiv)`
   box-sizing: border-box;
 `;
 
-export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
+export enum CompetitionRole {
+  Participant = 'Participant',
+  Coach = 'Coach',
+  Admin = 'Admin',
+  SiteCoordinator = 'Site-Coordinator'
+}
 
 export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
@@ -71,27 +76,27 @@ export const CompetitionPage: FC = () => {
         <PageOptionsContainerDiv>
           <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
             
-            {(roles.includes('Admin') || roles.includes('Coach') || roles.includes('Site-Coordinator')) &&
+            {(roles.includes(CompetitionRole.Admin) || roles.includes(CompetitionRole.Coach) || roles.includes(CompetitionRole.SiteCoordinator)) &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/teams/${compId}`) }}>
               <ToggleOptionTextSpan>Teams</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
 
-            {(roles.includes('Admin') || roles.includes('Coach')) &&
+            {(roles.includes(CompetitionRole.Admin) || roles.includes(CompetitionRole.Coach)) &&
               <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/students/${compId}`) }}>
               <ToggleOptionTextSpan>Students</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
 
-            {(roles.includes('Admin')) &&
+            {(roles.includes(CompetitionRole.Admin)) &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/staff/${compId}`) }}>
               <ToggleOptionTextSpan>Staff</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
             
-            {roles.includes('Admin') &&
+            {roles.includes(CompetitionRole.Admin) &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/site/${compId}`) }}>
               <ToggleOptionTextSpan>Site</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
 
-            {roles.includes('Site-Coordinator') &&
+            {roles.includes(CompetitionRole.SiteCoordinator) &&
             <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/site/${compId}`) }}>
               <ToggleOptionTextSpan>Attendees</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}

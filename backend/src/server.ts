@@ -206,6 +206,8 @@ app.get('/competition/roles', competitionController.competitionRoles);
 // all the above are strings
 app.get('/competition/students', competitionController.competitionStudents);
 
+app.get('/competition/staff', competitionController.competitionStaff);
+
 // Create and post a notification
 app.post('/notification', notificationController.notificationCreate);
 
