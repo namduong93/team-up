@@ -10,7 +10,7 @@ const TeamCardGridDisplay = styled.div`
   flex: 1;
   background-color: white;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(294px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(294px, 100%), 1fr));
   margin-top: 32px;
   row-gap: 20px;
   overflow: auto;
