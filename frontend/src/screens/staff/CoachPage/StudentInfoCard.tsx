@@ -1,8 +1,9 @@
 import React, { FC, ReactNode } from "react"
-import { StudentCardProps, StudentStatus } from "./StudentDisplay"
+import { StudentStatus } from "./StudentDisplay"
 import styled from "styled-components"
+import { NarrowStatusDiv } from "../StaffDisplay/StaffDisplay";
 
-const StudentInfoContainerDiv = styled.div`
+export const StudentInfoContainerDiv = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -37,30 +38,53 @@ const FieldTitle = styled.div`
   font-weight: bold;
   border-bottom: 1px solid ${({ theme }) => theme.colours.sidebarLine};
   background-color: #D9D9D9;
+  box-sizing: border-box;
 `;
 
 const FieldValue = styled.div`
   width: 100%;
-  flex: 1 1 auto;
+  flex: 2 1 auto;
+  flex-direction: column;
+  height: fit-content;
   text-align: center;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   max-width: 170px;
-`
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+`;
 
 interface FieldContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   value: ReactNode;
 }
 
-const Field: FC<FieldContainerProps> = ({ label, value, style, ...props }) => {
+export const Field: FC<FieldContainerProps> = ({ label, value, style, ...props }) => {
   return (
     <ContainerDiv style={{ ...style }} {...props}>
       <FieldTitle>{label}</FieldTitle>
       <FieldValue>{value}</FieldValue>
     </ContainerDiv>
   )
+}
+
+export interface StudentCardInfo {
+  name: string;
+  sex: string;
+  email: string;
+  studentId: string;
+  status: string;
+  level: string;
+  tshirtSize: string;
+  siteName: string;
+  teamName?: string;
+}
+
+export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  studentInfo: StudentCardInfo;
+  isHeader?: boolean;
 }
 
 export const StudentInfoCard: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
@@ -72,18 +96,18 @@ export const StudentInfoCard: FC<StudentCardProps> = ({ style, studentInfo, isHe
       <Field label="Email" value={studentInfo.email} style={{ width: '25%', minWidth: '170px' }} />
       <Field label="Status" 
         value={
-          <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
+          <NarrowStatusDiv>
             <StudentStatus style={{ minWidth: '78px' }} isMatched={studentInfo.status === 'Matched'}>
               {studentInfo.status}
             </StudentStatus>
-          </div>
+          </NarrowStatusDiv>
         }
         style={{ width: '20%', minWidth: '88px' }}
       />
       <Field label="Identifier" value={studentInfo.studentId} style={{ width: '10%', minWidth: '70px' }} />
       <Field label="Team Name" value={studentInfo.teamName} style={{ width: '25%', minWidth: '163px' }}/>
-      <Field label="Level" value={studentInfo.level} style={{ width: '5%', minWidth: '37px' }} />
-      <Field label="Shirt Size" value={studentInfo.tshirtSize} style={{ width: '5%', minWidth: '37px' }}/>
+      <Field label="Level" value={studentInfo.level} style={{ width: '10%', minWidth: '37px' }} />
+      <Field label="Shirt Size" value={studentInfo.tshirtSize} style={{ width: '5%', minWidth: '65px' }}/>
       <Field label="Site" value={studentInfo.siteName} style={{ width: '25%', minWidth: '163px' }} />
 
       

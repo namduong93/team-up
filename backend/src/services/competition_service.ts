@@ -1,8 +1,9 @@
+import createHttpError from "http-errors";
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED, INVALID_TOKEN, SITE_NAMES_MUST_BE_UNIQUE } from "../controllers/controller_util/http_error_handler.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
-import { CompetitionRepository } from "../repository/competition_repository_type.js";
+import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
@@ -18,14 +19,34 @@ export interface IndividualTeamInfo {
   isRemote: boolean;
 }
 
-export interface TeamInfo {
-  teamName: string;
-  competitionLevel: string;
-  ICPCEligible: string;
-  boersenEligible: string;
-  isRemote: boolean;
-}
 
+export type MemberDetails = [
+  name: string,
+  siteId: number,
+  ICPCEligible: boolean,
+  level: string,
+  boersenEligible: boolean,
+  isRemote: boolean
+];
+
+export enum Member {
+  name = 0,
+  siteId = 1,
+  ICPCEligible = 2,
+  level = 3,
+  boersenEligible = 4,
+  isRemote = 5,
+}
+export interface TeamDetails {
+  teamId: number;
+  universityId: number;
+  teamName: string;
+  member1?: MemberDetails;
+  member2?: MemberDetails;
+  member3?: MemberDetails;
+  status: 'pending' | 'registered' | 'unregistered';
+  teamNameApproved: boolean;
+};
 export interface TeamMateData {
   teamMateEmail: string;
   teamMateName: string;
@@ -35,6 +56,8 @@ export interface TeamMateData {
 };
 
 export interface StudentInfo {
+  userId: number;
+  universityId: number;
   name: string;
   sex: string;
   email: string;
@@ -46,6 +69,20 @@ export interface StudentInfo {
   teamName?: string;
 };
 
+export enum StaffAccess {
+  Accepted = 'Accepted',
+  Pending = 'Pending',
+  Rejected = 'Rejected',
+}
+export interface StaffInfo {
+  userId: number;
+  name: string;
+  roles: CompetitionRole[];
+  universityName: string;
+  access: StaffAccess;
+  email: string;
+}
+
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
@@ -55,18 +92,12 @@ export class CompetitionService {
     this.userRepository = userRepository;
   }
 
+  competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
+    return await this.competitionRepository.competitionStaff(userId, compId);
+  }
+
   competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {
-    const roles = await this.competitionRepository.competitionRoles(userId, compId);
-    if (roles.includes(CompetitionUserRole.ADMIN)) {
-      return [];
-    }
-
-    if (roles.includes(CompetitionUserRole.COACH)) {
-
-      return await this.competitionRepository.competitionStudents(userId, compId);
-    }
-
-    return [];
+    return await this.competitionRepository.competitionStudents(userId, compId);
   }
 
   competitionRoles = async (userId: number, compId: number) => {
@@ -169,7 +200,7 @@ export class CompetitionService {
     return { incompleteTeamId: 1 };
   }
 
-  competitionStudentJoin2 = async (sessionToken: string, code: string, teamInfo: TeamInfo,
+  competitionStudentJoin2 = async (sessionToken: string, code: string, teamInfo: TeamDetails,
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
 
     return { teamId: 1 };
