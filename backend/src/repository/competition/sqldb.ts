@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamInfo, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY } from "../../models/competition/competition.js";
 
@@ -14,15 +14,6 @@ const { randomUUID } = new ShortUniqueId({
   dictionary: 'alphanum_upper',
   length: 8
 });
-
-interface CompetitionTeam {
-  teamName: string;
-  memberName1?: string;
-  memberName2?: string;
-  memberName3?: string;
-  status: 'pending' | 'registered' | 'unregistered';
-  teamNameApproved: boolean;
-}
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -59,14 +50,32 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return parse(dbResult.rows[0].roles) as Array<CompetitionUserRole>;
   }
 
-  competitionTeams = async (userId: number, compId: number): Promise<Array<CompetitionTeam>> => {
-    const dbResult = await this.pool.query(
-      `SELECT team_name AS "teamName",
-        member_name1 AS "memberName1", member_name2 AS "memberName2", member_name3 AS "memberName3",
+  competitionTeams = async (userId: number, compId: number): Promise<Array<TeamDetails>> => {
+    const roles = await this.competitionRoles(userId, compId);
+
+    if (roles.includes(CompetitionUserRole.ADMIN)) {
+      const dbResult = await this.pool.query(
+        `SELECT team_id AS "teamId", university_id AS "universityId", team_name AS "teamName",
+        member1, member2, member3,
         status, team_name_approved AS "teamNameApproved"
-      FROM competition_team_list(${userId}, ${compId})`);
-      
-    return dbResult.rows;
+        FROM competition_admin_team_list(${compId})`
+      );
+
+      return dbResult.rows;
+    }
+
+    if (roles.includes(CompetitionUserRole.COACH)) {
+      const dbResult = await this.pool.query(
+        `SELECT team_id AS "teamId", university_id AS "universityId", team_name AS "teamName",
+          member1, member2, member3,
+          status, team_name_approved AS "teamNameApproved"
+        FROM competition_coach_team_list(${userId}, ${compId})`);
+      console.log(dbResult.rows);
+      return dbResult.rows;
+    }
+    
+
+    return [];
   };
 
   competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
@@ -344,7 +353,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { incompleteTeamId: 1 };
   }
 
-  competitionStudentJoin2 = async (sessionToken: string, teamInfo: TeamInfo,
+  competitionStudentJoin2 = async (sessionToken: string, teamInfo: TeamDetails,
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
 
     return { teamId: 1 };

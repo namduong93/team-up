@@ -1,3 +1,4 @@
+import createHttpError from "http-errors";
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED, INVALID_TOKEN, SITE_NAMES_MUST_BE_UNIQUE } from "../controllers/controller_util/http_error_handler.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
@@ -18,13 +19,21 @@ export interface IndividualTeamInfo {
   isRemote: boolean;
 }
 
-export interface TeamInfo {
-  teamName: string;
+export interface TeamDetails {
+  teamId: number;
+  universityId: number;
+  siteId: number;
+  ICPCEligible: boolean;
   competitionLevel: string;
-  ICPCEligible: string;
-  boersenEligible: string;
+  boersenEligible: boolean;
   isRemote: boolean;
-}
+  teamName: string;
+  memberName1?: string;
+  memberName2?: string;
+  memberName3?: string;
+  status: 'pending' | 'registered' | 'unregistered';
+  teamNameApproved: boolean;
+};
 
 export interface TeamMateData {
   teamMateEmail: string;
@@ -169,7 +178,7 @@ export class CompetitionService {
     return { incompleteTeamId: 1 };
   }
 
-  competitionStudentJoin2 = async (sessionToken: string, code: string, teamInfo: TeamInfo,
+  competitionStudentJoin2 = async (sessionToken: string, code: string, teamInfo: TeamDetails,
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
 
     return { teamId: 1 };
