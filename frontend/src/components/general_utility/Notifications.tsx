@@ -21,8 +21,8 @@ interface Notification {
     | 'welcomeAccount'
     | 'welcomeCompetition';
   message: string;
-  date: Date;
-  compId?: string;
+  createdAt: Date;
+  competitionId?: string;
   competitionName?: string;
   decision?: 'substitution' | 'replacement';
   teamName?: string;
@@ -130,6 +130,10 @@ const getNotificationIcon = (type: Notification['type']) => {
   }
 };
 
+function cleanNotificationType(type: string): string {
+  return type.replace(/[{}]/g, ''); // Removes { or }
+}
+
 export const Notifications: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isStaff, setIsStaff] = useState(false);
@@ -150,92 +154,42 @@ export const Notifications: FC = () => {
   }, [navigate]);
 
   useEffect(() => {
-    const fetchedNotifications: Notification[] = [
-      {
-        id: '1',
-        type: 'withdrawal',
-        message: 'John Doe from team Team A has withdrawn from competition ICPC 2024. They have opted for: substitution.',
-        decision: 'substitution',
-        studentName: 'John Doe',
-        teamName: 'Team A',
-        competitionName: 'ICPC 2024',
-        date: new Date('2024-10-15T10:00:00Z'),
-      },
-      {
-        id: '2',
-        type: 'name',
-        message: 'Your coach has approved your team name change to New Team Name for competition ICPC 2024.',
-        newTeamName: 'New Team Name',
-        competitionName: 'ICPC 2024',
-        date: new Date('2024-10-14T09:30:00Z'),
-      },
-      {
-        id: '3',
-        type: 'site',
-        message: 'Competition ICPC 2024 will take place at Sydney University.',
-        siteLocation: 'Sydney University',
-        competitionName: 'ICPC 2024',
-        date: new Date('2024-10-16T08:00:00Z'),
-      },
-      {
-        id: '4',
-        type: 'deadline',
-        message: 'The early registration deadline for competition ICPC 2024 is closing soon on 24th October. Register now!',
-        competitionName: 'ICPC 2024',
-        date: new Date('2024-10-13T12:00:00Z'),
-      },
-      {
-        id: '5',
-        type: 'teamStatus',
-        message: 'Your team has been successfully formed!',
-        date: new Date('2024-10-16T11:45:00Z'),
-      },
-      {
-        id: '6',
-        type: 'invite',
-        message: 'Welcome to ICPC 2024! Start inviting your friends or join an existing team via the team code.',
-        competitionName: 'ICPC 2024',
-        date: new Date('2024-10-16T11:45:00Z'),
-      },
-      {
-        id: '7',
-        type: 'cheer',
-        message: 'Good luck in ICPC 2024 Team A!',
-        teamName: 'Team A',
-        competitionName: 'ICPC 2024',
-        date: new Date('2024-10-16T11:45:00Z'),
-      },
-      {
-        id: '8',
-        type: 'welcomeAccount',
-        message: isStaff
-          ? 'Welcome to TeamUP! Start managing competitions and teams.'
-          : 'Welcome to TeamUP! Start joining competitions and forming your teams.',
-        date: new Date(),
-      },
-      {
-        id: '9',
-        type: 'welcomeCompetition',
-        message: isStaff
-          ? 'Welcome to ICPC 2024! Prepare to manage your teams effectively.'
-          : 'Welcome to ICPC 2024! Start preparing and building your team.',
-        competitionName: 'ICPC 2024',
-        date: new Date(),
-      },
-    ];
+    (async () => {
+      try {
+        // Fetch notifications from the backend
+        const notifResponse = await sendRequest.get<Notification[]>('/user/notifications');
 
-    setNotifications(fetchedNotifications);
+        // Transform the backend response to match the frontend Notification structure
+        const transformedNotifications = notifResponse.data.map((notif) => ({
+          id: notif.id?.toString() || '',  // Convert id to string
+          type: cleanNotificationType(notif.type) as Notification['type'],  // Convert type to string
+          message: notif.message,
+          createdAt: new Date(notif.createdAt),  // Use createdAt as date
+          competitionId: notif.competitionId,  // Convert competitionId to compId and string
+          competitionName: notif.competitionName,
+          decision: notif.decision,
+          teamName: notif.teamName,
+          studentName: notif.studentName,
+          newTeamName: notif.newTeamName,
+          siteLocation: notif.siteLocation,
+        }));
+  
+        setNotifications(transformedNotifications); // Set transformed data
+      } catch (error: unknown) {
+        console.log('Error fetching notifications:', error);
+      }
+    })();
   }, [isStaff]);
 
   const handleNavigate = (notification: Notification) => {
-    const { type, decision, studentName, teamName, compId } = notification;
+    const { type, decision, studentName, teamName, competitionId } = notification;
 
     if (isStaff) {
       if (type === 'withdrawal') {
         if (decision === 'substitution') {
-          navigate(`/coach/page/students/${compId}/${studentName}`);
+          navigate(`/coach/page/students/${competitionId}/${studentName}`);
         } else {
-          navigate(`/coach/page/teams/${compId}/${teamName}`);
+          navigate(`/coach/page/teams/${competitionId}/${teamName}`);
         }
       } else if (type === 'name' || type === 'site' || type === 'teamStatus') {
         navigate(`/coach/page/teams/${teamName}`);
@@ -245,7 +199,7 @@ export const Notifications: FC = () => {
         navigate('/dashboard');
       }
     } else {
-      navigate(`/competition/participant/${compId}`);
+      navigate(`/competition/participant/${competitionId}`);
     }
   };
 
@@ -276,7 +230,7 @@ export const Notifications: FC = () => {
             {notification.type === 'withdrawal' && notification.decision && (
               <small>Decision: {notification.decision}</small>
             )}
-            <NotificationDate>{formatDate(notification.date)}</NotificationDate>
+            <NotificationDate>{formatDate(notification.createdAt)}</NotificationDate>
           </NotificationMsg>
           <CloseButton
             onClick={(e) => {
