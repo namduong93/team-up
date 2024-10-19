@@ -153,21 +153,98 @@ AS $$
   WHERE cu.user_id = u_id;
 $$ LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION competition_team_list(u_id INT, c_id INT)
+CREATE OR REPLACE FUNCTION competition_coach_team_list(u_id INT, c_id INT)
 RETURNS TABLE(
-  team_name TEXT, member_name1 TEXT, member_name2 TEXT, member_name3 TEXT,
+  team_id INT, university_id INT,
+  team_name TEXT, member1 JSON, member2 JSON, member3 JSON,
   status competition_team_status, team_name_approved BOOLEAN)
 AS $$
-  SELECT ct.name AS team_name, 
-    (SELECT u.name FROM users AS u WHERE u.id = ct.participants[1]) AS member_name1,
-    (SELECT u.name FROM users AS u WHERE u.id = ct.participants[2]) AS member_name2,
-    (SELECT u.name FROM users AS u WHERE u.id = ct.participants[3]) AS member_name3,
+  SELECT
+    ct.id AS team_id,
+    u.university_id AS university_id,
+    ct.name AS team_name,
+    JSON_BUILD_ARRAY(
+      u1.name,
+      cu1.site_attending_id,
+      cu1.icpc_eligible,
+      cu1.competition_level,
+      cu1.boersen_eligible,
+      cu1.is_remote) AS member1,
+    
+    JSON_BUILD_ARRAY(
+      u2.name,
+      cu2.site_attending_id,
+      cu2.icpc_eligible,
+      cu2.competition_level,
+      cu2.boersen_eligible,
+      cu2.is_remote) AS member2,
+    
+    JSON_BUILD_ARRAY(
+      u3.name,
+      cu3.site_attending_id,
+      cu3.icpc_eligible,
+      cu3.competition_level,
+      cu3.boersen_eligible,
+      cu3.is_remote) AS member3,
     ct.team_status AS status,
     ct.team_name_approved AS team_name_approved
   FROM competition_teams AS ct
+  JOIN users AS u1 ON u1.id = ct.participants[1]
+  JOIN competition_users cu1 ON cu1.user_id = u1.id
+  JOIN users AS u2 ON u2.id = ct.participants[2]
+  JOIN competition_users cu2 ON cu2.user_id = u2.id
+  JOIN users AS u3 ON u3.id = ct.participants[3]
+  JOIN competition_users cu3 ON cu3.user_id = u3.id
+
   JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
   JOIN users AS u ON u.id = cu.user_id
   WHERE u.id = u_id AND ct.competition_id = c_id;
+$$ LANGUAGE sql;
+
+
+CREATE OR REPLACE FUNCTION competition_admin_team_list(c_id INT)
+RETURNS TABLE(
+  team_id INT, university_id INT,
+  team_name TEXT, member1 JSON, member2 JSON, member3 JSON,
+  status competition_team_status, team_name_approved BOOLEAN)
+AS $$
+  SELECT
+    ct.id AS team_id,
+    u1.university_id AS university_id,
+    ct.name AS team_name,
+    JSON_BUILD_ARRAY(
+      u1.name,
+      cu1.site_attending_id,
+      cu1.icpc_eligible,
+      cu1.competition_level,
+      cu1.boersen_eligible,
+      cu1.is_remote) AS member1,
+    
+    JSON_BUILD_ARRAY(
+      u2.name,
+      cu2.site_attending_id,
+      cu2.icpc_eligible,
+      cu2.competition_level,
+      cu2.boersen_eligible,
+      cu2.is_remote) AS member2,
+    
+    JSON_BUILD_ARRAY(
+      u3.name,
+      cu3.site_attending_id,
+      cu3.icpc_eligible,
+      cu3.competition_level,
+      cu3.boersen_eligible,
+      cu3.is_remote) AS member3,
+    ct.team_status AS status,
+    ct.team_name_approved AS team_name_approved
+  FROM competition_teams AS ct
+  JOIN users AS u1 ON u1.id = ct.participants[1]
+  JOIN competition_users cu1 ON cu1.user_id = u1.id
+  JOIN users AS u2 ON u2.id = ct.participants[2]
+  JOIN competition_users cu2 ON cu2.user_id = u2.id
+  JOIN users AS u3 ON u3.id = ct.participants[3]
+  JOIN competition_users cu3 ON cu3.user_id = u3.id
+  WHERE ct.competition_id = c_id;
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE VIEW user_profile_info AS
