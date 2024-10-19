@@ -14,6 +14,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
   }
 
   userNotificationsList = async(userId: number): Promise<Array<Notification> | undefined> => {
+    // TODO: add criteria to sort notifications
     const notifications = await this.pool.query(
       `SELECT id, message, created_at AS "createdAt" FROM notifications WHERE user_id = $1`,
       [userId]
