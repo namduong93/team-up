@@ -19,22 +19,34 @@ export interface IndividualTeamInfo {
   isRemote: boolean;
 }
 
+
+export type MemberDetails = [
+  name: string,
+  siteId: number,
+  ICPCEligible: boolean,
+  level: string,
+  boersenEligible: boolean,
+  isRemote: boolean
+];
+
+export enum Member {
+  name = 0,
+  siteId = 1,
+  ICPCEligible = 2,
+  level = 3,
+  boersenEligible = 4,
+  isRemote = 5,
+}
 export interface TeamDetails {
   teamId: number;
   universityId: number;
-  siteId: number;
-  ICPCEligible: boolean;
-  competitionLevel: string;
-  boersenEligible: boolean;
-  isRemote: boolean;
   teamName: string;
-  memberName1?: string;
-  memberName2?: string;
-  memberName3?: string;
+  member1?: MemberDetails;
+  member2?: MemberDetails;
+  member3?: MemberDetails;
   status: 'pending' | 'registered' | 'unregistered';
   teamNameApproved: boolean;
 };
-
 export interface TeamMateData {
   teamMateEmail: string;
   teamMateName: string;
