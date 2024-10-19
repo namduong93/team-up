@@ -56,6 +56,8 @@ export interface TeamMateData {
 };
 
 export interface StudentInfo {
+  userId: number;
+  universityId: number;
   name: string;
   sex: string;
   email: string;
@@ -77,17 +79,7 @@ export class CompetitionService {
   }
 
   competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {
-    const roles = await this.competitionRepository.competitionRoles(userId, compId);
-    if (roles.includes(CompetitionUserRole.ADMIN)) {
-      return [];
-    }
-
-    if (roles.includes(CompetitionUserRole.COACH)) {
-
-      return await this.competitionRepository.competitionStudents(userId, compId);
-    }
-
-    return [];
+    return await this.competitionRepository.competitionStudents(userId, compId);
   }
 
   competitionRoles = async (userId: number, compId: number) => {

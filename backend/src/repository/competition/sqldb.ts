@@ -21,24 +21,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   constructor(pool: Pool) {
     this.pool = pool;
   }
-
-  name: string;
-  sex: string;
-  email: string;
-  studentId: string;
-  status: string;
-  level: string;
-  tshirtSize: string;
-  siteName: string;
-  teamName?: string;
-  competitionStudents = async(userId: number, compId: number): Promise<Array<StudentInfo>> => {
-    const dbResult = await this.pool.query(
-      `SELECT * FROM competition_coach_students(${userId}, ${compId})`
-    );
-
-    return dbResult.rows;
-  }
-
+  
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
     const dbResult = await this.pool.query(
       `SELECT cu.competition_roles AS roles
@@ -48,6 +31,26 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       return [];
     }
     return parse(dbResult.rows[0].roles) as Array<CompetitionUserRole>;
+  }
+
+  competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (roles.includes(CompetitionUserRole.ADMIN)) {
+      const dbResult = await this.pool.query(
+        `SELECT * FROM competition_admin_students(${compId})`
+      );
+      return dbResult.rows;
+    }
+    
+    if (roles.includes(CompetitionUserRole.COACH)) {
+      const dbResult = await this.pool.query(
+        `SELECT * FROM competition_coach_students(${userId}, ${compId})`
+      );
+      return dbResult.rows;
+    }
+
+    // Should be changed later when we have a comprehensive error system.
+    return [];
   }
 
   competitionTeams = async (userId: number, compId: number): Promise<Array<TeamDetails>> => {
@@ -74,7 +77,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       return dbResult.rows;
     }
     
-
+    // should be changed when we have a comprehensive error system.
     return [];
   };
 
