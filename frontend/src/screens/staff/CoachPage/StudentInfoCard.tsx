@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from "react"
-import { StudentCardProps, StudentStatus } from "./StudentDisplay"
+import { StudentStatus } from "./StudentDisplay"
 import styled from "styled-components"
 
 const StudentInfoContainerDiv = styled.div`
@@ -61,6 +61,23 @@ const Field: FC<FieldContainerProps> = ({ label, value, style, ...props }) => {
       <FieldValue>{value}</FieldValue>
     </ContainerDiv>
   )
+}
+
+export interface StudentCardInfo {
+  name: string;
+  sex: string;
+  email: string;
+  studentId: string;
+  status: string;
+  level: string;
+  tshirtSize: string;
+  siteName: string;
+  teamName?: string;
+}
+
+export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  studentInfo: StudentCardInfo;
+  isHeader?: boolean;
 }
 
 export const StudentInfoCard: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
