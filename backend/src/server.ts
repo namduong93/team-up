@@ -211,7 +211,7 @@ app.post('/notification', notificationController.notificationCreate);
 
 // PARAMS: {}
 // Get all notifications for a user
-app.get('/user/notification', notificationController.userNotificationsList);
+app.get('/user/notifications', notificationController.userNotificationsList);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

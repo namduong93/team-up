@@ -14,8 +14,9 @@ export interface Notification {
   siteLocation?: string;
 }
 
-export const enum NotificationType {
-  ANNOUNCEMENT = 'announcement',
+export enum NotificationType {
+  WELCOME_ACCOUNT = 'welcomeAccount',
+  WELCOME_COMPETITION = 'welcomeCompetition',
   WITHDRAWL = 'withdrawal',
   NAME = 'name',
   SITE = 'site',
