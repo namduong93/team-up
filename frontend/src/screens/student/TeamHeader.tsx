@@ -79,9 +79,7 @@ const SquareAlertButton = styled(AlertButton)`
   border-radius: 8px;
 `;
 
-export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCountdown }) => {
-  const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
-  
+export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCountdown }) => {  
   return (
     <ResponsiveHeader>
       <HeaderContent>
@@ -97,10 +95,7 @@ export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCount
             redirectPath="/dashboard"
             actionType="error"
           />
-          <SquareAlertButton onClick={() => setIsNotificationsVisible((prev) => !prev)}>
-            <FaBell size={20} />
-          </SquareAlertButton>
-          {isNotificationsVisible && <Notifications />}
+          <Notifications />
         </ButtonContainer>
 
         <CompCountdownBar daysRemaining={compCountdown} progress={0.5} />

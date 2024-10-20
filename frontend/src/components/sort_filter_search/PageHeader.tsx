@@ -124,6 +124,15 @@ interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   searchTermState?: { searchTerm: string, setSearchTerm: React.Dispatch<SetStateAction<string>> };
 }
 
+const AdditionalElementsDiv = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-direction: row-reverse;
+`;
+
 // ACCEPTS PROPS:
 // - pageTitle --- The large header to appear at the top of the page
 // - pageDescription --- The subheading
@@ -146,7 +155,6 @@ export const PageHeader: FC<HeaderAttributes> = ({
 
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
-  const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
 
   return (
   <PageHeaderContainerDiv style={{ flexDirection: 'row', justifyContent: 'space-between', ...style }} {...props}>
@@ -200,13 +208,10 @@ export const PageHeader: FC<HeaderAttributes> = ({
             onChange={(e) => searchTermState.setSearchTerm(e.target.value)} />
         </ButtonContainer>}
       </SortFilterSearchContainerDiv>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <AdditionalElementsDiv>
+        <Notifications />
         {children}
-        <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}>
-          <FaBell size={15} />
-        </AlertButton>
-        {isNotificationsVisible && <Notifications />}
-      </div>
+      </AdditionalElementsDiv>
     </MenuOptionsContainerDiv>
   </PageHeaderContainerDiv>
   )
