@@ -11,6 +11,14 @@ CREATE TABLE universities (
   name TEXT NOT NULL
 );
 
+CREATE TABLE courses (
+  id SERIAL PRIMARY KEY,
+  
+  name TEXT NOT NULL, -- Full Name of course including any course codes
+  
+  university_id INT NOT NULL REFERENCES universities (id)
+)
+
 CREATE TYPE user_type_enum AS ENUM ('student', 'staff', 'system_admin');
 
 CREATE TABLE users (
@@ -100,11 +108,14 @@ CREATE TABLE competition_users (
 
   -- participant info
   icpc_eligible BOOLEAN,
-  competition_level competition_level_enum,
+  competition_level competition_level_enum DEFAULT 'Level B',
   boersen_eligible BOOLEAN,
   degree_year INT,
   degree TEXT,
   is_remote BOOLEAN,
+  is_official BOOLEAN,
+
+  preferred_contact TEXT,
 
   national_prizes TEXT,
   international_prizes TEXT,
@@ -137,9 +148,9 @@ CREATE TABLE competition_teams (
   competition_coach_id INT REFERENCES competition_users (id),
 
   name TEXT NOT NULL,
+  pending_name TEXT,
 
   team_status competition_team_status NOT NULL,
-  team_name_approved BOOLEAN NOT NULL,
   team_size INT NOT NULL,
 
   participants INT[], --- array of user_id's
@@ -196,7 +207,7 @@ AS $$
   SELECT
     ct.id AS team_id,
     u.university_id AS university_id,
-    ct.name AS team_name,
+    (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS team_name,
     JSON_BUILD_ARRAY(
       u1.name,
       cu1.site_attending_id,
@@ -221,7 +232,7 @@ AS $$
       cu3.boersen_eligible,
       cu3.is_remote) AS member3,
     ct.team_status AS status,
-    ct.team_name_approved AS team_name_approved
+    (ct.pending_name IS NULL) AS team_name_approved
   FROM competition_teams AS ct
   JOIN users AS u1 ON u1.id = ct.participants[1]
   JOIN competition_users cu1 ON cu1.user_id = u1.id
@@ -245,7 +256,7 @@ AS $$
   SELECT
     ct.id AS team_id,
     u1.university_id AS university_id,
-    ct.name AS team_name,
+    (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS team_name,
     JSON_BUILD_ARRAY(
       u1.name,
       cu1.site_attending_id,
@@ -270,7 +281,7 @@ AS $$
       cu3.boersen_eligible,
       cu3.is_remote) AS member3,
     ct.team_status AS status,
-    ct.team_name_approved AS team_name_approved
+    (ct.pending_name IS NULL) AS team_name_approved
   FROM competition_teams AS ct
   JOIN users AS u1 ON u1.id = ct.participants[1]
   JOIN competition_users cu1 ON cu1.user_id = u1.id
@@ -302,7 +313,8 @@ AS $$
   SELECT
     u.id AS "userId", u.university_id AS "universityId", u.name,
     u.gender AS sex, u.email, u.student_id AS "studentId", 'Matched' AS status,
-    cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName", ct.name AS "teamName"
+    cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName",
+    (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName"
   FROM competition_users AS cu_coach
   JOIN users AS u_coach ON cu_coach.user_id = u_coach.id
   JOIN competition_users AS cu ON cu.competition_coach_id = cu_coach.id
@@ -320,7 +332,8 @@ AS $$
   SELECT
     u.id AS "userId", u.university_id AS "universityId", u.name,
     u.gender AS sex, u.email, u.student_id AS "studentId", 'Matched' AS status,
-    cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName", ct.name AS "teamName"
+    cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName",
+    (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName"
   FROM competition_users AS cu
   JOIN users AS u ON u.id = cu.user_id
   JOIN competition_sites AS cs ON cs.id = cu.site_attending_id
@@ -570,15 +583,17 @@ INSERT INTO competition_users (
   codeforces_rating,
   university_courses,
   site_attending_id,
-  past_regional
+  past_regional,
+  is_official,
+  preferred_contact
 )
 VALUES
-    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE);
+    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, "Email example@email.com"),
+    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, "Discord fdc234"),
+    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, "Phone 0413421311"),
+    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, "Minecraft Account: EpicMan123"),
+    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, "Roblox Account: epicerrMan123"),
+    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, "fax machine number 98531234");
 
 -- Non-access coaches
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
@@ -587,11 +602,11 @@ VALUES
 (11, 1, ARRAY['Coach']::competition_role_enum[], 1, 'Rejected');
 
 INSERT INTO competition_teams (
-  competition_coach_id, name, team_status, team_name_approved, team_size, participants, university_id, competition_id
+  competition_coach_id, name, team_status, pending_name, team_size, participants, university_id, competition_id
 )
 VALUES
-(4, 'Team Zeta', 'registered', FALSE, 3, ARRAY[8, 9, 10], 2, 1),
-(4, 'Team Alpha', 'pending', FALSE, 3, ARRAY[5, 6, 7], 2, 1);
+(4, 'Team Zeta', 'registered', NULL, 3, ARRAY[8, 9, 10], 2, 1),
+(4, 'Team Alpha', 'pending', 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1);
 
 -- Notifications
 INSERT INTO notifications (
