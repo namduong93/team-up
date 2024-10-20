@@ -175,6 +175,25 @@ export class CompetitionService {
     return competitions;
   }
 
+  competitionCodeStatus = async (userId: number, code: string): Promise<{} | undefined> => {
+    const userTypeObject = await this.userRepository.userType(userId);
+    if(userTypeObject.type !== UserType.STUDENT) {
+      throw COMPETITION_STUDENT_REQUIRED;
+    }
+
+    const competitionId = await this.competitionRepository.competitionIdFromCode(code);
+    if(!competitionId) {
+      throw COMPETITION_NOT_FOUND;
+    }
+
+    const competitionRoles = await this.competitionRepository.competitionRoles(userId, competitionId);
+    if(competitionRoles.length > 0) { // either they are already a participant or a staff
+      throw COMPETITION_USER_REGISTERED;
+    }
+
+    return {};
+  }
+
   competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
     const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);
     if(userTypeObject.type !== UserType.STUDENT) {
