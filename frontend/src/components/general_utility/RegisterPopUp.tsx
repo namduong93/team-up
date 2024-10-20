@@ -5,7 +5,9 @@ import styled from "styled-components";
 interface RegisterPopUpProps {
   isOpen: boolean;
   onClose: () => void;
-  message: string;
+  message: React.ReactNode;
+  showInput?: boolean;
+  showButtons?: boolean;
 }
 
 const Overlay = styled.div`
@@ -50,6 +52,7 @@ const CloseButton = styled.button`
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
+  min-width: 100px;
   width: 25%;
   height: 35px;
   border: 0px;
@@ -69,7 +72,7 @@ const ButtonContainer = styled.div`
   width: 100%;
   justify-content: center;
   align-items: center;
-  gap: 90px;
+  gap: 40px;
 `
 
 const Title = styled.h2`
@@ -93,7 +96,13 @@ const Input = styled.input`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({ isOpen, onClose, message }) => {
+export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({ 
+  isOpen, 
+  onClose, 
+  message,
+  showInput = true,
+  showButtons = true,
+}) => {
   if (!isOpen) return null;
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
@@ -102,6 +111,7 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({ isOpen, onClose, m
     navigate(`/competition/information/${inputValue}`);
   }
 
+  // TODO: change to account for when the competition code is incorrect
   function isButtonDisabled(): boolean | undefined {
     return (
       inputValue === ""
@@ -112,17 +122,21 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({ isOpen, onClose, m
     <Overlay onClick={onClose}>
       <Container onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>✖</CloseButton>
-        <Title>{message}</Title>
-        <Input
+        <div>{message}</div>
+        {showInput && (<Input
           type="text"
-          placeholder="Enter the competition code"
+          placeholder="COMP1234"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <ButtonContainer>
+        )}
+
+        {showButtons && (
+          <ButtonContainer>
           <Button disabled={isButtonDisabled()} onClick={handleRegister}>Register</Button>
           <Button onClick={onClose}>Cancel</Button>
         </ButtonContainer>
+        )}
       </Container>
     </Overlay>
   );
