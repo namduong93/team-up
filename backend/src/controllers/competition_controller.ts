@@ -103,6 +103,14 @@ export class CompetitionController {
     return;
   });
 
+  competitionCodeStatus = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const code = req.body.code;
+    const codeStatus = await this.competitionService.competitionCodeStatus(Number(userId), code);
+    res.json(codeStatus);
+    return;
+  });
+
   competitionStudentJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const code = req.body.code;
     const competitionUserInfo = req.body.competitionUser;
