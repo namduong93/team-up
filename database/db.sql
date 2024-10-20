@@ -11,6 +11,14 @@ CREATE TABLE universities (
   name TEXT NOT NULL
 );
 
+CREATE TABLE courses (
+  id SERIAL PRIMARY KEY,
+  
+  name TEXT NOT NULL, -- Full Name of course including any course codes
+  
+  university_id INT NOT NULL REFERENCES universities (id)
+)
+
 CREATE TYPE user_type_enum AS ENUM ('student', 'staff', 'system_admin');
 
 CREATE TABLE users (
@@ -100,12 +108,14 @@ CREATE TABLE competition_users (
 
   -- participant info
   icpc_eligible BOOLEAN,
-  competition_level competition_level_enum,
+  competition_level competition_level_enum DEFAULT 'Level B',
   boersen_eligible BOOLEAN,
   degree_year INT,
   degree TEXT,
   is_remote BOOLEAN,
   is_official BOOLEAN,
+
+  preferred_contact TEXT,
 
   national_prizes TEXT,
   international_prizes TEXT,
@@ -573,15 +583,17 @@ INSERT INTO competition_users (
   codeforces_rating,
   university_courses,
   site_attending_id,
-  past_regional
+  past_regional,
+  is_official,
+  preferred_contact
 )
 VALUES
-    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE),
-    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE);
+    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, "Email example@email.com"),
+    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, "Discord fdc234"),
+    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, "Phone 0413421311"),
+    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, "Minecraft Account: EpicMan123"),
+    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, "Roblox Account: epicerrMan123"),
+    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, "fax machine number 98531234");
 
 -- Non-access coaches
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
