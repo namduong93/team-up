@@ -148,6 +148,36 @@ CREATE TABLE competition_teams (
   competition_id INT NOT NULL REFERENCES competitions (id)
 );
 
+CREATE TYPE notification_type_enum AS ENUM (
+  'welcomeAccount',
+  'welcomeCompetition',
+  'withdrawal',
+  'name',
+  'site',
+  'deadline',
+  'teamStatus',
+  'cheer',
+  'invite'
+);
+
+CREATE TABLE notifications (
+  id SERIAL PRIMARY KEY,
+  
+  user_id INT NOT NULL REFERENCES users (id),
+  team_id INT REFERENCES competition_teams (id),
+  competition_id INT REFERENCES competitions (id),
+  type TEXT NOT NULL,
+  message TEXT NOT NULL,
+  decision TEXT,
+  created_at TIMESTAMP NOT NULL,
+  
+  team_name TEXT,
+  student_name TEXT,
+  competition_name TEXT,
+  new_team_name TEXT,
+  site_location TEXT
+);
+
 CREATE OR REPLACE FUNCTION competition_list(u_id INT)
 RETURNS TABLE(id INT, name TEXT, created_date TIMESTAMP, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
 AS $$
@@ -562,3 +592,38 @@ INSERT INTO competition_teams (
 VALUES
 (4, 'Team Zeta', 'registered', FALSE, 3, ARRAY[8, 9, 10], 2, 1),
 (4, 'Team Alpha', 'pending', FALSE, 3, ARRAY[5, 6, 7], 2, 1);
+
+-- Notifications
+INSERT INTO notifications (
+  user_id, team_id, competition_id, type, message, decision, created_at,
+  team_name, student_name, competition_name, new_team_name, site_location
+)
+VALUES 
+(
+  5, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  NULL, NULL, NULL, NULL, NULL
+),
+(
+  5, NULL, NULL, ARRAY['welcomeAccount']::notification_type_enum[], 'Welcome to TeamUP!', NULL, NOW(),
+  NULL, NULL, NULL, NULL, NULL
+),
+(
+  6, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  NULL, NULL, NULL, NULL, NULL
+),
+(
+  7, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  NULL, NULL, NULL, NULL, NULL
+),
+(
+  8, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  NULL, NULL, NULL, NULL, NULL
+),
+(
+  9, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  NULL, NULL, NULL, NULL, NULL
+),
+(
+  10, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  NULL, NULL, NULL, NULL, NULL
+);
