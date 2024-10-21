@@ -1,8 +1,10 @@
-import { FC, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { ResponsiveButton, TransparentResponsiveButton } from "../sort_filter_search/PageHeader";
+import { StyledResponsiveActionDiv } from "../../screens/Dashboard/Dashboard";
 
-interface ActionButtonProps {
+interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   actionName: string;
   question: string;
   redirectPath: string;
@@ -148,3 +150,53 @@ export const ActionButton: FC<ActionButtonProps> = ({ actionName, question, redi
     </>
   );
 };
+
+interface ResponsiveActionButtonProps {
+  icon: ReactNode;
+  label: string;
+  question: string;
+  redirectPath: string;
+  actionType: "primary" | "secondary" | "error";
+  handleClick?: () => void; // Optional function prop for a custom click handler
+}
+
+export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
+    question, redirectPath, actionType, handleClick, icon, label }) => {
+    
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleConfirm = () => {
+    navigate(redirectPath); // Go to the correct redirected path
+  };
+
+  const handleButtonClick = () => {
+    if (handleClick) {
+      handleClick(); // Call the custom click handler if provided
+    } else {
+      setIsOpen(true); // Open the confirmation pop-up
+    }
+  };
+  
+  return (
+    <>
+      <StyledResponsiveActionDiv $actionType={actionType}>
+        <TransparentResponsiveButton
+          actionType={actionType}
+          onClick={handleButtonClick}
+          isOpen={isOpen}
+          icon={icon} label={label}
+        />
+      </StyledResponsiveActionDiv>
+      {isOpen && (
+        <PopUpOverlay onClick={() => setIsOpen(false)}>
+          <PopUpContent onClick={(e) => e.stopPropagation()}>
+            <Question>{question}</Question>
+            <ConfirmButton onClick={handleConfirm}>Confirm</ConfirmButton>
+            <CancelButton onClick={() => setIsOpen(false)}>Cancel</CancelButton>
+          </PopUpContent>
+        </PopUpOverlay>
+      )}
+    </>
+  );
+}

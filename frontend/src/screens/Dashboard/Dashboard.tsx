@@ -3,12 +3,14 @@ import styled from "styled-components";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { FaTimes } from "react-icons/fa";
 import { CompCard } from "../../components/general_utility/CompCard";
-import { ActionButton } from "../../components/general_utility/ActionButton";
+import { ActionButton, ResponsiveActionButton } from "../../components/general_utility/ActionButton";
 import { sendRequest } from "../../utility/request";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/sort_filter_search/PageHeader";
 import { DashInfo } from "./useDashInfo";
 import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
+import { IoIosCreate } from "react-icons/io";
+import { MdAssignmentAdd } from "react-icons/md";
 
 interface Competition { 
   compName: string;
@@ -140,7 +142,41 @@ const Title2 = styled.h2`
   font-size: 22px;
   white-space: pre-wrap;
   word-break: break-word;
-`
+`;
+
+export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | 'secondary' | 'error' }>`
+  border-radius: 10px;
+  box-sizing: border-box;
+  height: 33px;
+  border: none;
+  white-space: nowrap;
+  max-width: 80px;
+  width: 100%;
+
+  background-color: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "primary") {
+      return theme.colours.primaryLight;
+    } else if (actionType === "secondary") {
+      return theme.colours.secondaryLight;
+    } else {
+      return theme.colours.error;
+    }
+  }};
+
+  color: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "error") {
+      return theme.background;
+    } else {
+      return theme.fonts.colour;
+    }
+  }};
+
+  font-weight: ${({ $actionType: actionType, theme }) => {
+    if (actionType === "error") {
+      return theme.fonts.fontWeights.bold;
+    }
+  }};
+`;
 
 export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
@@ -352,20 +388,20 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
           searchTermState={{ searchTerm, setSearchTerm }}
         >
           {isAdmin && 
-            <ActionButton
-              actionName="Create"
-              question="Create a new competition?"
-              redirectPath="/competition/create"
-              actionType="secondary"
-            />
+            <ResponsiveActionButton
+            icon={<IoIosCreate />}
+            label="Create"
+            question="Create a new competition?"
+            redirectPath="/competition/create"
+            actionType="secondary"/>
           }
-          <ActionButton
-            actionName="Register"
+          <ResponsiveActionButton
+            icon={<MdAssignmentAdd />}
+            label="Register"
             question="Register for a new competition?"
             redirectPath="/competition/information"
-            actionType="primary"
             handleClick={handleRegisterClick}
-          />
+            actionType="primary"/>
         </PageHeader>
   
         {/* Active Filters Display */}

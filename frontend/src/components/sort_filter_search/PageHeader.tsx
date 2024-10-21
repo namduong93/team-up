@@ -1,11 +1,10 @@
 import React, { FC, ReactNode, SetStateAction, useState } from "react";
-import { FaBell, FaSort } from "react-icons/fa";
+import { FaSort } from "react-icons/fa";
 import styled from "styled-components";
 import { SortOption, SortSelect } from "../general_utility/SortSelect";
 import { FilterIcon, FilterSelect } from "../general_utility/FilterSelect";
 import { SearchBar } from "../../screens/staff/CoachPage/PageUtils";
 import { Notifications } from "../general_utility/Notifications";
-import { AlertButton } from "../../screens/Dashboard/Dashboard";
 
 type Filters = Record<string, Array<string>>;
 
@@ -57,10 +56,11 @@ export const SortFilterSearchContainerDiv = styled.div`
   min-width: 62px;
 `;
 
-interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface ResponsiveButton extends React.HTMLAttributes<HTMLButtonElement> {
   isOpen: boolean;
   icon: ReactNode;
   label: string;
+  actionType: 'primary' | 'secondary' | 'error'
 }
 
 export const SortButton = styled.button<{ $isSortOpen: boolean }>`
@@ -88,7 +88,56 @@ export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   }
 `;
 
-export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon, label, style, isOpen, ...props }) => {
+export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: 'primary' | 'secondary' | 'error' }>`
+  background-color: transparent;
+  border-radius: 10px;
+  box-sizing: border-box;
+  border: 0px;
+  padding: 8px 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    background-color: ${({ $actionType: actionType, theme }) => {
+      if (actionType === "primary") {
+        return theme.colours.primaryDark;
+      } else if (actionType === "secondary") {
+        return theme.colours.secondaryDark;
+      } else {
+        return theme.colours.cancelDark;
+      }
+    }};
+    color: ${({ theme }) => theme.background};
+    font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+  }
+`;
+
+export const TransparentResponsiveButton: FC<ResponsiveButton> = ({
+    onClick, actionType, icon, label, style, isOpen = false, ...props }) => {
+  return (
+    <TransparentButton $actionType={actionType} onClick={onClick} style={{
+      height: '100%',
+      width: '100%',
+      overflow: 'hidden',
+      padding: '0',
+      display: 'flex',
+      flexWrap: 'wrap',
+      ...style
+    }} $isSortOpen={isOpen} {...props}>
+      <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
+        <div style={{ height: '200%' }}>
+          {icon}
+        </div>
+        <span>{label}</span>
+      </div>
+    </TransparentButton>
+  )
+}
+
+
+export const ResponsiveButton: FC<ResponsiveButton> = ({ onClick, icon, label, style, isOpen = false, ...props }) => {
   return (
     <SortButton onClick={onClick} style={{
       height: '100%',
