@@ -126,10 +126,10 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
       }
       setIsLoading(true);
       try {
-        const response = await sendRequest.get('/competition/student/status', { code: inputValue });
+        const response = await sendRequest.get<{}>('/competition/student/status', { code: inputValue });
 
         // Check if the response is an empty object (valid code)
-        if (Object.keys(response).length === 0) {
+        if (Object.keys(response.data).length === 0) {
           setIsValidCode(true); // Valid competition code
           setErrorMessage(null); // Clear any previous error message
         } else {
@@ -169,7 +169,6 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
-                setErrorMessage(null); // Reset error message on input change
               }}
             />
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Display error message */}
