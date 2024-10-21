@@ -139,7 +139,7 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
       } catch (error) {
         console.error("Failed to validate competition code:", error);
         setIsValidCode(false); // Treat as invalid if an error occurs
-        setErrorMessage("Error validating competition code."); // Set error message
+        setErrorMessage("Invalid competition code. Please try again."); // Set error message
       } finally {
         setIsLoading(false);
       }
