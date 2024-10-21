@@ -7,7 +7,6 @@ import { SortButton } from "../../Dashboard/Dashboard";
 import { FaSearch } from "react-icons/fa";
 
 export const OverflowFlexBackground = styled(FlexBackground)`
-  overflow: auto;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 

@@ -24,7 +24,6 @@ interface DashboardsProps {
 }
 
 const OverflowFlexBackground = styled(FlexBackground)`
-  overflow: hidden;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   height: 100vh;
   background-color: ${({ theme }) => theme.background};
@@ -43,7 +42,7 @@ const DashboardContent = styled.div`
 
 export const AlertButton = styled.button`
   border-radius: 10px;
-  padding: 9px;
+  padding: 0px;
   background-color: ${({ theme }) => theme.colours.notifLight};
   color: ${({ theme }) => theme.colours.notifDark};
   border: none;
