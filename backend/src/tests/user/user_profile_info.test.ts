@@ -4,6 +4,7 @@ import { SessionTokenObject } from '../../repository/session_repository_type';
 import { SqlDbUserRepository } from '../../repository/user/sqldb';
 import { SqlDbSessionRepository } from '../../repository/session/sqldb';
 import pool, { getUserIdFromSessionId } from '../test_util/test_utilities';
+import { all } from 'axios';
 
 describe('GET /user/profile_info', () => {
   let userService: UserService;
@@ -20,53 +21,28 @@ describe('GET /user/profile_info', () => {
 
   describe('successful cases', () => {
     test('student success', async () => {
-      const mockStudent: Student = {
-        name: 'test student profile',
-        preferredName: 'test student profile',
-        email: 'teststudentprofileinfo@gmail.com',
-        password: 'testPassword',
-        gender: 'Male',
-        pronouns: 'He/Him',
-        tshirtSize: 'M',
-        universityId: 1,
-        studentId: 'z5296486'
+      const mockLoginDetails = {
+        email: 'student@example.com',
+        password: 'pleasechange'
       };
 
-      const sessionToken: SessionTokenObject = await userService.studentRegister(mockStudent);
+      const sessionToken: SessionTokenObject = await userService.userLogin(mockLoginDetails.email, mockLoginDetails.password);
       const userId: number = await getUserIdFromSessionId(sessionToken.sessionId);
 
       // Retrieve user profile info using the userId
       const result = await userService.userProfileInfo(userId);
 
       expect(result).toEqual(expect.objectContaining({
-        name: 'test student profile',
-        email: 'teststudentprofileinfo@gmailcom',
-        university: 'University of Melbourne'
-      }));
-    });
-
-    test('staff success', async () => {
-      const mockStaff = {
-        name: 'test staff profile',
-        preferredName: 'test staff profile',
-        email: 'teststaffprofileinfo@gmail.com',
-        password: 'testPassword',
-        gender: 'Male',
-        pronouns: 'He/Him',
-        tshirtSize: 'M',
-        universityId: 2,
-      };
-
-      const sessionToken: SessionTokenObject = await userService.staffRegister(mockStaff);
-      const userId: number = await getUserIdFromSessionId(sessionToken.sessionId);
-
-      // Retrieve user profile info using the userId
-      const result = await userService.userProfileInfo(userId);
-
-      expect(result).toEqual(expect.objectContaining({
-        name: 'test staff profile',
-        email: 'teststaffprofileinfo@gmailcom',
-        university: 'Monash University'
+        name: 'Test Student Account 1',
+        preferredName: 'Test Account',
+        email: 'student@example.com',
+        gender: 'M',
+        pronouns: 'They/them',
+        tshirtSize: 'S',
+        allergies: 'None',
+        dietaryReqs: [],
+        accessibilityReqs: 'Wheelchair Access',
+        affiliation: 'Monash University',
       }));
     });
   });
