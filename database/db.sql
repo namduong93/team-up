@@ -532,7 +532,49 @@ VALUES
   'Stairs Access',
   'staff',
   3,
-  NULL); -- password is 'pleasechange'
+  NULL), -- password is 'pleasechange'
+  ( -- id: 12
+  'Test Student Account 7',
+  'Test Account',
+  'teststudent7@example.com',
+  '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
+  'M',
+  'They/them',
+  'S',
+  'None',
+  '{}',
+  'Wheelchair Access',
+  'student',
+  2,
+  'z000007'),
+( -- id: 13
+  'Test Student Account 8',
+  'Test Account',
+  'teststudent8@example.com',
+  '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
+  'M',
+  'They/them',
+  'S',
+  'None',
+  '{}',
+  'Wheelchair Access',
+  'student',
+  2,
+  'z000008'),
+( -- id: 14
+  'Test Student Account 9',
+  'Test Account',
+  'teststudent9@example.com',
+  '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
+  'M',
+  'They/them',
+  'S',
+  'None',
+  '{}',
+  'Wheelchair Access',
+  'student',
+  2,
+  'z000009'); --- password is pleasechange
 
 -- Competitions
 INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code)
@@ -593,7 +635,11 @@ VALUES
     (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, 'Phone 0413421311'),
     (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'Minecraft Account: EpicMan123'),
     (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'Roblox Account: epicerrMan123'),
-    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax machine number 98531234');
+    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax machine number 98531234'),
+    (12, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax machine number 98531234'),
+    (13, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax number'),
+    (14, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax 1332');
+  
 
 -- Non-access coaches
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
@@ -606,7 +652,8 @@ INSERT INTO competition_teams (
 )
 VALUES
 (4, 'Team Zeta', 'registered', NULL, 3, ARRAY[8, 9, 10], 2, 1),
-(4, 'Team Alpha', 'pending', 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1);
+(4, 'Team Alpha', 'pending', 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1),
+(4, 'Team Donkey', 'pending', 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1);
 
 -- Notifications
 INSERT INTO notifications (

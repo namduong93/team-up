@@ -5,7 +5,7 @@ import { FaTimes } from "react-icons/fa";
 import { CompCard } from "../../components/general_utility/CompCard";
 import { ActionButton } from "../../components/general_utility/ActionButton";
 import { sendRequest } from "../../utility/request";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/sort_filter_search/PageHeader";
 import { DashInfo } from "./useDashInfo";
 import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
@@ -124,6 +124,23 @@ const CompetitionGrid = styled.div`
   padding: 0 20px;
   box-sizing: border-box;
 `;
+
+const Title1 = styled.h2`
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  white-space: pre-wrap;
+  word-break: break-word;
+`
+
+const Title2 = styled.h2`
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  white-space: pre-wrap;
+  word-break: break-word;
+`
 
 export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
@@ -309,6 +326,14 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     setIsRegisterPopUpOpen(false);
   }
 
+  const location = useLocation();
+  const [isRegoSucessPopUpOpen, setRegoSuccessPopUp] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.isRegoSuccessPopUpOpen) {
+      setRegoSuccessPopUp(true);
+    }
+  }, [location.state]);
   
   return (isLoaded &&
     <OverflowFlexBackground>
@@ -398,7 +423,26 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
 
           {/* Register Pop-Up */}
           {isRegisterPopUpOpen && (
-            <RegisterPopUp isOpen={isRegisterPopUpOpen} onClose={handleClosePopUp} message="Please enter the Competition Code"/>
+            <RegisterPopUp isOpen={isRegisterPopUpOpen} onClose={handleClosePopUp} message={
+              <Title1>Please enter the {"\nCompetition Code"}</Title1>
+            }/>
+          )}
+
+          {isRegoSucessPopUpOpen && (
+            <RegisterPopUp
+              isOpen={isRegoSucessPopUpOpen}
+              onClose={() => setRegoSuccessPopUp(false)}
+              message={
+                <Title2>
+                  You have successfully registered for the Competition! {"\n\n"}
+                  <span style={{ fontWeight: 'normal' }}>
+                    Please navigate to the Team Profile Page to join a team or invite team members
+                  </span>
+                </Title2>
+              }
+              showInput={false}
+              showButtons={false}
+            />
           )}
 
 

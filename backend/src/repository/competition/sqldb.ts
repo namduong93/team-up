@@ -342,18 +342,16 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     // Generate the team name (e.g., "Team#ID") and insert into competition_teams
     let teamStatus = TeamStatus.PENDING;
-    let teamNameApproved = false;
     let teamSize = DEFAULT_TEAM_SIZE;
     let participants = [userId];
 
     let teamNameQuery = `
-      INSERT INTO competition_teams (name, team_status, team_name_approved, team_size, participants, university_id, competition_id)
-      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1,  $2, $3, $4, $5, $6)
+      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id)
+      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1, $2, $3, $4, $5)
       RETURNING id
     `;
     const teamNameValues = [
       teamStatus,
-      teamNameApproved,
       teamSize,
       participants,
       universityId,  // university_id from users table

@@ -111,7 +111,7 @@ export const CompRegistrationProgressBar: FC<ProgressBarProps> = ({ progressNumb
         Individual Information
       </span>
       <span>
-        Competitive Experience Information
+        Competitive Experience
       </span>
     </ProgressBar>
   )
