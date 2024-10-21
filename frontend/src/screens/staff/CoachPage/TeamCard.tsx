@@ -76,7 +76,7 @@ export const TeamCardMember = ({ memberName }: { memberName: string }) => {
   );
 }
 
-const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean }>`
+const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean, $isEditingNameStatus: boolean }>`
   transition: transform 0.2s ease-in-out !important;
   display: flex;
   flex: 0 1 auto;
@@ -91,7 +91,7 @@ const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean }>`
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   user-select: none;
   &:hover {
-    ${({ $isEditingStatus }) => !$isEditingStatus && `transform: translate(2px, 2px);`}
+    ${({ $isEditingStatus, $isEditingNameStatus }) => (!$isEditingStatus && !$isEditingNameStatus) && `transform: translate(2px, 2px);`}
     cursor: pointer;
   }
 `
@@ -345,7 +345,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
   const isEditNameThisCard = isEditingNameStatus && (teamDetails.teamNameApproved === false);
 
   return (
-    <StyledHoverDiv $isEditingStatus={isEditThisCard}>
+    <StyledHoverDiv $isEditingStatus={isEditThisCard} $isEditingNameStatus={isEditNameThisCard}>
       {!isEditNameThisCard &&
       <>
         <CardHeaderDiv $statusColor={colorMap[status]}>
