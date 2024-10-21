@@ -139,7 +139,7 @@ app.get('/competition/details', competitionController.competitionGetDetails)
 
 // Throw status codes for when getting the competition code fails
 // PARAMS: { code: string }
-app.get('competition/student/status', competitionController.competitionCodeStatus);
+app.get('/competition/student/status', competitionController.competitionCodeStatus);
 
 // Student join competition with 0 friends
 // PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses } }
