@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { sendRequest } from "../../utility/request";
 
 interface RegisterPopUpProps {
   isOpen: boolean;
@@ -96,49 +97,94 @@ const Input = styled.input`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({ 
-  isOpen, 
-  onClose, 
+const ErrorMessage = styled.div`
+    color: red; // Adjust as necessary
+    font-size: 14px;
+    margin-top: 5px;
+`;
+
+export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
+  isOpen,
+  onClose,
   message,
   showInput = true,
   showButtons = true,
 }) => {
-  if (!isOpen) return null;
+
   const [inputValue, setInputValue] = useState("");
+  const [isValidCode, setIsValidCode] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const validateCode = async () => {
+      if (inputValue === "") {
+        setIsValidCode(false);
+        setErrorMessage(null); // Reset error message
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const response = await sendRequest.get('/competition/student/status', { code: inputValue });
+
+        // Check if the response is an empty object (valid code)
+        if (Object.keys(response).length === 0) {
+          setIsValidCode(true); // Valid competition code
+          setErrorMessage(null); // Clear any previous error message
+        } else {
+          setIsValidCode(false); // Invalid code
+          setErrorMessage("Invalid competition code. Please try again."); // Set error message
+        }
+      } catch (error) {
+        console.error("Failed to validate competition code:", error);
+        setIsValidCode(false); // Treat as invalid if an error occurs
+        setErrorMessage("Error validating competition code."); // Set error message
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    validateCode();
+  }, [inputValue]);
 
   const handleRegister = () => {
     navigate(`/competition/information/${inputValue}`);
-  }
+  };
 
-  // TODO: change to account for when the competition code is incorrect
-  function isButtonDisabled(): boolean | undefined {
-    return (
-      inputValue === ""
-    );
-  }
+  const isButtonDisabled = () => isLoading || !isValidCode;
+
+  if (!isOpen) return null;
 
   return (
     <Overlay onClick={onClose}>
       <Container onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>✖</CloseButton>
         <div>{message}</div>
-        {showInput && (<Input
-          type="text"
-          placeholder="COMP1234"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
+        {showInput && (
+          <>
+            <Input
+              type="text"
+              placeholder="COMP1234"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setErrorMessage(null); // Reset error message on input change
+              }}
+            />
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Display error message */}
+          </>
         )}
 
         {showButtons && (
           <ButtonContainer>
-          <Button disabled={isButtonDisabled()} onClick={handleRegister}>Register</Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </ButtonContainer>
+            <Button disabled={isButtonDisabled()} onClick={handleRegister}>
+              Register
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ButtonContainer>
         )}
       </Container>
     </Overlay>
   );
 };
-
