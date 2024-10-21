@@ -1,12 +1,14 @@
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { TeamCard, TeamDetails } from "./TeamCard";
 import styled, { useTheme } from "styled-components";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
 import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
 import { ResponsiveButton } from "../../../components/sort_filter_search/PageHeader";
 import { FaSave, FaStamp } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
+import { useCompetitionOutletContext } from "./useCompetitionOutletContext";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;
@@ -18,15 +20,72 @@ const TeamCardGridDisplay = styled.div`
   overflow: auto;
 `;
 
-export interface CompetitionPageContext {
-  filters: Record<string, Array<string>>;
-  sortOption: string;
-  searchTerm: string;
-  removeFilter: (field: string, value: string) => Record<string, string>;
-  setFilterOptions: React.Dispatch<React.SetStateAction<Record<string, Array<string>>>>;
-  setSortOptions: React.Dispatch<React.SetStateAction<Array<{ label: string, value: string }>>>;
-  setPageButtons: React.Dispatch<React.SetStateAction<ReactNode>>;
-  setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+export interface PageButtonsProps {
+  filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
+  editingStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  teamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+}
+
+export const TeamPageButtons: FC<PageButtonsProps> = ({
+  filtersState: [filters, setFilters],
+  editingStatusState: [isEditingStatus, setIsEditingStatus],
+  teamIdsState: [approveTeamIds, setApproveTeamIds]
+}) => {
+  
+  const theme = useTheme();
+
+  const enableEditTeamStatus = () => {
+    setIsEditingStatus(true);
+    setFilters({ Status: ['Pending'], ...filters });
+  };
+  const disableEditTeamStatus = () => {
+    setIsEditingStatus(false);
+    setFilters({});
+    setApproveTeamIds([]);
+  }
+  const confirmTeams = () => {
+    // do something with the approveTeamIds:
+    console.log(approveTeamIds)
+
+    disableEditTeamStatus();
+  }
+
+  return (<>
+  {!isEditingStatus &&
+  <div style={{ maxWidth: '130px', width: '100%', height: '33px' }}>
+    <ResponsiveButton onClick={enableEditTeamStatus} label="Edit Team Status" isOpen={false}
+      icon={<FaStamp style={{ color: theme.fonts.colour}} />}
+      style={{
+        backgroundColor: theme.colours.confirm,
+        color: theme.background,
+        border: '0'
+      }}
+    />
+  </div>}
+  {isEditingStatus && 
+  <>
+  <div style={{ maxWidth: '130px', width: '100%', height: '33px' }}>
+    <ResponsiveButton onClick={confirmTeams} label="Confirm Teams" isOpen={false}
+      icon={<FaSave style={{ color: theme.fonts.colour}} />}
+      style={{
+        backgroundColor: theme.colours.confirm,
+        color: theme.background,
+        border: '0'
+      }}
+    />
+  </div>
+  <div style={{ maxWidth: '100px', width: '100%', height: '33px' }}>
+  <ResponsiveButton onClick={disableEditTeamStatus} label="Cancel" isOpen={false}
+      icon={<GiCancel style={{ color: theme.fonts.colour}} />}
+      style={{
+        backgroundColor: theme.colours.cancel,
+        color: theme.background,
+        border: '0'
+      }}
+    />
+  </div>
+  </>}
+  </>);
 }
 
 export const TEAM_DISPLAY_SORT_OPTIONS = [
@@ -42,57 +101,15 @@ export const TEAM_DISPLAY_FILTER_OPTIONS = {
 export const TeamDisplay: FC = () => {
   const { compId } = useParams();
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
-          setFilterOptions, setSortOptions, setPageButtons } = useOutletContext<CompetitionPageContext>();
-  
-  const theme = useTheme();
-
+          editingStatusState: [isEditingStatus, setIsEditingStatus],
+          teamIdsState: [approveTeamIds, setApproveTeamIds],
+          setFilterOptions, setSortOptions, setEnableTeamButtons } = useCompetitionOutletContext('teams');
 
   const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
   setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
   setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
+  setEnableTeamButtons(true);
 
-  
-
-  const [isEditingStatus, setIsEditingStatus] = useState<boolean>(false);
-  const enableEditTeamStatus = () => {
-    setIsEditingStatus(true);
-    setFilters({ Status: ['Pending'], ...filters });
-  };
-  const disableEditTeamStatus = () => {
-    setIsEditingStatus(false);
-    setFilters({});
-  }
-
-  useEffect(() => {
-
-    setPageButtons(
-      <>
-        {!isEditingStatus &&
-        <div style={{ maxWidth: '130px', width: '100%', height: '33px' }}>
-          <ResponsiveButton onClick={enableEditTeamStatus} label="Edit Team Status" isOpen={false}
-            icon={<FaStamp style={{ color: theme.fonts.colour}} />}
-            style={{
-              backgroundColor: theme.colours.confirm,
-              color: theme.background,
-              border: '0'
-            }}
-          />
-        </div>}
-        {isEditingStatus && 
-        <div style={{ maxWidth: '130px', width: '100%', height: '33px' }}>
-          <ResponsiveButton onClick={disableEditTeamStatus} label="Confirm Teams" isOpen={false}
-            icon={<FaSave style={{ color: theme.fonts.colour}} />}
-            style={{
-              backgroundColor: theme.colours.confirm,
-              color: theme.background,
-              border: '0'
-            }}
-          />
-        </div>}
-      </>
-    );
-  }
-  , [isEditingStatus])
 
   useEffect(() => {
     const fetchCompetitionTeams = async () => {
@@ -179,6 +196,7 @@ export const TeamDisplay: FC = () => {
     <TeamCardGridDisplay>
       {searchedCompetitions.map(({item: teamDetails}, index) => {
         return (<TeamCard
+          teamIdsState={[approveTeamIds, setApproveTeamIds]}
           isEditingStatus={isEditingStatus}
           key={`${teamDetails.teamName}${teamDetails.status}${index}`} teamDetails={teamDetails} />)
       })}

@@ -46,7 +46,6 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style, def
   
   const realChildren = React.Children.toArray(children).filter((child) => child !== null)
   const numChildren = realChildren.length;
-  console.log(numChildren);
   return (
     <StyledToggleDiv $borderIndex={borderIndex} $numElems={numChildren} style={{ maxWidth: `${150 * numChildren}px`, ...style }}>
       {realChildren.map((child, index) => {

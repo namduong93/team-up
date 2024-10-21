@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { sendRequest } from "../../../utility/request";
 import { SortOption } from "../../../components/general_utility/SortSelect";
+import { TeamPageButtons } from "../CoachPage/TeamDisplay";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -34,7 +35,10 @@ export const CompetitionPage: FC = () => {
   
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
 
-  const [pageButtons, setPageButtons] = useState<ReactNode>();
+  const [enableTeamButtons, setEnableTeamButtons] = useState<boolean>(false);
+  const [isEditingStatus, setIsEditingStatus] = useState<boolean>(false);
+  const [approveTeamIds, setApproveTeamIds] = useState<Array<number>>([]);
+
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -75,7 +79,10 @@ export const CompetitionPage: FC = () => {
           filtersState={{ filters, setFilters }}
           searchTermState={{ searchTerm, setSearchTerm }}
           >
-            {pageButtons}
+            {enableTeamButtons && <TeamPageButtons
+              filtersState={[filters, setFilters]}
+              editingStatusState={[isEditingStatus, setIsEditingStatus]}
+              teamIdsState={[approveTeamIds, setApproveTeamIds]} />}
           </PageHeader>
         <PageOptionsContainerDiv>
           <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
@@ -109,7 +116,9 @@ export const CompetitionPage: FC = () => {
         </PageOptionsContainerDiv>
 
         <Outlet context={{ filters, sortOption, searchTerm, removeFilter, setFilters,
-          setFilterOptions, setSortOptions, setPageButtons }}/>
+          filtersState: [filters, setFilters], editingStatusState: [isEditingStatus, setIsEditingStatus],
+          teamIdsState: [approveTeamIds, setApproveTeamIds], 
+          setFilterOptions, setSortOptions, setEnableTeamButtons }}/>
 
       </MainPageDiv>
     </OverflowFlexBackground>

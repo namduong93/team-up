@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { CiCircleAlert } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
@@ -34,6 +34,7 @@ export interface TeamDetails {
 interface TeamCardProps {
   teamDetails: TeamDetails;
   isEditingStatus: boolean;
+  teamIdsState: [number[], React.Dispatch<React.SetStateAction<number[]>>];
 };
 
 const TeamMemberContainerDiv = styled.div`
@@ -71,7 +72,7 @@ export const TeamCardMember = ({ memberName }: { memberName: string }) => {
   );
 }
 
-const StyledHoverDiv = styled.div`
+const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean }>`
   transition: transform 0.2s ease-in-out !important;
   display: flex;
   flex: 0 1 auto;
@@ -79,14 +80,14 @@ const StyledHoverDiv = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 260px;
-  max-height: 260px;
+  max-height: ${({ $isEditingStatus }) => $isEditingStatus ? '280px' : '260px'};
   max-width: 294px;
   min-width: 140px;
   border-radius: 20px 20px 20px 20px;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   user-select: none;
   &:hover {
-    transform: translate(2px, 2px);
+    ${({ $isEditingStatus }) => !$isEditingStatus && `transform: translate(2px, 2px);`}
     cursor: pointer;
   }
 `
@@ -123,7 +124,8 @@ const TeamMemberDiv = styled.div`
   border-radius: 10px;
   border: 1px solid rgb(200, 200, 200);
   width: 85.37%;
-  height: 20.79%;
+  min-height: 40px;
+  /* height: 20.79%; */
 `;
 
 const RedTeamNameAlert = styled(CiCircleAlert)`
@@ -134,10 +136,42 @@ const RedTeamNameAlert = styled(CiCircleAlert)`
 `;
 
 const ApproveDiv = styled.div`
-  
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  column-gap: 4px;
+  color: ${({ theme }) => theme.colours.confirm};
 `;
 
-export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = false }) => {
+const RadioCircleDiv = styled.div<{ $selected: boolean }>`
+  transition: background-color 0.2s ease-in-out !important;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid ${({ theme }) => theme.colours.confirm};
+  box-sizing: border-box;
+  background-color: ${({ theme, $selected }) => (
+      $selected ? theme.colours.confirm : theme.background
+    )};
+`;
+
+const ApproveRadio: FC<React.HTMLAttributes<HTMLDivElement>> = ({ onClick = () => {}, children, ...props }) => {
+  const [selected, setSelected] = useState<boolean>(false);
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    setSelected((prev) => !prev);
+    onClick(e);
+  }
+  return (
+    <ApproveDiv onClick={handleClick} {...props}>
+      <RadioCircleDiv $selected={selected} />
+      {children}
+    </ApproveDiv>
+  );
+}
+
+export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = false,
+  teamIdsState: [teamIds, setTeamIds]
+ }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, _ ] = useState(teamDetails.status);
   const colorMap = {
@@ -145,9 +179,24 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
     'unregistered': '#FDD386',
     'registered': '#8BDFA5',
   };
-  console.log(teamDetails);
+
+  const toggleCurrentId = () => {
+    setTeamIds((pTeamIds) => {
+      const index = pTeamIds.indexOf(teamDetails.teamId);
+      if (index < 0) {
+        return [...pTeamIds, teamDetails.teamId];
+      }
+      
+      return [
+        ...(pTeamIds.slice(0, index)),
+        ...(pTeamIds.slice(index + 1))
+      ];
+    });
+
+  }
+
   return (
-    <StyledHoverDiv>
+    <StyledHoverDiv $isEditingStatus={isEditingStatus}>
       <CardHeaderDiv $statusColor={colorMap[status]}>
         <TitleSpan>{teamDetails.teamName}</TitleSpan>
         {!teamDetails.teamNameApproved && <RedTeamNameAlert />}
@@ -171,7 +220,9 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
         </TeamMemberDiv>}
 
         {isEditingStatus &&
-        <div></div>
+          <ApproveRadio onClick={toggleCurrentId}>
+            Approve
+          </ApproveRadio>
         }
 
       </TeamMatesContainerDiv>

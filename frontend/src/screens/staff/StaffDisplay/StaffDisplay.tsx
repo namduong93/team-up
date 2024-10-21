@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
-import { CompetitionPageContext } from "../CoachPage/TeamDisplay";
+import { useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { NarrowDisplayDiv, UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideDisplayDiv, WideInfoContainerDiv } from "../CoachPage/StudentDisplay";
@@ -9,6 +8,7 @@ import styled, { useTheme } from "styled-components";
 import { Field, StudentInfoContainerDiv } from "../CoachPage/StudentInfoCard";
 import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
+import { useCompetitionOutletContext } from "../CoachPage/useCompetitionOutletContext";
 
 
 export enum StaffAccess {
@@ -245,9 +245,8 @@ const STAFF_DISPLAY_FILTER_OPTIONS = {
 
 export const StaffDisplay: FC = () => {
   const { compId } = useParams();
-  const { filters, sortOption, searchTerm, removeFilter,
-    setFilterOptions, setSortOptions
-  } = useOutletContext<CompetitionPageContext>();
+  const { filters, sortOption, searchTerm, removeFilter, setFilters,
+    setFilterOptions, setSortOptions } = useCompetitionOutletContext('staff');
 
   setSortOptions(STAFF_DISPLAY_SORT_OPTIONS);
   setFilterOptions(STAFF_DISPLAY_FILTER_OPTIONS);

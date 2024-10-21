@@ -3,10 +3,10 @@ import { FaRegUser } from "react-icons/fa";
 import styled from "styled-components";
 import { StudentCardInfo, StudentCardProps, StudentInfoCard } from "./StudentInfoCard";
 import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
-import { useOutletContext, useParams } from "react-router-dom";
-import { CompetitionPageContext } from "./TeamDisplay";
+import { useParams } from "react-router-dom";
 import Fuse from "fuse.js";
 import { sendRequest } from "../../../utility/request";
+import { useCompetitionOutletContext } from "./useCompetitionOutletContext";
 
 export const WideDisplayDiv = styled.div`
   flex: 1;
@@ -229,9 +229,8 @@ const STUDENT_DISPLAY_FILTER_OPTIONS = {
 };
 
 export const StudentDisplay = () => {
-  const { filters, sortOption, searchTerm, removeFilter,
-    setFilterOptions, setSortOptions
-  } = useOutletContext<CompetitionPageContext>();
+  const { filters, sortOption, searchTerm, removeFilter, setFilters,
+    setFilterOptions, setSortOptions } = useCompetitionOutletContext('students');
   
   const { compId } = useParams();
 

@@ -131,6 +131,7 @@ const AdditionalElementsDiv = styled.div`
   align-items: center;
   column-gap: 4px;
   flex-direction: row-reverse;
+  flex-wrap: wrap;
 `;
 
 // ACCEPTS PROPS:
