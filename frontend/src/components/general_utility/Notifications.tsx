@@ -4,9 +4,11 @@ import { sendRequest } from '../../utility/request';
 import { 
   FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, 
   FaUserEdit, FaThumbsUp, FaUserPlus, FaClipboardList, 
-  FaTrophy, FaHandshake 
+  FaTrophy, FaHandshake, 
+  FaBell
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { AlertButton } from '../../screens/Dashboard/Dashboard';
 
 interface Notification {
   id: string;
@@ -33,17 +35,20 @@ interface Notification {
 
 const NotificationsContainer = styled.div`
   position: absolute;
-  top: 58px;
-  right: 30px;
+  top: calc(100% + 10px);
+  right: 0;
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  width: 40%;
+  width: 70vw;
+  z-index: 1005;
+  max-width: 450px;
+  min-width: 250px;
   max-height: 400px;
   overflow-y: auto;
   z-index: 1000;
 
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     width: 80%;
     right: 10px;
   }
@@ -52,7 +57,7 @@ const NotificationsContainer = styled.div`
     width: 95%;
     top: 10px;
     right: 5px;
-  }
+  } */
 `;
 
 const NotificationItem = styled.div`
@@ -105,6 +110,12 @@ const NotificationDate = styled.small`
   font-size: 0.85rem;
 `;
 
+const NotificationButtonContainer = styled.div`
+  position: relative;
+  height: 33px;
+  width: 33px;
+`;
+
 const getNotificationIcon = (type: Notification['type']) => {
   switch (type) {
     case 'withdrawal':
@@ -137,6 +148,7 @@ function cleanNotificationType(type: string): string {
 export const Notifications: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isStaff, setIsStaff] = useState(false);
+  const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -218,7 +230,11 @@ export const Notifications: FC = () => {
   };
 
   return (
-    <NotificationsContainer>
+  <NotificationButtonContainer>
+    <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}>
+        <FaBell size={15} />
+    </AlertButton>
+    {isNotificationsVisible && <NotificationsContainer>
       {notifications.map((notification) => (
         <NotificationItem
           key={notification.id}
@@ -240,6 +256,7 @@ export const Notifications: FC = () => {
           />
         </NotificationItem>
       ))}
-    </NotificationsContainer>
+    </NotificationsContainer>}
+  </NotificationButtonContainer>
   );
 };
