@@ -129,7 +129,11 @@ export const CompetitionExperience: FC = () => {
       const response = await sendRequest.post('/competition/student/join ', payload);
       console.log("Response:", response.data);
 
-      navigate("/dashboard"); 
+      navigate("/dashboard", {
+        state: {
+          isRegoSuccessPopUpOpen: true,
+        }
+      }); 
 
       // TO-DO: uncomment when pop-up is implemented on Admin Page
       // navigate("/competition/page", { 
@@ -329,7 +333,7 @@ export const CompetitionExperience: FC = () => {
             descriptor={[
               "This prize celebrates the work of Ms. Raewyn Boersen, previous South Pacific Director, Founder, and recipient of the Mark Measures Distinguished Service Award.",
               "The prize is awarded to the top team of all women or non-binary students. If this team places in the top half of level A, then they qualify to the Regional Finals.","",
-              "Select 'Yes' if you are women or non-binary, or 'No' otherwise."
+              "Please select 'Yes' if you are female or non-binary and would like to compete for the Boersen Prize, or 'No' otherwise."
             ]}
             width="100%"
             />

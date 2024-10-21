@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { sendRequest } from "../../utility/request";
 
 interface RegisterPopUpProps {
   isOpen: boolean;
   onClose: () => void;
-  message: string;
+  message: React.ReactNode;
+  showInput?: boolean;
+  showButtons?: boolean;
 }
 
 const Overlay = styled.div`
@@ -50,6 +53,7 @@ const CloseButton = styled.button`
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
+  min-width: 100px;
   width: 25%;
   height: 35px;
   border: 0px;
@@ -69,7 +73,7 @@ const ButtonContainer = styled.div`
   width: 100%;
   justify-content: center;
   align-items: center;
-  gap: 90px;
+  gap: 40px;
 `
 
 const Title = styled.h2`
@@ -93,38 +97,93 @@ const Input = styled.input`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({ isOpen, onClose, message }) => {
-  if (!isOpen) return null;
+const ErrorMessage = styled.div`
+    color: red; // Adjust as necessary
+    font-size: 14px;
+    margin-top: 5px;
+`;
+
+export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
+  isOpen,
+  onClose,
+  message,
+  showInput = true,
+  showButtons = true,
+}) => {
+
   const [inputValue, setInputValue] = useState("");
+  const [isValidCode, setIsValidCode] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const validateCode = async () => {
+      if (inputValue === "") {
+        setIsValidCode(false);
+        setErrorMessage(null); // Reset error message
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const response = await sendRequest.get<{}>('/competition/student/status', { code: inputValue });
+
+        // Check if the response is an empty object (valid code)
+        if (Object.keys(response.data).length === 0) {
+          setIsValidCode(true); // Valid competition code
+          setErrorMessage(null); // Clear any previous error message
+        } else {
+          setIsValidCode(false); // Invalid code
+          setErrorMessage("Invalid competition code. Please try again."); // Set error message
+        }
+      } catch (error) {
+        console.error("Failed to validate competition code:", error);
+        setIsValidCode(false); // Treat as invalid if an error occurs
+        setErrorMessage("Invalid competition code. Please try again."); // Set error message
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    validateCode();
+  }, [inputValue]);
 
   const handleRegister = () => {
     navigate(`/competition/information/${inputValue}`);
-  }
+  };
 
-  function isButtonDisabled(): boolean | undefined {
-    return (
-      inputValue === ""
-    );
-  }
+  const isButtonDisabled = () => isLoading || !isValidCode;
+
+  if (!isOpen) return null;
 
   return (
     <Overlay onClick={onClose}>
       <Container onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>✖</CloseButton>
-        <Title>{message}</Title>
-        <Input
-          type="text"
-          placeholder="Enter the competition code"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <ButtonContainer>
-          <Button disabled={isButtonDisabled()} onClick={handleRegister}>Register</Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </ButtonContainer>
+        <div>{message}</div>
+        {showInput && (
+          <>
+            <Input
+              type="text"
+              placeholder="COMP1234"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+              }}
+            />
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Display error message */}
+          </>
+        )}
+
+        {showButtons && (
+          <ButtonContainer>
+            <Button disabled={isButtonDisabled()} onClick={handleRegister}>
+              Register
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ButtonContainer>
+        )}
       </Container>
     </Overlay>
   );
 };
-

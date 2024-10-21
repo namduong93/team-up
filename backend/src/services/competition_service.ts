@@ -1,5 +1,4 @@
-import createHttpError from "http-errors";
-import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED, INVALID_TOKEN, SITE_NAMES_MUST_BE_UNIQUE } from "../controllers/controller_util/http_error_handler.js";
+import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
@@ -175,19 +174,39 @@ export class CompetitionService {
     return competitions;
   }
 
-  competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
-    const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);
-    if(userTypeObject.type !== UserType.STUDENT) {
+  competitionCodeStatus = async (userId: number, code: string): Promise<{} | undefined> => {
+    const userTypeObject = await this.userRepository.userType(userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
       throw COMPETITION_STUDENT_REQUIRED;
     }
 
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
-    if(!competitionId) {
+    if (!competitionId) {
       throw COMPETITION_NOT_FOUND;
     }
+
+    const competitionRoles = await this.competitionRepository.competitionRoles(userId, competitionId);
+    if (competitionRoles.length > 0) { // either they are already a participant or a staff
+      throw COMPETITION_USER_REGISTERED;
+    }
+
+    return {};
+  }
+
+  competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
+    const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
+      throw COMPETITION_STUDENT_REQUIRED;
+    }
+
+    const competitionId = await this.competitionRepository.competitionIdFromCode(code);
+    if (!competitionId) {
+      throw COMPETITION_NOT_FOUND;
+    }
+
     competitionUserInfo.competitionId = competitionId;
     const competitionRoles = await this.competitionRepository.competitionRoles(competitionUserInfo.userId, competitionId);
-    if(competitionRoles.length > 0) { // either they are already a participant or a staff
+    if (competitionRoles.length > 0) { // either they are already a participant or a staff
       throw COMPETITION_USER_REGISTERED;
     }
     competitionUserInfo.competitionRoles = [CompetitionUserRole.PARTICIPANT];
