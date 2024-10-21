@@ -56,11 +56,10 @@ export const SortFilterSearchContainerDiv = styled.div`
   min-width: 62px;
 `;
 
-interface ResponsiveButton extends React.HTMLAttributes<HTMLButtonElement> {
+interface ResponsiveButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   isOpen: boolean;
   icon: ReactNode;
   label: string;
-  actionType: 'primary' | 'secondary' | 'error'
 }
 
 export const SortButton = styled.button<{ $isSortOpen: boolean }>`
@@ -114,7 +113,11 @@ export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionTy
   }
 `;
 
-export const TransparentResponsiveButton: FC<ResponsiveButton> = ({
+interface ResponsiveActionButtonProps extends ResponsiveButtonProps {
+  actionType: 'primary' | 'secondary' | 'error'
+}
+
+export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
     onClick, actionType, icon, label, style, isOpen = false, ...props }) => {
   return (
     <TransparentButton $actionType={actionType} onClick={onClick} style={{
@@ -137,7 +140,7 @@ export const TransparentResponsiveButton: FC<ResponsiveButton> = ({
 }
 
 
-export const ResponsiveButton: FC<ResponsiveButton> = ({ onClick, icon, label, style, isOpen = false, ...props }) => {
+export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, label, style, isOpen = false, ...props }) => {
   return (
     <SortButton onClick={onClick} style={{
       height: '100%',

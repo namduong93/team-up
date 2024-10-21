@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { ResponsiveButton, TransparentResponsiveButton } from "../sort_filter_search/PageHeader";
+import { TransparentResponsiveButton } from "../sort_filter_search/PageHeader";
 import { StyledResponsiveActionDiv } from "../../screens/Dashboard/Dashboard";
 
 interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {

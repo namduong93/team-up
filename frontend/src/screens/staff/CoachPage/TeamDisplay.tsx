@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
 import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
-import { ResponsiveButton } from "../../../components/sort_filter_search/PageHeader";
+import { ResponsiveButtonProps } from "../../../components/sort_filter_search/PageHeader";
 import { FaCheck, FaCheckCircle, FaRegCheckCircle, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { useCompetitionOutletContext } from "./useCompetitionOutletContext";
