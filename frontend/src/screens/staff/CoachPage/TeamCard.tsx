@@ -184,9 +184,11 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
     setTeamIds((pTeamIds) => {
       const index = pTeamIds.indexOf(teamDetails.teamId);
       if (index < 0) {
+        // if the team isn't in the list yet then add it
         return [...pTeamIds, teamDetails.teamId];
       }
       
+      // otherwise remove it
       return [
         ...(pTeamIds.slice(0, index)),
         ...(pTeamIds.slice(index + 1))
