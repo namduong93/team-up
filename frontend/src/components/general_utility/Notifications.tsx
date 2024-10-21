@@ -114,6 +114,7 @@ const NotificationButtonContainer = styled.div`
   position: relative;
   height: 33px;
   width: 33px;
+  min-width: 33px;
 `;
 
 const getNotificationIcon = (type: Notification['type']) => {

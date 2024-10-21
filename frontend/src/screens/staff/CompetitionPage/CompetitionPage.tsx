@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../CoachPage/PageUtils";
 import { PageHeader } from "../../../components/sort_filter_search/PageHeader";
 import { CustomToggleSwitch } from "../../../components/general_utility/ToggleSwitch";
@@ -33,6 +33,8 @@ export const CompetitionPage: FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
+
+  const [pageButtons, setPageButtons] = useState<ReactNode>();
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -72,7 +74,9 @@ export const CompetitionPage: FC = () => {
           filterOptions={filterOptions}
           filtersState={{ filters, setFilters }}
           searchTermState={{ searchTerm, setSearchTerm }}
-          />
+          >
+            {pageButtons}
+          </PageHeader>
         <PageOptionsContainerDiv>
           <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
             
@@ -104,8 +108,8 @@ export const CompetitionPage: FC = () => {
           </CustomToggleSwitch>
         </PageOptionsContainerDiv>
 
-        <Outlet context={{ filters, sortOption, searchTerm, removeFilter,
-          setFilterOptions, setSortOptions }}/>
+        <Outlet context={{ filters, sortOption, searchTerm, removeFilter, setFilters,
+          setFilterOptions, setSortOptions, setPageButtons }}/>
 
       </MainPageDiv>
     </OverflowFlexBackground>

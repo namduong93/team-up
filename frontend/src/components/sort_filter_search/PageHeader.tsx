@@ -129,7 +129,7 @@ const AdditionalElementsDiv = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
+  column-gap: 4px;
   flex-direction: row-reverse;
 `;
 

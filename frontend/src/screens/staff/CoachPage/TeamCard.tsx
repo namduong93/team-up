@@ -33,6 +33,7 @@ export interface TeamDetails {
 
 interface TeamCardProps {
   teamDetails: TeamDetails;
+  isEditingStatus: boolean;
 };
 
 const TeamMemberContainerDiv = styled.div`
@@ -132,7 +133,11 @@ const RedTeamNameAlert = styled(CiCircleAlert)`
   margin-right: 5%;
 `;
 
-export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
+const ApproveDiv = styled.div`
+  
+`;
+
+export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = false }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, _ ] = useState(teamDetails.status);
   const colorMap = {
@@ -150,20 +155,24 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails }) => {
 
       <TeamMatesContainerDiv>
 
-        {teamDetails.member1 && 
+        {teamDetails.member1 &&
         <TeamMemberDiv>
           <TeamCardMember memberName={teamDetails.member1[Member.name]} />
         </TeamMemberDiv>}
 
-        {teamDetails.member2 && 
+        {teamDetails.member2 &&
         <TeamMemberDiv>
           <TeamCardMember memberName={teamDetails.member2[Member.name]} />
         </TeamMemberDiv>}
 
-        {teamDetails.member3 && 
+        {teamDetails.member3 &&
         <TeamMemberDiv>
           <TeamCardMember memberName={teamDetails.member3[Member.name]} />
         </TeamMemberDiv>}
+
+        {isEditingStatus &&
+        <div></div>
+        }
 
       </TeamMatesContainerDiv>
 
