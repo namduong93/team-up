@@ -1,7 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import { CiCircleAlert } from "react-icons/ci";
-import { FaRegUser } from "react-icons/fa";
-import styled from "styled-components";
+import { FaCheck, FaRegCheckCircle, FaRegUser, FaStamp } from "react-icons/fa";
+import { IoMdCheckmark } from "react-icons/io";
+import { LiaTimesSolid } from "react-icons/lia";
+import styled, { useTheme } from "styled-components";
 
 export type MemberDetails = [
   name: string,
@@ -35,6 +37,8 @@ interface TeamCardProps {
   teamDetails: TeamDetails;
   isEditingStatus: boolean;
   teamIdsState: [number[], React.Dispatch<React.SetStateAction<number[]>>];
+  rejectedTeamIdsState: [number[], React.Dispatch<React.SetStateAction<number[]>>];
+  isEditingNameStatus: boolean;
 };
 
 const TeamMemberContainerDiv = styled.div`
@@ -169,8 +173,148 @@ const ApproveRadio: FC<React.HTMLAttributes<HTMLDivElement>> = ({ onClick = () =
   );
 }
 
+interface ApprovalNameRadiosProps extends React.HTMLAttributes<HTMLDivElement> {
+  setTeamIds: React.Dispatch<React.SetStateAction<Array<number>>>;
+  setRejectedTeamIds: React.Dispatch<React.SetStateAction<Array<number>>>;
+  teamId: number;
+}
+
+const ApprovalNameDiv = styled.div`
+  width: 100%;
+  height: 33px;
+  display: flex;
+  justify-content: center;
+`;
+
+const RadioCheckIcon = styled(IoMdCheckmark)`
+  width: 23px;
+  height: 23px;
+  color: ${({ theme }) => theme.colours.confirm};
+`;
+
+const RadioCrossIcon = styled(LiaTimesSolid)`
+  width: 23px;
+  height: 23px;
+  color: ${({ theme }) => theme.colours.cancel};
+`;
+
+const RadioIconDiv = styled.div`
+  width: 33px;
+  height: 33px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  box-sizing: border-box;
+`;
+
+const enum RadioOption {
+  Neither = 'Neither',
+  Check = 'Check',
+  Cross = 'Cross',
+}
+
+const ApproveNameRadios: FC<ApprovalNameRadiosProps> = ({ setTeamIds, setRejectedTeamIds, teamId, ...props }) => {
+  const theme = useTheme();
+  
+  const [selectedOption, setSelectedOption] = useState<RadioOption>(RadioOption.Neither);
+
+  const handleCheckClick = () => {
+    setSelectedOption((prev) => prev === RadioOption.Check ? RadioOption.Neither : RadioOption.Check);
+  }
+
+  const handleCrossClick = () => {
+    setSelectedOption((prev) => prev === RadioOption.Cross ? RadioOption.Neither : RadioOption.Cross);
+  }
+
+  const addTeam = () => {
+    setTeamIds((prev) => prev.includes(teamId) ? prev : [...prev, teamId]);
+  }
+  const removeTeam = () => {
+    setTeamIds((prev) => {
+      const index = prev.indexOf(teamId);
+      if (index < 0) {
+        return prev;
+      }
+
+      return [
+        ...prev.slice(0, index),
+        ...prev.slice(index + 1)
+      ];
+    })
+  }
+  const rejectTeam = () => {
+    setRejectedTeamIds((prev) => prev.includes(teamId) ? prev : [...prev, teamId]);
+  }
+  const unRejectTeam = () => {
+    setRejectedTeamIds((prev) => {
+      const index = prev.indexOf(teamId);
+      if (index < 0) {
+        return prev;
+      }
+
+      return [
+        ...prev.slice(0, index),
+        ...prev.slice(index + 1)
+      ];
+    })
+  }
+
+  useEffect(() => {
+    if (selectedOption === RadioOption.Check) {
+      addTeam();
+    } else {
+      removeTeam();
+    }
+
+    if (selectedOption === RadioOption.Cross) {
+      rejectTeam();
+    }
+
+  }, [selectedOption]);
+
+  return (
+    <ApprovalNameDiv {...props}>
+      
+      <RadioIconDiv onClick={handleCheckClick} style={{
+        border: `1px solid ${theme.colours.confirm}`,
+        backgroundColor: selectedOption === RadioOption.Check ? theme.colours.confirm : theme.background
+      }}>
+        <RadioCheckIcon style={{
+          color: selectedOption === RadioOption.Check ? theme.background : theme.colours.confirm
+        }} />
+      </RadioIconDiv>
+
+      <div style={{ flex: '0 2 20px' }} />
+      
+      <RadioIconDiv onClick={handleCrossClick} style={{
+        border: `1px solid ${theme.colours.cancel}`,
+        backgroundColor: selectedOption === RadioOption.Cross ? theme.colours.cancel : theme.background,
+        color: selectedOption === RadioOption.Cross ? theme.background : theme.colours.cancel
+      }}>
+        <RadioCrossIcon style={{
+          color: selectedOption === RadioOption.Cross ? theme.background : theme.colours.cancel
+        }} />
+      </RadioIconDiv>
+    
+    </ApprovalNameDiv>
+  )
+}
+
+const TeamNameApprovalDiv = styled.div`
+  width: 100%;
+  height: 100%;
+  /* background-color: green; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = false,
-  teamIdsState: [teamIds, setTeamIds]
+  teamIdsState: [teamIds, setTeamIds],
+  rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+  isEditingNameStatus = false
  }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, _ ] = useState(teamDetails.status);
@@ -197,38 +341,54 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
 
   }
 
+  const isEditThisCard = isEditingStatus && (teamDetails.status === 'pending');
+  const isEditNameThisCard = isEditingNameStatus && (teamDetails.teamNameApproved === false);
+
   return (
-    <StyledHoverDiv $isEditingStatus={isEditingStatus}>
-      <CardHeaderDiv $statusColor={colorMap[status]}>
-        <TitleSpan>{teamDetails.teamName}</TitleSpan>
-        {!teamDetails.teamNameApproved && <RedTeamNameAlert />}
-      </CardHeaderDiv>
+    <StyledHoverDiv $isEditingStatus={isEditThisCard}>
+      {!isEditNameThisCard &&
+      <>
+        <CardHeaderDiv $statusColor={colorMap[status]}>
+          <TitleSpan>{teamDetails.teamName}</TitleSpan>
+          {!teamDetails.teamNameApproved && <RedTeamNameAlert />}
+        </CardHeaderDiv>
+    
+          <TeamMatesContainerDiv>
+    
+            {teamDetails.member1 &&
+            <TeamMemberDiv>
+              <TeamCardMember memberName={teamDetails.member1[Member.name]} />
+            </TeamMemberDiv>}
+          
+            {teamDetails.member2 &&
+            <TeamMemberDiv>
+              <TeamCardMember memberName={teamDetails.member2[Member.name]} />
+            </TeamMemberDiv>}
+          
+            {teamDetails.member3 &&
+            <TeamMemberDiv>
+              <TeamCardMember memberName={teamDetails.member3[Member.name]} />
+            </TeamMemberDiv>}
+          
+            {isEditThisCard &&
+              <ApproveRadio onClick={toggleCurrentId}>
+                Approve
+              </ApproveRadio>
+            }
+  
+        </TeamMatesContainerDiv>
+    </>}
 
-      <TeamMatesContainerDiv>
-
-        {teamDetails.member1 &&
-        <TeamMemberDiv>
-          <TeamCardMember memberName={teamDetails.member1[Member.name]} />
-        </TeamMemberDiv>}
-
-        {teamDetails.member2 &&
-        <TeamMemberDiv>
-          <TeamCardMember memberName={teamDetails.member2[Member.name]} />
-        </TeamMemberDiv>}
-
-        {teamDetails.member3 &&
-        <TeamMemberDiv>
-          <TeamCardMember memberName={teamDetails.member3[Member.name]} />
-        </TeamMemberDiv>}
-
-        {isEditingStatus &&
-          <ApproveRadio onClick={toggleCurrentId}>
-            Approve
-          </ApproveRadio>
-        }
-
-      </TeamMatesContainerDiv>
-
+    {isEditNameThisCard &&
+      <TeamNameApprovalDiv>
+        <TitleSpan style={{ margin: '0', marginBottom: '20px' }}>{teamDetails.teamName}</TitleSpan>
+        <ApproveNameRadios
+          setTeamIds={setTeamIds}
+          setRejectedTeamIds={setRejectedTeamIds}
+          teamId={teamDetails.teamId}
+        />
+      </TeamNameApprovalDiv>
+    }
     </StyledHoverDiv>
   )
 }

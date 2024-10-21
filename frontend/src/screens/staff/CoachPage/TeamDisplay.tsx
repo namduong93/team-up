@@ -6,7 +6,7 @@ import { FilterTagButton, RemoveFilterIcon } from "../../Dashboard/Dashboard";
 import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
 import { ResponsiveButton } from "../../../components/sort_filter_search/PageHeader";
-import { FaSave, FaStamp } from "react-icons/fa";
+import { FaCheck, FaCheckCircle, FaRegCheckCircle, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { useCompetitionOutletContext } from "./useCompetitionOutletContext";
 
@@ -24,19 +24,24 @@ export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
   editingStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   teamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+  editingNameStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
 }
 
 export const TeamPageButtons: FC<PageButtonsProps> = ({
   filtersState: [filters, setFilters],
   editingStatusState: [isEditingStatus, setIsEditingStatus],
-  teamIdsState: [approveTeamIds, setApproveTeamIds]
+  teamIdsState: [approveTeamIds, setApproveTeamIds],
+
+  rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+  editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus]
 }) => {
   
   const theme = useTheme();
 
   const enableEditTeamStatus = () => {
     setIsEditingStatus(true);
-    setFilters({ Status: ['Pending'], ...filters });
+    setFilters({ ...filters, Status: ['Pending'] });
   };
   const disableEditTeamStatus = () => {
     setIsEditingStatus(false);
@@ -45,13 +50,31 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   }
   const confirmTeams = () => {
     // do something with the approveTeamIds:
-    console.log(approveTeamIds)
+    console.log('accepted', approveTeamIds);
 
     disableEditTeamStatus();
   }
 
+  const enableEditNameStatus = () => {
+    setIsEditingNameStatus(true);
+    setFilters({ ...filters, "Team Name Approval": ['Unapproved'] });
+  }
+  const disableEditNameStatus = () => {
+    setIsEditingNameStatus(false);
+    setFilters({});
+    setApproveTeamIds([]);
+    setRejectedTeamIds([]);
+  }
+  const confirmNames = () => {
+    // do something with the approveTeamIds and rejectedteamIds:
+    console.log('accepted', approveTeamIds);
+    console.log('rejected', rejectedTeamIds);
+
+    disableEditNameStatus();
+  }
+
   return (<>
-  {!isEditingStatus &&
+  {!isEditingStatus && !isEditingNameStatus &&
   <div style={{ maxWidth: '130px', width: '100%', height: '33px' }}>
     <ResponsiveButton onClick={enableEditTeamStatus} label="Edit Team Status" isOpen={false}
       icon={<FaStamp style={{ color: theme.fonts.colour}} />}
@@ -85,6 +108,43 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     />
   </div>
   </>}
+
+  {!isEditingStatus && !isEditingNameStatus &&
+  <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+    <ResponsiveButton onClick={enableEditNameStatus} label="Approve Names" isOpen={false}
+      icon={<FaRegCheckCircle style={{ color: theme.fonts.colour}} />}
+      style={{
+        backgroundColor: theme.colours.confirm,
+        color: theme.background,
+        border: '0'
+      }}
+    />
+  </div>}
+
+  {isEditingNameStatus && 
+  <>
+  <div style={{ maxWidth: '130px', width: '100%', height: '33px' }}>
+    <ResponsiveButton onClick={confirmNames} label="Confirm Names" isOpen={false}
+      icon={<FaSave style={{ color: theme.fonts.colour}} />}
+      style={{
+        backgroundColor: theme.colours.confirm,
+        color: theme.background,
+        border: '0'
+      }}
+    />
+  </div>
+  <div style={{ maxWidth: '100px', width: '100%', height: '33px' }}>
+  <ResponsiveButton onClick={disableEditNameStatus} label="Cancel" isOpen={false}
+      icon={<GiCancel style={{ color: theme.fonts.colour}} />}
+      style={{
+        backgroundColor: theme.colours.cancel,
+        color: theme.background,
+        border: '0'
+      }}
+    />
+  </div>
+  </>}
+
   </>);
 }
 
@@ -103,15 +163,18 @@ export const TeamDisplay: FC = () => {
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
           editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
+          rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+          editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           setFilterOptions, setSortOptions, setEnableTeamButtons } = useCompetitionOutletContext('teams');
 
   const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
-  setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
-  setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
-  setEnableTeamButtons(true);
 
 
   useEffect(() => {
+    setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
+    setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
+    setEnableTeamButtons(true);
+
     const fetchCompetitionTeams = async () => {
       try {
         const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
@@ -195,9 +258,12 @@ export const TeamDisplay: FC = () => {
     </div>
     <TeamCardGridDisplay>
       {searchedCompetitions.map(({item: teamDetails}, index) => {
-        return (<TeamCard
+        return (
+        <TeamCard
           teamIdsState={[approveTeamIds, setApproveTeamIds]}
+          rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
           isEditingStatus={isEditingStatus}
+          isEditingNameStatus={isEditingNameStatus}
           key={`${teamDetails.teamName}${teamDetails.status}${index}`} teamDetails={teamDetails} />)
       })}
     </TeamCardGridDisplay>

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useOutletContext } from "react-router-dom"
 
 export interface CompetitionPageContext {
@@ -12,6 +12,9 @@ export interface CompetitionPageContext {
   setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
   editingStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   teamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+  editingNameStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+
 }
 
 export const useCompetitionOutletContext = (page: string) => {
@@ -19,32 +22,43 @@ export const useCompetitionOutletContext = (page: string) => {
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
     editingStatusState: [isEditingStatus, setIsEditingStatus],
     teamIdsState: [approveTeamIds, setApproveTeamIds],
+    editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
+    rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
     setFilterOptions, setSortOptions, setEnableTeamButtons } = context;
 
-  // enable the team buttons on the team page and not on the non-team page
-  if (page !== 'teams') {
-    setEnableTeamButtons(false);
-  } else {
-    setEnableTeamButtons(true);
-  }
-
-  if (page !== 'students') {
-
-  } else {
-
-  }
-
-  if (page !== 'staff') {
-
-  } else {
-
-  }
-
-  if (page === 'site') {
-
-  } else {
+  useEffect(() => {
+    setIsEditingStatus(false);
+    setApproveTeamIds([]);
+    setFilters({});
+    setIsEditingNameStatus(false);
+    setRejectedTeamIds([]);
     
-  }
+    // enable the team buttons on the team page and not on the non-team page
+    if (page !== 'teams') {
+      setEnableTeamButtons(false);
+    } else {
+      setEnableTeamButtons(true);
+    }
+  
+    if (page !== 'students') {
+  
+    } else {
+  
+    }
+  
+    if (page !== 'staff') {
+  
+    } else {
+  
+    }
+  
+    if (page === 'site') {
+  
+    } else {
+      
+    }
+
+  }, []);
 
   return context;
 }

@@ -35,10 +35,14 @@ export const CompetitionPage: FC = () => {
   
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
 
+  ////
   const [enableTeamButtons, setEnableTeamButtons] = useState<boolean>(false);
   const [isEditingStatus, setIsEditingStatus] = useState<boolean>(false);
   const [approveTeamIds, setApproveTeamIds] = useState<Array<number>>([]);
-
+  
+  const [rejectedTeamIds, setRejectedTeamIds] = useState<Array<number>>([]);
+  const [isEditingNameStatus, setIsEditingNameStatus] = useState<boolean>(false);
+  ////
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -82,7 +86,10 @@ export const CompetitionPage: FC = () => {
             {enableTeamButtons && <TeamPageButtons
               filtersState={[filters, setFilters]}
               editingStatusState={[isEditingStatus, setIsEditingStatus]}
-              teamIdsState={[approveTeamIds, setApproveTeamIds]} />}
+              teamIdsState={[approveTeamIds, setApproveTeamIds]}
+              editingNameStatusState={[isEditingNameStatus, setIsEditingNameStatus]}
+              rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
+              />}
           </PageHeader>
         <PageOptionsContainerDiv>
           <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
@@ -117,7 +124,10 @@ export const CompetitionPage: FC = () => {
 
         <Outlet context={{ filters, sortOption, searchTerm, removeFilter, setFilters,
           filtersState: [filters, setFilters], editingStatusState: [isEditingStatus, setIsEditingStatus],
-          teamIdsState: [approveTeamIds, setApproveTeamIds], 
+          teamIdsState: [approveTeamIds, setApproveTeamIds],
+          editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
+          rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+
           setFilterOptions, setSortOptions, setEnableTeamButtons }}/>
 
       </MainPageDiv>
