@@ -1,11 +1,11 @@
 import { FC, useState } from "react";
 import { FaBell } from "react-icons/fa";
 import styled from "styled-components";
-import { Notifications } from "../../components/general_utility/Notifications";
-import { AlertButton } from "../../screens/Dashboard/Dashboard";
-import { PageHeaderContainerDiv, PageTitle, PageDescriptionSpan } from "../../components/sort_filter_search/PageHeader";
+import { NotificationButton } from "../../components/page_header/components/NotificationButton";
+import { AlertButton } from "../dashboard/Dashboard";
+import { PageHeaderContainerDiv, PageTitle, PageDescriptionSpan } from "../../components/page_header/PageHeader";
 import { CompCountdownBar } from "./CompCountdownBar";
-import { ActionButton } from "../../components/general_utility/ActionButton";
+import { ActionButton } from "../../components/responsive_fields/action_buttons/ActionButton";
 
 interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   compName: string;
@@ -95,7 +95,7 @@ export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCount
             redirectPath="/dashboard"
             actionType="error"
           />
-          <Notifications />
+          <NotificationButton />
         </ButtonContainer>
 
         <CompCountdownBar daysRemaining={compCountdown} progress={0.5} />

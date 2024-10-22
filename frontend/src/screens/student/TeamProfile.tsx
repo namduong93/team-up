@@ -1,6 +1,6 @@
 import { FC  } from "react";
-import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../staff/CoachPage/PageUtils";
-import { CustomToggleSwitch } from "../../components/general_utility/ToggleSwitch";
+import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../competition_staff_page/components/PageUtils";
+import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
 import styled from "styled-components";
 // import { sendRequest } from "../../utility/request";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
