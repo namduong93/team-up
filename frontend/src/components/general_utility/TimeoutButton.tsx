@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { Button } from "../../screens/login/AccountInformation";
+import { Button } from "../../screens/authentication/registration/AccountInformation";
 
 interface TimeoutButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   seconds?: number;

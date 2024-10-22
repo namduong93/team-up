@@ -1,39 +1,37 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Landing } from './screens/login/Landing';
-// import { Login } from './screens/login/Login';
-// import { SignUp } from './screens/login/SignUp';
-import { Dashboard } from './screens/Dashboard/Dashboard';
-import { Account } from './screens/Account';
-import { RoleRegistration } from './screens/login/RoleRegistration';
+import { Landing } from './screens/authentication/login/Landing';
+import { Dashboard } from './screens/dashboard/Dashboard';
+import { Account } from './screens/account/Account';
 import { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from './themes/defaultTheme';
 import { darkTheme } from './themes/darkTheme';
 import { Settings } from './screens/settings/Settings';
-import { Competition } from './screens/competition/Competition';
-import { AccountInformation } from './screens/login/AccountInformation';
-import { SiteInformation } from './screens/login/SiteInformation';
-import { InstitutionInformation } from './screens/login/InstitutionInformation';
-import { MultiStepRegoFormProvider } from'./screens/login/MultiStepRegoForm';
-import { TeamDisplay } from './screens/staff/CoachPage/TeamDisplay';
-import { StudentDisplay } from './screens/staff/CoachPage/StudentDisplay';
+import { MultiStepRegoFormProvider } from'./screens/authentication/registration/hooks/useMultiStepRegoForm';
+
 import { TeamProfile } from './screens/student/TeamProfile';
-import { CompetitionDetails } from './screens/competition/CompDetails';
-import { CompetitionConfirmation } from './screens/competition/CompConfirmation';
-import { EmailRecoverForm, EmailSuccess, PasswordCodeRecoverForm, PasswordRecovery } from './screens/login/PasswordRecovery';
-import { CompetitionPage } from './screens/staff/CompetitionPage/CompetitionPage';
-import { CompIdNavigate } from './screens/staff/CompetitionPage/CompIdNavigate';
+import { CompetitionDetails } from './screens/competition/creation/CompDetails';
+import { CompetitionConfirmation } from './screens/competition/creation/CompConfirmation';
+import { EmailRecoverForm, EmailSuccess, PasswordCodeRecoverForm, PasswordRecovery } from './screens/authentication/recovery/PasswordRecovery';
+import { CompetitionPage } from './screens/competition_staff_page/CompetitionPage';
+import { CompIdNavigate } from './screens/competition_staff_page/components/CompIdNavigate';
 import { SidebarLayout } from './screens/SidebarLayout';
-import { useDashInfo } from './screens/Dashboard/useDashInfo';
 import { TeamDetails } from './screens/student/TeamDetails';
 import { TeamManage } from './screens/student/TeamManage';
-import { CompetitionInformation } from './screens/competition/CompInformation';
-import { CompetitionIndividual } from './screens/competition/CompIndividual';
-import { MultiStepCompRegoFormProvider } from './screens/competition/MultiStepCompRegoForm';
-import { CompetitionExperience } from './screens/competition/CompExperience';
-import { StaffDisplay } from './screens/staff/StaffDisplay/StaffDisplay';
+import { CompetitionInformation } from './screens/competition/register/CompInformation';
+import { CompetitionIndividual } from './screens/competition/register/CompIndividual';
+import { MultiStepCompRegoFormProvider } from './screens/competition/register/hooks/useMultiStepCompRegoForm';
+import { CompetitionExperience } from './screens/competition/register/CompExperience';
+import { StaffDisplay } from './screens/competition_staff_page/staff_page/StaffDisplay';
+import { useDashInfo } from './screens/dashboard/hooks/useDashInfo';
+import { RoleRegistration } from './screens/authentication/registration/RoleRegistration';
+import { AccountInformation } from './screens/authentication/registration/AccountInformation';
+import { SiteInformation } from './screens/authentication/registration/SiteInformation';
+import { InstitutionInformation } from './screens/authentication/registration/InstitutionInformation';
+import { TeamDisplay } from './screens/competition_staff_page/teams_page/TeamDisplay';
+import { StudentDisplay } from './screens/competition_staff_page/students_page/StudentDisplay';
 
 function App() {
   const [theme, setTheme ] = useState(defaultTheme)
@@ -199,6 +197,7 @@ function App() {
 
           <Route path="/competition/create" element={<CompetitionDetails />} />
           <Route path="/competition/confirmation" element={<CompetitionConfirmation />} />
+          
           <Route path="/competition/information/:code?" element={
             <MultiStepCompRegoFormProvider>
               <CompetitionInformation />
