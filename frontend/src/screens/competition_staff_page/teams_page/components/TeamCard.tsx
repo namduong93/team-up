@@ -1,6 +1,6 @@
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { CiCircleAlert } from "react-icons/ci";
-import { FaCheck, FaRegCheckCircle, FaRegUser, FaStamp } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
 import { LiaTimesSolid } from "react-icons/lia";
 import styled, { useTheme } from "styled-components";
@@ -263,6 +263,7 @@ const ApproveNameRadios: FC<ApprovalNameRadiosProps> = ({ setTeamIds, setRejecte
   useEffect(() => {
     if (selectedOption === RadioOption.Check) {
       addTeam();
+      unRejectTeam();
     } else {
       removeTeam();
     }
