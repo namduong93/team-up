@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FaUserPlus, FaUsers, FaEdit, FaGlobe } from "react-icons/fa";
+import InvitePopUp from "../../screens/student/InvitePopUp";
+import JoinPopUp from "../../screens/student/JoinPopUp";
 
 type ActionType = "invite" | "join" | "name" | "site";
 
@@ -84,10 +86,22 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
-`;
+`
+
+const Heading = styled.h2`
+  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
+  margin-top: 40px;
+  color: ${({ theme }) => theme.colours.notifDark};
+  margin-bottom: 10%;
+  white-space: pre-wrap;
+  word-break: break-word;
+`
 
 export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) => {
-  const [modalOpen, setModalOpen] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState<"invite" | "join" | "name" | "site" | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [selectedAction, setSelectedAction] = useState<ActionType | null>(null);
+
 
   const actions = [
     { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a friend" },
@@ -104,13 +118,20 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
     return false;
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+
   return (
     <>
       <ActionsContainer>
         {actions.map((action, index) => (
           <ActionCard
             key={index}
-            onClick={() => !isDisabled(action.type) && setModalOpen(action.text)}
+            onClick={() => !isDisabled(action.type) && setModalOpen(action.type)}
             $actionType={action.type}
             $disabled={isDisabled(action.type)}
           >
@@ -122,7 +143,28 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
         ))}
       </ActionsContainer>
 
-      {actions.map((action, index) => (
+      <Overlay $isOpen={modalOpen !== null} onClick={() => setModalOpen(null)} />
+
+        {modalOpen === "invite" && (
+          <InvitePopUp 
+            heading={<Heading>Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}</Heading>}
+            text="COMP1234"
+            onClose={() => setModalOpen(null)}
+          />
+        )}
+
+        {modalOpen === "join" && (
+          <JoinPopUp 
+            heading={<Heading>Enter the details of the {"\nTeam you would like to join"}</Heading>}
+            onClose={() => setModalOpen(null)}
+          />
+        )}
+
+        {modalOpen == "name" && (
+          
+        )}
+
+      {/* {actions.map((action, index) => (
         <React.Fragment key={index}>
           <Overlay $isOpen={modalOpen === action.text} onClick={() => setModalOpen(null)} />
           <Modal $isOpen={modalOpen === action.text}>
@@ -130,7 +172,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
             <button onClick={() => setModalOpen(null)}>Close</button>
           </Modal>
         </React.Fragment>
-      ))}
+      ))} */}
     </>
   );
 };

@@ -169,8 +169,8 @@ export const TeamManage: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const copyToClipboard = (email: string) => {
-    navigator.clipboard.writeText(email);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

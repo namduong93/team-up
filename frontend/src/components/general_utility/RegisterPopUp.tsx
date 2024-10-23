@@ -76,14 +76,6 @@ const ButtonContainer = styled.div`
   gap: 40px;
 `
 
-const Title = styled.h2`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: bold;
-`;
-
-
 const Input = styled.input`
   padding: 10px 1.5%;
   /* height: 100%; */
