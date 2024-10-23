@@ -35,9 +35,9 @@ describe('GET /user/type', () => {
       }));
     });
 
-    test('staff success', async () => {
+    test('coach success', async () => {
       const mockStaff = {
-        email: 'teststaff@examplecom',
+        email: 'coach@example.com',
         password: 'pleasechange',
       };
 
@@ -53,7 +53,7 @@ describe('GET /user/type', () => {
 
     test('student success', async () => {
       const mockStaff = {
-        email: 'teststudent@examplecom',
+        email: 'student@example.com',
         password: 'pleasechange',
       };
 
