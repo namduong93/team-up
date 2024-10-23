@@ -7,19 +7,17 @@ type ActionType = "competition" | "registration" | "seat";
 
 interface StaffActionCardProps {
   staffRoles: string[];
-};
+}
 
 interface ActionCardProps {
   $actionType: ActionType;
-};
+}
 
 const ActionsContainer = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  margin: 5% 0;
-  flex-wrap: wrap;
 `;
 
 const ActionCard = styled.button<ActionCardProps>`
@@ -27,13 +25,13 @@ const ActionCard = styled.button<ActionCardProps>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 300px;
+  flex: 1 1 0;
+  max-width: 350px;
   aspect-ratio: 1;
+  margin: 5px;
   background-color: ${({ theme, $actionType }) => theme.staffActions[$actionType]};
   border: ${({ theme, $actionType }) => `1px solid ${theme.staffActions[`${$actionType}Border`]}`};
   border-radius: 12px;
-  padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   cursor: pointer;
@@ -45,13 +43,13 @@ const ActionCard = styled.button<ActionCardProps>`
 `;
 
 const CardIcon = styled.div`
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 10px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const CardText = styled.p`
-  font-size: 1rem;
+  font-size: 1.5rem;
   color: ${({ theme }) => theme.fonts.colour};
   margin: 0;
 `;
@@ -80,7 +78,6 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   z-index: 999;
 `;
 
-
 const BackButton = styled.button`
   color: ${({ theme }) => theme.colours.primaryDark};
   cursor: pointer;
@@ -97,7 +94,6 @@ const BackButton = styled.button`
     color: ${({ theme }) => theme.colours.secondaryDark};
   }
 `;
-
 
 export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
   const [modalOpen, setModalOpen] = useState<string | null>(null);
@@ -131,7 +127,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
         </>
       )}
 
-      {!showManageSite && 
+      {!showManageSite &&
         <ActionsContainer>
           {filteredActions.map((action, index) => (
             <ActionCard
