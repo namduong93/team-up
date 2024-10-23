@@ -182,6 +182,7 @@ function App() {
               <Route path='students/:compId' element={<StudentDisplay />} />
               <Route path='staff/:compId' element={<StaffDisplay />} />
               <Route path='site/:compId' element={<div>Site</div>} />
+              <Route path='manage/:compId' element={<TeamManage />} />
             </Route>
 
             <Route path='/competition/participant/:compId/' element={<TeamProfile />}>
