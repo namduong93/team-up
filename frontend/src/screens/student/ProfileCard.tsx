@@ -1,8 +1,19 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { CopyButton } from "../../components/general_utility/copyButton";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaUserCircle } from "react-icons/fa"; // Import FaUserCircle icon
 import defaultProfile from "./default-profile.jpg";
+
+interface ProfileCardProps {
+  name: string;
+  email: string;
+  bio: string;
+  image?: string;
+  preferredContact?: string;
+  isFirst?: boolean;
+  onEdit?: () => void;
+  isCoach?: boolean; // New prop to indicate if the user is a coach
+}
 
 const StudentCard = styled.div<{ $isFirst?: boolean }>`
   display: flex;
@@ -77,6 +88,17 @@ const StudentImage = styled.img`
   object-fit: cover;
 `;
 
+const IconWrapper = styled.div`
+  width: 20%;
+  max-width: 50px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px; // Adjust icon size
+  color: ${({ theme }) => theme.fonts.colour};
+`;
+
 const PreferredContact = styled.div`
   display: flex;
   align-items: center;
@@ -110,16 +132,6 @@ const StudentContact = styled.div`
   justify-content: space-between;
 `;
 
-interface ProfileCardProps {
-  name: string;
-  email: string;
-  bio: string;
-  image?: string;
-  preferredContact?: string;
-  isFirst?: boolean;
-  onEdit?: () => void;
-}
-
 export const ProfileCard: FC<ProfileCardProps> = ({
   name,
   email,
@@ -128,6 +140,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
   preferredContact,
   isFirst,
   onEdit,
+  isCoach,
 }) => {
   const contactParts = preferredContact ? preferredContact.split(":") : [];
 
@@ -135,10 +148,16 @@ export const ProfileCard: FC<ProfileCardProps> = ({
     <StudentCard $isFirst={isFirst}>
       <StudentCardContent>
         <ContentContainer>
-          <StudentImage
-            src={image || defaultProfile} // Use defaultProfile if image is undefined
-            alt={`${name}'s profile`}
-          />
+          {isCoach ? (
+            <IconWrapper>
+              <FaUserCircle />
+            </IconWrapper>
+          ) : (
+            <StudentImage
+              src={image || defaultProfile} // Use defaultProfile if image is undefined
+              alt={`${name}'s profile`}
+            />
+          )}
           <StudentInfo>
             <StudentContact>
               <StudentName>{name}</StudentName>
@@ -146,7 +165,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
                 <span>{email}</span>
                 <CopyButton textToCopy={email} />
               </StudentEmail>
-              {preferredContact && contactParts.length === 2 ? (
+              {!isCoach && preferredContact && contactParts.length === 2 ? (
                 <PreferredContact>
                   <span>{contactParts[0]}:</span>
                   <PreferredContactHandle>
@@ -154,8 +173,8 @@ export const ProfileCard: FC<ProfileCardProps> = ({
                   </PreferredContactHandle>
                   <CopyButton textToCopy={contactParts[1]} />
                 </PreferredContact>
-              ) : (
-                <span>No preferred contact available.</span>
+              ) : ( // only students should have a preferred contact
+                !isCoach ? (<span>No preferred contact available.</span>) : <span></span>
               )}
             </StudentContact>
             <StudentBio>{bio}</StudentBio>

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaInfoCircle, FaTimes, FaUserTie } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
-import { CopyButton } from "../../components/general_utility/copyButton";
+import { ProfileCard } from "./ProfileCard"; // Import the ProfileCard component
 
 const ManageContainer = styled.div`
   display: flex;
@@ -42,12 +42,6 @@ const InfoLabel = styled.h3`
   margin: 0;
   color: ${({ theme }) => theme.colours.primaryDark};
   margin-bottom: 5%;
-`;
-
-const InfoText = styled.p`
-  font-size: ${({ theme }) => theme.fonts.fontSizes.small};
-  margin: 4px 0 0;
-  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const InfoLink = styled.a`
@@ -101,43 +95,6 @@ const CloseButton = styled.button`
   }
 `;
 
-const CoachInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const CoachName = styled.p`
-  margin: 0;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  font-size: 1rem;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
-const CoachEmail = styled.p`
-  margin: 0;
-  font-size: 1rem;
-  text-decoration: underline;
-  color: ${({ theme }) => theme.colours.primaryDark};
-  display: flex;
-  align-items: center;
-`;
-
-const StyledUserTieIcon = styled(FaUserTie)`
-  font-size: 32px;
-  margin-right: 15px;
-  width: 20px;
-  height: auto;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
-const StyledInfoCircleIcon = styled(FaInfoCircle)`
-  font-size: 32px;
-  margin-right: 15px;
-  width: 20px;
-  height: auto;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
 export const TeamManage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -153,22 +110,14 @@ export const TeamManage: React.FC = () => {
     <ManageContainer>
       <TeamActionCard numMembers={1} />
       <InfoContainer>
+        <ProfileCard
+          name="Coach Name"
+          email="coach@email.com"
+          bio="I'm a coach who believes in P = NP"
+          isCoach={true}
+        />
+        
         <InfoCard>
-          <StyledUserTieIcon />
-          <InfoContent>
-            <InfoLabel>Coach Contact:</InfoLabel>
-            <CoachInfoContainer>
-              <CoachName>Coach Name</CoachName>
-              <CoachEmail>
-                coach@email.com
-                <CopyButton textToCopy="coach@email.com" />
-              </CoachEmail>
-              <InfoText>Contact office/hours...</InfoText>
-            </CoachInfoContainer>
-          </InfoContent>
-        </InfoCard>
-        <InfoCard>
-          <StyledInfoCircleIcon />
           <InfoContent>
             <InfoLabel>Competition Information:</InfoLabel>
             <InfoLink onClick={handleOpenModal}>see competition details →</InfoLink>
