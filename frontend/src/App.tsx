@@ -32,6 +32,7 @@ import { SiteInformation } from './screens/authentication/registration/SiteInfor
 import { InstitutionInformation } from './screens/authentication/registration/InstitutionInformation';
 import { TeamDisplay } from './screens/competition_staff_page/teams_page/TeamDisplay';
 import { StudentDisplay } from './screens/competition_staff_page/students_page/StudentDisplay';
+import { StaffManage } from './screens/competition_staff_page/manage_page/StaffManage';
 
 function App() {
   const [theme, setTheme ] = useState(defaultTheme)
@@ -182,7 +183,7 @@ function App() {
               <Route path='students/:compId' element={<StudentDisplay />} />
               <Route path='staff/:compId' element={<StaffDisplay />} />
               <Route path='site/:compId' element={<div>Site</div>} />
-              <Route path='manage/:compId' element={<TeamManage />} />
+              <Route path='manage/:compId' element={<StaffManage />} />
             </Route>
 
             <Route path='/competition/participant/:compId/' element={<TeamProfile />}>

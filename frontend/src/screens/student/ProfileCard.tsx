@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { CopyButton } from "../../components/general_utility/copyButton";
-import { FaEdit, FaUserCircle } from "react-icons/fa"; // Import FaUserCircle icon
+import { CopyButton } from "../../components/general_utility/CopyButton";
+import { FaEdit, FaUserCircle } from "react-icons/fa";
 import defaultProfile from "./default-profile.jpg";
 
 interface ProfileCardProps {
@@ -12,7 +12,7 @@ interface ProfileCardProps {
   preferredContact?: string;
   isFirst?: boolean;
   onEdit?: () => void;
-  isCoach?: boolean; // New prop to indicate if the user is a coach
+  isCoach?: boolean;
 }
 
 const StudentCard = styled.div<{ $isFirst?: boolean }>`

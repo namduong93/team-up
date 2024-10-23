@@ -49,13 +49,22 @@ export const darkTheme: DefaultTheme = {
   },
   teamProfile: {
     ...defaultTheme.teamProfile,
-    inviteBorder: "#DFE8FB",
     invite: "#6688D2",
-    joinBorder: "#FEEBC8",
+    inviteBorder: "#DFE8FB",
     join: "#EA9C0D",
-    nameBorder: "#FDE2FC",
+    joinBorder: "#FEEBC8",
     name: "#F19EDC",
-    siteBorder: "#E1FAFC",
+    nameBorder: "#FDE2FC",
     site: "#35B4C2",
-  }
+    siteBorder: "#E1FAFC",
+  },
+  staffActions: {
+    ...defaultTheme.staffActions,
+    competition: "#6688D2",
+    competitionBorder: "#DFE8FB",
+    registration: "#EA9C0D",
+    registrationBorder: "#FEEBC8",
+    seat: "#F19EDC",
+    seatBorder: "#FDE2FC",
+  },
 };
