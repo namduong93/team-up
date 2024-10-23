@@ -30,6 +30,7 @@ const ActionCard = styled.button<ActionCardProps>`
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 350px;
   height: 100%;
   aspect-ratio: 1;
   background-color: ${({ theme, $actionType, $disabled }) =>

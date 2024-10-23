@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaInfoCircle, FaRegCopy, FaTimes, FaUserTie, FaCheck } from "react-icons/fa";
+import { FaInfoCircle, FaTimes, FaUserTie } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
+import { CopyButton } from "../../components/general_utility/copyButton";
 
 const ManageContainer = styled.div`
   display: flex;
@@ -121,26 +122,6 @@ const CoachEmail = styled.p`
   align-items: center;
 `;
 
-const CopyIcon = styled(FaRegCopy)`
-  margin-left: 5%;
-  width: 1.2rem;
-  height: 1.2rem;
-  cursor: pointer;
-  color: ${({ theme }) => theme.colours.primaryDark};
-  transition: color 0.2s;
-
-  &:hover {
-    color: ${({ theme }) => theme.colours.secondaryDark};
-  }
-`;
-
-const CheckIcon = styled(FaCheck)`
-  margin-left: 5%;
-  width: 1.2rem;
-  height: 1.2rem;
-  color: ${({ theme }) => theme.colours.confirm};
-`;
-
 const StyledUserTieIcon = styled(FaUserTie)`
   font-size: 32px;
   margin-right: 15px;
@@ -159,7 +140,6 @@ const StyledInfoCircleIcon = styled(FaInfoCircle)`
 
 export const TeamManage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -167,12 +147,6 @@ export const TeamManage: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-  };
-
-  const copyToClipboard = (email: string) => {
-    navigator.clipboard.writeText(email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -187,11 +161,7 @@ export const TeamManage: React.FC = () => {
               <CoachName>Coach Name</CoachName>
               <CoachEmail>
                 coach@email.com
-                {copied ? (
-                  <CheckIcon />
-                ) : (
-                  <CopyIcon onClick={() => copyToClipboard("coach@email.com")} />
-                )}
+                <CopyButton textToCopy="coach@email.com" />
               </CoachEmail>
               <InfoText>Contact office/hours...</InfoText>
             </CoachInfoContainer>

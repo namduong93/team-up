@@ -1,8 +1,6 @@
-import { FC, useState } from "react";
-import { FaBell } from "react-icons/fa";
+import { FC } from "react";
 import styled from "styled-components";
 import { NotificationButton } from "../../components/page_header/components/NotificationButton";
-import { AlertButton } from "../dashboard/Dashboard";
 import { PageHeaderContainerDiv, PageTitle, PageDescriptionSpan } from "../../components/page_header/PageHeader";
 import { CompCountdownBar } from "./CompCountdownBar";
 import { ActionButton } from "../../components/responsive_fields/action_buttons/ActionButton";
@@ -67,16 +65,6 @@ const ResponsiveHeader = styled(PageHeaderContainerDiv)`
   gap: 20px;
   width: 100%;
   margin: 0 auto;
-`;
-
-const SquareAlertButton = styled(AlertButton)`
-  width: 17%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border-radius: 8px;
 `;
 
 export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCountdown }) => {  
