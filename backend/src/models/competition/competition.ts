@@ -38,3 +38,6 @@ export type CompetitionShortDetailsObject = {
 export type CompetitionSiteObject = { universityId: number, name: string, capacity?: number };
 
 export type CompetitionOtherSiteObject = { universityName: number, name: string, capacity?: number };
+
+// A return object for the competition withdrawal that gives competition code to return to frontend and compName, teamId, and teamName to generate relevant notifications
+export type CompetitionWithdrawalReturnObject = { competitionCode: string, competitionName: string, teamId: number, teamName: string };

@@ -100,11 +100,13 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
       flexWrap: 'wrap',
       ...style
     }} $isSortOpen={isOpen} {...props}>
-      <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
+      <div style={{ display: 'flex',
+        alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%',
+        justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
           {icon}
         </div>
-        <span>{label}</span>
+        <span style={{ marginLeft: '5px' }}>{label}</span>
       </div>
     </TransparentButton>
   )

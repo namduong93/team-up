@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaInfoCircle, FaRegCopy, FaTimes, FaUserTie, FaCheck } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
+import { ProfileCard } from "./ProfileCard"; // Import the ProfileCard component
 
 const ManageContainer = styled.div`
   display: flex;
@@ -41,12 +42,6 @@ const InfoLabel = styled.h3`
   margin: 0;
   color: ${({ theme }) => theme.colours.primaryDark};
   margin-bottom: 5%;
-`;
-
-const InfoText = styled.p`
-  font-size: ${({ theme }) => theme.fonts.fontSizes.small};
-  margin: 4px 0 0;
-  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const InfoLink = styled.a`
@@ -100,66 +95,8 @@ const CloseButton = styled.button`
   }
 `;
 
-const CoachInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const CoachName = styled.p`
-  margin: 0;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  font-size: 1rem;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
-const CoachEmail = styled.p`
-  margin: 0;
-  font-size: 1rem;
-  text-decoration: underline;
-  color: ${({ theme }) => theme.colours.primaryDark};
-  display: flex;
-  align-items: center;
-`;
-
-const CopyIcon = styled(FaRegCopy)`
-  margin-left: 5%;
-  width: 1.2rem;
-  height: 1.2rem;
-  cursor: pointer;
-  color: ${({ theme }) => theme.colours.primaryDark};
-  transition: color 0.2s;
-
-  &:hover {
-    color: ${({ theme }) => theme.colours.secondaryDark};
-  }
-`;
-
-const CheckIcon = styled(FaCheck)`
-  margin-left: 5%;
-  width: 1.2rem;
-  height: 1.2rem;
-  color: ${({ theme }) => theme.colours.confirm};
-`;
-
-const StyledUserTieIcon = styled(FaUserTie)`
-  font-size: 32px;
-  margin-right: 15px;
-  width: 20px;
-  height: auto;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
-const StyledInfoCircleIcon = styled(FaInfoCircle)`
-  font-size: 32px;
-  margin-right: 15px;
-  width: 20px;
-  height: auto;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
 export const TeamManage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -169,36 +106,18 @@ export const TeamManage: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const copyToClipboard = (email: string) => {
-    navigator.clipboard.writeText(email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <ManageContainer>
       <TeamActionCard numMembers={1} />
       <InfoContainer>
+        <ProfileCard
+          name="Coach Name"
+          email="coach@email.com"
+          bio="I'm a coach who believes in P = NP"
+          isCoach={true}
+        />
+        
         <InfoCard>
-          <StyledUserTieIcon />
-          <InfoContent>
-            <InfoLabel>Coach Contact:</InfoLabel>
-            <CoachInfoContainer>
-              <CoachName>Coach Name</CoachName>
-              <CoachEmail>
-                coach@email.com
-                {copied ? (
-                  <CheckIcon />
-                ) : (
-                  <CopyIcon onClick={() => copyToClipboard("coach@email.com")} />
-                )}
-              </CoachEmail>
-              <InfoText>Contact office/hours...</InfoText>
-            </CoachInfoContainer>
-          </InfoContent>
-        </InfoCard>
-        <InfoCard>
-          <StyledInfoCircleIcon />
           <InfoContent>
             <InfoLabel>Competition Information:</InfoLabel>
             <InfoLink onClick={handleOpenModal}>see competition details →</InfoLink>

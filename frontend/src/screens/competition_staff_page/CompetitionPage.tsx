@@ -119,6 +119,11 @@ export const CompetitionPage: FC = () => {
               <ToggleOptionTextSpan>Attendees</ToggleOptionTextSpan>
             </AdminToggleOptionDiv>}
 
+            {(roles.includes(CompetitionRole.Admin) || roles.includes(CompetitionRole.Coach) || roles.includes(CompetitionRole.SiteCoordinator)) &&
+            <AdminToggleOptionDiv onClick={() => { navigate(`/competition/page/manage/${compId}`) }}>
+              <ToggleOptionTextSpan>Manage</ToggleOptionTextSpan>
+            </AdminToggleOptionDiv>}
+
           </CustomToggleSwitch>
         </PageOptionsContainerDiv>
 
