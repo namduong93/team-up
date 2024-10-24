@@ -1,9 +1,10 @@
-// EditStudentModal.tsx
 import { FC, useState, ChangeEvent, FormEvent } from "react";
 import { Student } from "./TeamDetails";
 import styled from "styled-components";
 
 export interface StudentDetails extends Student {
+  name: string;
+  email: string;
   degreeYear: number;
   degree: string;
   ICPCEligibility?: boolean;
@@ -22,7 +23,7 @@ interface EditCompPreferencesProps {
   student: StudentDetails;
   onSave: (updatedStudent: StudentDetails) => void;
   onCancel: () => void;
-};
+}
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -101,9 +102,20 @@ const Button = styled.button`
 export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   student,
   onSave,
-  onCancel, // Use onCancel prop
+  onCancel,
 }) => {
-  const [formData, setFormData] = useState<StudentDetails>(student);
+  // Initialize form data with default values
+  const [formData, setFormData] = useState<StudentDetails>({
+    ...student,
+    ICPCEligibility: student.ICPCEligibility ?? false, // Default to false
+    isRemote: student.isRemote ?? false, // Default to false
+    codeforce: student.codeforce ?? undefined, // Ensure it's undefined if not provided
+    regional: student.regional ?? false, // Default to false
+    nationalPrizes: student.nationalPrizes ?? '', // Default to empty string
+    internationalPrizes: student.internationalPrizes ?? '', // Default to empty string
+    bio: student.bio ?? '', // Default to empty string
+    courses: student.courses || [], // Default to an empty array
+  });
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -157,7 +169,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Checkbox
               type="checkbox"
               name="ICPCEligibility"
-              checked={!!formData.ICPCEligibility}
+              checked={formData.ICPCEligibility}
               onChange={handleChange}
             />
           </Field>
@@ -166,7 +178,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Checkbox
               type="checkbox"
               name="isRemote"
-              checked={!!formData.isRemote}
+              checked={formData.isRemote}
               onChange={handleChange}
             />
           </Field>
@@ -189,7 +201,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Input
               type="number"
               name="codeforce"
-              value={formData.codeforce || ""}
+              value={formData.codeforce || ""} // Handle undefined case
               onChange={handleChange}
             />
           </Field>
@@ -198,7 +210,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Checkbox
               type="checkbox"
               name="regional"
-              checked={formData.regional || false}
+              checked={formData.regional}
               onChange={handleChange}
             />
           </Field>
@@ -207,7 +219,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Input
               type="text"
               name="nationalPrizes"
-              value={formData.nationalPrizes || ""}
+              value={formData.nationalPrizes}
               onChange={handleChange}
             />
           </Field>
@@ -216,7 +228,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Input
               type="text"
               name="internationalPrizes"
-              value={formData.internationalPrizes || ""}
+              value={formData.internationalPrizes}
               onChange={handleChange}
             />
           </Field>
@@ -240,7 +252,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Input type="text" value={formData.boersenEligible ? "Yes" : "No"} readOnly />
           </Field>
           <Button type="submit">Save</Button>
-          <Button type="button" onClick={onCancel}> {/* Call onCancel when Cancel is clicked */}
+          <Button type="button" onClick={onCancel}>
             Cancel
           </Button>
         </Form>

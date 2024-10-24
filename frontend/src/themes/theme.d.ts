@@ -37,6 +37,14 @@ declare module 'styled-components' {
         site: string;
         siteBorder: string;
       };
+      staffActions: {
+        competition: string;
+        competitionBorder: string;
+        registration: string;
+        registrationBorder: string;
+        seat: string;
+        seatBorder: string;
+      };
       teamView: {
           pending: string;
           unregistered: string;

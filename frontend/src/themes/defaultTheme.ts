@@ -36,6 +36,14 @@ export const defaultTheme: DefaultTheme = {
     site: "#E1FAFC",
     siteBorder: "#35B4C2",
   },
+  staffActions: {
+    competition: "#DFE8FB",
+    competitionBorder: "#6688D2",
+    registration: "#FEEBC8",
+    registrationBorder: "#EA9C0D",
+    seat: "#FDE2FC",
+    seatBorder: "#F19EDC",
+  },
   teamView: {
     pending: "#F68486",
     unregistered: "#FDD386",
