@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo } from "../../services/competition_service.js";
 import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
-import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY } from "../../models/competition/competition.js";
+import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject } from "../../models/competition/competition.js";
 
 import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
@@ -373,7 +373,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { teamId: 1 };
   }
 
-  competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<string | undefined> => {
+  competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<CompetitionWithdrawalReturnObject | undefined> => {
     // Check if the student exists as a participant in the competition
     const userInCompetitionQuery = `
       SELECT 1 FROM competition_users WHERE user_id = $1 AND competition_id = $2
@@ -394,21 +394,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const competitionCode = competitionExistResult.rows[0].code;
     const competitionName = competitionExistResult.rows[0].name;
 
-    // Check if the student is part of a team in the competition and get the team name
-    const teamNameQuery = `
-      SELECT name FROM competition_teams
-      WHERE $1 = ANY(participants) AND competition_id = $2
-    `;
-    const teamNameResult = await this.pool.query(teamNameQuery, [userId, competitionId]);
-    const teamName = teamNameResult.rows[0]?.name;
-
-    // Get student's name
-    const studentNameQuery = `
-      SELECT name FROM users WHERE id = $1
-    `;
-    const studentNameResult = await this.pool.query(studentNameQuery, [userId]);
-    const studentName = studentNameResult.rows[0]?.name;
-
     // Remove user from the team and put the team back to pending state in a single query
     // NOTE: I wanted to combine these two queries into a single query as commented but doing so makes the set status query not work for some reasons
     // const teamRemoveMemberAndSetPendingQuery = `
@@ -428,10 +413,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       UPDATE competition_teams
       SET participants = array_remove(participants, $1)
       WHERE $1 = ANY(participants) AND competition_id = $2
-      RETURNING id
+      RETURNING id, name
     `;
     const teamRemoveMemberResult = await this.pool.query(teamRemoveMemberQuery, [userId, competitionId]);
+    if (teamRemoveMemberResult.rowCount === 0) {
+      return undefined; // TODO: throw error that user is not in a team in this competition
+    }
     const teamId = teamRemoveMemberResult.rows[0]?.id;
+    const teamName = teamRemoveMemberResult.rows[0]?.name;
 
     const teamSetPendingQuery = `
       UPDATE competition_teams
@@ -448,7 +437,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     `;
     await this.pool.query(competitionRemoveParticipantQuery, [userId, competitionId]);
 
-    return competitionCode;
+    return { competitionCode, competitionName, teamId, teamName };
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

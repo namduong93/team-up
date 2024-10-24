@@ -14,6 +14,38 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return undefined;
   }
 
+  notificationWithdrawal = async(userId: number, competitionId: number, competitionName: string, teamId: number, teamName: string): Promise<{} | undefined> => {
+    // Get student's name
+    const studentNameQuery = `
+      SELECT name FROM users WHERE id = $1
+    `;
+    const studentNameResult = await this.pool.query(studentNameQuery, [userId]);
+    const studentName = studentNameResult.rows[0]?.name;
+
+    // Add notifications for other team members and the coach
+    const teamMemberWithdrawalNotification = `${studentName} has withdrawn from your team from competition ${competitionName}. Please invite a substitute via your team code or wait to receive a random replacement member.`;
+    const teamMembersNotificationQuery = `
+      INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+      SELECT participant AS user_id, $3, 'withdrawal'::notification_type_enum, $1, $2, NOW()
+      FROM competition_teams, unnest(participants) AS participant
+      WHERE competition_id = $1 
+      AND id = $2
+    `;
+    await this.pool.query(teamMembersNotificationQuery, [competitionId, teamId, teamMemberWithdrawalNotification]);
+    
+    const coachNotification = `${studentName} has withdrawn from team ${teamName} from competition ${competitionName}.`;
+    const coachNotificationQuery = `
+      INSERT INTO notifications (user_id, message, type, competition_id, created_at)
+      SELECT competition_coach_id AS user_id, $3, 'withdrawal'::notification_type_enum, $1, NOW()
+      FROM competition_teams
+      WHERE competition_id = $1
+      AND id = $2
+    `;
+    await this.pool.query(coachNotificationQuery, [competitionId, teamId, coachNotification]);
+
+    return {};
+  }
+
   userNotificationsList = async(userId: number): Promise<Array<Notification> | undefined> => {
     // TODO: add criteria to sort notifications
     const notifications = await this.pool.query(

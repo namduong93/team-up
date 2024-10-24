@@ -3,6 +3,7 @@ import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from 
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
+import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
@@ -85,10 +86,12 @@ export interface StaffInfo {
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
+  private notificationRepository: NotificationRepository;
   
-  constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository) {
+  constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository, notificationRepository: NotificationRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
+    this.notificationRepository = notificationRepository;
   }
 
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
@@ -226,12 +229,22 @@ export class CompetitionService {
   }
 
   competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<string | undefined> => {
+    // Check if user is a participant
+    const userTypeObject = await this.userRepository.userType(userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
+      throw COMPETITION_STUDENT_REQUIRED;
+    }
+    
+    // Remove student from competition
     const result = await this.competitionRepository.competitionStudentWithdraw(userId, competitionId);
     if (!result) {
       throw BAD_REQUEST;
     }
-    
-    return result;
+
+    // Notify team members and coach
+    await this.notificationRepository.notificationWithdrawal(userId, competitionId, result.competitionName, result.teamId, result.teamName);
+
+    return result.competitionCode;
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

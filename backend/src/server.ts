@@ -45,6 +45,11 @@ const pool = new Pool({
 //Middleware to authenticate request
 const authenticator = new Authenticator();
 
+// Notification Registry
+const notificationRepository = new SqlDbNotificationRepository(pool);
+const notificationService = new NotificationService(notificationRepository);
+const notificationController = new NotificationController(notificationService);
+
 // User Registry
 const sessionRepository = new SqlDbSessionRepository(pool);
 app.use(authenticator.authenticationMiddleware(sessionRepository));
@@ -56,18 +61,13 @@ const userController = new UserController(userService);
 
 // Competition Registry
 const competitionRepository = new SqlDbCompetitionRepository(pool);
-const competitionService = new CompetitionService(competitionRepository, userRepository);
+const competitionService = new CompetitionService(competitionRepository, userRepository, notificationRepository);
 const competitionController = new CompetitionController(competitionService);
 
 // University Registry
 const universityRepository = new SqlDbUniversityRepository(pool);
 const universityService = new UniversityService(universityRepository);
 const universityController = new UniversityController(universityService);
-
-// Notification Registry
-const notificationRepository = new SqlDbNotificationRepository(pool);
-const notificationService = new NotificationService(notificationRepository);
-const notificationController = new NotificationController(notificationService);
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
