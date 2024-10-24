@@ -100,7 +100,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
       <ResponsiveButton onClick={enableEditNameStatus} label="Approve Names" isOpen={false}
         icon={<FaRegCheckCircle style={{ color: theme.fonts.colour}} />}
         style={{
-          backgroundColor: theme.colours.confirm,
+          backgroundColor: theme.colours.primaryLight,
           color: theme.background,
           border: '0'
         }}
@@ -113,7 +113,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
       <ResponsiveButton onClick={confirmNames} label="Confirm Names" isOpen={false}
         icon={<FaSave style={{ color: theme.fonts.colour}} />}
         style={{
-          backgroundColor: theme.colours.confirm,
+          backgroundColor: theme.colours.primaryLight,
           color: theme.background,
           border: '0'
         }}
