@@ -19,7 +19,6 @@ const Modal = styled.div`
   align-items: center;
 `
 
-
 const CloseButton = styled.button`
   background: transparent;
   border: none;
@@ -37,36 +36,12 @@ const CloseButton = styled.button`
   }
 `
 
-const Button = styled.button<{ yes?: boolean }>`
-  max-width: 150px;
-  width: 40%;
-  height: 35px;
-  border: 0px;
-  border-radius: 30px;
-  background-color: ${({ theme, yes }) => (yes ? theme.colours.confirm : theme.colours.error)};
-  margin-top: 35px;
-  margin-bottom: 40px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-`
-
-const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-`
-
-interface SecondStepPopUpProps {
+interface ThirdStepPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
-  onNext: () => void;
 }
 
-export const SecondStepPopUp: React.FC<SecondStepPopUpProps> = ({ heading, onClose, onNext }) => {
+export const ThirdStepPopUp: React.FC<ThirdStepPopUpProps> = ({ heading, onClose }) => {
 
   return (
     <>
@@ -76,13 +51,7 @@ export const SecondStepPopUp: React.FC<SecondStepPopUpProps> = ({ heading, onClo
         </CloseButton>
         <div>{heading}</div>
 
-        <ButtonContainer>
-          <Button yes={true} onClick={onNext}>Yes</Button>
-          <Button yes={false} onClick={onClose}>No</Button>
-        </ButtonContainer>
-
       </Modal>
     </>
   );
 };
-

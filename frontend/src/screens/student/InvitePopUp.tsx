@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaTimes, FaRegCopy } from "react-icons/fa";
+import { CopyButton } from "../../components/general_utility/CopyButton";
 
 // Modal styles
 const Modal = styled.div`
@@ -53,18 +54,24 @@ const CopyText = styled.p`
   display: inline-block; 
 `;
 
-const CopyIcon = styled(FaRegCopy)`
-  margin-left: 20px;
-  width: 1.7rem;
-  height: 1.7rem;
-  cursor: pointer;
-  color: ${({ theme }) => theme.colours.primaryDark};
-  transition: color 0.2s;
+// const CopyIcon = styled(FaRegCopy)`
+//   margin-left: 20px;
+//   width: 1.7rem;
+//   height: 1.7rem;
+//   cursor: pointer;
+//   color: ${({ theme }) => theme.colours.primaryDark};
+//   transition: color 0.2s;
 
-  &:hover {
-    color: ${({ theme }) => theme.colours.secondaryDark};
-  }
-`;
+//   &:hover {
+//     color: ${({ theme }) => theme.colours.secondaryDark};
+//   }
+// `;
+
+const LargeCopyButtonWrapper = styled.div`
+  transform: scale(1.5); 
+  display: inline-flex; 
+  margin-left: 20px;
+`
 
 
 interface InvitePopUpProps {
@@ -75,11 +82,6 @@ interface InvitePopUpProps {
 
 
 const InvitePopUp: React.FC<InvitePopUpProps> = ({ heading, text, onClose }) => {
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(text);
-    alert("Text copied to clipboard!"); 
-  };
-
   return (
     <>
       <Modal>
@@ -89,7 +91,9 @@ const InvitePopUp: React.FC<InvitePopUpProps> = ({ heading, text, onClose }) => 
         <div>{heading}</div>
         <CopyContainer>
           <CopyText>{text}</CopyText>
-          <CopyIcon onClick={copyToClipboard} />
+          <LargeCopyButtonWrapper>
+            <CopyButton textToCopy={text} /> 
+          </LargeCopyButtonWrapper>
         </CopyContainer>
       </Modal>
     </>

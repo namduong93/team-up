@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { FaUserPlus, FaUsers, FaEdit, FaGlobe } from "react-icons/fa";
 import InvitePopUp from "../../screens/student/InvitePopUp";
 import JoinPopUp from "../../screens/student/JoinPopUp";
+import { SitePopUpChain } from "../../screens/student/SitePopUpChain";
+import { NamePopUpChain } from "../../screens/student/NamePopUpChain";
 
 type ActionType = "invite" | "join" | "name" | "site";
 
@@ -100,8 +102,6 @@ const Heading = styled.h2`
 
 export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) => {
   const [modalOpen, setModalOpen] = useState<"invite" | "join" | "name" | "site" | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [selectedAction, setSelectedAction] = useState<ActionType | null>(null);
 
 
   const actions = [
@@ -118,13 +118,6 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
     if (numMembers >= MAX_MEMBERS) return actionType === "invite" || actionType === "join";
     return false;
   };
-
-  // const copyToClipboard = (text: string) => {
-  //   navigator.clipboard.writeText(text);
-  //   setCopied(true);
-  //   setTimeout(() => setCopied(false), 2000);
-  // };
-
 
   return (
     <>
@@ -161,9 +154,13 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
           />
         )}
 
-        {/* {modalOpen == "name" && (
-          
-        )} */}
+        {modalOpen === "site" && (
+          <SitePopUpChain handleClose={() => setModalOpen(null)} />
+        )}
+
+        {modalOpen === "name" && (
+          <NamePopUpChain handleClose={() => setModalOpen(null)} />
+        )}
 
       {/* {actions.map((action, index) => (
         <React.Fragment key={index}>
