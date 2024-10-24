@@ -438,17 +438,15 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionCode, competitionName, teamId, teamName };
   }
 
-  competitionRequestTeamNameChange = async(userId: number, competitionId: number, teamId: number, newTeamName: string): Promise<{} | undefined> => {
+  competitionRequestTeamNameChange = async(userId: number, competitionId: number, newTeamName: string): Promise<number | undefined> => {
     // Check if the user is a valid member of this team
     const teamMemberCheckQuery = `
       SELECT 1
       FROM competition_teams
-      WHERE id = $1
-      AND competition_id = $2
-      AND $3 = ANY(participants)
+      WHERE competition_id = $1 AND $2 = ANY(participants)
     `;
-    const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [teamId, competitionId, userId]);
-    
+    const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [competitionId, userId]);
+
     if (teamMemberCheckResult.rowCount === 0) {
       return undefined; // TODO: throw error that user is not a member of this team
     }
@@ -457,16 +455,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const teamNameUpdateQuery = `
       UPDATE competition_teams
       SET pending_name = $3
-      WHERE id = $2
-      AND competition_id = $1
+      WHERE competition_id = $1 AND $2 = ANY(participants)
+      RETURNING id
     `;
-    const result = await this.pool.query(teamNameUpdateQuery, [competitionId, teamId, newTeamName]);
+    const result = await this.pool.query(teamNameUpdateQuery, [competitionId, userId, newTeamName]);
+    const teamId = result.rows[0].id;
 
     if (result.rowCount === 0) {
       return undefined; // TODO: throw error that no such team or competition exists
     }
 
-    return {};
+    return teamId;
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

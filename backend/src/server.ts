@@ -164,11 +164,11 @@ app.post('/competition/student/join/2', competitionController.competitionStudent
 
 // Student withdraws from competition
 // PARAMS: { competitionId: number }
-// RESPONSE: { }
+// RESPONSE: { competitionCode: string }
 app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
 
 // Student requests to change the team name
-// PARAMS: { competitionId, teamId, newTeamName }
+// PARAMS: { competitionId, newTeamName }
 // RESPONSE: { }
 app.post('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
 

@@ -131,16 +131,16 @@ export class CompetitionController {
 
   competitionStudentWithdraw = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const competitionId = req.body.competitionId;
-    const result = await this.competitionService.competitionStudentWithdraw(Number(userId), Number(competitionId));
+    const compId = req.body.competitionId;
+    const result = await this.competitionService.competitionStudentWithdraw(Number(userId), Number(compId));
     res.json(result);
     return;
   });
 
   competitionRequestTeamNameChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const { competitionId, teamId, newTeamName } = req.body;
-    const result = await this.competitionService.competitionRequestTeamNameChange(Number(userId), Number(competitionId), Number(teamId), newTeamName);
+    const { compId, newTeamName } = req.body;
+    const result = await this.competitionService.competitionRequestTeamNameChange(Number(userId), Number(compId), newTeamName);
     res.json(result);
     return;
   });

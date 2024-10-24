@@ -247,7 +247,7 @@ export class CompetitionService {
     return result.competitionCode;
   }
 
-  competitionRequestTeamNameChange = async (userId: number, competitionId: number, teamId: number, newTeamName: string): Promise<{} | undefined> => {
+  competitionRequestTeamNameChange = async (userId: number, competitionId: number, newTeamName: string): Promise<{} | undefined> => {
     // Check if user is a participant
     const userTypeObject = await this.userRepository.userType(userId);
     if (userTypeObject.type !== UserType.STUDENT) {
@@ -255,15 +255,15 @@ export class CompetitionService {
     }
 
     // Request team name change
-    const result = await this.competitionRepository.competitionRequestTeamNameChange(userId, competitionId, teamId, newTeamName);
-    if (!result) {
+    const teamId = await this.competitionRepository.competitionRequestTeamNameChange(userId, competitionId, newTeamName);
+    if (!teamId) {
       throw BAD_REQUEST;
     }
 
     // Notify coach
     await this.notificationRepository.notificationRequestTeamNameChange(teamId, competitionId);
 
-    return result;
+    return {};
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {
