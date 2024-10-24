@@ -1,6 +1,7 @@
 import { Pool } from "pg";
-import { Notification } from "../../models/notification/notification";
+import { Notification, NotificationType } from "../../models/notification/notification";
 import { NotificationRepository } from "../notification_repository_type";
+import { parse } from "postgres-array";
 
 export class SqlDbNotificationRepository implements NotificationRepository {
   private readonly pool: Pool;
@@ -26,6 +27,14 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       return undefined;
     }
 
-    return notifications.rows;
+    // Parse the type to remove brackets
+    const parsedNotifications = notifications.rows.map((notification: any) => {
+      return {
+        ...notification,
+        type: notification.type.replace(/[{ }]/g, ''), // Removes curly braces
+      } as Notification;
+    });
+
+    return parsedNotifications;
   }
 }
