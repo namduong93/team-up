@@ -133,7 +133,7 @@ app.post('/competition/system_admin/create', competitionController.competitionsS
 app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
 // Get a competition's details
-// PARAMS: { id: number }
+// PARAMS: { compId: number }
 // RESPONSE: { competitionDetails: CompetitionDetails}
 app.get('/competition/details', competitionController.competitionGetDetails)
 
@@ -163,7 +163,7 @@ app.post('/competition/student/join/1', competitionController.competitionStudent
 app.post('/competition/student/join/2', competitionController.competitionStudentJoin2);
 
 // Student withdraws from competition
-// PARAMS: { competitionId: number }
+// PARAMS: { compId: number }
 // RESPONSE: { competitionCode: string }
 app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
 
