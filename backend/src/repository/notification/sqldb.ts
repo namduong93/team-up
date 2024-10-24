@@ -36,10 +36,12 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     const coachNotification = `${studentName} has withdrawn from team ${teamName} from competition ${competitionName}.`;
     const coachNotificationQuery = `
       INSERT INTO notifications (user_id, message, type, competition_id, created_at)
-      SELECT competition_coach_id AS user_id, $3, 'withdrawal'::notification_type_enum, $1, NOW()
-      FROM competition_teams
-      WHERE competition_id = $1
-      AND id = $2
+      SELECT u.id AS user_id, $3, 'withdrawal'::notification_type_enum, $1, NOW()
+      FROM competition_teams AS ct
+      JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
+      JOIN users AS u ON u.id = cu.user_id
+      WHERE ct.competition_id = $1
+      AND ct.id = $2
     `;
     await this.pool.query(coachNotificationQuery, [competitionId, teamId, coachNotification]);
 
