@@ -88,7 +88,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
           member1, member2, member3,
           status, team_name_approved AS "teamNameApproved"
         FROM competition_coach_team_list(${userId}, ${compId})`);
-      console.log(dbResult.rows);
+
       return dbResult.rows;
     }
     
@@ -283,8 +283,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       competitions.push({ compId, compName, location, compDate, roles, compCreatedDate });
     }
 
-
-
     return competitions;
   }
 
@@ -373,6 +371,84 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
 
     return { teamId: 1 };
+  }
+
+  competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<string | undefined> => {
+    // Check if the student exists as a participant in the competition
+    const userInCompetitionQuery = `
+      SELECT 1 FROM competition_users WHERE user_id = $1 AND competition_id = $2
+    `;
+    const userInCompetitionResult = await this.pool.query(userInCompetitionQuery, [userId, competitionId]);
+    if (userInCompetitionResult.rowCount === 0) {
+      return undefined; // TODO: throw error
+    }
+
+    // Check if the competition exists
+    const competitionExistQuery = `
+      SELECT code, name FROM competitions WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [competitionId]);
+    if (competitionExistResult.rowCount === 0) {
+      return undefined; // TODO: throw error
+    }
+    const competitionCode = competitionExistResult.rows[0].code;
+    const competitionName = competitionExistResult.rows[0].name;
+
+    // Check if the student is part of a team in the competition and get the team name
+    const teamNameQuery = `
+      SELECT name FROM competition_teams
+      WHERE $1 = ANY(participants) AND competition_id = $2
+    `;
+    const teamNameResult = await this.pool.query(teamNameQuery, [userId, competitionId]);
+    const teamName = teamNameResult.rows[0]?.name;
+
+    // Get student's name
+    const studentNameQuery = `
+      SELECT name FROM users WHERE id = $1
+    `;
+    const studentNameResult = await this.pool.query(studentNameQuery, [userId]);
+    const studentName = studentNameResult.rows[0]?.name;
+
+    // Remove user from the team and put the team back to pending state in a single query
+    // NOTE: I wanted to combine these two queries into a single query as commented but doing so makes the set status query not work for some reasons
+    // const teamRemoveMemberAndSetPendingQuery = `
+    //   WITH updated_team AS (
+    //     UPDATE competition_teams
+    //     SET participants = array_remove(participants, $1)
+    //     WHERE $1 = ANY(participants) AND competition_id = $2
+    //     RETURNING id, participants
+    //   )
+    //   UPDATE competition_teams
+    //   SET team_status = 'pending'::competition_team_status
+    //   WHERE id = (SELECT id FROM updated_team)
+    // `;
+    // await this.pool.query(teamRemoveMemberAndSetPendingQuery, [userId, competitionId]);
+
+    const teamRemoveMemberQuery = `
+      UPDATE competition_teams
+      SET participants = array_remove(participants, $1)
+      WHERE $1 = ANY(participants) AND competition_id = $2
+      RETURNING id
+    `;
+    const teamRemoveMemberResult = await this.pool.query(teamRemoveMemberQuery, [userId, competitionId]);
+    const teamId = teamRemoveMemberResult.rows[0]?.id;
+
+    const teamSetPendingQuery = `
+      UPDATE competition_teams
+      SET team_status = 'pending'::competition_team_status
+      WHERE id = $1
+    `;
+    await this.pool.query(teamSetPendingQuery, [teamId]);
+    
+    // Remove user from the competition altogether
+    const competitionRemoveParticipantQuery = `
+      DELETE FROM competition_users
+      WHERE user_id = $1
+      AND competition_id = $2
+    `;
+    await this.pool.query(competitionRemoveParticipantQuery, [userId, competitionId]);
+
+    return competitionCode;
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

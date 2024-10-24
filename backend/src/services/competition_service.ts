@@ -225,6 +225,15 @@ export class CompetitionService {
     return { teamId: 1 };
   }
 
+  competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<string | undefined> => {
+    const result = await this.competitionRepository.competitionStudentWithdraw(userId, competitionId);
+    if (!result) {
+      throw BAD_REQUEST;
+    }
+    
+    return result;
+  }
+
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {
 
     return {};

@@ -18,7 +18,8 @@ export interface CompetitionRepository {
   competitionStudentJoin1(sessionToken: string, individualInfo: IndividualTeamInfo,
     teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined>;
   competitionStudentJoin2(sessionToken: string, teamInfo: TeamDetails,
-    teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined>
+    teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined>;
+  competitionStudentWithdraw(userId: number, competitionId: number): Promise<string | undefined>;
   
   competitionStaffJoinCoach(code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined>;
   competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;

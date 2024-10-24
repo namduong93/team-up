@@ -162,6 +162,11 @@ app.post('/competition/student/join/1', competitionController.competitionStudent
 // RESPONSE: { teamId }
 app.post('/competition/student/join/2', competitionController.competitionStudentJoin2);
 
+// Student withdraws from competition
+// PARAMS: { competitionId: number }
+// RESPONSE: { }
+app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
+
 
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
