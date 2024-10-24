@@ -145,7 +145,7 @@ CREATE TYPE competition_team_status AS ENUM ('registered', 'unregistered', 'pend
 CREATE TABLE competition_teams (
   id SERIAL PRIMARY KEY,
 
-  competition_coach_id INT REFERENCES competition_users (id),
+  competition_coach_id INT REFERENCES competition_users (id), --- id is the id of the coach in the competition, not the user_id
 
   name TEXT NOT NULL,
   pending_name TEXT,
