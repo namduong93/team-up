@@ -163,7 +163,7 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
                 setInputValue(e.target.value);
               }}
             />
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Display error message */}
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} 
           </>
         )}
 

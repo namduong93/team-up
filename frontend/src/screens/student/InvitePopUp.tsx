@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FaTimes, FaRegCopy } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { CopyButton } from "../../components/general_utility/CopyButton";
 
 // Modal styles
@@ -16,7 +16,7 @@ const Modal = styled.div`
   z-index: 1000;
   width: 25%; // Adjust the width as needed
   text-align: center;
-`;
+`
 
 // Close button styles
 const CloseButton = styled.button`
@@ -34,7 +34,7 @@ const CloseButton = styled.button`
   &:hover {
     color: #c9302c; // Change color on hover
   }
-`;
+`
 
 const CopyContainer = styled.div`
   display: flex;
@@ -42,7 +42,7 @@ const CopyContainer = styled.div`
   justify-content: center;
   margin-top: 10px; 
   margin-bottom: 30px;
-`;
+`
 
 const CopyText = styled.p`
   font-size: 18px; 
@@ -52,27 +52,13 @@ const CopyText = styled.p`
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 8px; 
   display: inline-block; 
-`;
-
-// const CopyIcon = styled(FaRegCopy)`
-//   margin-left: 20px;
-//   width: 1.7rem;
-//   height: 1.7rem;
-//   cursor: pointer;
-//   color: ${({ theme }) => theme.colours.primaryDark};
-//   transition: color 0.2s;
-
-//   &:hover {
-//     color: ${({ theme }) => theme.colours.secondaryDark};
-//   }
-// `;
+`
 
 const LargeCopyButtonWrapper = styled.div`
   transform: scale(1.5); 
   display: inline-flex; 
   margin-left: 20px;
 `
-
 
 interface InvitePopUpProps {
   heading: React.ReactNode;

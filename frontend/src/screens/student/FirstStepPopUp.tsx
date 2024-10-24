@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { styled } from 'styled-components';
 import TextInputLight from '../../components/general_utility/TextInputLight';
@@ -54,30 +54,25 @@ const Button = styled.button<{ disabled?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `
 
-const Input = styled.input`
-  padding: 10px 1.5%;
-  height: 100%;
-  box-sizing: border-box;
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  border-radius: 10px;
-  margin-bottom: 5px;
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
 interface FirstStepPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
   onNext: () =>void;
   text: string;
-  // add something to navigate
+  inputValue: string;
+  setInputValue: (value: string) => void;
 }
 
-export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({ heading, onClose, onNext, text }) => {
+export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({ 
+  heading, 
+  onClose, 
+  onNext, 
+  text, 
+  inputValue,
+  setInputValue,
+}) => {
 
-  const [inputValue, setInputValue] = useState("");
+  // const [inputValue, setInputValue] = useState("");
 
   const isButtonDisabled = () => {
     return inputValue == ""

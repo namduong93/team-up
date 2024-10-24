@@ -17,8 +17,9 @@ const Heading = styled.h2`
   word-break: break-word;
 `;
 
-export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose }) => {
+export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [newName, setNewName] = useState('');
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -29,6 +30,12 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose }) =
     handleClose(); 
   };
 
+  const handleSubmit = () => {
+    // TO-DO: add backend routing to submit the newName request to backend
+
+    setCurrentStep((prevStep) => prevStep + 1);
+  }
+
   const renderModal = () => {
     switch (currentStep) {
       case 1:
@@ -38,6 +45,8 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose }) =
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter new name"
+            inputValue={newName}
+            setInputValue={setNewName}
           />
         );
       case 2:
@@ -45,7 +54,7 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose }) =
           <SecondStepPopUp
             heading={<Heading>Are you sure you would {"\nlike to change your Team's"} {"\nname?"}</Heading>}
             onClose={handleCloseWithReset}
-            onNext={handleNext}
+            onNext={handleSubmit}
           />
         );
       case 3:

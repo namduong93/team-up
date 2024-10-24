@@ -19,18 +19,24 @@ const Heading = styled.h2`
 
 export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [newSite, setNewSite] = useState('');
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
 
   const handleCloseWithReset = () => {
-    setCurrentStep(1); // Reset to the first step
-    handleClose(); // Call the parent close function
+    setCurrentStep(1); 
+    handleClose(); 
   };
 
+  const handleSubmit = () => {
+    // TO-DO: add backend routing to submit the newSite request to backend
+
+    setCurrentStep((prevStep) => prevStep + 1);
+  }
+
   const renderModal = () => {
-    console.log(`Current Step: ${currentStep}`); // Debugging log
     switch (currentStep) {
       case 1:
         return (
@@ -39,6 +45,8 @@ export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) =
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter a location"
+            inputValue={newSite}
+            setInputValue={setNewSite}
           />
         );
       case 2:
@@ -46,7 +54,7 @@ export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) =
           <SecondStepPopUp
             heading={<Heading>Are you sure you would {"\nlike to change your Team's"} {"\nsite location?"}</Heading>}
             onClose={handleCloseWithReset}
-            onNext={handleNext}
+            onNext={handleSubmit}
           />
         );
       case 3:

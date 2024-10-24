@@ -67,10 +67,15 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({ heading, onClose }) => {
   const [teamName, setTeamName] = useState("");
 
   const isButtonDisabled = () => {
+    // TO-DO: implemented backend routing to check if the teamCode and teamName 
+    // correspond to actual Teams in database
+    
     return teamCode === "" || teamName === "";
   }
 
   const handleJoin =() => {
+    // TO-DO: implement backend routing to submit join request to backend
+
     navigate("/dashboard", { state: { joined: true, teamName: teamName }})
   }
 
