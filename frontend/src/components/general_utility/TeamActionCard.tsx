@@ -32,6 +32,7 @@ const ActionCard = styled.button<ActionCardProps>`
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 350px;
   height: 100%;
   aspect-ratio: 1;
   background-color: ${({ theme, $actionType, $disabled }) =>
@@ -104,10 +105,10 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
 
 
   const actions = [
-    { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a friend" },
-    { type: "join" as ActionType, icon: FaUsers, text: "Join a team" },
-    { type: "name" as ActionType, icon: FaEdit, text: "Change team name" },
-    { type: "site" as ActionType, icon: FaGlobe, text: "Change team site" }
+    { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a Friend" },
+    { type: "join" as ActionType, icon: FaUsers, text: "Join a Team" },
+    { type: "name" as ActionType, icon: FaEdit, text: "Change Team Name" },
+    { type: "site" as ActionType, icon: FaGlobe, text: "Change Team Site" }
   ];
 
   // Determine which actions should be disabled based on the number of members

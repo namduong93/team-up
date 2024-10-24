@@ -5,7 +5,7 @@ import {
   FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, 
   FaUserEdit, FaThumbsUp, FaUserPlus, FaClipboardList, 
   FaTrophy, FaHandshake, 
-  FaBell
+  FaBell, FaAddressCard,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { AlertButton } from '../../../screens/dashboard/Dashboard';
@@ -21,7 +21,8 @@ interface Notification {
     | 'cheer'
     | 'invite'
     | 'welcomeAccount'
-    | 'welcomeCompetition';
+    | 'welcomeCompetition'
+    | 'update';
   message: string;
   createdAt: Date;
   competitionId?: string;
@@ -47,17 +48,6 @@ const NotificationsContainer = styled.div`
   max-height: 400px;
   overflow-y: auto;
   z-index: 1000;
-
-  /* @media (max-width: 768px) {
-    width: 80%;
-    right: 10px;
-  }
-
-  @media (max-width: 480px) {
-    width: 95%;
-    top: 10px;
-    right: 5px;
-  } */
 `;
 
 const NotificationItem = styled.div`
@@ -137,14 +127,12 @@ const getNotificationIcon = (type: Notification['type']) => {
       return <FaHandshake />;
     case 'welcomeCompetition':
       return <FaTrophy />;
+    case 'update':
+      return <FaAddressCard />;
     default:
       return <FaClipboardList />;
   }
 };
-
-function cleanNotificationType(type: string): string {
-  return type.replace(/[{}]/g, ''); // Removes { or }
-}
 
 export const NotificationButton: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -175,7 +163,7 @@ export const NotificationButton: FC = () => {
         // Transform the backend response to match the frontend Notification structure
         const transformedNotifications = notifResponse.data.map((notif) => ({
           id: notif.id?.toString() || '',  // Convert id to string
-          type: cleanNotificationType(notif.type) as Notification['type'],  // Convert type to string
+          type: notif.type as Notification['type'],
           message: notif.message,
           createdAt: new Date(notif.createdAt),  // Use createdAt as date
           competitionId: notif.competitionId,  // Convert competitionId to compId and string
@@ -212,7 +200,11 @@ export const NotificationButton: FC = () => {
         navigate('/dashboard');
       }
     } else {
-      navigate(`/competition/participant/${competitionId}`);
+      if (type === 'update') {
+        navigate(`/account`);
+      } else {
+        navigate(`/competition/participant/${competitionId}`);
+      }
     }
   };
 

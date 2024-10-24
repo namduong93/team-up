@@ -30,34 +30,39 @@ export const TeamProfile: FC = () => {
   const teamName = "UNSWKoalas";
   const compCountdown = 34; // days to go
 
-  const teamSite = "UNSW Kensington Campus";
+  const teamSite = "UNSW K17 Building";
+  const teamSeat = "Bongo 03"
   const teamLevel = "A";
   const students = [
     {
       name: "Student1",
       email: "email1@email.com",
       bio: "I love coding! I love coding! I love coding! I love coding! I love coding! I love coding!",
+      preferredContact: "Instagram:@hollie",
     },
     {
       name: "Student2",
       email: "email2@email.com",
       bio: "My favourite language is java. My favourite language is java. My favourite language is java. ",
+      preferredContact: "Discord:@john",
     },
     {
       name: "Student3",
       email: "email3@email.com",
       bio: "First time competing :/",
+      preferredContact: "Twitter:@stewie",
     },
   ];
   const coach = {
     name: "Coach1",
     email: "coach@email.com",
-    office: "Level 304 K17",
+    bio: "I think P = NP :)",
   };
 
   const teamOutletProps = {
     teamName,
     teamSite,
+    teamSeat,
     teamLevel,
     students,
     coach,

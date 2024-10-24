@@ -8,10 +8,10 @@ import { CancelButton, ConfirmButton, PopUpContent, PopUpOverlay, Question } fro
 export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | 'secondary' | 'error' }>`
   border-radius: 10px;
   box-sizing: border-box;
-  height: 33px;
+  height: 35px;
   border: none;
   white-space: nowrap;
-  max-width: 80px;
+  max-width: 150px;
   width: 100%;
 
   background-color: ${({ $actionType: actionType, theme }) => {

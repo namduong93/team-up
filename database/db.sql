@@ -179,7 +179,6 @@ CREATE TABLE notifications (
   competition_id INT REFERENCES competitions (id),
   type TEXT NOT NULL,
   message TEXT NOT NULL,
-  decision TEXT,
   created_at TIMESTAMP NOT NULL,
   
   team_name TEXT,
@@ -234,12 +233,12 @@ AS $$
     ct.team_status AS status,
     (ct.pending_name IS NULL) AS team_name_approved
   FROM competition_teams AS ct
-  JOIN users AS u1 ON u1.id = ct.participants[1]
-  JOIN competition_users cu1 ON cu1.user_id = u1.id
-  JOIN users AS u2 ON u2.id = ct.participants[2]
-  JOIN competition_users cu2 ON cu2.user_id = u2.id
-  JOIN users AS u3 ON u3.id = ct.participants[3]
-  JOIN competition_users cu3 ON cu3.user_id = u3.id
+  LEFT JOIN users AS u1 ON u1.id = ct.participants[1]
+  LEFT JOIN competition_users cu1 ON cu1.user_id = u1.id
+  LEFT JOIN users AS u2 ON u2.id = ct.participants[2]
+  LEFT JOIN competition_users cu2 ON cu2.user_id = u2.id
+  LEFT JOIN users AS u3 ON u3.id = ct.participants[3]
+  LEFT JOIN competition_users cu3 ON cu3.user_id = u3.id
 
   JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
   JOIN users AS u ON u.id = cu.user_id
@@ -283,12 +282,12 @@ AS $$
     ct.team_status AS status,
     (ct.pending_name IS NULL) AS team_name_approved
   FROM competition_teams AS ct
-  JOIN users AS u1 ON u1.id = ct.participants[1]
-  JOIN competition_users cu1 ON cu1.user_id = u1.id
-  JOIN users AS u2 ON u2.id = ct.participants[2]
-  JOIN competition_users cu2 ON cu2.user_id = u2.id
-  JOIN users AS u3 ON u3.id = ct.participants[3]
-  JOIN competition_users cu3 ON cu3.user_id = u3.id
+  LEFT JOIN users AS u1 ON u1.id = ct.participants[1]
+  LEFT JOIN competition_users cu1 ON cu1.user_id = u1.id
+  LEFT JOIN users AS u2 ON u2.id = ct.participants[2]
+  LEFT JOIN competition_users cu2 ON cu2.user_id = u2.id
+  LEFT JOIN users AS u3 ON u3.id = ct.participants[3]
+  LEFT JOIN competition_users cu3 ON cu3.user_id = u3.id
   WHERE ct.competition_id = c_id;
 $$ LANGUAGE sql;
 
@@ -651,41 +650,41 @@ INSERT INTO competition_teams (
   competition_coach_id, name, team_status, pending_name, team_size, participants, university_id, competition_id
 )
 VALUES
-(4, 'Team Zeta', 'registered', NULL, 3, ARRAY[8, 9, 10], 2, 1),
-(4, 'Team Alpha', 'pending', 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1),
-(4, 'Team Donkey', 'pending', 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1);
+(2, 'Team Zeta', 'registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1),
+(2, 'Team Alpha', 'pending'::competition_team_status, 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1),
+(2, 'Team Donkey', 'pending'::competition_team_status, 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1);
 
 -- Notifications
 INSERT INTO notifications (
-  user_id, team_id, competition_id, type, message, decision, created_at,
+  user_id, team_id, competition_id, type, message, created_at,
   team_name, student_name, competition_name, new_team_name, site_location
 )
 VALUES 
 (
-  5, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  5, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  5, NULL, NULL, ARRAY['welcomeAccount']::notification_type_enum[], 'Welcome to TeamUP!', NULL, NOW(),
+  5, NULL, NULL, ARRAY['welcomeAccount']::notification_type_enum[], 'Welcome to TeamUP!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  6, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  6, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  7, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  7, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  8, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  8, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  9, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  9, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  10, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  10, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 );

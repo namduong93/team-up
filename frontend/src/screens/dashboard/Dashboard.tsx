@@ -161,7 +161,8 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [competitions, setCompetitions] = useState<Competition[]>([]);
-  const [userType, setUserType] = useState<string>('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setUserType] = useState<string>('');
   const navigate = useNavigate();
 
 
