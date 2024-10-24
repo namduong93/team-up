@@ -260,7 +260,10 @@ export class CompetitionService {
       throw BAD_REQUEST;
     }
 
-    return {};
+    // Notify coach
+    await this.notificationRepository.notificationRequestTeamNameChange(teamId, competitionId);
+
+    return result;
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

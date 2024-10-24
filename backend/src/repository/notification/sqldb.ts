@@ -48,6 +48,45 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
+  notificationRequestTeamNameChange = async(teamId: number, competitionId: number): Promise<{} | undefined> => {
+    // Get the old team name and the pending team name
+    const teamNameQuery = `
+      SELECT name, pending_name 
+      FROM competition_teams 
+      WHERE id = $1
+      AND competition_id = $2
+    `;
+    const teamNameResult = await this.pool.query(teamNameQuery, [teamId, competitionId]);
+    const oldTeamName = teamNameResult.rows[0]?.name;
+    const pendingTeamName = teamNameResult.rows[0]?.pending_name;
+
+    // Get the competition name
+    const competitionNameQuery = `
+      SELECT name 
+      FROM competitions 
+      WHERE id = $1
+    `;
+    const competitionNameResult = await this.pool.query(competitionNameQuery, [competitionId]);
+    const competitionName = competitionNameResult.rows[0]?.name;
+
+    // Create notification message
+    const notificationMessage = `Team ${oldTeamName} has requested to change its name to ${pendingTeamName} for competition ${competitionName}.`;
+
+    // Insert notification into the database
+    const notificationQuery = `
+      INSERT INTO notifications (user_id, message, type, competition_id, created_at)
+      SELECT u.id AS user_id, $3, 'name'::notification_type_enum, $1, NOW()
+      FROM competition_teams AS ct
+      JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
+      JOIN users AS u ON u.id = cu.user_id
+      WHERE ct.competition_id = $1
+      AND ct.id = $2
+    `;
+    await this.pool.query(notificationQuery, [competitionId, teamId, notificationMessage]);
+
+    return {};
+  }    
+
   userNotificationsList = async(userId: number): Promise<Array<Notification> | undefined> => {
     // TODO: add criteria to sort notifications
     const notifications = await this.pool.query(

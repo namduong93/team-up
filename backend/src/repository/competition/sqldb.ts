@@ -448,6 +448,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       AND $3 = ANY(participants)
     `;
     const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [teamId, competitionId, userId]);
+    
     if (teamMemberCheckResult.rowCount === 0) {
       return undefined; // TODO: throw error that user is not a member of this team
     }
