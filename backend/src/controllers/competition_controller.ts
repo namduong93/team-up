@@ -137,6 +137,19 @@ export class CompetitionController {
     return;
   });
 
+  competitionRequestTeamNameChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { competitionId, teamId, newTeamName } = req.body;
+    const result = await this.competitionService.competitionRequestTeamNameChange(Number(userId), Number(competitionId), Number(teamId), newTeamName);
+    res.json(result);
+    return;
+  });
+
+  competitionApproveTeamNameChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    res.json({});
+    return;
+  });
+
   competitionStaffJoinCoach = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({});
     return;

@@ -286,8 +286,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitions;
   }
 
-
-
   competitionStudentJoin = async (competitionUserInfo: CompetitionUser): Promise<{} | undefined> => {
     // First insert the user into the competition_users table
     let userId = competitionUserInfo.userId;
@@ -438,6 +436,36 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     await this.pool.query(competitionRemoveParticipantQuery, [userId, competitionId]);
 
     return { competitionCode, competitionName, teamId, teamName };
+  }
+
+  competitionRequestTeamNameChange = async(userId: number, competitionId: number, teamId: number, newTeamName: string): Promise<{} | undefined> => {
+    // Check if the user is a valid member of this team
+    const teamMemberCheckQuery = `
+      SELECT 1
+      FROM competition_teams
+      WHERE id = $1
+      AND competition_id = $2
+      AND $3 = ANY(participants)
+    `;
+    const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [teamId, competitionId, userId]);
+    if (teamMemberCheckResult.rowCount === 0) {
+      return undefined; // TODO: throw error that user is not a member of this team
+    }
+
+    // Update the pending name in the competition teams table
+    const teamNameUpdateQuery = `
+      UPDATE competition_teams
+      SET pending_name = $3
+      WHERE id = $2
+      AND competition_id = $1
+    `;
+    const result = await this.pool.query(teamNameUpdateQuery, [competitionId, teamId, newTeamName]);
+
+    if (result.rowCount === 0) {
+      return undefined; // TODO: throw error that no such team or competition exists
+    }
+
+    return {};
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

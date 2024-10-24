@@ -20,6 +20,8 @@ export interface CompetitionRepository {
   competitionStudentJoin2(sessionToken: string, teamInfo: TeamDetails,
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined>;
   competitionStudentWithdraw(userId: number, competitionId: number): Promise<CompetitionWithdrawalReturnObject | undefined>;
+
+  competitionRequestTeamNameChange(userId: number, competitionId: number, teamId: number, newTeamName: string): Promise<{} | undefined>;
   
   competitionStaffJoinCoach(code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined>;
   competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;
