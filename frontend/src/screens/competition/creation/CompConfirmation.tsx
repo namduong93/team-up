@@ -180,6 +180,8 @@ export const CompetitionConfirmation: FC = () => {
       name,
       earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
       generalRegDeadline: `${generalDate}T${generalTime}:00`,
+      startDate: `${generalDate}T${generalTime}:00`,
+      region: 'Australia',
       code,
       siteLocations: siteLocations.map(location => ({
         universityId: location.universityId, 

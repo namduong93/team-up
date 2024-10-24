@@ -77,8 +77,10 @@ CREATE TABLE competitions (
   created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   early_reg_deadline TIMESTAMP NOT NULL,
   general_reg_deadline TIMESTAMP NOT NULL,
-  code VARCHAR(8) NOT NULL
+  start_date TIMESTAMP NOT NULL,
+  code VARCHAR(8) NOT NULL,
 
+  region TEXT NOT NULL
 );
 
 CREATE TABLE competition_sites (
@@ -577,11 +579,11 @@ VALUES
   'z000009'); --- password is pleasechange
 
 -- Competitions
-INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code)
+INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region)
 VALUES 
-('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024'),
-('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024'),
-('ICPC World Final', 3, '2024-10-10 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025');
+('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024', '2024-09-30 00:00:00', 'Australia'),
+('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024', '2024-09-30 00:00:00', 'Australia'),
+('ICPC World Final', 3, '2024-10-10 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025', '2024-09-30 00:00:00', 'Earth');
 
 -- Competition Sites
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
