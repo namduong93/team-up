@@ -441,7 +441,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionRequestTeamNameChange = async(userId: number, competitionId: number, newTeamName: string): Promise<number | undefined> => {
     // Check if the user is a valid member of this team
     const teamMemberCheckQuery = `
-      SELECT 1
+      SELECT name, pending_name
       FROM competition_teams
       WHERE competition_id = $1 AND $2 = ANY(participants)
     `;
@@ -449,6 +449,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     if (teamMemberCheckResult.rowCount === 0) {
       return undefined; // TODO: throw error that user is not a member of this team
+    }
+
+    if (teamMemberCheckResult.rows[0].name === newTeamName || teamMemberCheckResult.rows[0].pending_name === newTeamName) {
+      return undefined; // TODO: throw error that the new team name is the same as the current one or the pending one
     }
 
     // Update the pending name in the competition teams table
@@ -466,6 +470,35 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
 
     return teamId;
+  }
+
+  competitionApproveTeamNameChange = async(competitionId: number, teamId: number, approve: boolean): Promise<{} | undefined> => {
+    let result = undefined;
+
+    // Update the team name if the name change is approved
+    if (approve) {
+      const teamNameUpdateQuery = `
+        UPDATE competition_teams
+        SET name = pending_name, pending_name = NULL
+        WHERE id = $1
+        AND competition_id = $2
+      `;
+      result = await this.pool.query(teamNameUpdateQuery, [teamId, competitionId]);
+    } else {
+      const teamNameUpdateQuery = `
+        UPDATE competition_teams
+        SET pending_name = NULL
+        WHERE id = $1
+        AND competition_id = $2
+      `;
+      result = await this.pool.query(teamNameUpdateQuery, [teamId, competitionId]);
+    }
+
+    if (result.rowCount === 0) {
+      return undefined; // TODO: throw error that no such team or competition exists
+    }
+
+    return {};
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

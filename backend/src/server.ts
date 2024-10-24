@@ -168,14 +168,14 @@ app.post('/competition/student/join/2', competitionController.competitionStudent
 app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
 
 // Student requests to change the team name
-// PARAMS: { competitionId, newTeamName }
+// PARAMS: { compId: number, newTeamName: string }
 // RESPONSE: { }
-app.post('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
+app.put('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
 
 // Coach approves the team name change
-// PARAMS: { competitionId, teamId }
+// PARAMS: { compId: number, teamId: number, approve: boolean }
 // RESPONSE: { }
-app.post('/competition/coach/team_name_change', competitionController.competitionApproveTeamNameChange);
+app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
 
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }

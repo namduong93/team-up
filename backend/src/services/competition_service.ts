@@ -266,6 +266,25 @@ export class CompetitionService {
     return {};
   }
 
+  competitionApproveTeamNameChange = async (userId: number, competitionId: number, teamId: number, approve: boolean): Promise<{} | undefined> => {
+    // Check if user is a coach
+    const roles = await this.competitionRoles(userId, competitionId);
+    if (!roles.includes(CompetitionUserRole.COACH)) {
+      throw COMPETITION_ADMIN_REQUIRED;
+    }
+
+    // Approve or reject team name change
+    const result = await this.competitionRepository.competitionApproveTeamNameChange(competitionId, teamId, approve);
+    if (!result) {
+      throw BAD_REQUEST;
+    }
+
+    // Notify team members
+    await this.notificationRepository.notificationApproveTeamNameChange(competitionId, teamId, approve);
+
+    return {};
+  }
+
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {
 
     return {};

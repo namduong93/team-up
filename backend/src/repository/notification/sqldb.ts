@@ -85,7 +85,38 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     await this.pool.query(notificationQuery, [competitionId, teamId, notificationMessage]);
 
     return {};
-  }    
+  }
+  
+  notificationApproveTeamNameChange = async(competitionId: number, teamId: number, approve: boolean): Promise<{} | undefined> => {
+    // Get the competition name
+    const competitionNameQuery = `
+      SELECT name 
+      FROM competitions 
+      WHERE id = $1
+    `;
+    const competitionNameResult = await this.pool.query(competitionNameQuery, [competitionId]);
+    const competitionName = competitionNameResult.rows[0]?.name;
+
+    // Create notification message
+    let notificationMessage: string;
+    if (approve) {
+      notificationMessage = `Your coach has approved your new team name for competition ${competitionName}.`;
+    } else {
+      notificationMessage = `Your coach has rejected your new team name for competition ${competitionName}.`;
+    }
+
+    // Insert notification into the database
+    const notificationQuery = `
+      INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+      SELECT participant AS user_id, $3, 'name'::notification_type_enum, $1, $2, NOW()
+      FROM competition_teams, unnest(participants) AS participant
+      WHERE competition_id = $1 
+      AND id = $2
+    `;
+    await this.pool.query(notificationQuery, [competitionId, teamId, notificationMessage]);
+
+    return {};
+  }
 
   userNotificationsList = async(userId: number): Promise<Array<Notification> | undefined> => {
     // TODO: add criteria to sort notifications
