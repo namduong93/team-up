@@ -53,20 +53,22 @@ const Button = styled.button<{ disabled?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `
 
-interface FirstStepPopUpProps {
+const ButtonContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+`
+
+interface SecondStepPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
-  onNext: () =>void;
+  onNext: () => void;
   // add something to navigate
 }
 
-const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({ heading, onClose, onNext }) => {
-
-  const [inputValue, setInputValue] = useState("");
-
-  const isButtonDisabled = () => {
-    return inputValue == ""
-  }
+const SecondStepPopUp: React.FC<SecondStepPopUpProps> = ({ heading, onClose, onNext }) => {
 
   return (
     <>
@@ -75,22 +77,15 @@ const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({ heading, onClose, onNex
           <FaTimes />
         </CloseButton>
         <div>{heading}</div>
-        <input
-          type="text"
-          placeholder="Plese enter"
-          value={inputValue}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-          }}
-        />
 
-        <Button disabled={isButtonDisabled()} onClick={onNext}>
-          Request
-        </Button>
+        <ButtonContainer>
+            <Button onClick={onNext}>Yes</Button>
+            <Button onClick={onClose}>No</Button>
+          </ButtonContainer>
 
       </Modal>
     </>
   );
 };
 
-export default FirstStepPopUp;
+export default SecondStepPopUp;

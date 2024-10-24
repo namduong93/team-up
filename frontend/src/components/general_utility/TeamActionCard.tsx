@@ -118,11 +118,11 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
     return false;
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  // const copyToClipboard = (text: string) => {
+  //   navigator.clipboard.writeText(text);
+  //   setCopied(true);
+  //   setTimeout(() => setCopied(false), 2000);
+  // };
 
 
   return (
@@ -160,9 +160,9 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
           />
         )}
 
-        {modalOpen == "name" && (
+        {/* {modalOpen == "name" && (
           
-        )}
+        )} */}
 
       {/* {actions.map((action, index) => (
         <React.Fragment key={index}>
