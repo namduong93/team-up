@@ -15,7 +15,7 @@ const Heading = styled.h2`
   margin-bottom: 10%;
   white-space: pre-wrap;
   word-break: break-word;
-`;
+`
 
 export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) => {
   const [currentStep, setCurrentStep] = useState(1);

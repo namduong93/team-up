@@ -301,23 +301,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     }
   });
 
-  // TO-DO: uncomment when the admin page is created
-
-  // const location = useLocation();
-  // const showPopUp = location.state?.showPopUp || false;
-  // const message = location.state?.message || "You have created a new competition!";
-  // const code = location.state?.code || "COMP_CODE";
-  // const [isPopUpOpen, setIsPopUpOpen] = useState(showPopUp);
-  
-  // const handleClosePopUp = () => {
-  //   setIsPopUpOpen(false);
-  // }
-
-  // useEffect(() => {
-  //   if (showPopUp) {
-  //     setIsPopUpOpen(true);
-  //   }
-  // }, [showPopUp]);
 
   const [isRegisterPopUpOpen, setIsRegisterPopUpOpen] = useState(false);
 
