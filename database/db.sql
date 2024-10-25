@@ -74,10 +74,10 @@ CREATE TABLE competitions (
   
   name TEXT NOT NULL,
   team_size INT NOT NULL,
-  created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  early_reg_deadline TIMESTAMP NOT NULL,
-  general_reg_deadline TIMESTAMP NOT NULL,
-  start_date TIMESTAMP NOT NULL,
+  created_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  early_reg_deadline TIMESTAMPTZ,
+  general_reg_deadline TIMESTAMPTZ NOT NULL,
+  start_date TIMESTAMPTZ NOT NULL,
   code VARCHAR(8) NOT NULL,
 
   region TEXT NOT NULL
