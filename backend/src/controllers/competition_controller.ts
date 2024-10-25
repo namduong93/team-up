@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { CompetitionService } from "../services/competition_service.js";
-import { UserService } from "../services/user_service.js";
 import { httpErrorHandler, INVALID_TOKEN } from "./controller_util/http_error_handler.js";
 import { Competition } from "../models/competition/competition.js";
 
@@ -10,6 +9,15 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionTeamDetails = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const teamDetails = await this.competitionService.competitionTeamDetails(
+      parseInt(userId as string), parseInt(compId as string));
+
+    res.json(teamDetails);
+  });
   
   competitionStaff = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
