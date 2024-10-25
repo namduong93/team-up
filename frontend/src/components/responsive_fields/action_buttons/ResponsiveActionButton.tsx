@@ -39,23 +39,31 @@ export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | '
   }};
 `;
 
-interface ResponsiveActionButtonProps {
+interface ResponsiveActionButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   icon: ReactNode;
   label: string;
   question: string;
-  redirectPath: string;
+  redirectPath?: string;
   actionType: "primary" | "secondary" | "error";
   handleClick?: () => void; // Optional function prop for a custom click handler
+  handleSubmit?: () => void;
 }
 
 export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
-    question, redirectPath, actionType, handleClick, icon, label }) => {
+    question, redirectPath, actionType, handleClick, icon, label, style, handleSubmit, ...props }) => {
     
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleConfirm = () => {
-    navigate(redirectPath); // Go to the correct redirected path
+    if (handleSubmit) {
+      handleSubmit();
+    }
+    if (redirectPath) {
+      navigate(redirectPath); // Go to the correct redirected path
+    } else {
+      setIsOpen(false);
+    }
   };
 
   const handleButtonClick = () => {
@@ -74,6 +82,8 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
           onClick={handleButtonClick}
           isOpen={isOpen}
           icon={icon} label={label}
+          style={style}
+          {...props}
         />
       </StyledResponsiveActionDiv>
       {isOpen && (
