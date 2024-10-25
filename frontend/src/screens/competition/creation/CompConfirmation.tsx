@@ -198,16 +198,7 @@ export const CompetitionConfirmation: FC = () => {
       console.log("Response:", response.data);
 
       const compId = response.data.competitionId;
-      navigate(`/competition/page/${compId}`, {state: {isCreationSuccessPopUpOpen: true}}); 
-
-      // TO-DO: uncomment when pop-up is implemented on Admin Page
-      // navigate("/competition/page", { 
-      //   state: { 
-      //     showPopUp: true, 
-      //     message: "You have created a new Competition", 
-      //     code: "COMP_12345"
-      //   }
-      // }); 
+      navigate(`/competition/page/${compId}`, { state: { isSuccessPopUpOpen: true } }); 
     } catch (error) {
         console.error("Error creating competition:", error);
     }

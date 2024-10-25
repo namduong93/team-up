@@ -129,8 +129,6 @@ export const TeamDisplay: FC = () => {
   }
 
 
-  // TO-DO: uncomment when the admin page is created
-
   const location = useLocation();
   const [isCreationSuccessPopUpOpen, setIsCreationSuccessPopUpOpen] = useState(false);
 
@@ -139,7 +137,9 @@ export const TeamDisplay: FC = () => {
   }
 
   useEffect(() => {
-    if (location.state?.isCreationSuccessPopUpOpen) {
+    console.log("hello")
+    console.log(location.state)
+    if (location.state?.isSuccessPopUpOpen) {
       setIsCreationSuccessPopUpOpen(true);
     }
   }, [location.state]);

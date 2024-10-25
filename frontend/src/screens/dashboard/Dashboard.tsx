@@ -11,6 +11,7 @@ import { IoIosCreate } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
 import { DashInfo } from "./hooks/useDashInfo";
 import { ResponsiveActionButton } from "../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { ThirdStepPopUp } from "../student/ThirdStepPopUp";
 
 interface Competition { 
   compName: string;
@@ -358,7 +359,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             label="Create"
             question="Create a new competition?"
             redirectPath="/competition/create"
-            handleClick={handleCreateClick}
+            // handleClick={handleCreateClick}
             actionType="secondary"
             />
           }
@@ -443,7 +444,12 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             />
           )}
 
-
+          {isCompCreationPopUpOpen && (
+            <ThirdStepPopUp
+            heading={<Title2>Your team's new site location {"\nis now pending approval"} {"\nfrom your coach"}</Title2>}
+            onClose={() => setIsCompCreationPopUpOpen(false)}
+            />
+          )}
         </ContentArea>
       </DashboardContent>
     </OverflowFlexBackground>
