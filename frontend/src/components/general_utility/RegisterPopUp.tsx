@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { sendRequest } from "../../utility/request";
+import { FaTimes } from 'react-icons/fa';
 
 interface RegisterPopUpProps {
   isOpen: boolean;
@@ -35,32 +36,66 @@ const Container = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
+// const CloseButton = styled.button`
+//   position: absolute;
+//   top: 10px;
+//   right: 10px;
+//   background: none;
+//   border: none;
+//   font-size: 24px;
+//   /* font-weight: bold; */
+//   color: #666;
+//   cursor: pointer;
+
+//   &:hover {
+//     color: red;
+//   }
+// `
+
 const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
   position: absolute;
   top: 10px;
   right: 10px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  /* font-weight: bold; */
-  color: #666;
-  cursor: pointer;
+  font-size: 20px;
+  color: #d9534f; 
+  transition: color 0.2s;
+  font-size: 26px;
 
   &:hover {
-    color: red;
+    color: #c9302c;
   }
+`
+
+const Modal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 25%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
   min-width: 100px;
-  width: 25%;
+  width: 35%;
   height: 35px;
   border: 0px;
   border-radius: 30px;
   background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
-  margin-top: 35px;
-  margin-bottom: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
@@ -70,6 +105,7 @@ const Button = styled.button<{ disabled?: boolean }>`
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -85,7 +121,7 @@ const Input = styled.input`
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 35px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
@@ -150,8 +186,12 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
 
   return (
     <Overlay onClick={onClose}>
-      <Container onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>✖</CloseButton>
+      {/* <Container onClick={(e) => e.stopPropagation()}> */}
+      <Modal>
+
+      <CloseButton onClick={onClose}>
+        <FaTimes />
+      </CloseButton>
         <div>{message}</div>
         {showInput && (
           <>
@@ -175,7 +215,9 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
             <Button onClick={onClose}>Cancel</Button>
           </ButtonContainer>
         )}
-      </Container>
+
+      </Modal>
+      {/* </Container> */}
     </Overlay>
   );
 };

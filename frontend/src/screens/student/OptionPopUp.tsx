@@ -45,8 +45,8 @@ const Button = styled.button`
   border: 0px;
   border-radius: 30px;
   background-color: ${({ theme }) => (theme.colours.primaryLight)};
-  margin-top: 35px;
-  margin-bottom: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
@@ -55,6 +55,7 @@ const Button = styled.button`
 `
 const ButtonContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   justify-content: center;
   align-items: center;
