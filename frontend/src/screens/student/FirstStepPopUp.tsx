@@ -40,6 +40,7 @@ const CloseButton = styled.button`
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
+  min-width: 100px;
   width: 50%;
   height: 35px;
   border: 0px;
@@ -85,7 +86,9 @@ export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({
           <FaTimes />
         </CloseButton>
         <div>{heading}</div>
-
+        <span style={{ marginBottom: '20px'}}>Your Coach will review <br /> your change, where you will<br />
+        receive a notification <br /> with the results of the review
+        </span>
         <TextInputLight
             label=""
             placeholder={text}
