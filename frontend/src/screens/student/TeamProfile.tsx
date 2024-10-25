@@ -1,10 +1,32 @@
-import { FC  } from "react";
+import { FC, useEffect, useState  } from "react";
 import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../competition_staff_page/components/PageUtils";
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
 import styled from "styled-components";
 // import { sendRequest } from "../../utility/request";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
 import { TeamHeader } from "./TeamHeader";
+import { sendRequest } from "../../utility/request";
+
+export interface ParticipantTeamDetails {
+  compName: string;
+  teamName: string;
+  teamSite: string;
+  teamSeat?: string;
+  teamLevel: string;
+  startDate: Date;
+  students: Array<{
+    name: string;
+    email: string;
+    bio: string;
+    preferredContact: string;
+  }>;
+  coach: {
+    name: string;
+    email: string;
+    bio: string;
+  }
+}
+
 
 const TeamToggleOptionDiv = styled(ToggleOptionDiv)`
 `;
@@ -26,53 +48,50 @@ const TeamProfileViews = styled(Outlet)`
 export const TeamProfile: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
-  const compName = "ICPC Regional Championships 2024";
-  const teamName = "UNSWKoalas";
-  const compCountdown = 34; // days to go
+  const [teamDetails, setTeamDetails] = useState<ParticipantTeamDetails>(
+    {
+      compName: '',
+      teamName: '',
+      teamSite: '',
+      teamSeat: '',
+      teamLevel: '',
+      startDate: new Date(),
+      students: [],
+      coach: {
+        name: '',
+        email: '',
+        bio: '',
+      }
+    }
+  );
 
-  const teamSite = "UNSW K17 Building";
-  const teamSeat = "Bongo 03"
-  const teamLevel = "A";
-  const students = [
-    {
-      name: "Student1",
-      email: "email1@email.com",
-      bio: "I love coding! I love coding! I love coding! I love coding! I love coding! I love coding!",
-      preferredContact: "Instagram:@hollie",
-    },
-    {
-      name: "Student2",
-      email: "email2@email.com",
-      bio: "My favourite language is java. My favourite language is java. My favourite language is java. ",
-      preferredContact: "Discord:@john",
-    },
-    {
-      name: "Student3",
-      email: "email3@email.com",
-      bio: "First time competing :/",
-      preferredContact: "Twitter:@stewie",
-    },
-  ];
-  const coach = {
-    name: "Coach1",
-    email: "coach@email.com",
-    bio: "I think P = NP :)",
-  };
+  useEffect(() => {
+
+    const fetchTeamDetails = async () => {
+      const response = await sendRequest.get<ParticipantTeamDetails>(
+        '/competition/team/details', { compId });
+      
+      const details = response.data;
+      setTeamDetails({ ...details, startDate: new Date(details.startDate) });
+    };
+
+    fetchTeamDetails();
+
+  }, []);
+  
 
   const teamOutletProps = {
-    teamName,
-    teamSite,
-    teamSeat,
-    teamLevel,
-    students,
-    coach,
+    ...teamDetails,
     compId,
   };
+
+
+  const compCountdown =  Math.round(((teamDetails.startDate.getTime()-Date.now())/(1000*60*60*24)));
 
   return (
   <TeamOverflowFlexBackground>
     <MainPageDiv>
-      <TeamHeader compName={compName} teamName={teamName} compCountdown={compCountdown} />
+      <TeamHeader compName={teamDetails.compName} teamName={teamDetails.teamName} compCountdown={compCountdown} />
       <PageOptionsContainerDiv>
         <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
           <TeamToggleOptionDiv onClick={() => { navigate(`/competition/participant/${compId}/details`) }}>
