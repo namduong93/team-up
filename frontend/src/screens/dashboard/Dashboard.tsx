@@ -331,6 +331,11 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     }
   }, [location.state]);
 
+  const [isCompCreationPopUpOpen, setIsCompCreationPopUpOpen] = useState(false);
+  const handleCreateClick = () => {
+    setIsCompCreationPopUpOpen(true);
+  }
+
   return (isLoaded &&
     <OverflowFlexBackground>
       <DashboardContent>
@@ -353,7 +358,9 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             label="Create"
             question="Create a new competition?"
             redirectPath="/competition/create"
-            actionType="secondary"/>
+            handleClick={handleCreateClick}
+            actionType="secondary"
+            />
           }
           <ResponsiveActionButton
             icon={<MdAssignmentAdd />}
