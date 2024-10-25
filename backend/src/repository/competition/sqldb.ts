@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails } from "../../services/competition_service.js";
 import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject } from "../../models/competition/competition.js";
 
@@ -9,6 +9,7 @@ import { parse } from "postgres-array";
 import { CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
+import { response } from "express";
 
 // Set up short-unique-id library for generating competition codes
 const { randomUUID } = new ShortUniqueId({
@@ -21,6 +22,86 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   constructor(pool: Pool) {
     this.pool = pool;
+  }
+
+  competitionTeamDetails = async (userId: number, compId: number): Promise<ParticipantTeamDetails> => {
+    const dbResult = await this.pool.query(
+      `SELECT c.name AS "compName",
+        ct.name AS "teamName", cs.name AS "teamSite", ct.team_seat AS "teamSeat",
+        cu_source.competition_level AS "teamLevel", c.start_date AS "startDate",
+        JSON_BUILD_ARRAY(
+          u1.name, u1.email, cu1.bio, cu1.preferred_contact
+        ) AS member1,
+        JSON_BUILD_ARRAY(
+          u2.name, u2.email, cu2.bio, cu2.preferred_contact
+        ) AS member2,
+        JSON_BUILD_ARRAY(
+          u3.name, u3.email, cu3.bio, cu3.preferred_contact
+        ) AS member3,
+        JSON_BUILD_ARRAY(
+          u_coach.name, u_coach.email, cu_coach.bio
+        ) AS coach
+      
+      FROM competition_users AS cu_source
+      JOIN competitions AS c ON c.id = cu_source.competition_id
+      JOIN competition_teams AS ct ON cu_source.user_id = ANY(ct.participants)
+      JOIN competition_sites AS cs ON cu_source.site_attending_id = cs.id
+      
+      JOIN competition_users AS cu_coach ON cu_coach.id = ct.competition_coach_id
+      JOIN users AS u_coach ON u_coach.id = cu_coach.user_id
+
+      JOIN users AS u1 ON u1.id = ct.participants[1]
+      JOIN users AS u2 ON u2.id = ct.participants[2]
+      JOIN users AS u3 ON u3.id = ct.participants[3]
+      JOIN competition_users AS cu1 ON u1.id = cu1.user_id
+      JOIN competition_users AS cu2 ON u2.id = cu2.user_id
+      JOIN competition_users AS cu3 ON u3.id = cu3.user_id
+      WHERE cu_source.user_id = ${userId} AND cu_source.competition_id = ${compId}
+      LIMIT 1;
+      `
+    );
+
+    const result = dbResult.rows[0];
+
+    const teamDetails: ParticipantTeamDetails = {
+      compName: result.compName,
+      teamName: result.teamName,
+      teamSite: result.teamSite,
+      teamSeat: result.teamSeat,
+      teamLevel: result.teamLevel,
+      startDate: new Date(result.startDate),
+      students: [
+        {
+          name: result.member1[0],
+          email: result.member1[1],
+          bio: result.member1[2],
+          preferredContact: result.member1[3]
+        },
+        {
+          name: result.member2[0],
+          email: result.member2[1],
+          bio: result.member2[2],
+          preferredContact: result.member2[3]
+        },
+
+        // TODO: handle fewer than 3 members (check if the fields in the array are null/undefined)
+        {
+          name: result.member3[0],
+          email: result.member3[1],
+          bio: result.member3[2],
+          preferredContact: result.member3[3]
+        }
+      ],
+
+      coach: {
+        name: result.coach[0],
+        email: result.coach[1],
+        bio: result.coach[2],
+      },
+    };
+
+    return teamDetails;
+
   }
 
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
@@ -114,8 +195,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     
     // Insert competition into competitions table
     const competitionQuery =
-    `INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    `INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     RETURNING id, code;
     `;
     
@@ -126,7 +207,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
       competition.code,
-      new Date(competition.startDate)
+      new Date(competition.startDate),
+      competition.region
     ];
     
     const competitionResult = await this.pool.query(competitionQuery, competitionValues);

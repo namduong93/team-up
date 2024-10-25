@@ -174,7 +174,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
                   <CopyButton textToCopy={contactParts[1]} />
                 </PreferredContact>
               ) : ( // only students should have a preferred contact
-                !isCoach ? (<span>No preferred contact available.</span>) : <span></span>
+                isCoach && (<span>No preferred contact available.</span>)
               )}
             </StudentContact>
             <StudentBio>{bio}</StudentBio>
