@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { CopyButton } from "../../components/general_utility/CopyButton";
-import { FaEdit, FaUserCircle } from "react-icons/fa";
+import { FaEdit, FaUserTie } from "react-icons/fa";
 import defaultProfile from "./default-profile.jpg";
 
 interface ProfileCardProps {
@@ -132,6 +132,10 @@ const StudentContact = styled.div`
   justify-content: space-between;
 `;
 
+const CoachContact = styled.div`
+  color: ${({ theme }) => theme.colours.sidebarLine};
+`;
+
 export const ProfileCard: FC<ProfileCardProps> = ({
   name,
   email,
@@ -150,7 +154,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
         <ContentContainer>
           {isCoach ? (
             <IconWrapper>
-              <FaUserCircle />
+              <FaUserTie />
             </IconWrapper>
           ) : (
             <StudentImage
@@ -174,7 +178,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
                   <CopyButton textToCopy={contactParts[1]} />
                 </PreferredContact>
               ) : ( // only students should have a preferred contact
-                isCoach && (<span>No preferred contact available.</span>)
+                isCoach && (<CoachContact>No preferred contact available.</CoachContact>)
               )}
             </StudentContact>
             <StudentBio>{bio}</StudentBio>

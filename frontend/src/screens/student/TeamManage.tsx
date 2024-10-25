@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
 import { ProfileCard } from "./ProfileCard"; // Import the ProfileCard component
+import { useOutletContext } from "react-router-dom";
+import { Student } from "./TeamDetails";
 
 const ManageContainer = styled.div`
   display: flex;
@@ -96,6 +98,14 @@ const CloseButton = styled.button`
 `;
 
 export const TeamManage: React.FC = () => {
+  const { students, coach } = useOutletContext<{
+    students: Student[];
+    coach: {
+      name: '',
+      email: '',
+      bio: '',
+    }
+  }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -108,12 +118,12 @@ export const TeamManage: React.FC = () => {
 
   return (
     <ManageContainer>
-      <TeamActionCard numMembers={2} />
+      <TeamActionCard numMembers={students.length} />
       <InfoContainer>
         <ProfileCard
-          name="Coach Name"
-          email="coach@email.com"
-          bio="I'm a coach who believes in P = NP"
+          name={coach.name}
+          email={coach.email}
+          bio={coach.bio}
           isCoach={true}
         />
         
