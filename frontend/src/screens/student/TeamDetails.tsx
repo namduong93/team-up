@@ -5,6 +5,7 @@ import { ProfileCard } from "./ProfileCard";
 import defaultProfile from "./default-profile.jpg";
 import { EditCompPreferences } from "./EditCompPreferences";
 import { StudentDetails } from "./EditCompPreferences";
+// import backend image handler
 
 const DetailsContainer = styled.div`
   display: flex;

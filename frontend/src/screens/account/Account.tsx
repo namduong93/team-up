@@ -4,6 +4,7 @@ import { FlexBackground } from "../../components/general_utility/Background";
 import defaultProfile from '../../components/assets/default-profile.jpg';
 import { sendRequest } from "../../utility/request";
 import { DashInfo } from "../dashboard/hooks/useDashInfo";
+import { backendURL } from "../../../config/backendURLConfig";
 
 interface User {
   role: "student" | "staff";
@@ -178,7 +179,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     affiliation: "UNSW",
     gender: "Male",
     pronouns: "He/Him",
-    profilePic: "../components/assets/default-profile.jpg",
+    profilePic: `${backendURL.HOST}:${backendURL.PORT}/public/images/icpc_logo.png`,
     tshirtSize: "Male L",
     allergies: "None",
     dietaryReqs: ["Vegetarian"],
