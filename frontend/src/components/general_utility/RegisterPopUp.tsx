@@ -90,9 +90,9 @@ const Input = styled.input`
 `;
 
 const ErrorMessage = styled.div`
-    color: red; // Adjust as necessary
-    font-size: 14px;
-    margin-top: 5px;
+  color: red; 
+  font-size: 14px;
+  margin-top: 5px;
 `;
 
 export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({

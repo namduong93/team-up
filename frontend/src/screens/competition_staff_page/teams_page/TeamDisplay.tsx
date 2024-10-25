@@ -153,7 +153,7 @@ export const TeamDisplay: FC = () => {
         heading={<Heading>The competition has successfully {"\nbeen created"} </Heading>}
         onClose={handleClosePopUp}
       />
-      </>
+    </>
     )}
     <div>
       {Object.entries(filters).map(([field, values]) =>

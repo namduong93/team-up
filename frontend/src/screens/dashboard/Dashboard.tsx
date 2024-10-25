@@ -11,7 +11,7 @@ import { IoIosCreate } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
 import { DashInfo } from "./hooks/useDashInfo";
 import { ResponsiveActionButton } from "../../components/responsive_fields/action_buttons/ResponsiveActionButton";
-import { ThirdStepPopUp } from "../student/ThirdStepPopUp";
+import { OptionPopUp } from "../student/OptionPopUp";
 
 interface Competition { 
   compName: string;
@@ -144,6 +144,26 @@ const Title2 = styled.h2`
   white-space: pre-wrap;
   word-break: break-word;
 `;
+
+const Heading = styled.h2`
+  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
+  margin-top: 40px;
+  color: ${({ theme }) => theme.colours.notifDark};
+  margin-bottom: 10%;
+  white-space: pre-wrap;
+  word-break: break-word;
+`
+
+const Overlay = styled.div<{ $isOpen: boolean }>`
+  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`
 
 export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
@@ -333,6 +353,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   }, [location.state]);
 
   const [isCompCreationPopUpOpen, setIsCompCreationPopUpOpen] = useState(false);
+
   const handleCreateClick = () => {
     setIsCompCreationPopUpOpen(true);
   }
@@ -359,7 +380,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             label="Create"
             question="Create a new competition?"
             redirectPath="/competition/create"
-            // handleClick={handleCreateClick}
+            handleClick={handleCreateClick}
             actionType="secondary"
             />
           }
@@ -404,7 +425,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             ))}
           </CompetitionGrid>
 
-          {/* Register Pop-Up */}
           {isRegisterPopUpOpen && (
             <RegisterPopUp isOpen={isRegisterPopUpOpen} onClose={handleClosePopUp} message={
               <Title1>Please enter the {"\nCompetition Code"}</Title1>
@@ -445,10 +465,17 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
           )}
 
           {isCompCreationPopUpOpen && (
-            <ThirdStepPopUp
-            heading={<Title2>Your team's new site location {"\nis now pending approval"} {"\nfrom your coach"}</Title2>}
-            onClose={() => setIsCompCreationPopUpOpen(false)}
+            <>
+            <Overlay $isOpen={true} />
+            <OptionPopUp
+              heading={<Heading>Would you like to
+                {"\ncreate a Competition?"} 
+              </Heading>}
+              onClose={() => setIsCompCreationPopUpOpen(false)}
+              onNext={() => navigate("/competition/create")}
+              actionButtonText="Create"
             />
+            </>
           )}
         </ContentArea>
       </DashboardContent>
