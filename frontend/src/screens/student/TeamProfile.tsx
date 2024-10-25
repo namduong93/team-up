@@ -27,6 +27,7 @@ export interface ParticipantTeamDetails {
   }
 }
 
+import { WithdrawPopUpChain } from "./WithdrawPopUpChain";
 
 const TeamToggleOptionDiv = styled(ToggleOptionDiv)`
 `;
@@ -44,6 +45,17 @@ const TeamOverflowFlexBackground = styled(OverflowFlexBackground)`
 const TeamProfileViews = styled(Outlet)`
   /* box-sizing: border-box; */
 `;
+
+const Overlay = styled.div<{ $isOpen: boolean }>`
+  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`
 
 export const TeamProfile: FC = () => {
   const navigate = useNavigate();
@@ -88,10 +100,26 @@ export const TeamProfile: FC = () => {
 
   const compCountdown =  Math.round(((teamDetails.startDate.getTime()-Date.now())/(1000*60*60*24)));
 
+  // const location = useLocation();
+  const [withdrawPopUpOpen, setWithdrawPopUpOpen] = useState(false);
+
+  // const handleClosePopUp = () => {
+  //   setWithdrawPopUpOpen(false);
+  // }
+
+  const handleWithdrawClick = () => {
+    setWithdrawPopUpOpen(true);
+  }
+  
   return (
   <TeamOverflowFlexBackground>
     <MainPageDiv>
-      <TeamHeader compName={teamDetails.compName} teamName={teamDetails.teamName} compCountdown={compCountdown} />
+
+    <Overlay $isOpen={withdrawPopUpOpen}>
+      <WithdrawPopUpChain handleClose={() => setWithdrawPopUpOpen(false)}/>
+    </Overlay>
+
+      <TeamHeader compName={teamDetails.compName} teamName={teamDetails.teamName} compCountdown={compCountdown} onWithdrawClick={handleWithdrawClick} />
       <PageOptionsContainerDiv>
         <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
           <TeamToggleOptionDiv onClick={() => { navigate(`/competition/participant/${compId}/details`) }}>

@@ -76,14 +76,6 @@ const ButtonContainer = styled.div`
   gap: 40px;
 `
 
-const Title = styled.h2`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: bold;
-`;
-
-
 const Input = styled.input`
   padding: 10px 1.5%;
   /* height: 100%; */
@@ -98,9 +90,9 @@ const Input = styled.input`
 `;
 
 const ErrorMessage = styled.div`
-    color: red; // Adjust as necessary
-    font-size: 14px;
-    margin-top: 5px;
+  color: red; 
+  font-size: 14px;
+  margin-top: 5px;
 `;
 
 export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
@@ -171,7 +163,7 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
                 setInputValue(e.target.value);
               }}
             />
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Display error message */}
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} 
           </>
         )}
 

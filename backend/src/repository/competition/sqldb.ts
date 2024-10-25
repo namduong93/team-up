@@ -194,8 +194,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     
     // Insert competition into competitions table
     const competitionQuery =
-    `INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    `INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     RETURNING id, code;
     `;
     
@@ -206,7 +206,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
       competition.code,
-      new Date(competition.startDate)
+      new Date(competition.startDate),
+      competition.region
     ];
     
     const competitionResult = await this.pool.query(competitionQuery, competitionValues);
