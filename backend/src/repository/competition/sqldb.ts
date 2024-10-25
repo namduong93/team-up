@@ -113,8 +113,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     
     // Insert competition into competitions table
     const competitionQuery =
-    `INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    `INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING id, code;
     `;
     
@@ -124,7 +124,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       new Date(competition.createdDate),
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
-      competition.code
+      competition.code,
+      new Date(competition.startDate)
     ];
     
     const competitionResult = await this.pool.query(competitionQuery, competitionValues);
@@ -223,7 +224,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   competitionGetDetails = async(competitionId: number): Promise<Competition | undefined> => {
     const competitionQuery = `
-      SELECT id, name, team_size, created_date, early_reg_deadline, general_reg_deadline, code
+      SELECT id, name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region
       FROM competitions
       WHERE id = $1
     `;
@@ -258,7 +259,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       createdDate: competitionData.created_date,
       earlyRegDeadline: competitionData.early_reg_deadline,
       generalRegDeadline: competitionData.general_reg_deadline,
+      startDate: competitionData.start_date,
       code: competitionData.code,
+      region: competitionData.region,
       siteLocations: siteLocations,
     };
   

@@ -6,10 +6,12 @@ export interface Competition {
   teamSize?: number,
   createdDate: EpochTimeStamp,
   earlyRegDeadline: EpochTimeStamp,
+  startDate: EpochTimeStamp;
   generalRegDeadline: EpochTimeStamp,
   siteLocations?: CompetitionSiteObject[],
   otherSiteLocations?: CompetitionOtherSiteObject[],
   code?: string,
+  region: string
 }
 
 export enum CompetitionLevel {
