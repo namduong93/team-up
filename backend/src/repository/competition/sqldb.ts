@@ -1,21 +1,13 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails } from "../../services/competition_service.js";
-import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
+import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject } from "../../models/competition/competition.js";
 
-import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
 import { CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
-import { response } from "express";
-
-// Set up short-unique-id library for generating competition codes
-const { randomUUID } = new ShortUniqueId({
-  dictionary: 'alphanum_upper',
-  length: 8
-});
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
