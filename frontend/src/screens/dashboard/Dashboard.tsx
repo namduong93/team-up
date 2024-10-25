@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { FaTimes } from "react-icons/fa";
@@ -6,12 +6,13 @@ import { CompCard } from "./components/CompCard";
 import { sendRequest } from "../../utility/request";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/page_header/PageHeader";
-import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
+import { Input, RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 import { IoIosCreate } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
 import { DashInfo } from "./hooks/useDashInfo";
 import { ResponsiveActionButton } from "../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { OptionPopUp } from "../student/OptionPopUp";
+import { ErrorMessage } from "../authentication/registration/AccountInformation";
 
 interface Competition { 
   compName: string;
@@ -322,17 +323,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     }
   });
 
-
-  const [isRegisterPopUpOpen, setIsRegisterPopUpOpen] = useState(false);
-
-  const handleRegisterClick = () => {
-    setIsRegisterPopUpOpen(true);
-  }
-
-  const handleClosePopUp = () => {
-    setIsRegisterPopUpOpen(false);
-  }
-
   const location = useLocation();
   const [isRegoSucessPopUpOpen, setRegoSuccessPopUp] = useState(false);
 
@@ -352,10 +342,27 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     }
   }, [location.state]);
 
-  const [isCompCreationPopUpOpen, setIsCompCreationPopUpOpen] = useState(false);
+  const [compRegisterCode, setCompRegisterCode] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleCreateClick = () => {
-    setIsCompCreationPopUpOpen(true);
+  const handleRegisterConfirm = async () => {
+    const validateCode = async () => {
+      try {
+        await sendRequest.get<{}>('/competition/student/status', { code: compRegisterCode });
+        // above line will throw if the code is invalid
+        
+        setErrorMessage(null); // Clear any previous error message
+        return true;
+      } catch (error) {
+        console.error("Failed to validate competition code:", error);
+        setErrorMessage("Invalid competition code. Please try again."); // Set error message
+        return false;
+      } finally {
+      }
+    };
+
+    return await validateCode();
+
   }
 
   return (isLoaded &&
@@ -380,17 +387,36 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             label="Create"
             question="Create a new competition?"
             redirectPath="/competition/create"
-            handleClick={handleCreateClick}
+            // handleClick={handleCreateClick}
             actionType="secondary"
             />
           }
+
           <ResponsiveActionButton
             icon={<MdAssignmentAdd />}
             label="Register"
             question="Register for a new competition?"
-            redirectPath="/competition/information"
-            handleClick={handleRegisterClick}
-            actionType="primary"/>
+            redirectPath={`/competition/information/${compRegisterCode}`}
+            actionType="primary"
+            handleSubmit={handleRegisterConfirm}
+            timeout={2}
+            handleClose={() => setErrorMessage(null)}
+            >
+              <div>
+                <Input
+                  type="text"
+                  placeholder="COMP1234"
+                  onChange={(e) => {
+                    setCompRegisterCode(e.target.value)
+                  }}
+                />
+              </div>
+              
+              <div>
+                {errorMessage && <ErrorMessage style={{ marginTop: '10px' }}>{errorMessage}</ErrorMessage>}
+              </div>
+          </ResponsiveActionButton>
+
         </PageHeader>
   
         {/* Active Filters Display */}
@@ -425,12 +451,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             ))}
           </CompetitionGrid>
 
-          {isRegisterPopUpOpen && (
-            <RegisterPopUp isOpen={isRegisterPopUpOpen} onClose={handleClosePopUp} message={
-              <Title1>Please enter the {"\nCompetition Code"}</Title1>
-            }/>
-          )}
-
           {isRegoSucessPopUpOpen && (
             <RegisterPopUp
               isOpen={isRegoSucessPopUpOpen}
@@ -443,8 +463,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                   </span>
                 </Title2>
               }
-              showInput={false}
-              showButtons={false}
+
             />
           )}
 
@@ -459,24 +478,10 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                   </span>
                 </Title2>
               }
-              showInput={false}
-              showButtons={false}
+
             />
           )}
 
-          {isCompCreationPopUpOpen && (
-            <>
-            <Overlay $isOpen={true} />
-            <OptionPopUp
-              heading={<Heading>Would you like to
-                {"\ncreate a Competition?"} 
-              </Heading>}
-              onClose={() => setIsCompCreationPopUpOpen(false)}
-              onNext={() => navigate("/competition/create")}
-              actionButtonText="Create"
-            />
-            </>
-          )}
         </ContentArea>
       </DashboardContent>
     </OverflowFlexBackground>
