@@ -161,7 +161,8 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [competitions, setCompetitions] = useState<Competition[]>([]);
-  const [userType, setUserType] = useState<string>('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setUserType] = useState<string>('');
   const navigate = useNavigate();
 
 
@@ -337,6 +338,16 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     }
   }, [location.state]);
   
+  const [isJoinPopUpOpen, setIsJoinPopUpOpen] = useState(false);
+  const [teamName, setTeamName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (location.state?.joined) {
+      setIsJoinPopUpOpen(true);
+      setTeamName(location.state.teamName)
+    }
+  }, [location.state]);
+
   return (isLoaded &&
     <OverflowFlexBackground>
       <DashboardContent>
@@ -418,6 +429,22 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                   You have successfully registered for the Competition! {"\n\n"}
                   <span style={{ fontWeight: 'normal' }}>
                     Please navigate to the Team Profile Page to join a team or invite team members
+                  </span>
+                </Title2>
+              }
+              showInput={false}
+              showButtons={false}
+            />
+          )}
+
+          {isJoinPopUpOpen && (
+            <RegisterPopUp
+              isOpen={isJoinPopUpOpen}
+              onClose={() => setIsJoinPopUpOpen(false)}
+              message={
+                <Title2>
+                  You have successfully {"\n"} joined the Team:  {"\n\n"} <span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>
+                  {teamName}
                   </span>
                 </Title2>
               }

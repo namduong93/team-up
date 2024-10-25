@@ -57,7 +57,7 @@ export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, lab
 
 
 
-export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: 'primary' | 'secondary' | 'error' }>`
+export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: 'primary' | 'secondary' | 'confirm' | 'error' }>`
   background-color: transparent;
   border-radius: 10px;
   box-sizing: border-box;
@@ -74,17 +74,19 @@ export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionTy
         return theme.colours.primaryDark;
       } else if (actionType === "secondary") {
         return theme.colours.secondaryDark;
+      } else if (actionType === 'confirm') {
+        return theme.colours.confirmDark;
       } else {
         return theme.colours.cancelDark;
       }
-    }};
+    }} !important;
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   }
 `;
 
 interface ResponsiveActionButtonProps extends ResponsiveButtonProps {
-  actionType: 'primary' | 'secondary' | 'error'
+  actionType: 'primary' | 'secondary' | 'confirm' | 'error';
 }
 
 export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
@@ -100,11 +102,13 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
       flexWrap: 'wrap',
       ...style
     }} $isSortOpen={isOpen} {...props}>
-      <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
+      <div style={{ display: 'flex',
+        alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%',
+        justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
           {icon}
         </div>
-        <span>{label}</span>
+        <span style={{ marginLeft: '5px' }}>{label}</span>
       </div>
     </TransparentButton>
   )

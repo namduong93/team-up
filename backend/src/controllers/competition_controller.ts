@@ -53,9 +53,11 @@ export class CompetitionController {
       createdDate: Date.now(),
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
-      code : req.body.code,
+      startDate: req.body.startDate,
+      code: req.body.code,
       siteLocations: req.body.siteLocations,
       otherSiteLocations: req.body.otherSiteLocations,
+      region: req.body.region,
     };
 
     const competitionId = await this.competitionService.competitionSystemAdminCreate(Number(userId), newCompetition);
@@ -75,7 +77,9 @@ export class CompetitionController {
       createdDate: Date.now(),
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
+      startDate: req.body.startDate,
       siteLocations: req.body.siteLocations,
+      region: req.body.region,
     };
 
     const competitionId = await this.competitionService.competitionSystemAdminUpdate(Number(userId), newCompetitionDetails);
