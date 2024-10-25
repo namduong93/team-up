@@ -1,8 +1,9 @@
 import { FC } from "react";
 import { useTheme } from "styled-components";
 import { ResponsiveButton, TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaRegCheckCircle, FaSave, FaStamp } from "react-icons/fa";
+import { FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
+import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -55,6 +56,13 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     console.log('rejected', rejectedTeamIds);
 
     disableEditNameStatus();
+  }
+
+
+  const handleAlgorithmButton = () => {
+
+    // hook it here
+    console.log('running the algorithm...');
   }
 
   return (
@@ -129,6 +137,23 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
       />
     </div>
     </>}
+
+    {!isEditingStatus && !isEditingNameStatus &&
+    <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+      <ResponsiveActionButton actionType="primary" label="Run Algorithm"
+        icon={<FaRunning style={{ color: theme.fonts.colour }} />}
+        style={{
+          backgroundColor: theme.colours.primaryLight,
+          color: theme.background,
+          border: '0'
+        }}
+
+        question="Run the Algorithm?"
+        handleSubmit={handleAlgorithmButton}
+      />
+
+    </div>
+    }
 
   </>
   );
