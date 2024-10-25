@@ -45,6 +45,11 @@ const pool = new Pool({
 //Middleware to authenticate request
 const authenticator = new Authenticator();
 
+// Notification Registry
+const notificationRepository = new SqlDbNotificationRepository(pool);
+const notificationService = new NotificationService(notificationRepository);
+const notificationController = new NotificationController(notificationService);
+
 // User Registry
 const sessionRepository = new SqlDbSessionRepository(pool);
 app.use(authenticator.authenticationMiddleware(sessionRepository));
@@ -56,18 +61,13 @@ const userController = new UserController(userService);
 
 // Competition Registry
 const competitionRepository = new SqlDbCompetitionRepository(pool);
-const competitionService = new CompetitionService(competitionRepository, userRepository);
+const competitionService = new CompetitionService(competitionRepository, userRepository, notificationRepository);
 const competitionController = new CompetitionController(competitionService);
 
 // University Registry
 const universityRepository = new SqlDbUniversityRepository(pool);
 const universityService = new UniversityService(universityRepository);
 const universityController = new UniversityController(universityService);
-
-// Notification Registry
-const notificationRepository = new SqlDbNotificationRepository(pool);
-const notificationService = new NotificationService(notificationRepository);
-const notificationController = new NotificationController(notificationService);
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
@@ -119,7 +119,7 @@ app.get('/user/type', userController.userType);
 
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
-// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline, code,
+// PARAMS: { name: string, earlyRegDeadline, generalRegDeadline, code, startDate, region,
 //  siteLocations: Array<{ universityId: number, defaultSite: string }>, otherSiteLocations: Array<{ universityName: string, defaultSite: string } }
 // RESPONSE: { competitionId: number }
 app.post('/competition/system_admin/create', competitionController.competitionsSystemAdminCreate);
@@ -128,7 +128,7 @@ app.post('/competition/system_admin/create', competitionController.competitionsS
 // Update a competition's details
 // TODO: Handle empty field cases (FE may prefill it, but if not we want to fill it with old info)
 // PARAMS: { id: number, name?: string, teamSize?: number, earlyRegDeadline?: Date, generalRegDeadline?: Date,
-//          siteLocations?: Array<{ universityId: number, name: string }> }
+//          siteLocations?: Array<{ universityId: number, name: string, startDate?, region? }> }
 // RESPONSE: {}
 app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
@@ -161,6 +161,11 @@ app.post('/competition/student/join/1', competitionController.competitionStudent
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { teamId }
 app.post('/competition/student/join/2', competitionController.competitionStudentJoin2);
+
+// Student withdraws from competition
+// PARAMS: { competitionId: number }
+// RESPONSE: { }
+app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
 
 
 // PARAMS: { competitionId }
@@ -218,6 +223,8 @@ app.post('/notification', notificationController.notificationCreate);
 // PARAMS: {}
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);
+
+app.get('/competition/team/details', competitionController.competitionTeamDetails);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { CompetitionService } from "../services/competition_service.js";
-import { UserService } from "../services/user_service.js";
 import { httpErrorHandler, INVALID_TOKEN } from "./controller_util/http_error_handler.js";
 import { Competition } from "../models/competition/competition.js";
 
@@ -10,6 +9,15 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionTeamDetails = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const teamDetails = await this.competitionService.competitionTeamDetails(
+      parseInt(userId as string), parseInt(compId as string));
+
+    res.json(teamDetails);
+  });
   
   competitionStaff = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
@@ -53,9 +61,11 @@ export class CompetitionController {
       createdDate: Date.now(),
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
-      code : req.body.code,
+      startDate: req.body.startDate,
+      code: req.body.code,
       siteLocations: req.body.siteLocations,
       otherSiteLocations: req.body.otherSiteLocations,
+      region: req.body.region,
     };
 
     const competitionId = await this.competitionService.competitionSystemAdminCreate(Number(userId), newCompetition);
@@ -75,7 +85,9 @@ export class CompetitionController {
       createdDate: Date.now(),
       earlyRegDeadline: req.body.earlyRegDeadline,
       generalRegDeadline: req.body.generalRegDeadline,
+      startDate: req.body.startDate,
       siteLocations: req.body.siteLocations,
+      region: req.body.region,
     };
 
     const competitionId = await this.competitionService.competitionSystemAdminUpdate(Number(userId), newCompetitionDetails);
@@ -86,7 +98,7 @@ export class CompetitionController {
   });
 
   competitionGetDetails = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const competitionId = req.body.id;
+    const competitionId = req.query.id;
     const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
 
     res.json(competitionDetails);
@@ -104,7 +116,7 @@ export class CompetitionController {
   });
 
   competitionCodeStatus = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const { userId, code} = req.query;
+    const { userId, code } = req.query;
     const codeStatus = await this.competitionService.competitionCodeStatus(Number(userId), String(code));
     res.json(codeStatus);
     return;
@@ -126,6 +138,14 @@ export class CompetitionController {
 
   competitionStudentJoin2 = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({ teamId: 1 });
+    return;
+  });
+
+  competitionStudentWithdraw = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const competitionId = req.body.competitionId;
+    const result = await this.competitionService.competitionStudentWithdraw(Number(userId), Number(competitionId));
+    res.json(result);
     return;
   });
 

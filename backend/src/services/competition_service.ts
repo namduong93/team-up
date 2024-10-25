@@ -1,8 +1,10 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
+import { ServiceError } from "../errors/service_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
+import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
@@ -81,14 +83,46 @@ export interface StaffInfo {
   access: StaffAccess;
   email: string;
 }
+export interface ParticipantTeamDetails {
+  compName: string;
+  teamName: string;
+  teamSite: string;
+  teamSeat?: string;
+  teamLevel: string;
+  startDate: Date;
+  students: Array<{
+    name: string;
+    email: string;
+    bio: string;
+    preferredContact: string;
+  }>;
+  coach: {
+    name: string;
+    email: string;
+    bio: string;
+  }
+}
+
 
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
+  private notificationRepository: NotificationRepository;
   
-  constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository) {
+  constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository, notificationRepository: NotificationRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
+    this.notificationRepository = notificationRepository;
+  }
+
+  competitionTeamDetails = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'competition/team/details route is only for participants to use');
+    }
+
+    return await this.competitionRepository.competitionTeamDetails(userId, compId);
   }
 
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
@@ -223,6 +257,25 @@ export class CompetitionService {
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
 
     return { teamId: 1 };
+  }
+
+  competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<string | undefined> => {
+    // Check if user is a participant
+    const userTypeObject = await this.userRepository.userType(userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
+      throw COMPETITION_STUDENT_REQUIRED;
+    }
+    
+    // Remove student from competition
+    const result = await this.competitionRepository.competitionStudentWithdraw(userId, competitionId);
+    if (!result) {
+      throw BAD_REQUEST;
+    }
+
+    // Notify team members and coach
+    await this.notificationRepository.notificationWithdrawal(userId, competitionId, result.competitionName, result.teamId, result.teamName);
+
+    return result.competitionCode;
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

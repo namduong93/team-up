@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
+import { DbError } from "../../errors/db_error.js";
+import { ServiceError } from "../../errors/service_error.js";
 
 
 export type HTTPFunction = (req: Request, res: Response, next: NextFunction) => Promise<void>;
@@ -15,9 +17,32 @@ export function httpErrorHandler(httpFunction: HTTPFunction) {
       if (createHttpError.isHttpError(err)) {
         // err is auto cast to a HttpError here.
         res.status(err.statusCode).json(err);
-      } else {
-        next(err);
+        return;
       }
+
+      if (err instanceof DbError) {
+        if (err.getErrorType() === DbError.Auth) {
+          res.status(403).send(err.message);
+          return;
+        }
+        if (err.getErrorType() === DbError.Query) {
+          res.status(400).send(err.message);
+          return;
+        }
+        if (err.getErrorType() === DbError.Insert) {
+          res.status(400).send(err.message);
+          return;
+        }
+      }
+
+      if (err instanceof ServiceError) {
+        if (err.getErrorType() === ServiceError.Auth) {
+          res.status(403).send(err.message);
+          return;
+        }
+      }
+
+      next(err);
     }
   };
 }

@@ -134,10 +134,6 @@ const getNotificationIcon = (type: Notification['type']) => {
   }
 };
 
-function cleanNotificationType(type: string): string {
-  return type.replace(/[{}]/g, ''); // Removes { or }
-}
-
 export const NotificationButton: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isStaff, setIsStaff] = useState(false);
@@ -167,7 +163,7 @@ export const NotificationButton: FC = () => {
         // Transform the backend response to match the frontend Notification structure
         const transformedNotifications = notifResponse.data.map((notif) => ({
           id: notif.id?.toString() || '',  // Convert id to string
-          type: cleanNotificationType(notif.type) as Notification['type'],  // Convert type to string
+          type: notif.type as Notification['type'],
           message: notif.message,
           createdAt: new Date(notif.createdAt),  // Use createdAt as date
           competitionId: notif.competitionId,  // Convert competitionId to compId and string

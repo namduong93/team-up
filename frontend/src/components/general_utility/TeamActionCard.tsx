@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FaUserPlus, FaUsers, FaEdit, FaGlobe } from "react-icons/fa";
+import InvitePopUp from "../../screens/student/InvitePopUp";
+import JoinPopUp from "../../screens/student/JoinPopUp";
+import { SitePopUpChain } from "../../screens/student/SitePopUpChain";
+import { NamePopUpChain } from "../../screens/student/NamePopUpChain";
 
 type ActionType = "invite" | "join" | "name" | "site";
 
@@ -22,7 +26,7 @@ const ActionsContainer = styled.div`
   width: 100%;
   margin: 5% 5%;
   
-`;
+`
 
 const ActionCard = styled.button<ActionCardProps>`
   display: flex;
@@ -30,7 +34,7 @@ const ActionCard = styled.button<ActionCardProps>`
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 350px;
+  max-width: 280px;
   height: 100%;
   aspect-ratio: 1;
   background-color: ${({ theme, $actionType, $disabled }) =>
@@ -47,34 +51,21 @@ const ActionCard = styled.button<ActionCardProps>`
   &:hover {
     transform: ${({ $disabled }) => ($disabled ? "none" : "translate(2px, 2px)")};
   }
-`;
+`
 
 const CardIcon = styled.div<{ $disabled: boolean }>`
   font-size: 32px;
   margin-bottom: 10px;
   color: ${({ theme, $disabled }) =>
     $disabled ? theme.colours.notifDark : theme.fonts.colour};
-`;
+`
 
 const CardText = styled.p<{ $disabled: boolean }>`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme, $disabled }) =>
     $disabled ? theme.colours.notifDark : theme.fonts.colour};
   margin: 0;
-`;
-
-const Modal = styled.div<{ $isOpen: boolean }>`
-  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-`;
+`
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
@@ -85,10 +76,21 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
-`;
+`
+
+const Heading = styled.h2`
+  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
+  margin-top: 40px;
+  color: ${({ theme }) => theme.colours.notifDark};
+  margin-bottom: 10%;
+  white-space: pre-wrap;
+  word-break: break-word;
+`
 
 export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) => {
-  const [modalOpen, setModalOpen] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState<"invite" | "join" | "name" | "site" | null>(null);
+  const [teamCode, setTeamCode] = useState('');
+
 
   const actions = [
     { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a Friend" },
@@ -105,13 +107,16 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
     return false;
   };
 
+  // TO-DO: backend route to obtain the teamCode --> replace text in InvitePopUp with teamCode
+  // when implemented
+
   return (
     <>
       <ActionsContainer>
         {actions.map((action, index) => (
           <ActionCard
             key={index}
-            onClick={() => !isDisabled(action.type) && setModalOpen(action.text)}
+            onClick={() => !isDisabled(action.type) && setModalOpen(action.type)}
             $actionType={action.type}
             $disabled={isDisabled(action.type)}
           >
@@ -123,15 +128,30 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
         ))}
       </ActionsContainer>
 
-      {actions.map((action, index) => (
-        <React.Fragment key={index}>
-          <Overlay $isOpen={modalOpen === action.text} onClick={() => setModalOpen(null)} />
-          <Modal $isOpen={modalOpen === action.text}>
-            <h2>{action.text}</h2>
-            <button onClick={() => setModalOpen(null)}>Close</button>
-          </Modal>
-        </React.Fragment>
-      ))}
+      <Overlay $isOpen={modalOpen !== null} onClick={() => setModalOpen(null)} />
+
+        {modalOpen === "invite" && (
+          <InvitePopUp 
+            heading={<Heading>Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}</Heading>}
+            text="COMP1234" 
+            onClose={() => setModalOpen(null)}
+          />
+        )}
+
+        {modalOpen === "join" && (
+          <JoinPopUp 
+            heading={<Heading>Enter the details of the {"\nTeam you would like to join"}</Heading>}
+            onClose={() => setModalOpen(null)}
+          />
+        )}
+
+        {modalOpen === "site" && (
+          <SitePopUpChain handleClose={() => setModalOpen(null)} />
+        )}
+
+        {modalOpen === "name" && (
+          <NamePopUpChain handleClose={() => setModalOpen(null)} />
+        )}
     </>
   );
 };

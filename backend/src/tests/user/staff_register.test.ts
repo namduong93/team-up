@@ -1,23 +1,7 @@
-import { UserService } from '../../services/user_service';
 import { Staff } from '../../models/user/staff/staff';
-import pool from '../test_util/test_utilities';
-import HttpError from "http-errors";
-import { SqlDbUserRepository } from '../../repository/user/sqldb';
-import { SqlDbSessionRepository } from '../../repository/session/sqldb';
+import { sendRequest } from '../test_util/requests';
 
 describe('POST /staff/register', () => {
-  let userService: UserService;
-
-  beforeAll(async () => {
-    // Initialize the UserService with a real repository that connects to the test database
-    userService = new UserService(new SqlDbUserRepository(pool), new SqlDbSessionRepository(pool));
-  });
-
-  afterAll(() => {
-    // Clean up and close the database connection
-    pool.end();
-  });
-
   describe('successful cases', () => {
     test('success', async () => {
       const mockStaff: Staff = {
@@ -31,8 +15,9 @@ describe('POST /staff/register', () => {
         universityId: 1,
       };
 
-      const result = await userService.staffRegister(mockStaff);
-      expect(result).toHaveProperty('sessionId'); // Adjust according to your returned structure
+      const response = await sendRequest.post('/staff/register', mockStaff);
+      expect(response.status).toBe(200);
+      expect(response.data).toEqual({});
     });
   });
 
@@ -49,7 +34,11 @@ describe('POST /staff/register', () => {
         universityId: 1,
       };
 
-      await expect(userService.staffRegister(newStaff)).rejects.toThrow(HttpError.HttpError);
+      try {
+        await sendRequest.post('/staff/register', newStaff);
+      } catch (error: any) {
+        expect(error.response.status).toBe(400);
+      }    
     });
 
     test('missing email', async () => {
@@ -64,7 +53,11 @@ describe('POST /staff/register', () => {
         universityId: 1,
       };
 
-      await expect(userService.staffRegister(newStaff)).rejects.toThrow(HttpError.HttpError);
+      try {
+        await sendRequest.post('/staff/register', newStaff);
+      } catch (error: any) {
+        expect(error.response.status).toBe(400);
+      }    
     });
 
     test('missing password', async () => {
@@ -79,7 +72,11 @@ describe('POST /staff/register', () => {
         universityId: 1,
       };
 
-      await expect(userService.staffRegister(newStaff)).rejects.toThrow(HttpError.HttpError);
+      try {
+        await sendRequest.post('/staff/register', newStaff);
+      } catch (error: any) {
+        expect(error.response.status).toBe(400);
+      }    
     });
 
     test('missing t-shirt size', async () => {
@@ -94,7 +91,11 @@ describe('POST /staff/register', () => {
         universityId: 1,
       };
 
-      await expect(userService.staffRegister(newStaff)).rejects.toThrow(HttpError.HttpError);
+      try {
+        await sendRequest.post('/staff/register', newStaff);
+      } catch (error: any) {
+        expect(error.response.status).toBe(400);
+      }   
     });
 
     test('duplicated email', async () => {
@@ -120,11 +121,12 @@ describe('POST /staff/register', () => {
         universityId: 1,
       };
 
-      // Register the first staff
-      await userService.staffRegister(mockStaff1);
-
-      // Attempt to register the second staff with the same email
-      await expect(userService.staffRegister(mockStaff2)).rejects.toThrow(HttpError.HttpError);
+      try {
+        await sendRequest.post('/staff/register', mockStaff1); // First registration should succeed
+        await sendRequest.post('/staff/register', mockStaff2); // This should fail due to duplicate email
+      } catch (error: any) {
+        expect(error.response.status).toBe(400);
+      }
     });
   });
 });

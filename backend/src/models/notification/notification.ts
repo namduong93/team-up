@@ -5,7 +5,6 @@ export interface Notification {
   competitionId?: number;
   type: NotificationType;
   message: string;
-  decision?: DecisionType;
   createdAt: Date;
   teamName?: string;
   studentName?: string;
@@ -24,9 +23,4 @@ export enum NotificationType {
   TEAM_STATUS = 'teamStatus',
   CHEER = 'cheer',
   INVITE = 'invite',
-}
-
-export const enum DecisionType {
-  SUBSTITUTION = 'substitution',
-  REPLACEMENT = 'replacement',
 }

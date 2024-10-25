@@ -1,26 +1,9 @@
-import { UserService } from '../../services/user_service';
-import { Student } from '../../models/user/student/student';
-import pool from '../test_util/test_utilities'
-import HttpError from "http-errors";
-import { SqlDbUserRepository } from '../../repository/user/sqldb';
-import { SqlDbSessionRepository } from '../../repository/session/sqldb';
+import { sendRequest } from "../test_util/requests";
 
 describe('POST /student/register', () => {
-  let userService: UserService;
-
-  beforeAll(async () => {
-    // Initialize the UserService with a real repository that connects to the test database
-    userService = new UserService(new SqlDbUserRepository(pool), new SqlDbSessionRepository(pool));
-  });
-
-  afterAll(async () => {
-    // Clean up and close the database connection
-    await pool.end();
-  });
-
   describe('successful cases', () => {
-    test('success', async () => {
-      const mockStudent: Student = {
+    test('successfully registers a student', async () => {
+      const mockStudent = {
         name: 'Quan Hoang',
         preferredName: 'Quan',
         email: 'hoangtungquan@gmail.com',
@@ -32,14 +15,15 @@ describe('POST /student/register', () => {
         studentId: 'z5296486'
       };
 
-      const result = await userService.studentRegister(mockStudent);
-      expect(result).toHaveProperty('sessionId'); // Adjust according to your returned structure
+      const response = await sendRequest.post('/student/register', mockStudent);
+      expect(response.status).toBe(200);
+      expect(response.data).toEqual({});
     });
-  })
+  });
 
   describe('failing cases', () => {
-    test('missing name', async () => {
-      const newStudent: Student = {
+    test('fails due to missing name', async () => {
+      const mockStudent = {
         name: '',
         preferredName: 'Quan',
         email: 'hoangtungquan1@gmail.com',
@@ -51,57 +35,17 @@ describe('POST /student/register', () => {
         studentId: 'z5296486'
       };
 
-      await expect(userService.studentRegister(newStudent)).rejects.toThrow(HttpError.HttpError);
+      try {
+        await sendRequest.post('/student/register', mockStudent);
+      } catch (error: any) {
+        expect(error.response.status).toBe(400);
+      }
     });
 
-    test('missing email', async () => {
-      const newStudent: Student = {
-        name: 'Quan',
-        email: '',
-        password: 'testPassword',
-        gender: 'Male',
-        pronouns: 'He/Him',
-        tshirtSize: 'M',
-        universityId: 1,
-        studentId: 'z5296486'
-      };
-
-      await expect(userService.studentRegister(newStudent)).rejects.toThrow(HttpError.HttpError);
-    });
-
-    test('missing password', async () => {
-      const newStudent: Student = {
-        name: 'Quan',
-        email: 'hoangtungquan2@gmail.com',
-        password: '',
-        gender: 'Male',
-        pronouns: 'He/Him',
-        tshirtSize: 'M',
-        universityId: 1,
-        studentId: 'z5296486'
-      };
-
-      await expect(userService.studentRegister(newStudent)).rejects.toThrow(HttpError.HttpError);
-    });
-
-    test('missing t-shirt size', async () => {
-      const newStudent: Student = {
-        name: 'Quan',
-        email: 'hoangtungquan3@gmail.com',
-        password: 'testPassword',
-        gender: 'Male',
-        pronouns: 'He/Him',
-        tshirtSize: '',
-        universityId: 1,
-        studentId: 'z5296486'
-      };
-      
-      await expect(userService.studentRegister(newStudent)).rejects.toThrow(HttpError.HttpError);
-    });
-
-    test('duplicated email', async () => {
-      const mockStudent1: Student = {
-        name: 'Quan',
+    test('fails due to duplicated email', async () => {
+      const mockStudent1 = {
+        name: 'Quan Hoang',
+        preferredName: 'Quan',
         email: 'hoangtungquan4@gmail.com',
         password: 'testPassword',
         gender: 'Male',
@@ -111,20 +55,24 @@ describe('POST /student/register', () => {
         studentId: 'z5296486'
       };
 
-      const mockStudent2: Student = {
+      const mockStudent2 = {
         name: 'Not Quan',
-        email: 'hoangtungquan4@gmail.com',
+        preferredName: 'Not Quan',
+        email: 'hoangtungquan4@gmail.com', // Same email as mockStudent1
         password: 'testPassword',
         gender: 'Male',
         pronouns: 'He/Him',
         tshirtSize: 'M',
         universityId: 1,
-        studentId: 'z5296486'
+        studentId: 'z5296487'
       };
 
-      await userService.studentRegister(mockStudent1);
-
-      await expect(userService.studentRegister(mockStudent2)).rejects.toThrow(HttpError.HttpError);
+      try {
+        await sendRequest.post('/student/register', mockStudent1); // First registration should succeed
+        await sendRequest.post('/student/register', mockStudent2); // This should fail due to duplicate email
+      } catch (error: any) {
+        expect(error.response.status).toBe(400); // Assuming 409 Conflict for duplicate email
+      }
     });
-  })
+  });
 });

@@ -180,6 +180,8 @@ export const CompetitionConfirmation: FC = () => {
       name,
       earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
       generalRegDeadline: `${generalDate}T${generalTime}:00`,
+      startDate: `${generalDate}T${generalTime}:00`,
+      region: 'Australia',
       code,
       siteLocations: siteLocations.map(location => ({
         universityId: location.universityId, 
@@ -196,7 +198,7 @@ export const CompetitionConfirmation: FC = () => {
       console.log("Response:", response.data);
 
       const compId = response.data.competitionId;
-      navigate(`/competition/page/${compId}`); 
+      navigate(`/competition/page/${compId}`, {state: {showPopUp: true}}); 
 
       // TO-DO: uncomment when pop-up is implemented on Admin Page
       // navigate("/competition/page", { 

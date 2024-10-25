@@ -74,11 +74,13 @@ CREATE TABLE competitions (
   
   name TEXT NOT NULL,
   team_size INT NOT NULL,
-  created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  early_reg_deadline TIMESTAMP NOT NULL,
-  general_reg_deadline TIMESTAMP NOT NULL,
-  code VARCHAR(8) NOT NULL
+  created_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  early_reg_deadline TIMESTAMPTZ,
+  general_reg_deadline TIMESTAMPTZ NOT NULL,
+  start_date TIMESTAMPTZ NOT NULL,
+  code VARCHAR(8) NOT NULL,
 
+  region TEXT NOT NULL
 );
 
 CREATE TABLE competition_sites (
@@ -105,6 +107,8 @@ CREATE TABLE competition_users (
   competition_id INT NOT NULL REFERENCES competitions (id),
 
   competition_roles competition_role_enum[] NOT NULL,
+
+  bio TEXT NOT NULL DEFAULT '',
 
   -- participant info
   icpc_eligible BOOLEAN,
@@ -153,6 +157,7 @@ CREATE TABLE competition_teams (
   team_status competition_team_status NOT NULL,
   team_size INT NOT NULL,
 
+  team_seat TEXT,
   participants INT[], --- array of user_id's
   
   university_id INT NOT NULL REFERENCES universities (id),
@@ -179,7 +184,6 @@ CREATE TABLE notifications (
   competition_id INT REFERENCES competitions (id),
   type TEXT NOT NULL,
   message TEXT NOT NULL,
-  decision TEXT,
   created_at TIMESTAMP NOT NULL,
   
   team_name TEXT,
@@ -234,12 +238,12 @@ AS $$
     ct.team_status AS status,
     (ct.pending_name IS NULL) AS team_name_approved
   FROM competition_teams AS ct
-  JOIN users AS u1 ON u1.id = ct.participants[1]
-  JOIN competition_users cu1 ON cu1.user_id = u1.id
-  JOIN users AS u2 ON u2.id = ct.participants[2]
-  JOIN competition_users cu2 ON cu2.user_id = u2.id
-  JOIN users AS u3 ON u3.id = ct.participants[3]
-  JOIN competition_users cu3 ON cu3.user_id = u3.id
+  LEFT JOIN users AS u1 ON u1.id = ct.participants[1]
+  LEFT JOIN competition_users cu1 ON cu1.user_id = u1.id
+  LEFT JOIN users AS u2 ON u2.id = ct.participants[2]
+  LEFT JOIN competition_users cu2 ON cu2.user_id = u2.id
+  LEFT JOIN users AS u3 ON u3.id = ct.participants[3]
+  LEFT JOIN competition_users cu3 ON cu3.user_id = u3.id
 
   JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
   JOIN users AS u ON u.id = cu.user_id
@@ -283,12 +287,12 @@ AS $$
     ct.team_status AS status,
     (ct.pending_name IS NULL) AS team_name_approved
   FROM competition_teams AS ct
-  JOIN users AS u1 ON u1.id = ct.participants[1]
-  JOIN competition_users cu1 ON cu1.user_id = u1.id
-  JOIN users AS u2 ON u2.id = ct.participants[2]
-  JOIN competition_users cu2 ON cu2.user_id = u2.id
-  JOIN users AS u3 ON u3.id = ct.participants[3]
-  JOIN competition_users cu3 ON cu3.user_id = u3.id
+  LEFT JOIN users AS u1 ON u1.id = ct.participants[1]
+  LEFT JOIN competition_users cu1 ON cu1.user_id = u1.id
+  LEFT JOIN users AS u2 ON u2.id = ct.participants[2]
+  LEFT JOIN competition_users cu2 ON cu2.user_id = u2.id
+  LEFT JOIN users AS u3 ON u3.id = ct.participants[3]
+  LEFT JOIN competition_users cu3 ON cu3.user_id = u3.id
   WHERE ct.competition_id = c_id;
 $$ LANGUAGE sql;
 
@@ -577,11 +581,11 @@ VALUES
   'z000009'); --- password is pleasechange
 
 -- Competitions
-INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code)
+INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region)
 VALUES 
-('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024'),
-('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024'),
-('ICPC World Final', 3, '2024-10-10 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025');
+('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024', '2025-09-30 00:00:00', 'Australia'),
+('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024', '2025-09-30 00:00:00', 'Australia'),
+('ICPC World Final', 3, '2024-10-10 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025', '2025-09-30 00:00:00', 'Earth');
 
 -- Competition Sites
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
@@ -591,18 +595,18 @@ VALUES
 (3, 5, 'K7', 300);
 
 -- Competition Admin(s)
-INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
-(1, 1, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
-(1, 2, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
-(1, 3, ARRAY['Admin']::competition_role_enum[], 'Accepted');
+(1, 1, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
+(1, 2, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
+(1, 3, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio');
 
 -- Competition Coach(es)
-INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
-(2, 1, ARRAY['Coach']::competition_role_enum[], 'Accepted'),
-(2, 2, ARRAY['Coach']::competition_role_enum[], 'Accepted'),
-(2, 3, ARRAY['Coach']::competition_role_enum[], 'Accepted');
+(2, 1, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio'),
+(2, 2, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio'),
+(2, 3, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio');
 
 -- Competition Site Coordinator(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
@@ -627,18 +631,19 @@ INSERT INTO competition_users (
   site_attending_id,
   past_regional,
   is_official,
-  preferred_contact
+  preferred_contact,
+  bio
 )
 VALUES
-    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, 'Email example@email.com'),
-    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, 'Discord fdc234'),
-    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, 'Phone 0413421311'),
-    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'Minecraft Account: EpicMan123'),
-    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'Roblox Account: epicerrMan123'),
-    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax machine number 98531234'),
-    (12, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax machine number 98531234'),
-    (13, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax number'),
-    (14, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax 1332');
+    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, 'Email example@email.com', 'epic bio'),
+    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, 'Discord fdc234', 'epic bio'),
+    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, FALSE, 'Phone 0413421311', 'epic bio'),
+    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'Minecraft Account: EpicMan123', 'epic bio'),
+    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'Roblox Account: epicerrMan123', 'epic bio'),
+    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax machine number 98531234', 'epic bio'),
+    (12, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax machine number 98531234', 'epic bio'),
+    (13, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax number', 'epic bio'),
+    (14, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 2, FALSE, TRUE, 'fax 1332', 'epic bio');
   
 
 -- Non-access coaches
@@ -648,44 +653,45 @@ VALUES
 (11, 1, ARRAY['Coach']::competition_role_enum[], 1, 'Rejected');
 
 INSERT INTO competition_teams (
-  competition_coach_id, name, team_status, pending_name, team_size, participants, university_id, competition_id
+  competition_coach_id, name, team_status, pending_name,
+  team_size, participants, university_id, competition_id, team_seat
 )
 VALUES
-(4, 'Team Zeta', 'registered', NULL, 3, ARRAY[8, 9, 10], 2, 1),
-(4, 'Team Alpha', 'pending', 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1),
-(4, 'Team Donkey', 'pending', 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1);
+(2, 'Team Zeta', 'registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11'),
+(2, 'Team Alpha', 'pending'::competition_team_status, 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1, 'Tabla01'),
+(2, 'Team Donkey', 'pending'::competition_team_status, 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20');
 
 -- Notifications
 INSERT INTO notifications (
-  user_id, team_id, competition_id, type, message, decision, created_at,
+  user_id, team_id, competition_id, type, message, created_at,
   team_name, student_name, competition_name, new_team_name, site_location
 )
 VALUES 
 (
-  5, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  5, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  5, NULL, NULL, ARRAY['welcomeAccount']::notification_type_enum[], 'Welcome to TeamUP!', NULL, NOW(),
+  5, NULL, NULL, ARRAY['welcomeAccount']::notification_type_enum[], 'Welcome to TeamUP!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  6, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  6, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  7, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  7, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  8, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  8, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  9, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  9, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  10, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NULL, NOW(),
+  10, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 );

@@ -57,7 +57,7 @@ export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, lab
 
 
 
-export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: 'primary' | 'secondary' | 'error' }>`
+export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: 'primary' | 'secondary' | 'confirm' | 'error' }>`
   background-color: transparent;
   border-radius: 10px;
   box-sizing: border-box;
@@ -74,17 +74,19 @@ export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionTy
         return theme.colours.primaryDark;
       } else if (actionType === "secondary") {
         return theme.colours.secondaryDark;
+      } else if (actionType === 'confirm') {
+        return theme.colours.confirmDark;
       } else {
         return theme.colours.cancelDark;
       }
-    }};
+    }} !important;
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   }
 `;
 
 interface ResponsiveActionButtonProps extends ResponsiveButtonProps {
-  actionType: 'primary' | 'secondary' | 'error'
+  actionType: 'primary' | 'secondary' | 'confirm' | 'error';
 }
 
 export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({

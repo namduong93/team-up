@@ -1,11 +1,13 @@
-import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo } from "../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails } from "../services/competition_service.js";
+import './competition/sqldb'
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionTeamDetails(userId: number, compId: number): Promise<ParticipantTeamDetails>;
   competitionStaff(userId: number, compId: number): Promise<StaffInfo[]>;
   competitionStudents(userId: number, compId: number): Promise<StudentInfo[]>;
   competitionRoles(userId: number, compId: number): Promise<Array<CompetitionUserRole>>;
@@ -18,7 +20,8 @@ export interface CompetitionRepository {
   competitionStudentJoin1(sessionToken: string, individualInfo: IndividualTeamInfo,
     teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined>;
   competitionStudentJoin2(sessionToken: string, teamInfo: TeamDetails,
-    teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined>
+    teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined>;
+  competitionStudentWithdraw(userId: number, competitionId: number): Promise<CompetitionWithdrawalReturnObject | undefined>;
   
   competitionStaffJoinCoach(code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined>;
   competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;
