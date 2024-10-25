@@ -172,8 +172,8 @@ app.post('/competition/student/withdraw', competitionController.competitionStude
 // RESPONSE: { }
 app.put('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
 
-// Coach approves the team name change
-// PARAMS: { compId: number, teamId: number, approve: boolean }
+// Coach approves the team name change (for many teams in one specific competition at once)
+// PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
 // RESPONSE: { }
 app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
 

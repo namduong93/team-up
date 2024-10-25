@@ -3,17 +3,11 @@ import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, 
 import { CompetitionRepository, CompetitionRole } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject } from "../../models/competition/competition.js";
 
-import ShortUniqueId from "short-unique-id";
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
 import { CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
-
-// Set up short-unique-id library for generating competition codes
-const { randomUUID } = new ShortUniqueId({
-  dictionary: 'alphanum_upper',
-  length: 8
-});
+import { DbError } from "../../errors/db_error.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -475,30 +469,48 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return teamId;
   }
 
-  competitionApproveTeamNameChange = async(competitionId: number, teamId: number, approve: boolean): Promise<{} | undefined> => {
-    let result = undefined;
+  competitionApproveTeamNameChange = async(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
 
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+    
     // Update the team name if the name change is approved
-    if (approve) {
-      const teamNameUpdateQuery = `
+    if (approveIds.length > 0) {
+      const approveQuery = `
         UPDATE competition_teams
         SET name = pending_name, pending_name = NULL
-        WHERE id = $1
+        WHERE id = ANY($1::int[])
         AND competition_id = $2
       `;
-      result = await this.pool.query(teamNameUpdateQuery, [teamId, competitionId]);
-    } else {
-      const teamNameUpdateQuery = `
+      const approveResult = await this.pool.query(approveQuery, [approveIds, compId]);
+  
+      // If no rows were updated, it implies that no matching records were found
+      if (approveResult.rowCount === 0) {
+        throw new DbError(DbError.Insert, "No matching teams found for the provided approved IDs in this competition.");
+      }
+    } 
+    
+    // If there are rejected team IDs, batch update to clear pending_name only
+    if (rejectIds.length > 0) {
+      const rejectQuery = `
         UPDATE competition_teams
         SET pending_name = NULL
-        WHERE id = $1
+        WHERE id = ANY($1::int[])
         AND competition_id = $2
       `;
-      result = await this.pool.query(teamNameUpdateQuery, [teamId, competitionId]);
-    }
+      const rejectResult = await this.pool.query(rejectQuery, [rejectIds, compId]);
 
-    if (result.rowCount === 0) {
-      return undefined; // TODO: throw error that no such team or competition exists
+      if (rejectResult.rowCount === 0) {
+        throw new DbError(DbError.Insert, "No matching teams found for the provided rejected IDs in this competition.");
+      }
     }
 
     return {};

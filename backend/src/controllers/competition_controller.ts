@@ -151,8 +151,8 @@ export class CompetitionController {
 
   competitionApproveTeamNameChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const { compId, teamId, approve } = req.body;
-    const result = await this.competitionService.competitionApproveTeamNameChange(Number(userId), Number(compId), Number(teamId), approve);
+    const { compId, approveIds, rejectIds } = req.body;
+    const result = await this.competitionService.competitionApproveTeamNameChange(Number(userId), Number(compId), approveIds, rejectIds);
     res.json(result);
     return;
   });

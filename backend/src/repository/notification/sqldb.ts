@@ -1,7 +1,7 @@
 import { Pool } from "pg";
-import { Notification, NotificationType } from "../../models/notification/notification";
-import { NotificationRepository } from "../notification_repository_type";
-import { parse } from "postgres-array";
+import { Notification, NotificationType } from "../../models/notification/notification.js";
+import { NotificationRepository } from "../notification_repository_type.js";
+import { DbError } from "../../errors/db_error.js";
 
 export class SqlDbNotificationRepository implements NotificationRepository {
   private readonly pool: Pool;
@@ -87,33 +87,41 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
   
-  notificationApproveTeamNameChange = async(competitionId: number, teamId: number, approve: boolean): Promise<{} | undefined> => {
+  notificationApproveTeamNameChange = async(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
     // Get the competition name
     const competitionNameQuery = `
       SELECT name 
       FROM competitions 
       WHERE id = $1
     `;
-    const competitionNameResult = await this.pool.query(competitionNameQuery, [competitionId]);
+    const competitionNameResult = await this.pool.query(competitionNameQuery, [compId]);
     const competitionName = competitionNameResult.rows[0]?.name;
 
-    // Create notification message
-    let notificationMessage: string;
-    if (approve) {
-      notificationMessage = `Your coach has approved your new team name for competition ${competitionName}.`;
-    } else {
-      notificationMessage = `Your coach has rejected your new team name for competition ${competitionName}.`;
+    // Notification message for approvals
+    if (approveIds.length > 0) {
+      const approvalMessage = `Your coach has approved your new team name for competition ${competitionName}.`;
+      const approvalNotificationQuery = `
+        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+        SELECT participant AS user_id, $3, 'name'::notification_type_enum, $1, id AS team_id, NOW()
+        FROM competition_teams, unnest(participants) AS participant
+        WHERE competition_id = $1 
+        AND id = ANY($2::int[])
+      `;
+      await this.pool.query(approvalNotificationQuery, [compId, approveIds, approvalMessage]);
     }
 
-    // Insert notification into the database
-    const notificationQuery = `
-      INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
-      SELECT participant AS user_id, $3, 'name'::notification_type_enum, $1, $2, NOW()
-      FROM competition_teams, unnest(participants) AS participant
-      WHERE competition_id = $1 
-      AND id = $2
-    `;
-    await this.pool.query(notificationQuery, [competitionId, teamId, notificationMessage]);
+    // Notification message for rejections
+    if (rejectIds.length > 0) {
+      const rejectionMessage = `Your coach has rejected your new team name for competition ${competitionName}.`;
+      const rejectionNotificationQuery = `
+        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+        SELECT participant AS user_id, $3, 'name'::notification_type_enum, $1, id AS team_id, NOW()
+        FROM competition_teams, unnest(participants) AS participant
+        WHERE competition_id = $1 
+        AND id = ANY($2::int[])
+      `;
+      await this.pool.query(rejectionNotificationQuery, [compId, rejectIds, rejectionMessage]);
+    }
 
     return {};
   }

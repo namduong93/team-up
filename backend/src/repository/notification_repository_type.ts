@@ -5,7 +5,7 @@ export interface NotificationRepository {
 
   notificationWithdrawal(userId: number, competitionId: number, competitionName: string, teamId: number, teamName: string): Promise<{} | undefined>;
   notificationRequestTeamNameChange(userId: number, competitionId: number): Promise<{} | undefined>;
-  notificationApproveTeamNameChange(competitionId: number, teamId: number, approve: boolean): Promise<{} | undefined>;
+  notificationApproveTeamNameChange(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined>;
 
   userNotificationsList(userId: number): Promise<Array<Notification> | undefined>;
 }

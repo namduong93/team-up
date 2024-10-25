@@ -266,21 +266,18 @@ export class CompetitionService {
     return {};
   }
 
-  competitionApproveTeamNameChange = async (userId: number, competitionId: number, teamId: number, approve: boolean): Promise<{} | undefined> => {
+  competitionApproveTeamNameChange = async (userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
     // Check if user is a coach
-    const roles = await this.competitionRoles(userId, competitionId);
+    const roles = await this.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.COACH)) {
       throw COMPETITION_ADMIN_REQUIRED;
     }
 
     // Approve or reject team name change
-    const result = await this.competitionRepository.competitionApproveTeamNameChange(competitionId, teamId, approve);
-    if (!result) {
-      throw BAD_REQUEST;
-    }
+    await this.competitionRepository.competitionApproveTeamNameChange(compId, approveIds, rejectIds);
 
     // Notify team members
-    await this.notificationRepository.notificationApproveTeamNameChange(competitionId, teamId, approve);
+    await this.notificationRepository.notificationApproveTeamNameChange(compId, approveIds, rejectIds);
 
     return {};
   }
