@@ -1,4 +1,5 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
+import { ServiceError } from "../errors/service_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
@@ -247,21 +248,23 @@ export class CompetitionService {
     return result.competitionCode;
   }
 
-  competitionRequestTeamNameChange = async (userId: number, competitionId: number, newTeamName: string): Promise<{} | undefined> => {
+  competitionRequestTeamNameChange = async (userId: number, compId: number, newTeamName: string): Promise<{} | undefined> => {
     // Check if user is a participant
     const userTypeObject = await this.userRepository.userType(userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw COMPETITION_STUDENT_REQUIRED;
+      throw new ServiceError(ServiceError.Auth, "User is not a student.");
+    }
+
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
     }
 
     // Request team name change
-    const teamId = await this.competitionRepository.competitionRequestTeamNameChange(userId, competitionId, newTeamName);
-    if (!teamId) {
-      throw BAD_REQUEST;
-    }
+    const teamId = await this.competitionRepository.competitionRequestTeamNameChange(userId, compId, newTeamName);
 
     // Notify coach
-    await this.notificationRepository.notificationRequestTeamNameChange(teamId, competitionId);
+    await this.notificationRepository.notificationRequestTeamNameChange(teamId, compId);
 
     return {};
   }
@@ -270,7 +273,7 @@ export class CompetitionService {
     // Check if user is a coach
     const roles = await this.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.COACH)) {
-      throw COMPETITION_ADMIN_REQUIRED;
+      throw new ServiceError(ServiceError.Auth, "User is not a coach for this competition.");
     }
 
     // Approve or reject team name change

@@ -435,21 +435,21 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionCode, competitionName, teamId, teamName };
   }
 
-  competitionRequestTeamNameChange = async(userId: number, competitionId: number, newTeamName: string): Promise<number | undefined> => {
+  competitionRequestTeamNameChange = async(userId: number, compId: number, newTeamName: string): Promise<number> => {
     // Check if the user is a valid member of this team
     const teamMemberCheckQuery = `
       SELECT name, pending_name
       FROM competition_teams
       WHERE competition_id = $1 AND $2 = ANY(participants)
     `;
-    const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [competitionId, userId]);
+    const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [compId, userId]);
 
     if (teamMemberCheckResult.rowCount === 0) {
-      return undefined; // TODO: throw error that user is not a member of this team
+      throw new DbError(DbError.Query, "User is not a member of this team.");
     }
 
     if (teamMemberCheckResult.rows[0].name === newTeamName || teamMemberCheckResult.rows[0].pending_name === newTeamName) {
-      return undefined; // TODO: throw error that the new team name is the same as the current one or the pending one
+      throw new DbError(DbError.Query, "New team name is similar to the old name or an already requested new name.");
     }
 
     // Update the pending name in the competition teams table
@@ -459,17 +459,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       WHERE competition_id = $1 AND $2 = ANY(participants)
       RETURNING id
     `;
-    const result = await this.pool.query(teamNameUpdateQuery, [competitionId, userId, newTeamName]);
+    const result = await this.pool.query(teamNameUpdateQuery, [compId, userId, newTeamName]);
     const teamId = result.rows[0].id;
 
     if (result.rowCount === 0) {
-      return undefined; // TODO: throw error that no such team or competition exists
+      throw new DbError(DbError.Query, "No matching team found for the provided ID in this competition.");
     }
 
     return teamId;
   }
 
-  competitionApproveTeamNameChange = async(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+  competitionApproveTeamNameChange = async(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
     // Verify if competition exists
     const competitionExistQuery = `
       SELECT 1
@@ -480,6 +480,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     if (competitionExistResult.rowCount === 0) {
       throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Verify if there are duplicate IDs in the approveIds and rejectIds arrays
+    const duplicateIds = approveIds.filter(id => rejectIds.includes(id));
+    if (duplicateIds.length > 0) {
+      throw new DbError(DbError.Query, "Duplicate team IDs found in team name approve and reject lists.");
     }
     
     // Update the team name if the name change is approved
@@ -494,7 +500,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   
       // If no rows were updated, it implies that no matching records were found
       if (approveResult.rowCount === 0) {
-        throw new DbError(DbError.Insert, "No matching teams found for the provided approved IDs in this competition.");
+        throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
       }
     } 
     
