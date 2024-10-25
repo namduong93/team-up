@@ -3,6 +3,8 @@ import { FirstStepPopUp } from './FirstStepPopUp';
 import { SecondStepPopUp } from './SecondStepPopUp';
 import { ThirdStepPopUp } from './ThirdStepPopUp';
 import styled from "styled-components";
+import { useParams } from 'react-router-dom';
+import { sendRequest } from '../../utility/request';
 
 interface NamePopUpChainProps {
   handleClose: () => void;
@@ -18,8 +20,9 @@ const Heading = styled.h2`
 `;
 
 export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) => {
+  const { compId } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
-  const [newName, setNewName] = useState('');
+  const [newTeamName, setNewTeamName] = useState('');
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -30,10 +33,13 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) =>
     handleClose(); 
   };
 
-  const handleSubmit = () => {
-    // TO-DO: add backend routing to submit the newName request to backend
-
-    setCurrentStep((prevStep) => prevStep + 1);
+  const handleSubmit = async () => {
+    try {
+      await sendRequest.put<{}>('/competition/student/team_name_change', { compId, newTeamName });
+      setCurrentStep((prevStep) => prevStep + 1);
+    } catch (error) {
+      console.error("Error requesting a team name change:", error);
+    }
   }
 
   const renderModal = () => {
@@ -45,8 +51,8 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) =>
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter new name"
-            inputValue={newName}
-            setInputValue={setNewName}
+            inputValue={newTeamName}
+            setInputValue={setNewTeamName}
           />
         );
       case 2:
