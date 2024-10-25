@@ -8,6 +8,7 @@ import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
 import { CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
+import { DbError } from "../../errors/db_error.js";
 
 // Set up short-unique-id library for generating competition codes
 const { randomUUID } = new ShortUniqueId({
@@ -376,41 +377,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { teamId: 1 };
   }
 
-  competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<CompetitionWithdrawalReturnObject | undefined> => {
-    // Check if the student exists as a participant in the competition
-    const userInCompetitionQuery = `
-      SELECT 1 FROM competition_users WHERE user_id = $1 AND competition_id = $2
-    `;
-    const userInCompetitionResult = await this.pool.query(userInCompetitionQuery, [userId, competitionId]);
-    if (userInCompetitionResult.rowCount === 0) {
-      return undefined; // TODO: throw error
-    }
-
+  competitionStudentWithdraw = async (userId: number, compId: number): Promise<CompetitionWithdrawalReturnObject | undefined> => {
     // Check if the competition exists
     const competitionExistQuery = `
       SELECT code, name FROM competitions WHERE id = $1
     `;
-    const competitionExistResult = await this.pool.query(competitionExistQuery, [competitionId]);
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
     if (competitionExistResult.rowCount === 0) {
-      return undefined; // TODO: throw error
+      throw new DbError(DbError.Query, 'Competition does not exist.');
     }
     const competitionCode = competitionExistResult.rows[0].code;
     const competitionName = competitionExistResult.rows[0].name;
-
-    // Remove user from the team and put the team back to pending state in a single query
-    // NOTE: I wanted to combine these two queries into a single query as commented but doing so makes the set status query not work for some reasons
-    // const teamRemoveMemberAndSetPendingQuery = `
-    //   WITH updated_team AS (
-    //     UPDATE competition_teams
-    //     SET participants = array_remove(participants, $1)
-    //     WHERE $1 = ANY(participants) AND competition_id = $2
-    //     RETURNING id, participants
-    //   )
-    //   UPDATE competition_teams
-    //   SET team_status = 'pending'::competition_team_status
-    //   WHERE id = (SELECT id FROM updated_team)
-    // `;
-    // await this.pool.query(teamRemoveMemberAndSetPendingQuery, [userId, competitionId]);
 
     const teamRemoveMemberQuery = `
       UPDATE competition_teams
@@ -418,9 +395,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       WHERE $1 = ANY(participants) AND competition_id = $2
       RETURNING id, name
     `;
-    const teamRemoveMemberResult = await this.pool.query(teamRemoveMemberQuery, [userId, competitionId]);
+    const teamRemoveMemberResult = await this.pool.query(teamRemoveMemberQuery, [userId, compId]);
     if (teamRemoveMemberResult.rowCount === 0) {
-      return undefined; // TODO: throw error that user is not in a team in this competition
+      throw new DbError(DbError.Query, 'User is not a participant in any team in this competition.');; // TODO: throw error that user is not in a team in this competition
     }
     const teamId = teamRemoveMemberResult.rows[0]?.id;
     const teamName = teamRemoveMemberResult.rows[0]?.name;
@@ -438,7 +415,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       WHERE user_id = $1
       AND competition_id = $2
     `;
-    await this.pool.query(competitionRemoveParticipantQuery, [userId, competitionId]);
+    await this.pool.query(competitionRemoveParticipantQuery, [userId, compId]);
 
     return { competitionCode, competitionName, teamId, teamName };
   }
