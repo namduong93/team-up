@@ -3,6 +3,8 @@ import { SecondStepPopUp } from './SecondStepPopUp';
 import styled from "styled-components";
 import InvitePopUp from './InvitePopUp';
 import { OptionPopUp } from './OptionPopUp';
+import { useParams } from 'react-router-dom';
+import { sendRequest } from '../../utility/request';
 
 interface WithdrawPopUpChainProps {
   handleClose: () => void;
@@ -18,7 +20,9 @@ const Heading = styled.h2`
 `;
 
 export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleClose }) => {
+  const { compId } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
+  const [compCode, setCompCode] = useState<string>("");
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -29,10 +33,18 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleCl
     handleClose(); 
   };
 
-  const handleSubmit = () => {
-    // TO-DO: add backend routing to submit the withdrawal request to backend
+  const handleSubmit = async () => {
+    try {
+      // Send a request to the backend to withdraw from the team.
+      const withdrawResponse = await sendRequest.post<string>('/competition/student/withdraw', { compId });
 
-    setCurrentStep((prevStep) => prevStep + 1);
+      // Retrieve the competition code from the response and update the state.
+      setCompCode(withdrawResponse.data);
+      
+      setCurrentStep((prevStep) => prevStep + 1);
+    } catch (error) {
+      console.error("Error withdrawing from the team:", error);
+    }
   }
 
   const renderModal = () => {
@@ -72,7 +84,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleCl
               {"\nfor a Random Replacement"} 
               {"\nto be assigned"} 
             </Heading>}
-            text="COMP1234" 
+            text={compCode} 
             onClose={handleCloseWithReset}
           />
         );

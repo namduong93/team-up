@@ -163,8 +163,8 @@ app.post('/competition/student/join/1', competitionController.competitionStudent
 app.post('/competition/student/join/2', competitionController.competitionStudentJoin2);
 
 // Student withdraws from competition
-// PARAMS: { competitionId: number }
-// RESPONSE: { }
+// PARAMS: { compId: number }
+// RESPONSE: { competitionCode: string }
 app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
 
 
