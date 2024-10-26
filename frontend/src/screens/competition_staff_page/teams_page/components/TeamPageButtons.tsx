@@ -1,9 +1,11 @@
-import { FC } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { sendRequest } from "../../../../utility/request";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -64,6 +66,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     // hook it here
     console.log('running the algorithm...');
   }
+
+  
 
   return (
   <>
@@ -136,7 +140,6 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
     </div>
     }
-
   </>
   );
 }
