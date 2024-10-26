@@ -23,6 +23,7 @@ const SidebarContainer = styled.div<{ $cropState: boolean }>`
   height: calc(100vh - 50px);
   overflow-x: hidden;
   overflow-y: auto;
+  box-sizing: border-box;
 
   @media (max-width: 600px) {
     min-width: 35px;
@@ -41,6 +42,7 @@ const SidebarContent = styled.div`
   min-height: 600px;
   overflow-y: auto;
   margin-bottom: 10px;
+  box-sizing: border-box;
 `;
 
 const ProfileSection = styled.div`
@@ -71,6 +73,7 @@ const NavLinks = styled.nav`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 `;
 
 const NavButton = styled.button<{ $active: boolean }>`
@@ -91,6 +94,7 @@ const NavButton = styled.button<{ $active: boolean }>`
   flex-grow: 1;
   margin: 5px;
   justify-content: center;
+  box-sizing: border-box;
 
   &:hover {
     background-color: ${({ theme }) => theme.background};
@@ -106,6 +110,7 @@ const NavButton = styled.button<{ $active: boolean }>`
     justify-content: center;
     padding: 10px;
     gap: 0;
+    box-sizing: border-box;
 
     span {
       display: none;
@@ -131,6 +136,7 @@ const LogoutButton = styled.button`
   border-radius: 40px;
   flex-shrink: 1;
   letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
+  box-sizing: border-box;
   
   svg {
     width: 20px;

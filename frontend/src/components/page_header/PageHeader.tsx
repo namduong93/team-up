@@ -21,6 +21,7 @@ export const PageHeaderContainerDiv = styled.div`
 export const PageTitle = styled.h1`
   margin-bottom: 0;
   font-size: 2em;
+  box-sizing: border-box;
 `;
 
 export const PageDescriptionSpan = styled.span`
@@ -37,6 +38,7 @@ export const MenuOptionsContainerDiv = styled.div`
   display: flex;
   flex-direction: column-reverse;
   align-items: flex-end;
+  box-sizing: border-box;
 `;
 
 export const ButtonContainer = styled.div`

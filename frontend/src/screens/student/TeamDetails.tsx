@@ -2,7 +2,6 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
 import { ProfileCard } from "./ProfileCard";
-import defaultProfile from "./default-profile.jpg";
 import { EditCompPreferences } from "./EditCompPreferences";
 import { StudentDetails } from "./EditCompPreferences";
 import { backendURL } from "../../../config/backendURLConfig";
@@ -29,6 +28,7 @@ const TeamDetailsContainer = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
   padding: 15px;
+  box-sizing: border-box;
 `;
 
 const TeamInfo = styled.div`
@@ -53,6 +53,7 @@ const TeamField = styled.p`
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 12px;
   padding: 10px;
+  box-sizing: border-box;
 `;
 
 const StudentsContainer = styled.div`
@@ -93,7 +94,7 @@ export const TeamDetails: FC = () => {
       name: "John Doe",
       email: "john.doe@example.com",
       bio: "Passionate coder and team player.",
-      image: defaultProfile,
+      image: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
       id,
       preferredContact: "Discord:john_doe",
       degreeYear: 3,

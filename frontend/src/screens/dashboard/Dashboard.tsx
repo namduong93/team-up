@@ -53,6 +53,7 @@ export const AlertButton = styled.button`
   justify-content: center;
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
 
   &:hover {
     cursor: pointer;
@@ -98,6 +99,7 @@ export const FilterTagButton = styled.button`
   color: ${({ theme }) => theme.fonts.colour};
   border: none;
   cursor: auto;
+  box-sizing: border-box;
 `;
 
 export const RemoveFilterIcon = styled(FaTimes)`

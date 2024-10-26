@@ -36,6 +36,7 @@ const WithdrawButton = styled(ActionButton)`
   min-height: 20px;
   flex: 1;
   padding: 0 16px;
+  box-sizing: border-box;
 `;
 
 const HeaderContent = styled.div`

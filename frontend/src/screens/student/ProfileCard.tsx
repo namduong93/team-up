@@ -29,6 +29,7 @@ const StudentCard = styled.div<{ $isFirst?: boolean }>`
   overflow-y: hidden;
   overflow-x: auto;
   height: fit-content;
+  box-sizing: border-box;
 `;
 
 const ContactEdit = styled.div`
@@ -44,6 +45,7 @@ const StudentCardContent = styled.div`
   flex: 1;
   margin: 5%;
   padding: 5px;
+  box-sizing: border-box;
 `;
 
 const ContentContainer = styled.div`
@@ -60,6 +62,7 @@ const StudentInfo = styled.div`
   justify-content: flex-start;
   width: 100%;
   padding-right: 10px;
+  box-sizing: border-box;
 `;
 
 const StudentName = styled.p`
@@ -88,6 +91,7 @@ const StudentBio = styled.p`
   max-width: 100%;
   text-overflow: ellipsis;
   flex-grow: 1;
+  box-sizing: border-box;
 `;
 
 const StudentImage = styled.img`
@@ -96,6 +100,7 @@ const StudentImage = styled.img`
   height: auto;
   border-radius: 50%;
   object-fit: cover;
+  box-sizing: border-box;
 `;
 
 const IconWrapper = styled.div`

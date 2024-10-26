@@ -58,6 +58,7 @@ const AccountCard = styled.div<{ $isEditing: boolean }>`
   justify-content: space-evenly;
   padding: 10px;
   max-height: 100%;
+  box-sizing: border-box;
 `;
 
 const ProfileEditContainer = styled.div`
@@ -86,6 +87,7 @@ export const ProfilePic = styled.div<{ $imageUrl: string }>`
 const DetailsCard = styled.div`
   text-align: left;
   padding: 10px;
+  box-sizing: border-box;
 `;
 
 const AccountItem = styled.div`
@@ -104,13 +106,16 @@ const DetailsText = styled.div`
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: 95%;
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 20px;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
+  color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.fonts.colour};
+  box-sizing: border-box;
 `;
 
 const Select = styled.select`
@@ -121,6 +126,7 @@ const Select = styled.select`
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   width: 100%;
+  box-sizing: border-box;
 `;
 
 const Option = styled.option``;
@@ -142,6 +148,7 @@ const EditIconButton = styled.button`
   border: none;
   cursor: pointer;
   align-self: flex-start;
+  box-sizing: border-box;
 `;
 
 const EditIcon = styled(FaEdit)`
@@ -157,6 +164,7 @@ const EditIcon = styled(FaEdit)`
 const Button = styled.button<{ type: "confirm" | "cancel" }>`
   padding: 12px 20px;
   border: none;
+  box-sizing: border-box;
   border-radius: 10px;
   cursor: pointer;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
@@ -227,7 +235,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     setUser(newDetails);
     setIsEditingUser(false);
     await sendRequest.put('/user/profile_info', newDetails);
-    setDashInfo({ preferredName: newDetails.preferredName, affiliation: newDetails.affiliation });
+    setDashInfo({ preferredName: newDetails.preferredName, affiliation: newDetails.affiliation, profilePic: newDetails.profilePic });
   };
 
   const handleCancelUser = () => {

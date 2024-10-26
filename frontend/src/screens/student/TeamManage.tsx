@@ -30,6 +30,7 @@ const InfoCard = styled.div`
   padding: 15px;
   background-color: ${({ theme }) => theme.background};
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 `;
 
 const InfoContent = styled.div`
@@ -77,6 +78,7 @@ const ModalContent = styled.div`
   max-width: 600px;
   width: 80%;
   color: ${({ theme }) => theme.fonts.colour};
+  box-sizing: border-box;
 `;
 
 const CloseButton = styled.button`
@@ -89,6 +91,7 @@ const CloseButton = styled.button`
   color: ${({ theme }) => theme.colours.error};
   font-size: 24px;
   transition: color 0.3s;
+  box-sizing: border-box;
 
   &:hover {
     color: ${({ theme }) => theme.colours.cancelDark};
