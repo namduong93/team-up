@@ -1,9 +1,11 @@
 import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../../components/general_utility/Background";
-import defaultProfile from '../../components/assets/default-profile.jpg';
 import { sendRequest } from "../../utility/request";
 import { DashInfo } from "../dashboard/hooks/useDashInfo";
+import { backendURL } from "../../../config/backendURLConfig";
+import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   role: "student" | "staff";
@@ -22,37 +24,30 @@ interface User {
 
 const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
+  width: 100%;
+  height: 100%;
+  align-items: center;
 `;
 
 const AccountContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  height: 100%;
+  margin: 10px;
   width: 100%;
+  max-height: 95%;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 const CardContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
-  flex-wrap: wrap;
   width: 100%;
-  overflow-y: auto;
-  max-height: 100vh;
-  
-  & > * {
-    flex: 1 1 300px;
-    margin: 20px;
-  }
+  max-height: 100%;
 `;
 
-const AccountCard = styled.div`
-  background-color: ${({ theme }) => theme.colours.sidebarBackground};
-  padding: 15px;
+const AccountCard = styled.div<{ $isEditing: boolean }>`
+  background-color: ${({ theme }) => theme.background};
+  border: 1.5px solid ${({ theme, $isEditing: isEditing }) => isEditing ? theme.colours.secondaryLight : theme.colours.sidebarBackground };
   border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   flex: 1 0;
   text-align: center;
   display: flex;
@@ -60,56 +55,80 @@ const AccountCard = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
   word-wrap: break-word;
-  max-height: 90%;
+  justify-content: space-evenly;
+  padding: 10px;
+  max-height: 100%;
+  box-sizing: border-box;
 `;
 
-const ProfilePic = styled.div<{ $imageUrl: string }>`
-  width: 150px;
-  height: 150px;
+const ProfileEditContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  width: 100%;
+`;
+
+export const ProfilePic = styled.div<{ $imageUrl: string }>`
+  width: 8rem;
+  height: 8rem;
   border-radius: 50%;
-  background-image: url(${(props) => props.$imageUrl || defaultProfile});
+  background-image: url(${(props) => props.$imageUrl || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`});
   background-size: cover;
   background-position: center;
-  border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 const DetailsCard = styled.div`
   text-align: left;
   padding: 10px;
+  box-sizing: border-box;
 `;
 
 const AccountItem = styled.div`
-  margin-bottom: 20px;
-  margin-right: 20px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 `;
 
-const Label = styled.label`
+const Label = styled.label<{ $isEditing: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  color: ${({ theme }) => theme.colours.primaryDark};
+  color: ${({ theme, $isEditing: isEditing }) => isEditing ? theme.colours.secondaryDark : theme.colours.primaryDark };
 `;
 
 const DetailsText = styled.div`
-  margin: 10px 0;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const Input = styled.input`
-  width: 100%;
+  width: 95%;
   padding: 10px;
   margin-top: 10px;
+  margin-bottom: 10px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 20px;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
+  box-sizing: border-box;
 `;
 
 const Select = styled.select`
-  padding: 15px;
+  padding: 10px;
   margin-top: 10px;
+  margin-bottom: 10px;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   width: 100%;
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
+  box-sizing: border-box;
 `;
 
 const Option = styled.option``;
@@ -126,17 +145,34 @@ const ButtonGroup = styled.div`
   gap: 20px;
 `;
 
-const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
-  padding: 15px 20px;
+const EditIconButton = styled.button`
+  background: transparent;
   border: none;
+  cursor: pointer;
+  align-self: flex-start;
+  box-sizing: border-box;
+`;
+
+const EditIcon = styled(FaEdit)`
+  width: 20px;
+  height: 20px;
+  color: ${({ theme }) => theme.colours.secondaryDark};
+  
+  &:hover {
+    color: ${({ theme }) => theme.colours.secondaryLight}
+  };
+`;
+
+const Button = styled.button<{ type: "confirm" | "cancel" }>`
+  padding: 12px 20px;
+  border: none;
+  box-sizing: border-box;
   border-radius: 10px;
   cursor: pointer;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.fonts.colour};
   background-color: ${({ theme, type }) => {
     switch (type) {
-      case "primary":
-        return theme.colours.primaryLight;
       case "confirm":
         return theme.colours.confirm;
       case "cancel":
@@ -152,8 +188,6 @@ const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
     color: ${({ theme }) => theme.background};
     background-color: ${({ theme, type }) => {
       switch (type) {
-        case "primary":
-          return theme.colours.primaryDark;
         case "confirm":
           return theme.colours.confirmDark;
         case "cancel":
@@ -167,29 +201,31 @@ const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
 
 interface AccountProps {
   setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;
-}
+};
 
 export const Account: FC<AccountProps> = ({ setDashInfo }) => {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const navigate = useNavigate();
   const [user, setUser] = useState<User>({
     role: "student",
-    name: "John Doe",
-    preferredName: "Johnny",
-    email: "john.doe@example.com",
-    affiliation: "UNSW",
-    gender: "Male",
-    pronouns: "He/Him",
-    profilePic: "../components/assets/default-profile.jpg",
-    tshirtSize: "Male L",
-    allergies: "None",
-    dietaryReqs: ["Vegetarian"],
-    accessibilityReqs: "None",
+    name: "",
+    preferredName: "",
+    email: "",
+    affiliation: "",
+    gender: "Other",
+    pronouns: "They/Them",
+    profilePic: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
+    tshirtSize: "",
+    allergies: "",
+    dietaryReqs: [],
+    accessibilityReqs: "",
   });
 
   const [isEditingUser, setIsEditingUser] = useState(false);
   
   const [newDetails, setNewDetails] = useState<User>({
     ...user,
-    profilePic: defaultProfile,
+    profilePic: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
   });
 
   const handleEditUser = () => {
@@ -201,7 +237,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     setUser(newDetails);
     setIsEditingUser(false);
     await sendRequest.put('/user/profile_info', newDetails);
-    setDashInfo({ preferredName: newDetails.preferredName, affiliation: newDetails.affiliation });
+    setDashInfo({ preferredName: newDetails.preferredName, affiliation: newDetails.affiliation, profilePic: newDetails.profilePic });
   };
 
   const handleCancelUser = () => {
@@ -232,27 +268,41 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
       try {
         const infoResponse = await sendRequest.get<User>('/user/profile_info');
         setUser(infoResponse.data);
+        setIsLoaded(true);
       } catch (error: unknown) {
-        console.log('Error fetching user info:', error);
+        sendRequest.handleErrorStatus(error, [403], () => {
+          setIsLoaded(false);
+          navigate('/');
+          console.log('Error fetching account details: ', error);
+        });
       }
     })();
   }, []);
 
-  return (
+  return ( isLoaded &&
     <Background>
       <AccountContainer>
         <CardContainer>
-          <AccountCard>
-            <ProfilePic $imageUrl={newDetails.profilePic || defaultProfile } />
+          <AccountCard $isEditing={isEditingUser}>
+            <ProfileEditContainer>
+              <ProfileContainer>
+                <ProfilePic $imageUrl={newDetails.profilePic || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
+              </ProfileContainer>
+              {!isEditingUser && (
+                <EditIconButton onClick={handleEditUser}>
+                  <EditIcon />
+                </EditIconButton>
+              )}
+            </ProfileEditContainer>
             <DetailsCard>
               <AccountItem>
-                <Label>Profile Picture:</Label>
+                {isEditingUser && <Label $isEditing={isEditingUser}>Profile Picture:</Label>}
                 {isEditingUser && (
                   <Input type="file" accept="image/*" onChange={handlePhotoUpload} />
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Name:</Label>
+                <Label $isEditing={isEditingUser}>Name:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -264,7 +314,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Preferred Name:</Label>
+                <Label $isEditing={isEditingUser}>Preferred Name:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -276,7 +326,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Email:</Label>
+                <Label $isEditing={isEditingUser}>Email:</Label>
                 {isEditingUser ? (
                   <Input
                     type="email"
@@ -288,7 +338,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Affiliation:</Label>
+                <Label $isEditing={isEditingUser}>Affiliation:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -300,7 +350,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Gender:</Label>
+                <Label $isEditing={isEditingUser}>Gender:</Label>
                 {isEditingUser ? (
                   <Select
                     value={newDetails.gender}
@@ -315,7 +365,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Preferred Pronouns:</Label>
+                <Label $isEditing={isEditingUser}>Preferred Pronouns:</Label>
                 {isEditingUser ? (
                   <Select
                     value={newDetails.pronouns}
@@ -331,7 +381,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>T-Shirt Size:</Label>
+                <Label $isEditing={isEditingUser}>T-Shirt Size:</Label>
                 {isEditingUser ? (
                   <Select
                     value={newDetails.tshirtSize}
@@ -350,7 +400,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Dietary Preferences:</Label>
+                <Label $isEditing={isEditingUser}>Dietary Preferences:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -362,7 +412,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Allergy Preferences:</Label>
+                <Label $isEditing={isEditingUser}>Allergy Preferences:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -374,7 +424,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Accessibility Preferences:</Label>
+                <Label $isEditing={isEditingUser}>Accessibility Preferences:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -384,10 +434,10 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 ) : (
                   <DetailsText>{user.accessibilityReqs}</DetailsText>
                 )}
-              </AccountItem>
+                            </AccountItem>
             </DetailsCard>
             <ActionButtons>
-              {isEditingUser ? (
+              {isEditingUser && (
                 <ButtonGroup>
                   <Button type="confirm" onClick={handleSaveUser}>
                     Save
@@ -396,8 +446,6 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                     Cancel
                   </Button>
                 </ButtonGroup>
-              ) : (
-                <Button type="primary" onClick={handleEditUser}>Edit</Button>
               )}
             </ActionButtons>
           </AccountCard>
@@ -406,3 +454,4 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     </Background>
   );
 };
+

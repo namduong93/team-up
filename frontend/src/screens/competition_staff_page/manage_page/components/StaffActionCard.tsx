@@ -3,21 +3,34 @@ import styled from "styled-components";
 import { FaFileSignature, FaChair, FaEdit, FaChevronLeft } from "react-icons/fa";
 import { ManageSite } from "../ManageSite";
 
-type ActionType = "competition" | "registration" | "seat";
+type ActionType = "competition" | "registration" | "seat" | "contact" | "capacity";
 
 interface StaffActionCardProps {
   staffRoles: string[];
-}
+};
 
 interface ActionCardProps {
   $actionType: ActionType;
-}
+};
+
+const StandardContainerDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
+`;
 
 const ActionsContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  gap: 10px;
+  justify-content: flex-start;
 `;
 
 const ActionCard = styled.button<ActionCardProps>`
@@ -26,9 +39,11 @@ const ActionCard = styled.button<ActionCardProps>`
   align-items: center;
   justify-content: center;
   flex: 1 1 0;
-  max-width: 350px;
+  max-width: 280px;
+  height: 100%;
+  width: 100%;
   aspect-ratio: 1;
-  margin: 5px;
+  box-sizing: border-box;
   background-color: ${({ theme, $actionType }) => theme.staffActions[$actionType]};
   border: ${({ theme, $actionType }) => `1px solid ${theme.staffActions[`${$actionType}Border`]}`};
   border-radius: 12px;
@@ -84,7 +99,7 @@ const BackButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  font-size: 16px;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -103,6 +118,8 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
     { type: "competition" as ActionType, icon: FaEdit, text: "Edit Competition Details", roles: ["Admin"] },
     { type: "registration" as ActionType, icon: FaFileSignature, text: "Update Registration Form", roles: ["Admin", "Coach"] },
     { type: "seat" as ActionType, icon: FaChair, text: "Assign Seats to Teams", roles: ["Admin", "Site-Coordinator"] },
+    { type: "contact" as ActionType, icon: FaChair, text: "Update Your Contact Bio", roles: ["Admin", "Coach"] },
+    { type: "capacity" as ActionType, icon: FaChair, text: "Update Your Site Capacity", roles: ["Admin", "Site-Coordinator"] },
   ];
 
   // Filter actions based on at least one matching role
@@ -119,7 +136,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
   };
 
   return (
-    <>
+    <StandardContainerDiv>
       {showManageSite && (
         <>
           <BackButton onClick={() => setShowManageSite(false)}><FaChevronLeft /> Back</BackButton>
@@ -151,6 +168,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
           </Modal>
         </Fragment>
       ))}
-    </>
+    </StandardContainerDiv>
   );
 };

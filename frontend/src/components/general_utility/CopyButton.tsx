@@ -14,6 +14,7 @@ const IconButton = styled(FaRegCopy)<{ $copied: boolean }>`
   color: ${({ theme, $copied }) =>
     $copied ? theme.colours.confirm : theme.colours.primaryDark};
   transition: color 0.2s;
+  box-sizing: border-box;
 
   &:hover {
     color: ${({ theme }) => theme.colours.secondaryDark};
@@ -25,6 +26,7 @@ const CheckIcon = styled(FaCheck)`
   width: 1rem;
   height: 1rem;
   color: ${({ theme }) => theme.colours.confirm};
+  box-sizing: border-box;
 `;
 
 export const CopyButton: FC<CopyButtonProps> = ({ textToCopy }) => {
