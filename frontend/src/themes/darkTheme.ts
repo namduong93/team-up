@@ -68,5 +68,7 @@ export const darkTheme: DefaultTheme = {
     seatBorder: "#FDE2FC",
     contact: "#35B4C2",
     contactBorder: "#E1FAFC",
+    capacity: "#8BDFA5",
+    capacityBorder: "#E8F7EC",
   },
 };

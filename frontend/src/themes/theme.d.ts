@@ -46,6 +46,8 @@ declare module 'styled-components' {
         seatBorder: string;
         contact: string;
         contactBorder: string;
+        capacity: string;
+        capacityBorder: string;
       };
       teamView: {
           pending: string;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FaFileSignature, FaChair, FaEdit, FaChevronLeft } from "react-icons/fa";
 import { ManageSite } from "../ManageSite";
 
-type ActionType = "competition" | "registration" | "seat" | "contact";
+type ActionType = "competition" | "registration" | "seat" | "contact" | "capacity";
 
 interface StaffActionCardProps {
   staffRoles: string[];
@@ -119,6 +119,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
     { type: "registration" as ActionType, icon: FaFileSignature, text: "Update Registration Form", roles: ["Admin", "Coach"] },
     { type: "seat" as ActionType, icon: FaChair, text: "Assign Seats to Teams", roles: ["Admin", "Site-Coordinator"] },
     { type: "contact" as ActionType, icon: FaChair, text: "Update Your Contact Bio", roles: ["Admin", "Coach"] },
+    { type: "capacity" as ActionType, icon: FaChair, text: "Update Your Site Capacity", roles: ["Admin", "Site-Coordinator"] },
   ];
 
   // Filter actions based on at least one matching role
@@ -133,7 +134,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
       setModalOpen(actionText);
     }
   };
-  
+
   return (
     <StandardContainerDiv>
       {showManageSite && (

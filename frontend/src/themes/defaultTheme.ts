@@ -45,6 +45,8 @@ export const defaultTheme: DefaultTheme = {
     seatBorder: "#F19EDC",
     contact: "#E1FAFC",
     contactBorder: "#35B4C2",
+    capacity: "#E8F7EC",
+    capacityBorder: "#8BDFA5",
   },
   teamView: {
     pending: "#F68486",
