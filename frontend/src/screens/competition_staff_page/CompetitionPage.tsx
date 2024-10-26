@@ -43,6 +43,7 @@ export const CompetitionPage: FC = () => {
   
   const [rejectedTeamIds, setRejectedTeamIds] = useState<Array<number>>([]);
   const [isEditingNameStatus, setIsEditingNameStatus] = useState<boolean>(false);
+  const [registeredTeamIds, setRegisteredTeamIds] = useState<Array<number>>([]);
   ////
 
   useEffect(() => {
@@ -110,6 +111,7 @@ export const CompetitionPage: FC = () => {
               teamIdsState={[approveTeamIds, setApproveTeamIds]}
               editingNameStatusState={[isEditingNameStatus, setIsEditingNameStatus]}
               rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
+              registeredTeamIdsState={[registeredTeamIds, setRegisteredTeamIds]}
               />}
             
             {(roles.includes(CompetitionRole.Admin)) &&
@@ -158,6 +160,7 @@ export const CompetitionPage: FC = () => {
           teamIdsState: [approveTeamIds, setApproveTeamIds],
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+          registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
           universityOption,
 
           setFilterOptions, setSortOptions, setEnableTeamButtons }}/>

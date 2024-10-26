@@ -1,12 +1,11 @@
 import { FC, SetStateAction, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaDownload, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
+import { FaDownload, FaFileCsv, FaFilePdf, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../../utility/request";
-import { GrDocumentCsv } from "react-icons/gr";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -14,6 +13,7 @@ export interface PageButtonsProps {
   teamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
   editingNameStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+  registeredTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
 }
 
 export const TeamPageButtons: FC<PageButtonsProps> = ({
@@ -22,7 +22,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   teamIdsState: [approveTeamIds, setApproveTeamIds],
 
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
-  editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus]
+  editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
+  registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
 }) => {
   
   const theme = useTheme();
@@ -73,7 +74,13 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   
 
   const downloadCSV = async () => {
+    // get team IDs of registered teams
+    console.log(registeredTeamIds)
 
+    // from team IDs, get team details for each team
+
+    // format the details for each team into string format
+    
     // generate and download csv here
     console.log('downloading csv');
     return true;
@@ -192,21 +199,21 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
       </div>
       
       <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <ResponsiveActionButton actionType="confirm"
+        <ResponsiveActionButton actionType="secondary"
           label="Download CSV"
           question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentCsv />}
-          style={{ backgroundColor: theme.colours.confirm }}
+          icon={<FaFileCsv />}
+          style={{ backgroundColor: theme.colours.secondaryLight }}
           handleSubmit={downloadCSV}
         />
       </div>
 
       <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <ResponsiveActionButton actionType="confirm"
+        <ResponsiveActionButton actionType="primary"
           label="Download PDF"
           question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentCsv />}
-          style={{ backgroundColor: theme.colours.confirm }}
+          icon={<FaFilePdf />}
+          style={{ backgroundColor: theme.colours.primaryLight }}
           handleSubmit={downloadPDF}
         />
       </div>
