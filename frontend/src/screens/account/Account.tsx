@@ -5,6 +5,7 @@ import { sendRequest } from "../../utility/request";
 import { DashInfo } from "../dashboard/hooks/useDashInfo";
 import { backendURL } from "../../../config/backendURLConfig";
 import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   role: "student" | "staff";
@@ -193,6 +194,8 @@ interface AccountProps {
 };
 
 export const Account: FC<AccountProps> = ({ setDashInfo }) => {
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const navigate = useNavigate();
   const [user, setUser] = useState<User>({
     role: "student",
     name: "",
@@ -255,13 +258,18 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
       try {
         const infoResponse = await sendRequest.get<User>('/user/profile_info');
         setUser(infoResponse.data);
+        setIsLoaded(true);
       } catch (error: unknown) {
-        console.log('Error fetching user info:', error);
+        sendRequest.handleErrorStatus(error, [403], () => {
+          setIsLoaded(false);
+          navigate('/');
+          console.log('Error fetching account details: ', error);
+        });
       }
     })();
   }, []);
 
-  return (
+  return ( isLoaded &&
     <Background>
       <AccountContainer>
         <CardContainer>

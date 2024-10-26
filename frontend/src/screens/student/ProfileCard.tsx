@@ -2,7 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import { CopyButton } from "../../components/general_utility/CopyButton";
 import { FaEdit, FaUserTie } from "react-icons/fa";
-import defaultProfile from "./default-profile.jpg";
+import { backendURL } from "../../../config/backendURLConfig";
 
 interface ProfileCardProps {
   name: string;
@@ -166,7 +166,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
             </IconWrapper>
           ) : (
             <StudentImage
-              src={image || defaultProfile} // Use defaultProfile if image is undefined
+              src={image || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`} // Use defaultProfile if image is undefined
               alt={`${name}'s profile`}
             />
           )}
