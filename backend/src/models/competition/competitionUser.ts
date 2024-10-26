@@ -13,6 +13,8 @@ export interface CompetitionUser {
   codeforcesRating: number;
   universityCourses: string[];
   pastRegional: boolean;
+  competitionBio: string;
+  preferredContact: string;
 }
 
 export interface CompetitionStudentDetails {

@@ -419,10 +419,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let codeforcesRating = competitionUserInfo.codeforcesRating || 0;
     let universityCourses = competitionUserInfo.universityCourses || [];
     let pastRegional = competitionUserInfo.pastRegional || false;
+    let competitionBio = competitionUserInfo.competitionBio || "";
+    let preferredContact = competitionUserInfo.preferredContact || "";
 
     const competitionJoinQuery = `
-      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional, bio, preferred_contact)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
       RETURNING id
     `;
     const competitionJoinValues = [
@@ -439,7 +441,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       internationalPrizes,
       codeforcesRating,
       universityCourses,
-      pastRegional
+      pastRegional,
+      competitionBio,
+      preferredContact
     ];
     
     // Insert user into competition_users table and get competition_user_id

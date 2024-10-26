@@ -142,7 +142,7 @@ app.get('/competition/details', competitionController.competitionGetDetails)
 app.get('/competition/student/status', competitionController.competitionCodeStatus);
 
 // Student join competition with 0 friends
-// PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses } }
+// PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses, competitionBio, preferredContact } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { }
 app.post('/competition/student/join', competitionController.competitionStudentJoin);
