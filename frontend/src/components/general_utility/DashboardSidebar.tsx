@@ -26,6 +26,11 @@ const SidebarContainer = styled.div<{ $cropState: boolean }>`
     min-width: 35px;
     width: 35px;
   }
+
+  @media (max-width: 335px) {
+    margin-right: 2px;
+    margin-left: 0;
+  }
 `;
 
 const SidebarContent = styled.div`
