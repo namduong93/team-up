@@ -1,8 +1,8 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { CopyButton } from "../../components/general_utility/CopyButton";
-import { FaEdit, FaUserCircle } from "react-icons/fa";
-import defaultProfile from "./default-profile.jpg";
+import { FaEdit, FaUserTie } from "react-icons/fa";
+import { backendURL } from "../../../config/backendURLConfig";
 
 interface ProfileCardProps {
   name: string;
@@ -26,7 +26,16 @@ const StudentCard = styled.div<{ $isFirst?: boolean }>`
   width: 100%;
   margin: 10px 0;
   position: relative;
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: auto;
+  height: fit-content;
+  box-sizing: border-box;
+`;
+
+const ContactEdit = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 `;
 
 const StudentCardContent = styled.div`
@@ -35,6 +44,8 @@ const StudentCardContent = styled.div`
   width: 100%;
   flex: 1;
   margin: 5%;
+  padding: 5px;
+  box-sizing: border-box;
 `;
 
 const ContentContainer = styled.div`
@@ -50,6 +61,8 @@ const StudentInfo = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
+  padding-right: 10px;
+  box-sizing: border-box;
 `;
 
 const StudentName = styled.p`
@@ -78,6 +91,7 @@ const StudentBio = styled.p`
   max-width: 100%;
   text-overflow: ellipsis;
   flex-grow: 1;
+  box-sizing: border-box;
 `;
 
 const StudentImage = styled.img`
@@ -86,6 +100,7 @@ const StudentImage = styled.img`
   height: auto;
   border-radius: 50%;
   object-fit: cover;
+  box-sizing: border-box;
 `;
 
 const IconWrapper = styled.div`
@@ -113,9 +128,6 @@ const PreferredContactHandle = styled.span`
 `;
 
 const EditIcon = styled(FaEdit)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
   width: 1rem;
   height: 1rem;
   cursor: pointer;
@@ -130,6 +142,10 @@ const StudentContact = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+`;
+
+const CoachContact = styled.div`
+  color: ${({ theme }) => theme.colours.sidebarLine};
 `;
 
 export const ProfileCard: FC<ProfileCardProps> = ({
@@ -147,43 +163,47 @@ export const ProfileCard: FC<ProfileCardProps> = ({
   return (
     <StudentCard $isFirst={isFirst}>
       <StudentCardContent>
+        
         <ContentContainer>
           {isCoach ? (
             <IconWrapper>
-              <FaUserCircle />
+              <FaUserTie />
             </IconWrapper>
           ) : (
             <StudentImage
-              src={image || defaultProfile} // Use defaultProfile if image is undefined
+              src={image || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`} // Use defaultProfile if image is undefined
               alt={`${name}'s profile`}
             />
           )}
           <StudentInfo>
-            <StudentContact>
-              <StudentName>{name}</StudentName>
-              <StudentEmail>
-                <span>{email}</span>
-                <CopyButton textToCopy={email} />
-              </StudentEmail>
-              {!isCoach && preferredContact && contactParts.length === 2 ? (
-                <PreferredContact>
-                  <span>{contactParts[0]}:</span>
-                  <PreferredContactHandle>
-                    {contactParts[1]}
-                  </PreferredContactHandle>
-                  <CopyButton textToCopy={contactParts[1]} />
-                </PreferredContact>
-              ) : ( // only students should have a preferred contact
-                isCoach && (<span>No preferred contact available.</span>)
+            <ContactEdit>
+              <StudentContact>
+                <StudentName>{name}</StudentName>
+                <StudentEmail>
+                  <span>{email}</span>
+                  <CopyButton textToCopy={email} />
+                </StudentEmail>
+                {!isCoach && preferredContact && contactParts.length === 2 ? (
+                  <PreferredContact>
+                    <span>{contactParts[0]}:</span>
+                    <PreferredContactHandle>
+                      {contactParts[1]}
+                    </PreferredContactHandle>
+                    <CopyButton textToCopy={contactParts[1]} />
+                  </PreferredContact>
+                ) : ( // only students should have a preferred contact
+                  isCoach && (<CoachContact>No preferred contact available.</CoachContact>)
+                )}
+              </StudentContact>
+              {isFirst && onEdit && (
+                <EditIcon onClick={onEdit} />
               )}
-            </StudentContact>
+            </ContactEdit>
             <StudentBio>{bio}</StudentBio>
           </StudentInfo>
         </ContentContainer>
       </StudentCardContent>
-      {isFirst && onEdit && (
-        <EditIcon onClick={onEdit} />
-      )}
+      
     </StudentCard>
   );
 };

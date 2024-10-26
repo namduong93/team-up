@@ -24,6 +24,9 @@ export interface CompetitionRepository {
   competitionStudentJoin2(sessionToken: string, teamInfo: TeamDetails,
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined>;
   competitionStudentWithdraw(userId: number, compId: number): Promise<CompetitionWithdrawalReturnObject | undefined>;
+
+  competitionRequestTeamNameChange(userId: number, compId: number, newTeamName: string): Promise<number | undefined>;
+  competitionApproveTeamNameChange(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined>;
   
   competitionStaffJoinCoach(code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined>;
   competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;

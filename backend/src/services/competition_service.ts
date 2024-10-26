@@ -289,6 +289,43 @@ export class CompetitionService {
     return result.competitionCode;
   }
 
+  competitionRequestTeamNameChange = async (userId: number, compId: number, newTeamName: string): Promise<{} | undefined> => {
+    // Check if user is a participant
+    const userTypeObject = await this.userRepository.userType(userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
+      throw new ServiceError(ServiceError.Auth, "User is not a student.");
+    }
+
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+    }
+
+    // Request team name change
+    const teamId = await this.competitionRepository.competitionRequestTeamNameChange(userId, compId, newTeamName);
+
+    // Notify coach
+    await this.notificationRepository.notificationRequestTeamNameChange(teamId, compId);
+
+    return {};
+  }
+
+  competitionApproveTeamNameChange = async (userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+    // Check if user is a coach
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.COACH)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a coach for this competition.");
+    }
+
+    // Approve or reject team name change
+    await this.competitionRepository.competitionApproveTeamNameChange(compId, approveIds, rejectIds);
+
+    // Notify team members
+    await this.notificationRepository.notificationApproveTeamNameChange(compId, approveIds, rejectIds);
+
+    return {};
+  }
+
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {
 
     return {};

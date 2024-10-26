@@ -403,8 +403,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitions;
   }
 
-
-
   competitionStudentJoin = async (competitionUserInfo: CompetitionUser): Promise<{} | undefined> => {
     // First insert the user into the competition_users table
     let userId = competitionUserInfo.userId;
@@ -531,6 +529,93 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     await this.pool.query(competitionRemoveParticipantQuery, [userId, compId]);
 
     return { competitionCode, competitionName, teamId, teamName };
+  }
+
+  competitionRequestTeamNameChange = async(userId: number, compId: number, newTeamName: string): Promise<number> => {
+    // Check if the user is a valid member of this team
+    const teamMemberCheckQuery = `
+      SELECT name, pending_name
+      FROM competition_teams
+      WHERE competition_id = $1 AND $2 = ANY(participants)
+    `;
+    const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [compId, userId]);
+
+    if (teamMemberCheckResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "User is not a member of this team.");
+    }
+
+    if (teamMemberCheckResult.rows[0].name === newTeamName || teamMemberCheckResult.rows[0].pending_name === newTeamName) {
+      throw new DbError(DbError.Query, "New team name is similar to the old name or an already requested new name.");
+    }
+
+    // Update the pending name in the competition teams table
+    const teamNameUpdateQuery = `
+      UPDATE competition_teams
+      SET pending_name = $3
+      WHERE competition_id = $1 AND $2 = ANY(participants)
+      RETURNING id
+    `;
+    const result = await this.pool.query(teamNameUpdateQuery, [compId, userId, newTeamName]);
+    const teamId = result.rows[0].id;
+
+    if (result.rowCount === 0) {
+      throw new DbError(DbError.Query, "No matching team found for the provided ID in this competition.");
+    }
+
+    return teamId;
+  }
+
+  competitionApproveTeamNameChange = async(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Verify if there are duplicate IDs in the approveIds and rejectIds arrays
+    const duplicateIds = approveIds.filter(id => rejectIds.includes(id));
+    if (duplicateIds.length > 0) {
+      throw new DbError(DbError.Query, "Duplicate team IDs found in team name approve and reject lists.");
+    }
+    
+    // Update the team name if the name change is approved
+    if (approveIds.length > 0) {
+      const approveQuery = `
+        UPDATE competition_teams
+        SET name = pending_name, pending_name = NULL
+        WHERE id = ANY($1::int[])
+        AND competition_id = $2
+      `;
+      const approveResult = await this.pool.query(approveQuery, [approveIds, compId]);
+  
+      // If no rows were updated, it implies that no matching records were found
+      if (approveResult.rowCount === 0) {
+        throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+      }
+    } 
+    
+    // If there are rejected team IDs, batch update to clear pending_name only
+    if (rejectIds.length > 0) {
+      const rejectQuery = `
+        UPDATE competition_teams
+        SET pending_name = NULL
+        WHERE id = ANY($1::int[])
+        AND competition_id = $2
+      `;
+      const rejectResult = await this.pool.query(rejectQuery, [rejectIds, compId]);
+
+      if (rejectResult.rowCount === 0) {
+        throw new DbError(DbError.Insert, "No matching teams found for the provided rejected IDs in this competition.");
+      }
+    }
+
+    return {};
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

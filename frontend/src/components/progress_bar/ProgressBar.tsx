@@ -17,6 +17,7 @@ const RegoProgressContainer = styled.div`
   border-radius: 10px;
   /* margin-top: 10px;
   margin-left: 10px; */
+  box-sizing: border-box;
 
   @media (max-width: 600px) {
     min-width: 60px;
@@ -40,6 +41,7 @@ const ProgressItemsContainer = styled.div`
   position: relative;
   justify-content: space-between;
   margin-top: 10vh;
+  box-sizing: border-box;
 
   &::after {
     content: '';
@@ -67,6 +69,7 @@ const ProgressCircle = styled.div<{ $isCurrentProgress: boolean }>`
   border-radius: 50%;
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
 `
 
 export const RegoProgressBar: FC<ProgressBarProps> = ({ progressNumber = 0 }) => {

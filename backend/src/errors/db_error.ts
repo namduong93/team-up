@@ -1,6 +1,6 @@
 import { ErrorInterface } from "./error_interface";
 
-export enum DbErrorType {
+enum DbErrorType {
   Auth = 'Auth',
   Query = 'Query',
   Insert = 'Insert',
