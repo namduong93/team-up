@@ -19,7 +19,7 @@ const DropdownTextInput = styled.input`
   width: 100%;
   border-radius: 10px;
   box-sizing: border-box;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border: 1px solid ${({ theme }) => theme.colours.notifDark};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
 
@@ -36,7 +36,7 @@ const DropdownIconDiv = styled.div`
   z-index: 5000;
   right: 0;
   top: 0;
-  border-left: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border-left: 1px solid ${({ theme }) => theme.colours.notifDark};
   display: flex;
   justify-content: center;
   align-items: center;

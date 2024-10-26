@@ -8,6 +8,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import SiteLocationForm from "./components/SiteLocationForm";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import moment from 'moment-timezone';
+import DropdownInput from "../../../components/general_utility/DropDownInput";
+
 
 const Container = styled.div`
   flex: 1;
@@ -121,23 +123,35 @@ interface OtherSiteLocation {
 interface CompetitionInformation {
   name: string;
   region: string;
+  timeZone: string;
   startDate: string;
   startTime: string;
+  start: string;
   earlyBird: boolean | null;
   earlyBirdDate?: string;
   earlyBirdTime?: string;
+  early: string;
   generalDate: string;
   generalTime: string;
+  general: string;
   code: string;
   siteLocations: SiteLocation[];
   otherSiteLocations: OtherSiteLocation[];
 }
 
+const createTimezoneOptions = () => {
+  const timezones = moment.tz.names().map((tz) => ({
+    value: tz,
+    label: tz.replace(/_/g, ' ').replace(/\/(.+)/, ' - $1'), // Format label for better readability
+  }));
+
+  return [{ value: "", label: "Please Select" }, ...timezones];
+};
+
 export const CompetitionDetails: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [locationError, setLocationError] = useState<ReactNode>('');
-  const [selectedTimezone, setSelectedTimezone] = useState<string>('');
   
   const [optionDisplayList, setOptionDisplayList] = useState<Array<{ value: string, label: string, defaultSite: string }>>(
     location.state?.optionDisplayList || []
@@ -147,13 +161,17 @@ export const CompetitionDetails: FC = () => {
     location.state?.competitionInfo || {
       name: "",
       region: "",
+      timeZone: "",
       startDate: "",
       startTime: "",
+      start: "",
       earlyBird: null,
       earlyBirdDate: "",
       earlyBirdTime: "",
+      early:  "",
       generalDate: "",
       generalTime: "",
+      general:  "",
       code: "",
       siteLocations: [],
       otherSiteLocations: [],
@@ -263,13 +281,15 @@ export const CompetitionDetails: FC = () => {
       region, 
       startDate,
       startTime,
+      timeZone,
     } = competitionInfo;
     return (
       name === '' ||
       region === '' ||
+      timeZone === '' ||
       startDate === '' ||
       startTime === '' ||
-      (earlyBird && earlyBirdDate === '' && earlyBirdTime === '') ||
+      (earlyBird && !earlyBirdDate && !earlyBirdTime) ||
       generalDate === '' ||
       generalTime === '' ||
       code === '' ||
@@ -278,10 +298,8 @@ export const CompetitionDetails: FC = () => {
     );
   };
 
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    navigate("/competition/confirmation", {state: { competitionInfo, optionDisplayList }});
+  const handleTimeZoneChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCompetitionInfo({ ...competitionInfo, timeZone: e.target.value });
   };
 
   const convertToTimezone = (date: string, time: string, timezone: string) => {
@@ -289,7 +307,27 @@ export const CompetitionDetails: FC = () => {
 
     const dateTimeString = `${date} ${time}`;
     return moment.tz(dateTimeString, timezone).format();
-};
+  };
+
+  const timezoneOptions = createTimezoneOptions();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const { startDate, startTime, earlyBirdDate, earlyBirdTime, generalDate, generalTime } = competitionInfo;
+    
+    const start = convertToTimezone(startDate, startTime, competitionInfo.timeZone);
+    const early = earlyBirdDate && earlyBirdTime ? convertToTimezone(earlyBirdDate, earlyBirdTime, competitionInfo.timeZone) : '';
+    const general = convertToTimezone(generalDate, generalTime, competitionInfo.timeZone);
+
+    const updatedCompetitionInfo = { 
+      ...competitionInfo,
+      start, 
+      early, 
+      general 
+    };
+    
+    navigate("/competition/confirmation", { state: { competitionInfo: updatedCompetitionInfo, optionDisplayList } });
+  };
 
   return (
     <FlexBackground
@@ -299,7 +337,7 @@ export const CompetitionDetails: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+    > 
       <CompCreationProgressBar progressNumber={0} />
       <Container>
         <FormContainer onSubmit={handleSubmit}>
@@ -324,6 +362,16 @@ export const CompetitionDetails: FC = () => {
             onChange={(e) => handleChange(e, "region")}
             width="100%"
             descriptor="Please specify the region your Competition will be held in"
+          />
+
+          <DropdownInput
+            label="Competition Timezone"
+            options={timezoneOptions}
+            required={true}
+            value={competitionInfo.timeZone}
+            onChange={handleTimeZoneChange}
+            width="100%"
+            descriptor="Please select the timezone for the Competition"
           />
 
           <Label>Competition Start<Asterisk>*</Asterisk></Label>

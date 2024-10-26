@@ -50,7 +50,7 @@ const RelativeSelectGrid = styled.div`
 
 const RelativeSelectElement = styled.select`
   appearance: none;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colours.notifDark};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   color: ${({ theme }) => theme.fonts.colour};
   background-color: ${({ theme }) => theme.background};;

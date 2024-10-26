@@ -134,13 +134,17 @@ interface OtherSiteLocation {
 interface CompetitionInformation {
   name: string;
   region: string;
+  timeZone: string;
   startDate: string;
   startTime: string;
+  start: string;
   earlyBird: boolean | null;
   earlyBirdDate?: string;
   earlyBirdTime?: string;
+  early: string;
   generalDate: string;
   generalTime: string;
+  general: string;
   code: string;
   siteLocations: SiteLocation[];
   otherSiteLocations: OtherSiteLocation[];
@@ -179,19 +183,20 @@ export const CompetitionConfirmation: FC = () => {
   }, []);
 
   const handleBack = () => {
+    console.log(competitionInfo);
     navigate("/competition/create", { state: { competitionInfo, optionDisplayList } });
   };
 
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations, otherSiteLocations } = competitionInfo;
+    const { name, early, general, start, region, code, siteLocations, otherSiteLocations } = competitionInfo;
     const payload = {
       name,
-      earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
-      generalRegDeadline: `${generalDate}T${generalTime}:00`,
-      startDate: `${generalDate}T${generalTime}:00`,
-      region: 'Australia',
+      earlyRegDeadline: early ? early : null,
+      generalRegDeadline: general,
+      startDate: start,
+      region: region,
       code,
       siteLocations: siteLocations.map(location => ({
         universityId: location.universityId, 
@@ -202,7 +207,7 @@ export const CompetitionConfirmation: FC = () => {
         name: location.defaultSite, 
       })),
     };
-
+    console.log(payload)
     try {
       const response = await sendRequest.post<{competitionId: number }>('/competition/system_admin/create', payload);
       console.log("Response:", response.data);
@@ -236,14 +241,17 @@ export const CompetitionConfirmation: FC = () => {
 
           <Label>Competition Start</Label>
           <DoubleInputContainer>
-              <HalfText>Date</HalfText>
-              <HalfText>Time</HalfText>
-            </DoubleInputContainer>
+            <HalfText>Date</HalfText>
+            <HalfText>Time</HalfText>
+          </DoubleInputContainer>
 
-            <DoubleInputContainer margin={true}>
-              <HalfText><em>{competitionInfo?.startDate}</em></HalfText>
-              <HalfText><em>{competitionInfo?.startTime}</em></HalfText>
-            </DoubleInputContainer>
+          <DoubleInputContainer margin={true}>
+            <HalfText><em>{competitionInfo?.startDate}</em></HalfText>
+            <HalfText><em>{competitionInfo?.startTime}</em></HalfText>
+          </DoubleInputContainer>
+
+          <Label>Competition Timezone</Label>
+          <Text><em>{competitionInfo?.timeZone}</em></Text>
 
           {competitionInfo?.earlyBird && (
             <>
@@ -259,7 +267,7 @@ export const CompetitionConfirmation: FC = () => {
               <HalfText><em>{competitionInfo?.earlyBirdTime}</em></HalfText>
             </DoubleInputContainer>
             </>
-          )};
+          )}
 
           <Label>General Registration Deadline</Label>
 
