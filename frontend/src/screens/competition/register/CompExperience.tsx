@@ -97,6 +97,7 @@ export const CompetitionExperience: FC = () => {
   // const [courseOptions, setCourseOptions] = useState<Array<{ value: string; label: string }>>([]);
 
   const handleBack = () => {
+    console.log(formData)
     navigate(`/competition/individual/${code}`);
   };
 
@@ -104,7 +105,25 @@ export const CompetitionExperience: FC = () => {
 
     e.preventDefault();
 
-    const { degreeYear, degree, ICPCEligibility, isRemote, competitionLevel, boersenEligible, codeforce, nationalPrizes, internationalPrizes, courses, pastRegional } = formData;
+    // post process platform and handle fields to be platform:handle for preferredContact
+
+    const { 
+      degreeYear, 
+      degree, 
+      ICPCEligibility, 
+      isRemote, 
+      competitionLevel, 
+      boersenEligible, 
+      codeforce, 
+      nationalPrizes, 
+      internationalPrizes, 
+      courses, 
+      pastRegional,
+      platform,
+      handle,
+      competitionBio, 
+    } = formData;
+
     const competitionUser = {
       ICPCEligible: ICPCEligibility,
       competitionLevel: competitionLevel,
@@ -117,6 +136,8 @@ export const CompetitionExperience: FC = () => {
       codeforcesRating: codeforce,
       universityCourses: courses,
       pastRegional: pastRegional,
+      competitionBio: competitionBio,
+      preferredContact: `${platform}:${handle}`
     }
 
     const payload = {
@@ -141,12 +162,19 @@ export const CompetitionExperience: FC = () => {
   };
 
   const courseOptions = [
-    { value: '1511', label: 'COMP1511  Programming Fundamentals' },
-    { value: '2521', label: 'COMP2521  Data Structures and Algorithms' },
-    { value: '3121', label: 'COMP3121  Algorithm Design and Analysis' },
-    { value: '3821', label: 'COMP3821  Extended Algorithm Design and Analysis' },
-    { value: '4128', label: 'COMP4128  Programming Challenges' },
+    { value: 'Introduction to Programming / Programming Fundamentals', label: 'Introduction to Programming / Programming Fundamentals (and any advanced versions' },
+    { value: 'Data Structures and Algorithms', label: 'Data Structures and Algorithms (and any advanced versions)' },
+    { value: 'Algorithm Design and Analysis', label: 'Algorithm Design and Analysis (and any advanced versions' },
+    { value: 'Programming Challenges and Problems', label: 'Programming Challenges and Problems (and any advanced versions' },
   ];
+
+  // const courseOptions = [
+  //   { value: '1511', label: 'COMP1511  Programming Fundamentals' },
+  //   { value: '2521', label: 'COMP2521  Data Structures and Algorithms' },
+  //   { value: '3121', label: 'COMP3121  Algorithm Design and Analysis' },
+  //   { value: '3821', label: 'COMP3821  Extended Algorithm Design and Analysis' },
+  //   { value: '4128', label: 'COMP4128  Programming Challenges' },
+  // ];
 
   // useEffect(() => {
   //   const fetchCourses = async () => {
