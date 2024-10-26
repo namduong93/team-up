@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { FirstStepPopUp } from './FirstStepPopUp';
 import { SecondStepPopUp } from './SecondStepPopUp';
-import { ThirdStepPopUp } from './ThirdStepPopUp';
 import styled from "styled-components";
+import InvitePopUp from './InvitePopUp';
+import { OptionPopUp } from './OptionPopUp';
 
-interface SitePopUpChainProps {
+interface WithdrawPopUpChainProps {
   handleClose: () => void;
 }
 
@@ -15,11 +15,10 @@ const Heading = styled.h2`
   margin-bottom: 10%;
   white-space: pre-wrap;
   word-break: break-word;
-`
+`;
 
-export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) => {
+export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [newSite, setNewSite] = useState('');
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -31,7 +30,7 @@ export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) =
   };
 
   const handleSubmit = () => {
-    // TO-DO: add backend routing to submit the newSite request to backend
+    // TO-DO: add backend routing to submit the withdrawal request to backend
 
     setCurrentStep((prevStep) => prevStep + 1);
   }
@@ -40,27 +39,40 @@ export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) =
     switch (currentStep) {
       case 1:
         return (
-          <FirstStepPopUp
-            heading={<Heading>Change Team Site {"\nLocation"}</Heading>}
+          <OptionPopUp
+            heading={<Heading>Withdrawing from the Team 
+              {"\nwill make you ineligible"} 
+              {"\n to compete in the Competition"}
+              {"\n\nThis action is final and"}
+              {"\ncannot be undone"}
+              {"\n\nDo you still wish"}
+              {"\nto proceed?"}
+            </Heading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
-            text="Enter a location"
-            inputValue={newSite}
-            setInputValue={setNewSite}
+            actionButtonText='Proceed'
           />
         );
       case 2:
         return (
           <SecondStepPopUp
-            heading={<Heading>Are you sure you would {"\nlike to change your Team's"} {"\nsite location?"}</Heading>}
+            heading={<Heading>Are you sure you would {"\nlike to withdraw?"}</Heading>}
             onClose={handleCloseWithReset}
             onNext={handleSubmit}
           />
         );
       case 3:
         return (
-          <ThirdStepPopUp
-            heading={<Heading>Your team's new site location {"\nis now pending approval"} {"\nfrom your coach"}</Heading>}
+          <InvitePopUp 
+            heading={<Heading>Copy and send your 
+              {"\nTeam Code"}
+              {"\nto invite your Substitute"} 
+              {"\nto the Team"} 
+              {"\n\nAlternatively, you can wait"}
+              {"\nfor a Random Replacement"} 
+              {"\nto be assigned"} 
+            </Heading>}
+            text="COMP1234" 
             onClose={handleCloseWithReset}
           />
         );

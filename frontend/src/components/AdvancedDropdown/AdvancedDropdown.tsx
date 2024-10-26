@@ -8,6 +8,7 @@ const DropdownContainerDiv = styled.div`
   border-radius: 10px;
   box-sizing: border-box;
   position: relative;
+  z-index: 1;
   color: ${({ theme }) => theme.fonts.colour};
   
 `;
@@ -19,7 +20,7 @@ const DropdownTextInput = styled.input`
   border-radius: 10px;
   box-sizing: border-box;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  background-color: ${({ theme }) => theme.colours.sidebarBackground};
+  background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
 
   &:focus + div {
@@ -32,7 +33,7 @@ const DropdownIconDiv = styled.div`
   position: absolute;
   width: 36px;
   height: 100%;
-  z-index: 5;
+  z-index: 5000;
   right: 0;
   top: 0;
   border-left: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -57,7 +58,9 @@ interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
 const DropdownOptionsDiv = styled.div`
   position: absolute;
   width: 100%;
+  right: 0;
   min-height: 36px;
+  min-width: 200px;
   background-color: ${({ theme }) => theme.background};
   top: calc(100% + 3px);
   border-radius: 10px;
@@ -152,7 +155,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({ optionsState: [options, se
 
   const fuse = new Fuse(options, {
     keys: ['label'],
-    threshold: 0.5,
+    threshold: 1,
   });
 
   let filteredOptions;

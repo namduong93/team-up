@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../../components/progress_bar/ProgressBar";
@@ -8,7 +8,6 @@ import MultiRadio from "../../../components/general_utility/MultiRadio";
 import TextInput from "../../../components/general_utility/TextInput";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
-import axios from "axios";
 import { sendRequest } from "../../../utility/request";
 
 const Container = styled.div`
@@ -135,14 +134,6 @@ export const CompetitionExperience: FC = () => {
         }
       }); 
 
-      // TO-DO: uncomment when pop-up is implemented on Admin Page
-      // navigate("/competition/page", { 
-      //   state: { 
-      //     showPopUp: true, 
-      //     message: "You have created a new Competition", 
-      //     code: "COMP_12345"
-      //   }
-      // }); 
     } catch (error) {
       console.error("Error creating competition:", error);
     }

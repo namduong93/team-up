@@ -83,6 +83,26 @@ export interface StaffInfo {
   access: StaffAccess;
   email: string;
 }
+export interface ParticipantTeamDetails {
+  compName: string;
+  teamName: string;
+  teamSite: string;
+  teamSeat?: string;
+  teamLevel: string;
+  startDate: Date;
+  students: Array<{
+    name: string;
+    email: string;
+    bio: string;
+    preferredContact: string;
+  }>;
+  coach: {
+    name: string;
+    email: string;
+    bio: string;
+  }
+}
+
 
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
@@ -93,6 +113,16 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+
+  competitionTeamDetails = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'competition/team/details route is only for participants to use');
+    }
+
+    return await this.competitionRepository.competitionTeamDetails(userId, compId);
   }
 
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {

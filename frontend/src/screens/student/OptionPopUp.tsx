@@ -1,14 +1,15 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { styled } from 'styled-components';
+import { CancelButton, ConfirmButton } from '../../components/responsive_fields/action_buttons/ActionButton';
 
 const Modal = styled.div`
   position: fixed;
   top: 50%;
-  left: 50%;
   min-width: 290px;
-  max-width: 450px;
+  max-width: 350px;
   box-sizing: border-box;
+  left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 12px;
@@ -21,7 +22,6 @@ const Modal = styled.div`
   flex-direction: column;
   align-items: center;
 `
-
 
 const CloseButton = styled.button`
   background: transparent;
@@ -40,12 +40,22 @@ const CloseButton = styled.button`
   }
 `
 
-interface ThirdStepPopUpProps {
+const ButtonContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+`
+
+interface OptionPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
+  onNext: () => void;
+  actionButtonText: string;
 }
 
-export const ThirdStepPopUp: React.FC<ThirdStepPopUpProps> = ({ heading, onClose }) => {
+export const OptionPopUp: React.FC<OptionPopUpProps> = ({ heading, onClose, onNext, actionButtonText }) => {
 
   return (
     <>
@@ -55,7 +65,13 @@ export const ThirdStepPopUp: React.FC<ThirdStepPopUpProps> = ({ heading, onClose
         </CloseButton>
         <div>{heading}</div>
 
+        <ButtonContainer>
+          <ConfirmButton onClick={onNext}>{actionButtonText}</ConfirmButton>
+          <CancelButton onClick={onClose}>Cancel</CancelButton>
+        </ButtonContainer>
+
       </Modal>
     </>
   );
 };
+

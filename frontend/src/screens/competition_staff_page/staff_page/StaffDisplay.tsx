@@ -245,7 +245,7 @@ const STAFF_DISPLAY_FILTER_OPTIONS = {
 
 export const StaffDisplay: FC = () => {
   const { compId } = useParams();
-  const { filters, sortOption, searchTerm, removeFilter, setFilters,
+  const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
     setFilterOptions, setSortOptions } = useCompetitionOutletContext('staff');
 
   
@@ -278,6 +278,10 @@ export const StaffDisplay: FC = () => {
       if (!filters.Roles.some((role) => staffDetails.roles.includes(role as CompetitionRole))) {
         return false;
       }
+    }
+
+    if (!(universityOption.value === '') && !(staffDetails.universityName === universityOption.label)) {
+      return false;
     }
 
     return true;

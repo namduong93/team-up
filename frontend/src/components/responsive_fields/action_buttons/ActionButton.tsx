@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { TimeoutButton } from "../../general_utility/TimeoutButton";
 
 
 interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -76,9 +77,14 @@ export const PopUpContent = styled.div`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
   padding: 20px;
+  width: 98%;
+  max-width: 320px;
+  box-sizing: border-box;
   text-align: center;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 `;
+
+
 
 export const Question = styled.div`
   padding: 20px;
@@ -93,6 +99,24 @@ export const ConfirmButton = styled.button`
   border-radius: 20px;
   border: none;
   margin: 15px;
+  max-width: 150px;
+  min-width: 100px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colours.confirmDark};
+    color: ${({ theme }) => theme.background};
+  }
+`;
+
+export const TimeoutConfirmButton = styled(TimeoutButton)`
+  color: ${({ theme }) => theme.fonts.colour};
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: none;
+  margin: 15px;
+  max-width: 150px;
+  min-width: 100px;
   cursor: pointer;
 
   &:hover {
@@ -108,6 +132,8 @@ export const CancelButton = styled.button`
   border-radius: 20px;
   border: none;
   margin: 15px;
+  max-width: 150px;
+  min-width: 100px;
   cursor: pointer;
 
   &:hover {

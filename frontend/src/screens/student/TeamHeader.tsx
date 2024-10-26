@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { NotificationButton } from "../../components/page_header/components/NotificationButton";
 import { PageHeaderContainerDiv, PageTitle, PageDescriptionSpan } from "../../components/page_header/PageHeader";
@@ -9,6 +9,7 @@ interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   compName: string;
   teamName: string;
   compCountdown: number;
+  onWithdrawClick: () => void;
 };
 
 const TeamTitle = styled(PageTitle)`
@@ -67,7 +68,7 @@ const ResponsiveHeader = styled(PageHeaderContainerDiv)`
   margin: 0 auto;
 `;
 
-export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCountdown }) => {  
+export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCountdown, onWithdrawClick }) => {
   return (
     <ResponsiveHeader>
       <HeaderContent>
@@ -82,6 +83,7 @@ export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCount
             question="Are you sure you want to withdraw from the competition?"
             redirectPath="/dashboard"
             actionType="error"
+            handleClick={onWithdrawClick}
           />
           <NotificationButton />
         </ButtonContainer>
