@@ -27,7 +27,7 @@ const CompCardContainer = styled.div`
   transition: transform 0.2s ease-in-out !important;
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translate(3px, 3px);
   }
 `;
 
