@@ -3,8 +3,15 @@ import { FlexBackground } from "../../components/general_utility/Background";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { sendRequest } from "../../utility/request";
+import { SearchBar } from "../competition_staff_page/components/PageUtils";
 import staffFAQs from "./faq_staff.json";
 import studentFAQs from "./faq_student.json";
+import adminFAQs from "./faq_admin.json";
+
+interface FAQ {
+  question: string;
+  answer: string;
+};
 
 const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
@@ -77,10 +84,10 @@ const DropdownContent = styled.div<{ $isOpen: boolean }>`
   box-sizing: border-box;
 `;
 
-interface FAQ {
-  question: string;
-  answer: string;
-}
+const FAQSearchBar = styled(SearchBar)`
+  height: 40px;
+`;
+
 
 export const Settings: FC = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -91,16 +98,17 @@ export const Settings: FC = () => {
   const [faqOpen, setFaqOpen] = useState(false);
   const [appearancesOpen, setAppearancesOpen] = useState(false);
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     (async () => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setUserType(typeResponse.data.type);
-        setIsLoaded(true);
         const savedTheme = localStorage.getItem("theme");
         if (savedTheme === "dark") setIsDarkTheme(true);
-        setFAQ((typeResponse.data.type === "student") ? studentFAQs : staffFAQs);
+        fetchFAQs(typeResponse.data.type);
+        setIsLoaded(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           setIsLoaded(false);
@@ -111,6 +119,25 @@ export const Settings: FC = () => {
       }
     })();
   }, []);
+
+  const fetchFAQs = (userType: string) => {
+    let faqs: FAQ[] = [];
+  
+    if (userType === "student") {
+      faqs = studentFAQs;
+    } else if (userType === "staff") {
+      faqs = [...staffFAQs, ...studentFAQs];
+    } else if (userType === "system_admin") {
+      faqs = [...adminFAQs, ...staffFAQs, ...studentFAQs];
+    }
+  
+    setFAQ(faqs);
+  };
+
+  // Filter FAQs based on search query
+  const filteredFAQs = faq.filter(faqItem =>
+    faqItem.question.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Toggle between dark and light theme
   const toggleTheme = () => {
@@ -130,12 +157,20 @@ export const Settings: FC = () => {
             FAQs
           </DropdownHeader>
           <DropdownContent $isOpen={faqOpen}>
-            {faq.map((faqItem, index) => (
-              <div key={index}>
-                <h3>{faqItem.question}</h3>
-                <p>{faqItem.answer}</p>
-              </div>
-            ))}
+            <FAQSearchBar 
+              value={searchQuery} 
+              onChange={(e) => setSearchQuery(e.target.value)} 
+            />
+            {filteredFAQs.length > 0 ? (
+              filteredFAQs.map((faqItem, index) => (
+                <div key={index}>
+                  <h3>{faqItem.question}</h3>
+                  <p>{faqItem.answer}</p>
+                </div>
+              ))
+            ) : (
+              <div>No results found.</div>
+            )}
           </DropdownContent>
         </DropdownContainer>
 
