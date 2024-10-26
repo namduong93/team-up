@@ -143,7 +143,7 @@ export class CompetitionController {
 
   competitionStudentWithdraw = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const compId = req.body.competitionId;
+    const compId = req.body.compId;
     const result = await this.competitionService.competitionStudentWithdraw(Number(userId), Number(compId));
     res.json(result);
     return;
