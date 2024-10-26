@@ -98,7 +98,7 @@ export class CompetitionController {
   });
 
   competitionGetDetails = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const competitionId = req.query.id;
+    const competitionId = req.query.compId;
     const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
 
     res.json(competitionDetails);
@@ -143,8 +143,8 @@ export class CompetitionController {
 
   competitionStudentWithdraw = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const competitionId = req.body.competitionId;
-    const result = await this.competitionService.competitionStudentWithdraw(Number(userId), Number(competitionId));
+    const compId = req.body.compId;
+    const result = await this.competitionService.competitionStudentWithdraw(Number(userId), Number(compId));
     res.json(result);
     return;
   });

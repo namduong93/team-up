@@ -1,7 +1,6 @@
 import { Pool } from "pg";
-import { Notification, NotificationType } from "../../models/notification/notification";
+import { Notification } from "../../models/notification/notification";
 import { NotificationRepository } from "../notification_repository_type";
-import { parse } from "postgres-array";
 
 export class SqlDbNotificationRepository implements NotificationRepository {
   private readonly pool: Pool;

@@ -2,9 +2,9 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
 import { ProfileCard } from "./ProfileCard";
-import defaultProfile from "./default-profile.jpg";
 import { EditCompPreferences } from "./EditCompPreferences";
 import { StudentDetails } from "./EditCompPreferences";
+import { backendURL } from "../../../config/backendURLConfig";
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -28,6 +28,7 @@ const TeamDetailsContainer = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
   padding: 15px;
+  box-sizing: border-box;
 `;
 
 const TeamInfo = styled.div`
@@ -52,6 +53,7 @@ const TeamField = styled.p`
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 12px;
   padding: 10px;
+  box-sizing: border-box;
 `;
 
 const StudentsContainer = styled.div`
@@ -86,12 +88,13 @@ export const TeamDetails: FC = () => {
     alert(`Saved details for: ${updatedStudent.name}`);
   };
 
+  // TODO: waiting for backend route to get 1 paritcipant comp details
   const fetchStudentDetails = (id: string): StudentDetails => {
     return {
       name: "John Doe",
       email: "john.doe@example.com",
       bio: "Passionate coder and team player.",
-      image: defaultProfile,
+      image: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
       id,
       preferredContact: "Discord:john_doe",
       degreeYear: 3,
@@ -143,7 +146,7 @@ export const TeamDetails: FC = () => {
             name={student.name}
             email={student.email}
             bio={student.bio}
-            image={student.image || defaultProfile}
+            image={student.image || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` }
             preferredContact={student.preferredContact}
             isFirst={index === 0}
             onEdit={() => setEditingPreferences(fetchStudentDetails(student.id))}

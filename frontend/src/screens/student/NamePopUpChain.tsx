@@ -41,7 +41,7 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) =>
       case 1:
         return (
           <FirstStepPopUp
-            heading={<Heading>Change {"\nTeam Name"}</Heading>}
+            heading={<Heading>Change Team {"\n Name"}</Heading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter new name"

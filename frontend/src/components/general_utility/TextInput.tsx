@@ -70,7 +70,7 @@ const Input = styled.input`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.fonts.colour};
+  border: 1px solid ${({ theme }) => theme.colours.notifDark};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
   border-radius: 10px;

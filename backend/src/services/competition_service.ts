@@ -259,21 +259,23 @@ export class CompetitionService {
     return { teamId: 1 };
   }
 
-  competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<string | undefined> => {
-    // Check if user is a participant
+  competitionStudentWithdraw = async (userId: number, compId: number): Promise<string | undefined> => {
+    // Check if user is a student or a participant
     const userTypeObject = await this.userRepository.userType(userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw COMPETITION_STUDENT_REQUIRED;
+      throw new ServiceError('User is not a student.', ServiceError.Auth);
+    }
+
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
     }
     
     // Remove student from competition
-    const result = await this.competitionRepository.competitionStudentWithdraw(userId, competitionId);
-    if (!result) {
-      throw BAD_REQUEST;
-    }
+    const result = await this.competitionRepository.competitionStudentWithdraw(userId, compId);
 
     // Notify team members and coach
-    await this.notificationRepository.notificationWithdrawal(userId, competitionId, result.competitionName, result.teamId, result.teamName);
+    await this.notificationRepository.notificationWithdrawal(userId, compId, result.competitionName, result.teamId, result.teamName);
 
     return result.competitionCode;
   }

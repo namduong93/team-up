@@ -9,16 +9,17 @@ import { sendRequest } from "../../../utility/request";
 export interface DashInfo {
   preferredName: string;
   affiliation: string;
+  profilePic: string;
 }
 
-export const useDashInfo = (): [{ preferredName: string, affiliation: string }, React.Dispatch<React.SetStateAction<{ preferredName: string, affiliation: string }>>] => {
+export const useDashInfo = (): [{ preferredName: string, affiliation: string, profilePic: string, }, React.Dispatch<React.SetStateAction<{ preferredName: string, affiliation: string, profilePic: string, }>>] => {
 
-  const [dashInfo, setDashInfo] = useState({ preferredName: '', affiliation: '' });
+  const [dashInfo, setDashInfo] = useState({ preferredName: '', affiliation: '', profilePic: '', });
 
   useEffect(() => {
     (async () => {
       try {
-        const infoResponse = await sendRequest.get<{ preferredName: string, affiliation: string }>(`/user/dash_info`);
+        const infoResponse = await sendRequest.get<{ preferredName: string, affiliation: string, profilePic: string }>(`/user/dash_info`);
         // Can also store the preferredName from the response and use it in the sidebar.
         // Request any personal info needed here and then if there's an auth error in any of them
         // the page will redirect.

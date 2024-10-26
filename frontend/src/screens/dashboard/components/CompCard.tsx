@@ -17,16 +17,18 @@ const CompCardContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  margin: 10px;
-  width: 275px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 285px;
   height: fit-content;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   transition: transform 0.2s ease-in-out !important;
+  box-sizing: border-box;
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translate(3px, 3px);
   }
 `;
 
@@ -80,6 +82,7 @@ const Role = styled.div`
   color: ${({ theme }) => theme.background};
   border: none;
   border-radius: 20px;
+  box-sizing: border-box;
   padding: 8px 10px;
   width: fit-content;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
@@ -97,6 +100,7 @@ const ProgressBar = styled.div`
   height: 15px;
   overflow: hidden;
   margin-top: 20px;
+  box-sizing: border-box;
 `;
 
 const Progress = styled.div<{ $width: number }>`

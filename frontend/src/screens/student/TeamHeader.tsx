@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import styled from "styled-components";
 import { NotificationButton } from "../../components/page_header/components/NotificationButton";
 import { PageHeaderContainerDiv, PageTitle, PageDescriptionSpan } from "../../components/page_header/PageHeader";
@@ -36,6 +36,7 @@ const WithdrawButton = styled(ActionButton)`
   min-height: 20px;
   flex: 1;
   padding: 0 16px;
+  box-sizing: border-box;
 `;
 
 const HeaderContent = styled.div`
@@ -74,6 +75,7 @@ export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCount
       <HeaderContent>
         <TeamTitle>{compName}</TeamTitle>
         <TeamDescription>Team {teamName}</TeamDescription>
+        {/* <div>{compCountdown}</div> */}
       </HeaderContent>
 
       <HeaderRightSection>

@@ -17,7 +17,7 @@ export const darkTheme: DefaultTheme = {
     secondaryDark: "#FDD386",
     cancel: "#F68486",
     cancelDark: "#AD0B0B",
-    confirmDark: "#558964",
+    confirmDark: "#2A7A47",
     confirm: "#8BDFA5",
     sidebarBackground: "#333333",
     optionUnselected: "#333333",
@@ -66,5 +66,9 @@ export const darkTheme: DefaultTheme = {
     registrationBorder: "#FEEBC8",
     seat: "#F19EDC",
     seatBorder: "#FDE2FC",
+    contact: "#35B4C2",
+    contactBorder: "#E1FAFC",
+    capacity: "#8BDFA5",
+    capacityBorder: "#E8F7EC",
   },
 };

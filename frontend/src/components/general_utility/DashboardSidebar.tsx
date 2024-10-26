@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { sendRequest } from "../../utility/request";
+import { ProfilePic } from "../../screens/account/Account";
+import { backendURL } from "../../../config/backendURLConfig";
 
 export interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   cropState: boolean;
-  sidebarInfo: { preferredName: string, affiliation: string };
+  sidebarInfo: { preferredName: string, affiliation: string, profile?: string };
 }
 
 const SidebarContainer = styled.div<{ $cropState: boolean }>`
@@ -21,10 +23,16 @@ const SidebarContainer = styled.div<{ $cropState: boolean }>`
   height: calc(100vh - 50px);
   overflow-x: hidden;
   overflow-y: auto;
+  box-sizing: border-box;
 
   @media (max-width: 600px) {
     min-width: 35px;
     width: 35px;
+  }
+
+  @media (max-width: 335px) {
+    margin-right: 2px;
+    margin-left: 0;
   }
 `;
 
@@ -39,6 +47,7 @@ const SidebarContent = styled.div`
   min-height: 600px;
   overflow-y: auto;
   margin-bottom: 10px;
+  box-sizing: border-box;
 `;
 
 const ProfileSection = styled.div`
@@ -56,14 +65,6 @@ const ProfileSection = styled.div`
   }
 `;
 
-const ProfilePic = styled.div`
-  width: 150px;
-  height: 150px;
-  background-color: white;
-  border-radius: 50%;
-  margin-bottom: 10px;
-`;
-
 const Name = styled.div`
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
@@ -77,6 +78,7 @@ const NavLinks = styled.nav`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 `;
 
 const NavButton = styled.button<{ $active: boolean }>`
@@ -97,6 +99,7 @@ const NavButton = styled.button<{ $active: boolean }>`
   flex-grow: 1;
   margin: 5px;
   justify-content: center;
+  box-sizing: border-box;
 
   &:hover {
     background-color: ${({ theme }) => theme.background};
@@ -112,6 +115,7 @@ const NavButton = styled.button<{ $active: boolean }>`
     justify-content: center;
     padding: 10px;
     gap: 0;
+    box-sizing: border-box;
 
     span {
       display: none;
@@ -137,6 +141,7 @@ const LogoutButton = styled.button`
   border-radius: 40px;
   flex-shrink: 1;
   letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
+  box-sizing: border-box;
   
   svg {
     width: 20px;
@@ -183,7 +188,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, s
       <SidebarContent>
         {!cropState && (
           <ProfileSection>
-            <ProfilePic />
+            <ProfilePic $imageUrl={sidebarInfo.profile || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
             <div>Hello</div>
             <Name>{sidebarInfo.preferredName}</Name>
             <div>{sidebarInfo.affiliation}</div>

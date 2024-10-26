@@ -49,6 +49,7 @@ const ProgressBarContainer = styled.div`
   background-color: ${({ theme }) => theme.colours.progressBackground};
   border-radius: 6px;
   overflow: hidden;
+  box-sizing: border-box;
 `;
 
 const Progress = styled.div<{ $progress: number }>`

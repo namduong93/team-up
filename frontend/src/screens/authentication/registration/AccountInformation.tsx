@@ -226,18 +226,20 @@ const ButtonContainer = styled.div`
   gap: 90px;
 `
 
-export const Button = styled.button<{ $disabled?: boolean }>`
+export const Button = styled.button<{ $disabled?: boolean, $bgColor?: string }>`
   max-width: 150px;
   width: 25%;
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ $disabled: disabled, theme }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
+  background-color: ${({ $disabled: disabled, theme, $bgColor }) => (
+    disabled ? theme.colours.sidebarBackground : ($bgColor || theme.colours.primaryLight)
+    )};
   margin-top: 35px;
   margin-bottom: 40px;
   color: ${({ theme }) => theme.fonts.colour};
-  font-size: 16px;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+  /* font-size: 16px;
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold}; */
   pointer-events: ${({ $disabled: disabled }) => disabled ? 'none' : 'auto'};
   cursor: ${({ $disabled: disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
   font-family: ${({ theme }) => theme.fonts.fontFamily};

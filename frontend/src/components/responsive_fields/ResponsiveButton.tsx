@@ -61,11 +61,13 @@ export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionTy
   background-color: transparent;
   border-radius: 10px;
   box-sizing: border-box;
+  min-width: 120px;
   border: 0px;
   padding: 8px 16px;
   display: flex;
   gap: 10px;
   align-items: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
 
   &:hover {
     cursor: pointer;
@@ -81,7 +83,7 @@ export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionTy
       }
     }} !important;
     color: ${({ theme }) => theme.background};
-    font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+    /* font-weight: ${({ theme }) => theme.fonts.fontWeights.bold}; */
   }
 `;
 
