@@ -47,14 +47,15 @@ const HalfText = styled.label`
   font-size: 16px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.regular};
   width: 45%;
-`;
+`
 
-const DoubleInputContainer = styled.div`
+const DoubleInputContainer = styled.div<{ margin?: boolean }>`
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 0.8%;
-`;
+  margin-bottom: ${({ margin }) => (margin ? "20px" : "0")};
+`
 
 const Text = styled.label`
   display: block;
@@ -64,7 +65,7 @@ const Text = styled.label`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 16px;
   width: 100%;
-`;
+`
 
 
 const LocationList = styled.div`
@@ -110,6 +111,11 @@ const Button = styled.button<{ disabled?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
+const Asterisk = styled.span`
+  color: ${({ theme }) => theme.colours.error};
+`;
+
+
 interface University {
   id: number;
   name: string;
@@ -127,8 +133,12 @@ interface OtherSiteLocation {
 
 interface CompetitionInformation {
   name: string;
-  earlyBirdDate: string;
-  earlyBirdTime: string;
+  region: string;
+  startDate: string;
+  startTime: string;
+  earlyBird: boolean | null;
+  earlyBirdDate?: string;
+  earlyBirdTime?: string;
   generalDate: string;
   generalTime: string;
   code: string;
@@ -221,17 +231,35 @@ export const CompetitionConfirmation: FC = () => {
           <Label>Competition Name</Label>
           <Text><em>{competitionInfo?.name}</em></Text>
 
-          <Label>Early Bird Registration Deadline</Label>
+          <Label>Competition Region</Label>
+          <Text><em>{competitionInfo?.region}</em></Text>
 
+          <Label>Competition Start</Label>
           <DoubleInputContainer>
-            <HalfText>Date</HalfText>
-            <HalfText>Time</HalfText>
-          </DoubleInputContainer>
+              <HalfText>Date</HalfText>
+              <HalfText>Time</HalfText>
+            </DoubleInputContainer>
 
-          <DoubleInputContainer>
-            <HalfText><em>{competitionInfo?.earlyBirdDate}</em></HalfText>
-            <HalfText><em>{competitionInfo?.earlyBirdTime}</em></HalfText>
-          </DoubleInputContainer>
+            <DoubleInputContainer margin={true}>
+              <HalfText><em>{competitionInfo?.startDate}</em></HalfText>
+              <HalfText><em>{competitionInfo?.startTime}</em></HalfText>
+            </DoubleInputContainer>
+
+          {competitionInfo?.earlyBird && (
+            <>
+            <Label>Early Bird Registration Deadline</Label>
+
+            <DoubleInputContainer>
+              <HalfText>Date</HalfText>
+              <HalfText>Time</HalfText>
+            </DoubleInputContainer>
+
+            <DoubleInputContainer margin={true}>
+              <HalfText><em>{competitionInfo?.earlyBirdDate}</em></HalfText>
+              <HalfText><em>{competitionInfo?.earlyBirdTime}</em></HalfText>
+            </DoubleInputContainer>
+            </>
+          )};
 
           <Label>General Registration Deadline</Label>
 
@@ -240,7 +268,7 @@ export const CompetitionConfirmation: FC = () => {
             <HalfText>Time</HalfText>
           </DoubleInputContainer>
 
-          <DoubleInputContainer>
+          <DoubleInputContainer margin={true}>
             <HalfText><em>{competitionInfo?.generalDate}</em></HalfText>
             <HalfText><em>{competitionInfo?.generalTime}</em></HalfText>
           </DoubleInputContainer>

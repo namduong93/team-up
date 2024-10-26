@@ -6,6 +6,8 @@ import TextInput from "../../../components/general_utility/TextInput";
 import TextInputLight from "../../../components/general_utility/TextInputLight";
 import { useLocation, useNavigate } from "react-router-dom";
 import SiteLocationForm from "./components/SiteLocationForm";
+import RadioButton from "../../../components/general_utility/RadioButton";
+import moment from 'moment-timezone';
 
 const Container = styled.div`
   flex: 1;
@@ -95,7 +97,16 @@ const Button = styled.button<{ disabled?: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
-`;
+`
+const Descriptor = styled.div`
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colours.filterText};
+  width: 100%;
+`
+const Asterisk = styled.span`
+  color: ${({ theme }) => theme.colours.error};
+`
 
 interface SiteLocation {
   universityId: number;
@@ -109,8 +120,12 @@ interface OtherSiteLocation {
 
 interface CompetitionInformation {
   name: string;
-  earlyBirdDate: string;
-  earlyBirdTime: string;
+  region: string;
+  startDate: string;
+  startTime: string;
+  earlyBird: boolean | null;
+  earlyBirdDate?: string;
+  earlyBirdTime?: string;
   generalDate: string;
   generalTime: string;
   code: string;
@@ -122,6 +137,7 @@ export const CompetitionDetails: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [locationError, setLocationError] = useState<ReactNode>('');
+  const [selectedTimezone, setSelectedTimezone] = useState<string>('');
   
   const [optionDisplayList, setOptionDisplayList] = useState<Array<{ value: string, label: string, defaultSite: string }>>(
     location.state?.optionDisplayList || []
@@ -130,6 +146,10 @@ export const CompetitionDetails: FC = () => {
   const [competitionInfo, setCompetitionInfo] = useState<CompetitionInformation>(
     location.state?.competitionInfo || {
       name: "",
+      region: "",
+      startDate: "",
+      startTime: "",
+      earlyBird: null,
       earlyBirdDate: "",
       earlyBirdTime: "",
       generalDate: "",
@@ -231,11 +251,25 @@ export const CompetitionDetails: FC = () => {
   };
 
   const isButtonDisabled = () => {
-    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations, otherSiteLocations } = competitionInfo;
+    const { name, 
+      earlyBirdDate, 
+      earlyBirdTime, 
+      generalDate, 
+      generalTime, 
+      code, 
+      siteLocations, 
+      otherSiteLocations, 
+      earlyBird,
+      region, 
+      startDate,
+      startTime,
+    } = competitionInfo;
     return (
       name === '' ||
-      earlyBirdDate === '' ||
-      earlyBirdTime === '' ||
+      region === '' ||
+      startDate === '' ||
+      startTime === '' ||
+      (earlyBird && earlyBirdDate === '' && earlyBirdTime === '') ||
       generalDate === '' ||
       generalTime === '' ||
       code === '' ||
@@ -250,7 +284,12 @@ export const CompetitionDetails: FC = () => {
     navigate("/competition/confirmation", {state: { competitionInfo, optionDisplayList }});
   };
 
-  
+  const convertToTimezone = (date: string, time: string, timezone: string) => {
+    if (!date || !time || !timezone) return '';
+
+    const dateTimeString = `${date} ${time}`;
+    return moment.tz(dateTimeString, timezone).format();
+};
 
   return (
     <FlexBackground
@@ -276,31 +315,91 @@ export const CompetitionDetails: FC = () => {
             width="100%"
           />
 
-          <Label>Early Bird Registration Deadline</Label>
+          <TextInput
+            label="Competition Region"
+            placeholder="Please type"
+            type="text"
+            required={true}
+            value={competitionInfo.region}
+            onChange={(e) => handleChange(e, "region")}
+            width="100%"
+            descriptor="Please specify the region your Competition will be held in"
+          />
+
+          <Label>Competition Start<Asterisk>*</Asterisk></Label>
 
           <DoubleInputContainer>
-            <TextInputLight
-              label="Date"
-              placeholder="dd/mm/yyyy"
-              type="date"
-              required={true}
-              value={competitionInfo.earlyBirdDate}
-              onChange={(e) => handleChange(e, "earlyBirdDate")}
-              width="45%"
-            />
+              <TextInputLight
+                label="Date"
+                placeholder="dd/mm/yyyy"
+                type="date"
+                required={true}
+                value={competitionInfo.startDate}
+                onChange={(e) => handleChange(e, "startDate")}
+                width="45%"
+              />
 
-            <TextInputLight
-              label="Time"
-              placeholder="hh:mm"
-              type="time"
-              required={true}
-              value={competitionInfo.earlyBirdTime}
-              onChange={(e) => handleChange(e, "earlyBirdTime")}
-              width="45%"
-            />
+              <TextInputLight
+                label="Time"
+                placeholder="hh:mm"
+                type="time"
+                required={true}
+                value={competitionInfo.startTime}
+                onChange={(e) => handleChange(e, "startTime")}
+                width="45%"
+              />
           </DoubleInputContainer>
 
-          <Label>General Registration Deadline</Label>
+          <Label>Early Bird Registration Deadline</Label>
+
+          <RadioButton
+            label=""
+            options={['Yes', 'No']}
+            selectedOption={competitionInfo.earlyBird === null ? '' : competitionInfo.earlyBird ? 'Yes' : 'No'}
+            onOptionChange={(e) => {
+              const isEarlyBird = e.target.value === 'Yes';
+              setCompetitionInfo((prev) => ({
+                ...prev,
+                earlyBird: isEarlyBird,
+                earlyBirdDate: isEarlyBird ? prev.earlyBirdDate : '',
+                earlyBirdTime: isEarlyBird ? prev.earlyBirdTime : '',
+              }));
+            }}
+            required={true}
+            descriptor="Will your Competition have an Early Bird Registration Deadline?"
+            width="100%"
+          />
+
+
+          {competitionInfo.earlyBird && (
+            <>
+            <Descriptor>Please set the Date and Time of your Early Bird Registration Deadline</Descriptor>
+            <DoubleInputContainer>
+              <TextInputLight
+                label="Date"
+                placeholder="dd/mm/yyyy"
+                type="date"
+                required={true}
+                value={competitionInfo.earlyBirdDate || ""}
+                onChange={(e) => handleChange(e, "earlyBirdDate")}
+                width="45%"
+              />
+
+              <TextInputLight
+                label="Time"
+                placeholder="hh:mm"
+                type="time"
+                required={true}
+                value={competitionInfo.earlyBirdTime || ""}
+                onChange={(e) => handleChange(e, "earlyBirdTime")}
+                width="45%"
+              />
+            </DoubleInputContainer>
+            </>
+          )}
+
+          <Label>General Registration Deadline<Asterisk>*</Asterisk></Label>
+          <Descriptor>Please set the Date and Time of your General Registration Deadline</Descriptor>
 
           <DoubleInputContainer>
             <TextInputLight
