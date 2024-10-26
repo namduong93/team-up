@@ -657,9 +657,9 @@ INSERT INTO competition_teams (
   team_size, participants, university_id, competition_id, team_seat
 )
 VALUES
-(2, 'Team Zeta', 'registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11'),
-(2, 'Team Alpha', 'pending'::competition_team_status, 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1, 'Tabla01'),
-(2, 'Team Donkey', 'pending'::competition_team_status, 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20');
+(4, 'Team Zeta', 'registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11'),
+(4, 'Team Alpha', 'pending'::competition_team_status, 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1, 'Tabla01'),
+(4, 'Team Donkey', 'pending'::competition_team_status, 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20');
 
 -- Notifications
 INSERT INTO notifications (
