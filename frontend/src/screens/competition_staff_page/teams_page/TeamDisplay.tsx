@@ -33,6 +33,7 @@ export const TeamDisplay: FC = () => {
           editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+          universityOption,
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           setFilterOptions, setSortOptions, setEnableTeamButtons } = useCompetitionOutletContext('teams');
 
@@ -75,7 +76,10 @@ export const TeamDisplay: FC = () => {
       )) {
         return false;
       }
-
+    }
+    
+    if (!(universityOption.value === '') && !(team.universityId === parseInt(universityOption.value))) {
+      return false;
     }
     
     return true;

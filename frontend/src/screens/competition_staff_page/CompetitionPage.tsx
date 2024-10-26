@@ -7,6 +7,7 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { sendRequest } from "../../utility/request";
 import { SortOption } from "../../components/page_header/components/SortSelect";
 import { TeamPageButtons } from "./teams_page/components/TeamPageButtons";
+import { AdvancedDropdown } from "../../components/AdvancedDropdown/AdvancedDropdown";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -69,6 +70,26 @@ export const CompetitionPage: FC = () => {
     });
   };
 
+  const [options, setOptions] = useState<Array<{ value: string, label: string }>>([{ value: '', label: '' }]);
+  const [universityOption, setUniversityOption] = useState<{ value: string, label: string }>({ value: '', label: '' });
+
+  useEffect(() => {
+
+    // TODO: change to get only the universities for this competition
+    const fetchUniversities = async () => {
+      const response = await sendRequest.get<{ universities: Array<{ id: number, name: string }>}>(
+        '/universities/list');
+      const { universities } = response.data;
+      setOptions([
+        ...universities.map(({ id, name }) => ({ value: String(id), label: name })),
+        { value: '', label: 'All Universities' }
+      ]);
+
+    }
+
+    fetchUniversities();
+  }, []);
+
 
   return (
     <OverflowFlexBackground>
@@ -90,6 +111,11 @@ export const CompetitionPage: FC = () => {
               editingNameStatusState={[isEditingNameStatus, setIsEditingNameStatus]}
               rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
               />}
+            
+            {(roles.includes(CompetitionRole.Admin)) &&
+            <AdvancedDropdown style={{ width: '100%', maxWidth: '302px' }}
+              optionsState={[options, setOptions]} setCurrentSelected={setUniversityOption}/>}
+
           </PageHeader>
         <PageOptionsContainerDiv>
           <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
@@ -132,6 +158,7 @@ export const CompetitionPage: FC = () => {
           teamIdsState: [approveTeamIds, setApproveTeamIds],
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+          universityOption,
 
           setFilterOptions, setSortOptions, setEnableTeamButtons }}/>
 

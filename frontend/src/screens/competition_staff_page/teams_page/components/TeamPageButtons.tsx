@@ -1,9 +1,11 @@
-import { FC } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
-import { ResponsiveButton, TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
+import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { sendRequest } from "../../../../utility/request";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -65,96 +67,79 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     console.log('running the algorithm...');
   }
 
+  
+
   return (
   <>
     {!isEditingStatus && !isEditingNameStatus &&
-    <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+    <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <TransparentResponsiveButton actionType="confirm" onClick={enableEditTeamStatus} label="Edit Team Status" isOpen={false}
-        icon={<FaStamp style={{ color: theme.fonts.colour}} />}
+        icon={<FaStamp />}
         style={{
           backgroundColor: theme.colours.confirm,
-          color: theme.background,
-          border: '0'
         }}
       />
     </div>}
     
     {isEditingStatus && 
     <>
-    <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+    <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <TransparentResponsiveButton actionType="confirm" onClick={confirmTeams} label="Confirm Teams" isOpen={false}
-        icon={<FaSave style={{ color: theme.fonts.colour}} />}
+        icon={<FaSave />}
         style={{
           backgroundColor: theme.colours.confirm,
-          color: theme.background,
-          border: '0'
         }}
       />
     </div>
-    <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+    <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
     <TransparentResponsiveButton actionType="error" onClick={disableEditTeamStatus} label="Cancel" isOpen={false}
-          icon={<GiCancel style={{ color: theme.fonts.colour }} />}
+          icon={<GiCancel />}
           style={{
             backgroundColor: theme.colours.cancel,
-            color: theme.background,
-            border: '0'
           }} />
     </div>
     </>}
 
     {!isEditingStatus && !isEditingNameStatus &&
-    <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+    <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <TransparentResponsiveButton actionType="primary" onClick={enableEditNameStatus} label="Approve Names" isOpen={false}
-        icon={<FaRegCheckCircle style={{ color: theme.fonts.colour}} />}
+        icon={<FaRegCheckCircle />}
         style={{
           backgroundColor: theme.colours.primaryLight,
-          color: theme.background,
-          border: '0'
         }}
       />
     </div>}
 
     {isEditingNameStatus && 
     <>
-    <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+    <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <TransparentResponsiveButton actionType="primary" onClick={confirmNames} label="Confirm Names" isOpen={false}
-        icon={<FaSave style={{ color: theme.fonts.colour}} />}
+        icon={<FaSave />}
         style={{
           backgroundColor: theme.colours.primaryLight,
-          color: theme.background,
-          border: '0'
         }}
       />
     </div>
-    <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+    <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
     <TransparentResponsiveButton actionType="error" onClick={disableEditNameStatus} label="Cancel" isOpen={false}
-        icon={<GiCancel style={{ color: theme.fonts.colour}} />}
+        icon={<GiCancel />}
         style={{
           backgroundColor: theme.colours.cancel,
-          color: theme.background,
-          border: '0'
         }}
       />
     </div>
     </>}
 
     {!isEditingStatus && !isEditingNameStatus &&
-    <div style={{ maxWidth: '150px', width: '100%', height: '33px' }}>
+    <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <ResponsiveActionButton actionType="primary" label="Run Algorithm"
-        icon={<FaRunning style={{ color: theme.fonts.colour }} />}
-        style={{
-          backgroundColor: theme.colours.primaryLight,
-          color: theme.background,
-          border: '0'
-        }}
-
+        icon={<FaRunning />}
         question="Run the Algorithm?"
         handleSubmit={handleAlgorithmButton}
       />
 
     </div>
     }
-
   </>
   );
 }
