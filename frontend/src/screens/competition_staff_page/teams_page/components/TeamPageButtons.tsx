@@ -86,6 +86,16 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     return true;
   }
 
+  const enableDownloading = () => {
+    setIsDownloading(true);
+    setFilters({ ...filters, Status: ['Unregistered'] });
+  }
+
+  const disableDownloading = () => {
+    setIsDownloading(false);
+    setFilters({});
+  }
+
   return (
   <>
     {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
@@ -164,7 +174,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
           label="Download"
           icon={<FaDownload />}
           style={{ backgroundColor: theme.colours.primaryLight }}
-          onClick={() => setIsDownloading(true)} isOpen={false}
+          onClick={enableDownloading} isOpen={false}
         />
 
       </div>
@@ -174,7 +184,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     <>
       <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
         <TransparentResponsiveButton actionType="error"
-          onClick={() => setIsDownloading(false)} label="Cancel" isOpen={false}
+          onClick={disableDownloading} label="Cancel" isOpen={false}
           icon={<GiCancel />}
           style={{
             backgroundColor: theme.colours.cancel,
