@@ -42,12 +42,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       JOIN competition_users AS cu_coach ON cu_coach.id = ct.competition_coach_id
       JOIN users AS u_coach ON u_coach.id = cu_coach.user_id
 
-      JOIN users AS u1 ON u1.id = ct.participants[1]
-      JOIN users AS u2 ON u2.id = ct.participants[2]
-      JOIN users AS u3 ON u3.id = ct.participants[3]
-      JOIN competition_users AS cu1 ON u1.id = cu1.user_id
-      JOIN competition_users AS cu2 ON u2.id = cu2.user_id
-      JOIN competition_users AS cu3 ON u3.id = cu3.user_id
+      LEFT JOIN users AS u1 ON u1.id = ct.participants[1]
+      LEFT JOIN users AS u2 ON u2.id = ct.participants[2]
+      LEFT JOIN users AS u3 ON u3.id = ct.participants[3]
+      LEFT JOIN competition_users AS cu1 ON u1.id = cu1.user_id
+      LEFT JOIN competition_users AS cu2 ON u2.id = cu2.user_id
+      LEFT JOIN competition_users AS cu3 ON u3.id = cu3.user_id
       WHERE cu_source.user_id = ${userId} AND cu_source.competition_id = ${compId}
       LIMIT 1;
       `

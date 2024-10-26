@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { FaTimes } from "react-icons/fa";
@@ -6,11 +6,13 @@ import { CompCard } from "./components/CompCard";
 import { sendRequest } from "../../utility/request";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/page_header/PageHeader";
-import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
+import { Input, RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 import { IoIosCreate } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
 import { DashInfo } from "./hooks/useDashInfo";
 import { ResponsiveActionButton } from "../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { OptionPopUp } from "../student/OptionPopUp";
+import { ErrorMessage } from "../authentication/registration/AccountInformation";
 
 interface Competition { 
   compName: string;
@@ -119,22 +121,22 @@ const ContentArea = styled.div`
 
 const CompetitionGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(294px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(294px, 100%), 1fr));
   gap: 20px;
   width: 100%;
   min-height: 500px;
-  padding: 0 20px;
+  /* padding: 0 20px; */
   box-sizing: border-box;
 `;
 
-const Title1 = styled.h2`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: bold;
-  white-space: pre-wrap;
-  word-break: break-word;
-`
+// const Title1 = styled.h2`
+//   margin-top: 40px;
+//   margin-bottom: 20px;
+//   font-size: 22px;
+//   font-weight: bold;
+//   white-space: pre-wrap;
+//   word-break: break-word;
+// `
 
 const Title2 = styled.h2`
   margin-top: 40px;
@@ -143,6 +145,26 @@ const Title2 = styled.h2`
   white-space: pre-wrap;
   word-break: break-word;
 `;
+
+// const Heading = styled.h2`
+//   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
+//   margin-top: 40px;
+//   color: ${({ theme }) => theme.colours.notifDark};
+//   margin-bottom: 10%;
+//   white-space: pre-wrap;
+//   word-break: break-word;
+// `
+
+// const Overlay = styled.div<{ $isOpen: boolean }>`
+//   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(0, 0, 0, 0.5);
+//   z-index: 999;
+// `
 
 export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
@@ -301,34 +323,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     }
   });
 
-  // TO-DO: uncomment when the admin page is created
-
-  // const location = useLocation();
-  // const showPopUp = location.state?.showPopUp || false;
-  // const message = location.state?.message || "You have created a new competition!";
-  // const code = location.state?.code || "COMP_CODE";
-  // const [isPopUpOpen, setIsPopUpOpen] = useState(showPopUp);
-  
-  // const handleClosePopUp = () => {
-  //   setIsPopUpOpen(false);
-  // }
-
-  // useEffect(() => {
-  //   if (showPopUp) {
-  //     setIsPopUpOpen(true);
-  //   }
-  // }, [showPopUp]);
-
-  const [isRegisterPopUpOpen, setIsRegisterPopUpOpen] = useState(false);
-
-  const handleRegisterClick = () => {
-    setIsRegisterPopUpOpen(true);
-  }
-
-  const handleClosePopUp = () => {
-    setIsRegisterPopUpOpen(false);
-  }
-
   const location = useLocation();
   const [isRegoSucessPopUpOpen, setRegoSuccessPopUp] = useState(false);
 
@@ -347,6 +341,29 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
       setTeamName(location.state.teamName)
     }
   }, [location.state]);
+
+  const [compRegisterCode, setCompRegisterCode] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleRegisterConfirm = async () => {
+    const validateCode = async () => {
+      try {
+        await sendRequest.get<{}>('/competition/student/status', { code: compRegisterCode });
+        // above line will throw if the code is invalid
+        
+        setErrorMessage(null); // Clear any previous error message
+        return true;
+      } catch (error) {
+        console.error("Failed to validate competition code:", error);
+        setErrorMessage("Invalid competition code. Please try again."); // Set error message
+        return false;
+      } finally {
+      }
+    };
+
+    return await validateCode();
+
+  }
 
   return (isLoaded &&
     <OverflowFlexBackground>
@@ -370,15 +387,36 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             label="Create"
             question="Create a new competition?"
             redirectPath="/competition/create"
-            actionType="secondary"/>
+            // handleClick={handleCreateClick}
+            actionType="secondary"
+            />
           }
+
           <ResponsiveActionButton
             icon={<MdAssignmentAdd />}
             label="Register"
             question="Register for a new competition?"
-            redirectPath="/competition/information"
-            handleClick={handleRegisterClick}
-            actionType="primary"/>
+            redirectPath={`/competition/information/${compRegisterCode}`}
+            actionType="primary"
+            handleSubmit={handleRegisterConfirm}
+            timeout={2}
+            handleClose={() => setErrorMessage(null)}
+            >
+              <div>
+                <Input
+                  type="text"
+                  placeholder="COMP1234"
+                  onChange={(e) => {
+                    setCompRegisterCode(e.target.value)
+                  }}
+                />
+              </div>
+              
+              <div>
+                {errorMessage && <ErrorMessage style={{ marginTop: '10px' }}>{errorMessage}</ErrorMessage>}
+              </div>
+          </ResponsiveActionButton>
+
         </PageHeader>
   
         {/* Active Filters Display */}
@@ -413,13 +451,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             ))}
           </CompetitionGrid>
 
-          {/* Register Pop-Up */}
-          {isRegisterPopUpOpen && (
-            <RegisterPopUp isOpen={isRegisterPopUpOpen} onClose={handleClosePopUp} message={
-              <Title1>Please enter the {"\nCompetition Code"}</Title1>
-            }/>
-          )}
-
           {isRegoSucessPopUpOpen && (
             <RegisterPopUp
               isOpen={isRegoSucessPopUpOpen}
@@ -432,8 +463,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                   </span>
                 </Title2>
               }
-              showInput={false}
-              showButtons={false}
+
             />
           )}
 
@@ -448,11 +478,9 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                   </span>
                 </Title2>
               }
-              showInput={false}
-              showButtons={false}
+
             />
           )}
-
 
         </ContentArea>
       </DashboardContent>

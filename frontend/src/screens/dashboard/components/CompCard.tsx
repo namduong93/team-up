@@ -17,8 +17,9 @@ const CompCardContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  margin: 10px;
-  width: 275px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 285px;
   height: fit-content;
   display: flex;
   flex-direction: column;
@@ -26,7 +27,7 @@ const CompCardContainer = styled.div`
   transition: transform 0.2s ease-in-out !important;
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translate(3px, 3px);
   }
 `;
 

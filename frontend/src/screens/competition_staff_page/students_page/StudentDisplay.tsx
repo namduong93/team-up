@@ -229,7 +229,7 @@ const STUDENT_DISPLAY_FILTER_OPTIONS = {
 };
 
 export const StudentDisplay = () => {
-  const { filters, sortOption, searchTerm, removeFilter, setFilters,
+  const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
     setFilterOptions, setSortOptions } = useCompetitionOutletContext('students');
   
   const { compId } = useParams();
@@ -441,6 +441,10 @@ export const StudentDisplay = () => {
       if (!filters.Status.some((status) => status === studentInfo.status)) {
         return false;
       }
+    }
+
+    if (!(universityOption.value === '') && !(studentInfo.universityId === parseInt(universityOption.value))) {
+      return false;
     }
 
     return true;

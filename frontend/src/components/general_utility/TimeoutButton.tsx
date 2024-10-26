@@ -1,11 +1,16 @@
 import React, { FC, useState } from "react";
 import { Button } from "../../screens/authentication/registration/AccountInformation";
+import { useTheme } from "styled-components";
 
 interface TimeoutButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   seconds?: number;
+  bgColor?: string;
 }
 
-export const TimeoutButton: FC<TimeoutButtonProps> = ({ seconds = 5, onClick = () => {}, style, children, ...props }) => {
+export const TimeoutButton: FC<TimeoutButtonProps> = ({ seconds = 5,
+    bgColor, onClick = () => {}, style, children, ...props }) => {
+
+  const theme = useTheme();
   const [timeoutSeconds, setTimeoutSeconds] = useState(0);
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -24,7 +29,7 @@ export const TimeoutButton: FC<TimeoutButtonProps> = ({ seconds = 5, onClick = (
     onClick(e);
   }
   return (
-    <Button type="button" style={style} $disabled={!!timeoutSeconds} onClick={handleClick} {...props}>
+    <Button $bgColor={bgColor || theme.colours.primaryLight} type="button" style={style} $disabled={!!timeoutSeconds} onClick={handleClick} {...props}>
       {timeoutSeconds > 0 ? timeoutSeconds : children}
     </Button>
   )
