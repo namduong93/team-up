@@ -119,11 +119,11 @@ const ContentArea = styled.div`
 
 const CompetitionGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(294px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(294px, 100%), 1fr));
   gap: 20px;
   width: 100%;
   min-height: 500px;
-  padding: 0 20px;
+  /* padding: 0 20px; */
   box-sizing: border-box;
 `;
 
