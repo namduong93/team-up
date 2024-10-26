@@ -224,7 +224,33 @@ app.post('/notification', notificationController.notificationCreate);
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);
 
+// PARAMS: { compId }
+// RESPONSE: 
+// Get all the details of a team in a competition
 app.get('/competition/team/details', competitionController.competitionTeamDetails);
+
+// PARAMS: { compId }
+// RESPONSE: 
+// {
+//   name: string;
+//   email: string;
+//   preferredContact: string;
+//   image?: string;
+//   competitionBio: string;
+//   competitionLevel: string;
+//   ICPCEligible: boolean;
+//   boersenEligible: boolean;
+//   degreeYear: number;
+//   degree: string;
+//   isRemote: boolean;
+//   nationalPrizes?: string;
+//   internationalPrizes: string;
+//   codeforcesRating?: number;
+//   universityCourses: string[];
+//   pastRegional?: boolean;
+// }
+// Get all the details of a student in a competition
+app.get('/competition/student/details', competitionController.competitionStudentDetails);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

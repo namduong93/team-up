@@ -125,6 +125,15 @@ export class CompetitionService {
     return await this.competitionRepository.competitionTeamDetails(userId, compId);
   }
 
+  competitionStudentDetails = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+    }
+
+    return await this.competitionRepository.competitionStudentDetails(userId, compId);
+  }
+
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
     return await this.competitionRepository.competitionStaff(userId, compId);
   }
