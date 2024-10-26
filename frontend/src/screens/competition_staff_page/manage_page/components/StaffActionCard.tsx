@@ -7,16 +7,16 @@ type ActionType = "competition" | "registration" | "seat";
 
 interface StaffActionCardProps {
   staffRoles: string[];
-}
+};
 
 interface ActionCardProps {
   $actionType: ActionType;
-}
+};
 
 const ActionsContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // Creates a 2x2 grid layout
+  gap: 10px; // Adds space between the grid items
   width: 100%;
 `;
 
@@ -84,7 +84,7 @@ const BackButton = styled.button`
   background: none;
   border: none;
   padding: 0;
-  font-size: 16px;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -103,6 +103,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
     { type: "competition" as ActionType, icon: FaEdit, text: "Edit Competition Details", roles: ["Admin"] },
     { type: "registration" as ActionType, icon: FaFileSignature, text: "Update Registration Form", roles: ["Admin", "Coach"] },
     { type: "seat" as ActionType, icon: FaChair, text: "Assign Seats to Teams", roles: ["Admin", "Site-Coordinator"] },
+    { type: "contact" as ActionType, icon: FaChair, text: "Update Your Contact Bio", roles: ["Admin", "Coach"] },
   ];
 
   // Filter actions based on at least one matching role

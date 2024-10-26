@@ -113,8 +113,8 @@ const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 20px;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
-  color: ${({ theme }) => theme.background};
-  background-color: ${({ theme }) => theme.fonts.colour};
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
   box-sizing: border-box;
 `;
 
@@ -126,6 +126,8 @@ const Select = styled.select`
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   width: 100%;
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
   box-sizing: border-box;
 `;
 
