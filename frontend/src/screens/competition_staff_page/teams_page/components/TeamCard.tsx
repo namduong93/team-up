@@ -94,6 +94,13 @@ const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean, $isEditingNameSta
     ${({ $isEditingStatus, $isEditingNameStatus }) => (!$isEditingStatus && !$isEditingNameStatus) && `transform: translate(3px, 3px);`}
     cursor: pointer;
   }
+
+  @media (max-width: 410px ) {
+    &:hover {
+      ${({ $isEditingStatus, $isEditingNameStatus }) => (!$isEditingStatus && !$isEditingNameStatus) && `transform: translate(0, 3px);`}
+      cursor: pointer;
+    }
+  }
 `
 
 const CardHeaderDiv = styled.div<{ $statusColor: string }>`

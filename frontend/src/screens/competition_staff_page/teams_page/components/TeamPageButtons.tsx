@@ -1,11 +1,12 @@
 import { FC, SetStateAction, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
+import { FaDownload, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../../utility/request";
+import { GrDocumentCsv } from "react-icons/gr";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -61,17 +62,33 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   }
 
 
-  const handleAlgorithmButton = () => {
+  const handleAlgorithmButton = async () => {
 
     // hook it here
     console.log('running the algorithm...');
+    return true;
   }
 
+  const [isDownloading, setIsDownloading] = useState(false);
   
+
+  const downloadCSV = async () => {
+
+    // generate and download csv here
+    console.log('downloading csv');
+    return true;
+  }
+
+  const downloadPDF = async () => {
+
+    // generate and download pdf here
+    console.log('downloading pdf');
+    return true;
+  }
 
   return (
   <>
-    {!isEditingStatus && !isEditingNameStatus &&
+    {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
     <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <TransparentResponsiveButton actionType="confirm" onClick={enableEditTeamStatus} label="Edit Team Status" isOpen={false}
         icon={<FaStamp />}
@@ -100,7 +117,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     </div>
     </>}
 
-    {!isEditingStatus && !isEditingNameStatus &&
+    {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
     <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <TransparentResponsiveButton actionType="primary" onClick={enableEditNameStatus} label="Approve Names" isOpen={false}
         icon={<FaRegCheckCircle />}
@@ -130,7 +147,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     </div>
     </>}
 
-    {!isEditingStatus && !isEditingNameStatus &&
+    {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
     <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <ResponsiveActionButton actionType="primary" label="Run Algorithm"
         icon={<FaRunning />}
@@ -139,6 +156,52 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
       />
 
     </div>
+    }
+
+    {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
+      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+        <TransparentResponsiveButton actionType="primary"
+          label="Download"
+          icon={<FaDownload />}
+          style={{ backgroundColor: theme.colours.primaryLight }}
+          onClick={() => setIsDownloading(true)} isOpen={false}
+        />
+
+      </div>
+    }
+
+    {isDownloading &&
+    <>
+      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+        <TransparentResponsiveButton actionType="error"
+          onClick={() => setIsDownloading(false)} label="Cancel" isOpen={false}
+          icon={<GiCancel />}
+          style={{
+            backgroundColor: theme.colours.cancel,
+        }} />
+      </div>
+      
+      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+        <ResponsiveActionButton actionType="confirm"
+          label="Download CSV"
+          question="Are you sure you would like to register these teams?"
+          icon={<GrDocumentCsv />}
+          style={{ backgroundColor: theme.colours.confirm }}
+          handleSubmit={downloadCSV}
+        />
+      </div>
+
+      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+        <ResponsiveActionButton actionType="confirm"
+          label="Download PDF"
+          question="Are you sure you would like to register these teams?"
+          icon={<GrDocumentCsv />}
+          style={{ backgroundColor: theme.colours.confirm }}
+          handleSubmit={downloadPDF}
+        />
+      </div>
+
+    </>
     }
   </>
   );

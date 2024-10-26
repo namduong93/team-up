@@ -1,12 +1,11 @@
 import { FC, ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled, { ThemeConsumer, useTheme } from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../ResponsiveButton";
 import { CancelButton, ConfirmButton, PopUpContent, PopUpOverlay, Question, TimeoutConfirmButton } from "./ActionButton";
-import { RecordWithTtl } from "dns";
 
 
-export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | 'secondary' | 'error' }>`
+export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | 'secondary' | 'error' | 'confirm' }>`
   border-radius: 10px;
   box-sizing: border-box;
   height: 35px;
@@ -46,7 +45,7 @@ interface ResponsiveActionButtonProps extends React.HTMLAttributes<HTMLButtonEle
   question: string;
   redirectPath?: string;
   timeout?: number;
-  actionType: "primary" | "secondary" | "error";
+  actionType: "primary" | "secondary" | "error" | "confirm";
   handleClick?: () => void; // Optional function prop for a custom click handler
   handleSubmit?: () => Promise<boolean>;
   handleClose?: () => void;

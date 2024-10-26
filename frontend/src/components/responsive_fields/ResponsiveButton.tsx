@@ -61,6 +61,7 @@ export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionTy
   background-color: transparent;
   border-radius: 10px;
   box-sizing: border-box;
+  min-width: 120px;
   border: 0px;
   padding: 8px 16px;
   display: flex;
