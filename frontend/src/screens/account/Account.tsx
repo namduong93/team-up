@@ -59,11 +59,18 @@ const AccountCard = styled.div<{ $isEditing: boolean }>`
   max-height: 100%;
 `;
 
+const ProfileEditContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 const ProfileContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 10px;
+  width: 100%;
 `;
 
 export const ProfilePic = styled.div<{ $imageUrl: string }>`
@@ -130,12 +137,10 @@ const ButtonGroup = styled.div`
 `;
 
 const EditIconButton = styled.button`
-  position: absolute;
-  top: 70px;
-  right: 20px;
   background: transparent;
   border: none;
   cursor: pointer;
+  align-self: flex-start;
 `;
 
 const EditIcon = styled(FaEdit)`
@@ -261,14 +266,16 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
       <AccountContainer>
         <CardContainer>
           <AccountCard $isEditing={isEditingUser}>
-            <ProfileContainer>
-              <ProfilePic $imageUrl={newDetails.profilePic || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
-            </ProfileContainer>
-            {!isEditingUser && (
-              <EditIconButton onClick={handleEditUser}>
-                <EditIcon />
-              </EditIconButton>
-            )}
+            <ProfileEditContainer>
+              <ProfileContainer>
+                <ProfilePic $imageUrl={newDetails.profilePic || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
+              </ProfileContainer>
+              {!isEditingUser && (
+                <EditIconButton onClick={handleEditUser}>
+                  <EditIcon />
+                </EditIconButton>
+              )}
+            </ProfileEditContainer>
             <DetailsCard>
               <AccountItem>
                 {isEditingUser && <Label $isEditing={isEditingUser}>Profile Picture:</Label>}
