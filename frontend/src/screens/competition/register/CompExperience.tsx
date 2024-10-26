@@ -134,14 +134,6 @@ export const CompetitionExperience: FC = () => {
         }
       }); 
 
-      // TO-DO: uncomment when pop-up is implemented on Admin Page
-      // navigate("/competition/page", { 
-      //   state: { 
-      //     showPopUp: true, 
-      //     message: "You have created a new Competition", 
-      //     code: "COMP_12345"
-      //   }
-      // }); 
     } catch (error) {
       console.error("Error creating competition:", error);
     }
