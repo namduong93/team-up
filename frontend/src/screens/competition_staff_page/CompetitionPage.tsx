@@ -80,7 +80,10 @@ export const CompetitionPage: FC = () => {
       const response = await sendRequest.get<{ universities: Array<{ id: number, name: string }>}>(
         '/universities/list');
       const { universities } = response.data;
-      setOptions(universities.map(({ id, name }) => ({ value: String(id), label: name })));
+      setOptions([
+        ...universities.map(({ id, name }) => ({ value: String(id), label: name })),
+        { value: '', label: 'All Universities' }
+      ]);
 
     }
 
