@@ -97,6 +97,8 @@ export const ConfirmButton = styled.button`
   border-radius: 20px;
   border: none;
   margin: 15px;
+  max-width: 150px;
+  min-width: 100px;
   cursor: pointer;
 
   &:hover {
@@ -111,6 +113,8 @@ export const TimeoutConfirmButton = styled(TimeoutButton)`
   border-radius: 20px;
   border: none;
   margin: 15px;
+  max-width: 150px;
+  min-width: 100px;
   cursor: pointer;
 
   &:hover {
@@ -126,6 +130,8 @@ export const CancelButton = styled.button`
   border-radius: 20px;
   border: none;
   margin: 15px;
+  max-width: 150px;
+  min-width: 100px;
   cursor: pointer;
 
   &:hover {

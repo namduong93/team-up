@@ -49,7 +49,7 @@ const CopyText = styled.p`
   font-style: italic;
   margin: 0; 
   padding: 10px; 
-  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border: 1px solid ${({ theme }) => theme.colours.confirmDark};
   border-radius: 8px; 
   display: inline-block; 
 `

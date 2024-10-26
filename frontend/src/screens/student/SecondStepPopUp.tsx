@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { styled } from 'styled-components';
+import { ConfirmButton, CancelButton } from '../../components/responsive_fields/action_buttons/ActionButton';
 
 const Modal = styled.div`
   position: fixed;
@@ -37,21 +38,6 @@ const CloseButton = styled.button`
   }
 `
 
-const Button = styled.button<{ yes?: boolean }>`
-  max-width: 150px;
-  width: 40%;
-  height: 35px;
-  border: 0px;
-  border-radius: 30px;
-  background-color: ${({ theme, yes }) => (yes ? theme.colours.confirm : theme.colours.error)};
-  margin-top: 35px;
-  margin-bottom: 40px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-`
-
 const ButtonContainer = styled.div`
   display: flex;
   width: 100%;
@@ -77,8 +63,8 @@ export const SecondStepPopUp: React.FC<SecondStepPopUpProps> = ({ heading, onClo
         <div>{heading}</div>
 
         <ButtonContainer>
-          <Button yes={true} onClick={onNext}>Yes</Button>
-          <Button yes={false} onClick={onClose}>No</Button>
+          <ConfirmButton onClick={onNext}>Yes</ConfirmButton>
+          <CancelButton onClick={onClose}>No</CancelButton>
         </ButtonContainer>
 
       </Modal>

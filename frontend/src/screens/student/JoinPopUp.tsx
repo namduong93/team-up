@@ -42,7 +42,8 @@ const CloseButton = styled.button`
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
-  width: 25%;
+  min-width: 100px;
+  width: 50%;
   height: 35px;
   border: 0px;
   border-radius: 30px;
@@ -51,9 +52,14 @@ const Button = styled.button<{ disabled?: boolean }>`
   margin-bottom: 40px;
   color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
+
+  &:hover {
+    color: ${({ theme, disabled }) => (disabled ? theme.fonts.colour : theme.background)};
+    font-weight: ${({ theme, disabled }) => (disabled ? theme.fonts.fontWeights.regular : theme.fonts.fontWeights.bold)};
+    background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryDark)};
+  }
 `
 
 interface JoinPopUpProps {
