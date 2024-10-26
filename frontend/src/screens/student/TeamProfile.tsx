@@ -14,10 +14,16 @@ export interface ParticipantTeamDetails {
   teamLevel: string;
   startDate: Date;
   students: Array<{
+    userId: number;
     name: string;
     email: string;
     bio: string;
     preferredContact: string;
+    siteId: number;
+    ICPCEligible: boolean;
+    level: string;
+    boersenEligible: boolean;
+    isRemote: boolean;
   }>;
   coach: {
     name: string;
