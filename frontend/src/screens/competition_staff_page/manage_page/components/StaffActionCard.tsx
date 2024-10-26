@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FaFileSignature, FaChair, FaEdit, FaChevronLeft } from "react-icons/fa";
 import { ManageSite } from "../ManageSite";
 
-type ActionType = "competition" | "registration" | "seat";
+type ActionType = "competition" | "registration" | "seat" | "contact";
 
 interface StaffActionCardProps {
   staffRoles: string[];
@@ -13,11 +13,24 @@ interface ActionCardProps {
   $actionType: ActionType;
 };
 
+const StandardContainerDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
+`;
+
 const ActionsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr); // Creates a 2x2 grid layout
-  gap: 10px; // Adds space between the grid items
+  grid-template-columns: repeat(2, 1fr);
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  gap: 10px;
+  justify-content: flex-start;
 `;
 
 const ActionCard = styled.button<ActionCardProps>`
@@ -26,9 +39,11 @@ const ActionCard = styled.button<ActionCardProps>`
   align-items: center;
   justify-content: center;
   flex: 1 1 0;
-  max-width: 350px;
+  max-width: 280px;
+  height: 100%;
+  width: 100%;
   aspect-ratio: 1;
-  margin: 5px;
+  box-sizing: border-box;
   background-color: ${({ theme, $actionType }) => theme.staffActions[$actionType]};
   border: ${({ theme, $actionType }) => `1px solid ${theme.staffActions[`${$actionType}Border`]}`};
   border-radius: 12px;
@@ -118,9 +133,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
       setModalOpen(actionText);
     }
   };
-
+  
   return (
-    <>
+    <StandardContainerDiv>
       {showManageSite && (
         <>
           <BackButton onClick={() => setShowManageSite(false)}><FaChevronLeft /> Back</BackButton>
@@ -152,6 +167,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
           </Modal>
         </Fragment>
       ))}
-    </>
+    </StandardContainerDiv>
   );
 };
