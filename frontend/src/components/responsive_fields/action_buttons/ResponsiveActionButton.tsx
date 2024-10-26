@@ -1,8 +1,9 @@
 import { FC, ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { ThemeConsumer, useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../ResponsiveButton";
-import { CancelButton, ConfirmButton, PopUpContent, PopUpOverlay, Question } from "./ActionButton";
+import { CancelButton, ConfirmButton, PopUpContent, PopUpOverlay, Question, TimeoutConfirmButton } from "./ActionButton";
+import { RecordWithTtl } from "dns";
 
 
 export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | 'secondary' | 'error' }>`
@@ -44,20 +45,27 @@ interface ResponsiveActionButtonProps extends React.HTMLAttributes<HTMLButtonEle
   label: string;
   question: string;
   redirectPath?: string;
+  timeout?: number;
   actionType: "primary" | "secondary" | "error";
   handleClick?: () => void; // Optional function prop for a custom click handler
-  handleSubmit?: () => void;
+  handleSubmit?: () => Promise<boolean>;
+  handleClose?: () => void;
 }
 
 export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
-    question, redirectPath, actionType, handleClick, icon, label, style, handleSubmit, ...props }) => {
-    
+    question, redirectPath, actionType, handleClick, timeout, handleClose = () => {},
+    icon, label, style, handleSubmit, children, ...props }) => {
+  
+  const theme = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleConfirm = () => {
+  const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (handleSubmit) {
-      handleSubmit();
+      if (!(await handleSubmit())) {
+        return;
+      };
     }
     if (redirectPath) {
       navigate(redirectPath); // Go to the correct redirected path
@@ -69,10 +77,14 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
   const handleButtonClick = () => {
     if (handleClick) {
       handleClick(); // Call the custom click handler if provided
-    } else {
-      setIsOpen(true); // Open the confirmation pop-up
-    }
+    } 
+    setIsOpen(true); // Open the confirmation pop-up
   };
+
+  const handleClosePopup = () => {
+    handleClose();
+    setIsOpen(false);
+  }
   
   return (
     <>
@@ -87,11 +99,17 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
         />
       </StyledResponsiveActionDiv>
       {isOpen && (
-        <PopUpOverlay onClick={() => setIsOpen(false)}>
+        <PopUpOverlay onClick={handleClosePopup}>
           <PopUpContent onClick={(e) => e.stopPropagation()}>
             <Question>{question}</Question>
-            <ConfirmButton onClick={handleConfirm}>Confirm</ConfirmButton>
-            <CancelButton onClick={() => setIsOpen(false)}>Cancel</CancelButton>
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              {children}
+            </div>
+            {!timeout ?
+              <ConfirmButton onClick={handleConfirm}>Confirm</ConfirmButton>
+            : <TimeoutConfirmButton bgColor={theme.colours.confirm} seconds={timeout} onClick={handleConfirm}>Confirm</TimeoutConfirmButton>
+            }
+            <CancelButton onClick={handleClosePopup}>Cancel</CancelButton>
           </PopUpContent>
         </PopUpOverlay>
       )}

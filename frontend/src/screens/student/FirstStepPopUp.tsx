@@ -7,13 +7,16 @@ const Modal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
+  min-width: 290px;
+  max-width: 450px;
+  box-sizing: border-box;
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 25%;
+  width: 100%;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -40,6 +43,7 @@ const CloseButton = styled.button`
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
+  min-width: 100px;
   width: 50%;
   height: 35px;
   border: 0px;
@@ -49,9 +53,14 @@ const Button = styled.button<{ disabled?: boolean }>`
   margin-bottom: 40px;
   color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
+
+  &:hover {
+    color: ${({ theme, disabled }) => (disabled ? theme.fonts.colour : theme.background)};
+    font-weight: ${({ theme, disabled }) => (disabled ? theme.fonts.fontWeights.regular : theme.fonts.fontWeights.bold)};
+    background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryDark)};
+  }
 `
 
 interface FirstStepPopUpProps {
@@ -85,7 +94,9 @@ export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({
           <FaTimes />
         </CloseButton>
         <div>{heading}</div>
-
+        <span style={{ marginBottom: '20px'}}>Your Coach will review <br /> your change, where you will<br />
+        receive a notification <br /> with the results of the review
+        </span>
         <TextInputLight
             label=""
             placeholder={text}

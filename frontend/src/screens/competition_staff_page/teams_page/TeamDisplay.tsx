@@ -1,11 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { TeamCard, TeamDetails } from "./components/TeamCard";
+import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;
@@ -26,6 +27,25 @@ export const TEAM_DISPLAY_FILTER_OPTIONS = {
   Status: ['Pending', 'Unregistered', 'Registered'],
   "Team Name Approval": ['Approved', 'Unapproved'], 
 };
+
+const Overlay = styled.div<{ $isOpen: boolean }>`
+  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`
+const Heading = styled.h2`
+  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
+  margin-top: 40px;
+  color: ${({ theme }) => theme.colours.notifDark};
+  margin-bottom: 10%;
+  white-space: pre-wrap;
+  word-break: break-word;
+`
 
 export const TeamDisplay: FC = () => {
   const { compId } = useParams();
@@ -112,8 +132,33 @@ export const TeamDisplay: FC = () => {
     searchedCompetitions = sortedTeamList.map((team) => { return { item: team } });
   }
 
+
+  const location = useLocation();
+  const [isCreationSuccessPopUpOpen, setIsCreationSuccessPopUpOpen] = useState(false);
+
+   const handleClosePopUp = () => {
+    setIsCreationSuccessPopUpOpen(false);
+  }
+
+  useEffect(() => {
+    console.log("hello")
+    console.log(location.state)
+    if (location.state?.isSuccessPopUpOpen) {
+      setIsCreationSuccessPopUpOpen(true);
+    }
+  }, [location.state]);
+
   return (
     <>
+    {isCreationSuccessPopUpOpen && (
+      <>
+      <Overlay $isOpen={true} />
+      <ThirdStepPopUp
+        heading={<Heading>The competition has successfully {"\nbeen created"} </Heading>}
+        onClose={handleClosePopUp}
+      />
+    </>
+    )}
     <div>
       {Object.entries(filters).map(([field, values]) =>
         values.map((value) => (

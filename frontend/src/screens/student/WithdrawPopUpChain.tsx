@@ -50,6 +50,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleCl
             </Heading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
+            actionButtonText='Proceed'
           />
         );
       case 2:

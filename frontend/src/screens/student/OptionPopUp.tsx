@@ -1,10 +1,14 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { styled } from 'styled-components';
+import { CancelButton, ConfirmButton } from '../../components/responsive_fields/action_buttons/ActionButton';
 
 const Modal = styled.div`
   position: fixed;
   top: 50%;
+  min-width: 290px;
+  max-width: 350px;
+  box-sizing: border-box;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
@@ -12,13 +16,12 @@ const Modal = styled.div`
   padding: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 25%;
+  width: 100%;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
 `
-
 
 const CloseButton = styled.button`
   background: transparent;
@@ -37,37 +40,22 @@ const CloseButton = styled.button`
   }
 `
 
-const Button = styled.button`
-  max-width: 150px;
-  min-width: 100px;
-  width: 35%;
-  height: 35px;
-  border: 0px;
-  border-radius: 30px;
-  background-color: ${({ theme }) => (theme.colours.primaryLight)};
-  margin-top: 35px;
-  margin-bottom: 40px;
-  color: ${({ theme }) => theme.fonts.colour};
-  font-size: 16px;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  /* cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )}; */
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-`
 const ButtonContainer = styled.div`
   display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  gap: 40px;
+  flex-wrap: wrap;
 `
 
 interface OptionPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
   onNext: () => void;
+  actionButtonText: string;
 }
 
-export const OptionPopUp: React.FC<OptionPopUpProps> = ({ heading, onClose, onNext }) => {
+export const OptionPopUp: React.FC<OptionPopUpProps> = ({ heading, onClose, onNext, actionButtonText }) => {
 
   return (
     <>
@@ -78,8 +66,8 @@ export const OptionPopUp: React.FC<OptionPopUpProps> = ({ heading, onClose, onNe
         <div>{heading}</div>
 
         <ButtonContainer>
-          <Button onClick={onNext}>Proceed</Button>
-          <Button onClick={onClose}>Cancel</Button>
+          <ConfirmButton onClick={onNext}>{actionButtonText}</ConfirmButton>
+          <CancelButton onClick={onClose}>Cancel</CancelButton>
         </ButtonContainer>
 
       </Modal>
