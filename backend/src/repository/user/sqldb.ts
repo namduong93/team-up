@@ -9,6 +9,7 @@ import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 import { Staff } from "../../models/user/staff/staff.js";
 import { UserType, UserTypeObject } from "../../models/user/user.js";
 import { UserDashInfo } from "../../models/user/user_dash_info.js";
+import { DbError } from "../../errors/db_error.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -194,13 +195,22 @@ export class SqlDbUserRepository implements UserRepository {
     return { type: dbResult.rows[0].userType };
   }
 
-  userDashInfo = async(userId: number): Promise<UserDashInfo | undefined> =>{
-    
+  userDashInfo = async(userId: number): Promise<UserDashInfo | undefined> => {
     const dbResult = await this.pool.query(
       `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = ${userId}`
     );
 
     return dbResult.rows[0];
+  }
+
+  userUniversityId = async (userId: number): Promise<number | undefined> => {
+    const dbResult = await this.pool.query(
+      `SELECT university_id AS "universityId" FROM users WHERE id = ${userId}`
+    );
+    if (dbResult.rowCount === 0) {
+      return undefined;
+    }
+    return dbResult.rows[0].universityId;
   }
 
 }

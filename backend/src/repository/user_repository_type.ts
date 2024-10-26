@@ -17,4 +17,6 @@ export interface UserRepository {
 
   userType(userId: number): Promise<UserTypeObject | undefined>;
   userDashInfo(userId: number): Promise<UserDashInfo | undefined>;
+
+  userUniversityId(userId: number): Promise<number | undefined>;
 };

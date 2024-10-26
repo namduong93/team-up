@@ -545,6 +545,20 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return [{ id: 1, name: 'Macquarie University' }]
   }
 
+  competitionAlgorithm = async(compId: number, universityId: number): Promise<{} | undefined> => {
+    const teamQuery = `
+      SELECT team_id, participants
+      FROM competition_teams
+      WHERE competition_id = $1 AND university_id = $2
+    `;
+    const teamResult = await this.pool.query(teamQuery, [compId, universityId]);
+    if (teamResult.rowCount === 0) {
+      return undefined;
+    }
+    console.log(teamResult.rows);
+    return ;
+  }
+
   competitionIdFromCode = async (code: string): Promise<number | undefined> => {
     const competitionIdQuery = `SELECT id FROM competitions WHERE code = $1 LIMIT 1`;
     const competitionIdResult = await this.pool.query(competitionIdQuery, [code]);

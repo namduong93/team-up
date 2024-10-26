@@ -1,5 +1,5 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
-import { ServiceError } from "../errors/service_error.js";
+import { ServiceError, ServiceErrorType } from "../errors/service_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
@@ -296,6 +296,22 @@ export class CompetitionService {
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {
 
     return [{ id: 1, name: 'Macquarie University' }]
+  }
+
+  competitionAlgorithm = async (compId: number, userId: number): Promise<void> => {
+    const competition = await this.competitionRepository.competitionGetDetails(compId);
+    if (!competition) {
+      throw new ServiceError(ServiceError.NotFound, 'Competition not found');
+    }
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.COACH)) {
+      throw new ServiceError(ServiceError.Auth, 'User is not a coach');
+    }
+    const universityId = await this.userRepository.userUniversityId(userId);
+    if (!universityId) {
+      throw new ServiceError(ServiceError.Auth, 'User is not associated with a university');
+    }
+    await this.competitionRepository.competitionAlgorithm(compId, universityId);
   }
 
   // Check to make sure every competition name is unique

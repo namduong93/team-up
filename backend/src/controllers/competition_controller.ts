@@ -169,4 +169,12 @@ export class CompetitionController {
     return;
   });
 
+  competitionAlgorithm = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    let userId = req.query.userId;
+    const compId = req.body.compId;
+    //TODO: Add userId later
+    await this.competitionService.competitionAlgorithm(Number(compId), 2);
+    return;
+  });
+
 }

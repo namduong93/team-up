@@ -226,6 +226,8 @@ app.get('/user/notifications', notificationController.userNotificationsList);
 
 app.get('/competition/team/details', competitionController.competitionTeamDetails);
 
+app.post('/competition/algorithm', competitionController.competitionAlgorithm);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

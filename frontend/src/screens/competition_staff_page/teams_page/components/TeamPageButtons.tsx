@@ -4,6 +4,8 @@ import { ResponsiveButton, TransparentResponsiveButton } from "../../../../compo
 import { FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { useParams } from "react-router-dom";
+import { sendRequest } from "../../../../utility/request";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -23,7 +25,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 }) => {
   
   const theme = useTheme();
-
+  const { compId } = useParams<{ compId: string }>();
   const enableEditTeamStatus = () => {
     setIsEditingStatus(true);
     setFilters({ ...filters, Status: ['Pending'] });
@@ -60,9 +62,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
 
   const handleAlgorithmButton = () => {
-
     // hook it here
-    console.log('running the algorithm...');
+    sendRequest.post('/competition/algorithm', { compId });
   }
 
   return (
