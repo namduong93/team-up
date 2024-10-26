@@ -4,6 +4,7 @@ import { FlexBackground } from "../../components/general_utility/Background";
 import { sendRequest } from "../../utility/request";
 import { DashInfo } from "../dashboard/hooks/useDashInfo";
 import { backendURL } from "../../../config/backendURLConfig";
+import { FaEdit } from "react-icons/fa";
 
 interface User {
   role: "student" | "staff";
@@ -22,37 +23,30 @@ interface User {
 
 const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
+  width: 100%;
+  height: 100%;
+  align-items: center;
 `;
 
 const AccountContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  height: 100%;
+  margin: 10px;
   width: 100%;
+  max-height: 95%;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
 const CardContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
-  flex-wrap: wrap;
   width: 100%;
-  overflow-y: auto;
-  max-height: 100vh;
-  
-  & > * {
-    flex: 1 1 300px;
-    margin: 20px;
-  }
+  max-height: 100%;
 `;
 
-const AccountCard = styled.div`
-  background-color: ${({ theme }) => theme.colours.sidebarBackground};
-  padding: 15px;
+const AccountCard = styled.div<{ $isEditing: boolean }>`
+  background-color: ${({ theme }) => theme.background};
+  border: 1.5px solid ${({ theme, $isEditing: isEditing }) => isEditing ? theme.colours.secondaryLight : theme.colours.sidebarBackground };
   border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   flex: 1 0;
   text-align: center;
   display: flex;
@@ -60,17 +54,25 @@ const AccountCard = styled.div`
   overflow-x: hidden;
   overflow-y: auto;
   word-wrap: break-word;
-  max-height: 90%;
+  justify-content: space-evenly;
+  padding: 10px;
+  max-height: 100%;
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
 `;
 
 export const ProfilePic = styled.div<{ $imageUrl: string }>`
-  width: 150px;
-  height: 150px;
+  width: 8rem;
+  height: 8rem;
   border-radius: 50%;
   background-image: url(${(props) => props.$imageUrl || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`});
   background-size: cover;
   background-position: center;
-  border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 const DetailsCard = styled.div`
@@ -79,17 +81,16 @@ const DetailsCard = styled.div`
 `;
 
 const AccountItem = styled.div`
-  margin-bottom: 20px;
-  margin-right: 20px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 `;
 
-const Label = styled.label`
+const Label = styled.label<{ $isEditing: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  color: ${({ theme }) => theme.colours.primaryDark};
+  color: ${({ theme, $isEditing: isEditing }) => isEditing ? theme.colours.secondaryDark : theme.colours.primaryDark };
 `;
 
 const DetailsText = styled.div`
-  margin: 10px 0;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.fonts.colour};
 `;
@@ -98,14 +99,16 @@ const Input = styled.input`
   width: 100%;
   padding: 10px;
   margin-top: 10px;
+  margin-bottom: 10px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 20px;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
 `;
 
 const Select = styled.select`
-  padding: 15px;
+  padding: 10px;
   margin-top: 10px;
+  margin-bottom: 10px;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -126,8 +129,27 @@ const ButtonGroup = styled.div`
   gap: 20px;
 `;
 
-const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
-  padding: 15px 20px;
+const EditIconButton = styled.button`
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+`;
+
+const EditIcon = styled(FaEdit)`
+  width: 20px;
+  height: 20px;
+  color: ${({ theme }) => theme.colours.secondaryDark};
+  
+  &:hover {
+    color: ${({ theme }) => theme.colours.secondaryLight}
+  };
+`;
+
+const Button = styled.button<{ type: "confirm" | "cancel" }>`
+  padding: 12px 20px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -135,8 +157,6 @@ const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
   color: ${({ theme }) => theme.fonts.colour};
   background-color: ${({ theme, type }) => {
     switch (type) {
-      case "primary":
-        return theme.colours.primaryLight;
       case "confirm":
         return theme.colours.confirm;
       case "cancel":
@@ -152,8 +172,6 @@ const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
     color: ${({ theme }) => theme.background};
     background-color: ${({ theme, type }) => {
       switch (type) {
-        case "primary":
-          return theme.colours.primaryDark;
         case "confirm":
           return theme.colours.confirmDark;
         case "cancel":
@@ -167,7 +185,7 @@ const Button = styled.button<{ type: "primary" | "confirm" | "cancel" }>`
 
 interface AccountProps {
   setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;
-}
+};
 
 export const Account: FC<AccountProps> = ({ setDashInfo }) => {
   const [user, setUser] = useState<User>({
@@ -242,17 +260,24 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     <Background>
       <AccountContainer>
         <CardContainer>
-          <AccountCard>
-            <ProfilePic $imageUrl={newDetails.profilePic || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
+          <AccountCard $isEditing={isEditingUser}>
+            <ProfileContainer>
+              <ProfilePic $imageUrl={newDetails.profilePic || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
+            </ProfileContainer>
+            {!isEditingUser && (
+              <EditIconButton onClick={handleEditUser}>
+                <EditIcon />
+              </EditIconButton>
+            )}
             <DetailsCard>
               <AccountItem>
-                <Label>Profile Picture:</Label>
+                {isEditingUser && <Label $isEditing={isEditingUser}>Profile Picture:</Label>}
                 {isEditingUser && (
                   <Input type="file" accept="image/*" onChange={handlePhotoUpload} />
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Name:</Label>
+                <Label $isEditing={isEditingUser}>Name:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -264,7 +289,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Preferred Name:</Label>
+                <Label $isEditing={isEditingUser}>Preferred Name:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -276,7 +301,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Email:</Label>
+                <Label $isEditing={isEditingUser}>Email:</Label>
                 {isEditingUser ? (
                   <Input
                     type="email"
@@ -288,7 +313,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Affiliation:</Label>
+                <Label $isEditing={isEditingUser}>Affiliation:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -300,7 +325,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Gender:</Label>
+                <Label $isEditing={isEditingUser}>Gender:</Label>
                 {isEditingUser ? (
                   <Select
                     value={newDetails.gender}
@@ -315,7 +340,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Preferred Pronouns:</Label>
+                <Label $isEditing={isEditingUser}>Preferred Pronouns:</Label>
                 {isEditingUser ? (
                   <Select
                     value={newDetails.pronouns}
@@ -331,7 +356,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>T-Shirt Size:</Label>
+                <Label $isEditing={isEditingUser}>T-Shirt Size:</Label>
                 {isEditingUser ? (
                   <Select
                     value={newDetails.tshirtSize}
@@ -350,7 +375,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Dietary Preferences:</Label>
+                <Label $isEditing={isEditingUser}>Dietary Preferences:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -362,7 +387,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Allergy Preferences:</Label>
+                <Label $isEditing={isEditingUser}>Allergy Preferences:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -374,7 +399,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 )}
               </AccountItem>
               <AccountItem>
-                <Label>Accessibility Preferences:</Label>
+                <Label $isEditing={isEditingUser}>Accessibility Preferences:</Label>
                 {isEditingUser ? (
                   <Input
                     type="text"
@@ -384,10 +409,10 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 ) : (
                   <DetailsText>{user.accessibilityReqs}</DetailsText>
                 )}
-              </AccountItem>
+                            </AccountItem>
             </DetailsCard>
             <ActionButtons>
-              {isEditingUser ? (
+              {isEditingUser && (
                 <ButtonGroup>
                   <Button type="confirm" onClick={handleSaveUser}>
                     Save
@@ -396,8 +421,6 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                     Cancel
                   </Button>
                 </ButtonGroup>
-              ) : (
-                <Button type="primary" onClick={handleEditUser}>Edit</Button>
               )}
             </ActionButtons>
           </AccountCard>
@@ -406,3 +429,4 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     </Background>
   );
 };
+
