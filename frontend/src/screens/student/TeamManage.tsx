@@ -18,9 +18,7 @@ const ManageContainer = styled.div`
 
 const InfoContainer = styled.div`
   display: grid;
-  gap: 16px;
   width: 100%;
-  height: 50%;
   max-width: 50%;
 `;
 

@@ -26,7 +26,15 @@ const StudentCard = styled.div<{ $isFirst?: boolean }>`
   width: 100%;
   margin: 10px 0;
   position: relative;
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: auto;
+  height: fit-content;
+`;
+
+const ContactEdit = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 `;
 
 const StudentCardContent = styled.div`
@@ -35,6 +43,7 @@ const StudentCardContent = styled.div`
   width: 100%;
   flex: 1;
   margin: 5%;
+  padding: 5px;
 `;
 
 const ContentContainer = styled.div`
@@ -50,6 +59,7 @@ const StudentInfo = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
+  padding-right: 10px;
 `;
 
 const StudentName = styled.p`
@@ -113,9 +123,6 @@ const PreferredContactHandle = styled.span`
 `;
 
 const EditIcon = styled(FaEdit)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
   width: 1rem;
   height: 1rem;
   cursor: pointer;
@@ -151,6 +158,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
   return (
     <StudentCard $isFirst={isFirst}>
       <StudentCardContent>
+        
         <ContentContainer>
           {isCoach ? (
             <IconWrapper>
@@ -163,31 +171,34 @@ export const ProfileCard: FC<ProfileCardProps> = ({
             />
           )}
           <StudentInfo>
-            <StudentContact>
-              <StudentName>{name}</StudentName>
-              <StudentEmail>
-                <span>{email}</span>
-                <CopyButton textToCopy={email} />
-              </StudentEmail>
-              {!isCoach && preferredContact && contactParts.length === 2 ? (
-                <PreferredContact>
-                  <span>{contactParts[0]}:</span>
-                  <PreferredContactHandle>
-                    {contactParts[1]}
-                  </PreferredContactHandle>
-                  <CopyButton textToCopy={contactParts[1]} />
-                </PreferredContact>
-              ) : ( // only students should have a preferred contact
-                isCoach && (<CoachContact>No preferred contact available.</CoachContact>)
+            <ContactEdit>
+              <StudentContact>
+                <StudentName>{name}</StudentName>
+                <StudentEmail>
+                  <span>{email}</span>
+                  <CopyButton textToCopy={email} />
+                </StudentEmail>
+                {!isCoach && preferredContact && contactParts.length === 2 ? (
+                  <PreferredContact>
+                    <span>{contactParts[0]}:</span>
+                    <PreferredContactHandle>
+                      {contactParts[1]}
+                    </PreferredContactHandle>
+                    <CopyButton textToCopy={contactParts[1]} />
+                  </PreferredContact>
+                ) : ( // only students should have a preferred contact
+                  isCoach && (<CoachContact>No preferred contact available.</CoachContact>)
+                )}
+              </StudentContact>
+              {isFirst && onEdit && (
+                <EditIcon onClick={onEdit} />
               )}
-            </StudentContact>
+            </ContactEdit>
             <StudentBio>{bio}</StudentBio>
           </StudentInfo>
         </ContentContainer>
       </StudentCardContent>
-      {isFirst && onEdit && (
-        <EditIcon onClick={onEdit} />
-      )}
+      
     </StudentCard>
   );
 };

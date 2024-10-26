@@ -87,6 +87,7 @@ export const TeamDetails: FC = () => {
     alert(`Saved details for: ${updatedStudent.name}`);
   };
 
+  // TODO: waiting for backend route to get 1 paritcipant comp details
   const fetchStudentDetails = (id: string): StudentDetails => {
     return {
       name: "John Doe",
