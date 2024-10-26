@@ -32,7 +32,8 @@ const Label = styled.label`
 const Descriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
-  color: ${({ theme }) => theme.fonts.descriptor};
+  color: ${({ theme }) => theme.colours.filterText};
+  width: 100%;
 `;
 
 const Asterisk = styled.span`
