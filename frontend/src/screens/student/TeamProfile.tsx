@@ -2,7 +2,6 @@ import { FC, useEffect, useState  } from "react";
 import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../competition_staff_page/components/PageUtils";
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
 import styled from "styled-components";
-// import { sendRequest } from "../../utility/request";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
 import { TeamHeader } from "./TeamHeader";
 import { sendRequest } from "../../utility/request";
@@ -88,7 +87,6 @@ export const TeamProfile: FC = () => {
     };
 
     fetchTeamDetails();
-
   }, []);
   
 
@@ -100,12 +98,7 @@ export const TeamProfile: FC = () => {
 
   const compCountdown =  Math.round(((teamDetails.startDate.getTime()-Date.now())/(1000*60*60*24)));
 
-  // const location = useLocation();
   const [withdrawPopUpOpen, setWithdrawPopUpOpen] = useState(false);
-
-  // const handleClosePopUp = () => {
-  //   setWithdrawPopUpOpen(false);
-  // }
 
   const handleWithdrawClick = () => {
     setWithdrawPopUpOpen(true);

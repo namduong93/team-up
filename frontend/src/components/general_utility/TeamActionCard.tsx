@@ -13,11 +13,11 @@ const MAX_MEMBERS = 3; // Maximum number of team members
 interface ActionCardProps {
   $actionType: ActionType;
   $disabled: boolean;
-}
+};
 
 interface TeamActionCardProps {
   numMembers: number;
-}
+};
 
 const ActionsContainer = styled.div`
   display: grid;
@@ -25,8 +25,8 @@ const ActionsContainer = styled.div`
   gap: 5%;
   width: 100%;
   margin: 5% 5%;
-  
-`
+  box-sizing: border-box;
+`;
 
 const ActionCard = styled.button<ActionCardProps>`
   display: flex;
@@ -47,25 +47,28 @@ const ActionCard = styled.button<ActionCardProps>`
   text-align: center;
   cursor: ${({ $disabled }) => ($disabled ? "not-allowed" : "pointer")};
   transition: transform 0.2s;
+  box-sizing: border-box;
 
   &:hover {
     transform: ${({ $disabled }) => ($disabled ? "none" : "translate(2px, 2px)")};
   }
-`
+`;
 
 const CardIcon = styled.div<{ $disabled: boolean }>`
   font-size: 32px;
   margin-bottom: 10px;
+  box-sizing: border-box;
   color: ${({ theme, $disabled }) =>
     $disabled ? theme.colours.notifDark : theme.fonts.colour};
-`
+`;
 
 const CardText = styled.p<{ $disabled: boolean }>`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme, $disabled }) =>
     $disabled ? theme.colours.notifDark : theme.fonts.colour};
   margin: 0;
-`
+  box-sizing: border-box;
+`;
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
@@ -76,7 +79,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
-`
+`;
 
 const Heading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
@@ -85,7 +88,8 @@ const Heading = styled.h2`
   margin-bottom: 10%;
   white-space: pre-wrap;
   word-break: break-word;
-`
+  box-sizing: border-box;
+`;
 
 export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) => {
   const [modalOpen, setModalOpen] = useState<"invite" | "join" | "name" | "site" | null>(null);

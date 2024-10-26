@@ -113,7 +113,7 @@ export const CompetitionPage: FC = () => {
               />}
             
             {(roles.includes(CompetitionRole.Admin)) &&
-            <AdvancedDropdown style={{ width: '100%', maxWidth: '302px' }}
+            <AdvancedDropdown style={{ minWidth: '0', maxWidth: '342px', width: '100%' }}
               optionsState={[options, setOptions]} setCurrentSelected={setUniversityOption}/>}
 
           </PageHeader>

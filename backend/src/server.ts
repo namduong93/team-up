@@ -133,7 +133,7 @@ app.post('/competition/system_admin/create', competitionController.competitionsS
 app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
 // Get a competition's details
-// PARAMS: { id: number }
+// PARAMS: { compId: number }
 // RESPONSE: { competitionDetails: CompetitionDetails}
 app.get('/competition/details', competitionController.competitionGetDetails)
 
@@ -163,10 +163,19 @@ app.post('/competition/student/join/1', competitionController.competitionStudent
 app.post('/competition/student/join/2', competitionController.competitionStudentJoin2);
 
 // Student withdraws from competition
-// PARAMS: { competitionId: number }
-// RESPONSE: { }
+// PARAMS: { compId: number }
+// RESPONSE: { competitionCode: string }
 app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
 
+// Student requests to change the team name
+// PARAMS: { compId: number, newTeamName: string }
+// RESPONSE: { }
+app.put('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
+
+// Coach approves the team name change (for many teams in one specific competition at once)
+// PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
+// RESPONSE: { }
+app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
 
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }

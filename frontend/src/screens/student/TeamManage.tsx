@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
 import { ProfileCard } from "./ProfileCard"; // Import the ProfileCard component
+import { useOutletContext } from "react-router-dom";
+import { Student } from "./TeamDetails";
 
 const ManageContainer = styled.div`
   display: flex;
@@ -16,9 +18,7 @@ const ManageContainer = styled.div`
 
 const InfoContainer = styled.div`
   display: grid;
-  gap: 16px;
   width: 100%;
-  height: 50%;
   max-width: 50%;
 `;
 
@@ -30,6 +30,7 @@ const InfoCard = styled.div`
   padding: 15px;
   background-color: ${({ theme }) => theme.background};
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 `;
 
 const InfoContent = styled.div`
@@ -77,6 +78,7 @@ const ModalContent = styled.div`
   max-width: 600px;
   width: 80%;
   color: ${({ theme }) => theme.fonts.colour};
+  box-sizing: border-box;
 `;
 
 const CloseButton = styled.button`
@@ -89,6 +91,7 @@ const CloseButton = styled.button`
   color: ${({ theme }) => theme.colours.error};
   font-size: 24px;
   transition: color 0.3s;
+  box-sizing: border-box;
 
   &:hover {
     color: ${({ theme }) => theme.colours.cancelDark};
@@ -96,6 +99,14 @@ const CloseButton = styled.button`
 `;
 
 export const TeamManage: React.FC = () => {
+  const { students, coach } = useOutletContext<{
+    students: Student[];
+    coach: {
+      name: '',
+      email: '',
+      bio: '',
+    }
+  }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -108,12 +119,12 @@ export const TeamManage: React.FC = () => {
 
   return (
     <ManageContainer>
-      <TeamActionCard numMembers={2} />
+      <TeamActionCard numMembers={students.length} />
       <InfoContainer>
         <ProfileCard
-          name="Coach Name"
-          email="coach@email.com"
-          bio="I'm a coach who believes in P = NP"
+          name={coach.name}
+          email={coach.email}
+          bio={coach.bio}
           isCoach={true}
         />
         

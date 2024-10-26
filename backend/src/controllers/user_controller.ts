@@ -106,8 +106,8 @@ export class UserController {
 
   userType = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const userTypeObject = await this.userService.userType(Number(userId));
-    res.json(userTypeObject);
+    const userDashInfo = await this.userService.userType(Number(userId));
+    res.json({...userDashInfo, profilePic: ''});
     return;
   });
 

@@ -259,23 +259,62 @@ export class CompetitionService {
     return { teamId: 1 };
   }
 
-  competitionStudentWithdraw = async (userId: number, competitionId: number): Promise<string | undefined> => {
-    // Check if user is a participant
+  competitionStudentWithdraw = async (userId: number, compId: number): Promise<string | undefined> => {
+    // Check if user is a student or a participant
     const userTypeObject = await this.userRepository.userType(userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw COMPETITION_STUDENT_REQUIRED;
+      throw new ServiceError('User is not a student.', ServiceError.Auth);
+    }
+
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
     }
     
     // Remove student from competition
-    const result = await this.competitionRepository.competitionStudentWithdraw(userId, competitionId);
-    if (!result) {
-      throw BAD_REQUEST;
-    }
+    const result = await this.competitionRepository.competitionStudentWithdraw(userId, compId);
 
     // Notify team members and coach
-    await this.notificationRepository.notificationWithdrawal(userId, competitionId, result.competitionName, result.teamId, result.teamName);
+    await this.notificationRepository.notificationWithdrawal(userId, compId, result.competitionName, result.teamId, result.teamName);
 
     return result.competitionCode;
+  }
+
+  competitionRequestTeamNameChange = async (userId: number, compId: number, newTeamName: string): Promise<{} | undefined> => {
+    // Check if user is a participant
+    const userTypeObject = await this.userRepository.userType(userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
+      throw new ServiceError(ServiceError.Auth, "User is not a student.");
+    }
+
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+    }
+
+    // Request team name change
+    const teamId = await this.competitionRepository.competitionRequestTeamNameChange(userId, compId, newTeamName);
+
+    // Notify coach
+    await this.notificationRepository.notificationRequestTeamNameChange(teamId, compId);
+
+    return {};
+  }
+
+  competitionApproveTeamNameChange = async (userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+    // Check if user is a coach
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.COACH)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a coach for this competition.");
+    }
+
+    // Approve or reject team name change
+    await this.competitionRepository.competitionApproveTeamNameChange(compId, approveIds, rejectIds);
+
+    // Notify team members
+    await this.notificationRepository.notificationApproveTeamNameChange(compId, approveIds, rejectIds);
+
+    return {};
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {
