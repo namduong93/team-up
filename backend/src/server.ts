@@ -133,7 +133,7 @@ app.post('/competition/system_admin/create', competitionController.competitionsS
 app.put('/competition/system_admin/update', competitionController.competitionSystemAdminUpdate)
 
 // Get a competition's details
-// PARAMS: { id: number }
+// PARAMS: { compId: number }
 // RESPONSE: { competitionDetails: CompetitionDetails}
 app.get('/competition/details', competitionController.competitionGetDetails)
 
