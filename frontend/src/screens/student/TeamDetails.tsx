@@ -5,7 +5,7 @@ import { ProfileCard } from "./ProfileCard";
 import defaultProfile from "./default-profile.jpg";
 import { EditCompPreferences } from "./EditCompPreferences";
 import { StudentDetails } from "./EditCompPreferences";
-// import backend image handler
+import { backendURL } from "../../../config/backendURLConfig";
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -144,7 +144,7 @@ export const TeamDetails: FC = () => {
             name={student.name}
             email={student.email}
             bio={student.bio}
-            image={student.image || defaultProfile}
+            image={student.image || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` }
             preferredContact={student.preferredContact}
             isFirst={index === 0}
             onEdit={() => setEditingPreferences(fetchStudentDetails(student.id))}

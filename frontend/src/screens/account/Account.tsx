@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBackground } from "../../components/general_utility/Background";
-import defaultProfile from '../../components/assets/default-profile.jpg';
 import { sendRequest } from "../../utility/request";
 import { DashInfo } from "../dashboard/hooks/useDashInfo";
 import { backendURL } from "../../../config/backendURLConfig";
@@ -64,11 +63,11 @@ const AccountCard = styled.div`
   max-height: 90%;
 `;
 
-const ProfilePic = styled.div<{ $imageUrl: string }>`
+export const ProfilePic = styled.div<{ $imageUrl: string }>`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-image: url(${(props) => props.$imageUrl || defaultProfile});
+  background-image: url(${(props) => props.$imageUrl || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`});
   background-size: cover;
   background-position: center;
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -173,24 +172,24 @@ interface AccountProps {
 export const Account: FC<AccountProps> = ({ setDashInfo }) => {
   const [user, setUser] = useState<User>({
     role: "student",
-    name: "John Doe",
-    preferredName: "Johnny",
-    email: "john.doe@example.com",
-    affiliation: "UNSW",
-    gender: "Male",
-    pronouns: "He/Him",
-    profilePic: `${backendURL.HOST}:${backendURL.PORT}/public/images/icpc_logo.png`,
-    tshirtSize: "Male L",
-    allergies: "None",
-    dietaryReqs: ["Vegetarian"],
-    accessibilityReqs: "None",
+    name: "",
+    preferredName: "",
+    email: "",
+    affiliation: "",
+    gender: "Other",
+    pronouns: "They/Them",
+    profilePic: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
+    tshirtSize: "",
+    allergies: "",
+    dietaryReqs: [],
+    accessibilityReqs: "",
   });
 
   const [isEditingUser, setIsEditingUser] = useState(false);
   
   const [newDetails, setNewDetails] = useState<User>({
     ...user,
-    profilePic: defaultProfile,
+    profilePic: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
   });
 
   const handleEditUser = () => {
@@ -244,7 +243,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
       <AccountContainer>
         <CardContainer>
           <AccountCard>
-            <ProfilePic $imageUrl={newDetails.profilePic || defaultProfile } />
+            <ProfilePic $imageUrl={newDetails.profilePic || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
             <DetailsCard>
               <AccountItem>
                 <Label>Profile Picture:</Label>

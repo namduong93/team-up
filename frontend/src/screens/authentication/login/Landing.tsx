@@ -4,8 +4,8 @@ import { FlexBackground } from "../../../components/general_utility/Background";
 import { sendRequest } from "../../../utility/request";
 import styled from "styled-components";
 import TextInput from "../../../components/general_utility/TextInput";
+import { backendURL } from "../../../../config/backendURLConfig";
 
-// Custom styled components
 const FormContainer = styled.form`
   display: flex;
   width: 500px;
@@ -78,7 +78,7 @@ export const Landing: FC = () => {
   return (
     <FlexBackground style={{ justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
       <div style={{ width: '600px', flex: '0 1 auto' }}>
-        <Image src="https://sppcontests.org/wp-content/uploads/2024/02/RGB_SPCPA_Logo_24@4x-2.png" />
+        <Image src={`${backendURL.HOST}:${backendURL.PORT}/images/icpc_logo_landing.png`} />
       </div>
       <FormContainer onSubmit={handleSubmit}>
         <Title>Welcome</Title>
