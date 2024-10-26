@@ -13,7 +13,7 @@ export interface CompetitionRepository {
   competitionRoles(userId: number, compId: number): Promise<Array<CompetitionUserRole>>;
   competitionTeams(userId: number, compId: number): unknown;
   competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject | undefined>;
-  competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{} | undefined>;
+  competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{}>;
   competitionGetDetails(competitionId: number): Promise<Competition | undefined>;
 
   competitionStudentJoin(competitionUserInfo: CompetitionUser): Promise<{} | undefined>;

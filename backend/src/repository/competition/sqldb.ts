@@ -240,7 +240,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionId: competitionId };    
   }
 
-  competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{} | undefined> => {
+  competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{}> => {
     // Verify if userId is an admin of this competition
     const adminCheckQuery = `
       SELECT 1
@@ -251,7 +251,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const adminCheckResult = await this.pool.query(adminCheckQuery, [userId, competition.id]);
 
     if (adminCheckResult.rowCount === 0) {
-      return undefined; // TODO: throw unique error
+      throw new DbError(DbError.Query, "User is not an admin for this competition.");
     }
 
     // Verify if competition exists
@@ -264,16 +264,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const competitionExistResult = await this.pool.query(competitionExistQuery, [competition.id]);
 
     if (competitionExistResult.rowCount === 0) {
-      return undefined; // TODO: throw unique error
+      throw new DbError(DbError.Query, "Competition does not exist.");
     }
 
-    // TODO: Handle prefilling empty fields with old info. This might have been done on the FE but we should handle it here as well
-    
     // Update competition details
     const competitionUpdateQuery = `
       UPDATE competitions
-      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5
-      WHERE id = $6;
+      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5, code = $6, start_date = $7, region = $8
+      WHERE id = $9;
     `;
 
     const competitionUpdateValues = [
@@ -282,6 +280,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       new Date(competition.createdDate),
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
+      competition.code,
+      new Date(competition.startDate),
+      competition.region,
       competition.id
     ];
 
