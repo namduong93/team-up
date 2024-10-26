@@ -6,6 +6,9 @@ import { ConfirmButton, CancelButton } from '../../components/responsive_fields/
 const Modal = styled.div`
   position: fixed;
   top: 50%;
+  min-width: 290px;
+  max-width: 350px;
+  box-sizing: border-box;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
@@ -13,7 +16,7 @@ const Modal = styled.div`
   padding: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 25%;
+  width: 100%;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -41,9 +44,9 @@ const CloseButton = styled.button`
 const ButtonContainer = styled.div`
   display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  gap: 40px;
+  flex-wrap: wrap;
 `
 
 interface SecondStepPopUpProps {

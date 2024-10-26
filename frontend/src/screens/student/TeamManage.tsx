@@ -108,7 +108,7 @@ export const TeamManage: React.FC = () => {
 
   return (
     <ManageContainer>
-      <TeamActionCard numMembers={1} />
+      <TeamActionCard numMembers={3} />
       <InfoContainer>
         <ProfileCard
           name="Coach Name"
