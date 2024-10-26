@@ -129,14 +129,14 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-const Title1 = styled.h2`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: bold;
-  white-space: pre-wrap;
-  word-break: break-word;
-`
+// const Title1 = styled.h2`
+//   margin-top: 40px;
+//   margin-bottom: 20px;
+//   font-size: 22px;
+//   font-weight: bold;
+//   white-space: pre-wrap;
+//   word-break: break-word;
+// `
 
 const Title2 = styled.h2`
   margin-top: 40px;
@@ -146,25 +146,25 @@ const Title2 = styled.h2`
   word-break: break-word;
 `;
 
-const Heading = styled.h2`
-  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
-  margin-top: 40px;
-  color: ${({ theme }) => theme.colours.notifDark};
-  margin-bottom: 10%;
-  white-space: pre-wrap;
-  word-break: break-word;
-`
+// const Heading = styled.h2`
+//   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
+//   margin-top: 40px;
+//   color: ${({ theme }) => theme.colours.notifDark};
+//   margin-bottom: 10%;
+//   white-space: pre-wrap;
+//   word-break: break-word;
+// `
 
-const Overlay = styled.div<{ $isOpen: boolean }>`
-  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-`
+// const Overlay = styled.div<{ $isOpen: boolean }>`
+//   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(0, 0, 0, 0.5);
+//   z-index: 999;
+// `
 
 export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});

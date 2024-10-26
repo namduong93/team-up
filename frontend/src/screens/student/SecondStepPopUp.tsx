@@ -7,7 +7,7 @@ const Modal = styled.div`
   position: fixed;
   top: 50%;
   min-width: 290px;
-  max-width: 350px;
+  max-width: 450px;
   box-sizing: border-box;
   left: 50%;
   transform: translate(-50%, -50%);

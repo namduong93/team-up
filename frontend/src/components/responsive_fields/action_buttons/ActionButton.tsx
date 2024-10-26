@@ -84,6 +84,8 @@ export const PopUpContent = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 `;
 
+
+
 export const Question = styled.div`
   padding: 20px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
