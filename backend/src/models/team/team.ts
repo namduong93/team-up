@@ -12,9 +12,9 @@ export interface Team {
 }
 
 export const enum TeamStatus {
-  PENDING = 'pending',
-  REGISTERED = 'registered',
-  UNREGISTERED = 'unrejected'
+  PENDING = 'Pending',
+  REGISTERED = 'Registered',
+  UNREGISTERED = 'Unregistered'
 }
 
 export const DEFAULT_TEAM_SIZE = 3;

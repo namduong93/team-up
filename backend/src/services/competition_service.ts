@@ -21,14 +21,14 @@ export interface IndividualTeamInfo {
 }
 
 
-export type MemberDetails = [
-  name: string,
-  siteId: number,
-  ICPCEligible: boolean,
-  level: string,
-  boersenEligible: boolean,
+export interface MemberDetails {
+  name: string;
+  siteId: number;
+  ICPCEligible: boolean;
+  level: string;
+  boersenEligible: boolean;
   isRemote: boolean
-];
+};
 
 export enum Member {
   name = 0,
@@ -38,14 +38,10 @@ export enum Member {
   boersenEligible = 4,
   isRemote = 5,
 }
-export interface TeamDetails {
+export interface TeamDetails extends ParticipantTeamDetails {
   teamId: number;
   universityId: number;
-  teamName: string;
-  member1?: MemberDetails;
-  member2?: MemberDetails;
-  member3?: MemberDetails;
-  status: 'pending' | 'registered' | 'unregistered';
+  status: 'Pending' | 'Registered' | 'Unregistered';
   teamNameApproved: boolean;
 };
 export interface TeamMateData {
@@ -91,10 +87,16 @@ export interface ParticipantTeamDetails {
   teamLevel: string;
   startDate: Date;
   students: Array<{
+    userId: number;
     name: string;
     email: string;
     bio: string;
     preferredContact: string;
+    siteId: number;
+    ICPCEligible: boolean;
+    level: string;
+    boersenEligible: boolean;
+    isRemote: boolean;
   }>;
   coach: {
     name: string;
@@ -102,7 +104,6 @@ export interface ParticipantTeamDetails {
     bio: string;
   }
 }
-
 
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;

@@ -4,15 +4,7 @@ import { FaRegUser } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
 import { LiaTimesSolid } from "react-icons/lia";
 import styled, { useTheme } from "styled-components";
-
-export type MemberDetails = [
-  name: string,
-  siteId: number,
-  ICPCEligible: boolean,
-  level: string,
-  boersenEligible: boolean,
-  isRemote: boolean
-];
+import { ParticipantTeamDetails } from "../../../student/TeamProfile";
 
 export enum Member {
   name = 0,
@@ -22,14 +14,10 @@ export enum Member {
   boersenEligible = 4,
   isRemote = 5,
 }
-export interface TeamDetails {
+export interface TeamDetails extends ParticipantTeamDetails {
   teamId: number;
   universityId: number;
-  teamName: string;
-  member1?: MemberDetails;
-  member2?: MemberDetails;
-  member3?: MemberDetails;
-  status: 'pending' | 'registered' | 'unregistered';
+  status: 'Pending' | 'Registered' | 'Unregistered';
   teamNameApproved: boolean;
 };
 
@@ -327,9 +315,9 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, _ ] = useState(teamDetails.status);
   const colorMap = {
-    'pending': '#F48385',
-    'unregistered': '#FDD386',
-    'registered': '#8BDFA5',
+    'Pending': '#F48385',
+    'Unregistered': '#FDD386',
+    'Registered': '#8BDFA5',
   };
 
   const toggleCurrentId = () => {
@@ -349,7 +337,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
 
   }
 
-  const isEditThisCard = isEditingStatus && (teamDetails.status === 'pending');
+  const isEditThisCard = isEditingStatus && (teamDetails.status === 'Pending');
   const isEditNameThisCard = isEditingNameStatus && (teamDetails.teamNameApproved === false);
 
   return (
@@ -362,21 +350,11 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
         </CardHeaderDiv>
     
           <TeamMatesContainerDiv>
-    
-            {teamDetails.member1 &&
-            <TeamMemberDiv>
-              <TeamCardMember memberName={teamDetails.member1[Member.name]} />
-            </TeamMemberDiv>}
-          
-            {teamDetails.member2 &&
-            <TeamMemberDiv>
-              <TeamCardMember memberName={teamDetails.member2[Member.name]} />
-            </TeamMemberDiv>}
-          
-            {teamDetails.member3 &&
-            <TeamMemberDiv>
-              <TeamCardMember memberName={teamDetails.member3[Member.name]} />
-            </TeamMemberDiv>}
+            {teamDetails.students.map((member, index) => (
+              <TeamMemberDiv key={`${member.name}${index}${member.email}`}>
+                <TeamCardMember memberName={member.name} />
+              </TeamMemberDiv>
+            ))}
           
             {isEditThisCard &&
               <ApproveRadio onClick={toggleCurrentId}>
