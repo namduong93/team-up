@@ -241,21 +241,27 @@ export class CompetitionService {
   competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
     const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw new DbError(DbError.Auth, 'User is not a student.');
+      throw new ServiceError(ServiceError.Auth, 'User is not a student.');
     }
 
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {
-      throw new DbError(DbError.Query, 'Competition does not exist.');
+      throw new ServiceError(ServiceError.NotFound, 'Competition not found');
     }
 
     competitionUserInfo.competitionId = competitionId;
     const competitionRoles = await this.competitionRepository.competitionRoles(competitionUserInfo.userId, competitionId);
     if (competitionRoles.length > 0) { // either they are already a participant or a staff
-      throw new DbError(DbError.Query, 'User is already a participant in this competition.');
+      throw new ServiceError(ServiceError.Auth, 'User is already a participant or staff for this competition.');
     }
     competitionUserInfo.competitionRoles = [CompetitionUserRole.PARTICIPANT];
-    await this.competitionRepository.competitionStudentJoin(competitionUserInfo);
+
+    const university = await this.userRepository.userUniversity(competitionUserInfo.userId);
+    if(!university) {
+      throw new ServiceError(ServiceError.NotFound, 'University not found');
+    }
+
+    await this.competitionRepository.competitionStudentJoin(competitionUserInfo, university);
     return;
   }
 

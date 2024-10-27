@@ -427,7 +427,7 @@ VALUES
   '{}',
   'Wheelchair Access',
   'student',
-  2,
+  5,
   'z000001'),
 ( -- id: 6
   'Test Student Account 2',
@@ -970,6 +970,7 @@ VALUES
   (26, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511'], 2, TRUE, FALSE, 'Boersen#4', 'bio for Boersen#4'),
   (27, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], 2, TRUE, FALSE, 'Testing Account', 'bio for Testing Account'),
   (28, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP4128'], 2, TRUE, FALSE, 'Testing Account 3', 'bio for Testing Account 3');
+  
 
 INSERT INTO competition_teams (
   competition_coach_id, 

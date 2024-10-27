@@ -8,6 +8,7 @@ import { parse } from "postgres-array";
 import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
+import { University } from "../../models/university/university.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -351,7 +352,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitions;
   }
 
-  competitionStudentJoin = async (competitionUserInfo: CompetitionUser): Promise<{} | undefined> => {
+  competitionStudentJoin = async (competitionUserInfo: CompetitionUser, university: University): Promise<{} | undefined> => {
     // First insert the user into the competition_users table
     let userId = competitionUserInfo.userId;
     let competitionId = competitionUserInfo.competitionId;
@@ -370,9 +371,22 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let competitionBio = competitionUserInfo.competitionBio || "";
     let preferredContact = competitionUserInfo.preferredContact || "";
 
+    
+    const coachUserIdResult = await this.pool.query(
+      `SELECT "userId" 
+       FROM competition_staff($1) 
+       WHERE roles::jsonb @> '["Coach"]'::jsonb 
+         AND "universityName" = $2`, 
+      [competitionId, university.name]
+    );
+    const competitionCoachIdResult = await this.pool.query(`
+      SELECT id FROM competition_users WHERE user_id = $1 AND competition_id = $2
+    `, [coachUserIdResult.rows[0].userId, competitionId]);
+    const competitionCoachId = competitionCoachIdResult.rows[0].id;
+
     const competitionJoinQuery = `
-      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional, bio, preferred_contact)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional, bio, preferred_contact, competition_coach_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
       RETURNING id
     `;
     const competitionJoinValues = [
@@ -391,36 +405,31 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       universityCourses,
       pastRegional,
       competitionBio,
-      preferredContact
+      preferredContact,
+      competitionCoachId,
     ];
     
     // Insert user into competition_users table and get competition_user_id
     const result = await this.pool.query(competitionJoinQuery, competitionJoinValues);
     const competitionUserId = result.rows[0].id;
 
-    // Retrieve university_id from the users table
-    const universityQuery = `
-      SELECT university_id FROM users WHERE id = $1
-    `;
-    const universityResult = await this.pool.query(universityQuery, [userId]);
-    const universityId = universityResult.rows[0].university_id;
-
-    // Generate the team name (e.g., "Team#ID") and insert into competition_teams
+    // Insert user to competition_teams table
     let teamStatus = TeamStatus.PENDING;
-    let teamSize = DEFAULT_TEAM_SIZE;
+    let teamSize = 1;
     let participants = [userId];
 
     let teamNameQuery = `
-      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id)
-      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1, $2, $3, $4, $5)
+      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id, competition_coach_id)
+      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1, $2, $3, $4, $5, $6)
       RETURNING id
     `;
     const teamNameValues = [
       teamStatus,
       teamSize,
       participants,
-      universityId,  // university_id from users table
-      competitionId
+      university.id,  
+      competitionId,
+      competitionCoachId
     ];
 
     // Insert the team into competition_teams table

@@ -10,6 +10,7 @@ import { Staff } from "../../models/user/staff/staff.js";
 import { UserType, UserTypeObject } from "../../models/user/user.js";
 import { UserDashInfo } from "../../models/user/user_dash_info.js";
 import { DbError } from "../../errors/db_error.js";
+import { University } from "../../models/university/university.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -203,14 +204,18 @@ export class SqlDbUserRepository implements UserRepository {
     return dbResult.rows[0];
   }
 
-  userUniversityId = async (userId: number): Promise<number | undefined> => {
-    const dbResult = await this.pool.query(
-      `SELECT university_id AS "universityId" FROM users WHERE id = ${userId}`
-    );
-    if (dbResult.rowCount === 0) {
+  userUniversity = async (userId: number): Promise<University | undefined> => {
+    const universityIdResult = await this.pool.query(`SELECT university_id FROM users WHERE id = $1`, [userId]);
+    if (universityIdResult.rowCount === 0) {
       return undefined;
     }
-    return dbResult.rows[0].universityId;
+    const universityId = universityIdResult.rows[0].university_id;
+    const universityNameResult = await this.pool.query(`SELECT name FROM universities WHERE id = $1`, [universityId]);
+    if (universityNameResult.rowCount === 0) {
+      return undefined;
+    }
+    const universityName = universityNameResult.rows[0].name;
+    return { id: universityId, name: universityName };
   }
 
 }

@@ -1,5 +1,6 @@
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
 import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
+import { University } from "../models/university/university.js";
 import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails } from "../services/competition_service.js";
 import './competition/sqldb'
@@ -17,7 +18,7 @@ export interface CompetitionRepository {
   competitionTeamDetails(userId: number, compId: number): Promise<ParticipantTeamDetails>;
   competitionStudentDetails(userId: number, compId: number): Promise<CompetitionStudentDetails>;
 
-  competitionStudentJoin(competitionUserInfo: CompetitionUser): Promise<{} | undefined>;
+  competitionStudentJoin(competitionUserInfo: CompetitionUser, university: University): Promise<{} | undefined>;
   competitionStudentJoin1(sessionToken: string, individualInfo: IndividualTeamInfo,
     teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined>;
   competitionStudentJoin2(sessionToken: string, teamInfo: TeamDetails,
