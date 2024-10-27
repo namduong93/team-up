@@ -25,7 +25,8 @@ declare module 'styled-components' {
         progressStart: string;
         progressEnd: string;
         progressBackground: string;
-        userInfoCardHeader: string,
+        userInfoCardHeader: string;
+        cardBackground: string;
   };
       teamProfile: {
         invite: string;

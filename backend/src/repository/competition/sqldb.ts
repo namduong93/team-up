@@ -5,7 +5,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
+import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 
@@ -35,7 +35,46 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const currentStudent = students.splice(currentStudentIndex, 1)[0];
     students.unshift(currentStudent);
     return { ...teamDetails, students };
+  }
 
+  competitionStudentDetails = async (userId: number, compId: number): Promise<CompetitionStudentDetails> => {
+    const dbResult = await this.pool.query(
+      `SELECT u.name, u.email, cu.preferred_contact AS "preferredContact", cu.bio AS "competitionBio",
+        cu.competition_level AS "competitionLevel", cu.icpc_eligible AS "ICPCEligible", cu.boersen_eligible AS "boersenEligible",
+        cu.degree_year AS "degreeYear", cu.degree, cu.is_remote AS "isRemote", cu.national_prizes AS "nationalPrizes",
+        cu.international_prizes AS "internationalPrizes", cu.codeforces_rating AS "codeforcesRating", cu.university_courses AS "universityCourses",
+        cu.past_regional AS "pastRegional"
+      FROM users u
+      JOIN competition_users cu ON u.id = cu.user_id
+      WHERE cu.user_id = $1 AND cu.competition_id = $2`,
+      [userId, compId]
+    );
+
+    if (dbResult.rows.length === 0) {
+      throw new DbError(DbError.Query, 'User does not exist or is not a participant in this competition.');
+    }
+
+    const result = dbResult.rows[0];
+
+    const studentDetails: CompetitionStudentDetails = {
+      name: result.name,
+      email: result.email,
+      preferredContact: result.preferredContact,
+      competitionBio: result.competitionBio,
+      competitionLevel: result.competitionLevel,
+      ICPCEligible: result.ICPCEligible,
+      boersenEligible: result.boersenEligible,
+      degreeYear: result.degreeYear,
+      degree: result.degree,
+      isRemote: result.isRemote,
+      nationalPrizes: result.nationalPrizes,
+      internationalPrizes: result.internationalPrizes,
+      codeforcesRating: result.codeforcesRating,
+      universityCourses: result.universityCourses,
+      pastRegional: result.pastRegional
+    };
+
+    return studentDetails;
   }
 
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
@@ -188,7 +227,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionId: competitionId };    
   }
 
-  competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{} | undefined> => {
+  competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{}> => {
     // Verify if userId is an admin of this competition
     const adminCheckQuery = `
       SELECT 1
@@ -199,7 +238,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const adminCheckResult = await this.pool.query(adminCheckQuery, [userId, competition.id]);
 
     if (adminCheckResult.rowCount === 0) {
-      return undefined; // TODO: throw unique error
+      throw new DbError(DbError.Query, "User is not an admin for this competition.");
     }
 
     // Verify if competition exists
@@ -212,16 +251,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const competitionExistResult = await this.pool.query(competitionExistQuery, [competition.id]);
 
     if (competitionExistResult.rowCount === 0) {
-      return undefined; // TODO: throw unique error
+      throw new DbError(DbError.Query, "Competition does not exist.");
     }
 
-    // TODO: Handle prefilling empty fields with old info. This might have been done on the FE but we should handle it here as well
-    
     // Update competition details
     const competitionUpdateQuery = `
       UPDATE competitions
-      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5
-      WHERE id = $6;
+      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5, code = $6, start_date = $7, region = $8
+      WHERE id = $9;
     `;
 
     const competitionUpdateValues = [
@@ -230,6 +267,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       new Date(competition.createdDate),
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
+      competition.code,
+      new Date(competition.startDate),
+      competition.region,
       competition.id
     ];
 
@@ -241,7 +281,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
 
     // TODO: handle site updates
-
     return {};
   }
 
@@ -328,10 +367,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let codeforcesRating = competitionUserInfo.codeforcesRating || 0;
     let universityCourses = competitionUserInfo.universityCourses || [];
     let pastRegional = competitionUserInfo.pastRegional || false;
+    let competitionBio = competitionUserInfo.competitionBio || "";
+    let preferredContact = competitionUserInfo.preferredContact || "";
 
     const competitionJoinQuery = `
-      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional, bio, preferred_contact)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
       RETURNING id
     `;
     const competitionJoinValues = [
@@ -348,7 +389,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       internationalPrizes,
       codeforcesRating,
       universityCourses,
-      pastRegional
+      pastRegional,
+      competitionBio,
+      preferredContact
     ];
     
     // Insert user into competition_users table and get competition_user_id

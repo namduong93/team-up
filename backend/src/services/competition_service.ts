@@ -1,5 +1,6 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
 import { ServiceError, ServiceErrorType } from "../errors/service_error.js";
+import { DbError } from "../errors/db_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
@@ -126,6 +127,15 @@ export class CompetitionService {
     return await this.competitionRepository.competitionTeamDetails(userId, compId);
   }
 
+  competitionStudentDetails = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+    }
+
+    return await this.competitionRepository.competitionStudentDetails(userId, compId);
+  }
+
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
     return await this.competitionRepository.competitionStaff(userId, compId);
   }
@@ -168,7 +178,7 @@ export class CompetitionService {
     const userTypeObject = await this.userRepository.userType(userId);
     
     if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
-      throw COMPETITION_ADMIN_REQUIRED;
+      throw new ServiceError(ServiceError.Auth, 'User is not a system admin.');
     }
 
     // const uniqueNames = this.checkUniqueSiteNames(competition);
@@ -231,18 +241,18 @@ export class CompetitionService {
   competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
     const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw COMPETITION_STUDENT_REQUIRED;
+      throw new DbError(DbError.Auth, 'User is not a student.');
     }
 
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {
-      throw COMPETITION_NOT_FOUND;
+      throw new DbError(DbError.Query, 'Competition does not exist.');
     }
 
     competitionUserInfo.competitionId = competitionId;
     const competitionRoles = await this.competitionRepository.competitionRoles(competitionUserInfo.userId, competitionId);
     if (competitionRoles.length > 0) { // either they are already a participant or a staff
-      throw COMPETITION_USER_REGISTERED;
+      throw new DbError(DbError.Query, 'User is already a participant in this competition.');
     }
     competitionUserInfo.competitionRoles = [CompetitionUserRole.PARTICIPANT];
     await this.competitionRepository.competitionStudentJoin(competitionUserInfo);

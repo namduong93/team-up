@@ -107,7 +107,7 @@ const TitleSpan = styled.span`
 `
 
 const TeamMatesContainerDiv = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.colours.cardBackground};
   flex: 1 1 auto;
   border-radius: 0px 0px 20px 20px;
   border: 1px solid rgba(0, 0, 0, 0.25);
@@ -117,6 +117,7 @@ const TeamMatesContainerDiv = styled.div`
   gap: 16px;
   justify-content: center;
   align-items: center;
+  color: ${({ theme }) => theme.fonts.colour}
 `
 
 const TeamMemberDiv = styled.div`

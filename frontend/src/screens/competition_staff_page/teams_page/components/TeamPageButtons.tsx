@@ -7,7 +7,7 @@ import { ResponsiveActionButton } from "../../../../components/responsive_fields
 import { useParams } from "react-router-dom";
 import { sendRequest } from "../../../../utility/request";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
-import { GrDocumentCsv } from "react-icons/gr";
+import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -204,7 +204,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
         <ResponsiveActionButton actionType="confirm"
           label="Download PDF"
           question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentCsv />}
+          icon={<GrDocumentPdf />}
           style={{ backgroundColor: theme.colours.confirm }}
           handleSubmit={downloadPDF}
         />

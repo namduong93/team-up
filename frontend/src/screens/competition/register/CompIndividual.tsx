@@ -128,8 +128,6 @@ export const CompetitionIndividual: FC = () => {
   };
 
   const handleNext = () => {
-    // post process the handle and platform into the format platform:handle
-    // and set formData.preferredContact to be that new string
     navigate(`/competition/experience/${code}`); 
   };
 
