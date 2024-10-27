@@ -9,92 +9,6 @@ import { CompetitionUser, CompetitionUserRole } from "../../models/competition/c
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 
-const HardCodeTeam = 
-[
-  {
-    team_id: 2,
-    university_id: 2,
-    team_name: 'This Unapproved Name',
-    member1: [ 'AR', 2, true, 'Level A', false, false, 'AIO', 'IOI', 2537, [], true], 
-    member2: [],
-    member3: [],
-    status: 'pending',
-    team_name_approved: false
-  },
-  {
-    team_id: 3,
-    university_id: 2,
-    team_name: 'AliYi',
-    member1: [ 'AK', 3, true, 'Level A', false, false, 'INOI', '', 2113, [], true],
-    member2: [ 'YF', 2, true, 'Level A', false, false, '', '', 0, [], true],
-    status: 'pending',
-    team_name_approved: false
-  },
-  {
-    team_id: 4,
-    university_id: 2,
-    team_name: 'DY',
-    member1: [ 'DY', 2, true, 'Level A', false, false, 'AIO', '', 1624, ['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], true],
-    status: 'pending',
-    team_name_approved: false
-  },
-  {
-    team_id: 5,
-    university_id: 2,
-    team_name: 'Kass',
-    member1: [ 'Kass', 2, true, 'Level A', true, false, 'NOI', '', 2848, ['COMP1511', 'COMP2521', 'COMP3821'], true],
-    member2: [ 'JL', 2, true, 'Level A', false, false, '', '', 0, ['COMP1511', 'COMP2521'], true],
-  },
-  {
-    team_id: 6,
-    university_id: 2,
-    team_name: 'Hello',
-    member1: [ 'HT', 2, true, 'Level A', true, false, 'NOI', '', 1962, ['COMP1511', 'COMP2521'], true],
-  },
-  {
-    team_id: 7,
-    university_id: 2,
-    team_name: 'Boersen#1',
-    member1: [ 'Boersen#1', 2, true, 'Level A', true, false, '', '', 0, ['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], true],
-  },
-  {
-    team_id: 8,
-    university_id: 2,
-    team_name: 'Boersen#1',
-    member1: [ 'Boersen#1', 2, true, 'Level A', true, false, '', '', 0, ['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], true],
-  },
-  {
-    team_id: 9,
-    university_id: 2,
-    team_name: 'Boersen#2',
-    member1: [ 'Boersen#2', 2, true, 'Level A', true, false, '', '', 0, ['COMP3121', 'COMP4128'], true],
-  },
-  {
-    team_id: 10,
-    university_id: 2,
-    team_name: 'Boersen#3',
-    member1: [ 'Boersen#3', 2, true, 'Level A', true, false, '', '', 0, ['COMP2521'], true],
-  },
-  {
-    team_id: 11,
-    university_id: 2,
-    team_name: 'Boersen#4',
-    member1: [ 'Boersen#4', 2, true, 'Level A', true, false, '', '', 0, ['COMP1511'], true],
-  },
-  {
-    team_id: 12,
-    university_id: 2,
-    team_name: 'Random Cool guy',
-    member1: [ 'Testing Account', 2, true, 'Level A', true, false, '', '', 0, ['COMP2521'], true],
-  },
-  {
-    team_id: 13,
-    university_id: 2,
-    team_name: 'Random Cool Guy',
-    member1: [ 'Testing Account 3', 2, true, 'Level A', true, false, '', '', 0, ['COMP4128'], true],
-  }
-]
-
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
 
@@ -195,6 +109,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         WHERE ctd.coach_user_id = ${userId} AND ctd.src_competition_id = ${compId};
         ` 
       );
+      console.log("herer", dbResult.rows);
 
       return dbResult.rows;
     }
@@ -641,13 +556,13 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     if (teamResult.rowCount === 0) {
       return undefined;
     }
-    const teams = HardCodeTeam;
+    console.log(teamResult.rows);
     // MemberDeatails = [name, site_id, ICPCEligible, level, boersenEligible, isRemote, nationalPrizes, internationalPrizes, codeforcesRating, universityCourses, pastRegional]
-    for (let i = 0; i < teams.length; i++) {
-      for(let j = i; j < teams.length; j++) {
+    // for (let i = 0; i < teams.length; i++) {
+    //   for(let j = i; j < teams.length; j++) {
 
-      }
-    }
+    //   }
+    // }
     return ;
   }
 
