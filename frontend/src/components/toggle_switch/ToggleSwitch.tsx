@@ -12,6 +12,7 @@ const StyledToggleDiv = styled.div<{ $numElems: number, $borderIndex: number }>`
   display: flex;
   position: relative;
   user-select: none;
+  color: ${({ theme }) => theme.fonts.colour};
   font-size: clamp(0.9em, calc(7.5vw - ${({ $numElems }) => `${$numElems}vw`}), 2em);
   &::after {
     content: '';
