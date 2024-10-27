@@ -238,6 +238,7 @@ app.get('/user/notifications', notificationController.userNotificationsList);
 // Get all the details of a team in a competition
 app.get('/competition/team/details', competitionController.competitionTeamDetails);
 
+app.get('/competition/attendees', competitionController.competitionAttendees);
 // PARAMS: { compId }
 // RESPONSE: 
 // {

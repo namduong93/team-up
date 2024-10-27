@@ -1,12 +1,13 @@
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
 import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails } from "../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../services/competition_service.js";
 import './competition/sqldb'
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionAttendees(userId: number, compId: number): Promise<Array<AttendeesDetails>>;
   competitionStaff(userId: number, compId: number): Promise<StaffInfo[]>;
   competitionStudents(userId: number, compId: number): Promise<StudentInfo[]>;
   competitionRoles(userId: number, compId: number): Promise<Array<CompetitionUserRole>>;
