@@ -168,7 +168,7 @@ export class CompetitionService {
     const userTypeObject = await this.userRepository.userType(userId);
     
     if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
-      throw COMPETITION_ADMIN_REQUIRED;
+      throw new ServiceError(ServiceError.Auth, 'User is not a system admin.');
     }
 
     // const uniqueNames = this.checkUniqueSiteNames(competition);
