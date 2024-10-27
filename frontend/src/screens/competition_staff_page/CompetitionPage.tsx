@@ -155,7 +155,7 @@ export const CompetitionPage: FC = () => {
           </CustomToggleSwitch>
         </PageOptionsContainerDiv>
 
-        <Outlet context={{ filters, sortOption, searchTerm, removeFilter, setFilters,
+        <Outlet context={{ filters, sortOption, searchTerm, removeFilter, setFilters, roles,
           filtersState: [filters, setFilters], editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],

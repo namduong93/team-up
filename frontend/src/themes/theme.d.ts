@@ -56,6 +56,8 @@ declare module 'styled-components' {
           registered: string;
       };
       roles: {
+          participantBackground: string;
+          participantText: string;
           coachText: string;
           coachBackground: string;
           siteCoordinatorText: string;

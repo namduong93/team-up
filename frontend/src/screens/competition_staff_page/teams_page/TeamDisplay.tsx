@@ -7,6 +7,7 @@ import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { TeamCard, TeamDetails } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
+import { CompetitionRole } from "../CompetitionPage";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;
@@ -53,7 +54,7 @@ export const TeamDisplay: FC = () => {
           editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
-          universityOption,
+          universityOption, roles,
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           setFilterOptions, setSortOptions, setEnableTeamButtons } = useCompetitionOutletContext('teams');
 
@@ -63,7 +64,7 @@ export const TeamDisplay: FC = () => {
   useEffect(() => {
     setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
     setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
-    setEnableTeamButtons(true);
+    setEnableTeamButtons(!roles.includes(CompetitionRole.SiteCoordinator) && true);
 
     const fetchCompetitionTeams = async () => {
       try {

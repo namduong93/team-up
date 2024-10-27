@@ -30,7 +30,7 @@ interface StaffCardProps extends React.HTMLAttributes<HTMLDivElement> {
   staffDetails: StaffDetails;
 }
 
-const StandardContainerDiv = styled.div`
+export const StandardContainerDiv = styled.div`
   width: 20%;
   height: 100%;
   display: flex;
@@ -40,9 +40,9 @@ const StandardContainerDiv = styled.div`
   box-sizing: border-box;
 `;
 
-const StandardSpan = styled.span``;
+export const StandardSpan = styled.span``;
 
-const StaffStatus = styled.div<{ $role: CompetitionRole }>`
+export const StaffStatus = styled.div<{ $role: CompetitionRole }>`
   width: 80%;
   height: 50%;
   max-width: 175px;

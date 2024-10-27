@@ -15,7 +15,7 @@ export interface CompetitionPageContext {
   editingNameStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
   universityOption: { value: string, label: string };
-
+  roles: Array<string>;
 }
 
 export const useCompetitionOutletContext = (page: string) => {
@@ -23,7 +23,7 @@ export const useCompetitionOutletContext = (page: string) => {
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
     editingStatusState: [isEditingStatus, setIsEditingStatus],
     teamIdsState: [approveTeamIds, setApproveTeamIds],
-    universityOption,
+    universityOption, roles,
     editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
     rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
     setFilterOptions, setSortOptions, setEnableTeamButtons } = context;
