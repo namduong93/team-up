@@ -352,6 +352,21 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitions;
   }
 
+  competitionUniversityDefaultSite = async(competitionId: number, university: University): Promise<CompetitionSiteObject | undefined> => {
+    const siteResult = await this.pool.query(
+      `SELECT id, name FROM competition_sites
+      WHERE competition_id = $1 AND university_id = $2
+      LIMIT 1`,
+      [competitionId, university.id]
+    );
+    let site = {
+      id: siteResult.rows[0].id || 0,
+      universityId: university.id,
+      name: siteResult.rows[0].name || "Not Found",
+    };
+    return site;
+  }
+
   competitionStudentJoin = async (competitionUserInfo: CompetitionUser, university: University): Promise<{} | undefined> => {
     // First insert the user into the competition_users table
     let userId = competitionUserInfo.userId;

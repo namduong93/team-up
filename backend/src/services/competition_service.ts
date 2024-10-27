@@ -1,7 +1,7 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
 import { ServiceError, ServiceErrorType } from "../errors/service_error.js";
 import { DbError } from "../errors/db_error.js";
-import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
@@ -237,6 +237,22 @@ export class CompetitionService {
 
     return {};
   }
+
+  competitionUserDefaultSite = async (userId: number, code: string): Promise< CompetitionSiteObject | undefined> => {
+    const competitionId = await this.competitionRepository.competitionIdFromCode(code);
+    if (!competitionId) {
+      throw new ServiceError(ServiceError.NotFound, 'Competition not found');
+    }
+
+    const university = await this.userRepository.userUniversity(userId);
+    if (!university) {
+      throw new ServiceError(ServiceError.NotFound, 'User is not associated with a university');
+    }
+    console.log('university', university);
+    const defaultSite = await this.competitionRepository.competitionUniversityDefaultSite(competitionId, university);
+    return defaultSite;
+   }
+
 
   competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
     const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);

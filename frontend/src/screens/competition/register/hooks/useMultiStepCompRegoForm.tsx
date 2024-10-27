@@ -1,11 +1,16 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
+export interface SiteLocation {
+  id: number;
+  name: string;
+}
 interface FormState {
   degreeYear: number;
   degree: string;
   ICPCEligibility: boolean | undefined;
   isRemote: boolean | undefined;
   competitionLevel: string;
+  siteLocation: SiteLocation;
   boersenEligible?: boolean;
   courses: string[];
   codeforce?: number;
@@ -23,6 +28,7 @@ const initialState: FormState = {
   ICPCEligibility: undefined,
   isRemote: undefined,
   competitionLevel: '',
+  siteLocation: { id: 0, name: '' },
   boersenEligible: undefined,
   courses: [],
   codeforce: undefined,
