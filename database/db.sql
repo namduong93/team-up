@@ -42,7 +42,7 @@ CREATE TABLE users (
   user_type user_type_enum NOT NULL,
   
 
-  university_id INT,
+  university_id INT REFERENCES universities (id),
 
   -- student info
   student_id TEXT, --- NULL iff not a student

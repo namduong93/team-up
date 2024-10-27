@@ -15,6 +15,8 @@ export class CompetitionController {
 
     const attendees = await this.competitionService.competitionAttendees(
       parseInt(userId as string), parseInt(compId as string));
+    console.log(attendees);
+    res.json({ attendees });
   });
 
   competitionTeamDetails = httpErrorHandler(async (req: Request, res: Response) => {

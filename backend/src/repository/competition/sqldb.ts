@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject } from "../../models/competition/competition.js";
 
@@ -14,6 +14,49 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   constructor(pool: Pool) {
     this.pool = pool;
+  }
+
+
+  competitionAttendees = async (userId: number, compId: number): Promise<Array<AttendeesDetails>> => {
+    const roles = await this.competitionRoles(userId, compId);
+
+    if (roles.includes(CompetitionUserRole.ADMIN)) {
+      const dbResult = await this.pool.query(
+        `SELECT cu.user_id AS "userId", uni.id AS "universityId", cu.site_attending_id AS "siteId",
+          u.email AS "email", u.name AS "name", u.gender AS "sex", cu.competition_roles AS "roles",
+          uni.name AS "universityName", u.tshirt_size AS "shirtSize", u.dietary_reqs AS "dietaryNeeds",
+          u.allergies AS "allergies", u.accessibility_reqs AS "accessibilityNeeds"
+        
+        FROM competition_users AS cu
+        JOIN users AS u ON u.id = cu.user_id
+        JOIN universities AS uni ON uni.id = u.university_id
+        WHERE cu.competition_id = ${compId};
+        `
+      );
+      
+      return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
+    };
+
+    if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      const dbResult = await this.pool.query(
+        `SELECT cu.user_id AS "userId", uni.id AS "universityId", cu.site_attending_id AS "siteId",
+          u.email AS "email", u.name AS "name", u.gender AS "sex", cu.competition_roles AS "roles",
+          uni.name AS "universityName", u.tshirt_size AS "shirtSize", u.dietary_reqs AS "dietaryNeeds",
+          u.allergies AS "allergies", u.accessibility_reqs AS "accessibilityNeeds"
+        
+        FROM competition_users AS csu
+        JOIN competition_users AS cu ON cu.site_attending_id = csu.site_id
+        JOIN users AS u ON u.id = cu.user_id
+        JOIN universities AS uni ON uni.id = u.university_id
+        WHERE csu.user_id = ${userId} AND cu.competition_id = ${compId};
+        `
+      );
+
+      return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
+    };
+
+    return [];
+
   }
 
   competitionTeamDetails = async (userId: number, compId: number): Promise<ParticipantTeamDetails> => {
@@ -163,7 +206,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         ` 
       );
 
-      console.log(dbResult.rows);
       return dbResult.rows;
     }
     

@@ -106,6 +106,23 @@ export interface ParticipantTeamDetails {
   }
 }
 
+export interface AttendeesDetails {
+  userId: number;
+  universityId: number;
+  siteId: number;
+  email: string;
+  
+  name: string;
+  sex: string;
+  roles: Array<CompetitionRole>;
+  universityName: string;
+  shirtSize: string;
+  dietaryNeeds: string | null;
+  allergies: string | null;
+  accessibilityNeeds: string | null;
+}
+
+
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
@@ -119,9 +136,12 @@ export class CompetitionService {
   
   competitionAttendees = async (userId: number, compId: number) => {
     const roles = await this.competitionRoles(userId, compId);
-    if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
-      
+    if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR) && !roles.includes(CompetitionUserRole.ADMIN)) {
+      throw new ServiceError(ServiceError.Auth,
+        'competition/attendees route is only for site coordinators and admins to use');
     }
+
+    return await this.competitionRepository.competitionAttendees(userId, compId);
   }
 
   competitionTeamDetails = async (userId: number, compId: number) => {

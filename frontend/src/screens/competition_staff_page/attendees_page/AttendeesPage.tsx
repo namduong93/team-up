@@ -265,24 +265,6 @@ export const AttendeesDisplay: FC = () => {
     searchedAttendees = sortedAttendees.map((attendees) => { return { item: attendees } });
   }
 
-  searchedAttendees = [
-      {item: {
-        userId: 1,
-        universityId: 1,
-        siteId: 1,
-        email: 'email@example.com',
-        name: "Full Name",
-        sex: "M",
-        roles: [CompetitionRole.Participant],
-        universityName: "University",
-        shirtSize: "Mens L",
-        dietaryNeeds: "diet",
-        allergies: null,
-        accessibilityNeeds: ""
-      } },
-  ]
-  
-
   return (
     <>
     <div>
