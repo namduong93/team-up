@@ -268,6 +268,7 @@ $$ LANGUAGE sql;
 CREATE OR REPLACE VIEW competition_team_details AS
 SELECT cu_source.user_id AS src_user_id,
   cu_source.competition_id AS src_competition_id, u_coach.id AS coach_user_id,
+  cu_source.site_attending_id AS src_site_attending_id,
   c.name AS "compName", ct.id AS "teamId", ct.university_id AS "universityId",
   (ct.pending_name IS NULL) AS "teamNameApproved", ct.team_status AS "status",
   (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName",
@@ -587,7 +588,7 @@ VALUES
 -- Competition Site Coordinator(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
 VALUES
-(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 1, 'Accepted');
+(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 2, 'Accepted');
 
 
 -- Competition Participants
