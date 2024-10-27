@@ -350,8 +350,8 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
         </CardHeaderDiv>
     
           <TeamMatesContainerDiv>
-            {teamDetails.students.map((member) => (
-              <TeamMemberDiv>
+            {teamDetails.students.map((member, index) => (
+              <TeamMemberDiv key={`${member.name}${index}${member.email}`}>
                 <TeamCardMember memberName={member.name} />
               </TeamMemberDiv>
             ))}
