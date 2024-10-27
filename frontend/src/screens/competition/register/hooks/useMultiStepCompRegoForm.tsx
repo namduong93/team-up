@@ -12,6 +12,9 @@ interface FormState {
   pastRegional?: boolean | undefined;
   nationalPrizes?: string;
   internationalPrizes?: string;
+  competitionBio:string;
+  platform?: string;
+  handle?: string;
 }
 
 const initialState: FormState = {
@@ -26,6 +29,9 @@ const initialState: FormState = {
   pastRegional: undefined,
   nationalPrizes: "",
   internationalPrizes: "",
+  competitionBio:"",
+  platform: undefined, 
+  handle: undefined,
 }
 
 interface MultiStepCompRegoFormContextType {

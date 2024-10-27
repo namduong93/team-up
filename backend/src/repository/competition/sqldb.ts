@@ -104,81 +104,23 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   competitionTeamDetails = async (userId: number, compId: number): Promise<ParticipantTeamDetails> => {
     const dbResult = await this.pool.query(
-      `SELECT c.name AS "compName",
-        ct.name AS "teamName", cs.name AS "teamSite", ct.team_seat AS "teamSeat",
-        cu_source.competition_level AS "teamLevel", c.start_date AS "startDate",
-        JSON_BUILD_ARRAY(
-          u1.name, u1.email, cu1.bio, cu1.preferred_contact
-        ) AS member1,
-        JSON_BUILD_ARRAY(
-          u2.name, u2.email, cu2.bio, cu2.preferred_contact
-        ) AS member2,
-        JSON_BUILD_ARRAY(
-          u3.name, u3.email, cu3.bio, cu3.preferred_contact
-        ) AS member3,
-        JSON_BUILD_ARRAY(
-          u_coach.name, u_coach.email, cu_coach.bio
-        ) AS coach
-      
-      FROM competition_users AS cu_source
-      JOIN competitions AS c ON c.id = cu_source.competition_id
-      JOIN competition_teams AS ct ON cu_source.user_id = ANY(ct.participants)
-      JOIN competition_sites AS cs ON cu_source.site_attending_id = cs.id
-      
-      JOIN competition_users AS cu_coach ON cu_coach.id = ct.competition_coach_id
-      JOIN users AS u_coach ON u_coach.id = cu_coach.user_id
-
-      LEFT JOIN users AS u1 ON u1.id = ct.participants[1]
-      LEFT JOIN users AS u2 ON u2.id = ct.participants[2]
-      LEFT JOIN users AS u3 ON u3.id = ct.participants[3]
-      LEFT JOIN competition_users AS cu1 ON u1.id = cu1.user_id
-      LEFT JOIN competition_users AS cu2 ON u2.id = cu2.user_id
-      LEFT JOIN competition_users AS cu3 ON u3.id = cu3.user_id
-      WHERE cu_source.user_id = ${userId} AND cu_source.competition_id = ${compId}
+      `SELECT "compName", "teamName", "teamSite", "teamSeat",
+        "teamLevel", "startDate", students, coach
+      FROM competition_team_details AS ctd
+      WHERE ctd.src_user_id = ${userId} AND ctd.src_competition_id = ${compId}
       LIMIT 1;
       `
     );
 
-    const result = dbResult.rows[0];
-
-    const teamDetails: ParticipantTeamDetails = {
-      compName: result.compName,
-      teamName: result.teamName,
-      teamSite: result.teamSite,
-      teamSeat: result.teamSeat,
-      teamLevel: result.teamLevel,
-      startDate: new Date(result.startDate),
-      students: [
-        {
-          name: result.member1[0],
-          email: result.member1[1],
-          bio: result.member1[2],
-          preferredContact: result.member1[3]
-        },
-        {
-          name: result.member2[0],
-          email: result.member2[1],
-          bio: result.member2[2],
-          preferredContact: result.member2[3]
-        },
-
-        // TODO: handle fewer than 3 members (check if the fields in the array are null/undefined)
-        {
-          name: result.member3[0],
-          email: result.member3[1],
-          bio: result.member3[2],
-          preferredContact: result.member3[3]
-        }
-      ],
-
-      coach: {
-        name: result.coach[0],
-        email: result.coach[1],
-        bio: result.coach[2],
-      },
-    };
-
-    return teamDetails;
+    const teamDetails: ParticipantTeamDetails = dbResult.rows[0];
+    const students = teamDetails.students;
+    const currentStudentIndex = students.findIndex((student) => student.userId === userId);
+    if (currentStudentIndex < 0) {
+      throw new DbError(DbError.Query, 'Could not find the current user in their own team [VERY WEIRD BEHAVIOUR]');
+    }
+    const currentStudent = students.splice(currentStudentIndex, 1)[0];
+    students.unshift(currentStudent);
+    return { ...teamDetails, students };
 
   }
 
@@ -233,10 +175,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       const dbResult = await this.pool.query(
-        `SELECT team_id AS "teamId", university_id AS "universityId", team_name AS "teamName",
-        member1, member2, member3,
-        status, team_name_approved AS "teamNameApproved"
-        FROM competition_admin_team_list(${compId})`
+        `SELECT DISTINCT ON ("teamId")
+          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          "teamLevel", "startDate", students, coach
+        FROM competition_team_details AS ctd
+        WHERE ctd.src_competition_id = ${compId};
+        `
       );
 
       return dbResult.rows;
@@ -244,10 +188,13 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     if (roles.includes(CompetitionUserRole.COACH)) {
       const dbResult = await this.pool.query(
-        `SELECT team_id AS "teamId", university_id AS "universityId", team_name AS "teamName",
-          member1, member2, member3,
-          status, team_name_approved AS "teamNameApproved"
-        FROM competition_coach_team_list(${userId}, ${compId})`);
+        `SELECT DISTINCT ON ("teamId")
+          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          "teamLevel", "startDate", students, coach
+        FROM competition_team_details AS ctd
+        WHERE ctd.coach_user_id = ${userId} AND ctd.src_competition_id = ${compId};
+        ` 
+      );
 
       return dbResult.rows;
     }
@@ -562,7 +509,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     const teamSetPendingQuery = `
       UPDATE competition_teams
-      SET team_status = 'pending'::competition_team_status
+      SET team_status = 'Pending'::competition_team_status
       WHERE id = $1
     `;
     await this.pool.query(teamSetPendingQuery, [teamId]);

@@ -7,6 +7,7 @@ import Fuse from "fuse.js";
 import { sendRequest } from "../../../utility/request";
 import { StudentCardInfo, StudentCardProps, StudentInfoCard } from "./components/StudentInfoCard";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
+import { FlexBackground } from "../../../components/general_utility/Background";
 
 export const WideDisplayDiv = styled.div`
   flex: 1;
@@ -53,12 +54,12 @@ export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = fa
 
 export const WideInfoContainerDiv = styled.div`
   width: 100%;
-  height: 54px;
   box-sizing: border-box;
   border-bottom: 1px solid #D9D9D9;
   display: flex;
   font-size: 13px;
   gap: 0.5%;
+  min-height: 54px;
 `;
 
 export const UserNameContainerDiv = styled.div`
@@ -507,7 +508,7 @@ export const StudentDisplay = () => {
         ))
       )}
     </div>
-  <div style={ { flex: '1', width: '100%', height: '100%' } }>
+  <FlexBackground>
     <NarrowDisplayDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoCard key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
@@ -531,7 +532,7 @@ export const StudentDisplay = () => {
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
     </WideDisplayDiv>
-  </div>
+  </FlexBackground>
   </>
   );
 }
