@@ -87,13 +87,12 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
   
   return (
     <>
-      <StyledResponsiveActionDiv $actionType={actionType}>
+      <StyledResponsiveActionDiv $actionType={actionType} style={style} >
         <TransparentResponsiveButton
           actionType={actionType}
           onClick={handleButtonClick}
           isOpen={isOpen}
           icon={icon} label={label}
-          style={style}
           {...props}
         />
       </StyledResponsiveActionDiv>

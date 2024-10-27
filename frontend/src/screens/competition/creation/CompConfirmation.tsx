@@ -47,14 +47,15 @@ const HalfText = styled.label`
   font-size: 16px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.regular};
   width: 45%;
-`;
+`
 
-const DoubleInputContainer = styled.div`
+const DoubleInputContainer = styled.div<{ margin?: boolean }>`
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 0.8%;
-`;
+  margin-bottom: ${({ margin }) => (margin ? "20px" : "0")};
+`
 
 const Text = styled.label`
   display: block;
@@ -64,7 +65,7 @@ const Text = styled.label`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 16px;
   width: 100%;
-`;
+`
 
 
 const LocationList = styled.div`
@@ -110,6 +111,11 @@ const Button = styled.button<{ disabled?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
+const Asterisk = styled.span`
+  color: ${({ theme }) => theme.colours.error};
+`;
+
+
 interface University {
   id: number;
   name: string;
@@ -127,10 +133,18 @@ interface OtherSiteLocation {
 
 interface CompetitionInformation {
   name: string;
-  earlyBirdDate: string;
-  earlyBirdTime: string;
+  region: string;
+  timeZone: string;
+  startDate: string;
+  startTime: string;
+  start: string;
+  earlyBird: boolean | null;
+  earlyBirdDate?: string;
+  earlyBirdTime?: string;
+  early: string;
   generalDate: string;
   generalTime: string;
+  general: string;
   code: string;
   siteLocations: SiteLocation[];
   otherSiteLocations: OtherSiteLocation[];
@@ -169,19 +183,20 @@ export const CompetitionConfirmation: FC = () => {
   }, []);
 
   const handleBack = () => {
+    console.log(competitionInfo);
     navigate("/competition/create", { state: { competitionInfo, optionDisplayList } });
   };
 
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const { name, earlyBirdDate, earlyBirdTime, generalDate, generalTime, code, siteLocations, otherSiteLocations } = competitionInfo;
+    const { name, early, general, start, region, code, siteLocations, otherSiteLocations } = competitionInfo;
     const payload = {
       name,
-      earlyRegDeadline: `${earlyBirdDate}T${earlyBirdTime}:00`,
-      generalRegDeadline: `${generalDate}T${generalTime}:00`,
-      startDate: `${generalDate}T${generalTime}:00`,
-      region: 'Australia',
+      earlyRegDeadline: early ? early : null,
+      generalRegDeadline: general,
+      startDate: start,
+      region: region,
       code,
       siteLocations: siteLocations.map(location => ({
         universityId: location.universityId, 
@@ -192,7 +207,7 @@ export const CompetitionConfirmation: FC = () => {
         name: location.defaultSite, 
       })),
     };
-
+    console.log(payload)
     try {
       const response = await sendRequest.post<{competitionId: number }>('/competition/system_admin/create', payload);
       console.log("Response:", response.data);
@@ -221,17 +236,38 @@ export const CompetitionConfirmation: FC = () => {
           <Label>Competition Name</Label>
           <Text><em>{competitionInfo?.name}</em></Text>
 
-          <Label>Early Bird Registration Deadline</Label>
+          <Label>Competition Region</Label>
+          <Text><em>{competitionInfo?.region}</em></Text>
 
+          <Label>Competition Start</Label>
           <DoubleInputContainer>
             <HalfText>Date</HalfText>
             <HalfText>Time</HalfText>
           </DoubleInputContainer>
 
-          <DoubleInputContainer>
-            <HalfText><em>{competitionInfo?.earlyBirdDate}</em></HalfText>
-            <HalfText><em>{competitionInfo?.earlyBirdTime}</em></HalfText>
+          <DoubleInputContainer margin={true}>
+            <HalfText><em>{competitionInfo?.startDate}</em></HalfText>
+            <HalfText><em>{competitionInfo?.startTime}</em></HalfText>
           </DoubleInputContainer>
+
+          <Label>Competition Timezone</Label>
+          <Text><em>{competitionInfo?.timeZone}</em></Text>
+
+          {competitionInfo?.earlyBird && (
+            <>
+            <Label>Early Bird Registration Deadline</Label>
+
+            <DoubleInputContainer>
+              <HalfText>Date</HalfText>
+              <HalfText>Time</HalfText>
+            </DoubleInputContainer>
+
+            <DoubleInputContainer margin={true}>
+              <HalfText><em>{competitionInfo?.earlyBirdDate}</em></HalfText>
+              <HalfText><em>{competitionInfo?.earlyBirdTime}</em></HalfText>
+            </DoubleInputContainer>
+            </>
+          )}
 
           <Label>General Registration Deadline</Label>
 
@@ -240,7 +276,7 @@ export const CompetitionConfirmation: FC = () => {
             <HalfText>Time</HalfText>
           </DoubleInputContainer>
 
-          <DoubleInputContainer>
+          <DoubleInputContainer margin={true}>
             <HalfText><em>{competitionInfo?.generalDate}</em></HalfText>
             <HalfText><em>{competitionInfo?.generalTime}</em></HalfText>
           </DoubleInputContainer>

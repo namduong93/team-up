@@ -10,7 +10,7 @@ import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;
-  background-color: white;
+  background-color: ${({ theme }) => theme.background};
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(294px, 100%), 1fr));
   margin-top: 32px;
