@@ -7,6 +7,7 @@ import { SearchBar } from "../competition_staff_page/components/PageUtils";
 import staffFAQs from "./faq_staff.json";
 import studentFAQs from "./faq_student.json";
 import adminFAQs from "./faq_admin.json";
+import Fuse from "fuse.js";
 
 interface FAQ {
   question: string;
@@ -134,10 +135,22 @@ export const Settings: FC = () => {
     setFAQ(faqs);
   };
 
+  const fuse = new Fuse(faq, {
+    keys: ['question', 'answer'],
+    threshold: 1
+  });
+  
+  let searchedFAQs;
+  if (searchQuery) {
+    searchedFAQs = fuse.search(searchQuery);
+  } else {
+    searchedFAQs = faq.map((faq) => { return { item: faq } });
+  }
+
   // Filter FAQs based on search query
-  const filteredFAQs = faq.filter(faqItem =>
-    faqItem.question.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // const filteredFAQs = faq.filter(faqItem =>
+  //   faqItem.question.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   // Toggle between dark and light theme
   const toggleTheme = () => {
@@ -161,8 +174,8 @@ export const Settings: FC = () => {
               value={searchQuery} 
               onChange={(e) => setSearchQuery(e.target.value)} 
             />
-            {filteredFAQs.length > 0 ? (
-              filteredFAQs.map((faqItem, index) => (
+            {searchedFAQs.length > 0 ? (
+              searchedFAQs.map(({ item: faqItem }, index) => (
                 <div key={index}>
                   <h3>{faqItem.question}</h3>
                   <p>{faqItem.answer}</p>
