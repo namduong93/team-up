@@ -23,9 +23,9 @@ const StandardContainerDiv = styled.div`
   box-sizing: border-box;
 `;
 
-const ActionsContainer = styled.div`
+const ActionsContainer = styled.div<{ $numActionsPerRow: number}>`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(${({ $numActionsPerRow: numActionsPerRow }) => numActionsPerRow}, 1fr);
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -145,7 +145,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
       )}
 
       {!showManageSite &&
-        <ActionsContainer>
+        <ActionsContainer $numActionsPerRow={(filteredActions.length === 2) ? 2 : 3}>
           {filteredActions.map((action, index) => (
             <ActionCard
               key={index}
