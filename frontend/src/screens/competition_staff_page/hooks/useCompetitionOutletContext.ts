@@ -1,5 +1,6 @@
-import { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useOutletContext } from "react-router-dom"
+import { TeamDetails } from "../teams_page/components/TeamCard";
 
 export interface CompetitionPageContext {
   filters: Record<string, Array<string>>;
@@ -16,6 +17,7 @@ export interface CompetitionPageContext {
   rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
   universityOption: { value: string, label: string };
   roles: Array<string>;
+  teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
 }
 
 export const useCompetitionOutletContext = (page: string) => {
@@ -24,6 +26,7 @@ export const useCompetitionOutletContext = (page: string) => {
     editingStatusState: [isEditingStatus, setIsEditingStatus],
     teamIdsState: [approveTeamIds, setApproveTeamIds],
     universityOption, roles,
+    teamListState: [teamList, setTeamList],
     editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
     rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
     setFilterOptions, setSortOptions, setEnableTeamButtons } = context;

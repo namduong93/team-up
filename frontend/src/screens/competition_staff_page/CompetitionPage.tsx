@@ -8,6 +8,7 @@ import { sendRequest } from "../../utility/request";
 import { SortOption } from "../../components/page_header/components/SortSelect";
 import { TeamPageButtons } from "./teams_page/components/TeamPageButtons";
 import { AdvancedDropdown } from "../../components/AdvancedDropdown/AdvancedDropdown";
+import { TeamDetails } from "./teams_page/components/TeamCard";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -43,6 +44,8 @@ export const CompetitionPage: FC = () => {
   
   const [rejectedTeamIds, setRejectedTeamIds] = useState<Array<number>>([]);
   const [isEditingNameStatus, setIsEditingNameStatus] = useState<boolean>(false);
+
+  const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
   ////
 
   useEffect(() => {
@@ -57,7 +60,21 @@ export const CompetitionPage: FC = () => {
 
     fetchRoles();
 
-  }, [])
+    const fetchCompetitionTeams = async () => {
+      try {
+        const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
+        const { teamList } = response.data
+        setTeamList(teamList);
+
+      } catch (error: unknown) {
+
+      }
+
+    };
+
+    fetchCompetitionTeams();
+
+  }, []);
 
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {
@@ -162,6 +179,7 @@ export const CompetitionPage: FC = () => {
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
           universityOption,
 
+          teamListState: [teamList, setTeamList],
           setFilterOptions, setSortOptions, setEnableTeamButtons }}/>
 
       </MainPageDiv>
