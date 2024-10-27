@@ -25,6 +25,7 @@ export const defaultTheme: DefaultTheme = {
     progressEnd: "#6688D2",
     progressBackground: "#BCCFF8",
     userInfoCardHeader: "#D6D6D6",
+    cardBackground: "white",
   },
   teamProfile: {
     invite: "#DFE8FB",
