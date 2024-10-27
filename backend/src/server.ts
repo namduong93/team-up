@@ -235,6 +235,8 @@ app.get('/user/notifications', notificationController.userNotificationsList);
 
 app.get('/competition/team/details', competitionController.competitionTeamDetails);
 
+app.get('/competition/attendees', competitionController.competitionAttendees);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

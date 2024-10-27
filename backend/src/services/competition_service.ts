@@ -115,6 +115,13 @@ export class CompetitionService {
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
   }
+  
+  competitionAttendees = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      
+    }
+  }
 
   competitionTeamDetails = async (userId: number, compId: number) => {
     const roles = await this.competitionRoles(userId, compId);

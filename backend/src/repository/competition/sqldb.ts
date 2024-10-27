@@ -112,6 +112,21 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
       return dbResult.rows;
     }
+
+    if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      const dbResult = await this.pool.query(
+        `SELECT DISTINCT ON ("teamId")
+          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          "teamLevel", "startDate", students, coach
+        FROM competition_team_details AS ctd
+        JOIN competition_users AS csu ON csu.site_id = ctd.src_site_attending_id
+        WHERE csu.user_id = ${userId} AND ctd.src_competition_id = ${compId};
+        ` 
+      );
+
+      console.log(dbResult.rows);
+      return dbResult.rows;
+    }
     
     // should be changed when we have a comprehensive error system.
     return [];
