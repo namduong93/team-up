@@ -346,11 +346,8 @@ export class CompetitionService {
     if (!roles.includes(CompetitionUserRole.COACH)) {
       throw new ServiceError(ServiceError.Auth, 'User is not a coach');
     }
-    const universityId = await this.userRepository.userUniversityId(userId);
-    if (!universityId) {
-      throw new ServiceError(ServiceError.Auth, 'User is not associated with a university');
-    }
-    await this.competitionRepository.competitionAlgorithm(compId, universityId);
+    
+    await this.competitionRepository.competitionAlgorithm(compId, userId);
   }
 
   // Check to make sure every competition name is unique

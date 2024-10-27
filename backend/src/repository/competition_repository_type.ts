@@ -33,5 +33,5 @@ export interface CompetitionRepository {
 
   competitionIdFromCode(code: string): Promise<number | undefined>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined>;
-  competitionAlgorithm(compId: number, universityId: number): Promise<{} | undefined>;
+  competitionAlgorithm(compId: number, userId: number): Promise<{} | undefined>;
 }
