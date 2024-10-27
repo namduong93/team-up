@@ -294,7 +294,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
 
     // TODO: handle site updates
-
     return {};
   }
 

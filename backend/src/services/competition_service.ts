@@ -1,5 +1,4 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
-import { DbError } from "../errors/db_error.js";
 import { ServiceError } from "../errors/service_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
@@ -168,7 +167,7 @@ export class CompetitionService {
     const userTypeObject = await this.userRepository.userType(userId);
     
     if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
-      throw new DbError(DbError.Auth, 'User is not a system admin.');
+      throw new ServiceError(ServiceError.Auth, 'User is not a system admin.');
     }
 
     // const uniqueNames = this.checkUniqueSiteNames(competition);
