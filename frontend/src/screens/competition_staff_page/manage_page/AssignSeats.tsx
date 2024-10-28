@@ -7,9 +7,117 @@ import styled from "styled-components";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import TextInput from "../../../components/general_utility/TextInput";
-import { FaBell, FaChair, FaDownload, FaFileCsv, FaTimes } from "react-icons/fa";
+import { FaBell, FaChair, FaDownload, FaTimes } from "react-icons/fa";
 import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
 import { TeamDetails } from "../teams_page/components/TeamCard";
+
+interface AssignSeatsProps {
+  siteName: string;
+  siteCapacity: number;
+};
+
+const mockSeatString: string = "Bongo00,Bongo01,Bongo02,Bongo03,Bongo04,Bongo05,Bongo06,Bongo07,Bongo08,Bongo09,Brass00,Brass01,Brass02,Brass03,Brass04,Brass05,Brass06,Brass07,Brass08,Brass09";
+const mockRooms: Room[] = [
+  {
+    roomName: "Bongo",
+    level: "A",
+    seatCodes: ["Bongo00", "Bongo01", "Bongo02", "Bongo03", "Bongo04"],
+    numSeats: 10,
+  },
+  {
+    roomName: "Bongo",
+    level: "B",
+    seatCodes: ["Bongo05", "Bongo06", "Bongo07", "Bongo08", "Bongo09"],
+    numSeats: 10,
+  },
+  {
+    roomName: "Brass",
+    level: "A",
+    seatCodes: ["Brass00", "Brass01", "Brass02", "Brass03", "Brass04"],
+    numSeats: 10,
+  },
+  {
+    roomName: "Brass",
+    level: "B",
+    seatCodes: ["Brass05", "Brass06", "Brass07", "Brass08", "Brass09"],
+    numSeats: 10,
+  },
+];
+
+const mockTeams: TeamDetails[] = [
+  {
+    teamId: 1,
+    universityId: 101,
+    teamName: "Code Warriors",
+    members: [
+      ["Alice Johnson", 12345, true, "A", false, false],
+      ["Bob Smith", 12346, true, "A", true, false],
+      ["Charlie Brown", 12347, false, "A", false, true],
+    ],
+    status: "registered",
+    teamNameApproved: true,
+  },
+  {
+    teamId: 2,
+    universityId: 102,
+    teamName: "Byte Size",
+    members: [
+      ["David Lee", 22345, true, "B", true, false],
+      ["Eva Green", 22346, false, "B", false, false],
+      ["Frank Wright", 22347, true, "B", true, true],
+    ],
+    status: "registered",
+    teamNameApproved: true,
+  },
+  {
+    teamId: 3,
+    universityId: 103,
+    teamName: "Algorithm Avengers",
+    members: [
+      ["Grace Taylor", 32345, true, "A", false, false],
+      ["Hank Cooper", 32346, true, "A", false, true],
+      ["Isabella Rodriguez", 32347, false, "A", true, false],
+    ],
+    status: "registered",
+    teamNameApproved: true,
+  },
+  {
+    teamId: 4,
+    universityId: 104,
+    teamName: "Debugging Ninjas",
+    members: [
+      ["Jack Thompson", 42345, true, "B", false, true],
+      ["Kimberly Yang", 42346, true, "B", false, false],
+      ["Leo Kim", 42347, false, "B", false, false],
+    ],
+    status: "registered",
+    teamNameApproved: true,
+  },
+  {
+    teamId: 5,
+    universityId: 105,
+    teamName: "Code Breakers",
+    members: [
+      ["Mia Chen", 52345, true, "A", true, false],
+      ["Nathan Patel", 52346, true, "A", true, true],
+      ["Olivia Kim", 52347, false, "A", false, false],
+    ],
+    status: "registered",
+    teamNameApproved: true,
+  },
+  {
+    teamId: 6,
+    universityId: 106,
+    teamName: "Code Crunchers",
+    members: [
+      ["Ava Thompson", 52345, true, "B", true, false],
+      ["Leo Martinez", 52346, true, "B", true, true],
+      ["Mia Patel", 52347, false, "B", false, false],
+    ],
+    status: "registered",
+    teamNameApproved: true,
+  },
+];
 
 interface SeatAssignment {
   siteId: string; // ID of the site
@@ -33,16 +141,6 @@ interface Room {
 };
 
 // route: send the new seat string for a team given the teamID
-
-
-// output JSON structure file:
-// "Bongo00, Bongo01, Bongo02"
-
-// user inputs:
-// RoomName: "Brass"
-// Number of Seats: 16
-// Start seat code: 774 || "A"
-
 
 const ManageContainer = styled.div`
   display: flex;
@@ -95,11 +193,6 @@ const RoomItem = styled.div`
   font-size: 16px;
   text-align: center;
 `;
-
-interface AssignSeatsProps {
-  siteName: string;
-  siteId: string;
-};
 
 const Button = styled.button`
   width: 120px;
@@ -264,11 +357,11 @@ const InputTitleB = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
-// export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteId }) => {
-  export const AssignSeats: FC = () => {
+export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) => {
+  // export const AssignSeats: FC = () => {
   const [seatInputType, setSeatInputType] = useState<string>("Text"); // either string or inputs
   const [seatAB, setSeatAB] = useState<string>("Together"); // seat level a and b either together or separately
-  const [isSeatedTogether, setIsSeatedTogether] = useState<boolean>(false);
+  const [isSeatedTogether, setIsSeatedTogether] = useState<boolean>(true); // by default, don't split level a and b
   const [isTextInput, setIsTextInput] = useState<boolean>(true);
   const [seatString, setSeatString] = useState<string>("");
   const [roomNameA, setRoomNameA] = useState<string>("");
@@ -282,6 +375,7 @@ const InputTitleB = styled.div`
 
   const [generatedSeats, setGeneratedSeats] = useState<string[]>([]);
   const [existingSeats, setExistingSeats] = useState<string[]>([]);
+  const [teamSeatAssignments, setTeamSeatAssignments] = useState<SeatAssignment[]>([]);
 
   // Update seat count whenever the seat string changes
   useEffect(() => {
@@ -439,15 +533,127 @@ const InputTitleB = styled.div`
     return isFormAInvalid && isFormBInvalid;
   };
 
-  const assignSeats = () => {
-    // Logic to assign seats based on the teams and rooms
-    console.log("Seats assigned!"); // Placeholder for actual logic
+  const distributeSeats = () => {
+    
+    // Assign one seat per team, skipping two each time
+    const seatAssignments: SeatAssignment[] = [];
+    const teamsToAssign = mockTeams; // Use mock teams
+
+    const levelATeams = [];
+    const levelBTeams = [];
+
+    for (const team of teamsToAssign) {
+      const teamLevel = team.members[0][3]; // level assumed by first student's level
+      if (teamLevel === 'A') {
+        levelATeams.push(team);
+      } else if (teamLevel === 'B') {
+        levelBTeams.push(team);
+      }
+    }
+    
+    
+    // if text input provided, use this method (only need to check the seatString and distribute)
+    if (isTextInput) {
+      const availableSeats = mockSeatString.split(",");
+      // Group teams by level
+      if (!isSeatedTogether) {
+        // Combine level A and level B teams
+        teamsToAssign.length = 0;
+        // Append A level teams followed by B level teams
+        teamsToAssign.push(...levelATeams, ...levelBTeams);
+      }
+      
+      for (let i = 0; i < teamsToAssign.length; i++) {
+        const team = teamsToAssign[i];
+        const seat = availableSeats[i * 3]; // Assign a seat, skipping 2 each time
+        if (seat) {
+          seatAssignments.push({
+            siteId: "mockSiteID", // Set this to your site ID
+            teamSite: "CSE Building K17", // Set this to the correct site name
+            teamSeat: seat,
+            teamId: team.teamId.toString(),
+            teamName: team.teamName,
+          });
+        }
+      }
+    } else {
+      // if specific room level input given, need to split based on provided room seat assignments
+      const availableRooms = mockRooms; // use mock room data
+      const assignedTeamIds = new Set<number>(); // To track assigned teams
+
+      for (const room of availableRooms) {
+        // Determine the appropriate teams to assign to the room
+        let teamsToAssign: TeamDetails[] = [];
+        
+        if (room.level === "A") {
+          teamsToAssign = levelATeams.filter(team => !assignedTeamIds.has(team.teamId));
+        } else if (room.level === "B") {
+          teamsToAssign = levelBTeams.filter(team => !assignedTeamIds.has(team.teamId));
+        }
+
+        // Assign teams to available seats in the room
+        for (let i = 0; i < teamsToAssign.length; i++) {
+          const team = teamsToAssign[i];
+          const seatIndex = i * 3; // Calculate the seat index to skip 2 seats
+          const seat = room.seatCodes[seatIndex]; // Get the seat from the room's available seats
+          
+          if (seat) {
+            seatAssignments.push({
+              siteId: "mockSiteID", // mock site id
+              teamSite: room.roomName, // mock site name
+              teamSeat: seat,
+              teamId: team.teamId.toString(),
+              teamName: team.teamName,
+            });
+            assignedTeamIds.add(team.teamId); // Mark this team as assigned
+          }
+        }
+      }
+    }
+    // TODO: route to update team seats based on seat assignments
+    console.log("Assigned Seats:", seatAssignments);
+    console.log("Seats assigned!");
+    setTeamSeatAssignments(seatAssignments);
     setSeatModalState(true);
   };
 
   const handleDownload = () => {
-    // Logic for downloading the seat assignment (placeholder)
-    console.log("Download seats data");
+
+    // Group seat assignments by site
+    const formattedData: exportSeatAssignment = {
+      siteName,
+      siteCapacity,
+      teams: teamSeatAssignments
+    };
+
+    // Prepare the CSV data and add headers
+    const csvRows = [];
+    csvRows.push(["Site Name", "Site Capacity", "Team ID", "Team Name", "Team Seat"].join(","));
+
+    // Add data rows
+    formattedData.teams.forEach(assignment => {
+      const row = [
+        formattedData.siteName,
+        formattedData.siteCapacity,
+        assignment.teamId,
+        assignment.teamName,
+        assignment.teamSeat
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    // CSV blob
+    const csvString = csvRows.join("\n");
+    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    // Tigger the download
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "seat_assignments.csv");
+    document.body.appendChild(link);
+    link.click(); // Trigger download
+    document.body.removeChild(link);
   };
 
   const handleNotifyTeams = () => {
@@ -463,7 +669,7 @@ const InputTitleB = styled.div`
           <SeatCount>Team Seats Available: {seatCount}</SeatCount>
           <AssignSeatsButton 
             actionType="secondary" 
-            onClick={assignSeats} 
+            onClick={distributeSeats} 
             label="Assign Seats" 
             isOpen={false} 
             icon={<FaChair />}
