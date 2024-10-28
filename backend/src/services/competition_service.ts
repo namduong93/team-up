@@ -67,7 +67,7 @@ export interface StudentInfo {
   teamName?: string;
 };
 
-export enum StaffAccess {
+enum StaffAccess {
   Accepted = 'Accepted',
   Pending = 'Pending',
   Rejected = 'Rejected',

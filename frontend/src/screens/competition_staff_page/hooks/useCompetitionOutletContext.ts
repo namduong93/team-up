@@ -1,6 +1,9 @@
 import React, { ReactNode, useEffect } from "react";
 import { useOutletContext } from "react-router-dom"
 import { TeamDetails } from "../teams_page/components/TeamCard";
+import { StudentInfo } from "../students_page/StudentDisplay";
+import { AttendeesDetails } from "../attendees_page/AttendeesPage";
+import { StaffDetails } from "../staff_page/StaffDisplay";
 
 export interface CompetitionPageContext {
   filters: Record<string, Array<string>>;
@@ -18,6 +21,9 @@ export interface CompetitionPageContext {
   universityOption: { value: string, label: string };
   roles: Array<string>;
   teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
+  studentsState: [Array<StudentInfo>, React.Dispatch<React.SetStateAction<Array<StudentInfo>>>];
+  attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
+  staffListState: [Array<StaffDetails>, React.Dispatch<React.SetStateAction<Array<StaffDetails>>>];
 }
 
 export const useCompetitionOutletContext = (page: string) => {
@@ -29,7 +35,10 @@ export const useCompetitionOutletContext = (page: string) => {
     teamListState: [teamList, setTeamList],
     editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
     rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
-    setFilterOptions, setSortOptions, setEnableTeamButtons } = context;
+    setFilterOptions, setSortOptions, setEnableTeamButtons,
+    studentsState: [students, setStudents],
+    attendeesListState: [attendeesList, setAttendeesList],
+  } = context;
 
   useEffect(() => {
     setIsEditingStatus(false);
