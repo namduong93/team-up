@@ -17,12 +17,9 @@ export enum Member {
 export interface TeamDetails extends ParticipantTeamDetails {
   teamId: number;
   universityId: number;
-
-  teamName: string;
   // member1?: MemberDetails;
   // member2?: MemberDetails;
   // member3?: MemberDetails;
-  members: MemberDetails[];
   status: 'Pending' | 'Registered' | 'Unregistered';
   teamNameApproved: boolean;
 };
@@ -123,7 +120,7 @@ const TeamMatesContainerDiv = styled.div`
   gap: 16px;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.fonts.colour}
+  color: ${({ theme }) => theme.fonts.colour};
 `
 
 const TeamMemberDiv = styled.div`

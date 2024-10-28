@@ -29,6 +29,7 @@ export const christmasTheme: DefaultTheme = {
     progressEnd: "#A5D6A7",
     progressStart: "#FF6F61",
     progressBackground: "#EBEBEB",
+    cardBackground: "#2C3A47",
   },
   themes: {
     light: "#EBEBEB",

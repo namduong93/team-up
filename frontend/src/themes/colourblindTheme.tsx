@@ -29,6 +29,7 @@ export const colourblindTheme: DefaultTheme = {
     progressEnd: "#000075",
     progressStart: "#FFE119",
     progressBackground: "#A9A9A9",
+    cardBackground: "#2C3A47",
   },
   themes: {
     light: "#EBEBEB",
