@@ -34,9 +34,11 @@ export const StaffManage: FC = () => {
     fetchRoles();
   }, [])
 
+  // COMP CODE (TO REGO) HARDCODED FOR NOW
+  // TODO: Fetch comp code fom backend
   return (
     <ManageContainer>
-      <StaffActionCard staffRoles={roles} />
+      <StaffActionCard staffRoles={roles} compCode={'COMP1234'}/>
     </ManageContainer>
   );
 };
