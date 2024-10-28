@@ -11,7 +11,7 @@ import { Field, StudentInfoContainerDiv } from "../students_page/components/Stud
 import { NarrowStatusDiv, StaffStatus, StandardContainerDiv, StandardSpan } from "../staff_page/StaffDisplay";
 import styled, { useTheme } from "styled-components";
 
-interface AttendeesDetails {
+export interface AttendeesDetails {
   userId: number;
   universityId: number;
   siteId: number;
@@ -220,23 +220,20 @@ const ATTENDEES_DISPLAY_FILTER_OPTIONS = {
 export const AttendeesDisplay: FC = () => {
   const { compId } = useParams();
   const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
-    setFilterOptions, setSortOptions } = useCompetitionOutletContext('attendees');
+    setFilterOptions, setSortOptions,
+    attendeesListState: [attendeesList, setAttendeesList],
+  } = useCompetitionOutletContext('attendees');
 
   
 
-  const [attendeesList, setAttendeesList] = useState<Array<AttendeesDetails>>([]);
 
   useEffect(() => {
 
     setSortOptions(ATTENDEES_DISPLAY_SORT_OPTIONS);
     setFilterOptions(ATTENDEES_DISPLAY_FILTER_OPTIONS);
-    const fetchAttendeesList = async () => {
-      const attendeesResponse = await sendRequest.get<{ attendees: Array<AttendeesDetails> }>('/competition/attendees', { compId });
-      const { attendees } = attendeesResponse.data;
-      setAttendeesList(attendees);
-    }
+    
 
-    fetchAttendeesList();
+    
 
   }, []);
 
