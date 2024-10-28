@@ -168,7 +168,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles, compCode
           <BackButton onClick={() => setShowManageSite(false)}>
             <FaChevronLeft /> Back
           </BackButton>
-          <AssignSeats />
+          <AssignSeats siteName="CSE Building K17" siteCapacity={50}/>
         </AssignSeatsPage>
       ) : (
         <ActionsContainer>
