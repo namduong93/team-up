@@ -14,12 +14,14 @@ export interface PageButtonsProps {
   teamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
   editingNameStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+  universityOption: { value: string, label: string };
 }
 
 export const TeamPageButtons: FC<PageButtonsProps> = ({
   filtersState: [filters, setFilters],
   editingStatusState: [isEditingStatus, setIsEditingStatus],
   teamIdsState: [approveTeamIds, setApproveTeamIds],
+  universityOption,
 
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
   editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus]
@@ -161,7 +163,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <ResponsiveActionButton actionType="primary" label="Run Algorithm"
         icon={<FaRunning />}
-        question="Run the Algorithm?"
+        question={`Run the Algorithm for ${universityOption.label} ?`}
         handleSubmit={handleAlgorithmButton}
       />
 

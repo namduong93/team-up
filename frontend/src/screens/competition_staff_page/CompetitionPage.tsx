@@ -162,6 +162,7 @@ export const CompetitionPage: FC = () => {
           searchTermState={{ searchTerm, setSearchTerm }}
           >
             {enableTeamButtons && <TeamPageButtons
+              universityOption={universityOption}
               filtersState={[filters, setFilters]}
               editingStatusState={[isEditingStatus, setIsEditingStatus]}
               teamIdsState={[approveTeamIds, setApproveTeamIds]}
