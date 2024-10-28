@@ -54,8 +54,18 @@ const mockTeams: TeamDetails[] = [
       ["Bob Smith", 12346, true, "A", true, false],
       ["Charlie Brown", 12347, false, "A", false, true],
     ],
-    status: "registered",
+    status: "Registered",
     teamNameApproved: true,
+    compName: "",
+    teamSite: "",
+    teamLevel: "",
+    startDate: new Date(),
+    students: [],
+    coach: {
+      name: "",
+      email: "",
+      bio: ""
+    }
   },
   {
     teamId: 2,
@@ -66,8 +76,18 @@ const mockTeams: TeamDetails[] = [
       ["Eva Green", 22346, false, "B", false, false],
       ["Frank Wright", 22347, true, "B", true, true],
     ],
-    status: "registered",
+    status: "Registered",
     teamNameApproved: true,
+    compName: "",
+    teamSite: "",
+    teamLevel: "",
+    startDate: new Date(),
+    students: [],
+    coach: {
+      name: "",
+      email: "",
+      bio: ""
+    }
   },
   {
     teamId: 3,
@@ -78,8 +98,18 @@ const mockTeams: TeamDetails[] = [
       ["Hank Cooper", 32346, true, "A", false, true],
       ["Isabella Rodriguez", 32347, false, "A", true, false],
     ],
-    status: "registered",
+    status: "Registered",
     teamNameApproved: true,
+    compName: "",
+    teamSite: "",
+    teamLevel: "",
+    startDate: new Date(),
+    students: [],
+    coach: {
+      name: "",
+      email: "",
+      bio: ""
+    }
   },
   {
     teamId: 4,
@@ -90,8 +120,18 @@ const mockTeams: TeamDetails[] = [
       ["Kimberly Yang", 42346, true, "B", false, false],
       ["Leo Kim", 42347, false, "B", false, false],
     ],
-    status: "registered",
+    status: "Registered",
     teamNameApproved: true,
+    compName: "",
+    teamSite: "",
+    teamLevel: "",
+    startDate: new Date(),
+    students: [],
+    coach: {
+      name: "",
+      email: "",
+      bio: ""
+    }
   },
   {
     teamId: 5,
@@ -102,8 +142,18 @@ const mockTeams: TeamDetails[] = [
       ["Nathan Patel", 52346, true, "A", true, true],
       ["Olivia Kim", 52347, false, "A", false, false],
     ],
-    status: "registered",
+    status: "Registered",
     teamNameApproved: true,
+    compName: "",
+    teamSite: "",
+    teamLevel: "",
+    startDate: new Date(),
+    students: [],
+    coach: {
+      name: "",
+      email: "",
+      bio: ""
+    }
   },
   {
     teamId: 6,
@@ -114,8 +164,18 @@ const mockTeams: TeamDetails[] = [
       ["Leo Martinez", 52346, true, "B", true, true],
       ["Mia Patel", 52347, false, "B", false, false],
     ],
-    status: "registered",
+    status: "Registered",
     teamNameApproved: true,
+    compName: "",
+    teamSite: "",
+    teamLevel: "",
+    startDate: new Date(),
+    students: [],
+    coach: {
+      name: "",
+      email: "",
+      bio: ""
+    }
   },
 ];
 
@@ -192,6 +252,7 @@ const RoomItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const Button = styled.button`
@@ -207,11 +268,6 @@ const Button = styled.button`
   &:disabled {
     background-color: ${({ theme }) => theme.colours.sidebarBackground};
     cursor: not-allowed;
-  }
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colours.confirmDark};
-    color: ${({ theme }) => theme.background};
   }
 `;
 

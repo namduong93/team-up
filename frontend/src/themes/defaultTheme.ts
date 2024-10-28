@@ -27,6 +27,12 @@ export const defaultTheme: DefaultTheme = {
     userInfoCardHeader: "#D6D6D6",
     cardBackground: "white",
   },
+  themes: {
+    light: "#EBEBEB",
+    dark: "#333333",
+    christmas:  "#2A7A47",
+    colourblind: "#4363D8",
+  },
   teamProfile: {
     invite: "#DFE8FB",
     inviteBorder: "#6688D2",

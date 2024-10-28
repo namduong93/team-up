@@ -31,6 +31,12 @@ export const darkTheme: DefaultTheme = {
     progressBackground: "#EBEBEB",
     cardBackground: "#2C3A47",
   },
+  themes: {
+    light: "#EBEBEB",
+    dark: "#333333",
+    christmas:  "#2A7A47",
+    colourblind: "#4363D8",
+  },
   teamView: {
     ...defaultTheme.teamView,
     pending: "#F68486",

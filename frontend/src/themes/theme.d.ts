@@ -27,7 +27,13 @@ declare module 'styled-components' {
         progressBackground: string;
         userInfoCardHeader: string;
         cardBackground: string;
-  };
+      };
+      themes: {
+        light: string;
+        dark: string;
+        christmas: string;
+        colourblind: string;
+      };
       teamProfile: {
         invite: string;
         inviteBorder: string;

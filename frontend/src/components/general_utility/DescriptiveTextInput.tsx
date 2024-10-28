@@ -27,6 +27,7 @@ const Label = styled.label`
   margin-top: 10px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
+  color: ${({ theme}) => theme.fonts.colour};
 `;
 
 const Descriptor = styled.div`
