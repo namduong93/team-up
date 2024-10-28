@@ -178,7 +178,7 @@ app.put('/competition/coach/team_assignment_approve', competitionController.comp
 app.put('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
 
 // Coach approves the team name change (for many teams in one specific competition at once)
-// PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
+// PARAMS: { compId: number, approveIds: Array<number> }
 // RESPONSE: { }
 app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
 
