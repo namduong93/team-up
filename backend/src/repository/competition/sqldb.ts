@@ -539,6 +539,52 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionCode, competitionName, teamId, teamName };
   }
 
+  competitionApproveTeamAssignment = async(compId: number, approveIds: Array<number>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Check if any of the ids in approveIds has team_status as 'Registered'
+    const registeredTeamsQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[]) 
+      AND competition_id = $2 
+      AND team_status = 'Registered'::competition_team_status
+    `;
+    const registeredTeamsResult = await this.pool.query(registeredTeamsQuery, [approveIds, compId]);
+
+    if (registeredTeamsResult.rowCount > 0) {
+      throw new DbError(DbError.Query, "One or more teams are already registered into ICPC system.");
+    }
+    
+    // Update the team status to 'Unregistered' if the team is approved
+    if (approveIds.length > 0) {
+      const approveQuery = `
+        UPDATE competition_teams
+        SET team_status = 'Unregistered'::competition_team_status
+        WHERE id = ANY($1::int[])
+        AND competition_id = $2
+      `;
+      const approveResult = await this.pool.query(approveQuery, [approveIds, compId]);
+  
+      // If no rows were updated, it implies that no matching records were found
+      if (approveResult.rowCount === 0) {
+        throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+      }
+    }
+
+    return {};
+  }
+
   competitionRequestTeamNameChange = async(userId: number, compId: number, newTeamName: string): Promise<number> => {
     // Check if the user is a valid member of this team
     const teamMemberCheckQuery = `

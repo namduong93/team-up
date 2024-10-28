@@ -167,6 +167,11 @@ app.post('/competition/student/join/2', competitionController.competitionStudent
 // RESPONSE: { competitionCode: string }
 app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
 
+// Coach approves the team assignment (changing status from pending to unregistered)
+// PARAMS: { compId: number, approveIds: Array<number> }
+// RESPONSE: { }
+app.put('/competition/coach/team_assignment_approve', competitionController.competitionApproveTeamAssignment);
+
 // Student requests to change the team name
 // PARAMS: { compId: number, newTeamName: string }
 // RESPONSE: { }

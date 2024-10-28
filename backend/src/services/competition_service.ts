@@ -318,6 +318,22 @@ export class CompetitionService {
     return result.competitionCode;
   }
 
+  competitionApproveTeamAssignment = async (userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
+    // Check if user is a coach
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.COACH)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a coach for this competition.");
+    }
+
+    // Approve or reject team name change
+    await this.competitionRepository.competitionApproveTeamAssignment(compId, approveIds);
+
+    // Notify team members
+    await this.notificationRepository.notificationApproveTeamAssignment(compId, approveIds);
+
+    return {};
+  }
+
   competitionRequestTeamNameChange = async (userId: number, compId: number, newTeamName: string): Promise<{} | undefined> => {
     // Check if user is a participant
     const userTypeObject = await this.userRepository.userType(userId);
