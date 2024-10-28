@@ -22,41 +22,41 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       const dbResult = await this.pool.query(
-        `SELECT cu.user_id AS "userId", uni.id AS "universityId", cu.site_attending_id AS "siteId",
+        `SELECT cu.user_id AS "userId", uni.id AS "universityId", 
+          ct.site_attending_id AS "siteId", ct.pending_site_attending_id AS "pendingSiteId",
           u.email AS "email", u.name AS "name", u.gender AS "sex", cu.competition_roles AS "roles",
           uni.name AS "universityName", u.tshirt_size AS "shirtSize", u.dietary_reqs AS "dietaryNeeds",
           u.allergies AS "allergies", u.accessibility_reqs AS "accessibilityNeeds"
         
-        FROM competition_users AS cu
-        JOIN users AS u ON u.id = cu.user_id
-        JOIN universities AS uni ON uni.id = u.university_id
-        WHERE cu.competition_id = ${compId};
-        `
+        FROM competition_teams AS ct
+        JOIN universities AS uni ON uni.id = ct.university_id
+        JOIN users AS u ON u.id = ANY(ct.participants)
+        JOIN competition_users AS cu ON cu.user_id = u.id AND cu.competition_id = $1
+        WHERE ct.competition_id = $1;`, [compId]
       );
       
       return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
-    };
-
+    }
+  
     if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
       const dbResult = await this.pool.query(
-        `SELECT cu.user_id AS "userId", uni.id AS "universityId", cu.site_attending_id AS "siteId",
+        `SELECT cu.user_id AS "userId", uni.id AS "universityId", 
+          ct.site_attending_id AS "siteId", ct.pending_site_attending_id AS "pendingSiteId",
           u.email AS "email", u.name AS "name", u.gender AS "sex", cu.competition_roles AS "roles",
           uni.name AS "universityName", u.tshirt_size AS "shirtSize", u.dietary_reqs AS "dietaryNeeds",
           u.allergies AS "allergies", u.accessibility_reqs AS "accessibilityNeeds"
         
-        FROM competition_users AS csu
-        JOIN competition_users AS cu ON cu.site_attending_id = csu.site_id
-        JOIN users AS u ON u.id = cu.user_id
-        JOIN universities AS uni ON uni.id = u.university_id
-        WHERE csu.user_id = ${userId} AND cu.competition_id = ${compId};
-        `
+        FROM competition_teams AS ct
+        JOIN universities AS uni ON uni.id = ct.university_id
+        JOIN users AS u ON u.id = ANY(ct.participants)
+        JOIN competition_users AS cu ON cu.user_id = u.id
+        WHERE ct.competition_id = $1 AND cu.site_attending_id = (SELECT site_attending_id FROM competition_users WHERE user_id = $2 LIMIT 1);`, [compId, userId]
       );
-
+  
       return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
-    };
-
+    }
+  
     return [];
-
   }
 
   competitionTeamDetails = async (userId: number, compId: number): Promise<ParticipantTeamDetails> => {

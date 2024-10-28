@@ -15,7 +15,7 @@ export class CompetitionController {
 
     const attendees = await this.competitionService.competitionAttendees(
       parseInt(userId as string), parseInt(compId as string));
-    console.log(attendees);
+      
     res.json({ attendees });
   });
 

@@ -110,6 +110,7 @@ export interface AttendeesDetails {
   userId: number;
   universityId: number;
   siteId: number;
+  pendingSiteId: number;
   email: string;
   
   name: string;
