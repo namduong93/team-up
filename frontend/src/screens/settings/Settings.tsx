@@ -10,6 +10,7 @@ import { ProfileCard } from "../student/ProfileCard";
 import staffFAQs from "./faq_staff.json";
 import studentFAQs from "./faq_student.json";
 import adminFAQs from "./faq_admin.json";
+import Fuse from "fuse.js";
 
 interface FAQ {
   question: string;
@@ -147,10 +148,22 @@ export const Settings: FC = () => {
     setFAQ(faqs);
   };
 
+  const fuse = new Fuse(faq, {
+    keys: ['question', 'answer'],
+    threshold: 1
+  });
+  
+  let searchedFAQs;
+  if (searchQuery) {
+    searchedFAQs = fuse.search(searchQuery);
+  } else {
+    searchedFAQs = faq.map((faq) => { return { item: faq } });
+  }
+
   // Filter FAQs based on search query
-  const filteredFAQs = faq.filter(faqItem =>
-    faqItem.question.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // const filteredFAQs = faq.filter(faqItem =>
+  //   faqItem.question.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   // Toggle between dark and light theme
   const toggleTheme = () => {

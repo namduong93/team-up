@@ -25,7 +25,8 @@ declare module 'styled-components' {
         progressStart: string;
         progressEnd: string;
         progressBackground: string;
-        userInfoCardHeader: string,
+        userInfoCardHeader: string;
+        cardBackground: string;
   };
       teamProfile: {
         invite: string;
@@ -57,6 +58,8 @@ declare module 'styled-components' {
           registered: string;
       };
       roles: {
+          participantBackground: string;
+          participantText: string;
           coachText: string;
           coachBackground: string;
           siteCoordinatorText: string;

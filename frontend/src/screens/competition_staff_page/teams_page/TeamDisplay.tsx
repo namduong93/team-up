@@ -2,15 +2,15 @@ import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useLocation, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
-import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { TeamCard, TeamDetails } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
+import { CompetitionRole } from "../CompetitionPage";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;
-  background-color: white;
+  background-color: ${({ theme }) => theme.background};
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(294px, 100%), 1fr));
   margin-top: 32px;
@@ -18,12 +18,12 @@ const TeamCardGridDisplay = styled.div`
   overflow: auto;
 `;
 
-export const TEAM_DISPLAY_SORT_OPTIONS = [
+const TEAM_DISPLAY_SORT_OPTIONS = [
   { label: "Default", value: "original" },
   { label: "Alphabetical (Name)", value: "name" },
 ];
 
-export const TEAM_DISPLAY_FILTER_OPTIONS = {
+const TEAM_DISPLAY_FILTER_OPTIONS = {
   Status: ['Pending', 'Unregistered', 'Registered'],
   "Team Name Approval": ['Approved', 'Unapproved'], 
 };
@@ -53,38 +53,21 @@ export const TeamDisplay: FC = () => {
           editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
-          universityOption,
+
+          teamListState: [teamList, setTeamList],
+          universityOption, roles,
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           setFilterOptions, setSortOptions, setEnableTeamButtons } = useCompetitionOutletContext('teams');
-
-  const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
-
 
   useEffect(() => {
     setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
     setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
-    setEnableTeamButtons(true);
-
-    const fetchCompetitionTeams = async () => {
-      try {
-        const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
-        const { teamList } = response.data
-        setTeamList(teamList);
-
-      } catch (error: unknown) {
-
-      }
-
-    };
-
-    fetchCompetitionTeams();
-
-
+    setEnableTeamButtons(!roles.includes(CompetitionRole.SiteCoordinator) && true);
   }, []);
   
   const filteredTeamList = teamList.filter((team: TeamDetails) => {
     if (filters.Status) {
-      if (!filters.Status.some((status) => status.toLocaleLowerCase() === team.status)) {
+      if (!filters.Status.some((status) => status.toLocaleLowerCase() === team.status.toLocaleLowerCase())) {
         return false;
       }
     }

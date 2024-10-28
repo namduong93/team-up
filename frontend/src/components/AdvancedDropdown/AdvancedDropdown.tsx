@@ -19,7 +19,7 @@ const DropdownTextInput = styled.input`
   width: 100%;
   border-radius: 10px;
   box-sizing: border-box;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border: 1px solid ${({ theme }) => theme.colours.notifDark};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
 
@@ -36,7 +36,7 @@ const DropdownIconDiv = styled.div`
   z-index: 5000;
   right: 0;
   top: 0;
-  border-left: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border-left: 1px solid ${({ theme }) => theme.colours.notifDark};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,6 +53,7 @@ interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   }>, React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>];
   setCurrentSelected: React.Dispatch<React.SetStateAction<{ value: string, label: string }>>;
   label?: string;
+  isExtendable?: boolean;
 }
 
 const DropdownOptionsDiv = styled.div`
@@ -105,9 +106,12 @@ interface OptionsProps extends React.HTMLAttributes<HTMLDivElement> {
   display: boolean;
   handleSelectOption: (e: React.MouseEvent<HTMLButtonElement>, value: string, label: string) => void;
   handleCreate: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  isExtendable?: boolean;
 }
 
-const DropdownOptions: FC<OptionsProps> = ({ options, display, searchTerm, handleSelectOption, handleCreate, style, ...props }) => {
+const DropdownOptions: FC<OptionsProps> = ({
+  options, display, searchTerm, isExtendable = true,
+  handleSelectOption, handleCreate, style, ...props }) => {
   
   return (display &&
     <DropdownOptionsDiv style={{ ...style }} {...props}>
@@ -124,7 +128,7 @@ const DropdownOptions: FC<OptionsProps> = ({ options, display, searchTerm, handl
         })
       }
 
-        {searchTerm && !options.some(({ item: { value: _, label } }) => label === searchTerm) &&
+        {searchTerm && isExtendable && !options.some(({ item: { value: _, label } }) => label === searchTerm) &&
         <OptionContainerDiv $isLast={true}
           onClick={handleCreate}
           onMouseDown={(e) => { e.preventDefault(); }}
@@ -149,8 +153,10 @@ const DropdownOptions: FC<OptionsProps> = ({ options, display, searchTerm, handl
 // optionList and setOptionList, along with the setCurrentSelected setState as props to the advanced dropdown
 // Then, the currentSelected state variable will have the currently selected option loaded into it, if the user creates their own
 // option then the value of that new option will be an empty string '' but the label will be the name they inserted for their own option
-export const AdvancedDropdown: FC<DropdownProps> = ({ optionsState: [options, setOptions], setCurrentSelected, style, ...props }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+export const AdvancedDropdown: FC<DropdownProps> = ({
+  optionsState: [options, setOptions], setCurrentSelected, isExtendable = true, style, ...props }) => {
+  
+    const [searchTerm, setSearchTerm] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
 
   const fuse = new Fuse(options, {
@@ -199,7 +205,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({ optionsState: [options, se
         <IoIosArrowDown style={{ height: '50%', width: '50%' }} />
       </DropdownIconDiv>
 
-      <DropdownOptions handleCreate={handleCreate} handleSelectOption={handleSelectOption} display={displayDropdown}
+      <DropdownOptions isExtendable={isExtendable} handleCreate={handleCreate} handleSelectOption={handleSelectOption} display={displayDropdown}
         searchTerm={searchTerm} options={filteredOptions} />
     </DropdownContainerDiv>
   )

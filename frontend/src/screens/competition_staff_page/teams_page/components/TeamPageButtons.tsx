@@ -6,8 +6,9 @@ import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../../utility/request";
-import { GrDocumentCsv } from "react-icons/gr";
 import { TeamDetails } from "./TeamCard";
+import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
+
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -15,6 +16,7 @@ export interface PageButtonsProps {
   teamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
   editingNameStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+  universityOption: { value: string, label: string };
 }
 
 // interface TeamsPerSiteData {
@@ -72,6 +74,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   filtersState: [filters, setFilters],
   editingStatusState: [isEditingStatus, setIsEditingStatus],
   teamIdsState: [approveTeamIds, setApproveTeamIds],
+  universityOption,
 
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
   editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus]
@@ -213,7 +216,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <ResponsiveActionButton actionType="primary" label="Run Algorithm"
         icon={<FaRunning />}
-        question="Run the Algorithm?"
+        question={`Run the Algorithm for ${universityOption.label} ?`}
         handleSubmit={handleAlgorithmButton}
       />
 
@@ -256,7 +259,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
         <ResponsiveActionButton actionType="primary"
           label="Download PDF"
           question="Are you sure you would like to register these teams?"
-          icon={<FaFilePdf />}
+          icon={<GrDocumentPdf />}
+          style={{ backgroundColor: theme.colours.confirm }}
           handleSubmit={downloadPDF}
         />
       </div>

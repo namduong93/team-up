@@ -29,6 +29,7 @@ export const darkTheme: DefaultTheme = {
     progressEnd: "#283e6c",
     progressStart: "#6688D2",
     progressBackground: "#EBEBEB",
+    cardBackground: "#2C3A47",
   },
   teamView: {
     ...defaultTheme.teamView,

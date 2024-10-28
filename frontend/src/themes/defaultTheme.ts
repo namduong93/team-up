@@ -25,6 +25,7 @@ export const defaultTheme: DefaultTheme = {
     progressEnd: "#6688D2",
     progressBackground: "#BCCFF8",
     userInfoCardHeader: "#D6D6D6",
+    cardBackground: "white",
   },
   teamProfile: {
     invite: "#DFE8FB",
@@ -56,6 +57,8 @@ export const defaultTheme: DefaultTheme = {
     registered: "#8BDFA5",
   },
   roles: {
+    participantBackground: '#4fdeee2b',
+    participantText: '#35B4C2',
     coachText: "#6688D2",
     coachBackground: "#BCCFF8",
     siteCoordinatorText: "#9747FF",

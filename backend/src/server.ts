@@ -142,7 +142,7 @@ app.get('/competition/details', competitionController.competitionGetDetails)
 app.get('/competition/student/status', competitionController.competitionCodeStatus);
 
 // Student join competition with 0 friends
-// PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses } }
+// PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses, competitionBio, preferredContact } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { }
 app.post('/competition/student/join', competitionController.competitionStudentJoin);
@@ -233,7 +233,17 @@ app.post('/notification', notificationController.notificationCreate);
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);
 
+// PARAMS: { compId }
+// RESPONSE: 
+// Get all the details of a team in a competition
 app.get('/competition/team/details', competitionController.competitionTeamDetails);
+
+app.get('/competition/attendees', competitionController.competitionAttendees);
+// PARAMS: { compId }
+// RESPONSE: 
+// { studentDetails: {...} }
+// Get all the details of a student in a competition
+app.get('/competition/student/details', competitionController.competitionStudentDetails);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

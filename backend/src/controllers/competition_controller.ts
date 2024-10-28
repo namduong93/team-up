@@ -10,6 +10,15 @@ export class CompetitionController {
     this.competitionService = competitionService;
   }
 
+  competitionAttendees = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const attendees = await this.competitionService.competitionAttendees(
+      parseInt(userId as string), parseInt(compId as string));
+    console.log(attendees);
+    res.json({ attendees });
+  });
+
   competitionTeamDetails = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 
@@ -17,6 +26,15 @@ export class CompetitionController {
       parseInt(userId as string), parseInt(compId as string));
 
     res.json(teamDetails);
+  });
+
+  competitionStudentDetails = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const studentDetails = await this.competitionService.competitionStudentDetails(
+      parseInt(userId as string), parseInt(compId as string));
+
+    res.json({studentDetails});
   });
   
   competitionStaff = httpErrorHandler(async (req: Request, res: Response) => {
