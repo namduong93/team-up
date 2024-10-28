@@ -15,7 +15,7 @@ export class CompetitionController {
 
     const attendees = await this.competitionService.competitionAttendees(
       parseInt(userId as string), parseInt(compId as string));
-      
+
     res.json({ attendees });
   });
 
@@ -182,6 +182,20 @@ export class CompetitionController {
     res.json(result);
     return;
   });
+
+  competitionRequestSiteChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { compId, newSiteId } = req.body;
+    const result = await this.competitionService.competitionRequestSiteChange(Number(userId), Number(compId), Number(newSiteId));
+    res.json(result);
+  });
+
+  competitionApproveSiteChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { compId, approveIds, rejectIds } = req.body;
+    const result = await this.competitionService.competitionApproveSiteChange(Number(userId), Number(compId), approveIds, rejectIds);
+    res.json(result);
+  });  
 
   competitionStaffJoinCoach = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({});

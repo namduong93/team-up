@@ -177,6 +177,16 @@ app.put('/competition/student/team_name_change', competitionController.competiti
 // RESPONSE: { }
 app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
 
+// Student requests to change the team site
+// PARAMS: { compId: number, newSiteId: number }
+// RESPONSE: { }
+app.put('/competition/student/site_change', competitionController.competitionRequestSiteChange);
+
+// Coach approves the team site change (for many teams in one specific competition at once)
+// PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
+// RESPONSE: { }
+app.put('/competition/coach/site_approve', competitionController.competitionApproveSiteChange);
+
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
 app.get('/competition/universities/list', competitionController.competitionUniversitiesList)
