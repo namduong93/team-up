@@ -60,6 +60,8 @@ export const darkTheme: DefaultTheme = {
   },
   staffActions: {
     ...defaultTheme.staffActions,
+    code: "#333333",
+    codeBorder: "#FFFFFF",
     competition: "#6688D2",
     competitionBorder: "#DFE8FB",
     registration: "#EA9C0D",

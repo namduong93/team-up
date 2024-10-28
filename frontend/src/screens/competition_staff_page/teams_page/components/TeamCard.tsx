@@ -26,9 +26,10 @@ export interface TeamDetails {
   teamId: number;
   universityId: number;
   teamName: string;
-  member1?: MemberDetails;
-  member2?: MemberDetails;
-  member3?: MemberDetails;
+  // member1?: MemberDetails;
+  // member2?: MemberDetails;
+  // member3?: MemberDetails;
+  members: MemberDetails[];
   status: 'pending' | 'registered' | 'unregistered';
   teamNameApproved: boolean;
 };

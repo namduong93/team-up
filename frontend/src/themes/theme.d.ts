@@ -38,6 +38,8 @@ declare module 'styled-components' {
         siteBorder: string;
       };
       staffActions: {
+        code: string;
+        codeBorder: string;
         competition: string;
         competitionBorder: string;
         registration: string;

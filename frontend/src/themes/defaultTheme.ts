@@ -37,6 +37,8 @@ export const defaultTheme: DefaultTheme = {
     siteBorder: "#35B4C2",
   },
   staffActions: {
+    code: "#FFFFFF",
+    codeBorder: "#333333",
     competition: "#DFE8FB",
     competitionBorder: "#6688D2",
     registration: "#FEEBC8",

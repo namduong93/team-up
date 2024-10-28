@@ -1,7 +1,7 @@
 import { FC, SetStateAction, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaDownload, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
+import { FaDownload, FaFileCsv, FaFilePdf, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
@@ -17,56 +17,56 @@ export interface PageButtonsProps {
   rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
 }
 
-interface TeamsPerSiteData {
-  siteName: string; // e.g. "CSE Building K17"
-  teams: TeamDetails[]; // details of each team attending this site. need: {teamName, members: {name, email}}.
-};
+// interface TeamsPerSiteData {
+//   siteName: string; // e.g. "CSE Building K17"
+//   teams: TeamDetails[]; // details of each team attending this site. need: {teamName, members: {name, email}}.
+// };
 
-interface TeamsDownload {
-  format: "PDF" | "CSV"; // format of the downloaded content
-  teamsToRegister: TeamsPerSiteData[]; // for each site, list the team details
-};
+// interface TeamsDownload {
+//   format: "PDF" | "CSV"; // format of the downloaded content
+//   teamsToRegister: TeamsPerSiteData[]; // for each site, list the team details
+// };
 
-interface tShirtData {
-  gender: "Male" | "Female" | "Unisex"; // cut of the t-shirt
-  size: "XS" | "S" | "M" | "L" | "XL"; // size of the t-shirt
-  quantity: number; // how many of this type of t-shirt required
-};
+// interface tShirtData {
+//   gender: "Male" | "Female" | "Unisex"; // cut of the t-shirt
+//   size: "XS" | "S" | "M" | "L" | "XL"; // size of the t-shirt
+//   quantity: number; // how many of this type of t-shirt required
+// };
 
-interface dietaryDetails {
-  name: string; // e.g. "John Smith"
-  email: string; // e.g. "testemail@example.com"
-  affiliation: string; // e.g. "UNSW"
-  details: string; // e.g. "No cheese"
-};
+// interface dietaryDetails {
+//   name: string; // e.g. "John Smith"
+//   email: string; // e.g. "testemail@example.com"
+//   affiliation: string; // e.g. "UNSW"
+//   details: string; // e.g. "No cheese"
+// };
 
-interface dietaryData {
-  requirement: string; // e.g. "dairy", "gluten-free" etc.
-  attendees: dietaryDetails[]; // list of details of all the attendees that have this dietary requirement
-  quantity: number; // number of attendees with this type of dietary requirement
-};
+// interface dietaryData {
+//   requirement: string; // e.g. "dairy", "gluten-free" etc.
+//   attendees: dietaryDetails[]; // list of details of all the attendees that have this dietary requirement
+//   quantity: number; // number of attendees with this type of dietary requirement
+// };
 
-interface accessibilityDetails {
-  name: string; // e.g. "John Smith"
-  email: string; // e.g. "testemail@example.com"
-  affiliation: string; // e.g. "UNSW"
-  details: string; // e.g. "Needs ramp"
-};
+// interface accessibilityDetails {
+//   name: string; // e.g. "John Smith"
+//   email: string; // e.g. "testemail@example.com"
+//   affiliation: string; // e.g. "UNSW"
+//   details: string; // e.g. "Needs ramp"
+// };
 
-interface accessibilityData {
-  requirement: string; // e.g. "wheelchair access" etc.
-  attendees: accessibilityDetails[]; // list of details of all the attendees that have this accessibility requirement
-  quantity: number; // number of attendees with this type of accessibility requirement
-};
+// interface accessibilityData {
+//   requirement: string; // e.g. "wheelchair access" etc.
+//   attendees: accessibilityDetails[]; // list of details of all the attendees that have this accessibility requirement
+//   quantity: number; // number of attendees with this type of accessibility requirement
+// };
 
-interface SiteDownload {
-  format: "PDF" | "CSV"; // format of the downloaded content
-  siteName: string; // e.g. "CSE Building K17"
-  siteCapacity: number // e.g. 30 (computers/seats)
-  tShirtQuantities: tShirtData[]; // data for each type of t-shirt required by attendees for this site
-  dietaryQuantities: dietaryData[]; // data for each type of dietary requiremnent by attendees for this site
-  accessibilityQuantities: accessibilityData[]; // data for each type of accessibility requiremnent by attendees for this site
-};
+// interface SiteDownload {
+//   format: "PDF" | "CSV"; // format of the downloaded content
+//   siteName: string; // e.g. "CSE Building K17"
+//   siteCapacity: number // e.g. 30 (computers/seats)
+//   tShirtQuantities: tShirtData[]; // data for each type of t-shirt required by attendees for this site
+//   dietaryQuantities: dietaryData[]; // data for each type of dietary requiremnent by attendees for this site
+//   accessibilityQuantities: accessibilityData[]; // data for each type of accessibility requiremnent by attendees for this site
+// };
 
 export const TeamPageButtons: FC<PageButtonsProps> = ({
   filtersState: [filters, setFilters],
@@ -244,21 +244,19 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
       </div>
       
       <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <ResponsiveActionButton actionType="confirm"
+        <ResponsiveActionButton actionType="secondary"
           label="Download CSV"
           question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentCsv />}
-          style={{ backgroundColor: theme.colours.confirm }}
+          icon={<FaFileCsv />}
           handleSubmit={downloadCSV}
         />
       </div>
 
       <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <ResponsiveActionButton actionType="confirm"
+        <ResponsiveActionButton actionType="primary"
           label="Download PDF"
           question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentCsv />}
-          style={{ backgroundColor: theme.colours.confirm }}
+          icon={<FaFilePdf />}
           handleSubmit={downloadPDF}
         />
       </div>

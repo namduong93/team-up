@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { sendRequest } from "../../utility/request";
 import { SearchBar } from "../competition_staff_page/components/PageUtils";
+import { FaChevronDown } from "react-icons/fa";
+import { ProfileCard } from "../student/ProfileCard";
+
 import staffFAQs from "./faq_staff.json";
 import studentFAQs from "./faq_student.json";
 import adminFAQs from "./faq_admin.json";
@@ -58,7 +61,7 @@ const SettingsContainer = styled.div`
   max-height: 95%;
 `;
 
-const DropdownContainer = styled.div<{ $isOpen: boolean }>`
+const DropdownContainer = styled.div`
   width: 100%;
   max-width: 600px;
   margin-top: 20px;
@@ -66,6 +69,9 @@ const DropdownContainer = styled.div<{ $isOpen: boolean }>`
 `;
 
 const DropdownHeader = styled.div<{ $isOpen: boolean }>`
+  display: flex;
+  justify-content: space-between; /* Align text and icon to opposite sides */
+  align-items: center;
   padding: 15px;
   cursor: pointer;
   background-color: ${({ $isOpen: isOpen, theme }) =>
@@ -74,6 +80,11 @@ const DropdownHeader = styled.div<{ $isOpen: boolean }>`
   border-radius: 10px;
   border: none;
   box-sizing: border-box;
+
+  svg {
+    transition: transform 0.3s ease; /* Smooth rotation */
+    transform: ${({ $isOpen }) => ($isOpen ? "rotate(180deg)" : "rotate(0deg)")};
+  }
 `;
 
 const DropdownContent = styled.div<{ $isOpen: boolean }>`
@@ -97,6 +108,8 @@ export const Settings: FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [faqOpen, setFaqOpen] = useState(false);
   const [appearancesOpen, setAppearancesOpen] = useState(false);
+  const [creditsOpen, setCreditsOpen] = useState(false);
+
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -147,44 +160,100 @@ export const Settings: FC = () => {
     window.dispatchEvent(new Event("storage"));
   };
 
-  return ( isLoaded &&
-    <Background>
-      <SettingsContainer>
-        <Title>Settings Page</Title>
+  return (
+    isLoaded && (
+      <Background>
+        <SettingsContainer>
+          <Title>Settings Page</Title>
 
-        <DropdownContainer $isOpen={faqOpen}>
-          <DropdownHeader $isOpen={faqOpen} onClick={() => setFaqOpen(!faqOpen)}>
-            FAQs
-          </DropdownHeader>
-          <DropdownContent $isOpen={faqOpen}>
-            <FAQSearchBar 
-              value={searchQuery} 
-              onChange={(e) => setSearchQuery(e.target.value)} 
-            />
-            {filteredFAQs.length > 0 ? (
-              filteredFAQs.map((faqItem, index) => (
-                <div key={index}>
-                  <h3>{faqItem.question}</h3>
-                  <p>{faqItem.answer}</p>
-                </div>
-              ))
-            ) : (
-              <div>No results found.</div>
-            )}
-          </DropdownContent>
-        </DropdownContainer>
+          <DropdownContainer>
+            <DropdownHeader
+              $isOpen={faqOpen}
+              onClick={() => setFaqOpen(!faqOpen)}
+            >
+              FAQs
+              <FaChevronDown />
+            </DropdownHeader>
+            <DropdownContent $isOpen={faqOpen}>
+              <FAQSearchBar
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {filteredFAQs.length > 0 ? (
+                filteredFAQs.map((faqItem, index) => (
+                  <div key={index}>
+                    <h3>{faqItem.question}</h3>
+                    <p>{faqItem.answer}</p>
+                  </div>
+                ))
+              ) : (
+                <div>No results found.</div>
+              )}
+            </DropdownContent>
+          </DropdownContainer>
 
-        <DropdownContainer $isOpen={appearancesOpen}>
-          <DropdownHeader $isOpen={appearancesOpen} onClick={() => setAppearancesOpen(!appearancesOpen)}>
-            Appearances
-          </DropdownHeader>
-          <DropdownContent $isOpen={appearancesOpen}>
-            <ToggleButton $isDarkTheme={isDarkTheme} onClick={toggleTheme}>
-              Toggle to {isDarkTheme ? "Light" : "Dark"} Theme
-            </ToggleButton>
-          </DropdownContent>
-        </DropdownContainer>
-      </SettingsContainer>
-    </Background>
+          <DropdownContainer>
+            <DropdownHeader
+              $isOpen={appearancesOpen}
+              onClick={() => setAppearancesOpen(!appearancesOpen)}
+            >
+              Appearances
+              <FaChevronDown />
+            </DropdownHeader>
+            <DropdownContent $isOpen={appearancesOpen}>
+              <ToggleButton $isDarkTheme={isDarkTheme} onClick={toggleTheme}>
+                Toggle to {isDarkTheme ? "Light" : "Dark"} Theme
+              </ToggleButton>
+              {/* <ToggleButton $isDarkTheme={isDarkTheme} onClick={toggleTheme}>
+                Toggle to {isDarkTheme ? "Light" : "Dark"} Theme
+              </ToggleButton> */}
+            </DropdownContent>
+          </DropdownContainer>
+
+          <DropdownContainer>
+            <DropdownHeader
+              $isOpen={creditsOpen}
+              onClick={() => setCreditsOpen(!creditsOpen)}
+            >
+              Credits
+              <FaChevronDown />
+            </DropdownHeader>
+            <DropdownContent $isOpen={creditsOpen}>
+              We are a team of computer-science students from UNSW who worked on TeamUP for our capstone project. We hope you enjoy our app!
+              <ProfileCard 
+                name="Julian"
+                email="julian@gamil.com"
+                bio="full stack dev"
+              />
+              <ProfileCard 
+                name="Tuyet"
+                email="tuyet@gamil.com"
+                bio="frontend dev"
+              />
+              <ProfileCard 
+                name="Olivia"
+                email="olivia@gamil.com"
+                bio="frontend dev"
+              />
+              <ProfileCard 
+                name="Quan"
+                email="quan@gamil.com"
+                bio="backend dev"
+              />
+              <ProfileCard 
+                name="Nam"
+                email="nam@gamil.com"
+                bio="backend dev"
+              />
+              <ProfileCard 
+                name="X"
+                email="x@gamil.com"
+                bio="backend dev"
+              />
+            </DropdownContent>
+          </DropdownContainer>
+        </SettingsContainer>
+      </Background>
+    )
   );
 };
