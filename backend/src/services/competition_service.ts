@@ -319,14 +319,10 @@ export class CompetitionService {
   }
 
   competitionApproveTeamAssignment = async (userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
-    // Check if user is a coach
-    const roles = await this.competitionRoles(userId, compId);
-    if (!roles.includes(CompetitionUserRole.COACH)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a coach for this competition.");
-    }
+    // Checks for if user is admin or coach is moved to repository layer
 
-    // Approve or reject team name change
-    await this.competitionRepository.competitionApproveTeamAssignment(compId, approveIds);
+    // Approve team assignments
+    await this.competitionRepository.competitionApproveTeamAssignment(userId, compId, approveIds);
 
     // Notify team members
     await this.notificationRepository.notificationApproveTeamAssignment(compId, approveIds);
