@@ -5,7 +5,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
+import { AlgoConversion, CompetitionAlgorithmStudentDetails, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
@@ -76,7 +76,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       LIMIT 1;
       `
     );
-    console.log("teamDetails", dbResult.rows[0]);
 
     const teamDetails: ParticipantTeamDetails = dbResult.rows[0];
     const students = teamDetails.students;
@@ -200,7 +199,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         WHERE ctd.coach_user_id = ${userId} AND ctd.src_competition_id = ${compId};
         ` 
       );
-      console.log("herer", dbResult.rows);
 
       return dbResult.rows;
     }
@@ -429,7 +427,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       universityId: university.id,
       name: siteResult.rows[0].name || "Not Found",
     };
-    console.log(pokemon.getName(30));
     return site;
   }
 
@@ -525,7 +522,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       competitionCoachId,
       siteId
     ];
-    // console.log("check_here", coachUserIdResult);
 
     // Insert the team into competition_teams table
     let checkId = await this.pool.query(teamQuery, teamNameValues);
@@ -916,22 +912,109 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   }
 
   competitionAlgorithm = async(compId: number, userId: number): Promise<{} | undefined> => {
-    const teamQuery = `
-      SELECT * FROM competition_coach_team_list($1, $2)
-      WHERE status = 'pending'::competition_team_status
+    const competitionCoachId = await this.competitionCoachIdFromCompId(compId, userId);
+    
+    const teamsQuery = `
+      SELECT id, name, pending_name, team_size, participants, university_id, team_seat, site_attending_id, competition_id
+      FROM competition_teams
+      WHERE competition_id = $1 AND competition_coach_id = $2 AND team_status = 'Pending'::competition_team_status
     `;
-    const teamResult = await this.pool.query(teamQuery, [userId, compId]);
-    if (teamResult.rowCount === 0) {
-      return undefined;
+    const teamsResult = await this.pool.query(teamsQuery, [compId, competitionCoachId]);
+    if (teamsResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "No teams to assign.");
     }
-    console.log(teamResult.rows);
-    // MemberDeatails = [name, site_id, ICPCEligible, level, boersenEligible, isRemote, nationalPrizes, internationalPrizes, codeforcesRating, universityCourses, pastRegional]
-    // for (let i = 0; i < teams.length; i++) {
-    //   for(let j = i; j < teams.length; j++) {
+    let teams = teamsResult.rows;
+    let userIds = [];
+    for (let team of teams) {
+      for(let participant of team.participants) {
+        userIds.push(participant);
+      }
+    }
+    
+    const sudentsQuery = `
+      SELECT id, preferred_contact, competition_level, icpc_eligible, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional
+      FROM competition_users
+      WHERE id = ANY($1::int[])
+    `;
+    const studentsResult = await this.pool.query(sudentsQuery, [userIds]);
+    let studentMap = new Map<number, CompetitionAlgorithmStudentDetails>();
+    for (let student of studentsResult.rows) {
+      let algoStudent : CompetitionAlgorithmStudentDetails = {
+        id: student.id,
+        preferred_contact: student.preferred_contact,
+        competitionLevel: student.competition_level,
+        ICPCEligible: student.icpc_eligible,
+        boersenEligible: student.boersen_eligible,
+        degreeYear: student.degree_year,
+        degree: student.degree,
+        isRemote: student.is_remote,
+        nationalPrizes: student.national_prizes,
+        internationalPrizes: student.international_prizes,
+        codeforcesRating: student.codeforces_rating,
+        universityCourses: student.university_courses,
+        pastRegional: student.past_regional,
+        algoPoint: 0
+      };
+      studentMap.set(student.id, algoStudent);
+    }
+    this.heuristicStudent(studentMap);
+    // this.heuristicTeam(teams);
 
-    //   }
-    // }
     return ;
+  }
+
+  // Calculate point for each participant
+  heuristicStudent = (students:  Map<number, CompetitionAlgorithmStudentDetails>) => {
+    for(let student of students.values()) {
+      if(student.codeforcesRating) {
+        student.algoPoint = Math.max(student.algoPoint, student.codeforcesRating);
+      }
+      console.log(student);
+      if(student.universityCourses.includes(DefaultUniCourses.INTRO_COURSE)) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTRO_COURSE);
+      }
+      // if(student.universityCourses.includes(DefaultUniCourses.DSA_COURSE)) {
+      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.DSA_COURSE);
+      // }
+      // if(student.universityCourses.includes(DefaultUniCourses.ADVANCED_ALGO_COURSE)) {
+      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.ADVANCED_COURSE);
+      // }
+      // if(student.universityCourses.includes(DefaultUniCourses.CHALLENGE_COURSE)) {
+      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.CHALLENGE_COURSE);
+      // }
+      // if(student.nationalPrizes) {
+      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.NATIONAL_PRIZE);
+      // }
+      // if(student.pastRegional) {
+      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.PAST_REGIONAL);
+      // }
+      // if(student.internationalPrizes) {
+      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTERNATION_PRIZE);
+      // }
+    }
+  }
+  // Calculate point for each team
+  // heuristic = (teams: any[]) => {
+  //   for (let team of teams) {
+  //     let teamPoint = 0;
+  //     for (let participant of team.participants) {
+  //       teamPoint += this.heuristicParticipant(participant);
+  //     }
+  //     team.algoPoint = teamPoint;
+  //   }
+  // }
+  //Take competition_coach_id from compId and userId
+  competitionCoachIdFromCompId = async (compId: number, userId: number): Promise<number | undefined> => {
+    const competitionCoachIdQuery = `
+      SELECT id
+      FROM competition_users
+      WHERE user_id = $1 AND competition_id = $2
+    `;
+    const competitionCoachIdResult = await this.pool.query(competitionCoachIdQuery, [userId, compId]);
+    if (competitionCoachIdResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "User is not a coach for this competition.");
+    }
+    return competitionCoachIdResult.rows[0].id;
   }
 
   competitionIdFromCode = async (code: string): Promise<number | undefined> => {
