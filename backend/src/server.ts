@@ -171,6 +171,11 @@ app.post('/competition/student/join/2', competitionController.competitionStudent
 // RESPONSE: { competitionCode: string }
 app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
 
+// Coach approves the team assignment (changing status from pending to unregistered)
+// PARAMS: { compId: number, approveIds: Array<number> }
+// RESPONSE: { }
+app.put('/competition/coach/team_assignment_approve', competitionController.competitionApproveTeamAssignment);
+
 // Student requests to change the team name
 // PARAMS: { compId: number, newTeamName: string }
 // RESPONSE: { }
@@ -180,6 +185,16 @@ app.put('/competition/student/team_name_change', competitionController.competiti
 // PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
 // RESPONSE: { }
 app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
+
+// Student requests to change the team site
+// PARAMS: { compId: number, newSiteId: number }
+// RESPONSE: { }
+app.put('/competition/student/site_change', competitionController.competitionRequestSiteChange);
+
+// Coach approves the team site change (for many teams in one specific competition at once)
+// PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
+// RESPONSE: { }
+app.put('/competition/coach/site_approve', competitionController.competitionApproveSiteChange);
 
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
@@ -244,26 +259,10 @@ app.get('/competition/team/details', competitionController.competitionTeamDetail
 
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
+app.get('/competition/attendees', competitionController.competitionAttendees);
 // PARAMS: { compId }
 // RESPONSE: 
-// {
-//   name: string;
-//   email: string;
-//   preferredContact: string;
-//   image?: string;
-//   competitionBio: string;
-//   competitionLevel: string;
-//   ICPCEligible: boolean;
-//   boersenEligible: boolean;
-//   degreeYear: number;
-//   degree: string;
-//   isRemote: boolean;
-//   nationalPrizes?: string;
-//   internationalPrizes: string;
-//   codeforcesRating?: number;
-//   universityCourses: string[];
-//   pastRegional?: boolean;
-// }
+// { studentDetails: {...} }
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
 

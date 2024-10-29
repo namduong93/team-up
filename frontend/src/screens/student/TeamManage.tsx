@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
-import { ProfileCard } from "./ProfileCard"; // Import the ProfileCard component
+import { ProfileCard } from "./ProfileCard";
 import { useOutletContext } from "react-router-dom";
 import { Student } from "./TeamDetails";
 

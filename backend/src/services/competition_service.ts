@@ -67,7 +67,7 @@ export interface StudentInfo {
   teamName?: string;
 };
 
-export enum StaffAccess {
+enum StaffAccess {
   Accepted = 'Accepted',
   Pending = 'Pending',
   Rejected = 'Rejected',
@@ -106,6 +106,24 @@ export interface ParticipantTeamDetails {
   }
 }
 
+export interface AttendeesDetails {
+  userId: number;
+  universityId: number;
+  siteId: number;
+  pendingSiteId: number;
+  email: string;
+  
+  name: string;
+  sex: string;
+  roles: Array<CompetitionRole>;
+  universityName: string;
+  shirtSize: string;
+  dietaryNeeds: string | null;
+  allergies: string | null;
+  accessibilityNeeds: string | null;
+}
+
+
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
@@ -115,6 +133,16 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+  
+  competitionAttendees = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR) && !roles.includes(CompetitionUserRole.ADMIN)) {
+      throw new ServiceError(ServiceError.Auth,
+        'competition/attendees route is only for site coordinators and admins to use');
+    }
+
+    return await this.competitionRepository.competitionAttendees(userId, compId);
   }
 
   competitionTeamDetails = async (userId: number, compId: number) => {
@@ -313,6 +341,18 @@ export class CompetitionService {
     return result.competitionCode;
   }
 
+  competitionApproveTeamAssignment = async (userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
+    // Checks for if user is admin or coach is moved to repository layer
+
+    // Approve team assignments
+    await this.competitionRepository.competitionApproveTeamAssignment(userId, compId, approveIds);
+
+    // Notify team members
+    await this.notificationRepository.notificationApproveTeamAssignment(compId, approveIds);
+
+    return {};
+  }
+
   competitionRequestTeamNameChange = async (userId: number, compId: number, newTeamName: string): Promise<{} | undefined> => {
     // Check if user is a participant
     const userTypeObject = await this.userRepository.userType(userId);
@@ -335,18 +375,43 @@ export class CompetitionService {
   }
 
   competitionApproveTeamNameChange = async (userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
-    // Check if user is a coach
-    const roles = await this.competitionRoles(userId, compId);
-    if (!roles.includes(CompetitionUserRole.COACH)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a coach for this competition.");
-    }
-
     // Approve or reject team name change
-    await this.competitionRepository.competitionApproveTeamNameChange(compId, approveIds, rejectIds);
+    await this.competitionRepository.competitionApproveTeamNameChange(userId, compId, approveIds, rejectIds);
 
     // Notify team members
     await this.notificationRepository.notificationApproveTeamNameChange(compId, approveIds, rejectIds);
 
+    return {};
+  }
+
+  competitionRequestSiteChange = async (userId: number, compId: number, newSiteId: number): Promise<{} | undefined> => {
+    // Check if user is a participant
+    const userTypeObject = await this.userRepository.userType(userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
+      throw new ServiceError(ServiceError.Auth, "User is not a student.");
+    }
+  
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+    }
+  
+    // Request site ID change
+    const teamId = await this.competitionRepository.competitionRequestSiteChange(userId, compId, newSiteId);
+  
+    // Notify coach
+    await this.notificationRepository.notificationRequestSiteChange(teamId, compId);
+  
+    return {};
+  }
+
+  competitionApproveSiteChange = async (userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+    // Approve or reject site ID change
+    await this.competitionRepository.competitionApproveSiteChange(userId, compId, approveIds, rejectIds);
+  
+    // Notify team members
+    await this.notificationRepository.notificationApproveSiteChange(compId, approveIds, rejectIds);
+  
     return {};
   }
 
