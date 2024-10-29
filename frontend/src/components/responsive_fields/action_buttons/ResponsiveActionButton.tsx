@@ -63,6 +63,7 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
     e.preventDefault();
     if (handleSubmit) {
       if (!(await handleSubmit())) {
+        setIsOpen(false);
         return;
       };
     }
