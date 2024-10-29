@@ -392,7 +392,7 @@ interface Room {
   numSeats: number; // length of the seat codes array
 };
 
-// route: send the new seat string for a team given the teamID
+// TODO route: send the new seat string for a team given the teamID
 
 const ManageContainer = styled.div`
   display: flex;
