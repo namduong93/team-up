@@ -33,7 +33,7 @@ describe('Student Register Function', () => {
     const result = await user_db.studentRegister(mockStudent);
     expect(result).toBe(undefined);
   })
-  test('Sucess case', async () => {
+  test('Sucess case: new student user made', async () => {
     const user_db = new SqlDbUserRepository(poolean);
     const mockStudent = {
       name: 'Maximillian Maverick',

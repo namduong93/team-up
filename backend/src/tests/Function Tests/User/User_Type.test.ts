@@ -2,7 +2,7 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb"
 import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
 
 
-describe('User Update Profile Function', () => {
+describe('User Type Function', () => {
   let poolean;
   const testDbName = "capstone_db"
 
@@ -15,7 +15,7 @@ describe('User Update Profile Function', () => {
     await dropTestDatabase(testDbName);
   });
 
-  test('Sucess case: Returns Info', async () => {
+  test('Sucess case: returns user type', async () => {
     const user_db = new SqlDbUserRepository(poolean);
 
     const result = await user_db.userType(1);

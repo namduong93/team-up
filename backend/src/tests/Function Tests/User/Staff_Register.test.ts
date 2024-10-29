@@ -33,7 +33,7 @@ describe('Staff Register Function', () => {
     const result = await user_db.staffRegister(mockStaff);
     expect(result).toBe(undefined);
   })
-  test('Sucess case: returns a number', async () => {
+  test('Sucess case: makes a new staff user', async () => {
     const user_db = new SqlDbUserRepository(poolean);
     const mockStaff: Staff = {
       name: 'Maximillian Maverick',

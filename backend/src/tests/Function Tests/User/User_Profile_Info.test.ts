@@ -21,7 +21,7 @@ describe('User Profile Info Function', () => {
     const result = await user_db.userProfileInfo(69);
     expect(result).toBe(undefined);
   })
-  test('Sucess case: Returns Info', async () => {
+  test('Sucess case: Returns user info', async () => {
     const user_db = new SqlDbUserRepository(poolean);
 
     const result = await user_db.userProfileInfo(1);
