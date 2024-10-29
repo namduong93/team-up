@@ -22,18 +22,6 @@ export interface PageButtonsProps {
   teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
   universityOption: { value: string, label: string };
   compDetails: CompetitionDetails;
-}
-
-interface TeamsPerSiteData {
-  siteName: string; // e.g., "CSE Building K17"
-  teams: { 
-    teamName: string; 
-    students: { name: string; email: string }[]; 
-  }[]; // List of teams per site
-};
-
-interface TeamsDownloadComponentProps {
-  teamList: TeamDetails[]; // List of all teams
 };
 
 // interface tShirtData {
