@@ -1,4 +1,3 @@
-import { Staff } from "../../../models/user/staff/staff";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
 import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
 
@@ -8,16 +7,16 @@ describe('Student Register Function', () => {
 
   const testDbName = "capstone_db"
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     poolean = await createTestDatabase(testDbName);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await poolean.end();
     await dropTestDatabase(testDbName);
   });
 
-  test('Failed case: returns an undefined object', async () => {
+  test('Failed case: Email Taken', async () => {
     const user_db = new SqlDbUserRepository(poolean);
     const mockStudent = {
       name: 'Maximillian Maverick',
@@ -34,7 +33,7 @@ describe('Student Register Function', () => {
     const result = await user_db.studentRegister(mockStudent);
     expect(result).toBe(undefined);
   })
-  test('Sucess case: returns a number', async () => {
+  test('Sucess case', async () => {
     const user_db = new SqlDbUserRepository(poolean);
     const mockStudent = {
       name: 'Maximillian Maverick',

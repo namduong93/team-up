@@ -15,6 +15,7 @@ const pool = new Pool({
 //creates a new test database
 export const createTestDatabase = async (testDbName: string) => {
   try {
+    await pool.query(`DROP DATABASE IF EXISTS "${testDbName}";`);
     await pool.query(`CREATE DATABASE "${testDbName}";`);
 
     const pathname = join(__dirname, '../../../../../database/db.sql');
@@ -47,4 +48,5 @@ export const createTestDatabase = async (testDbName: string) => {
 // deletes test database 
 export const dropTestDatabase = async (testDbName: string) => {
   await pool.query(`DROP DATABASE IF EXISTS "${testDbName}";`);
+  await pool.end()
 };

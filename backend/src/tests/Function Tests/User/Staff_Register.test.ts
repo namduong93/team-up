@@ -17,7 +17,7 @@ describe('Staff Register Function', () => {
     await dropTestDatabase(testDbName);
   });
 
-  test('Failed case: returns an undefined object', async () => {
+  test('Failed case: Email Taken', async () => {
     const user_db = new SqlDbUserRepository(poolean);
     const mockStaff: Staff = {
       name: 'Maximillian Maverick',
