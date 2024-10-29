@@ -9,7 +9,6 @@ import { sendRequest } from "../../../../utility/request";
 import { TeamDetails } from "./TeamCard";
 import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
 
-
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
   editingStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -77,7 +76,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   universityOption,
 
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
-  editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus]
+  editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
+  registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
 }) => {
   
   const theme = useTheme();
@@ -128,7 +128,13 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   
 
   const downloadCSV = async () => {
+    // get team IDs of registered teams
+    console.log(registeredTeamIds)
 
+    // from team IDs, get team details for each team
+
+    // format the details for each team into string format
+    
     // generate and download csv here
     console.log('downloading csv');
     return true;
