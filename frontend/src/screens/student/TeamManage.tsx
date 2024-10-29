@@ -45,7 +45,7 @@ const InfoLabel = styled.h3`
   margin-bottom: 5%;
 `;
 
-const InfoLink = styled.a`
+export const InfoLink = styled.a`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.colours.primaryDark};
   text-decoration: underline;

@@ -49,10 +49,43 @@ const mockTeams: TeamDetails[] = [
     teamId: 1,
     universityId: 101,
     teamName: "Code Warriors",
-    members: [
-      ["Alice Johnson", 12345, true, "A", false, false],
-      ["Bob Smith", 12346, true, "A", true, false],
-      ["Charlie Brown", 12347, false, "A", false, true],
+    students: [
+      {
+        userId: 12345,
+        name: "Alice Johnson",
+        email: "alice.johnson@example.com",
+        bio: "Computer Science student passionate about AI.",
+        preferredContact: "email:alice.johnson@example.com",
+        siteId: 1,
+        ICPCEligible: true,
+        level: "A",
+        boersenEligible: false,
+        isRemote: false,
+      },
+      {
+        userId: 12346,
+        name: "Bob Smith",
+        email: "bob.smith@example.com",
+        bio: "Software engineering major with a focus on backend.",
+        preferredContact: "slack:bobsmith",
+        siteId: 1,
+        ICPCEligible: true,
+        level: "A",
+        boersenEligible: true,
+        isRemote: false,
+      },
+      {
+        userId: 12347,
+        name: "Charlie Brown",
+        email: "charlie.brown@example.com",
+        bio: "Interested in cloud computing and distributed systems.",
+        preferredContact: "email:charlie.brown@example.com",
+        siteId: 1,
+        ICPCEligible: false,
+        level: "A",
+        boersenEligible: false,
+        isRemote: true,
+      }
     ],
     status: "Registered",
     teamNameApproved: true,
@@ -60,7 +93,6 @@ const mockTeams: TeamDetails[] = [
     teamSite: "",
     teamLevel: "",
     startDate: new Date(),
-    students: [],
     coach: {
       name: "",
       email: "",
@@ -71,111 +103,271 @@ const mockTeams: TeamDetails[] = [
     teamId: 2,
     universityId: 102,
     teamName: "Byte Size",
-    members: [
-      ["David Lee", 22345, true, "B", true, false],
-      ["Eva Green", 22346, false, "B", false, false],
-      ["Frank Wright", 22347, true, "B", true, true],
-    ],
     status: "Registered",
     teamNameApproved: true,
     compName: "",
     teamSite: "",
-    teamLevel: "",
+    teamLevel: "B",
     startDate: new Date(),
-    students: [],
+    students: [
+      {
+        userId: 22345,
+        name: "David Lee",
+        email: "david.lee@example.com",
+        bio: "Loves problem-solving and enjoys competitive programming.",
+        preferredContact: "email:david.lee@example.com",
+        siteId: 102,
+        ICPCEligible: true,
+        level: "B",
+        boersenEligible: true,
+        isRemote: false,
+      },
+      {
+        userId: 22346,
+        name: "Eva Green",
+        email: "eva.green@example.com",
+        bio: "Passionate about algorithms and optimization.",
+        preferredContact: "slack:evagreen",
+        siteId: 102,
+        ICPCEligible: false,
+        level: "B",
+        boersenEligible: false,
+        isRemote: false,
+      },
+      {
+        userId: 22347,
+        name: "Frank Wright",
+        email: "frank.wright@example.com",
+        bio: "Backend developer with experience in cloud technologies.",
+        preferredContact: "email:frank.wright@example.com",
+        siteId: 102,
+        ICPCEligible: true,
+        level: "B",
+        boersenEligible: true,
+        isRemote: true,
+      },
+    ],
     coach: {
       name: "",
       email: "",
-      bio: ""
-    }
+      bio: "",
+    },
   },
   {
     teamId: 3,
     universityId: 103,
     teamName: "Algorithm Avengers",
-    members: [
-      ["Grace Taylor", 32345, true, "A", false, false],
-      ["Hank Cooper", 32346, true, "A", false, true],
-      ["Isabella Rodriguez", 32347, false, "A", true, false],
-    ],
     status: "Registered",
     teamNameApproved: true,
     compName: "",
     teamSite: "",
-    teamLevel: "",
+    teamLevel: "A",
     startDate: new Date(),
-    students: [],
+    students: [
+      {
+        userId: 32345,
+        name: "Grace Taylor",
+        email: "grace.taylor@example.com",
+        bio: "Enjoys tackling hard algorithmic challenges.",
+        preferredContact: "email:grace.taylor@example.com",
+        siteId: 103,
+        ICPCEligible: true,
+        level: "A",
+        boersenEligible: false,
+        isRemote: false,
+      },
+      {
+        userId: 32346,
+        name: "Hank Cooper",
+        email: "hank.cooper@example.com",
+        bio: "Specializes in system design and data structures.",
+        preferredContact: "slack:hankcooper",
+        siteId: 103,
+        ICPCEligible: true,
+        level: "A",
+        boersenEligible: false,
+        isRemote: true,
+      },
+      {
+        userId: 32347,
+        name: "Isabella Rodriguez",
+        email: "isabella.rodriguez@example.com",
+        bio: "Frontend developer with a passion for design.",
+        preferredContact: "email:isabella.rodriguez@example.com",
+        siteId: 103,
+        ICPCEligible: false,
+        level: "A",
+        boersenEligible: true,
+        isRemote: false,
+      },
+    ],
     coach: {
       name: "",
       email: "",
-      bio: ""
-    }
+      bio: "",
+    },
   },
   {
     teamId: 4,
     universityId: 104,
     teamName: "Debugging Ninjas",
-    members: [
-      ["Jack Thompson", 42345, true, "B", false, true],
-      ["Kimberly Yang", 42346, true, "B", false, false],
-      ["Leo Kim", 42347, false, "B", false, false],
-    ],
     status: "Registered",
     teamNameApproved: true,
     compName: "",
     teamSite: "",
-    teamLevel: "",
+    teamLevel: "B",
     startDate: new Date(),
-    students: [],
+    students: [
+      {
+        userId: 42345,
+        name: "Jack Thompson",
+        email: "jack.thompson@example.com",
+        bio: "Specializes in debugging complex codebases.",
+        preferredContact: "slack:jackthompson",
+        siteId: 104,
+        ICPCEligible: true,
+        level: "B",
+        boersenEligible: false,
+        isRemote: true,
+      },
+      {
+        userId: 42346,
+        name: "Kimberly Yang",
+        email: "kimberly.yang@example.com",
+        bio: "Interested in cybersecurity and network protocols.",
+        preferredContact: "email:kimberly.yang@example.com",
+        siteId: 104,
+        ICPCEligible: true,
+        level: "B",
+        boersenEligible: false,
+        isRemote: false,
+      },
+      {
+        userId: 42347,
+        name: "Leo Kim",
+        email: "leo.kim@example.com",
+        bio: "Aspires to become a data scientist.",
+        preferredContact: "email:leo.kim@example.com",
+        siteId: 104,
+        ICPCEligible: false,
+        level: "B",
+        boersenEligible: false,
+        isRemote: false,
+      },
+    ],
     coach: {
       name: "",
       email: "",
-      bio: ""
-    }
+      bio: "",
+    },
   },
   {
     teamId: 5,
     universityId: 105,
     teamName: "Code Breakers",
-    members: [
-      ["Mia Chen", 52345, true, "A", true, false],
-      ["Nathan Patel", 52346, true, "A", true, true],
-      ["Olivia Kim", 52347, false, "A", false, false],
-    ],
     status: "Registered",
     teamNameApproved: true,
     compName: "",
     teamSite: "",
-    teamLevel: "",
+    teamLevel: "A",
     startDate: new Date(),
-    students: [],
+    students: [
+      {
+        userId: 52345,
+        name: "Mia Chen",
+        email: "mia.chen@example.com",
+        bio: "Enjoys working with AI and machine learning.",
+        preferredContact: "slack:miachen",
+        siteId: 105,
+        ICPCEligible: true,
+        level: "A",
+        boersenEligible: true,
+        isRemote: false,
+      },
+      {
+        userId: 52346,
+        name: "Nathan Patel",
+        email: "nathan.patel@example.com",
+        bio: "Passionate about blockchain technologies.",
+        preferredContact: "email:nathan.patel@example.com",
+        siteId: 105,
+        ICPCEligible: true,
+        level: "A",
+        boersenEligible: true,
+        isRemote: true,
+      },
+      {
+        userId: 52347,
+        name: "Olivia Kim",
+        email: "olivia.kim@example.com",
+        bio: "Aspires to build impactful mobile apps.",
+        preferredContact: "email:olivia.kim@example.com",
+        siteId: 105,
+        ICPCEligible: false,
+        level: "A",
+        boersenEligible: false,
+        isRemote: false,
+      },
+    ],
     coach: {
       name: "",
       email: "",
-      bio: ""
-    }
+      bio: "",
+    },
   },
   {
     teamId: 6,
     universityId: 106,
     teamName: "Code Crunchers",
-    members: [
-      ["Ava Thompson", 52345, true, "B", true, false],
-      ["Leo Martinez", 52346, true, "B", true, true],
-      ["Mia Patel", 52347, false, "B", false, false],
-    ],
     status: "Registered",
     teamNameApproved: true,
     compName: "",
     teamSite: "",
-    teamLevel: "",
+    teamLevel: "B",
     startDate: new Date(),
-    students: [],
+    students: [
+      {
+        userId: 52345,
+        name: "Ava Thompson",
+        email: "ava.thompson@example.com",
+        bio: "Interested in web development and UX design.",
+        preferredContact: "slack:avathompson",
+        siteId: 106,
+        ICPCEligible: true,
+        level: "B",
+        boersenEligible: true,
+        isRemote: false,
+      },
+      {
+        userId: 52346,
+        name: "Leo Martinez",
+        email: "leo.martinez@example.com",
+        bio: "Backend developer focused on scalability.",
+        preferredContact: "email:leo.martinez@example.com",
+        siteId: 106,
+        ICPCEligible: true,
+        level: "B",
+        boersenEligible: true,
+        isRemote: true,
+      },
+      {
+        userId: 52347,
+        name: "Mia Patel",
+        email: "mia.patel@example.com",
+        bio: "Loves working with databases and data analytics.",
+        preferredContact: "email:mia.patel@example.com",
+        siteId: 106,
+        ICPCEligible: false,
+        level: "B",
+        boersenEligible: false,
+        isRemote: false,
+      },
+    ],
     coach: {
       name: "",
       email: "",
-      bio: ""
-    }
+      bio: "",
+    },
   },
 ];
 
@@ -200,7 +392,7 @@ interface Room {
   numSeats: number; // length of the seat codes array
 };
 
-// route: send the new seat string for a team given the teamID
+// TODO route: send the new seat string for a team given the teamID
 
 const ManageContainer = styled.div`
   display: flex;
@@ -326,7 +518,7 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.colours.sidebarBackground};
   width: 100%;
   height: 30%;
   border-radius: 10px;
@@ -338,10 +530,12 @@ const ModalContainer = styled.div`
 
 const DownloadButton = styled(TransparentResponsiveButton)`
   background-color: ${({ theme }) => theme.colours.primaryLight};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const NotifyButton = styled(TransparentResponsiveButton)`
   background-color: ${({ theme }) => theme.colours.secondaryLight};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const ButtonContainer = styled.div`
@@ -413,8 +607,11 @@ const InputTitleB = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
+const AssignPopupText = styled.h2`
+  color: ${({ theme }) => theme.fonts.colour};
+`;
+
 export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) => {
-  // export const AssignSeats: FC = () => {
   const [seatInputType, setSeatInputType] = useState<string>("Text"); // either string or inputs
   const [seatAB, setSeatAB] = useState<string>("Together"); // seat level a and b either together or separately
   const [isSeatedTogether, setIsSeatedTogether] = useState<boolean>(true); // by default, don't split level a and b
@@ -599,7 +796,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
     const levelBTeams = [];
 
     for (const team of teamsToAssign) {
-      const teamLevel = team.members[0][3]; // level assumed by first student's level
+      const teamLevel = team.teamLevel; // level assumed by first student's level
       if (teamLevel === 'A') {
         levelATeams.push(team);
       } else if (teamLevel === 'B') {
@@ -852,7 +1049,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
                 <FaTimes />
               </CloseButton>
             </CloseButtonContainer>
-            <h2>Seats Assigned Successfully!</h2>
+            <AssignPopupText>Seats Assigned Successfully!</AssignPopupText>
             <ButtonContainer>
               <DownloadButton 
                 actionType="primary" 
