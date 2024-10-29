@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { CopyButton } from "../../components/general_utility/CopyButton";
 import { FaEdit, FaUserTie } from "react-icons/fa";
 import { backendURL } from "../../../config/backendURLConfig";
+import { InfoLink } from "./TeamManage";
 
 interface ProfileCardProps {
   name: string;
@@ -96,7 +97,8 @@ const StudentBio = styled.p`
 
 const StudentImage = styled.img`
   width: 20%;
-  max-width: 50px;
+  aspect-ratio: 1;
+  max-width: 70px;
   height: auto;
   border-radius: 50%;
   object-fit: cover;
@@ -180,7 +182,9 @@ export const ProfileCard: FC<ProfileCardProps> = ({
               <StudentContact>
                 <StudentName>{name}</StudentName>
                 <StudentEmail>
-                  <span>{email}</span>
+                    <InfoLink href={email} target="_blank" rel="noopener noreferrer">
+                      {email}
+                    </InfoLink>
                   <CopyButton textToCopy={email} />
                 </StudentEmail>
                 {!isCoach && preferredContact && contactParts.length === 2 ? (

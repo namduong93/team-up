@@ -6,6 +6,7 @@ import { sendRequest } from "../../utility/request";
 import { SearchBar } from "../competition_staff_page/components/PageUtils";
 import { FaChevronDown } from "react-icons/fa";
 import { ProfileCard } from "../student/ProfileCard";
+import { backendURL } from "../../../config/backendURLConfig";
 
 import staffFAQs from "./faq_staff.json";
 import studentFAQs from "./faq_student.json";
@@ -206,13 +207,42 @@ export const Settings: FC = () => {
               <FaChevronDown />
             </DropdownHeader>
             <DropdownContent $isOpen={creditsOpen}>
-              <p>We are a team of computer science students from UNSW working on TeamUP.</p>
-              <ProfileCard name="Julian" email="julian@gmail.com" bio="Full Stack Dev" />
-              <ProfileCard name="Tuyet" email="tuyet@gmail.com" bio="Frontend Dev" />
-              <ProfileCard name="Olivia" email="olivia@gmail.com" bio="Frontend Dev" />
-              <ProfileCard name="Quan" email="quan@gmail.com" bio="Backend Dev" />
-              <ProfileCard name="Nam" email="nam@gmail.com" bio="Backend Dev" />
-              <ProfileCard name="X" email="x@gmail.com" bio="Backend Dev" />
+              <p>We are a team of computer science students from UNSW who created TeamUP!</p>
+              <ProfileCard 
+                name="Julian Zincone" 
+                email="https://www.linkedin.com/in/julian-zincone/" 
+                bio="An aspiring Full Stack developer who studies Computer Science and Tutors Computer Networks at UNSW."
+                image={`${backendURL.HOST}:${backendURL.PORT}/images/julian_credits.jpg`}
+              />
+              <ProfileCard 
+                name="Tuyet Nguyen" 
+                email="https://www.linkedin.com/in/tuyet-nguyen-431192221" 
+                bio="Currently studying a Bachelors Degree in Mechanical and Manufacturing Engineering (Hon), and Computer Science. I’m an experienced Laboratory Assistant and Tutor at UNSW specialising in Python coding."
+                image={`${backendURL.HOST}:${backendURL.PORT}/images/tuyet_credits.jpg`}
+              />
+              <ProfileCard 
+                name="Olivia Chen" 
+                email="https://www.linkedin.com/in/olivia-chen-oc2601" 
+                bio="Currently studying a Double Degree in Eletrical Engineering and Computer Science. Born to girlie, forced grind."
+                image={`${backendURL.HOST}:${backendURL.PORT}/images/olivia_credits.jpg`}
+              />
+              <ProfileCard 
+                name="Quan Hoang" 
+                email="https://www.linkedin.com/in/tung-quan-hoang/" 
+                bio="Final year student in Commerce/Computer Science. Currently working as a simple IT handyman fixing Google Sheets and printing machines for small businesses."
+                image={`${backendURL.HOST}:${backendURL.PORT}/images/quan_credits.png`}
+              />
+              <ProfileCard 
+                name="Van Nam Duong" 
+                email="https://www.linkedin.com/in/namduong93/" 
+                bio="Software Engineer currently studying final year Computer Science at UNSW. I love solving ridiculously hard problems."
+                image={`${backendURL.HOST}:${backendURL.PORT}/images/nam_credits.png`}
+              />
+              <ProfileCard 
+                name="X Maverick" 
+                email="x@gmail.com" 
+                bio="Backend Dev" 
+              />
             </DropdownContent>
           </DropdownContainer>
         </SettingsContainer>
