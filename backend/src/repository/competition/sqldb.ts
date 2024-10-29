@@ -70,12 +70,13 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionTeamDetails = async (userId: number, compId: number): Promise<ParticipantTeamDetails> => {
     const dbResult = await this.pool.query(
       `SELECT "compName", "teamName", "teamSite", "teamSeat",
-        "teamLevel", "startDate", students, coach
+        "teamLevel", "startDate", students, coach, src_competition_id
       FROM competition_team_details AS ctd
       WHERE ctd.src_user_id = ${userId} AND ctd.src_competition_id = ${compId}
       LIMIT 1;
       `
     );
+    console.log("teamDetails", dbResult.rows[0]);
 
     const teamDetails: ParticipantTeamDetails = dbResult.rows[0];
     const students = teamDetails.students;
@@ -497,17 +498,25 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const competitionUserId = result.rows[0].id;
 
     // Insert user to competition_teams table
+    let numberOfTeamsQuery = `
+      SELECT COUNT(*) FROM competition_teams
+      WHERE competition_id = $1
+    `;
+    let numberOfTeamsResult = await this.pool.query(numberOfTeamsQuery, [competitionId]);
+    let numberOfTeams = parseInt(numberOfTeamsResult.rows[0].count);
+    let teamName = `Team ${pokemon.getName((numberOfTeams + 1) % 1000)}`;
     let teamStatus = TeamStatus.PENDING;
     let teamSize = 1;
     let participants = [userId];
     let siteId = competitionUserInfo.siteLocation.id;
 
-    let teamNameQuery = `
+    let teamQuery = `
       INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id, competition_coach_id, site_attending_id)
-      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1, $2, $3, $4, $5, $6, $7)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id
     `;
     const teamNameValues = [
+      teamName,
       teamStatus,
       teamSize,
       participants,
@@ -519,7 +528,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     // console.log("check_here", coachUserIdResult);
 
     // Insert the team into competition_teams table
-    let checkId = await this.pool.query(teamNameQuery, teamNameValues);
+    let checkId = await this.pool.query(teamQuery, teamNameValues);
     return {};
   }
 

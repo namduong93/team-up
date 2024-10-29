@@ -319,7 +319,7 @@ SELECT cu_source.user_id AS src_user_id,
 
 FROM competition_users AS cu_source
 JOIN competitions AS c ON c.id = cu_source.competition_id
-JOIN competition_teams AS ct ON cu_source.user_id = ANY(ct.participants)
+JOIN competition_teams AS ct ON cu_source.user_id = ANY(ct.participants) AND cu_source.competition_id = ct.competition_id
 JOIN competition_sites AS cs ON
   (CASE 
     WHEN ct.pending_site_attending_id IS NULL THEN ct.site_attending_id 
@@ -334,8 +334,10 @@ LEFT JOIN users AS u2 ON u2.id = ct.participants[2]
 LEFT JOIN users AS u3 ON u3.id = ct.participants[3]
 LEFT JOIN competition_users AS cu1 ON u1.id = cu1.user_id
 LEFT JOIN competition_users AS cu2 ON u2.id = cu2.user_id
-LEFT JOIN competition_users AS cu3 ON u3.id = cu3.user_id;
-
+LEFT JOIN competition_users AS cu3 ON u3.id = cu3.user_id
+WHERE (cu1.competition_id = cu_coach.competition_id OR cu1.competition_id IS NULL)
+  AND (cu2.competition_id = cu_coach.competition_id OR cu2.competition_id IS NULL)
+  AND (cu3.competition_id = cu_coach.competition_id OR cu3.competition_id IS NULL);
 
 
 
@@ -638,9 +640,9 @@ INSERT INTO competition_teams (
   team_size, participants, university_id, competition_id, team_seat, site_attending_id, pending_site_attending_id
 )
 VALUES
-(3, 'Team Zeta', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 2, NULL),
-(3, 'Team Alpha', 'Pending'::competition_team_status, 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1, 'Tabla01', 2, NULL),
-(3, 'Team Donkey', 'Pending'::competition_team_status, 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4);
+(3, 'Bulbasaur', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 2, NULL),
+(3, 'Ivysaur', 'Pending'::competition_team_status, 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1, 'Tabla01', 2, NULL),
+(3, 'Venusaur', 'Pending'::competition_team_status, 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4);
 
 -- Notifications
 INSERT INTO notifications (
@@ -913,8 +915,8 @@ VALUES
 
 -- Member from Team ID: 12
 (
-  'Testing Account',
-  'Testing Account',
+  'Algorithm Student 1',
+  'AlgoStu',
   'testingaccount@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
@@ -930,8 +932,8 @@ VALUES
 
 -- Member from Team ID: 13
 (
-  'Testing Account 3',
-  'Testing Account 3',
+  'Algorithm Student 1',
+  'AlgoStu2',
   'testingaccount3@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
@@ -993,15 +995,15 @@ INSERT INTO competition_teams (
   site_attending_id
 )
 VALUES
-  (20, 'This Unapproved Name', 'Pending'::competition_team_status, NULL, 1, ARRAY[15], 5, 4, 'bongo11', 2),
-  (20, 'AliYi', 'Pending'::competition_team_status, NULL, 2, ARRAY[16, 17], 5, 4, 'bongo14', 2),
-  (20, 'DY', 'Pending'::competition_team_status, NULL, 1, ARRAY[18], 5, 4, 'bongo17', 2),
-  (20, 'Kass', 'Pending'::competition_team_status, NULL, 2, ARRAY[19, 20], 5, 4, 'bongo20', 2),
-  (20, 'Hello', 'Pending'::competition_team_status, NULL, 1, ARRAY[21], 5, 4, 'bongo23', 2),
-  (20, 'Boersen#1', 'Pending'::competition_team_status, NULL, 1, ARRAY[22], 5, 4, 'bongo26', 2),
-  (20, 'Boersen#1', 'Pending'::competition_team_status, NULL, 1, ARRAY[23], 5, 4, 'bongo29', 2),
-  (20, 'Boersen#2', 'Pending'::competition_team_status, NULL, 1, ARRAY[24], 5, 4, 'bongo32', 2),
-  (20, 'Boersen#3', 'Pending'::competition_team_status, NULL, 1, ARRAY[25], 5, 4, 'bongo35', 2),
-  (20, 'Boersen#4', 'Pending'::competition_team_status, NULL, 1, ARRAY[26], 5, 4, 'bongo38', 2),
-  (20, 'Random Cool guy', 'Pending'::competition_team_status, NULL, 1, ARRAY[27], 5, 4, 'bongo41', 2),
-  (20, 'Random Cool Guy', 'Pending'::competition_team_status, NULL, 1, ARRAY[28], 5, 4, 'bongo44', 2);
+  (20, 'Bulbasaur', 'Pending'::competition_team_status, NULL, 1, ARRAY[15], 5, 4, 'bongo11', 2),
+  (20, 'Ivysaur', 'Pending'::competition_team_status, NULL, 2, ARRAY[16, 17], 5, 4, 'bongo14', 2),
+  (20, 'Venusaur', 'Pending'::competition_team_status, NULL, 1, ARRAY[18], 5, 4, 'bongo17', 2),
+  (20, 'Charmander', 'Pending'::competition_team_status, NULL, 2, ARRAY[19, 20], 5, 4, 'bongo20', 2),
+  (20, 'Charmeleon', 'Pending'::competition_team_status, NULL, 1, ARRAY[21], 5, 4, 'bongo23', 2),
+  (20, 'Charizard', 'Pending'::competition_team_status, NULL, 1, ARRAY[22], 5, 4, 'bongo26', 2),
+  (20, 'Squirtle', 'Pending'::competition_team_status, NULL, 1, ARRAY[23], 5, 4, 'bongo29', 2),
+  (20, 'Wartortle', 'Pending'::competition_team_status, NULL, 1, ARRAY[24], 5, 4, 'bongo32', 2),
+  (20, 'Blastoise', 'Pending'::competition_team_status, NULL, 1, ARRAY[25], 5, 4, 'bongo35', 2),
+  (20, 'Caterpie', 'Pending'::competition_team_status, NULL, 1, ARRAY[26], 5, 4, 'bongo38', 2),
+  (20, 'Metapod', 'Pending'::competition_team_status, NULL, 1, ARRAY[27], 5, 4, 'bongo41', 2),
+  (20, 'Butterfree', 'Pending'::competition_team_status, NULL, 1, ARRAY[28], 5, 4, 'bongo44', 2);
