@@ -9,6 +9,7 @@ import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from 
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
+import pokemon from 'pokemon';
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -427,6 +428,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       universityId: university.id,
       name: siteResult.rows[0].name || "Not Found",
     };
+    console.log(pokemon.getName(30));
     return site;
   }
 
@@ -449,7 +451,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let competitionBio = competitionUserInfo.competitionBio || "";
     let preferredContact = competitionUserInfo.preferredContact || "";
 
-    
     const coachUserIdResult = await this.pool.query(
       `SELECT "userId" 
        FROM competition_staff($1) 
@@ -457,6 +458,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
          AND "universityName" = $2`, 
       [competitionId, university.name]
     );
+    
+    if (coachUserIdResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Your university is not registered for this competition.");
+    }
     const competitionCoachIdResult = await this.pool.query(`
       SELECT id FROM competition_users WHERE user_id = $1 AND competition_id = $2
     `, [coachUserIdResult.rows[0].userId, competitionId]);
@@ -511,6 +516,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       competitionCoachId,
       siteId
     ];
+    // console.log("check_here", coachUserIdResult);
 
     // Insert the team into competition_teams table
     let checkId = await this.pool.query(teamNameQuery, teamNameValues);

@@ -9,6 +9,7 @@ ignoredRoutes.set("/staff/register", "POST");
 ignoredRoutes.set("/user/login", "POST");
 ignoredRoutes.set("/universities/list", "GET");
 ignoredRoutes.set("/images/icpc_logo_landing.png", "GET");
+ignoredRoutes.set("/user/logout", "POST");
 
 export class Authenticator {
 
