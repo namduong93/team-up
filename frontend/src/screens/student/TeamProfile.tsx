@@ -30,7 +30,7 @@ export interface ParticipantTeamDetails {
     email: string;
     bio: string;
   }
-}
+};
 
 import { WithdrawPopUpChain } from "./WithdrawPopUpChain";
 

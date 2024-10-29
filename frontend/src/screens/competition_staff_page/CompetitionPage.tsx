@@ -12,6 +12,7 @@ import { TeamDetails } from "./teams_page/components/TeamCard";
 import { StudentInfo } from "./students_page/StudentDisplay";
 import { AttendeesDetails } from "./attendees_page/AttendeesPage";
 import { StaffDetails } from "./staff_page/StaffDisplay";
+import { SiteLocation, OtherSiteLocation } from "../competition/creation/CompDetails";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -26,7 +27,21 @@ export enum CompetitionRole {
   Coach = 'Coach',
   Admin = 'Admin',
   SiteCoordinator = 'Site-Coordinator'
-}
+};
+
+export interface CompetitionDetails {
+  id?: number;
+  name: string;
+  teamSize?: number;
+  createdDate: EpochTimeStamp;
+  earlyRegDeadline: EpochTimeStamp;
+  startDate: EpochTimeStamp;
+  generalRegDeadline: EpochTimeStamp;
+  siteLocations?: SiteLocation[];
+  otherSiteLocations?: OtherSiteLocation[];
+  code?: string;
+  region: string;
+};
 
 export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
@@ -46,25 +61,47 @@ export const CompetitionPage: FC = () => {
   const [approveTeamIds, setApproveTeamIds] = useState<Array<number>>([]);
   
   const [rejectedTeamIds, setRejectedTeamIds] = useState<Array<number>>([]);
+  const [registeredTeamIds, setRegisteredTeamIds] = useState<Array<number>>([]);
   const [isEditingNameStatus, setIsEditingNameStatus] = useState<boolean>(false);
 
   const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
   const [students, setStudents] = useState<Array<StudentInfo>>([]);
   const [attendeesList, setAttendeesList] = useState<Array<AttendeesDetails>>([]);
   const [staffList, setStaffList] = useState<Array<StaffDetails>>([]);
+  const [compDetails, setCompDetails] = useState<CompetitionDetails>({
+    id: 0,
+    name: "",
+    teamSize: 3,
+    createdDate: Date.now(),
+    earlyRegDeadline: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days from now
+    startDate: Date.now() + 14 * 24 * 60 * 60 * 1000, // 14 days from now
+    generalRegDeadline: Date.now() + 10 * 24 * 60 * 60 * 1000, // 10 days from now
+    siteLocations: [],
+    otherSiteLocations: [],
+    code: "",
+    region: "Unknown",
+  });
   ////
 
   useEffect(() => {
+    const fetchCompetitionDetails = async () => {
+      try {
+        const response = await sendRequest.get<{ competition: CompetitionDetails }>('/competition/details', { compId });
+        const { competition } = response.data;
+        setCompDetails(competition);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (err: unknown) { /* empty */ }
+    };
+
     const fetchCompetitionTeams = async () => {
       try {
         const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
-        const { teamList } = response.data
+        const { teamList } = response.data;
         setTeamList(teamList);
 
       } catch (error: unknown) {
-
+        console.log(error)
       }
-
     };
 
     const fetchStudents = async () => {
@@ -95,6 +132,7 @@ export const CompetitionPage: FC = () => {
       if (userRoles.includes(CompetitionRole.Admin)
       || userRoles.includes(CompetitionRole.Coach) || userRoles.includes(CompetitionRole.SiteCoordinator)) {
         fetchCompetitionTeams();
+        fetchCompetitionDetails();
       }
 
       if (userRoles.includes(CompetitionRole.Admin) || userRoles.includes(CompetitionRole.Coach)) {
@@ -112,7 +150,6 @@ export const CompetitionPage: FC = () => {
     }
 
     fetchInfo();
-
 
   }, []);
 
@@ -169,6 +206,8 @@ export const CompetitionPage: FC = () => {
               editingNameStatusState={[isEditingNameStatus, setIsEditingNameStatus]}
               rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
               registeredTeamIdsState={[registeredTeamIds, setRegisteredTeamIds]}
+              teamListState={[teamList, setTeamList]}
+              compDetails={compDetails}
               />}
             
             {(roles.includes(CompetitionRole.Admin)) &&
@@ -220,13 +259,14 @@ export const CompetitionPage: FC = () => {
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
           registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
+          teamListState: [teamList, setTeamList],
           universityOption,
 
           setFilterOptions, setSortOptions, setEnableTeamButtons,
-          teamListState: [teamList, setTeamList],
           studentsState: [students, setStudents],
           attendeesListState: [attendeesList, setAttendeesList],
           staffListState: [staffList, setStaffList],
+          compDetails,
         }}/>
 
       </MainPageDiv>
