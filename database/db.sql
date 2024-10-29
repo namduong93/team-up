@@ -638,9 +638,9 @@ INSERT INTO competition_teams (
   team_size, participants, university_id, competition_id, team_seat, site_attending_id, pending_site_attending_id
 )
 VALUES
-(4, 'Team Zeta', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 2, NULL),
-(4, 'Team Alpha', 'Pending'::competition_team_status, 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1, 'Tabla01', 2, NULL),
-(4, 'Team Donkey', 'Pending'::competition_team_status, 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4);
+(3, 'Team Zeta', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 2, NULL),
+(3, 'Team Alpha', 'Pending'::competition_team_status, 'This Unapproved Name', 3, ARRAY[5, 6, 7], 2, 1, 'Tabla01', 2, NULL),
+(3, 'Team Donkey', 'Pending'::competition_team_status, 'P Team, U Name', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4);
 
 -- Notifications
 INSERT INTO notifications (
@@ -682,6 +682,10 @@ VALUES
 INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region)
 VALUES
 ('Algorithm Testing', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'ALG2024', '2025-09-30 00:00:00', 'Australia');
+
+INSERT INTO competition_sites (competition_id, university_id, name, capacity)
+VALUES 
+(4, 5, 'J17 K17 Building', 100);
 
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
@@ -954,27 +958,26 @@ INSERT INTO competition_users (
   international_prizes,
   codeforces_rating,
   university_courses,
-  site_attending_id,
   past_regional,
   is_official,
   preferred_contact,
   bio
 )
 VALUES
-  (15, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'AIO', 'IOI', 2537, ARRAY[]::TEXT[], 2, TRUE, FALSE, 'AR', 'bio for AR'),
-  (16, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'INOI', '', 2113, ARRAY[]::TEXT[], 3, TRUE, FALSE, 'AK', 'bio for AK'),
-  (17, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], 3, TRUE, FALSE, 'YF', 'bio for YF'),
-  (18, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'AIO', '', 1624, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], 2, TRUE, FALSE, 'DY', 'bio for DY'),
-  (19, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, 'NOI', '', 2848, ARRAY['COMP1511', 'COMP2521', 'COMP3821'], 2, TRUE, FALSE, 'Kass', 'bio for Kass'),
-  (20, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521'], 2, TRUE, FALSE, 'JL', 'bio for JL'),
-  (21, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, 'NOI', '', 1962, ARRAY['COMP1511', 'COMP2521'], 2, TRUE, FALSE, 'HT', 'bio for HT'),
-  (22, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], 2, TRUE, FALSE, 'Boersen#1', 'bio for Boersen#1'),
-  (23, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], 2, TRUE, FALSE, 'Boersen#1', 'bio for Boersen#1'),
-  (24, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP3121', 'COMP4128'], 2, TRUE, FALSE, 'Boersen#2', 'bio for Boersen#2'),
-  (25, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], 2, TRUE, FALSE, 'Boersen#3', 'bio for Boersen#3'),
-  (26, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511'], 2, TRUE, FALSE, 'Boersen#4', 'bio for Boersen#4'),
-  (27, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], 2, TRUE, FALSE, 'Testing Account', 'bio for Testing Account'),
-  (28, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP4128'], 2, TRUE, FALSE, 'Testing Account 3', 'bio for Testing Account 3');
+  (15, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'AIO', 'IOI', 2537, ARRAY[]::TEXT[], TRUE, FALSE, 'AR', 'bio for AR'),
+  (16, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'INOI', '', 2113, ARRAY[]::TEXT[], TRUE, FALSE, 'AK', 'bio for AK'),
+  (17, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], TRUE, FALSE, 'YF', 'bio for YF'),
+  (18, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'AIO', '', 1624, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'DY', 'bio for DY'),
+  (19, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, 'NOI', '', 2848, ARRAY['COMP1511', 'COMP2521', 'COMP3821'], TRUE, FALSE, 'Kass', 'bio for Kass'),
+  (20, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521'], TRUE, FALSE, 'JL', 'bio for JL'),
+  (21, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, 'NOI', '', 1962, ARRAY['COMP1511', 'COMP2521'], TRUE, FALSE, 'HT', 'bio for HT'),
+  (22, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#1', 'bio for Boersen#1'),
+  (23, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#1', 'bio for Boersen#1'),
+  (24, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#2', 'bio for Boersen#2'),
+  (25, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], TRUE, FALSE, 'Boersen#3', 'bio for Boersen#3'),
+  (26, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511'], TRUE, FALSE, 'Boersen#4', 'bio for Boersen#4'),
+  (27, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], TRUE, FALSE, 'Testing Account', 'bio for Testing Account'),
+  (28, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP4128'], TRUE, FALSE, 'Testing Account 3', 'bio for Testing Account 3');
   
 
 INSERT INTO competition_teams (
@@ -986,18 +989,19 @@ INSERT INTO competition_teams (
   participants, 
   university_id, 
   competition_id, 
-  team_seat
+  team_seat,
+  site_attending_id
 )
 VALUES
-  (20, 'This Unapproved Name', 'Pending'::competition_team_status, NULL, 1, ARRAY[15], 5, 4, 'bongo11'),
-  (20, 'AliYi', 'Pending'::competition_team_status, NULL, 2, ARRAY[16, 17], 5, 4, 'bongo14'),
-  (20, 'DY', 'Pending'::competition_team_status, NULL, 1, ARRAY[18], 5, 4, 'bongo17'),
-  (20, 'Kass', 'Pending'::competition_team_status, NULL, 2, ARRAY[19, 20], 5, 4, 'bongo20'),
-  (20, 'Hello', 'Pending'::competition_team_status, NULL, 1, ARRAY[21], 5, 4, 'bongo23'),
-  (20, 'Boersen#1', 'Pending'::competition_team_status, NULL, 1, ARRAY[22], 5, 4, 'bongo26'),
-  (20, 'Boersen#1', 'Pending'::competition_team_status, NULL, 1, ARRAY[23], 5, 4, 'bongo29'),
-  (20, 'Boersen#2', 'Pending'::competition_team_status, NULL, 1, ARRAY[24], 5, 4, 'bongo32'),
-  (20, 'Boersen#3', 'Pending'::competition_team_status, NULL, 1, ARRAY[25], 5, 4, 'bongo35'),
-  (20, 'Boersen#4', 'Pending'::competition_team_status, NULL, 1, ARRAY[26], 5, 4, 'bongo38'),
-  (20, 'Random Cool guy', 'Pending'::competition_team_status, NULL, 1, ARRAY[27], 5, 4, 'bongo41'),
-  (20, 'Random Cool Guy', 'Pending'::competition_team_status, NULL, 1, ARRAY[28], 5, 4, 'bongo44');
+  (20, 'This Unapproved Name', 'Pending'::competition_team_status, NULL, 1, ARRAY[15], 5, 4, 'bongo11', 2),
+  (20, 'AliYi', 'Pending'::competition_team_status, NULL, 2, ARRAY[16, 17], 5, 4, 'bongo14', 2),
+  (20, 'DY', 'Pending'::competition_team_status, NULL, 1, ARRAY[18], 5, 4, 'bongo17', 2),
+  (20, 'Kass', 'Pending'::competition_team_status, NULL, 2, ARRAY[19, 20], 5, 4, 'bongo20', 2),
+  (20, 'Hello', 'Pending'::competition_team_status, NULL, 1, ARRAY[21], 5, 4, 'bongo23', 2),
+  (20, 'Boersen#1', 'Pending'::competition_team_status, NULL, 1, ARRAY[22], 5, 4, 'bongo26', 2),
+  (20, 'Boersen#1', 'Pending'::competition_team_status, NULL, 1, ARRAY[23], 5, 4, 'bongo29', 2),
+  (20, 'Boersen#2', 'Pending'::competition_team_status, NULL, 1, ARRAY[24], 5, 4, 'bongo32', 2),
+  (20, 'Boersen#3', 'Pending'::competition_team_status, NULL, 1, ARRAY[25], 5, 4, 'bongo35', 2),
+  (20, 'Boersen#4', 'Pending'::competition_team_status, NULL, 1, ARRAY[26], 5, 4, 'bongo38', 2),
+  (20, 'Random Cool guy', 'Pending'::competition_team_status, NULL, 1, ARRAY[27], 5, 4, 'bongo41', 2),
+  (20, 'Random Cool Guy', 'Pending'::competition_team_status, NULL, 1, ARRAY[28], 5, 4, 'bongo44', 2);

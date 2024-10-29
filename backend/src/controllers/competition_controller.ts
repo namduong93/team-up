@@ -151,6 +151,7 @@ export class CompetitionController {
     const code = req.body.code;
     const competitionUserInfo = req.body.competitionUser;
     competitionUserInfo.userId = Number(req.query.userId);
+    console.log(competitionUserInfo);
     await this.competitionService.competitionStudentJoin(String(code), competitionUserInfo);
     res.json({});
     return;

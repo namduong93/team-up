@@ -495,10 +495,11 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let teamStatus = TeamStatus.PENDING;
     let teamSize = 1;
     let participants = [userId];
+    let siteId = competitionUserInfo.siteLocation.id;
 
     let teamNameQuery = `
-      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id, competition_coach_id)
-      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1, $2, $3, $4, $5, $6)
+      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id, competition_coach_id, site_attending_id)
+      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1, $2, $3, $4, $5, $6, $7)
       RETURNING id
     `;
     const teamNameValues = [
@@ -507,7 +508,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       participants,
       university.id,  
       competitionId,
-      competitionCoachId
+      competitionCoachId,
+      siteId
     ];
 
     // Insert the team into competition_teams table

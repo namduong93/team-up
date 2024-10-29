@@ -109,7 +109,8 @@ export const CompetitionExperience: FC = () => {
       degree, 
       ICPCEligibility, 
       isRemote, 
-      competitionLevel, 
+      competitionLevel,
+      siteLocation,
       boersenEligible, 
       codeforce, 
       nationalPrizes, 
@@ -124,6 +125,7 @@ export const CompetitionExperience: FC = () => {
     const competitionUser = {
       ICPCEligible: ICPCEligibility,
       competitionLevel: competitionLevel,
+      siteLocation: siteLocation,
       boersenEligible: boersenEligible,
       degreeYear: degreeYear,
       degree: degree, 

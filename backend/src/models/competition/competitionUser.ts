@@ -1,9 +1,12 @@
+import { CompetitionSiteObject } from "./competition";
+
 export interface CompetitionUser {
   userId?: number;
   competitionId: number;
   competitionRoles: Array<CompetitionUserRole>;
   ICPCEligible: boolean;
   competitionLevel: string;
+  siteLocation: CompetitionSiteObject;
   boersenEligible: boolean;
   degreeYear: number;
   degree: string;

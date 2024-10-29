@@ -276,7 +276,6 @@ export class CompetitionService {
     if (!university) {
       throw new ServiceError(ServiceError.NotFound, 'User is not associated with a university');
     }
-    console.log('university', university);
     const defaultSite = await this.competitionRepository.competitionUniversityDefaultSite(competitionId, university);
     return defaultSite;
    }
@@ -303,6 +302,10 @@ export class CompetitionService {
     const university = await this.userRepository.userUniversity(competitionUserInfo.userId);
     if(!university) {
       throw new ServiceError(ServiceError.NotFound, 'University not found');
+    }
+
+    if(!competitionUserInfo.siteLocation || !competitionUserInfo.siteLocation.id) {
+      throw new ServiceError(ServiceError.NotFound, 'Site location not provided');
     }
 
     await this.competitionRepository.competitionStudentJoin(competitionUserInfo, university);
