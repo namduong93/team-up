@@ -8,6 +8,10 @@ import { sendRequest } from "../../utility/request";
 import { SortOption } from "../../components/page_header/components/SortSelect";
 import { TeamPageButtons } from "./teams_page/components/TeamPageButtons";
 import { AdvancedDropdown } from "../../components/AdvancedDropdown/AdvancedDropdown";
+import { TeamDetails } from "./teams_page/components/TeamCard";
+import { StudentInfo } from "./students_page/StudentDisplay";
+import { AttendeesDetails } from "./attendees_page/AttendeesPage";
+import { StaffDetails } from "./staff_page/StaffDisplay";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -43,22 +47,74 @@ export const CompetitionPage: FC = () => {
   
   const [rejectedTeamIds, setRejectedTeamIds] = useState<Array<number>>([]);
   const [isEditingNameStatus, setIsEditingNameStatus] = useState<boolean>(false);
-  const [registeredTeamIds, setRegisteredTeamIds] = useState<Array<number>>([]);
+
+  const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
+  const [students, setStudents] = useState<Array<StudentInfo>>([]);
+  const [attendeesList, setAttendeesList] = useState<Array<AttendeesDetails>>([]);
+  const [staffList, setStaffList] = useState<Array<StaffDetails>>([]);
   ////
 
   useEffect(() => {
-    const fetchRoles = async () => {
+    const fetchCompetitionTeams = async () => {
+      try {
+        const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
+        const { teamList } = response.data
+        setTeamList(teamList);
+
+      } catch (error: unknown) {
+
+      }
+
+    };
+
+    const fetchStudents = async () => {
+      const studentsResponse = await sendRequest.get<{ students: Array<StudentInfo>}>('/competition/students', { compId: parseInt(compId as string) });
+      const { students } = studentsResponse.data;
+      setStudents(students);
+    }
+
+    const fetchAttendeesList = async () => {
+      const attendeesResponse = await sendRequest.get<{ attendees: Array<AttendeesDetails> }>('/competition/attendees', { compId });
+      const { attendees } = attendeesResponse.data;
+      setAttendeesList(attendees);
+    }
+
+    const fetchStaffList = async () => {
+      const staffResponse = await sendRequest.get<{ staff: Array<StaffDetails> }>('/competition/staff', { compId });
+      const { staff } = staffResponse.data;
+      setStaffList(staff);
+    }
+    
+    const fetchInfo = async () => {
       
       const roleResponse = await sendRequest.get<{ roles: Array<CompetitionRole> }>('/competition/roles', { compId });
 
-      const { roles } = roleResponse.data;
-      setRoles(roles);
+      const { roles: userRoles } = roleResponse.data;
+      setRoles(userRoles);
+
+      if (userRoles.includes(CompetitionRole.Admin)
+      || userRoles.includes(CompetitionRole.Coach) || userRoles.includes(CompetitionRole.SiteCoordinator)) {
+        fetchCompetitionTeams();
+      }
+
+      if (userRoles.includes(CompetitionRole.Admin) || userRoles.includes(CompetitionRole.Coach)) {
+        fetchStudents();
+      }
+
+      if (userRoles.includes(CompetitionRole.Admin) || userRoles.includes(CompetitionRole.SiteCoordinator)) {
+        fetchAttendeesList();
+      }
+
+      if (userRoles.includes(CompetitionRole.Admin)) {
+        fetchStaffList();
+      }
 
     }
 
-    fetchRoles();
+    fetchInfo();
 
-  }, [])
+
+  }, []);
 
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {
@@ -106,6 +162,7 @@ export const CompetitionPage: FC = () => {
           searchTermState={{ searchTerm, setSearchTerm }}
           >
             {enableTeamButtons && <TeamPageButtons
+              universityOption={universityOption}
               filtersState={[filters, setFilters]}
               editingStatusState={[isEditingStatus, setIsEditingStatus]}
               teamIdsState={[approveTeamIds, setApproveTeamIds]}
@@ -116,7 +173,9 @@ export const CompetitionPage: FC = () => {
             
             {(roles.includes(CompetitionRole.Admin)) &&
             <AdvancedDropdown style={{ minWidth: '0', maxWidth: '342px', width: '100%' }}
-              optionsState={[options, setOptions]} setCurrentSelected={setUniversityOption}/>}
+              optionsState={[options, setOptions]} setCurrentSelected={setUniversityOption}
+              isExtendable={false}
+            />}
 
           </PageHeader>
         <PageOptionsContainerDiv>
@@ -155,7 +214,7 @@ export const CompetitionPage: FC = () => {
           </CustomToggleSwitch>
         </PageOptionsContainerDiv>
 
-        <Outlet context={{ filters, sortOption, searchTerm, removeFilter, setFilters,
+        <Outlet context={{ filters, sortOption, searchTerm, removeFilter, setFilters, roles,
           filtersState: [filters, setFilters], editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
@@ -163,7 +222,12 @@ export const CompetitionPage: FC = () => {
           registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
           universityOption,
 
-          setFilterOptions, setSortOptions, setEnableTeamButtons }}/>
+          setFilterOptions, setSortOptions, setEnableTeamButtons,
+          teamListState: [teamList, setTeamList],
+          studentsState: [students, setStudents],
+          attendeesListState: [attendeesList, setAttendeesList],
+          staffListState: [staffList, setStaffList],
+        }}/>
 
       </MainPageDiv>
     </OverflowFlexBackground>

@@ -8,6 +8,7 @@ import { useMultiStepCompRegoForm } from "./hooks/useMultiStepCompRegoForm";
 import TextInputLight from "../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import { sendRequest } from "../../../utility/request";
+import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 
 const Container = styled.div`
   flex: 1;
@@ -80,6 +81,26 @@ const Text = styled.label`
   width: 100%;
 `
 
+const DoubleInputContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.8%;
+`
+
+const Colon = styled.span`
+  align-self: center;
+  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+`
+
+const Descriptor = styled.div`
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colours.filterText};
+  width: 100%;
+`;
+
 interface User {
   role: "student" | "staff";
   profilePic: string;
@@ -99,6 +120,8 @@ export const CompetitionIndividual: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepCompRegoForm();
   const { code } = useParams<{code?: string}>();
+  const [platform, setPlatform] = useState("");
+  const [handle, setHandle] = useState("");
   
   const handleBack = () => {
     navigate(`/competition/information/${code}`);
@@ -123,13 +146,14 @@ export const CompetitionIndividual: FC = () => {
   ];
 
   function isButtonDisabled(): boolean | undefined {
-    const { degree, degreeYear, ICPCEligibility, competitionLevel, isRemote } = formData;
+    const { degree, degreeYear, ICPCEligibility, competitionLevel, isRemote, competitionBio } = formData;
     return (
       degree === '' ||
       degreeYear === 0 ||
       ICPCEligibility === undefined ||
       competitionLevel === '' ||
-      isRemote === undefined
+      isRemote === undefined ||
+      competitionBio === ''
     );
   }
 
@@ -248,6 +272,42 @@ export const CompetitionIndividual: FC = () => {
             descriptor={["Will you be attending on site or remotely?", "(Please contact your coach for site location information.)"]}
             width="100%"
           />
+
+          <DescriptiveTextInput
+            label="Competition Biography"
+            descriptor="Please write a short description about yourself that would help others get to know you"
+            placeholder="Enter a description"
+            required={true}
+            value={formData.competitionBio}
+            onChange={(e) => setFormData({ ...formData, competitionBio: e.target.value })}
+            width="100%"
+          />
+
+          <Label>Preferred Contact Method</Label>
+          <Descriptor>Please specify your preferred contact method if you have another preference</Descriptor>
+          <DoubleInputContainer>
+            <TextInputLight
+              label="Platform"
+              placeholder="Please enter"
+              type="text"
+              required={false}
+              value={formData.platform || ''}
+              onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
+              width="45%" 
+            />
+
+            <Colon>:</Colon>
+
+            <TextInputLight
+              label="Handle"
+              placeholder="Please enter"
+              type="text"
+              required={false}
+              value={formData.handle || ''}
+              onChange={(e) => setFormData({ ...formData, handle: e.target.value })}
+              width="45%" 
+            />
+          </DoubleInputContainer>
 
           <ButtonContainer>
             <Button onClick={handleBack}>Back</Button>

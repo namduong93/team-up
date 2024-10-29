@@ -25,6 +25,13 @@ export const defaultTheme: DefaultTheme = {
     progressEnd: "#6688D2",
     progressBackground: "#BCCFF8",
     userInfoCardHeader: "#D6D6D6",
+    cardBackground: "white",
+  },
+  themes: {
+    light: "#EBEBEB",
+    dark: "#333333",
+    christmas:  "#2A7A47",
+    colourblind: "#4363D8",
   },
   teamProfile: {
     invite: "#DFE8FB",
@@ -37,6 +44,8 @@ export const defaultTheme: DefaultTheme = {
     siteBorder: "#35B4C2",
   },
   staffActions: {
+    code: "#FFFFFF",
+    codeBorder: "#333333",
     competition: "#DFE8FB",
     competitionBorder: "#6688D2",
     registration: "#FEEBC8",
@@ -54,6 +63,8 @@ export const defaultTheme: DefaultTheme = {
     registered: "#8BDFA5",
   },
   roles: {
+    participantBackground: '#4fdeee2b',
+    participantText: '#35B4C2',
     coachText: "#6688D2",
     coachBackground: "#BCCFF8",
     siteCoordinatorText: "#9747FF",

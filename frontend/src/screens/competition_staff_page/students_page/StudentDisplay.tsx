@@ -7,6 +7,7 @@ import Fuse from "fuse.js";
 import { sendRequest } from "../../../utility/request";
 import { StudentCardInfo, StudentCardProps, StudentInfoCard } from "./components/StudentInfoCard";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
+import { FlexBackground } from "../../../components/general_utility/Background";
 
 export const WideDisplayDiv = styled.div`
   flex: 1;
@@ -19,7 +20,7 @@ export const WideDisplayDiv = styled.div`
 `;
 
 
-interface StudentInfo extends StudentCardInfo {
+export interface StudentInfo extends StudentCardInfo {
   userId: number;
   universityId: number;
 };
@@ -53,12 +54,12 @@ export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = fa
 
 export const WideInfoContainerDiv = styled.div`
   width: 100%;
-  height: 54px;
   box-sizing: border-box;
   border-bottom: 1px solid #D9D9D9;
   display: flex;
   font-size: 13px;
   gap: 0.5%;
+  min-height: 54px;
 `;
 
 export const UserNameContainerDiv = styled.div`
@@ -147,9 +148,9 @@ const UniversityContainerDiv = styled.div`
   white-space: normal;
 `;
 
-const EmailSpan = styled.span<{ isHeader: boolean }>`
+const EmailSpan = styled.span<{ $isHeader: boolean }>`
   height: 100%;
-  background-color: ${({ isHeader }) => isHeader ? 'transparent' : 'white'};
+  background-color: ${({ $isHeader: isHeader }) => isHeader ? 'transparent' : 'white'};
   display: flex;
   align-items: center;
   position: absolute;
@@ -172,7 +173,7 @@ export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHea
             {studentInfo.sex}
         </SmallContainerDiv>
         <EmailContainerDiv $isHeader={isHeader}>
-          <EmailSpan isHeader={isHeader}>
+          <EmailSpan $isHeader={isHeader}>
           {studentInfo.email}
           </EmailSpan>
         </EmailContainerDiv>
@@ -230,11 +231,10 @@ const STUDENT_DISPLAY_FILTER_OPTIONS = {
 
 export const StudentDisplay = () => {
   const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
-    setFilterOptions, setSortOptions } = useCompetitionOutletContext('students');
+    setFilterOptions, setSortOptions, studentsState: [students, setStudents] } = useCompetitionOutletContext('students');
   
   const { compId } = useParams();
 
-  const [students, setStudents] = useState<Array<StudentInfo>>([]);
 
   useEffect(() => {
     setSortOptions(STUDENT_DISPLAY_SORT_OPTIONS);
@@ -242,198 +242,6 @@ export const StudentDisplay = () => {
     if (!compId) {
       return;
     }
-
-    const fetchStudents = async () => {
-    const studentsResponse = await sendRequest.get<{ students: Array<StudentInfo>}>('/competition/students', { compId: parseInt(compId as string) });
-      const { students } = studentsResponse.data;
-      setStudents([ ...students,
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Ernest Perkins',
-          sex: 'F',
-          email: 'lofvo@ajugip.bm',
-          studentId: '5717686',
-          status: 'Unmatched',
-          level: 'A',
-          tshirtSize: 'XS',
-          siteName: 'eat grown coal ',
-          teamName: 'ask diagram slightly',
-        },
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Rena Powers',
-          sex: 'F',
-          email: 'rog@we.bg',
-          studentId: '9579323',
-          status: 'Unmatched',
-          level: 'A',
-          tshirtSize: 'M',
-          siteName: 'development few way ',
-          teamName: 'seeing cowboy easily',
-        },
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Brent Johnston',
-          sex: 'M',
-          email: 'ilusonu@fiwjeka.bh',
-          studentId: '7122240',
-          status: 'Matched',
-          level: 'A',
-          tshirtSize: 'M',
-          siteName: 'share beauty game ',
-          teamName: 'rocky butter nuts',
-        },
-        {
-          userId: 999,
-          universityId: 2,
-          name: 'Leonard Holmes',
-          sex: 'NB',
-          email: 'jisufov@wis.vn',
-          studentId: '2116157',
-          status: 'Matched',
-          level: 'A',
-          tshirtSize: 'M',
-          siteName: 'sure fresh contain ',
-          teamName: 'season layers skin',
-        },
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Phillip Soto',
-          sex: 'F',
-          email: 'inosi@ijmajhij.io',
-          studentId: '9061298',
-          status: 'Matched',
-          level: 'B',
-          tshirtSize: '5XL',
-          siteName: 'percent generally noon ',
-          teamName: 'star differ birthday',
-        },
-        {
-          userId: 999,
-          universityId: 2,
-          name: 'Jordan Allison',
-          sex: 'M',
-          email: 'ucaip@ote.tc',
-          studentId: '2722497',
-          status: 'Unmatched',
-          level: 'A',
-          tshirtSize: 'XS',
-          siteName: 'blew language piano ',
-          teamName: 'swam fish attention',
-        },
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Cody Tran',
-          sex: 'F',
-          email: 'hewos@ja.wf',
-          studentId: '4852517',
-          status: 'Unmatched',
-          level: 'B',
-          tshirtSize: 'XS',
-          siteName: 'blue rather cattle ',
-          teamName: 'ought telephone rule',
-        },
-        {
-          userId: 999,
-          universityId: 2,
-          name: 'Jonathan Turner',
-          sex: 'F',
-          email: 'odjuf@vebar.be',
-          studentId: '1046450',
-          status: 'Matched',
-          level: 'B',
-          tshirtSize: 'XS',
-          siteName: 'contrast halfway sheet ',
-          teamName: 'offer golden just',
-        },
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Ada Wolfe',
-          sex: 'F',
-          email: 'luf@soralogob.nl',
-          studentId: '9066512',
-          status: 'Matched',
-          level: 'A',
-          tshirtSize: 'L',
-          siteName: 'sort flag final ',
-          teamName: 'noon although feet',
-        },
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Patrick Glover',
-          sex: 'M',
-          email: 'jaz@umedufed.ms',
-          studentId: '8753821',
-          status: 'Unmatched',
-          level: 'A',
-          tshirtSize: 'L',
-          siteName: 'forgot idea muscle ',
-          teamName: 'able story melted',
-        },
-        {
-          userId: 999,
-          universityId: 2,
-          name: 'Jeanette Sharp',
-          sex: 'M',
-          email: 'ricfu@nudu.mg',
-          studentId: '9045028',
-          status: 'Unmatched',
-          level: 'A',
-          tshirtSize: 'XL',
-          siteName: 'powder another question ',
-          teamName: 'average first disease',
-        },
-        {
-          userId: 999,
-          universityId: 2,
-          name: 'Danny Fields',
-          sex: 'NB',
-          email: 'wil@dihij.cz',
-          studentId: '4361756',
-          status: 'Unmatched',
-          level: 'B',
-          tshirtSize: 'L',
-          siteName: 'became melted thought ',
-          teamName: 'does spread job',
-        },
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Gary Quinn',
-          sex: 'F',
-          email: 'towzawco@how.ki',
-          studentId: '6143079',
-          status: 'Matched',
-          level: 'A',
-          tshirtSize: 'L',
-          siteName: 'walk out baseball ',
-          teamName: 'globe read lungs',
-        },
-        {
-          userId: 999,
-          universityId: 1,
-          name: 'Adam Blake',
-          sex: 'NB',
-          email: 'damennok@iv.us',
-          studentId: '2886120',
-          status: 'Unmatched',
-          level: 'A',
-          tshirtSize: 'XS',
-          siteName: 'even basic opportunity ',
-          teamName: 'send mice close',
-        }
-        
-       ]);
-    }
-    fetchStudents();
-
   }, []);
 
   const filteredStudents = students.filter((studentInfo) =>{
@@ -507,7 +315,7 @@ export const StudentDisplay = () => {
         ))
       )}
     </div>
-  <div style={ { flex: '1', width: '100%', height: '100%' } }>
+  <FlexBackground>
     <NarrowDisplayDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoCard key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
@@ -531,7 +339,7 @@ export const StudentDisplay = () => {
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
     </WideDisplayDiv>
-  </div>
+  </FlexBackground>
   </>
   );
 }

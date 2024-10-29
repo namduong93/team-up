@@ -1,11 +1,11 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject } from "../../models/competition/competition.js";
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
+import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 
@@ -16,84 +16,114 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
+
+  competitionAttendees = async (userId: number, compId: number): Promise<Array<AttendeesDetails>> => {
+    const roles = await this.competitionRoles(userId, compId);
+
+    if (roles.includes(CompetitionUserRole.ADMIN)) {
+      const dbResult = await this.pool.query(
+        `SELECT cu.user_id AS "userId", uni.id AS "universityId", 
+          ct.site_attending_id AS "siteId", ct.pending_site_attending_id AS "pendingSiteId",
+          u.email AS "email", u.name AS "name", u.gender AS "sex", cu.competition_roles AS "roles",
+          uni.name AS "universityName", cs.name AS "siteName", cs_pending.name AS "pendingSiteName",
+          u.tshirt_size AS "shirtSize", u.dietary_reqs AS "dietaryNeeds",
+          u.allergies AS "allergies", u.accessibility_reqs AS "accessibilityNeeds"
+        
+        FROM competition_teams AS ct
+        JOIN universities AS uni ON uni.id = ct.university_id
+        JOIN users AS u ON u.id = ANY(ct.participants)
+        JOIN competition_users AS cu ON cu.user_id = u.id
+        LEFT JOIN competition_sites AS cs ON cs.id = ct.site_attending_id
+        LEFT JOIN competition_sites AS cs_pending ON cs_pending.id = ct.pending_site_attending_id
+        WHERE ct.competition_id = $1;`, [compId]
+      );
+      
+      return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
+    }
+  
+    if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      const dbResult = await this.pool.query(
+        `SELECT cu.user_id AS "userId", uni.id AS "universityId", 
+          ct.site_attending_id AS "siteId", ct.pending_site_attending_id AS "pendingSiteId",
+          u.email AS "email", u.name AS "name", u.gender AS "sex", cu.competition_roles AS "roles",
+          uni.name AS "universityName", cs.name AS "siteName", cs_pending.name AS "pendingSiteName",
+          u.tshirt_size AS "shirtSize", u.dietary_reqs AS "dietaryNeeds",
+          u.allergies AS "allergies", u.accessibility_reqs AS "accessibilityNeeds"
+        
+        FROM competition_teams AS ct
+        JOIN universities AS uni ON uni.id = ct.university_id
+        JOIN users AS u ON u.id = ANY(ct.participants)
+        JOIN competition_users AS cu ON cu.user_id = u.id
+        LEFT JOIN competition_sites AS cs ON cs.id = ct.site_attending_id
+        LEFT JOIN competition_sites AS cs_pending ON cs_pending.id = ct.pending_site_attending_id
+        WHERE ct.competition_id = $1 AND ct.site_attending_id = (SELECT site_id FROM competition_users WHERE user_id = $2 LIMIT 1);`, [compId, userId]
+      );
+
+      return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
+    }
+  
+    return [];
+  }
+
   competitionTeamDetails = async (userId: number, compId: number): Promise<ParticipantTeamDetails> => {
     const dbResult = await this.pool.query(
-      `SELECT c.name AS "compName",
-        ct.name AS "teamName", cs.name AS "teamSite", ct.team_seat AS "teamSeat",
-        cu_source.competition_level AS "teamLevel", c.start_date AS "startDate",
-        JSON_BUILD_ARRAY(
-          u1.name, u1.email, cu1.bio, cu1.preferred_contact
-        ) AS member1,
-        JSON_BUILD_ARRAY(
-          u2.name, u2.email, cu2.bio, cu2.preferred_contact
-        ) AS member2,
-        JSON_BUILD_ARRAY(
-          u3.name, u3.email, cu3.bio, cu3.preferred_contact
-        ) AS member3,
-        JSON_BUILD_ARRAY(
-          u_coach.name, u_coach.email, cu_coach.bio
-        ) AS coach
-      
-      FROM competition_users AS cu_source
-      JOIN competitions AS c ON c.id = cu_source.competition_id
-      JOIN competition_teams AS ct ON cu_source.user_id = ANY(ct.participants)
-      JOIN competition_sites AS cs ON cu_source.site_attending_id = cs.id
-      
-      JOIN competition_users AS cu_coach ON cu_coach.id = ct.competition_coach_id
-      JOIN users AS u_coach ON u_coach.id = cu_coach.user_id
-
-      LEFT JOIN users AS u1 ON u1.id = ct.participants[1]
-      LEFT JOIN users AS u2 ON u2.id = ct.participants[2]
-      LEFT JOIN users AS u3 ON u3.id = ct.participants[3]
-      LEFT JOIN competition_users AS cu1 ON u1.id = cu1.user_id
-      LEFT JOIN competition_users AS cu2 ON u2.id = cu2.user_id
-      LEFT JOIN competition_users AS cu3 ON u3.id = cu3.user_id
-      WHERE cu_source.user_id = ${userId} AND cu_source.competition_id = ${compId}
+      `SELECT "compName", "teamName", "teamSite", "teamSeat",
+        "teamLevel", "startDate", students, coach
+      FROM competition_team_details AS ctd
+      WHERE ctd.src_user_id = ${userId} AND ctd.src_competition_id = ${compId}
       LIMIT 1;
       `
     );
 
+    const teamDetails: ParticipantTeamDetails = dbResult.rows[0];
+    const students = teamDetails.students;
+    const currentStudentIndex = students.findIndex((student) => student.userId === userId);
+    if (currentStudentIndex < 0) {
+      throw new DbError(DbError.Query, 'Could not find the current user in their own team [VERY WEIRD BEHAVIOUR]');
+    }
+    const currentStudent = students.splice(currentStudentIndex, 1)[0];
+    students.unshift(currentStudent);
+    return { ...teamDetails, students };
+  }
+
+  competitionStudentDetails = async (userId: number, compId: number): Promise<CompetitionStudentDetails> => {
+    const dbResult = await this.pool.query(
+      `SELECT u.name, u.email, cu.preferred_contact AS "preferredContact", cu.bio AS "competitionBio",
+        cu.competition_level AS "competitionLevel", cu.icpc_eligible AS "ICPCEligible", cu.boersen_eligible AS "boersenEligible",
+        cu.degree_year AS "degreeYear", cu.degree, cu.is_remote AS "isRemote", cu.national_prizes AS "nationalPrizes",
+        cu.international_prizes AS "internationalPrizes", cu.codeforces_rating AS "codeforcesRating", cu.university_courses AS "universityCourses",
+        cu.past_regional AS "pastRegional"
+      FROM users u
+      JOIN competition_users cu ON u.id = cu.user_id
+      WHERE cu.user_id = $1 AND cu.competition_id = $2`,
+      [userId, compId]
+    );
+
+    if (dbResult.rows.length === 0) {
+      throw new DbError(DbError.Query, 'User does not exist or is not a participant in this competition.');
+    }
+
     const result = dbResult.rows[0];
 
-    const teamDetails: ParticipantTeamDetails = {
-      compName: result.compName,
-      teamName: result.teamName,
-      teamSite: result.teamSite,
-      teamSeat: result.teamSeat,
-      teamLevel: result.teamLevel,
-      startDate: new Date(result.startDate),
-      students: [
-        {
-          name: result.member1[0],
-          email: result.member1[1],
-          bio: result.member1[2],
-          preferredContact: result.member1[3]
-        },
-        {
-          name: result.member2[0],
-          email: result.member2[1],
-          bio: result.member2[2],
-          preferredContact: result.member2[3]
-        },
-
-        // TODO: handle fewer than 3 members (check if the fields in the array are null/undefined)
-        {
-          name: result.member3[0],
-          email: result.member3[1],
-          bio: result.member3[2],
-          preferredContact: result.member3[3]
-        }
-      ],
-
-      coach: {
-        name: result.coach[0],
-        email: result.coach[1],
-        bio: result.coach[2],
-      },
+    const studentDetails: CompetitionStudentDetails = {
+      name: result.name,
+      email: result.email,
+      preferredContact: result.preferredContact,
+      competitionBio: result.competitionBio,
+      competitionLevel: result.competitionLevel,
+      ICPCEligible: result.ICPCEligible,
+      boersenEligible: result.boersenEligible,
+      degreeYear: result.degreeYear,
+      degree: result.degree,
+      isRemote: result.isRemote,
+      nationalPrizes: result.nationalPrizes,
+      internationalPrizes: result.internationalPrizes,
+      codeforcesRating: result.codeforcesRating,
+      universityCourses: result.universityCourses,
+      pastRegional: result.pastRegional
     };
 
-    return teamDetails;
-
+    return studentDetails;
   }
 
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
@@ -147,10 +177,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       const dbResult = await this.pool.query(
-        `SELECT team_id AS "teamId", university_id AS "universityId", team_name AS "teamName",
-        member1, member2, member3,
-        status, team_name_approved AS "teamNameApproved"
-        FROM competition_admin_team_list(${compId})`
+        `SELECT DISTINCT ON ("teamId")
+          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          "teamLevel", "startDate", students, coach
+        FROM competition_team_details AS ctd
+        WHERE ctd.src_competition_id = ${compId};
+        `
       );
 
       return dbResult.rows;
@@ -158,10 +190,27 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     if (roles.includes(CompetitionUserRole.COACH)) {
       const dbResult = await this.pool.query(
-        `SELECT team_id AS "teamId", university_id AS "universityId", team_name AS "teamName",
-          member1, member2, member3,
-          status, team_name_approved AS "teamNameApproved"
-        FROM competition_coach_team_list(${userId}, ${compId})`);
+        `SELECT DISTINCT ON ("teamId")
+          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          "teamLevel", "startDate", students, coach
+        FROM competition_team_details AS ctd
+        WHERE ctd.coach_user_id = ${userId} AND ctd.src_competition_id = ${compId};
+        ` 
+      );
+
+      return dbResult.rows;
+    }
+
+    if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      const dbResult = await this.pool.query(
+        `SELECT DISTINCT ON ("teamId")
+          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          "teamLevel", "startDate", students, coach
+        FROM competition_team_details AS ctd
+        JOIN competition_users AS csu ON csu.site_id = ctd.src_site_attending_id
+        WHERE csu.user_id = ${userId} AND ctd.src_competition_id = ${compId};
+        ` 
+      );
 
       return dbResult.rows;
     }
@@ -240,7 +289,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionId: competitionId };    
   }
 
-  competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{} | undefined> => {
+  competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{}> => {
     // Verify if userId is an admin of this competition
     const adminCheckQuery = `
       SELECT 1
@@ -251,7 +300,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const adminCheckResult = await this.pool.query(adminCheckQuery, [userId, competition.id]);
 
     if (adminCheckResult.rowCount === 0) {
-      return undefined; // TODO: throw unique error
+      throw new DbError(DbError.Query, "User is not an admin for this competition.");
     }
 
     // Verify if competition exists
@@ -264,16 +313,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const competitionExistResult = await this.pool.query(competitionExistQuery, [competition.id]);
 
     if (competitionExistResult.rowCount === 0) {
-      return undefined; // TODO: throw unique error
+      throw new DbError(DbError.Query, "Competition does not exist.");
     }
 
-    // TODO: Handle prefilling empty fields with old info. This might have been done on the FE but we should handle it here as well
-    
     // Update competition details
     const competitionUpdateQuery = `
       UPDATE competitions
-      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5
-      WHERE id = $6;
+      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5, code = $6, start_date = $7, region = $8
+      WHERE id = $9;
     `;
 
     const competitionUpdateValues = [
@@ -282,6 +329,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       new Date(competition.createdDate),
       new Date(competition.earlyRegDeadline),
       new Date(competition.generalRegDeadline),
+      competition.code,
+      new Date(competition.startDate),
+      competition.region,
       competition.id
     ];
 
@@ -293,7 +343,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
 
     // TODO: handle site updates
-
     return {};
   }
 
@@ -364,8 +413,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitions;
   }
 
-
-
   competitionStudentJoin = async (competitionUserInfo: CompetitionUser): Promise<{} | undefined> => {
     // First insert the user into the competition_users table
     let userId = competitionUserInfo.userId;
@@ -382,10 +429,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let codeforcesRating = competitionUserInfo.codeforcesRating || 0;
     let universityCourses = competitionUserInfo.universityCourses || [];
     let pastRegional = competitionUserInfo.pastRegional || false;
+    let competitionBio = competitionUserInfo.competitionBio || "";
+    let preferredContact = competitionUserInfo.preferredContact || "";
 
     const competitionJoinQuery = `
-      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional, bio, preferred_contact)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
       RETURNING id
     `;
     const competitionJoinValues = [
@@ -402,7 +451,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       internationalPrizes,
       codeforcesRating,
       universityCourses,
-      pastRegional
+      pastRegional,
+      competitionBio,
+      preferredContact
     ];
     
     // Insert user into competition_users table and get competition_user_id
@@ -478,7 +529,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     const teamSetPendingQuery = `
       UPDATE competition_teams
-      SET team_status = 'pending'::competition_team_status
+      SET team_status = 'Pending'::competition_team_status
       WHERE id = $1
     `;
     await this.pool.query(teamSetPendingQuery, [teamId]);
@@ -492,6 +543,314 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     await this.pool.query(competitionRemoveParticipantQuery, [userId, compId]);
 
     return { competitionCode, competitionName, teamId, teamName };
+  }
+
+  competitionApproveTeamAssignment = async(userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
+    // No team to approve
+    if (approveIds.length < 1) {
+      throw new DbError(DbError.Query, "No team to approve.");
+    }
+    
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Check if any of the ids in approveIds has team_status as 'Registered'
+    const registeredTeamsQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[]) 
+      AND competition_id = $2 
+      AND team_status = 'Registered'::competition_team_status
+    `;
+    const registeredTeamsResult = await this.pool.query(registeredTeamsQuery, [approveIds, compId]);
+
+    if (registeredTeamsResult.rowCount > 0) {
+      throw new DbError(DbError.Query, "One or more teams are already registered into ICPC system.");
+    }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      // Check if the coach is coaching all the teams in approveIds
+      const coachCheckQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+      AND competition_coach_id = (
+        SELECT id FROM competition_users
+        WHERE user_id = $3
+        AND competition_id = $2
+      )
+      `;
+      const coachCheckResult = await this.pool.query(coachCheckQuery, [approveIds, compId, userId]);
+      
+      if (coachCheckResult.rowCount !== approveIds.length) {
+        throw new DbError(DbError.Auth, "Coach is not coaching some of the teams in the provided approved IDs.");
+      }
+    }
+
+    const approveQuery = `
+      UPDATE competition_teams
+      SET team_status = 'Unregistered'::competition_team_status
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+    `;
+    const approveResult = await this.pool.query(approveQuery, [approveIds, compId]);
+
+    // If no rows were updated, it implies that no matching records were found
+    if (approveResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+    }
+
+    return {};
+  }
+
+  competitionRequestTeamNameChange = async(userId: number, compId: number, newTeamName: string): Promise<number> => {
+    // Check if the user is a valid member of this team
+    const teamMemberCheckQuery = `
+      SELECT name, pending_name
+      FROM competition_teams
+      WHERE competition_id = $1 AND $2 = ANY(participants)
+    `;
+    const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [compId, userId]);
+
+    if (teamMemberCheckResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "User is not a member of this team.");
+    }
+
+    if (teamMemberCheckResult.rows[0].name === newTeamName || teamMemberCheckResult.rows[0].pending_name === newTeamName) {
+      throw new DbError(DbError.Query, "New team name is similar to the old name or an already requested new name.");
+    }
+
+    // Update the pending name in the competition teams table
+    const teamNameUpdateQuery = `
+      UPDATE competition_teams
+      SET pending_name = $3
+      WHERE competition_id = $1 AND $2 = ANY(participants)
+      RETURNING id
+    `;
+    const result = await this.pool.query(teamNameUpdateQuery, [compId, userId, newTeamName]);
+    const teamId = result.rows[0].id;
+
+    if (result.rowCount === 0) {
+      throw new DbError(DbError.Query, "No matching team found for the provided ID in this competition.");
+    }
+
+    return teamId;
+  }
+
+  competitionApproveTeamNameChange = async(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Verify if there are duplicate IDs in the approveIds and rejectIds arrays
+    const duplicateIds = approveIds.filter(id => rejectIds.includes(id));
+    if (duplicateIds.length > 0) {
+      throw new DbError(DbError.Query, "Duplicate team IDs found in team name approve and reject lists.");
+    }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      // Check if the coach is coaching all the teams in approveIds
+      const coachCheckQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+      AND competition_coach_id = (
+        SELECT id FROM competition_users
+        WHERE user_id = $3
+        AND competition_id = $2
+      )
+      `;
+      const coachCheckResult = await this.pool.query(coachCheckQuery, [approveIds, compId, userId]);
+
+      if (coachCheckResult.rowCount !== approveIds.length) {
+        throw new DbError(DbError.Auth, "Coach is not coaching some of the teams in the provided approved IDs.");
+      }
+    }
+    
+    // Update the team name if the name change is approved
+    if (approveIds.length > 0) {
+      const approveQuery = `
+        UPDATE competition_teams
+        SET name = pending_name, pending_name = NULL
+        WHERE id = ANY($1::int[])
+        AND competition_id = $2
+      `;
+      const approveResult = await this.pool.query(approveQuery, [approveIds, compId]);
+
+      // If no rows were updated, it implies that no matching records were found
+      if (approveResult.rowCount === 0) {
+        throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+      }
+    }
+    
+    // If there are rejected team IDs, batch update to clear pending_name only
+    if (rejectIds.length > 0) {
+      const rejectQuery = `
+        UPDATE competition_teams
+        SET pending_name = NULL
+        WHERE id = ANY($1::int[])
+        AND competition_id = $2
+      `;
+      const rejectResult = await this.pool.query(rejectQuery, [rejectIds, compId]);
+
+      if (rejectResult.rowCount === 0) {
+        throw new DbError(DbError.Insert, "No matching teams found for the provided rejected IDs in this competition.");
+      }
+    }
+
+    return {};
+  }
+
+  competitionRequestSiteChange = async(userId: number, compId: number, newSiteId: number): Promise<number> => {
+    // Check if the user is a valid member of a team in this competition
+    const teamMemberCheckQuery = `
+      SELECT ct.site_attending_id, ct.pending_site_attending_id
+      FROM competition_teams AS ct
+      WHERE ct.competition_id = $1 AND $2 = ANY(ct.participants)
+    `;
+    const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [compId, userId]);
+  
+    if (teamMemberCheckResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "User is not a member of any team in this competition.");
+    }
+  
+    const currentSiteId = teamMemberCheckResult.rows[0].site_attending_id;
+    const pendingSiteId = teamMemberCheckResult.rows[0].pending_site_attending_id;
+  
+    if (currentSiteId === newSiteId || pendingSiteId === newSiteId) {
+      throw new DbError(DbError.Query, "New site ID is similar to the current site ID or an already requested new site ID.");
+    }
+  
+    // Update the pending site ID in the competition teams table
+    const siteIdUpdateQuery = `
+      UPDATE competition_teams
+      SET pending_site_attending_id = $3
+      WHERE competition_id = $1 AND $2 = ANY(participants)
+      RETURNING id
+    `;
+    const result = await this.pool.query(siteIdUpdateQuery, [compId, userId, newSiteId]);
+    
+    if (result.rowCount === 0) {
+      throw new DbError(DbError.Query, "No matching team found for the provided ID in this competition.");
+    }
+  
+    return result.rows[0].id; // Return the team ID
+  }
+
+  competitionApproveSiteChange = async(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Verify if there are duplicate IDs in the approveIds and rejectIds arrays
+    const duplicateIds = approveIds.filter(id => rejectIds.includes(id));
+    if (duplicateIds.length > 0) {
+      throw new DbError(DbError.Query, "Duplicate team IDs found in site ID approve and reject lists.");
+    }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      // Check if the coach is coaching all the teams in approveIds
+      const coachCheckQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+      AND competition_coach_id = (
+        SELECT id FROM competition_users
+        WHERE user_id = $3
+        AND competition_id = $2
+      )
+      `;
+      const coachCheckResult = await this.pool.query(coachCheckQuery, [approveIds, compId, userId]);
+
+      if (coachCheckResult.rowCount !== approveIds.length) {
+        throw new DbError(DbError.Auth, "Coach is not coaching some of the teams in the provided approved IDs.");
+      }
+    }
+
+    // Update the site ID if the change is approved
+    if (approveIds.length > 0) {
+      const approveQuery = `
+        UPDATE competition_teams
+        SET site_attending_id = pending_site_attending_id, pending_site_attending_id = NULL
+        WHERE id = ANY($1::int[])
+        AND competition_id = $2
+      `;
+      const approveResult = await this.pool.query(approveQuery, [approveIds, compId]);
+
+      // If no rows were updated, it implies that no matching records were found
+      if (approveResult.rowCount === 0) {
+        throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+      }
+    } 
+
+    // If there are rejected team IDs, batch update to clear pending_site_attending_id only
+    if (rejectIds.length > 0) {
+      const rejectQuery = `
+        UPDATE competition_teams
+        SET pending_site_attending_id = NULL
+        WHERE id = ANY($1::int[])
+        AND competition_id = $2
+      `;
+      const rejectResult = await this.pool.query(rejectQuery, [rejectIds, compId]);
+
+      if (rejectResult.rowCount === 0) {
+        throw new DbError(DbError.Insert, "No matching teams found for the provided rejected IDs in this competition.");
+      }
+    }
+
+    return {};
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

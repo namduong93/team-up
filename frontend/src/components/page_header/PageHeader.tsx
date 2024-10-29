@@ -16,6 +16,7 @@ export const PageHeaderContainerDiv = styled.div`
   gap: 20px;
   min-height: 117px;
   width: 100%;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 export const PageTitle = styled.h1`
@@ -25,7 +26,7 @@ export const PageTitle = styled.h1`
 `;
 
 export const PageDescriptionSpan = styled.span`
-  color: #525252;
+  color: ${({ theme }) => theme.fonts.descriptor};
   font-size: 1em;
 `;
 

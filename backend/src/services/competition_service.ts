@@ -1,4 +1,5 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
+import { DbError } from "../errors/db_error.js";
 import { ServiceError } from "../errors/service_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
@@ -21,14 +22,14 @@ export interface IndividualTeamInfo {
 }
 
 
-export type MemberDetails = [
-  name: string,
-  siteId: number,
-  ICPCEligible: boolean,
-  level: string,
-  boersenEligible: boolean,
+export interface MemberDetails {
+  name: string;
+  siteId: number;
+  ICPCEligible: boolean;
+  level: string;
+  boersenEligible: boolean;
   isRemote: boolean
-];
+};
 
 export enum Member {
   name = 0,
@@ -38,14 +39,10 @@ export enum Member {
   boersenEligible = 4,
   isRemote = 5,
 }
-export interface TeamDetails {
+export interface TeamDetails extends ParticipantTeamDetails {
   teamId: number;
   universityId: number;
-  teamName: string;
-  member1?: MemberDetails;
-  member2?: MemberDetails;
-  member3?: MemberDetails;
-  status: 'pending' | 'registered' | 'unregistered';
+  status: 'Pending' | 'Registered' | 'Unregistered';
   teamNameApproved: boolean;
 };
 export interface TeamMateData {
@@ -70,7 +67,7 @@ export interface StudentInfo {
   teamName?: string;
 };
 
-export enum StaffAccess {
+enum StaffAccess {
   Accepted = 'Accepted',
   Pending = 'Pending',
   Rejected = 'Rejected',
@@ -91,16 +88,39 @@ export interface ParticipantTeamDetails {
   teamLevel: string;
   startDate: Date;
   students: Array<{
+    userId: number;
     name: string;
     email: string;
     bio: string;
     preferredContact: string;
+    siteId: number;
+    ICPCEligible: boolean;
+    level: string;
+    boersenEligible: boolean;
+    isRemote: boolean;
   }>;
   coach: {
     name: string;
     email: string;
     bio: string;
   }
+}
+
+export interface AttendeesDetails {
+  userId: number;
+  universityId: number;
+  siteId: number;
+  pendingSiteId: number;
+  email: string;
+  
+  name: string;
+  sex: string;
+  roles: Array<CompetitionRole>;
+  universityName: string;
+  shirtSize: string;
+  dietaryNeeds: string | null;
+  allergies: string | null;
+  accessibilityNeeds: string | null;
 }
 
 
@@ -114,6 +134,16 @@ export class CompetitionService {
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
   }
+  
+  competitionAttendees = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR) && !roles.includes(CompetitionUserRole.ADMIN)) {
+      throw new ServiceError(ServiceError.Auth,
+        'competition/attendees route is only for site coordinators and admins to use');
+    }
+
+    return await this.competitionRepository.competitionAttendees(userId, compId);
+  }
 
   competitionTeamDetails = async (userId: number, compId: number) => {
     const roles = await this.competitionRoles(userId, compId);
@@ -123,6 +153,15 @@ export class CompetitionService {
     }
 
     return await this.competitionRepository.competitionTeamDetails(userId, compId);
+  }
+
+  competitionStudentDetails = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+    }
+
+    return await this.competitionRepository.competitionStudentDetails(userId, compId);
   }
 
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
@@ -167,7 +206,7 @@ export class CompetitionService {
     const userTypeObject = await this.userRepository.userType(userId);
     
     if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
-      throw COMPETITION_ADMIN_REQUIRED;
+      throw new ServiceError(ServiceError.Auth, 'User is not a system admin.');
     }
 
     // const uniqueNames = this.checkUniqueSiteNames(competition);
@@ -230,18 +269,18 @@ export class CompetitionService {
   competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
     const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw COMPETITION_STUDENT_REQUIRED;
+      throw new DbError(DbError.Auth, 'User is not a student.');
     }
 
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {
-      throw COMPETITION_NOT_FOUND;
+      throw new DbError(DbError.Query, 'Competition does not exist.');
     }
 
     competitionUserInfo.competitionId = competitionId;
     const competitionRoles = await this.competitionRepository.competitionRoles(competitionUserInfo.userId, competitionId);
     if (competitionRoles.length > 0) { // either they are already a participant or a staff
-      throw COMPETITION_USER_REGISTERED;
+      throw new DbError(DbError.Query, 'User is already a participant in this competition.');
     }
     competitionUserInfo.competitionRoles = [CompetitionUserRole.PARTICIPANT];
     await this.competitionRepository.competitionStudentJoin(competitionUserInfo);
@@ -278,6 +317,80 @@ export class CompetitionService {
     await this.notificationRepository.notificationWithdrawal(userId, compId, result.competitionName, result.teamId, result.teamName);
 
     return result.competitionCode;
+  }
+
+  competitionApproveTeamAssignment = async (userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
+    // Checks for if user is admin or coach is moved to repository layer
+
+    // Approve team assignments
+    await this.competitionRepository.competitionApproveTeamAssignment(userId, compId, approveIds);
+
+    // Notify team members
+    await this.notificationRepository.notificationApproveTeamAssignment(compId, approveIds);
+
+    return {};
+  }
+
+  competitionRequestTeamNameChange = async (userId: number, compId: number, newTeamName: string): Promise<{} | undefined> => {
+    // Check if user is a participant
+    const userTypeObject = await this.userRepository.userType(userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
+      throw new ServiceError(ServiceError.Auth, "User is not a student.");
+    }
+
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+    }
+
+    // Request team name change
+    const teamId = await this.competitionRepository.competitionRequestTeamNameChange(userId, compId, newTeamName);
+
+    // Notify coach
+    await this.notificationRepository.notificationRequestTeamNameChange(teamId, compId);
+
+    return {};
+  }
+
+  competitionApproveTeamNameChange = async (userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+    // Approve or reject team name change
+    await this.competitionRepository.competitionApproveTeamNameChange(userId, compId, approveIds, rejectIds);
+
+    // Notify team members
+    await this.notificationRepository.notificationApproveTeamNameChange(compId, approveIds, rejectIds);
+
+    return {};
+  }
+
+  competitionRequestSiteChange = async (userId: number, compId: number, newSiteId: number): Promise<{} | undefined> => {
+    // Check if user is a participant
+    const userTypeObject = await this.userRepository.userType(userId);
+    if (userTypeObject.type !== UserType.STUDENT) {
+      throw new ServiceError(ServiceError.Auth, "User is not a student.");
+    }
+  
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+    }
+  
+    // Request site ID change
+    const teamId = await this.competitionRepository.competitionRequestSiteChange(userId, compId, newSiteId);
+  
+    // Notify coach
+    await this.notificationRepository.notificationRequestSiteChange(teamId, compId);
+  
+    return {};
+  }
+
+  competitionApproveSiteChange = async (userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+    // Approve or reject site ID change
+    await this.competitionRepository.competitionApproveSiteChange(userId, compId, approveIds, rejectIds);
+  
+    // Notify team members
+    await this.notificationRepository.notificationApproveSiteChange(compId, approveIds, rejectIds);
+  
+    return {};
   }
 
   competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {

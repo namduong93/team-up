@@ -27,12 +27,14 @@ const Label = styled.label`
   margin-top: 10px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
+  color: ${({ theme}) => theme.fonts.colour};
 `;
 
 const Descriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
-  color: ${({ theme }) => theme.fonts.descriptor};
+  color: ${({ theme }) => theme.colours.filterText};
+  width: 100%;
 `;
 
 const Asterisk = styled.span`

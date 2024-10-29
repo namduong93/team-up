@@ -29,6 +29,13 @@ export const darkTheme: DefaultTheme = {
     progressEnd: "#283e6c",
     progressStart: "#6688D2",
     progressBackground: "#EBEBEB",
+    cardBackground: "#2C3A47",
+  },
+  themes: {
+    light: "#EBEBEB",
+    dark: "#333333",
+    christmas:  "#2A7A47",
+    colourblind: "#4363D8",
   },
   teamView: {
     ...defaultTheme.teamView,
@@ -60,6 +67,8 @@ export const darkTheme: DefaultTheme = {
   },
   staffActions: {
     ...defaultTheme.staffActions,
+    code: "#333333",
+    codeBorder: "#FFFFFF",
     competition: "#6688D2",
     competitionBorder: "#DFE8FB",
     registration: "#EA9C0D",
