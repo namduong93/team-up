@@ -26,9 +26,9 @@ export interface CompetitionRepository {
   competitionStudentWithdraw(userId: number, compId: number): Promise<CompetitionWithdrawalReturnObject | undefined>;
 
   competitionRequestTeamNameChange(userId: number, compId: number, newTeamName: string): Promise<number>;
-  competitionApproveTeamNameChange(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
+  competitionApproveTeamNameChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;
-  competitionApproveSiteChange(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
+  competitionApproveSiteChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   
   competitionStaffJoinCoach(code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined>;
   competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;

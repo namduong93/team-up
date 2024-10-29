@@ -58,7 +58,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         LEFT JOIN competition_sites AS cs_pending ON cs_pending.id = ct.pending_site_attending_id
         WHERE ct.competition_id = $1 AND ct.site_attending_id = (SELECT site_id FROM competition_users WHERE user_id = $2 LIMIT 1);`, [compId, userId]
       );
-      
+
       return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
     }
   
@@ -579,7 +579,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return teamId;
   }
 
-  competitionApproveTeamNameChange = async(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
+  competitionApproveTeamNameChange = async(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
     // Verify if competition exists
     const competitionExistQuery = `
       SELECT 1
@@ -597,6 +597,34 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     if (duplicateIds.length > 0) {
       throw new DbError(DbError.Query, "Duplicate team IDs found in team name approve and reject lists.");
     }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      // Check if the coach is coaching all the teams in approveIds
+      const coachCheckQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+      AND competition_coach_id = (
+        SELECT id FROM competition_users
+        WHERE user_id = $3
+        AND competition_id = $2
+      )
+      `;
+      const coachCheckResult = await this.pool.query(coachCheckQuery, [approveIds, compId, userId]);
+
+      if (coachCheckResult.rowCount !== approveIds.length) {
+        throw new DbError(DbError.Auth, "Coach is not coaching some of the teams in the provided approved IDs.");
+      }
+    }
     
     // Update the team name if the name change is approved
     if (approveIds.length > 0) {
@@ -607,12 +635,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         AND competition_id = $2
       `;
       const approveResult = await this.pool.query(approveQuery, [approveIds, compId]);
-  
+
       // If no rows were updated, it implies that no matching records were found
       if (approveResult.rowCount === 0) {
         throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
       }
-    } 
+    }
     
     // If there are rejected team IDs, batch update to clear pending_name only
     if (rejectIds.length > 0) {
@@ -668,7 +696,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return result.rows[0].id; // Return the team ID
   }
 
-  competitionApproveSiteChange = async(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
+  competitionApproveSiteChange = async(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
     // Verify if competition exists
     const competitionExistQuery = `
       SELECT 1
@@ -685,6 +713,34 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const duplicateIds = approveIds.filter(id => rejectIds.includes(id));
     if (duplicateIds.length > 0) {
       throw new DbError(DbError.Query, "Duplicate team IDs found in site ID approve and reject lists.");
+    }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      // Check if the coach is coaching all the teams in approveIds
+      const coachCheckQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+      AND competition_coach_id = (
+        SELECT id FROM competition_users
+        WHERE user_id = $3
+        AND competition_id = $2
+      )
+      `;
+      const coachCheckResult = await this.pool.query(coachCheckQuery, [approveIds, compId, userId]);
+
+      if (coachCheckResult.rowCount !== approveIds.length) {
+        throw new DbError(DbError.Auth, "Coach is not coaching some of the teams in the provided approved IDs.");
+      }
     }
 
     // Update the site ID if the change is approved
