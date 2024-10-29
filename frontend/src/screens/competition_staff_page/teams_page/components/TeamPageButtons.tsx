@@ -1,13 +1,14 @@
 import { FC, SetStateAction, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaDownload, FaFileCsv, FaFilePdf, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
+import { FaDownload, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../../utility/request";
 import { TeamDetails } from "./TeamCard";
 import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
+import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -15,18 +16,21 @@ export interface PageButtonsProps {
   teamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
   editingNameStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+  registeredTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
   universityOption: { value: string, label: string };
 }
 
-// interface TeamsPerSiteData {
-//   siteName: string; // e.g. "CSE Building K17"
-//   teams: TeamDetails[]; // details of each team attending this site. need: {teamName, members: {name, email}}.
-// };
+interface TeamsPerSiteData {
+  siteName: string; // e.g., "CSE Building K17"
+  teams: { 
+    teamName: string; 
+    students: { name: string; email: string }[]; 
+  }[]; // List of teams per site
+};
 
-// interface TeamsDownload {
-//   format: "PDF" | "CSV"; // format of the downloaded content
-//   teamsToRegister: TeamsPerSiteData[]; // for each site, list the team details
-// };
+interface TeamsDownloadComponentProps {
+  teamList: TeamDetails[]; // List of all teams
+};
 
 // interface tShirtData {
 //   gender: "Male" | "Female" | "Unisex"; // cut of the t-shirt
@@ -126,22 +130,58 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
   const [isDownloading, setIsDownloading] = useState(false);
   
-
   const downloadCSV = async () => {
-    // get team IDs of registered teams
-    console.log(registeredTeamIds)
-
-    // from team IDs, get team details for each team
-
-    // format the details for each team into string format
-    
-    // generate and download csv here
-    console.log('downloading csv');
+    // Filter only 'Unregistered' teams
+    // const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
+  
+    // // Group teams by site location
+    // const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
+    //   const siteName = team.teamSite || "Unknown Site"; // Default to 'Unknown Site' if missing
+    //   const existingSite = acc.find((site) => site.siteName === siteName);
+  
+    //   const mappedTeam = {
+    //     teamName: team.teamName,
+    //     students: team.students.map(({ name, email }) => ({ name, email })),
+    //   };
+  
+    //   if (existingSite) {
+    //     existingSite.teams.push(mappedTeam);
+    //   } else {
+    //     acc.push({ siteName, teams: [mappedTeam] });
+    //   }
+    //   return acc;
+    // }, [] as Array<{ 
+    //   siteName: string; 
+    //   teams: { teamName: string; students: { name: string; email: string }[] }[] 
+    // }>);
+  
+    // // Generate CSV content with the required headings
+    // let csvContent = "Site Location,Team Name,Member Name,Member Email\n";
+  
+    // teamsPerSite.forEach(({ siteName, teams }) => {
+    //   teams.forEach((team) => {
+    //     team.students.forEach((student) => {
+    //       csvContent += `${siteName},${team.teamName},${student.name},${student.email}\n`;
+    //     });
+    //   });
+    // });
+  
+    // // Create Blob and trigger CSV download
+    // const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    // const url = URL.createObjectURL(blob);
+    // const link = document.createElement("a");
+    // link.href = url;
+    // link.setAttribute("download", "unregistered_teams.csv");
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+  
+    console.log("Downloading CSV");
     return true;
-  }
+  };
 
   const downloadPDF = async () => {
-
+  
     // generate and download pdf here
     console.log('downloading pdf');
     return true;
@@ -256,7 +296,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
         <ResponsiveActionButton actionType="secondary"
           label="Download CSV"
           question="Are you sure you would like to register these teams?"
-          icon={<FaFileCsv />}
+          icon={<GrDocumentCsv />}
           handleSubmit={downloadCSV}
         />
       </div>
