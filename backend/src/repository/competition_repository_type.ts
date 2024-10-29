@@ -25,6 +25,7 @@ export interface CompetitionRepository {
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined>;
   competitionStudentWithdraw(userId: number, compId: number): Promise<CompetitionWithdrawalReturnObject | undefined>;
 
+  competitionApproveTeamAssignment(userId: number, compId: number, approveIds: Array<number>): Promise<{}>;
   competitionRequestTeamNameChange(userId: number, compId: number, newTeamName: string): Promise<number>;
   competitionApproveTeamNameChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;

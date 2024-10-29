@@ -172,6 +172,8 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
+  
+  
   notificationApproveSiteChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
     // Get the competition name
     const competitionNameQuery = `
@@ -181,7 +183,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     `;
     const competitionNameResult = await this.pool.query(competitionNameQuery, [compId]);
     const competitionName = competitionNameResult.rows[0]?.name;
-  
+
     // Notification message for approvals
     if (approveIds.length > 0) {
       const approvalMessage = `Your coach has approved your site change for competition ${competitionName}.`;
@@ -194,7 +196,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       `;
       await this.pool.query(approvalNotificationQuery, [compId, approveIds, approvalMessage]);
     }
-  
+
     // Notification message for rejections
     if (rejectIds.length > 0) {
       const rejectionMessage = `Your coach has rejected your site change for competition ${competitionName}.`;
@@ -207,7 +209,34 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       `;
       await this.pool.query(rejectionNotificationQuery, [compId, rejectIds, rejectionMessage]);
     }
+
+    return {};
+  }
+
   
+  notificationApproveTeamAssignment = async(compId: number, approveIds: Array<number>): Promise<{}> => {
+    // Get the competition name
+    const competitionNameQuery = `
+      SELECT name 
+      FROM competitions 
+      WHERE id = $1
+    `;
+    const competitionNameResult = await this.pool.query(competitionNameQuery, [compId]);
+    const competitionName = competitionNameResult.rows[0]?.name;
+
+    // Notification message all team members
+    if (approveIds.length > 0) {
+      const approvalMessage = `You have been assigned to a team for competition ${competitionName}.`;
+      const approvalNotificationQuery = `
+        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+        SELECT participant AS user_id, $3, 'teamStatus'::notification_type_enum, $1, id AS team_id, NOW()
+        FROM competition_teams, unnest(participants) AS participant
+        WHERE competition_id = $1 
+        AND id = ANY($2::int[])
+      `;
+      await this.pool.query(approvalNotificationQuery, [compId, approveIds, approvalMessage]);
+    }
+
     return {};
   }
 
@@ -233,5 +262,5 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     });
 
     return parsedNotifications;
-  }
+  }  
 }

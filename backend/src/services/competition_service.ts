@@ -319,6 +319,18 @@ export class CompetitionService {
     return result.competitionCode;
   }
 
+  competitionApproveTeamAssignment = async (userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
+    // Checks for if user is admin or coach is moved to repository layer
+
+    // Approve team assignments
+    await this.competitionRepository.competitionApproveTeamAssignment(userId, compId, approveIds);
+
+    // Notify team members
+    await this.notificationRepository.notificationApproveTeamAssignment(compId, approveIds);
+
+    return {};
+  }
+
   competitionRequestTeamNameChange = async (userId: number, compId: number, newTeamName: string): Promise<{} | undefined> => {
     // Check if user is a participant
     const userTypeObject = await this.userRepository.userType(userId);

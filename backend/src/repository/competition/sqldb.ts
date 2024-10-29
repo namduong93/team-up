@@ -545,6 +545,82 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { competitionCode, competitionName, teamId, teamName };
   }
 
+  competitionApproveTeamAssignment = async(userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
+    // No team to approve
+    if (approveIds.length < 1) {
+      throw new DbError(DbError.Query, "No team to approve.");
+    }
+    
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Check if any of the ids in approveIds has team_status as 'Registered'
+    const registeredTeamsQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[]) 
+      AND competition_id = $2 
+      AND team_status = 'Registered'::competition_team_status
+    `;
+    const registeredTeamsResult = await this.pool.query(registeredTeamsQuery, [approveIds, compId]);
+
+    if (registeredTeamsResult.rowCount > 0) {
+      throw new DbError(DbError.Query, "One or more teams are already registered into ICPC system.");
+    }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      // Check if the coach is coaching all the teams in approveIds
+      const coachCheckQuery = `
+      SELECT id
+      FROM competition_teams
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+      AND competition_coach_id = (
+        SELECT id FROM competition_users
+        WHERE user_id = $3
+        AND competition_id = $2
+      )
+      `;
+      const coachCheckResult = await this.pool.query(coachCheckQuery, [approveIds, compId, userId]);
+      
+      if (coachCheckResult.rowCount !== approveIds.length) {
+        throw new DbError(DbError.Auth, "Coach is not coaching some of the teams in the provided approved IDs.");
+      }
+    }
+
+    const approveQuery = `
+      UPDATE competition_teams
+      SET team_status = 'Unregistered'::competition_team_status
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+    `;
+    const approveResult = await this.pool.query(approveQuery, [approveIds, compId]);
+
+    // If no rows were updated, it implies that no matching records were found
+    if (approveResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+    }
+
+    return {};
+  }
+
   competitionRequestTeamNameChange = async(userId: number, compId: number, newTeamName: string): Promise<number> => {
     // Check if the user is a valid member of this team
     const teamMemberCheckQuery = `
