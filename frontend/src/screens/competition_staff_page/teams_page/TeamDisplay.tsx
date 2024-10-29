@@ -115,6 +115,13 @@ export const TeamDisplay: FC = () => {
     searchedCompetitions = sortedTeamList.map((team) => { return { item: team } });
   }
 
+  // handler based on teamList (all the teams) for moving members around (DOUBLE CLICK)
+  // oldTeam.members = []
+  // newTeam.memebrs = []
+
+  // fitler team list remove those 2 teams, add them, setTeamList
+
+  // and setTeamList
 
   const location = useLocation();
   const [isCreationSuccessPopUpOpen, setIsCreationSuccessPopUpOpen] = useState(false);
@@ -161,6 +168,7 @@ export const TeamDisplay: FC = () => {
       {searchedCompetitions.map(({item: teamDetails}, index) => {
         return (
         <TeamCard
+        // handler to take in memberId and newTeamID (updates list of teams)
           teamIdsState={[approveTeamIds, setApproveTeamIds]}
           rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
           isEditingStatus={isEditingStatus}

@@ -17,6 +17,7 @@ const Label = styled.label`
   margin-top: 10px;
   font-weight: bold;
   font-size: 18px;
+  color: ${({ theme}) => theme.fonts.colour};
 `;
 
 const Asterisk = styled.span`
@@ -44,6 +45,7 @@ const RadioButtonLabel = styled.label`
   flex: 1; // Allow labels to take equal space within the OptionsContainer
   font-size: 16px;
   cursor: pointer;
+  color: ${({ theme}) => theme.fonts.colour};
 `;
 
 const RadioInput = styled.input`

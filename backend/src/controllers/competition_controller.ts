@@ -34,7 +34,7 @@ export class CompetitionController {
     const studentDetails = await this.competitionService.competitionStudentDetails(
       parseInt(userId as string), parseInt(compId as string));
 
-    res.json(studentDetails);
+    res.json({studentDetails});
   });
   
   competitionStaff = httpErrorHandler(async (req: Request, res: Response) => {

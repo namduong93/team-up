@@ -251,24 +251,7 @@ app.get('/competition/team/details', competitionController.competitionTeamDetail
 app.get('/competition/attendees', competitionController.competitionAttendees);
 // PARAMS: { compId }
 // RESPONSE: 
-// {
-//   name: string;
-//   email: string;
-//   preferredContact: string;
-//   image?: string;
-//   competitionBio: string;
-//   competitionLevel: string;
-//   ICPCEligible: boolean;
-//   boersenEligible: boolean;
-//   degreeYear: number;
-//   degree: string;
-//   isRemote: boolean;
-//   nationalPrizes?: string;
-//   internationalPrizes: string;
-//   codeforcesRating?: number;
-//   universityCourses: string[];
-//   pastRegional?: boolean;
-// }
+// { studentDetails: {...} }
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
 
