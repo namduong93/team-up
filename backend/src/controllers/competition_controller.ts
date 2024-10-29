@@ -119,7 +119,7 @@ export class CompetitionController {
     const competitionId = req.query.compId;
     const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
 
-    res.json(competitionDetails);
+    res.json({competition: competitionDetails});
 
     return;
   });

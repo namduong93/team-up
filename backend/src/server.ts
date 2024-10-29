@@ -134,7 +134,7 @@ app.put('/competition/system_admin/update', competitionController.competitionSys
 
 // Get a competition's details
 // PARAMS: { compId: number }
-// RESPONSE: { competitionDetails: CompetitionDetails}
+// RESPONSE: { competition: CompetitionDetails}
 app.get('/competition/details', competitionController.competitionGetDetails)
 
 // Throw status codes for when getting the competition code fails
