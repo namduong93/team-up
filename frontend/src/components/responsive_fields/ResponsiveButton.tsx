@@ -68,6 +68,7 @@ export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionTy
   gap: 10px;
   align-items: center;
   transition: background-color 0.3s ease, color 0.3s ease;
+  color: ${({ theme }) => theme.fonts.colour};
 
   &:hover {
     cursor: pointer;
