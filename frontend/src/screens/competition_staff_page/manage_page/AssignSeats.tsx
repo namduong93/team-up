@@ -91,7 +91,7 @@ const mockTeams: TeamDetails[] = [
     teamNameApproved: true,
     compName: "",
     teamSite: "",
-    teamLevel: "",
+    teamLevel: "A",
     startDate: new Date(),
     coach: {
       name: "",
@@ -377,6 +377,7 @@ interface SeatAssignment {
   teamSeat: string; // e.g. "Bongo01"
   teamId: string; // ID of team who have been assigned that seat
   teamName: string; // name of team at the assigned seat
+  teamLevel: string; // level of the team
 };
 
 interface exportSeatAssignment {
@@ -826,6 +827,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
             teamSeat: seat,
             teamId: team.teamId.toString(),
             teamName: team.teamName,
+            teamLevel: team.teamLevel,
           });
         }
       }
@@ -857,6 +859,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
               teamSeat: seat,
               teamId: team.teamId.toString(),
               teamName: team.teamName,
+              teamLevel: team.teamLevel,
             });
             assignedTeamIds.add(team.teamId); // Mark this team as assigned
           }
@@ -881,13 +884,14 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
 
     // Prepare the CSV data and add headers
     const csvRows = [];
-    csvRows.push(["Site Name", "Site Capacity", "Team ID", "Team Name", "Team Seat"].join(","));
+    csvRows.push(["Site Name", "Site Capacity", "Team Level", "Team ID", "Team Name", "Team Seat"].join(","));
 
     // Add data rows
     formattedData.teams.forEach(assignment => {
       const row = [
         formattedData.siteName,
         formattedData.siteCapacity,
+        assignment.teamLevel,
         assignment.teamId,
         assignment.teamName,
         assignment.teamSeat

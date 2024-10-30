@@ -90,6 +90,7 @@ export const TeamProfile: FC = () => {
       
       const details = response.data;
       setTeamDetails({ ...details, startDate: new Date(details.startDate) });
+      console.log(details);
     };
 
     fetchTeamDetails();
