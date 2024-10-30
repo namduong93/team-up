@@ -8,7 +8,9 @@ import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/Advanc
 import { sendRequest } from "../../../../utility/request";
 import { TeamDetails } from "./TeamCard";
 import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
-import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+import { CompetitionDetails } from "../../CompetitionPage";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -17,19 +19,9 @@ export interface PageButtonsProps {
   editingNameStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   rejectedTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
   registeredTeamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
+  teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
   universityOption: { value: string, label: string };
-}
-
-interface TeamsPerSiteData {
-  siteName: string; // e.g., "CSE Building K17"
-  teams: { 
-    teamName: string; 
-    students: { name: string; email: string }[]; 
-  }[]; // List of teams per site
-};
-
-interface TeamsDownloadComponentProps {
-  teamList: TeamDetails[]; // List of all teams
+  compDetails: CompetitionDetails;
 };
 
 // interface tShirtData {
@@ -82,6 +74,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
   editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
   registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
+  teamListState: [teamList, setTeamList],
+  compDetails,
 }) => {
   
   const theme = useTheme();
@@ -131,61 +125,188 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const [isDownloading, setIsDownloading] = useState(false);
   
   const downloadCSV = async () => {
+    console.log(teamList);
     // Filter only 'Unregistered' teams
     // const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
-  
-    // // Group teams by site location
-    // const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
-    //   const siteName = team.teamSite || "Unknown Site"; // Default to 'Unknown Site' if missing
-    //   const existingSite = acc.find((site) => site.siteName === siteName);
-  
-    //   const mappedTeam = {
-    //     teamName: team.teamName,
-    //     students: team.students.map(({ name, email }) => ({ name, email })),
-    //   };
-  
-    //   if (existingSite) {
-    //     existingSite.teams.push(mappedTeam);
-    //   } else {
-    //     acc.push({ siteName, teams: [mappedTeam] });
-    //   }
-    //   return acc;
-    // }, [] as Array<{ 
-    //   siteName: string; 
-    //   teams: { teamName: string; students: { name: string; email: string }[] }[] 
-    // }>);
-  
-    // // Generate CSV content with the required headings
-    // let csvContent = "Site Location,Team Name,Member Name,Member Email\n";
-  
-    // teamsPerSite.forEach(({ siteName, teams }) => {
-    //   teams.forEach((team) => {
-    //     team.students.forEach((student) => {
-    //       csvContent += `${siteName},${team.teamName},${student.name},${student.email}\n`;
-    //     });
-    //   });
-    // });
-  
-    // // Create Blob and trigger CSV download
-    // const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    // const url = URL.createObjectURL(blob);
-    // const link = document.createElement("a");
-    // link.href = url;
-    // link.setAttribute("download", "unregistered_teams.csv");
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
-  
-    console.log("Downloading CSV");
+    const unregisteredTeams = teamList;
+
+    // Group teams by site location and level
+    const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
+        const siteName = team.teamSite || "Unknown Site"; // Default to 'Unknown Site' if missing
+        const teamLevel = team.teamLevel || "Unknown Level"; // Default to 'Unknown Level' if missing
+        const existingSite = acc.find((site) => site.siteName === siteName);
+
+        const mappedTeam = {
+            teamName: team.teamName,
+            level: teamLevel,
+            students: team.students.map(({ name, email }) => ({ name, email })),
+        };
+
+        if (existingSite) {
+            const existingLevelGroup = existingSite.levelGroups.find(levelGroup => levelGroup.level === teamLevel);
+            
+            if (existingLevelGroup) {
+                existingLevelGroup.teams.push(mappedTeam);
+            } else {
+                existingSite.levelGroups.push({ level: teamLevel, teams: [mappedTeam] });
+            }
+        } else {
+            acc.push({
+                siteName,
+                levelGroups: [{ level: teamLevel, teams: [mappedTeam] }]
+            });
+        }
+        return acc;
+    }, [] as Array<{
+        siteName: string;
+        levelGroups: { level: string; teams: { teamName: string; students: { name: string; email: string }[] }[] }[]
+    }>);
+
+    // Sort levels by A then B
+    teamsPerSite.forEach(site => {
+        site.levelGroups.sort((a, b) => a.level.localeCompare(b.level));
+    });
+
+    // Generate CSV
+    let csvContent = "Site Location,Team Level,Team Name,Member Name,Member Email\n";
+
+    teamsPerSite.forEach(({ siteName, levelGroups }) => {
+        levelGroups.forEach(({ level, teams }) => {
+            teams.forEach((team) => {
+                const teamName = team.teamName.split(',')[0];
+                team.students.forEach((student) => {
+                    csvContent += `${siteName},${level},${teamName},${student.name},${student.email}\n`;
+                });
+            });
+        });
+    });
+
+    // Create Blob and trigger CSV download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `unregistered_teams_${compDetails.name}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     return true;
   };
 
   const downloadPDF = async () => {
-  
-    // generate and download pdf here
-    console.log('downloading pdf');
+    console.log(teamList);
+    // Filter only 'Unregistered' teams
+    // const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
+    const unregisteredTeams = teamList; // Use all teams for now
+
+    // Grouping teams by site location and level
+    const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
+        const siteName = team.teamSite || "Unknown Site";
+        const teamLevel = team.teamLevel || "Unknown Level"; // Assuming 'teamLevel' is a property in your team object
+        const existingSite = acc.find((site) => site.siteName === siteName);
+
+        const mappedTeam = {
+            teamName: team.teamName,
+            level: teamLevel,
+            students: team.students.map(({ name, email }) => ({ name, email })),
+        };
+
+        if (existingSite) {
+            const existingLevelGroup = existingSite.levelGroups.find(levelGroup => levelGroup.level === teamLevel);
+
+            if (existingLevelGroup) {
+                existingLevelGroup.teams.push(mappedTeam);
+            } else {
+                existingSite.levelGroups.push({ level: teamLevel, teams: [mappedTeam] });
+            }
+        } else {
+            acc.push({
+                siteName,
+                levelGroups: [{ level: teamLevel, teams: [mappedTeam] }]
+            });
+        }
+        return acc;
+    }, [] as Array<{
+        siteName: string;
+        levelGroups: { level: string; teams: { teamName: string; students: { name: string; email: string }[] }[] }[]
+    }>);
+
+    // Sort levels to display Level A first and then Level B
+    teamsPerSite.forEach(site => {
+        site.levelGroups.sort((a, b) => {
+            if (a.level === "Level A" && b.level !== "Level A") return -1;
+            if (a.level === "Level B" && b.level === "Level A") return 1;
+            return 0; // If both are the same or not Level A or B, maintain original order
+        });
+    });
+
+    // Initialize jsPDF
+    const doc = new jsPDF();
+    let yPos = 10;
+
+    // Add title to the PDF
+    doc.setFontSize(16);
+    doc.text("Team Registration Data Report", 10, yPos);
+    yPos += 10;
+
+    teamsPerSite.forEach(({ siteName, levelGroups }) => {
+        // Add site location header
+        doc.setFontSize(12);
+        doc.text(`Site location: ${siteName}`, 10, yPos);
+        yPos += 10;
+
+        levelGroups.forEach(({ level, teams }) => {
+            // Add level header
+            doc.setFontSize(12);
+            doc.text(`Level: ${level}`, 10, yPos);
+            yPos += 5;
+
+            teams.forEach((team) => {
+                // Add a new table for each team
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (doc as any).autoTable({
+                    startY: yPos,
+                    head: [
+                        [{ content: `Team name:`, styles: { halign: 'left' } }, { content: team.teamName, styles: { halign: 'right' } }]
+                    ],
+                    body: team.students.map((student) => [
+                        { content: `${student.name}`, styles: { halign: 'left' } },
+                        { content: `${student.email}`, styles: { halign: 'right' } },
+                    ]),
+                    theme: "grid",
+                    styles: { fontSize: 10 },
+                    columnStyles: {
+                        0: { cellWidth: 'auto' },
+                        1: { cellWidth: 'auto' }
+                    },
+                    headStyles: {
+                      fillColor: [102, 136, 210],
+                      textColor: [255, 255, 255],
+                      fontSize: 12
+                    },
+                    margin: { left: 10, right: 10 },
+                });
+
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                yPos = (doc as any).lastAutoTable.finalY + 10;
+                if (yPos + 20 > doc.internal.pageSize.height) {
+                    doc.addPage();
+                    yPos = 10; // Reset Y position for the new page
+                }
+            });
+
+            yPos += 10;
+        });
+
+        yPos += 20;
+    });
+
+    // Save the PDF
+    doc.save(`unregistered_teams_report_${compDetails.name}.pdf`);
+    console.log("PDF generated successfully.");
     return true;
-  }
+  };
 
   const enableDownloading = () => {
     setIsDownloading(true);
@@ -306,7 +427,6 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
           label="Download PDF"
           question="Are you sure you would like to register these teams?"
           icon={<GrDocumentPdf />}
-          style={{ backgroundColor: theme.colours.confirm }}
           handleSubmit={downloadPDF}
         />
       </div>

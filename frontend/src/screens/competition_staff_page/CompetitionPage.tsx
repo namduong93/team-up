@@ -206,6 +206,8 @@ export const CompetitionPage: FC = () => {
               editingNameStatusState={[isEditingNameStatus, setIsEditingNameStatus]}
               rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
               registeredTeamIdsState={[registeredTeamIds, setRegisteredTeamIds]}
+              teamListState={[teamList, setTeamList]}
+              compDetails={compDetails}
               />}
             
             {(roles.includes(CompetitionRole.Admin)) &&
@@ -257,13 +259,13 @@ export const CompetitionPage: FC = () => {
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
           registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
+          teamListState: [teamList, setTeamList],
           universityOption,
 
           setFilterOptions, setSortOptions, setEnableTeamButtons,
           studentsState: [students, setStudents],
           attendeesListState: [attendeesList, setAttendeesList],
           staffListState: [staffList, setStaffList],
-          teamListState: [teamList, setTeamList],
           compDetails,
         }}/>
 
