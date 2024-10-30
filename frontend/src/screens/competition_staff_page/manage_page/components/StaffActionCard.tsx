@@ -1,12 +1,12 @@
-import { FC, Fragment, useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
-import { FaFileSignature, FaChair, FaEdit, FaChevronLeft } from "react-icons/fa";
-import { ManageSite } from "../ManageSite";
-
-type ActionType = "competition" | "registration" | "seat" | "contact" | "capacity";
+import { FaFileSignature, FaChair, FaEdit, FaChevronLeft, FaCopy } from "react-icons/fa";
+import { AssignSeats } from "../AssignSeats";
+type ActionType = "code" | "competition" | "registration" | "seat" | "contact" | "capacity";
 
 interface StaffActionCardProps {
   staffRoles: string[];
+  compCode: string;
 };
 
 interface ActionCardProps {
@@ -25,7 +25,7 @@ const StandardContainerDiv = styled.div`
 
 const ActionsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -38,14 +38,15 @@ const ActionCard = styled.button<ActionCardProps>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   max-width: 280px;
   height: 100%;
   width: 100%;
   aspect-ratio: 1;
   box-sizing: border-box;
   background-color: ${({ theme, $actionType }) => theme.staffActions[$actionType]};
-  border: ${({ theme, $actionType }) => `1px solid ${theme.staffActions[`${$actionType}Border`]}`};
+  border: ${({ theme, $actionType }) =>
+    `1px solid ${theme.staffActions[`${$actionType}Border`]}`};
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -58,7 +59,7 @@ const ActionCard = styled.button<ActionCardProps>`
 `;
 
 const CardIcon = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-bottom: 10px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
@@ -69,39 +70,15 @@ const CardText = styled.p`
   margin: 0;
 `;
 
-const Modal = styled.div<{ $isOpen: boolean }>`
-  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-`;
-
-const Overlay = styled.div<{ $isOpen: boolean }>`
-  display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-`;
-
 const BackButton = styled.button`
   color: ${({ theme }) => theme.colours.primaryDark};
   cursor: pointer;
   background: none;
   border: none;
   padding: 0;
-  font-size: 1.5rem;
+  font-size: 1rem;
   display: flex;
-  align-items: center;
+  align-self: flex-start;
   gap: 5px;
   margin: 10px;
 
@@ -110,11 +87,53 @@ const BackButton = styled.button`
   }
 `;
 
-export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
-  const [modalOpen, setModalOpen] = useState<string | null>(null);
+const AssignSeatsPage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+`;
+
+const Code = styled.div`
+  font-size: 1rem;
+  font-style: ${({ theme }) => theme.fonts.style};
+  color: ${({ theme }) => theme.fonts.descriptor};
+  background: ${({ theme }) => theme.colours.sidebarBackground};
+  border-radius: 12px;
+  width: 80%;
+  max-width: 400px;
+  height: 15%;
+  max-height: 25px;
+  text-align: center;
+  word-wrap: break-word;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+`;
+const CopyCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+`;
+
+const CodeCardText = styled(CardText)`
+  font-size: 1.25rem;
+`;
+
+export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles, compCode }) => {
   const [showManageSite, setShowManageSite] = useState(false);
 
   const actions = [
+    { type: "code" as ActionType, icon: FaCopy, text: `Copy Competition Code`, roles: ["Admin", "Coach", "Site-Coordinator"] },
     { type: "competition" as ActionType, icon: FaEdit, text: "Edit Competition Details", roles: ["Admin"] },
     { type: "registration" as ActionType, icon: FaFileSignature, text: "Update Registration Form", roles: ["Admin", "Coach"] },
     { type: "seat" as ActionType, icon: FaChair, text: "Assign Seats to Teams", roles: ["Admin", "Site-Coordinator"] },
@@ -127,47 +146,58 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({ staffRoles }) => {
     action.roles.some(role => staffRoles.includes(role))
   );
 
-  const handleAction = (actionType: string, actionText: string) => {
+  const handleActionClick = (actionType: ActionType) => {
     if (actionType === "seat") {
       setShowManageSite(true);
-    } else {
-      setModalOpen(actionText);
+    }
+  };
+
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(compCode);
+      alert("Competition code copied to clipboard!");
+    } catch (err) {
+      alert(err);
     }
   };
 
   return (
     <StandardContainerDiv>
-      {showManageSite && (
-        <>
-          <BackButton onClick={() => setShowManageSite(false)}><FaChevronLeft /> Back</BackButton>
-          <ManageSite />
-        </>
-      )}
-
-      {!showManageSite &&
+      {showManageSite ? (
+        <AssignSeatsPage>
+          <BackButton onClick={() => setShowManageSite(false)}>
+            <FaChevronLeft /> Back
+          </BackButton>
+          <AssignSeats siteName="CSE Building K17" siteCapacity={50}/>
+        </AssignSeatsPage>
+      ) : (
         <ActionsContainer>
           {filteredActions.map((action, index) => (
             <ActionCard
               key={index}
-              onClick={() => handleAction(action.type, action.text)}
+              onClick={() =>
+                action.type === "code" ? handleCopyCode() : handleActionClick(action.type)
+              }
               $actionType={action.type}
             >
-              <CardIcon as={action.icon} />
-              <CardText>{action.text}</CardText>
+              {action.type === "code" ? (
+                <CopyCard>
+                  <CardIcon as={action.icon} />
+                  <CodeCardText>{action.text}</CodeCardText>
+                  <Code>
+                    <p>{compCode}</p>
+                  </Code>
+                </CopyCard>
+              ) : (
+                <>
+                  <CardIcon as={action.icon} />
+                  <CardText>{action.text}</CardText>
+                </>
+              )}
             </ActionCard>
           ))}
         </ActionsContainer>
-      }
-
-      {filteredActions.map((action, index) => (
-        <Fragment key={index}>
-          <Overlay $isOpen={modalOpen === action.text} onClick={() => setModalOpen(null)} />
-          <Modal $isOpen={modalOpen === action.text}>
-            <h2>{action.text}</h2>
-            <button onClick={() => setModalOpen(null)}>Close</button>
-          </Modal>
-        </Fragment>
-      ))}
+      )}
     </StandardContainerDiv>
   );
 };

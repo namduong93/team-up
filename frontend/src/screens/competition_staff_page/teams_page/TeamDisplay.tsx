@@ -2,11 +2,11 @@ import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useLocation, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
-import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { TeamCard, TeamDetails } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
+import { CompetitionRole } from "../CompetitionPage";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;
@@ -18,12 +18,12 @@ const TeamCardGridDisplay = styled.div`
   overflow: auto;
 `;
 
-export const TEAM_DISPLAY_SORT_OPTIONS = [
+const TEAM_DISPLAY_SORT_OPTIONS = [
   { label: "Default", value: "original" },
   { label: "Alphabetical (Name)", value: "name" },
 ];
 
-export const TEAM_DISPLAY_FILTER_OPTIONS = {
+const TEAM_DISPLAY_FILTER_OPTIONS = {
   Status: ['Pending', 'Unregistered', 'Registered'],
   "Team Name Approval": ['Approved', 'Unapproved'], 
 };
@@ -53,38 +53,21 @@ export const TeamDisplay: FC = () => {
           editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
           rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
-          universityOption,
+
+          teamListState: [teamList, setTeamList],
+          universityOption, roles,
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           setFilterOptions, setSortOptions, setEnableTeamButtons } = useCompetitionOutletContext('teams');
-
-  const [teamList, setTeamList] = useState<Array<TeamDetails>>([]);
-
 
   useEffect(() => {
     setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
     setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
-    setEnableTeamButtons(true);
-
-    const fetchCompetitionTeams = async () => {
-      try {
-        const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
-        const { teamList } = response.data
-        setTeamList(teamList);
-
-      } catch (error: unknown) {
-
-      }
-
-    };
-
-    fetchCompetitionTeams();
-
-
+    setEnableTeamButtons(!roles.includes(CompetitionRole.SiteCoordinator) && true);
   }, []);
   
   const filteredTeamList = teamList.filter((team: TeamDetails) => {
     if (filters.Status) {
-      if (!filters.Status.some((status) => status.toLocaleLowerCase() === team.status)) {
+      if (!filters.Status.some((status) => status.toLocaleLowerCase() === team.status.toLocaleLowerCase())) {
         return false;
       }
     }
@@ -132,6 +115,13 @@ export const TeamDisplay: FC = () => {
     searchedCompetitions = sortedTeamList.map((team) => { return { item: team } });
   }
 
+  // handler based on teamList (all the teams) for moving members around (DOUBLE CLICK)
+  // oldTeam.members = []
+  // newTeam.memebrs = []
+
+  // fitler team list remove those 2 teams, add them, setTeamList
+
+  // and setTeamList
 
   const location = useLocation();
   const [isCreationSuccessPopUpOpen, setIsCreationSuccessPopUpOpen] = useState(false);
@@ -178,6 +168,7 @@ export const TeamDisplay: FC = () => {
       {searchedCompetitions.map(({item: teamDetails}, index) => {
         return (
         <TeamCard
+        // handler to take in memberId and newTeamID (updates list of teams)
           teamIdsState={[approveTeamIds, setApproveTeamIds]}
           rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
           isEditingStatus={isEditingStatus}

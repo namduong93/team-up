@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
-import { ProfileCard } from "./ProfileCard"; // Import the ProfileCard component
+import { ProfileCard } from "./ProfileCard";
 import { useOutletContext } from "react-router-dom";
 import { Student } from "./TeamDetails";
 
@@ -45,7 +45,7 @@ const InfoLabel = styled.h3`
   margin-bottom: 5%;
 `;
 
-const InfoLink = styled.a`
+export const InfoLink = styled.a`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.colours.primaryDark};
   text-decoration: underline;
@@ -119,7 +119,7 @@ export const TeamManage: React.FC = () => {
 
   return (
     <ManageContainer>
-      <TeamActionCard numMembers={students.length} />
+      <TeamActionCard numMembers={students.filter((s) => s.name !== null).length} />
       <InfoContainer>
         <ProfileCard
           name={coach.name}

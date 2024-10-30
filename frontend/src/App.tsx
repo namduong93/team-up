@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from './themes/defaultTheme';
 import { darkTheme } from './themes/darkTheme';
+import { christmasTheme } from './themes/christmasTheme';
+import { colourblindTheme } from './themes/colourblindTheme';
 import { Settings } from './screens/settings/Settings';
 import { MultiStepRegoFormProvider } from'./screens/authentication/registration/hooks/useMultiStepRegoForm';
 
@@ -33,115 +35,57 @@ import { InstitutionInformation } from './screens/authentication/registration/In
 import { TeamDisplay } from './screens/competition_staff_page/teams_page/TeamDisplay';
 import { StudentDisplay } from './screens/competition_staff_page/students_page/StudentDisplay';
 import { StaffManage } from './screens/competition_staff_page/manage_page/StaffManage';
+import { AttendeesDisplay } from './screens/competition_staff_page/attendees_page/AttendeesPage';
+
+const themeMap = {
+  default: defaultTheme,
+  dark: darkTheme,
+  christmas: christmasTheme,
+  colourblind: colourblindTheme,
+} as const;
 
 function App() {
-  const [theme, setTheme ] = useState(defaultTheme)
-  
-  // TODO: remove this hardcoding after demo pls
-  const name = "Name";
-  const affiliation = "UNSW";
-  const competitions = [
-    {
-        compName: 'ICPC 2024',
-        location: 'Kazakhstan',
-        compDate: new Date('2024-09-01').toISOString(),
-        roles: ['Participant'],
-        compId: 'abc1',
-        compCreationDate: new Date('2024-04-01').toISOString(),
-    },
-    {
-        compName: 'ICPC 2024',
-        location: 'USA',
-        compDate: new Date('2024-11-01').toISOString(),
-        roles: ['Coach'],
-        compId: 'abc2',
-        compCreationDate: new Date('2024-07-01').toISOString(),
-    },
-    {
-        compName: 'ICPC 2024',
-        location: 'India',
-        compDate: new Date('2024-12-01').toISOString(),
-        roles: ['Admin'],
-        compId: 'abc9',
-        compCreationDate: new Date('2024-08-01').toISOString(),
-    },
-    {
-        compName: 'ICPC 2025',
-        location: 'Kazakhstan',
-        compDate: new Date('2025-09-01').toISOString(),
-        roles: ['Participant'],
-        compId: 'abc3',
-        compCreationDate: new Date('2024-10-07').toISOString(),
-    },
-    {
-        compName: 'ICPC 2022',
-        location: 'USA',
-        compDate: new Date('2022-11-01').toISOString(),
-        roles: ['Coach', 'Site-Coordinator'],
-        compId: 'abc4',
-        compCreationDate: new Date('2022-07-01').toISOString(),
-    },
-    {
-        compName: 'ICPC 2023',
-        location: 'India',
-        compDate: new Date('2023-12-01').toISOString(),
-        roles: ['Admin'],
-        compId: 'abc5',
-        compCreationDate: new Date('2023-08-01').toISOString(),
-    },
-    {
-        compName: 'ICPC 2024',
-        location: 'Kazakhstan',
-        compDate: new Date('2024-09-01').toISOString(),
-        roles: ['Participant'],
-        compId: 'abc6',
-        compCreationDate: new Date('2024-05-01').toISOString(),
-    },
-    {
-        compName: 'ICPC 2024',
-        location: 'USA',
-        compDate: new Date('2024-11-01').toISOString(),
-        roles: ['Site-Coordinator'],
-        compId: 'abc7',
-        compCreationDate: new Date('2024-07-01').toISOString(),
-    },
-    {
-        compName: 'ICPC 2024',
-        location: 'India',
-        compDate: new Date('2024-12-01').toISOString(),
-        roles: ['Admin'],
-        compId: 'abc8',
-        compCreationDate: new Date('2024-08-01').toISOString(),
-    }
-];
-
-  
-
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [theme, setTheme ] = useState<keyof typeof themeMap>("default");
+  const currentTheme = themeMap[theme];
 
   // use local storage for theme preference (change later)
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
-    setIsDarkTheme(savedTheme === "dark" ? true : false);
-
-    // update when settings changes
+    if (savedTheme && savedTheme in themeMap) {
+      setTheme(savedTheme as keyof typeof themeMap);
+    } else {
+      setTheme("default"); // Fallback to default if not found
+    }
+    
+    // Add event listener for storage changes
     const handleStorageChange = () => {
-      const updatedTheme = localStorage.getItem("theme");
-      setIsDarkTheme(updatedTheme === "dark");
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme && savedTheme in themeMap) {
+        setTheme(savedTheme as keyof typeof themeMap);
+      } else {
+        setTheme("default"); // Fallback to default if not found
+      }
     };
 
+    // Attach event listener
     window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
 
-  useEffect(() => setTheme(isDarkTheme ? darkTheme : defaultTheme), [isDarkTheme]);
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []); 
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const [dashInfo, setDashInfo] = useDashInfo();
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={currentTheme}>
       <Router>
-        <div style={{ background: isDarkTheme ? darkTheme.background : defaultTheme.background}}>
+        <div style={{ background: currentTheme.background}}>
 
         </div>
         <Routes>
@@ -182,7 +126,7 @@ function App() {
               <Route path='teams/:compId' element={<TeamDisplay />} />
               <Route path='students/:compId' element={<StudentDisplay />} />
               <Route path='staff/:compId' element={<StaffDisplay />} />
-              <Route path='site/:compId' element={<div>Site</div>} />
+              <Route path='site/:compId' element={<AttendeesDisplay />} />
               <Route path='manage/:compId' element={<StaffManage />} />
             </Route>
 

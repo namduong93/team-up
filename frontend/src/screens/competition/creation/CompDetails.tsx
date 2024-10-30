@@ -110,12 +110,12 @@ const Asterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `
 
-interface SiteLocation {
+export interface SiteLocation {
   universityId: number;
   defaultSite: string;
 }
 
-interface OtherSiteLocation {
+export interface OtherSiteLocation {
   universityName: string;
   defaultSite: string;
 }

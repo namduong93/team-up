@@ -17,7 +17,7 @@ export enum StaffAccess {
   Rejected = 'Rejected',
 }
 
-interface StaffDetails {
+export interface StaffDetails {
   userId: number;
   name: string;
   roles: Array<CompetitionRole>;
@@ -30,7 +30,7 @@ interface StaffCardProps extends React.HTMLAttributes<HTMLDivElement> {
   staffDetails: StaffDetails;
 }
 
-const StandardContainerDiv = styled.div`
+export const StandardContainerDiv = styled.div`
   width: 20%;
   height: 100%;
   display: flex;
@@ -40,9 +40,9 @@ const StandardContainerDiv = styled.div`
   box-sizing: border-box;
 `;
 
-const StandardSpan = styled.span``;
+export const StandardSpan = styled.span``;
 
-const StaffStatus = styled.div<{ $role: CompetitionRole }>`
+export const StaffStatus = styled.div<{ $role: CompetitionRole }>`
   width: 80%;
   height: 50%;
   max-width: 175px;
@@ -246,24 +246,18 @@ const STAFF_DISPLAY_FILTER_OPTIONS = {
 export const StaffDisplay: FC = () => {
   const { compId } = useParams();
   const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
-    setFilterOptions, setSortOptions } = useCompetitionOutletContext('staff');
+    setFilterOptions, setSortOptions,
+    staffListState: [staffList, setStaffList],
+  } = useCompetitionOutletContext('staff');
 
   
 
-  const [staffList, setStaffList] = useState<Array<StaffDetails>>([]);
 
   useEffect(() => {
 
     setSortOptions(STAFF_DISPLAY_SORT_OPTIONS);
     setFilterOptions(STAFF_DISPLAY_FILTER_OPTIONS);
-    const fetchStaffList = async () => {
-      const staffResponse = await sendRequest.get<{ staff: Array<StaffDetails> }>('/competition/staff', { compId });
-      const { staff } = staffResponse.data;
-      setStaffList(staff);
-    }
-
-    fetchStaffList();
-
+    
   }, []);
 
   const filteredStaff = staffList.filter((staffDetails) => {

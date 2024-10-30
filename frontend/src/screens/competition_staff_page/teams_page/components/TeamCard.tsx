@@ -17,8 +17,13 @@ export enum Member {
 export interface TeamDetails extends ParticipantTeamDetails {
   teamId: number;
   universityId: number;
+  // member1?: MemberDetails;
+  // member2?: MemberDetails;
+  // member3?: MemberDetails;
   status: 'Pending' | 'Registered' | 'Unregistered';
   teamNameApproved: boolean;
+  // teamAlgoScore?: number;
+  // icpcEligible?: boolean;
 };
 
 interface TeamCardProps {
@@ -117,7 +122,7 @@ const TeamMatesContainerDiv = styled.div`
   gap: 16px;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.fonts.colour}
+  color: ${({ theme }) => theme.fonts.colour};
 `
 
 const TeamMemberDiv = styled.div`

@@ -44,6 +44,7 @@
     "http-errors": "^2.0.0",
     "morgan": "^1.10.0",
     "pg": "^8.13.0",
+    "pokemon": "^3.2.1",
     "postgres-array": "^3.0.2",
     "rimraf": "^6.0.1",
     "short-unique-id": "^5.2.0",

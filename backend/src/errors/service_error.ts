@@ -2,6 +2,7 @@ import { ErrorInterface } from "./error_interface";
 
 export enum ServiceErrorType {
   Auth = 'Auth',
+  NotFound = 'NotFound',
 }
 
 export class ServiceError extends Error implements ErrorInterface {
@@ -16,6 +17,7 @@ export class ServiceError extends Error implements ErrorInterface {
   }
   
   public static Auth = ServiceErrorType.Auth;
+  public static NotFound = ServiceErrorType.NotFound;
 
   public getErrorType() {
     return this.errorType;

@@ -14,6 +14,12 @@ import { StaffActionCard } from "./components/StaffActionCard";
 import { sendRequest } from "../../../utility/request";
 import { useParams } from "react-router-dom";
 import { CompetitionRole } from "../CompetitionPage";
+// import { CompetitionDetails } from "../CompetitionPage";
+import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
+
+// interface StaffManageProps extends React.HTMLAttributes<HTMLDivElement> {
+//   compDetails: CompetitionDetails;
+// };
 
 const ManageContainer = styled.div`
   width: 100%;
@@ -23,6 +29,8 @@ const ManageContainer = styled.div`
 export const StaffManage: FC = () => {
   const { compId } = useParams();
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
+  const { compDetails  } = useCompetitionOutletContext('manage'); 
+  const compCode = compDetails.code ?? "COMP1234";
 
   // Fetch the user type and set the state accordingly
   useEffect(() => {
@@ -34,9 +42,11 @@ export const StaffManage: FC = () => {
     fetchRoles();
   }, [])
 
+  // COMP CODE (TO REGO) HARDCODED FOR NOW
+  // TODO: Fetch comp code fom backend
   return (
     <ManageContainer>
-      <StaffActionCard staffRoles={roles} />
+      <StaffActionCard staffRoles={roles} compCode={compCode}/>
     </ManageContainer>
   );
 };

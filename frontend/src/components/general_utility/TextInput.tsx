@@ -59,6 +59,7 @@ const Label = styled.label`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
+  color: ${({ theme}) => theme.fonts.colour};
 `;
 
 const Asterisk = styled.span`

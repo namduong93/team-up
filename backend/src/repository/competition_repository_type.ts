@@ -1,12 +1,14 @@
-import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
 import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
+import { University } from "../models/university/university.js";
 import { UserType } from "../models/user/user.js";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails } from "../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../services/competition_service.js";
 import './competition/sqldb'
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionAttendees(userId: number, compId: number): Promise<Array<AttendeesDetails>>;
   competitionStaff(userId: number, compId: number): Promise<StaffInfo[]>;
   competitionStudents(userId: number, compId: number): Promise<StudentInfo[]>;
   competitionRoles(userId: number, compId: number): Promise<Array<CompetitionUserRole>>;
@@ -17,15 +19,19 @@ export interface CompetitionRepository {
   competitionTeamDetails(userId: number, compId: number): Promise<ParticipantTeamDetails>;
   competitionStudentDetails(userId: number, compId: number): Promise<CompetitionStudentDetails>;
 
-  competitionStudentJoin(competitionUserInfo: CompetitionUser): Promise<{} | undefined>;
+  competitionUniversityDefaultSite(competitionId: number, university: University): Promise<CompetitionSiteObject | undefined>;
+  competitionStudentJoin(competitionUserInfo: CompetitionUser, university: University): Promise<{} | undefined>;
   competitionStudentJoin1(sessionToken: string, individualInfo: IndividualTeamInfo,
     teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined>;
   competitionStudentJoin2(sessionToken: string, teamInfo: TeamDetails,
     teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined>;
   competitionStudentWithdraw(userId: number, compId: number): Promise<CompetitionWithdrawalReturnObject | undefined>;
 
-  competitionRequestTeamNameChange(userId: number, compId: number, newTeamName: string): Promise<number | undefined>;
-  competitionApproveTeamNameChange(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined>;
+  competitionApproveTeamAssignment(userId: number, compId: number, approveIds: Array<number>): Promise<{}>;
+  competitionRequestTeamNameChange(userId: number, compId: number, newTeamName: string): Promise<number>;
+  competitionApproveTeamNameChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
+  competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;
+  competitionApproveSiteChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   
   competitionStaffJoinCoach(code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined>;
   competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;
@@ -34,4 +40,5 @@ export interface CompetitionRepository {
 
   competitionIdFromCode(code: string): Promise<number | undefined>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined>;
+  competitionAlgorithm(compId: number, userId: number): Promise<{} | undefined>;
 }
