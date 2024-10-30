@@ -22,6 +22,8 @@ export interface TeamDetails extends ParticipantTeamDetails {
   // member3?: MemberDetails;
   status: 'Pending' | 'Registered' | 'Unregistered';
   teamNameApproved: boolean;
+  // teamAlgoScore?: number;
+  // icpcEligible?: boolean;
 };
 
 interface TeamCardProps {
