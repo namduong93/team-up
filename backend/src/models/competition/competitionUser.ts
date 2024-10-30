@@ -39,8 +39,9 @@ export interface CompetitionStudentDetails {
   pastRegional?: boolean;
 }
 
-export interface CompetitionAlgorithmStudentDetails {
+export interface CompetitionAlgoStudentDetails {
   id?: number;
+  userId: number;
   preferred_contact?: string;
   competitionLevel: CompetitionLevel;
   ICPCEligible: boolean;
@@ -54,6 +55,20 @@ export interface CompetitionAlgorithmStudentDetails {
   universityCourses: string[];
   pastRegional: boolean;
   algoPoint: number;
+}
+
+export interface CompetitionAlgoTeamDetails {
+  id?: number;
+  name: string;
+  pendingName?: string;
+  teamSize: number;
+  participants: CompetitionAlgoStudentDetails[];
+  universityId: number;
+  teamSeat?: string;
+  siteAttendingId?: number;
+  competitionId: number;
+  competitionCoachId: number;
+  teamStatus: TeamStatus;
 }
 
 export const enum CompetitionUserRole {
@@ -84,4 +99,10 @@ export const enum DefaultUniCourses {
   DSA_COURSE = 'Data Structures and Algorithms',
   ADVANCED_ALGO_COURSE = 'Algorithm Design and Analysis',
   CHALLENGE_COURSE = 'Programming Challenges and Problems',
+}
+
+export const enum TeamStatus {
+  PENDING = 'Pending',
+  REGISTERED = 'Registered',
+  UNREGITERED = 'Unregistered',
 }

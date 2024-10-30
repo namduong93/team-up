@@ -5,7 +5,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { AlgoConversion, CompetitionAlgorithmStudentDetails, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
+import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
@@ -501,7 +501,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     `;
     let numberOfTeamsResult = await this.pool.query(numberOfTeamsQuery, [competitionId]);
     let numberOfTeams = parseInt(numberOfTeamsResult.rows[0].count);
-    let teamName = `Team ${pokemon.getName((numberOfTeams + 1) % 1000)}`;
+    let teamName = `${pokemon.getName((numberOfTeams + 1) % 1000)}`;
     let teamStatus = TeamStatus.PENDING;
     let teamSize = 1;
     let participants = [userId];
@@ -915,32 +915,34 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const competitionCoachId = await this.competitionCoachIdFromCompId(compId, userId);
     
     const teamsQuery = `
-      SELECT id, name, pending_name, team_size, participants, university_id, team_seat, site_attending_id, competition_id
+      SELECT id, name, pending_name, team_size, participants, university_id, team_seat, site_attending_id, competition_id, competition_coach_id, team_status
       FROM competition_teams
       WHERE competition_id = $1 AND competition_coach_id = $2 AND team_status = 'Pending'::competition_team_status
     `;
     const teamsResult = await this.pool.query(teamsQuery, [compId, competitionCoachId]);
     if (teamsResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "No teams to assign.");
+      return;
     }
-    let teams = teamsResult.rows;
     let userIds = [];
-    for (let team of teams) {
+    let convertUserIdToCompUserId = new Map<number, number>();
+    for (let team of teamsResult.rows) {
       for(let participant of team.participants) {
         userIds.push(participant);
       }
     }
     
     const sudentsQuery = `
-      SELECT id, preferred_contact, competition_level, icpc_eligible, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional
+      SELECT id, user_id, preferred_contact, competition_level, icpc_eligible, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional
       FROM competition_users
-      WHERE id = ANY($1::int[])
+      WHERE user_id = ANY($1::int[])
     `;
     const studentsResult = await this.pool.query(sudentsQuery, [userIds]);
-    let studentMap = new Map<number, CompetitionAlgorithmStudentDetails>();
+    let studentMap = new Map<number, CompetitionAlgoStudentDetails>();
+    
     for (let student of studentsResult.rows) {
-      let algoStudent : CompetitionAlgorithmStudentDetails = {
+      let algoStudent : CompetitionAlgoStudentDetails = {
         id: student.id,
+        userId: student.user_id,
         preferred_contact: student.preferred_contact,
         competitionLevel: student.competition_level,
         ICPCEligible: student.icpc_eligible,
@@ -955,42 +957,63 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         pastRegional: student.past_regional,
         algoPoint: 0
       };
+      convertUserIdToCompUserId.set(algoStudent.userId, algoStudent.id);
       studentMap.set(student.id, algoStudent);
     }
     this.heuristicStudent(studentMap);
-    // this.heuristicTeam(teams);
+    let algoTeams : CompetitionAlgoTeamDetails[] = [];
+    for (let team of teamsResult.rows) {
+      let teamDetails : CompetitionAlgoTeamDetails = {
+        id: team.id,
+        name: team.name,
+        pendingName: team.pending_name,
+        teamSize: team.team_size,
+        participants: [],
+        universityId: team.university_id,
+        teamSeat: team.team_seat,
+        siteAttendingId: team.site_attending_id,
+        competitionId: team.competition_id,
+        competitionCoachId: team.competition_coach_id,
+        teamStatus: team.team_status,
+      };
+      
+      for (let participant of team.participants) {
+        teamDetails.participants.push(studentMap.get(convertUserIdToCompUserId.get(participant)));
+      }
+      algoTeams.push(teamDetails);
+    }
+    
 
     return ;
   }
 
   // Calculate point for each participant
-  heuristicStudent = (students:  Map<number, CompetitionAlgorithmStudentDetails>) => {
+  heuristicStudent = (students:  Map<number, CompetitionAlgoStudentDetails>) => {
     for(let student of students.values()) {
       if(student.codeforcesRating) {
         student.algoPoint = Math.max(student.algoPoint, student.codeforcesRating);
       }
-      console.log(student);
       if(student.universityCourses.includes(DefaultUniCourses.INTRO_COURSE)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTRO_COURSE);
       }
-      // if(student.universityCourses.includes(DefaultUniCourses.DSA_COURSE)) {
-      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.DSA_COURSE);
-      // }
-      // if(student.universityCourses.includes(DefaultUniCourses.ADVANCED_ALGO_COURSE)) {
-      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.ADVANCED_COURSE);
-      // }
-      // if(student.universityCourses.includes(DefaultUniCourses.CHALLENGE_COURSE)) {
-      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.CHALLENGE_COURSE);
-      // }
-      // if(student.nationalPrizes) {
-      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.NATIONAL_PRIZE);
-      // }
-      // if(student.pastRegional) {
-      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.PAST_REGIONAL);
-      // }
-      // if(student.internationalPrizes) {
-      //   student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTERNATION_PRIZE);
-      // }
+      if(student.universityCourses.includes(DefaultUniCourses.DSA_COURSE)) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.DSA_COURSE);
+      }
+      if(student.universityCourses.includes(DefaultUniCourses.ADVANCED_ALGO_COURSE)) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.ADVANCED_COURSE);
+      }
+      if(student.universityCourses.includes(DefaultUniCourses.CHALLENGE_COURSE)) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.CHALLENGE_COURSE);
+      }
+      if(student.nationalPrizes) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.NATIONAL_PRIZE);
+      }
+      if(student.pastRegional) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.PAST_REGIONAL);
+      }
+      if(student.internationalPrizes) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTERNATION_PRIZE);
+      }
     }
   }
   // Calculate point for each team
