@@ -50,6 +50,6 @@ describe('System Admin Create Function', () => {
     }
 
     const result = await user_db.competitionSystemAdminCreate(1, mockCompetition);
-    expect(result).toStrictEqual({ competitionId: 4 })
+    expect(result).toStrictEqual({ competitionId: 5 })
   })
 })

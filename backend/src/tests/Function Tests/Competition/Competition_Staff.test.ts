@@ -51,11 +51,11 @@ describe('Competition Staff Function', () => {
       },
       {
         userId: 3,
-        name: 'Coach 2',
-        roles: ['Coach'],
-        universityName: 'RMIT University',
+        name: 'Algorithm Coach',
+        roles: [ 'Coach' ],
+        universityName: 'University of New South Wales',
         access: 'Pending',
-        email: 'testcoach2@example.com'
+        email: 'raveen@example.com'
       },
       {
         userId: 11,

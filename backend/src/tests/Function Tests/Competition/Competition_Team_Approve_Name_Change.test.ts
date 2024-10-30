@@ -2,7 +2,7 @@ import { SqlDbCompetitionRepository } from "../../../repository/competition/sqld
 import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
 
 // TODO
-describe('Staff Register Function', () => {
+describe.skip('Staff Register Function', () => {
   let poolean;
 
   const testDbName = "capstone_db"

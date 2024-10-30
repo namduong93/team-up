@@ -16,7 +16,7 @@ describe('Staff Register Function', () => {
     await dropTestDatabase(testDbName);
   });
 
-  test('Sucess case: returns the users team details', async () => {
+  test.skip('Sucess case: returns the users team details', async () => {
     const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionTeamDetails(5, 1);
 

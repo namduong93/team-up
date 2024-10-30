@@ -21,14 +21,14 @@ describe('Competition Student Function', () => {
     expect(result).toStrictEqual([])
   })
 
-  test('Sucess case: returns List of students participating in competition', async () => {
+  test('Sucess case 1: returns List of students participating in competition', async () => {
     const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionStudents(1, 1);
     expect(result).toStrictEqual([
       {
         userId: 5,
-        universityId: 2,
-        name: 'Test Student Account 1',
+        universityId: 5,
+        name: 'New User',
         sex: 'M',
         email: 'student@example.com',
         studentId: 'z000001',
@@ -36,7 +36,7 @@ describe('Competition Student Function', () => {
         level: 'Level A',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'This Unapproved Name'
+        teamName: 'Charmander'
       },
       {
         userId: 6,
@@ -49,7 +49,7 @@ describe('Competition Student Function', () => {
         level: 'Level A',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'This Unapproved Name'
+        teamName: 'Charmander'
       },
       {
         userId: 7,
@@ -62,7 +62,7 @@ describe('Competition Student Function', () => {
         level: 'Level A',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'This Unapproved Name'
+        teamName: 'Charmander'
       },
       {
         userId: 8,
@@ -75,7 +75,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'Team Zeta'
+        teamName: 'Bulbasaur'
       },
       {
         userId: 9,
@@ -88,7 +88,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'Team Zeta'
+        teamName: 'Bulbasaur'
       },
       {
         userId: 10,
@@ -101,7 +101,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'Team Zeta'
+        teamName: 'Bulbasaur'
       },
       {
         userId: 12,
@@ -114,7 +114,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'P Team, U Name'
+        teamName: 'Charmeleon'
       },
       {
         userId: 13,
@@ -127,7 +127,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'P Team, U Name'
+        teamName: 'Charmeleon'
       },
       {
         userId: 14,
@@ -138,9 +138,165 @@ describe('Competition Student Function', () => {
         studentId: 'z000009',
         status: 'Matched',
         level: 'Level B',
-        tshirtSize: 'S',
+        tshirtSize: 'XL',
         siteName: 'Computer Science Building',
-        teamName: 'P Team, U Name'
+        teamName: 'Charmeleon'
+      },
+      {
+        userId: 15,
+        universityId: 5,
+        name: 'AR',
+        sex: 'M',
+        email: 'ar@example.com',
+        studentId: 'z000002',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Bulbasaur'
+      },
+      {
+        userId: 15,
+        universityId: 5,
+        name: 'AR',
+        sex: 'M',
+        email: 'ar@example.com',
+        studentId: 'z000002',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charizard'
+      },
+      {
+        userId: 16,
+        universityId: 5,
+        name: 'AK',
+        sex: 'M',
+        email: 'ak@example.com',
+        studentId: 'z000003',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Ivysaur'
+      },
+      {
+        userId: 16,
+        universityId: 5,
+        name: 'AK',
+        sex: 'M',
+        email: 'ak@example.com',
+        studentId: 'z000003',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charizard'
+      },
+      {
+        userId: 17,
+        universityId: 5,
+        name: 'YF',
+        sex: 'M',
+        email: 'yf@example.com',
+        studentId: 'z000004',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Ivysaur'
+      },
+      {
+        userId: 17,
+        universityId: 5,
+        name: 'YF',
+        sex: 'M',
+        email: 'yf@example.com',
+        studentId: 'z000004',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charizard'
+      },
+      {
+        userId: 18,
+        universityId: 5,
+        name: 'DY',
+        sex: 'M',
+        email: 'dy@example.com',
+        studentId: 'z000005',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Venusaur'
+      },
+      {
+        userId: 18,
+        universityId: 5,
+        name: 'DY',
+        sex: 'M',
+        email: 'dy@example.com',
+        studentId: 'z000005',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Snorlax'
+      },
+      {
+        userId: 19,
+        universityId: 5,
+        name: 'Kass',
+        sex: 'M',
+        email: 'kass@example.com',
+        studentId: 'z000006',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charmander'
+      },
+      {
+        userId: 19,
+        universityId: 5,
+        name: 'Kass',
+        sex: 'M',
+        email: 'kass@example.com',
+        studentId: 'z000006',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Snorlax'
+      },
+      {
+        userId: 20,
+        universityId: 5,
+        name: 'JL',
+        sex: 'M',
+        email: 'jl@example.com',
+        studentId: 'z000007',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charmander'
+      },
+      {
+        userId: 20,
+        universityId: 5,
+        name: 'JL',
+        sex: 'M',
+        email: 'jl@example.com',
+        studentId: 'z000007',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Snorlax'
       }
     ])
   })
@@ -150,8 +306,8 @@ describe('Competition Student Function', () => {
     expect(result).toStrictEqual([
       {
         userId: 5,
-        universityId: 2,
-        name: 'Test Student Account 1',
+        universityId: 5,
+        name: 'New User',
         sex: 'M',
         email: 'student@example.com',
         studentId: 'z000001',
@@ -159,7 +315,7 @@ describe('Competition Student Function', () => {
         level: 'Level A',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'This Unapproved Name'
+        teamName: 'Charmander'
       },
       {
         userId: 6,
@@ -172,7 +328,7 @@ describe('Competition Student Function', () => {
         level: 'Level A',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'This Unapproved Name'
+        teamName: 'Charmander'
       },
       {
         userId: 7,
@@ -185,7 +341,7 @@ describe('Competition Student Function', () => {
         level: 'Level A',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'This Unapproved Name'
+        teamName: 'Charmander'
       },
       {
         userId: 8,
@@ -198,7 +354,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'Team Zeta'
+        teamName: 'Bulbasaur'
       },
       {
         userId: 9,
@@ -211,7 +367,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'Team Zeta'
+        teamName: 'Bulbasaur'
       },
       {
         userId: 10,
@@ -224,7 +380,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'Team Zeta'
+        teamName: 'Bulbasaur'
       },
       {
         userId: 12,
@@ -237,7 +393,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'P Team, U Name'
+        teamName: 'Charmeleon'
       },
       {
         userId: 13,
@@ -250,7 +406,7 @@ describe('Competition Student Function', () => {
         level: 'Level B',
         tshirtSize: 'S',
         siteName: 'Computer Science Building',
-        teamName: 'P Team, U Name'
+        teamName: 'Charmeleon'
       },
       {
         userId: 14,
@@ -261,9 +417,165 @@ describe('Competition Student Function', () => {
         studentId: 'z000009',
         status: 'Matched',
         level: 'Level B',
-        tshirtSize: 'S',
+        tshirtSize: 'XL',
         siteName: 'Computer Science Building',
-        teamName: 'P Team, U Name'
+        teamName: 'Charmeleon'
+      },
+      {
+        userId: 15,
+        universityId: 5,
+        name: 'AR',
+        sex: 'M',
+        email: 'ar@example.com',
+        studentId: 'z000002',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Bulbasaur'
+      },
+      {
+        userId: 15,
+        universityId: 5,
+        name: 'AR',
+        sex: 'M',
+        email: 'ar@example.com',
+        studentId: 'z000002',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charizard'
+      },
+      {
+        userId: 16,
+        universityId: 5,
+        name: 'AK',
+        sex: 'M',
+        email: 'ak@example.com',
+        studentId: 'z000003',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Ivysaur'
+      },
+      {
+        userId: 16,
+        universityId: 5,
+        name: 'AK',
+        sex: 'M',
+        email: 'ak@example.com',
+        studentId: 'z000003',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charizard'
+      },
+      {
+        userId: 17,
+        universityId: 5,
+        name: 'YF',
+        sex: 'M',
+        email: 'yf@example.com',
+        studentId: 'z000004',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Ivysaur'
+      },
+      {
+        userId: 17,
+        universityId: 5,
+        name: 'YF',
+        sex: 'M',
+        email: 'yf@example.com',
+        studentId: 'z000004',
+        status: 'Matched',
+        level: 'Level A',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charizard'
+      },
+      {
+        userId: 18,
+        universityId: 5,
+        name: 'DY',
+        sex: 'M',
+        email: 'dy@example.com',
+        studentId: 'z000005',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Venusaur'
+      },
+      {
+        userId: 18,
+        universityId: 5,
+        name: 'DY',
+        sex: 'M',
+        email: 'dy@example.com',
+        studentId: 'z000005',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Snorlax'
+      },
+      {
+        userId: 19,
+        universityId: 5,
+        name: 'Kass',
+        sex: 'M',
+        email: 'kass@example.com',
+        studentId: 'z000006',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charmander'
+      },
+      {
+        userId: 19,
+        universityId: 5,
+        name: 'Kass',
+        sex: 'M',
+        email: 'kass@example.com',
+        studentId: 'z000006',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Snorlax'
+      },
+      {
+        userId: 20,
+        universityId: 5,
+        name: 'JL',
+        sex: 'M',
+        email: 'jl@example.com',
+        studentId: 'z000007',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Charmander'
+      },
+      {
+        userId: 20,
+        universityId: 5,
+        name: 'JL',
+        sex: 'M',
+        email: 'jl@example.com',
+        studentId: 'z000007',
+        status: 'Matched',
+        level: 'Level B',
+        tshirtSize: 'L',
+        siteName: 'Computer Science Building',
+        teamName: 'Snorlax'
       }
     ])
   })

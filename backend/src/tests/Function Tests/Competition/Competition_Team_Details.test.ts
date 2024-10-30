@@ -21,7 +21,8 @@ describe('Competition Team Detail Function', () => {
 
     expect(result).toStrictEqual({
       compName: 'South Pacific Preliminary Contest 2024',
-      teamName: 'This Unapproved Name',
+      src_competition_id: 1,
+      teamName: 'Charmander',
       teamSite: 'Computer Science Building',
       teamSeat: 'Tabla01',
       teamLevel: 'Level A',
@@ -29,11 +30,10 @@ describe('Competition Team Detail Function', () => {
       students: [
         {
           userId: 5,
-          name: 'Test Student Account 1',
+          name: 'New User',
           email: 'student@example.com',
           bio: 'epic bio',
           preferredContact: 'Email:example@email.com',
-          siteId: 2,
           ICPCEligible: true,
           level: 'Level A',
           boersenEligible: true,
@@ -45,7 +45,6 @@ describe('Competition Team Detail Function', () => {
           email: 'teststudent2@example.com',
           bio: 'epic bio',
           preferredContact: 'Discord:fdc234',
-          siteId: 2,
           ICPCEligible: true,
           level: 'Level A',
           boersenEligible: true,
@@ -57,7 +56,6 @@ describe('Competition Team Detail Function', () => {
           email: 'teststudent3@example.com',
           bio: 'epic bio',
           preferredContact: 'Phone:0413421311',
-          siteId: 2,
           ICPCEligible: true,
           level: 'Level A',
           boersenEligible: true,

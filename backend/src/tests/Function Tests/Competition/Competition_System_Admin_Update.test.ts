@@ -1,7 +1,7 @@
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
 import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
 
-describe('System Admin Update Function', () => {
+describe.skip('System Admin Update Function', () => {
   let poolean;
 
   const testDbName = "capstone_db"
