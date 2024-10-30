@@ -1,27 +1,22 @@
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Competition Teams Function', () => {
-  let poolean;
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbCompetitionRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Failure case: User has no access to this list', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionTeams(5, 1);
     expect(result).toStrictEqual([])
   })
 
   test('Sucess case: returns a list of teams in competition', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionTeams(1, 1);
     expect(result).toStrictEqual([
       {
@@ -34,7 +29,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'Computer Science Building',
         teamSeat: 'Bongo11',
         teamLevel: 'Level B',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -80,7 +75,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'Computer Science Building',
         teamSeat: 'Tabla01',
         teamLevel: 'Level A',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -126,7 +121,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'K7',
         teamSeat: 'Organ20',
         teamLevel: 'Level B',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -172,7 +167,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'Computer Science Building',
         teamSeat: 'Bongo11',
         teamLevel: 'Level A',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -218,7 +213,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'K7',
         teamSeat: 'Organ20',
         teamLevel: 'Level B',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -258,7 +253,6 @@ describe('Competition Teams Function', () => {
   })
 
   test('Sucess case 2: Coaches has access to some list', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionTeams(2, 1);
     expect(result).toStrictEqual([
       {
@@ -271,7 +265,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'Computer Science Building',
         teamSeat: 'Bongo11',
         teamLevel: 'Level B',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -317,7 +311,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'Computer Science Building',
         teamSeat: 'Tabla01',
         teamLevel: 'Level A',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -363,7 +357,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'K7',
         teamSeat: 'Organ20',
         teamLevel: 'Level B',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -409,7 +403,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'Computer Science Building',
         teamSeat: 'Bongo11',
         teamLevel: 'Level A',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",
@@ -455,7 +449,7 @@ describe('Competition Teams Function', () => {
         teamSite: 'K7',
         teamSeat: 'Organ20',
         teamLevel: 'Level B',
-        startDate: new Date('2025-09-30 00:00:00'),
+        startDate: new Date('2025-09-30T00:00:00Z'),
         students: [{
           "ICPCEligible": true,
           "bio": "epic bio",

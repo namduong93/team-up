@@ -1,24 +1,18 @@
 import { Staff } from "../../../models/user/staff/staff";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
-
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Staff Register Function', () => {
-  let poolean;
-
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Failed case: Email Taken', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
     const mockStaff: Staff = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
@@ -34,8 +28,7 @@ describe('Staff Register Function', () => {
     expect(result).toBe(undefined);
   })
   test('Sucess case: makes a new staff user', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-    const mockStaff: Staff = {
+    const SucessStaff: Staff = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
       email: 'beepboopmeupscotty@gmail.com',
@@ -46,7 +39,7 @@ describe('Staff Register Function', () => {
       universityId: 1,
     };
 
-    const result = await user_db.staffRegister(mockStaff);
+    const result = await user_db.staffRegister(SucessStaff);
     expect(result).toEqual({ userId: expect.any(Number) });
   })
 })

@@ -1,23 +1,16 @@
 import { SqlDbUniversityRepository } from "../../../repository/university/sqldb";
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Universities List Function', () => {
-  let poolean;
-
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUniversityRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
-
   test('Sucess case: returns a number', async () => {
-    const user_db = new SqlDbUniversityRepository(poolean);
-
     const result = await user_db.universitiesList();
     expect(result).toStrictEqual({
       universities: [{

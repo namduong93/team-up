@@ -1,27 +1,22 @@
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Get Comp Id from Code Function', () => {
-  let poolean;
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbCompetitionRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Failure case: code does not exist', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
-    const result = await user_db.competitionIdFromCode('TC1234');
+    const result = await user_db.competitionIdFromCode('WOBWOB');
     expect(result).toBe(undefined);
   })
 
   test('Sucess case: returns the users team details', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionIdFromCode('SPPR2024');
     expect(result).toBe(1);
   })

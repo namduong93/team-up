@@ -1,50 +1,56 @@
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 describe('User Update Profile Function', () => {
-  let poolean;
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Sucess case: successfully changed the info of user', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
 
-    const newUserInfo = {
-      name: 'System Admin;',
-      preferredName: 'A',
-      email: 'admin@example.com',
-      affiliation: 'University of Melbourne',
-      gender: 'M',
-      pronouns: 'he/Him',
-      tshirtSize: 'L',
-      allergies: 'Peanuts',
-      dietaryReqs: [],
-      accessibilityReqs: 'None',
+    const mockStudent = {
+      name: 'beep boop',
+      preferredName: 'beep',
+      email: 'beepbeepwobwob31@gmail.com',
+      password: 'testPassword',
+      gender: 'F',
+      pronouns: 'He/Him',
+      tshirtSize: 'S',
+      universityId: 1,
+      studentId: 'z1234567'
     };
-
-    await user_db.userUpdateProfile(1, newUserInfo);
-    const userInfo = await user_db.userProfileInfo(1);
-    const newTestUserInfo = {
-      name: 'System Admin;',
-      preferredName: 'A',
-      email: 'admin@example.com',
-      affiliation: 'University of Melbourne',
-      gender: 'M',
-      pronouns: 'he/Him',
+    const newUserInfo = {
+      name: 'beep boop',
+      preferredName: 'beepbeep',
+      email: 'beepbeepwobwob31@gmail.com',
+      password: 'testPassword',
+      gender: 'F',
+      pronouns: 'She/Him',
       tshirtSize: 'L',
-      allergies: 'Peanuts',
+      universityId: 1,
+      studentId: 'z1234567'
+    };
+    const testSubject = await user_db.studentRegister(mockStudent)
+    await user_db.userUpdateProfile(testSubject.userId, newUserInfo);
+    const userInfo = await user_db.userProfileInfo(testSubject.userId);
+    const newTestUserInfo = {
+      name: 'beep boop',
+      preferredName: 'beepbeep',
+      email: 'beepbeepwobwob31@gmail.com',
+      affiliation: 'University of Melbourne',
+      gender: 'F',
+      pronouns: 'She/Him',
+      tshirtSize: 'L',
+      allergies: null,
       dietaryReqs: [],
-      accessibilityReqs: 'None',
-      id: 1,
+      accessibilityReqs: null,
+      id: testSubject.userId,
     };
     expect(userInfo).toStrictEqual(newTestUserInfo)
   })

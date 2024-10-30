@@ -1,17 +1,13 @@
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, {  dropTestDatabase } from "../Utils/dbUtils";
 
 describe.skip('System Admin Update Function', () => {
-  let poolean;
-
-  const testDbName = "capstone_db"
   let user_db;
   let mockCompetition;
   let compId;
 
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
-    user_db = new SqlDbCompetitionRepository(poolean);
+    user_db = new SqlDbCompetitionRepository(pool);
     mockCompetition = {
       name: 'TestComp',
       teamSize: 5,
@@ -28,8 +24,7 @@ describe.skip('System Admin Update Function', () => {
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Failure case: admin is not creator of competition ', async () => {

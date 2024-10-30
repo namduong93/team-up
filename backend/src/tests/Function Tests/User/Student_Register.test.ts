@@ -1,23 +1,18 @@
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 describe('Student Register Function', () => {
-  let poolean;
-
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Failed case: Email Taken', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
     const mockStudent = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
@@ -34,7 +29,6 @@ describe('Student Register Function', () => {
     expect(result).toBe(undefined);
   })
   test('Sucess case: new student user made', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
     const mockStudent = {
       name: 'Maximillian Maverick',
       preferredName: 'X',

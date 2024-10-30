@@ -1,29 +1,21 @@
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 describe('User Profile Info Function', () => {
-  let poolean;
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
-
   test('Failed case: Unknown Id', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-
     const result = await user_db.userProfileInfo(69);
     expect(result).toBe(undefined);
   })
   test('Sucess case: Returns user info', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-
     const result = await user_db.userProfileInfo(1);
     expect(result).toStrictEqual({
       id: 1,

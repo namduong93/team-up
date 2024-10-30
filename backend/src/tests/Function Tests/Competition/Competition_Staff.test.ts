@@ -1,28 +1,21 @@
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Competition Staff Function', () => {
-  let poolean;
-
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbCompetitionRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
-
   test('Failure case: User has no access to the list', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionStaff(2, 1);
     expect(result).toStrictEqual([])
   })
 
   test('Sucess case: returns the staff list for competition', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionStaff(1, 1);
     expect(result).toStrictEqual([
       {

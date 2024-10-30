@@ -1,24 +1,18 @@
 import { UserType } from "../../../models/user/user";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Competition List Function', () => {
-  let poolean;
-
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbCompetitionRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Sucess case: returns the users competition list', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
-
     const result = await user_db.competitionsList(5, UserType.SYSTEM_ADMIN);
 
     expect(result).toStrictEqual([
