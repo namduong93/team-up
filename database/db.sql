@@ -423,8 +423,8 @@ VALUES
   2,
   NULL), -- password is 'pleasechange'
 ( -- id: 5
-  'Test Student Account 1',
-  'Test Account',
+  'New User',
+  'New User',
   'student@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
@@ -916,7 +916,7 @@ VALUES
 
 -- Member from Team ID: 12
 (
-  'Algorithm Student 1',
+  'Algo Student 1',
   'AlgoStu',
   'testingaccount@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
@@ -933,7 +933,7 @@ VALUES
 
 -- Member from Team ID: 13
 (
-  'Algorithm Student 1',
+  'Algo Student 2',
   'AlgoStu2',
   'testingaccount3@example.com',
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',

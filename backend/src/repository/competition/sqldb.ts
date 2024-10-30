@@ -1018,7 +1018,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const deletedTeamsArray = Array.from(deletedTeams);
     await this.pool.query(deleteTeamsQuery, [deletedTeamsArray, compId]);
 
-    return ;
+    // This is for demo only
+    return {
+      algorithm: {
+        teamsParticipating: algoTeams.map(team => ({
+          id: team.id,
+          name: team.name,
+          participants: team.participants.map(p => p.userId),
+          algoPoint: Math.max(...team.participants.map(p => studentMap.get(p.id)?.algoPoint || 0))
+        }))
+      }
+    };
   }
 
   // Calculate point for each participant

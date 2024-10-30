@@ -438,7 +438,7 @@ export class CompetitionService {
     return [{ id: 1, name: 'Macquarie University' }]
   }
 
-  competitionAlgorithm = async (compId: number, userId: number): Promise<void> => {
+  competitionAlgorithm = async (compId: number, userId: number): Promise<{}> => {
     const competition = await this.competitionRepository.competitionGetDetails(compId);
     if (!competition) {
       throw new ServiceError(ServiceError.NotFound, 'Competition not found');
@@ -447,8 +447,8 @@ export class CompetitionService {
     if (!roles.includes(CompetitionUserRole.COACH)) {
       throw new ServiceError(ServiceError.Auth, 'User is not a coach');
     }
-    
-    await this.competitionRepository.competitionAlgorithm(compId, userId);
+    const teamsParticipating = await this.competitionRepository.competitionAlgorithm(compId, userId);
+    return teamsParticipating;
   }
 
   // Check to make sure every competition name is unique

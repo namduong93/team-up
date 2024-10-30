@@ -235,8 +235,8 @@ export class CompetitionController {
   competitionAlgorithm = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     let userId = req.query.userId;
     const compId = req.body.compId;
-    await this.competitionService.competitionAlgorithm(Number(compId), Number(userId));
-    res.json({});
+    const teamParticipant = await this.competitionService.competitionAlgorithm(Number(compId), Number(userId));
+    res.json(teamParticipant);
     return;
   });
 
