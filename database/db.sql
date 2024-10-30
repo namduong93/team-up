@@ -1008,3 +1008,38 @@ VALUES
   (20, 'Caterpie', 'Pending'::competition_team_status, NULL, 1, ARRAY[26], 5, 4, 'bongo38', 2),
   (20, 'Metapod', 'Pending'::competition_team_status, NULL, 1, ARRAY[27], 5, 4, 'bongo41', 2),
   (20, 'Butterfree', 'Pending'::competition_team_status, NULL, 1, ARRAY[28], 5, 4, 'bongo44', 2);
+
+-- Delete after demo
+INSERT INTO competition_users (
+  user_id, competition_id, competition_roles,
+  competition_coach_id,
+  icpc_eligible,
+  competition_level,
+  boersen_eligible,
+  degree_year,
+  degree,
+  is_remote,
+  national_prizes,
+  international_prizes,
+  codeforces_rating,
+  university_courses,
+  past_regional,
+  is_official,
+  preferred_contact,
+  bio
+)
+VALUES
+    (15, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Email:example@email.com', 'epic bio'),
+    (16, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Discord:fdc234', 'epic bio'),
+    (17, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Phone:0413421311', 'epic bio'),
+    (18, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Minecraft:EpicMan123', 'epic bio'),
+    (19, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Roblox: epicerrMan123', 'epic bio'),
+    (20, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'faxMachineNumber:98531234', 'epic bio');
+  
+INSERT INTO competition_teams (
+  competition_coach_id, name, team_status, pending_name,
+  team_size, participants, university_id, competition_id, team_seat, site_attending_id, pending_site_attending_id
+)
+VALUES
+(4, 'Charizard', 'Unregistered'::competition_team_status, NULL, 3, ARRAY[15, 16, 17], 2, 1, 'Bongo11', 2, NULL),
+(4, 'Wimpod', 'Unregistered'::competition_team_status, 'Snorlax', 3, ARRAY[18, 19, 20], 2, 1, 'Organ20', 2, 4);
