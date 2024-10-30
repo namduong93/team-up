@@ -982,7 +982,41 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       }
       algoTeams.push(teamDetails);
     }
+
+    let sortedAlgoTeams = this.sortTeams(algoTeams, studentMap);
+    let deletedTeams = new Set<number>();
+    this.formTeams(sortedAlgoTeams, deletedTeams);
     
+    const teamUpdateQuery = `
+    UPDATE competition_teams
+    SET 
+        team_size = subquery.team_size,
+        participants = subquery.participants
+    FROM jsonb_to_recordset($1::jsonb) AS subquery(
+        id INT,
+        team_size INT,
+        participants INT[]
+    )
+    WHERE competition_teams.id = subquery.id
+    AND competition_teams.competition_id = $2
+    `;
+
+    // Prepare the data
+    const updateData = algoTeams.map(team => ({
+        id: team.id,
+        team_size: team.participants.length,
+        participants: team.participants.map(p => p.userId)
+    }));
+
+    await this.pool.query(teamUpdateQuery, [JSON.stringify(updateData), compId]);
+
+    const deleteTeamsQuery = `
+    DELETE FROM competition_teams
+    WHERE id = ANY($1::int[])
+    AND competition_id = $2
+    `;
+    const deletedTeamsArray = Array.from(deletedTeams);
+    await this.pool.query(deleteTeamsQuery, [deletedTeamsArray, compId]);
 
     return ;
   }
@@ -1016,17 +1050,76 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       }
     }
   }
-  // Calculate point for each team
-  // heuristic = (teams: any[]) => {
-  //   for (let team of teams) {
-  //     let teamPoint = 0;
-  //     for (let participant of team.participants) {
-  //       teamPoint += this.heuristicParticipant(participant);
-  //     }
-  //     team.algoPoint = teamPoint;
-  //   }
-  // }
-  //Take competition_coach_id from compId and userId
+  formTeams = (teams: CompetitionAlgoTeamDetails[], deletedTeams: Set<number>) => {
+    for(let i = 0; i < teams.length; i++) {
+      if(deletedTeams.has(teams[i].id)) {
+        continue;
+      }
+      if(teams[i].teamSize === 3) {
+        continue;
+      }
+      if(teams[i].teamSize === 2) {
+        for(let j = i + 1; j < teams.length; j++) {
+          if(deletedTeams.has(teams[j].id)) {
+            continue;
+          }
+          if(teams[j].participants.length === 1) {
+            teams[i].participants.push(teams[j].participants[0]);
+            teams[i].teamSize += 1;
+            deletedTeams.add(teams[j].id);
+            break;
+          }
+        }
+      }
+      else {
+        let singleTeam = 0;
+        for(let j = i + 1; j < teams.length; j++) {
+          if(deletedTeams.has(teams[j].id)) {
+            continue;
+          }
+          if(teams[j].teamSize === 1) {
+            if(singleTeam === 0) {
+              singleTeam = j;
+            }
+            else {
+              teams[i].participants.push(teams[singleTeam].participants[0]);
+              teams[i].participants.push(teams[j].participants[0]);
+              teams[i].teamSize += 2;
+              deletedTeams.add(teams[singleTeam].id);
+              deletedTeams.add(teams[j].id);
+              break;
+            }
+          }
+          else {
+            teams[i].participants.push(teams[j].participants[0]);
+            teams[i].participants.push(teams[j].participants[1]);
+            teams[i].teamSize += 2;
+            deletedTeams.add(teams[j].id);
+            break;
+          }
+          if(j === teams.length - 1) {
+            teams[i].participants.push(teams[singleTeam].participants[0]);
+            teams[i].teamSize += 1;
+            deletedTeams.add(teams[singleTeam].id);
+          }
+        }
+      }
+    }
+  }
+  sortTeams = (teams: CompetitionAlgoTeamDetails[], studentMap: Map<number, CompetitionAlgoStudentDetails>) => {  
+    teams.sort((teamA, teamB) => {
+      const teamAMaxPoint = Math.max(...teamA.participants.map(p => 
+          studentMap.get(p.id)?.algoPoint || 0
+      ));
+      const teamBMaxPoint = Math.max(...teamB.participants.map(p => 
+          studentMap.get(p.id)?.algoPoint || 0
+      ));
+      
+      // Sort in descending order (higher points first)
+      return teamBMaxPoint - teamAMaxPoint;
+    });
+    return teams;
+  }
   competitionCoachIdFromCompId = async (compId: number, userId: number): Promise<number | undefined> => {
     const competitionCoachIdQuery = `
       SELECT id
