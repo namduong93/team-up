@@ -5,9 +5,11 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
+import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
+import { University } from "../../models/university/university.js";
+import pokemon from 'pokemon';
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -68,7 +70,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionTeamDetails = async (userId: number, compId: number): Promise<ParticipantTeamDetails> => {
     const dbResult = await this.pool.query(
       `SELECT "compName", "teamName", "teamSite", "teamSeat",
-        "teamLevel", "startDate", students, coach
+        "teamLevel", "startDate", students, coach, src_competition_id
       FROM competition_team_details AS ctd
       WHERE ctd.src_user_id = ${userId} AND ctd.src_competition_id = ${compId}
       LIMIT 1;
@@ -413,7 +415,22 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitions;
   }
 
-  competitionStudentJoin = async (competitionUserInfo: CompetitionUser): Promise<{} | undefined> => {
+  competitionUniversityDefaultSite = async(competitionId: number, university: University): Promise<CompetitionSiteObject | undefined> => {
+    const siteResult = await this.pool.query(
+      `SELECT id, name FROM competition_sites
+      WHERE competition_id = $1 AND university_id = $2
+      LIMIT 1`,
+      [competitionId, university.id]
+    );
+    let site = {
+      id: siteResult.rows[0].id || 0,
+      universityId: university.id,
+      name: siteResult.rows[0].name || "Not Found",
+    };
+    return site;
+  }
+
+  competitionStudentJoin = async (competitionUserInfo: CompetitionUser, university: University): Promise<{} | undefined> => {
     // First insert the user into the competition_users table
     let userId = competitionUserInfo.userId;
     let competitionId = competitionUserInfo.competitionId;
@@ -432,9 +449,25 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let competitionBio = competitionUserInfo.competitionBio || "";
     let preferredContact = competitionUserInfo.preferredContact || "";
 
+    const coachUserIdResult = await this.pool.query(
+      `SELECT "userId" 
+       FROM competition_staff($1) 
+       WHERE roles::jsonb @> '["Coach"]'::jsonb 
+         AND "universityName" = $2`, 
+      [competitionId, university.name]
+    );
+    
+    if (coachUserIdResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Your university is not registered for this competition.");
+    }
+    const competitionCoachIdResult = await this.pool.query(`
+      SELECT id FROM competition_users WHERE user_id = $1 AND competition_id = $2
+    `, [coachUserIdResult.rows[0].userId, competitionId]);
+    const competitionCoachId = competitionCoachIdResult.rows[0].id;
+
     const competitionJoinQuery = `
-      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional, bio, preferred_contact)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+      INSERT INTO competition_users (user_id, competition_id, competition_roles, icpc_eligible, competition_level, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional, bio, preferred_contact, competition_coach_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
       RETURNING id
     `;
     const competitionJoinValues = [
@@ -453,40 +486,45 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       universityCourses,
       pastRegional,
       competitionBio,
-      preferredContact
+      preferredContact,
+      competitionCoachId,
     ];
     
     // Insert user into competition_users table and get competition_user_id
     const result = await this.pool.query(competitionJoinQuery, competitionJoinValues);
     const competitionUserId = result.rows[0].id;
 
-    // Retrieve university_id from the users table
-    const universityQuery = `
-      SELECT university_id FROM users WHERE id = $1
+    // Insert user to competition_teams table
+    let numberOfTeamsQuery = `
+      SELECT COUNT(*) FROM competition_teams
+      WHERE competition_id = $1
     `;
-    const universityResult = await this.pool.query(universityQuery, [userId]);
-    const universityId = universityResult.rows[0].university_id;
-
-    // Generate the team name (e.g., "Team#ID") and insert into competition_teams
+    let numberOfTeamsResult = await this.pool.query(numberOfTeamsQuery, [competitionId]);
+    let numberOfTeams = parseInt(numberOfTeamsResult.rows[0].count);
+    let teamName = `${pokemon.getName((numberOfTeams + 1) % 1000)}`;
     let teamStatus = TeamStatus.PENDING;
-    let teamSize = DEFAULT_TEAM_SIZE;
+    let teamSize = 1;
     let participants = [userId];
+    let siteId = competitionUserInfo.siteLocation.id;
 
-    let teamNameQuery = `
-      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id)
-      VALUES (CONCAT('Team#', currval(pg_get_serial_sequence('competition_teams', 'id'))), $1, $2, $3, $4, $5)
+    let teamQuery = `
+      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id, competition_coach_id, site_attending_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id
     `;
     const teamNameValues = [
+      teamName,
       teamStatus,
       teamSize,
       participants,
-      universityId,  // university_id from users table
-      competitionId
+      university.id,  
+      competitionId,
+      competitionCoachId,
+      siteId
     ];
 
     // Insert the team into competition_teams table
-    let checkId = await this.pool.query(teamNameQuery, teamNameValues);
+    let checkId = await this.pool.query(teamQuery, teamNameValues);
     return {};
   }
 
@@ -873,6 +911,238 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return [{ id: 1, name: 'Macquarie University' }]
   }
 
+  competitionAlgorithm = async(compId: number, userId: number): Promise<{} | undefined> => {
+    const competitionCoachId = await this.competitionCoachIdFromCompId(compId, userId);
+    
+    const teamsQuery = `
+      SELECT id, name, pending_name, team_size, participants, university_id, team_seat, site_attending_id, competition_id, competition_coach_id, team_status
+      FROM competition_teams
+      WHERE competition_id = $1 AND competition_coach_id = $2 AND team_status = 'Pending'::competition_team_status
+    `;
+    const teamsResult = await this.pool.query(teamsQuery, [compId, competitionCoachId]);
+    if (teamsResult.rowCount === 0) {
+      return;
+    }
+    let userIds = [];
+    let convertUserIdToCompUserId = new Map<number, number>();
+    for (let team of teamsResult.rows) {
+      for(let participant of team.participants) {
+        userIds.push(participant);
+      }
+    }
+    
+    const sudentsQuery = `
+      SELECT id, user_id, preferred_contact, competition_level, icpc_eligible, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional
+      FROM competition_users
+      WHERE user_id = ANY($1::int[])
+    `;
+    const studentsResult = await this.pool.query(sudentsQuery, [userIds]);
+    let studentMap = new Map<number, CompetitionAlgoStudentDetails>();
+    
+    for (let student of studentsResult.rows) {
+      let algoStudent : CompetitionAlgoStudentDetails = {
+        id: student.id,
+        userId: student.user_id,
+        preferred_contact: student.preferred_contact,
+        competitionLevel: student.competition_level,
+        ICPCEligible: student.icpc_eligible,
+        boersenEligible: student.boersen_eligible,
+        degreeYear: student.degree_year,
+        degree: student.degree,
+        isRemote: student.is_remote,
+        nationalPrizes: student.national_prizes,
+        internationalPrizes: student.international_prizes,
+        codeforcesRating: student.codeforces_rating,
+        universityCourses: student.university_courses,
+        pastRegional: student.past_regional,
+        algoPoint: 0
+      };
+      convertUserIdToCompUserId.set(algoStudent.userId, algoStudent.id);
+      studentMap.set(student.id, algoStudent);
+    }
+    this.heuristicStudent(studentMap);
+    let algoTeams : CompetitionAlgoTeamDetails[] = [];
+    for (let team of teamsResult.rows) {
+      let teamDetails : CompetitionAlgoTeamDetails = {
+        id: team.id,
+        name: team.name,
+        pendingName: team.pending_name,
+        teamSize: team.team_size,
+        participants: [],
+        universityId: team.university_id,
+        teamSeat: team.team_seat,
+        siteAttendingId: team.site_attending_id,
+        competitionId: team.competition_id,
+        competitionCoachId: team.competition_coach_id,
+        teamStatus: team.team_status,
+      };
+      
+      for (let participant of team.participants) {
+        teamDetails.participants.push(studentMap.get(convertUserIdToCompUserId.get(participant)));
+      }
+      algoTeams.push(teamDetails);
+    }
+
+    let sortedAlgoTeams = this.sortTeams(algoTeams, studentMap);
+    let deletedTeams = new Set<number>();
+    this.formTeams(sortedAlgoTeams, deletedTeams);
+    
+    const teamUpdateQuery = `
+    UPDATE competition_teams
+    SET 
+        team_size = subquery.team_size,
+        participants = subquery.participants
+    FROM jsonb_to_recordset($1::jsonb) AS subquery(
+        id INT,
+        team_size INT,
+        participants INT[]
+    )
+    WHERE competition_teams.id = subquery.id
+    AND competition_teams.competition_id = $2
+    `;
+
+    // Prepare the data
+    const updateData = algoTeams.map(team => ({
+        id: team.id,
+        team_size: team.participants.length,
+        participants: team.participants.map(p => p.userId)
+    }));
+
+    await this.pool.query(teamUpdateQuery, [JSON.stringify(updateData), compId]);
+
+    const deleteTeamsQuery = `
+    DELETE FROM competition_teams
+    WHERE id = ANY($1::int[])
+    AND competition_id = $2
+    `;
+    const deletedTeamsArray = Array.from(deletedTeams);
+    await this.pool.query(deleteTeamsQuery, [deletedTeamsArray, compId]);
+
+    // This is for demo only
+    return {
+      algorithm: {
+        teamsParticipating: algoTeams.map(team => ({
+          id: team.id,
+          name: team.name,
+          participants: team.participants.map(p => p.userId),
+          algoPoint: Math.max(...team.participants.map(p => studentMap.get(p.id)?.algoPoint || 0))
+        }))
+      }
+    };
+  }
+
+  // Calculate point for each participant
+  heuristicStudent = (students:  Map<number, CompetitionAlgoStudentDetails>) => {
+    for(let student of students.values()) {
+      if(student.codeforcesRating) {
+        student.algoPoint = Math.max(student.algoPoint, student.codeforcesRating);
+      }
+      if(student.universityCourses.includes(DefaultUniCourses.INTRO_COURSE)) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTRO_COURSE);
+      }
+      if(student.universityCourses.includes(DefaultUniCourses.DSA_COURSE)) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.DSA_COURSE);
+      }
+      if(student.universityCourses.includes(DefaultUniCourses.ADVANCED_ALGO_COURSE)) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.ADVANCED_COURSE);
+      }
+      if(student.universityCourses.includes(DefaultUniCourses.CHALLENGE_COURSE)) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.CHALLENGE_COURSE);
+      }
+      if(student.nationalPrizes) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.NATIONAL_PRIZE);
+      }
+      if(student.pastRegional) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.PAST_REGIONAL);
+      }
+      if(student.internationalPrizes) {
+        student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTERNATION_PRIZE);
+      }
+    }
+  }
+  formTeams = (teams: CompetitionAlgoTeamDetails[], deletedTeams: Set<number>) => {
+    for(let i = 0; i < teams.length; i++) {
+      if(deletedTeams.has(teams[i].id)) {
+        continue;
+      }
+      if(teams[i].teamSize === 3) {
+        continue;
+      }
+      if(teams[i].teamSize === 2) {
+        for(let j = i + 1; j < teams.length; j++) {
+          if(deletedTeams.has(teams[j].id)) {
+            continue;
+          }
+          if(teams[j].participants.length === 1) {
+            teams[i].participants.push(teams[j].participants[0]);
+            teams[i].teamSize += 1;
+            deletedTeams.add(teams[j].id);
+            break;
+          }
+        }
+      }
+      else {
+        let singleTeam = 0;
+        for(let j = i + 1; j < teams.length; j++) {
+          if(deletedTeams.has(teams[j].id)) {
+            continue;
+          }
+          if(teams[j].teamSize === 1) {
+            if(singleTeam === 0) {
+              singleTeam = j;
+            }
+            else {
+              teams[i].participants.push(teams[singleTeam].participants[0]);
+              teams[i].participants.push(teams[j].participants[0]);
+              teams[i].teamSize += 2;
+              deletedTeams.add(teams[singleTeam].id);
+              deletedTeams.add(teams[j].id);
+              break;
+            }
+          }
+          else {
+            teams[i].participants.push(teams[j].participants[0]);
+            teams[i].participants.push(teams[j].participants[1]);
+            teams[i].teamSize += 2;
+            deletedTeams.add(teams[j].id);
+            break;
+          }
+          if(j === teams.length - 1) {
+            teams[i].participants.push(teams[singleTeam].participants[0]);
+            teams[i].teamSize += 1;
+            deletedTeams.add(teams[singleTeam].id);
+          }
+        }
+      }
+    }
+  }
+  sortTeams = (teams: CompetitionAlgoTeamDetails[], studentMap: Map<number, CompetitionAlgoStudentDetails>) => {  
+    teams.sort((teamA, teamB) => {
+      const teamAMaxPoint = Math.max(...teamA.participants.map(p => 
+          studentMap.get(p.id)?.algoPoint || 0
+      ));
+      const teamBMaxPoint = Math.max(...teamB.participants.map(p => 
+          studentMap.get(p.id)?.algoPoint || 0
+      ));
+      
+      // Sort in descending order (higher points first)
+      return teamBMaxPoint - teamAMaxPoint;
+    });
+    return teams;
+  }
+  competitionCoachIdFromCompId = async (compId: number, userId: number): Promise<number | undefined> => {
+    const competitionCoachIdQuery = `
+      SELECT id
+      FROM competition_users
+      WHERE user_id = $1 AND competition_id = $2
+    `;
+    const competitionCoachIdResult = await this.pool.query(competitionCoachIdQuery, [userId, compId]);
+    if (competitionCoachIdResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "User is not a coach for this competition.");
+    }
+    return competitionCoachIdResult.rows[0].id;
+  }
+
   competitionIdFromCode = async (code: string): Promise<number | undefined> => {
     const competitionIdQuery = `SELECT id FROM competitions WHERE code = $1 LIMIT 1`;
     const competitionIdResult = await this.pool.query(competitionIdQuery, [code]);
@@ -891,5 +1161,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         competitionMap.get(row.id)?.userType.push(userType);
       }
     });
+  }
+
+  // Custom Comparator for algorithm
+  private compareTeams = (team1: any, team2: any) => {
+
   }
 }

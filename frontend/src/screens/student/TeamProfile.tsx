@@ -24,6 +24,7 @@ export interface ParticipantTeamDetails {
     level: string;
     boersenEligible: boolean;
     isRemote: boolean;
+    // studentAlgoScore?: number;
   }>;
   coach: {
     name: string;

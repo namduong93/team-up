@@ -140,6 +140,13 @@ export class CompetitionController {
     return;
   });
 
+  competitionUserDefaultSite = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId, code } = req.query;
+    const defaultSite = await this.competitionService.competitionUserDefaultSite(Number(userId), String(code));
+    res.json({ site : defaultSite });
+    return;
+  });
+
   competitionStudentJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const code = req.body.code;
     const competitionUserInfo = req.body.competitionUser;
@@ -222,6 +229,14 @@ export class CompetitionController {
 
   competitionUniversitiesList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({ id: 1, name: 'Macquarie University' });
+    return;
+  });
+
+  competitionAlgorithm = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    let userId = req.query.userId;
+    const compId = req.body.compId;
+    const teamParticipant = await this.competitionService.competitionAlgorithm(Number(compId), Number(userId));
+    res.json(teamParticipant);
     return;
   });
 

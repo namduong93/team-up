@@ -141,6 +141,10 @@ app.get('/competition/details', competitionController.competitionGetDetails)
 // PARAMS: { code: string }
 app.get('/competition/student/status', competitionController.competitionCodeStatus);
 
+// PARAMS: { code: string }
+// RESPONSE: { siteLocation: {id, name} }
+app.get('/competition/user/default_site', competitionController.competitionUserDefaultSite);
+
 // Student join competition with 0 friends
 // PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses, competitionBio, preferredContact } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
@@ -252,6 +256,8 @@ app.get('/user/notifications', notificationController.userNotificationsList);
 // RESPONSE: 
 // Get all the details of a team in a competition
 app.get('/competition/team/details', competitionController.competitionTeamDetails);
+
+app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
 app.get('/competition/attendees', competitionController.competitionAttendees);
 // PARAMS: { compId }

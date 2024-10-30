@@ -1,6 +1,6 @@
 
 export interface University {
-  id: Number;
+  id: number;
   name: string;
 };
 
