@@ -934,9 +934,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const sudentsQuery = `
       SELECT id, user_id, preferred_contact, competition_level, icpc_eligible, boersen_eligible, degree_year, degree, is_remote, national_prizes, international_prizes, codeforces_rating, university_courses, past_regional
       FROM competition_users
-      WHERE user_id = ANY($1::int[])
+      WHERE user_id = ANY($1::int[]) AND competition_id = $2
     `;
-    const studentsResult = await this.pool.query(sudentsQuery, [userIds]);
+    const studentsResult = await this.pool.query(sudentsQuery, [userIds, compId]);
     let studentMap = new Map<number, CompetitionAlgoStudentDetails>();
     
     for (let student of studentsResult.rows) {
