@@ -126,8 +126,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const downloadCSV = async () => {
     console.log(teamList);
     // Filter only 'Unregistered' teams
-    // const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
-    const unregisteredTeams = teamList;
+    const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
+    // const unregisteredTeams = teamList;
 
     // Group teams by site location and level
     const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
@@ -196,8 +196,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const downloadPDF = async () => {
     console.log(teamList);
     // Filter only 'Unregistered' teams
-    // const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
-    const unregisteredTeams = teamList; // Use all teams for now
+    const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
+    // const unregisteredTeams = teamList; // Use all teams for now
 
     // Grouping teams by site location and level
     const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
