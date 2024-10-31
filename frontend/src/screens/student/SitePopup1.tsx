@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { styled } from 'styled-components';
 import TextInputLight from '../../components/general_utility/TextInputLight';
+import { AdvancedDropdown } from '../../components/AdvancedDropdown/AdvancedDropdown';
 
 const Modal = styled.div`
   position: fixed;
@@ -68,23 +69,25 @@ interface FirstStepPopUpProps {
   onClose: () => void;
   onNext: () =>void;
   text: string;
-  inputValue: string;
-  setInputValue: (value: string) => void;
+  inputOption: { value: string, label: string };
+  setInputOption: React.Dispatch<React.SetStateAction<{ value: string, label: string }>>;
+  siteOptionsState: [{ value: string; label: string; }[], React.Dispatch<React.SetStateAction<{ value: string; label: string; }[]>>];
 }
 
-export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({ 
+export const SitePopup1: React.FC<FirstStepPopUpProps> = ({ 
   heading, 
   onClose, 
   onNext, 
   text, 
-  inputValue,
-  setInputValue,
+  inputOption: inputOption,
+  setInputOption: setInputOption,
+  siteOptionsState: [siteOptions, setSiteOptions],
 }) => {
 
   // const [inputValue, setInputValue] = useState("");
 
   const isButtonDisabled = () => {
-    return inputValue === ""
+    return inputOption.value === "";
   }
 
   return (
@@ -97,14 +100,12 @@ export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({
         <span style={{ marginBottom: '20px'}}>Your Coach will review <br /> your change, where you will<br />
         receive a notification <br /> with the results of the review
         </span>
-        <TextInputLight
-            label=""
-            placeholder={text}
-            required={false}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            width="80%"
-          />
+        <AdvancedDropdown
+          setCurrentSelected={setInputOption}
+          optionsState={[siteOptions, setSiteOptions]}
+          style={{ width: '80%' }}
+          isExtendable={false}
+        />
 
         <Button disabled={isButtonDisabled()} onClick={onNext}>
           Request

@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaUserPlus, FaUsers, FaEdit, FaGlobe } from "react-icons/fa";
 import InvitePopUp from "../../screens/student/InvitePopUp";
 import JoinPopUp from "../../screens/student/JoinPopUp";
 import { SitePopUpChain } from "../../screens/student/SitePopUpChain";
 import { NamePopUpChain } from "../../screens/student/NamePopUpChain";
+import { sendRequest } from "../../utility/request";
+import { useParams } from "react-router-dom";
+import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
 
 type ActionType = "invite" | "join" | "name" | "site";
 
@@ -17,6 +20,7 @@ interface ActionCardProps {
 
 interface TeamActionCardProps {
   numMembers: number;
+  compId?: number;
 };
 
 const ActionsContainer = styled.div`
@@ -91,10 +95,21 @@ const Heading = styled.h2`
   box-sizing: border-box;
 `;
 
-export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) => {
+export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers, compId = useParams().compId }) => {
   const [modalOpen, setModalOpen] = useState<"invite" | "join" | "name" | "site" | null>(null);
   const [teamCode, setTeamCode] = useState('');
 
+  const [siteLocationOptions, setSiteLocationOptions] = useState([{ value: '', label: '' }]);
+
+  useEffect(() => {
+    const fetchSiteLocations = async () => {
+      const response = await sendRequest.get<{ sites: Array<CompetitionSite> }>('/competition/sites', { compId });
+      const { sites } = response.data;
+      setSiteLocationOptions(sites.map((site) => ({ value: String(site.id), label: site.name })));
+    }
+
+    fetchSiteLocations();
+  }, []);
 
   const actions = [
     { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a Friend" },
@@ -150,7 +165,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
         )}
 
         {modalOpen === "site" && (
-          <SitePopUpChain handleClose={() => setModalOpen(null)} />
+          <SitePopUpChain siteOptionsState={[siteLocationOptions, setSiteLocationOptions]} handleClose={() => setModalOpen(null)} />
         )}
 
         {modalOpen === "name" && (

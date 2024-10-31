@@ -134,6 +134,10 @@ export class CompetitionService {
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
   }
+
+  competitionSites = async (compId: number) => {
+    return await this.competitionRepository.competitionSites(compId);
+  }
   
   competitionAttendees = async (userId: number, compId: number) => {
     const roles = await this.competitionRoles(userId, compId);

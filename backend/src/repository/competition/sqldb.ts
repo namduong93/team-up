@@ -9,6 +9,7 @@ import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetai
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
+import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite.js";
 import pokemon from 'pokemon';
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
@@ -17,7 +18,18 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   constructor(pool: Pool) {
     this.pool = pool;
   }
+  
+  competitionSites = async (compId: number): Promise<CompetitionSite[]> => {
+    
+    const dbResult = await this.pool.query(
+      `SELECT cs.id AS "id", cs.name AS "name"
+      FROM competition_sites AS cs
+      WHERE cs.competition_id = ${compId}
+      `
+    );
 
+    return dbResult.rows;
+  }
 
   competitionAttendees = async (userId: number, compId: number): Promise<Array<AttendeesDetails>> => {
     const roles = await this.competitionRoles(userId, compId);

@@ -266,6 +266,10 @@ app.get('/competition/attendees', competitionController.competitionAttendees);
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
 
+// PARAMS: { compId }
+// RESPONSE: { sites: Array<CompetitionSite> }
+app.get('/competition/sites', competitionController.competitionSites);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })
