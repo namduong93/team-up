@@ -104,31 +104,55 @@ export const StaffRoleRegistration: FC = () => {
   }, []);
 
   const isButtonDisabled = () => {
+    const { roles: role, capacity, competitionBio } = staffRegistrationData;
     console.log(staffRegistrationData);
-    const { roles: role, capacity, site, institution } = staffRegistrationData;
-    return (
-      role.length === 0 ||
-      (role.includes(CompetitionRole.Coach) && institution === "" && site === "") ||
-      (role.includes(CompetitionRole.SiteCoordinator) &&
-        site === "" &&
-        capacity === undefined)
-    );
+    if (role.length === 0) {
+      return true;
+    }
+
+    if (role.includes(CompetitionRole.Coach)) {
+      if (
+        currentUniversityOption.value === "" ||
+        currentSiteOption.value === "" ||
+        competitionBio === ""
+      ) {
+        return true;
+      }
+    }
+
+    if (role.includes(CompetitionRole.SiteCoordinator)) {
+      if (currentSiteOption.value === "" || capacity === undefined) {
+        return true;
+      }
+    }
+
+    return false;
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // add the site or institution
     if (
-      staffRegistrationData.role.includes("Coach") ||
-      staffRegistrationData.role.includes("Site Coordinator")
+      staffRegistrationData.roles.includes(CompetitionRole.Coach) ||
+      staffRegistrationData.roles.includes(CompetitionRole.SiteCoordinator)
     ) {
       setStaffRegistrationData({
         ...staffRegistrationData,
         site: currentSiteOption.value,
       });
     }
-    if (staffRegistrationData.role.includes(""))
-      navigate("/dashboard", { state: { isStaffRegoPopUpOpen: true } });
+
+    if (staffRegistrationData.roles.includes(CompetitionRole.Coach)) {
+      setStaffRegistrationData({
+        ...staffRegistrationData,
+        institution: currentUniversityOption.value,
+      });
+    }
+
+    //TO-DO: send staffRegistrationData to backend where request will be sent
+    // to admin to grant privileges
+
+    navigate("/dashboard", { state: { isStaffRegoPopUpOpen: true } });
   };
 
   return (
@@ -159,7 +183,9 @@ export const StaffRoleRegistration: FC = () => {
         />
 
         {(staffRegistrationData.roles.includes(CompetitionRole.Coach) ||
-          staffRegistrationData.roles.includes(CompetitionRole.SiteCoordinator)) && (
+          staffRegistrationData.roles.includes(
+            CompetitionRole.SiteCoordinator
+          )) && (
           <>
             <div
               style={{
@@ -181,7 +207,9 @@ export const StaffRoleRegistration: FC = () => {
           </>
         )}
 
-        {staffRegistrationData.roles.includes(CompetitionRole.SiteCoordinator) && (
+        {staffRegistrationData.roles.includes(
+          CompetitionRole.SiteCoordinator
+        ) && (
           <>
             <TextInput
               label="Capacity Constraints"
@@ -194,7 +222,7 @@ export const StaffRoleRegistration: FC = () => {
                 const value = e.target.value;
                 setStaffRegistrationData({
                   ...staffRegistrationData,
-                  capacity: Number(value),
+                  capacity: value === "" ? undefined : Number(value),
                 });
               }}
               width="100%"
@@ -265,6 +293,7 @@ const Title = styled.h1`
 
 const Button = styled.button`
   max-width: 150px;
+  min-width: 100px;
   width: 25%;
   height: 35px;
   border: 0px;
