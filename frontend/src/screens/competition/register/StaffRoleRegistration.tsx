@@ -97,7 +97,7 @@ export const StaffRoleRegistration: FC = () => {
       try {
         const response = await sendRequest.get<{
           sites: Array<CompetitionSite>;
-        }>("/competition/sites", { code });
+        }>("/competition/sites_code", { code });
         const { sites } = response.data;
         setSiteOptions(
           sites.map((site) => ({ value: String(site.id), label: site.name }))
