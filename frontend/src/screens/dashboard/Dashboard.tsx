@@ -6,7 +6,10 @@ import { CompCard } from "./components/CompCard";
 import { sendRequest } from "../../utility/request";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/page_header/PageHeader";
-import { Input, RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
+import {
+  Input,
+  RegisterPopUp,
+} from "../../components/general_utility/RegisterPopUp";
 import { IoIosCreate } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
 import { DashInfo } from "./hooks/useDashInfo";
@@ -14,7 +17,7 @@ import { ResponsiveActionButton } from "../../components/responsive_fields/actio
 import { OptionPopUp } from "../student/OptionPopUp";
 import { ErrorMessage } from "../authentication/registration/AccountInformation";
 
-interface Competition { 
+interface Competition {
   compName: string;
   location: string;
   compDate: string; // format: "YYYY-MM-DD"
@@ -131,15 +134,6 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-// const Title1 = styled.h2`
-//   margin-top: 40px;
-//   margin-bottom: 20px;
-//   font-size: 22px;
-//   font-weight: bold;
-//   white-space: pre-wrap;
-//   word-break: break-word;
-// `
-
 const Title2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;
@@ -147,26 +141,6 @@ const Title2 = styled.h2`
   white-space: pre-wrap;
   word-break: break-word;
 `;
-
-// const Heading = styled.h2`
-//   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
-//   margin-top: 40px;
-//   color: ${({ theme }) => theme.colours.notifDark};
-//   margin-bottom: 10%;
-//   white-space: pre-wrap;
-//   word-break: break-word;
-// `
-
-// const Overlay = styled.div<{ $isOpen: boolean }>`
-//   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   background: rgba(0, 0, 0, 0.5);
-//   z-index: 999;
-// `
 
 export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
@@ -186,31 +160,37 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [competitions, setCompetitions] = useState<Competition[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setUserType] = useState<string>('');
+  const [userType, setUserType] = useState<string>("");
   const navigate = useNavigate();
-
 
   useEffect(() => {
     (async () => {
       try {
-        const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
+        const typeResponse = await sendRequest.get<{ type: string }>(
+          "/user/type"
+        );
         setUserType(typeResponse.data.type);
         setIsAdmin(typeResponse.data.type === "system_admin");
         setIsLoaded(true);
 
-        const fakeComps = await sendRequest.get<{ competitions: Competition[] }>('/competitions/list');
-        const formattedCompetitions = fakeComps.data.competitions.map(comp => ({
-          ...comp,
-          compDate: new Date(comp.compDate).toISOString().split('T')[0],
-          compCreatedDate: new Date(comp.compCreatedDate).toISOString().split('T')[0]
-        }));
+        const fakeComps = await sendRequest.get<{
+          competitions: Competition[];
+        }>("/competitions/list");
+        const formattedCompetitions = fakeComps.data.competitions.map(
+          (comp) => ({
+            ...comp,
+            compDate: new Date(comp.compDate).toISOString().split("T")[0],
+            compCreatedDate: new Date(comp.compCreatedDate)
+              .toISOString()
+              .split("T")[0],
+          })
+        );
         setCompetitions(formattedCompetitions);
-  
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           setIsLoaded(false);
-          navigate('/');
-          console.log('Authentication Error: ', error);
+          navigate("/");
+          console.log("Authentication Error: ", error);
         });
         // can handle other codes or types of errors here if needed.
       }
@@ -222,10 +202,14 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
 
   // filter options based on the Competition fields (location, role, status, year)
   const filterOptions = {
-    Location: Array.from(new Set(competitions.map(comp => comp.location))).sort(),
-    Role: Array.from(new Set(competitions.flatMap(comp => comp.roles))),
+    Location: Array.from(
+      new Set(competitions.map((comp) => comp.location))
+    ).sort(),
+    Role: Array.from(new Set(competitions.flatMap((comp) => comp.roles))),
     Status: ["Completed", "Upcoming"],
-    Year: Array.from(new Set(competitions.map(comp => comp.compDate.split("-")[0]))).sort((a, b) => parseInt(a) - parseInt(b)),
+    Year: Array.from(
+      new Set(competitions.map((comp) => comp.compDate.split("-")[0]))
+    ).sort((a, b) => parseInt(a) - parseInt(b)),
   };
 
   // // click outside filter to close popup
@@ -254,12 +238,14 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
 
   const matchesSearch = (comp: Competition) => {
     const searchLower = searchTerm.toLowerCase();
-    const compDateMonth = new Date(comp.compDate).toLocaleString('default', { month: 'long' }).toLowerCase();
-    
+    const compDateMonth = new Date(comp.compDate)
+      .toLocaleString("default", { month: "long" })
+      .toLowerCase();
+
     return (
       comp.compName.toLowerCase().includes(searchLower) ||
       comp.location.toLowerCase().includes(searchLower) ||
-      comp.roles.some(role => role.toLowerCase().includes(searchLower)) ||
+      comp.roles.some((role) => role.toLowerCase().includes(searchLower)) ||
       compDateMonth.includes(searchLower)
     );
   };
@@ -314,12 +300,15 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
         return new Date(a.compDate).getTime() - new Date(b.compDate).getTime();
       case "location":
         return a.location.localeCompare(b.location);
-      case "timeRemaining":
-        { const aRemaining = new Date(a.compDate).getTime() - Date.now();
+      case "timeRemaining": {
+        const aRemaining = new Date(a.compDate).getTime() - Date.now();
         const bRemaining = new Date(b.compDate).getTime() - Date.now();
-        return aRemaining - bRemaining; };
+        return aRemaining - bRemaining;
+      }
       case "original":
-        return defaultIndices.indexOf(a.compId) - defaultIndices.indexOf(b.compId);
+        return (
+          defaultIndices.indexOf(a.compId) - defaultIndices.indexOf(b.compId)
+        );
       default:
         return 0;
     }
@@ -333,26 +322,35 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
       setRegoSuccessPopUp(true);
     }
   }, [location.state]);
-  
+
+  const [isStaffRegoPopUpOpen, setStaffRegoPopUpOpen] = useState(false);
+  useEffect(() => {
+    if (location.state?.isStaffRegoPopUpOpen) {
+      setStaffRegoPopUpOpen(true);
+    }
+  }, [location.state]);
+
   const [isJoinPopUpOpen, setIsJoinPopUpOpen] = useState(false);
   const [teamName, setTeamName] = useState<string | null>(null);
 
   useEffect(() => {
     if (location.state?.joined) {
       setIsJoinPopUpOpen(true);
-      setTeamName(location.state.teamName)
+      setTeamName(location.state.teamName);
     }
   }, [location.state]);
 
-  const [compRegisterCode, setCompRegisterCode] = useState('');
+  const [compRegisterCode, setCompRegisterCode] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleRegisterConfirm = async () => {
     const validateCode = async () => {
       try {
-        await sendRequest.get<{}>('/competition/student/status', { code: compRegisterCode });
+        await sendRequest.get<{}>("/competition/student/status", {
+          code: compRegisterCode,
+        });
         // above line will throw if the code is invalid
-        
+
         setErrorMessage(null); // Clear any previous error message
         return true;
       } catch (error) {
@@ -364,128 +362,147 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     };
 
     return await validateCode();
+  };
 
-  }
+  return (
+    isLoaded && (
+      <OverflowFlexBackground>
+        <DashboardContent>
+          {/* <CompCreatePopUp isOpen={isPopUpOpen} onClose={handleClosePopUp} message={message} code={code} /> */}
 
-  return (isLoaded &&
-    <OverflowFlexBackground>
-      <DashboardContent>
+          <PageHeader
+            pageTitle="Dashboard"
+            pageDescription={`Welcome back, ${dashInfo.preferredName}!`}
+            sortOptions={sortOptions}
+            filterOptions={filterOptions}
+            sortOptionState={{ sortOption, setSortOption }}
+            filtersState={{ filters, setFilters }}
+            searchTermState={{ searchTerm, setSearchTerm }}
+          >
+            {isAdmin && (
+              <ResponsiveActionButton
+                icon={<IoIosCreate />}
+                label="Create"
+                question="Create a new competition?"
+                redirectPath="/competition/create"
+                // handleClick={handleCreateClick}
+                actionType="secondary"
+              />
+            )}
 
-        
-        {/* <CompCreatePopUp isOpen={isPopUpOpen} onClose={handleClosePopUp} message={message} code={code} /> */}
-
-        <PageHeader
-          pageTitle="Dashboard"
-          pageDescription={`Welcome back, ${dashInfo.preferredName}!`}
-          sortOptions={sortOptions}
-          filterOptions={filterOptions}
-          sortOptionState={{ sortOption, setSortOption }}
-          filtersState={{ filters, setFilters }}
-          searchTermState={{ searchTerm, setSearchTerm }}
-        >
-          {isAdmin && 
             <ResponsiveActionButton
-            icon={<IoIosCreate />}
-            label="Create"
-            question="Create a new competition?"
-            redirectPath="/competition/create"
-            // handleClick={handleCreateClick}
-            actionType="secondary"
-            />
-          }
-
-          <ResponsiveActionButton
-            icon={<MdAssignmentAdd />}
-            label="Register"
-            question="Register for a new competition?"
-            redirectPath={`/competition/information/${compRegisterCode}`}
-            actionType="primary"
-            handleSubmit={handleRegisterConfirm}
-            timeout={2}
-            handleClose={() => setErrorMessage(null)}
+              icon={<MdAssignmentAdd />}
+              label="Register"
+              question="Register for a new competition?"
+              redirectPath={
+                userType === "student"
+                  ? `/competition/information/${compRegisterCode}`
+                  : `/competition/staff/register/${compRegisterCode}`
+              }
+              actionType="primary"
+              handleSubmit={handleRegisterConfirm}
+              timeout={2}
+              handleClose={() => setErrorMessage(null)}
             >
               <div>
                 <Input
                   type="text"
                   placeholder="COMP1234"
                   onChange={(e) => {
-                    setCompRegisterCode(e.target.value)
+                    setCompRegisterCode(e.target.value);
                   }}
                 />
               </div>
-              
+
               <div>
-                {errorMessage && <ErrorMessage style={{ marginTop: '10px' }}>{errorMessage}</ErrorMessage>}
+                {errorMessage && (
+                  <ErrorMessage style={{ marginTop: "10px" }}>
+                    {errorMessage}
+                  </ErrorMessage>
+                )}
               </div>
-          </ResponsiveActionButton>
+            </ResponsiveActionButton>
+          </PageHeader>
 
-        </PageHeader>
-  
-        {/* Active Filters Display */}
-        <div>
-          {Object.entries(filters).map(([field, values]) =>
-            values.map((value) => (
-              <FilterTagButton key={`${field}-${value}`}>
-                {value} 
-                <RemoveFilterIcon 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeFilter(field, value);
-                  }} 
+          {/* Active Filters Display */}
+          <div>
+            {Object.entries(filters).map(([field, values]) =>
+              values.map((value) => (
+                <FilterTagButton key={`${field}-${value}`}>
+                  {value}
+                  <RemoveFilterIcon
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeFilter(field, value);
+                    }}
+                  />
+                </FilterTagButton>
+              ))
+            )}
+          </div>
+
+          <ContentArea>
+            <CompetitionGrid>
+              {sortedCompetitions.map((comp, index) => (
+                <CompCard
+                  key={index}
+                  compName={comp.compName}
+                  location={comp.location}
+                  compDate={comp.compDate}
+                  roles={comp.roles}
+                  compId={comp.compId}
+                  compCreationDate={comp.compCreatedDate}
                 />
-              </FilterTagButton>
-            ))
-          )}
-        </div>
-        
-        <ContentArea>
-          <CompetitionGrid>
-            {sortedCompetitions.map((comp, index) => (
-              <CompCard
-                key={index}
-                compName={comp.compName}
-                location={comp.location}
-                compDate={comp.compDate}
-                roles={comp.roles}
-                compId={comp.compId}
-                compCreationDate={comp.compCreatedDate}
+              ))}
+            </CompetitionGrid>
+
+            {isRegoSucessPopUpOpen && (
+              <RegisterPopUp
+                isOpen={isRegoSucessPopUpOpen}
+                onClose={() => setRegoSuccessPopUp(false)}
+                message={
+                  <Title2>
+                    You have successfully registered for the Competition!{" "}
+                    {"\n\n"}
+                    <span style={{ fontWeight: "normal" }}>
+                      Please navigate to the Team Profile Page to join a team or
+                      invite team members
+                    </span>
+                  </Title2>
+                }
               />
-            ))}
-          </CompetitionGrid>
+            )}
 
-          {isRegoSucessPopUpOpen && (
-            <RegisterPopUp
-              isOpen={isRegoSucessPopUpOpen}
-              onClose={() => setRegoSuccessPopUp(false)}
-              message={
-                <Title2>
-                  You have successfully registered for the Competition! {"\n\n"}
-                  <span style={{ fontWeight: 'normal' }}>
-                    Please navigate to the Team Profile Page to join a team or invite team members
-                  </span>
-                </Title2>
-              }
+            {isJoinPopUpOpen && (
+              <RegisterPopUp
+                isOpen={isJoinPopUpOpen}
+                onClose={() => setIsJoinPopUpOpen(false)}
+                message={
+                  <Title2>
+                    You have successfully {"\n"} joined the Team: {"\n\n"}{" "}
+                    <span style={{ fontWeight: "normal", fontStyle: "italic" }}>
+                      {teamName}
+                    </span>
+                  </Title2>
+                }
+              />
+            )}
 
-            />
-          )}
-
-          {isJoinPopUpOpen && (
-            <RegisterPopUp
-              isOpen={isJoinPopUpOpen}
-              onClose={() => setIsJoinPopUpOpen(false)}
-              message={
-                <Title2>
-                  You have successfully {"\n"} joined the Team:  {"\n\n"} <span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>
-                  {teamName}
-                  </span>
-                </Title2>
-              }
-
-            />
-          )}
-
-        </ContentArea>
-      </DashboardContent>
-    </OverflowFlexBackground>
+            {isStaffRegoPopUpOpen && (
+              <RegisterPopUp
+                isOpen={isStaffRegoPopUpOpen}
+                onClose={() => setStaffRegoPopUpOpen(false)}
+                message={
+                  <Title2>
+                    Your Request has been {"\n"} sent {"\n\n"} Please wait for{" "}
+                    {"\n"} Administrator approval
+                  </Title2>
+                }
+              />
+            )}
+          </ContentArea>
+        </DashboardContent>
+      </OverflowFlexBackground>
+    )
   );
 };

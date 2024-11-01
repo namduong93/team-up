@@ -10,7 +10,6 @@ const DropdownContainerDiv = styled.div`
   position: relative;
   z-index: 1;
   color: ${({ theme }) => theme.fonts.colour};
-  
 `;
 
 const DropdownTextInput = styled.input`
@@ -22,11 +21,11 @@ const DropdownTextInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colours.notifDark};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 
   &:focus + div {
     border-color: ${({ theme }) => theme.fonts.colour};
   }
-
 `;
 
 const DropdownIconDiv = styled.div`
@@ -43,15 +42,21 @@ const DropdownIconDiv = styled.div`
   pointer-events: none;
 `;
 
-
 // dropdown opts
 
 interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
-  optionsState: [Array<{
-    value: string;
-    label: string;
-  }>, React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>];
-  setCurrentSelected: React.Dispatch<React.SetStateAction<{ value: string, label: string }>>;
+  optionsState: [
+    Array<{
+      value: string;
+      label: string;
+    }>,
+    React.Dispatch<
+      React.SetStateAction<Array<{ value: string; label: string }>>
+    >
+  ];
+  setCurrentSelected: React.Dispatch<
+    React.SetStateAction<{ value: string; label: string }>
+  >;
   label?: string;
   isExtendable?: boolean;
 }
@@ -91,8 +96,12 @@ const OptionContainerDiv = styled.button<{ $isLast: boolean }>`
   align-items: center;
   box-sizing: border-box;
   border-right: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  ${({$isLast, theme}) => $isLast ? '' : `border-bottom: 1px solid ${theme.colours.sidebarBackground}`};
+  ${({ $isLast, theme }) =>
+    $isLast
+      ? ""
+      : `border-bottom: 1px solid ${theme.colours.sidebarBackground}`};
   user-select: none;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 
   &:hover {
     background-color: ${({ theme }) => theme.colours.primaryLight};
@@ -101,51 +110,75 @@ const OptionContainerDiv = styled.button<{ $isLast: boolean }>`
 `;
 
 interface OptionsProps extends React.HTMLAttributes<HTMLDivElement> {
-  options: Array<FuseResult<{ value: string, label: string }>> | Array<{ item: { value: string, label: string } }>;
+  options:
+    | Array<FuseResult<{ value: string; label: string }>>
+    | Array<{ item: { value: string; label: string } }>;
   searchTerm: string;
   display: boolean;
-  handleSelectOption: (e: React.MouseEvent<HTMLButtonElement>, value: string, label: string) => void;
+  handleSelectOption: (
+    e: React.MouseEvent<HTMLButtonElement>,
+    value: string,
+    label: string
+  ) => void;
   handleCreate: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isExtendable?: boolean;
 }
 
 const DropdownOptions: FC<OptionsProps> = ({
-  options, display, searchTerm, isExtendable = true,
-  handleSelectOption, handleCreate, style, ...props }) => {
-  
-  return (display &&
-    <DropdownOptionsDiv style={{ ...style }} {...props}>
-      {
-        options.map(({item: { value, label } }, index) => {
+  options,
+  display,
+  searchTerm,
+  isExtendable = true,
+  handleSelectOption,
+  handleCreate,
+  style,
+  ...props
+}) => {
+  return (
+    display && (
+      <DropdownOptionsDiv style={{ ...style }} {...props}>
+        {options.map(({ item: { value, label } }, index) => {
           return (
-            <OptionContainerDiv type="button" key={index} $isLast={false}
+            <OptionContainerDiv
+              type="button"
+              key={index}
+              $isLast={false}
               onClick={(e) => handleSelectOption(e, value, label)}
-              onMouseDown={(e) => { e.preventDefault(); }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+              }}
             >
               {label}
             </OptionContainerDiv>
-          )
-        })
-      }
+          );
+        })}
 
-        {searchTerm && isExtendable && !options.some(({ item: { value: _, label } }) => label === searchTerm) &&
-        <OptionContainerDiv $isLast={true}
-          onClick={handleCreate}
-          onMouseDown={(e) => { e.preventDefault(); }}
-        >
-          Create "{searchTerm}"
-        </OptionContainerDiv>}
-    </DropdownOptionsDiv>
-  )
-}
-
+        {searchTerm &&
+          isExtendable &&
+          !options.some(
+            ({ item: { value: _, label } }) => label === searchTerm
+          ) && (
+            <OptionContainerDiv
+              $isLast={true}
+              onClick={handleCreate}
+              onMouseDown={(e) => {
+                e.preventDefault();
+              }}
+            >
+              Create "{searchTerm}"
+            </OptionContainerDiv>
+          )}
+      </DropdownOptionsDiv>
+    )
+  );
+};
 
 // PROPS:
 // - optionsState ---[ options -- state variable list of { value: string, label: string }, setOptions -- setSate for the options state variable ]
 // - setCurrentSelected --- setState function that should track the currently selected option ({ value: string, label: string })
 // - style --- additional styling to apply to the dropdown container
 // - props --- additional props to apply to the dropdown container
-// 
+//
 // INSTRUCTIONS:
 // To use the advanced dropdown create a state variable [<optionList>, set<OptionList>] of some kind that contains the list of options
 // that can be chosen from in the dropdown, then create a state variable [currentSelected, setCurrentSelected] that should store
@@ -154,13 +187,17 @@ const DropdownOptions: FC<OptionsProps> = ({
 // Then, the currentSelected state variable will have the currently selected option loaded into it, if the user creates their own
 // option then the value of that new option will be an empty string '' but the label will be the name they inserted for their own option
 export const AdvancedDropdown: FC<DropdownProps> = ({
-  optionsState: [options, setOptions], setCurrentSelected, isExtendable = true, style, ...props }) => {
-  
-    const [searchTerm, setSearchTerm] = useState('');
+  optionsState: [options, setOptions],
+  setCurrentSelected,
+  isExtendable = true,
+  style,
+  ...props
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [displayDropdown, setDisplayDropdown] = useState(false);
 
   const fuse = new Fuse(options, {
-    keys: ['label'],
+    keys: ["label"],
     threshold: 1,
   });
 
@@ -168,45 +205,66 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
   if (searchTerm) {
     filteredOptions = fuse.search(searchTerm);
   } else {
-    filteredOptions = options.map(obj =>{ return { item: obj }});
+    filteredOptions = options.map((obj) => {
+      return { item: obj };
+    });
   }
 
-
-  const handleSelectOption = (e: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement>, value: string, label: string) => {
+  const handleSelectOption = (
+    e:
+      | React.MouseEvent<HTMLButtonElement>
+      | React.KeyboardEvent<HTMLInputElement>,
+    value: string,
+    label: string
+  ) => {
     e.preventDefault();
     setCurrentSelected({ value, label });
     setSearchTerm(label);
     e.currentTarget.focus();
     e.currentTarget.blur();
-  }
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSelectOption(e, filteredOptions[0].item.value, filteredOptions[0].item.label);
+    if (e.key === "Enter") {
+      handleSelectOption(
+        e,
+        filteredOptions[0].item.value,
+        filteredOptions[0].item.label
+      );
     }
-  }
+  };
 
   const handleCreate = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setOptions((prevOptions) => [ ...prevOptions, { value: '', label: searchTerm } ]);
-    handleSelectOption(e, '', searchTerm);
-  }
+    setOptions((prevOptions) => [
+      ...prevOptions,
+      { value: "", label: searchTerm },
+    ]);
+    handleSelectOption(e, "", searchTerm);
+  };
   return (
     <DropdownContainerDiv style={{ ...style }} {...props}>
       <DropdownTextInput
-        type='text'
+        type="text"
         onFocus={() => setDisplayDropdown(true)}
         onBlur={() => setDisplayDropdown(false)}
         value={searchTerm}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setSearchTerm(e.target.value)
+        }
         onKeyDown={handleKeyPress}
-      >
-      </DropdownTextInput>
+      ></DropdownTextInput>
       <DropdownIconDiv>
-        <IoIosArrowDown style={{ height: '50%', width: '50%' }} />
+        <IoIosArrowDown style={{ height: "50%", width: "50%" }} />
       </DropdownIconDiv>
 
-      <DropdownOptions isExtendable={isExtendable} handleCreate={handleCreate} handleSelectOption={handleSelectOption} display={displayDropdown}
-        searchTerm={searchTerm} options={filteredOptions} />
+      <DropdownOptions
+        isExtendable={isExtendable}
+        handleCreate={handleCreate}
+        handleSelectOption={handleSelectOption}
+        display={displayDropdown}
+        searchTerm={searchTerm}
+        options={filteredOptions}
+      />
     </DropdownContainerDiv>
-  )
-}
+  );
+};
