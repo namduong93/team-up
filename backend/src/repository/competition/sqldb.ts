@@ -66,8 +66,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         
         FROM competition_teams AS ct
         JOIN universities AS uni ON uni.id = ct.university_id
-        JOIN users AS u ON u.id = ANY(ct.participants)
-        JOIN competition_users AS cu ON cu.user_id = u.id
+        JOIN competition_users AS cu ON cu.user_id = ANY(ct.participants) AND cu.competition_id = ct.competition_id
+        JOIN users AS u ON u.id = cu.user_id
         LEFT JOIN competition_sites AS cs ON cs.id = ct.site_attending_id
         LEFT JOIN competition_sites AS cs_pending ON cs_pending.id = ct.pending_site_attending_id
         WHERE ct.competition_id = $1 AND ct.site_attending_id = (SELECT site_id FROM competition_users WHERE user_id = $2 LIMIT 1);`, [compId, userId]
