@@ -8,9 +8,10 @@ import { useParams } from "react-router-dom";
 import { sendRequest } from "../../../../utility/request";
 import { TeamDetails } from "./TeamCard";
 import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
-import { CompetitionDetails } from "../../CompetitionPage";
+import { CompetitionDetails, fetchTeams } from "../../CompetitionPage";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { DownloadButtons } from "../../components/DownloadButtons";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -89,10 +90,16 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     setFilters({});
     setApproveTeamIds([]);
   }
-  const confirmTeams = () => {
-    // do something with the approveTeamIds:
-    console.log('accepted', approveTeamIds);
+  const confirmTeams = async () => {
+    if (approveTeamIds.length === 0) {
+      return;
+    }
+    try {
+      await sendRequest.put('/competition/coach/team_assignment_approve', { compId, approveIds: approveTeamIds });
+      await fetchTeams(compId, setTeamList);
+    } catch (error: unknown) {
 
+    }
     disableEditTeamStatus();
   }
 
@@ -106,8 +113,20 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     setApproveTeamIds([]);
     setRejectedTeamIds([]);
   }
-  const confirmNames = () => {
-    // do something with the approveTeamIds and rejectedteamIds:
+  const confirmNames = async () => {
+    if (approveTeamIds.length === 0 && rejectedTeamIds.length === 0) {
+      return;
+    }
+
+    try {
+      await sendRequest.put('/competition/coach/team_name_approve',
+        {compId, approveIds: approveTeamIds, rejectIds: rejectedTeamIds });
+      await fetchTeams(compId, setTeamList);
+    } catch (error: unknown) {
+
+    }
+
+
     console.log('accepted', approveTeamIds);
     console.log('rejected', rejectedTeamIds);
 
@@ -117,6 +136,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const handleAlgorithmButton = async () => {
     // hook it here
     const response = await sendRequest.post<{ algorithm: string }>('/competition/algorithm', { compId });
+    await fetchTeams(compId, setTeamList);
     console.log(response.data.algorithm);
     return true;
   }
@@ -307,13 +327,11 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     return true;
   };
 
-  const enableDownloading = () => {
-    setIsDownloading(true);
+  const handleEnableDownloading = () => {
     setFilters({ ...filters, Status: ['Unregistered'] });
   }
 
-  const disableDownloading = () => {
-    setIsDownloading(false);
+  const handleDisableDownloading = () => {
     setFilters({});
   }
 
@@ -389,49 +407,16 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     </div>
     }
 
-    {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <TransparentResponsiveButton actionType="primary"
-          label="Download"
-          icon={<FaDownload />}
-          style={{ backgroundColor: theme.colours.primaryLight }}
-          onClick={enableDownloading} isOpen={false}
-        />
-
-      </div>
-    }
-
-    {isDownloading &&
-    <>
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <TransparentResponsiveButton actionType="error"
-          onClick={disableDownloading} label="Cancel" isOpen={false}
-          icon={<GiCancel />}
-          style={{
-            backgroundColor: theme.colours.cancel,
-        }} />
-      </div>
-      
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <ResponsiveActionButton actionType="secondary"
-          label="Download CSV"
-          question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentCsv />}
-          handleSubmit={downloadCSV}
-        />
-      </div>
-
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <ResponsiveActionButton actionType="primary"
-          label="Download PDF"
-          question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentPdf />}
-          handleSubmit={downloadPDF}
-        />
-      </div>
-
-    </>
-    }
+    <DownloadButtons
+      isEditingStatus={isEditingStatus}
+      isEditingNameStatus={isEditingNameStatus}
+      isDownloadingState={[isDownloading, setIsDownloading]}
+      handleEnable={handleEnableDownloading}
+      handleDisable={handleDisableDownloading}
+      downloadCSV={downloadCSV}
+      downloadPDF={downloadPDF}
+    />
+    
   </>
   );
 }

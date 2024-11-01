@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "./components/PageUtils";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
@@ -13,6 +13,8 @@ import { StudentInfo } from "./students_page/StudentDisplay";
 import { AttendeesDetails } from "./attendees_page/AttendeesPage";
 import { StaffDetails } from "./staff_page/StaffDisplay";
 import { SiteLocation, OtherSiteLocation } from "../competition/creation/CompDetails";
+import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
+import { AttendeesPageButtons } from "./attendees_page/components/AttendeesPageButtons";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -43,6 +45,17 @@ export interface CompetitionDetails {
   region: string;
 };
 
+export const fetchTeams = async (compId: string | undefined, setTeams: React.Dispatch<React.SetStateAction<Array<TeamDetails>>>) => {
+  try {
+    const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
+    const { teamList } = response.data;
+    setTeams(teamList);
+
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
+
 export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
@@ -55,8 +68,16 @@ export const CompetitionPage: FC = () => {
   
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
 
+  const [buttonConfiguration, setButtonConfiguration] = useState<ButtonConfiguration>(
+    {
+      enableTeamButtons: false,
+      enableAttendeesButtons: false,
+      enableStudentButtons: false,
+      enableStaffButtons: false,
+    }
+  );
+
   ////
-  const [enableTeamButtons, setEnableTeamButtons] = useState<boolean>(false);
   const [isEditingStatus, setIsEditingStatus] = useState<boolean>(false);
   const [approveTeamIds, setApproveTeamIds] = useState<Array<number>>([]);
   
@@ -94,14 +115,7 @@ export const CompetitionPage: FC = () => {
     };
 
     const fetchCompetitionTeams = async () => {
-      try {
-        const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
-        const { teamList } = response.data;
-        setTeamList(teamList);
-
-      } catch (error: unknown) {
-        console.log(error)
-      }
+      fetchTeams(compId, setTeamList);
     };
 
     const fetchStudents = async () => {
@@ -198,7 +212,7 @@ export const CompetitionPage: FC = () => {
           filtersState={{ filters, setFilters }}
           searchTermState={{ searchTerm, setSearchTerm }}
           >
-            {enableTeamButtons && <TeamPageButtons
+            {buttonConfiguration.enableTeamButtons && <TeamPageButtons
               universityOption={universityOption}
               filtersState={[filters, setFilters]}
               editingStatusState={[isEditingStatus, setIsEditingStatus]}
@@ -209,6 +223,10 @@ export const CompetitionPage: FC = () => {
               teamListState={[teamList, setTeamList]}
               compDetails={compDetails}
               />}
+
+            {buttonConfiguration.enableAttendeesButtons && <AttendeesPageButtons
+              attendeesListState={[attendeesList, setAttendeesList]}
+            />}
             
             {(roles.includes(CompetitionRole.Admin)) &&
             <AdvancedDropdown style={{ minWidth: '0', maxWidth: '342px', width: '100%' }}
@@ -262,7 +280,8 @@ export const CompetitionPage: FC = () => {
           teamListState: [teamList, setTeamList],
           universityOption,
 
-          setFilterOptions, setSortOptions, setEnableTeamButtons,
+          setFilterOptions, setSortOptions,
+          buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
           studentsState: [students, setStudents],
           attendeesListState: [attendeesList, setAttendeesList],
           staffListState: [staffList, setStaffList],
