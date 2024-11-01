@@ -270,6 +270,10 @@ app.get('/competition/student/details', competitionController.competitionStudent
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites', competitionController.competitionSites);
 
+// PARAMS: { code }
+// RESPONSE: { sites: Array<CompetitionSite> }
+app.get('/competition/sites_code', competitionController.competitionSitesCodes);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

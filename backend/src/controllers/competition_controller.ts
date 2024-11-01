@@ -10,6 +10,14 @@ export class CompetitionController {
     this.competitionService = competitionService;
   }
 
+  competitionSitesCodes = httpErrorHandler(async (req: Request, res: Response) => {
+    const { code } = req.query;
+
+    const sites = await this.competitionService.competitionSitesCodes(code as string);
+
+    res.json({ sites });
+  });
+
   competitionSites = httpErrorHandler(async (req: Request, res: Response) => {
     const { compId } = req.query;
 

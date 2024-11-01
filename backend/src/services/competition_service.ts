@@ -134,6 +134,12 @@ export class CompetitionService {
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
   }
+  
+  competitionSitesCodes = async (code: string) => {
+    const compId = await this.competitionRepository.competitionIdFromCode(code);
+
+    return await this.competitionSites(compId);
+  }
 
   competitionSites = async (compId: number) => {
     return await this.competitionRepository.competitionSites(compId);
@@ -252,10 +258,10 @@ export class CompetitionService {
   }
 
   competitionCodeStatus = async (userId: number, code: string): Promise<{} | undefined> => {
-    const userTypeObject = await this.userRepository.userType(userId);
-    if (userTypeObject.type !== UserType.STUDENT) {
-      throw COMPETITION_STUDENT_REQUIRED;
-    }
+    // const userTypeObject = await this.userRepository.userType(userId);
+    // if (userTypeObject.type !== UserType.STUDENT) {
+    //   throw COMPETITION_STUDENT_REQUIRED;
+    // }
 
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {
