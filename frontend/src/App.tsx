@@ -211,7 +211,7 @@ function App() {
           />
 
           <Route
-            path="/competition/staff/register/:compId"
+            path="/competition/staff/register/:code?"
             element={<StaffRoleRegistration />}
           />
         </Routes>

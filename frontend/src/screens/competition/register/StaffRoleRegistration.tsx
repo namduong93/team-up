@@ -7,9 +7,10 @@ import TextInput from "../../../components/general_utility/TextInput";
 import { AdvancedDropdown } from "../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../utility/request";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
+import MultiRadio from "../../../components/general_utility/MultiRadio";
 
 interface StaffRegistration {
-  role: string;
+  role: string[];
   capacity?: number;
   site?: string;
   institution?: string;
@@ -40,7 +41,6 @@ export const StaffRoleRegistration: FC = () => {
   const navigate = useNavigate();
 
   const staffOptions = [
-    { value: "", label: "Please Select" },
     { value: "Coach", label: "Coach" },
     { value: "Site Coordinator", label: "Site Coordinator" },
     { value: "Administrator", label: "Administrator" },
@@ -48,7 +48,7 @@ export const StaffRoleRegistration: FC = () => {
 
   const [staffRegistrationData, setStaffRegistrationData] =
     useState<StaffRegistration>({
-      role: "",
+      role: [],
       capacity: undefined,
       site: "",
       institution: "",
@@ -108,9 +108,11 @@ export const StaffRoleRegistration: FC = () => {
   const isButtonDisabled = () => {
     const { role, capacity, site, institution } = staffRegistrationData;
     return (
-      role === "" ||
-      (role === "Coach" && institution === "" && site === "") ||
-      (role === "Site Coordinator" && site === "" && capacity === undefined)
+      role.length === 0 ||
+      (role.includes("Coach") && institution === "" && site === "") ||
+      (role.includes("Site Coordinator") &&
+        site === "" &&
+        capacity === undefined)
     );
   };
 
@@ -129,38 +131,68 @@ export const StaffRoleRegistration: FC = () => {
     >
       <FormContainer onSubmit={handleSubmit}>
         <Title>Staff Registration</Title>
-
-        <DropdownInput
-          label="Role"
+        <MultiRadio
           options={staffOptions}
-          value={staffRegistrationData.role}
-          required={true}
-          onChange={(e) =>
+          selectedValues={staffRegistrationData.role}
+          onChange={(selectedValues) =>
             setStaffRegistrationData({
               ...staffRegistrationData,
-              role: e.target.value,
+              role: selectedValues,
             })
           }
-          width="100%"
+          label={
+            <Label>
+              Role<Asterisk>*</Asterisk>
+            </Label>
+          }
+          descriptor="Please select all the roles you would like to register for"
+          showOther={false}
         />
 
-        {staffRegistrationData.role === "Coach" && (
+        {(staffRegistrationData.role.includes("Coach") ||
+          staffRegistrationData.role.includes("Site Coordinator")) && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+            }}
+          >
+            <Label>
+              Site Overseeing<Asterisk>*</Asterisk>
+            </Label>
+
+            <AdvancedDropdown
+              optionsState={[siteOptions, setSiteOptions]}
+              setCurrentSelected={setCurrentSiteOption}
+              style={{ width: "100%", marginBottom: 20 }}
+            />
+          </div>
+        )}
+
+        {staffRegistrationData.role.includes("Site Coordinator") && (
           <>
-            <DescriptiveTextInput
-              label="Competition Biography"
-              descriptor="Please write a short description about yourself that would help others get to know you"
-              placeholder="Enter a description"
+            <TextInput
+              label="Capacity Constraints"
+              descriptor="Please enter the capacity constraints of your selected location"
+              placeholder="Please enter"
+              type="numeric"
               required={true}
-              value={staffRegistrationData.competitionBio || ""}
-              onChange={(e) =>
+              value={staffRegistrationData.capacity?.toString() || ""}
+              onChange={(e) => {
+                const value = e.target.value;
                 setStaffRegistrationData({
                   ...staffRegistrationData,
-                  competitionBio: e.target.value,
-                })
-              }
+                  capacity: Number(value),
+                });
+              }}
               width="100%"
             />
+          </>
+        )}
 
+        {staffRegistrationData.role.includes("Coach") && (
+          <>
             <div
               style={{
                 display: "flex",
@@ -178,59 +210,18 @@ export const StaffRoleRegistration: FC = () => {
               />
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-              }}
-            >
-              <Label>
-                Site Location<Asterisk>*</Asterisk>
-              </Label>
-              <AdvancedDropdown
-                optionsState={[siteOptions, setSiteOptions]}
-                setCurrentSelected={setCurrentSiteOption}
-                style={{ width: "100%", marginBottom: 20 }}
-              />
-            </div>
-          </>
-        )}
-
-        {staffRegistrationData.role === "Site Coordinator" && (
-          <>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-              }}
-            >
-              <Label>
-                Site Location<Asterisk>*</Asterisk>
-              </Label>
-              <AdvancedDropdown
-                optionsState={[siteOptions, setSiteOptions]}
-                setCurrentSelected={setCurrentSiteOption}
-                label="Select Site"
-                style={{ width: "100%", marginBottom: 20 }}
-              />
-            </div>
-
-            <TextInput
-              label="Capacity Constraints"
-              descriptor="Please enter the capacity constraints of your selected location"
-              placeholder="Please enter"
-              type="numeric"
+            <DescriptiveTextInput
+              label="Competition Biography"
+              descriptor="Please write a short description about yourself that would help participants get to know you"
+              placeholder="Enter a description"
               required={true}
-              value={staffRegistrationData.capacity?.toString() || ""}
-              onChange={(e) => {
-                const value = e.target.value;
+              value={staffRegistrationData.competitionBio || ""}
+              onChange={(e) =>
                 setStaffRegistrationData({
                   ...staffRegistrationData,
-                  capacity: Number(value),
-                });
-              }}
+                  competitionBio: e.target.value,
+                })
+              }
               width="100%"
             />
           </>
