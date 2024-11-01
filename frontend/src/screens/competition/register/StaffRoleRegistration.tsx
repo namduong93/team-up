@@ -67,7 +67,6 @@ export const StaffRoleRegistration: FC = () => {
     label: "",
   });
 
-  // adjust to site
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
@@ -77,7 +76,7 @@ export const StaffRoleRegistration: FC = () => {
         const universities = response.data;
 
         const options = universities.universities.map((university) => ({
-          value: String(university.id), // String conversion needed since backend sends as number
+          value: String(university.id),
           label: university.name,
         }));
 
