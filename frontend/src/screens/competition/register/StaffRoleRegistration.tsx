@@ -9,14 +9,7 @@ import { sendRequest } from "../../../utility/request";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { CompetitionSite } from "../../../../shared_types/Competition/CompetitionSite";
 import MultiRadio from "../../../components/general_utility/MultiRadio";
-
-interface StaffRegistration {
-  role: string[];
-  capacity?: number;
-  site?: string;
-  institution?: string;
-  competitionBio?: string;
-}
+import { StaffRegistration } from "../../../../shared_types/Competition/registration/StaffRegistration";
 
 interface University {
   id: string;
@@ -50,7 +43,7 @@ export const StaffRoleRegistration: FC = () => {
 
   const [staffRegistrationData, setStaffRegistrationData] =
     useState<StaffRegistration>({
-      role: [],
+      roles: [],
       capacity: undefined,
       site: "",
       institution: "",
@@ -122,7 +115,7 @@ export const StaffRoleRegistration: FC = () => {
 
   const isButtonDisabled = () => {
     console.log(staffRegistrationData);
-    const { role, capacity, site, institution } = staffRegistrationData;
+    const { roles: role, capacity, site, institution } = staffRegistrationData;
     return (
       role.length === 0 ||
       (role.includes("Coach") && institution === "" && site === "") ||
@@ -149,11 +142,11 @@ export const StaffRoleRegistration: FC = () => {
         <Title>Staff Registration</Title>
         <MultiRadio
           options={staffOptions}
-          selectedValues={staffRegistrationData.role}
+          selectedValues={staffRegistrationData.roles}
           onChange={(selectedValues) =>
             setStaffRegistrationData({
               ...staffRegistrationData,
-              role: selectedValues,
+              roles: selectedValues,
             })
           }
           label={
@@ -164,8 +157,8 @@ export const StaffRoleRegistration: FC = () => {
           showOther={false}
         />
 
-        {(staffRegistrationData.role.includes("Coach") ||
-          staffRegistrationData.role.includes("Site Coordinator")) && (
+        {(staffRegistrationData.roles.includes("Coach") ||
+          staffRegistrationData.roles.includes("Site Coordinator")) && (
           <>
             <div
               style={{
@@ -186,7 +179,7 @@ export const StaffRoleRegistration: FC = () => {
           </>
         )}
 
-        {staffRegistrationData.role.includes("Site Coordinator") && (
+        {staffRegistrationData.roles.includes("Site Coordinator") && (
           <>
             <TextInput
               label="Capacity Constraints"
@@ -207,7 +200,7 @@ export const StaffRoleRegistration: FC = () => {
           </>
         )}
 
-        {staffRegistrationData.role.includes("Coach") && (
+        {staffRegistrationData.roles.includes("Coach") && (
           <>
             <div
               style={{
