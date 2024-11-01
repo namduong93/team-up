@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import DropdownInput from "../../../components/general_utility/DropDownInput";
@@ -7,6 +7,7 @@ import TextInput from "../../../components/general_utility/TextInput";
 import { AdvancedDropdown } from "../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../utility/request";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
+import { CompetitionSite } from "../../../../shared_types/Competition/CompetitionSite";
 import MultiRadio from "../../../components/general_utility/MultiRadio";
 
 interface StaffRegistration {
@@ -38,6 +39,7 @@ const Asterisk = styled.span`
 `;
 
 export const StaffRoleRegistration: FC = () => {
+  const { code } = useParams();
   const navigate = useNavigate();
 
   const staffOptions = [
@@ -85,13 +87,26 @@ export const StaffRoleRegistration: FC = () => {
           label: university.name,
         }));
 
-        setSiteOptions(options);
+        setUniversityOptions(options);
       } catch (error) {
         console.error("Error fetching universities:", error);
       }
     };
 
+    const fetchSites = async () => {
+      try {
+        const response = await sendRequest.get<{
+          sites: Array<CompetitionSite>;
+        }>("/competition/sites", { code });
+        const { sites } = response.data;
+        setSiteOptions(
+          sites.map((site) => ({ value: String(site.id), label: site.name }))
+        );
+      } catch (error: unknown) {}
+    };
+
     fetchUniversities();
+    fetchSites();
   }, []);
 
   // const handleSiteChange = (newSelectedSite: {
@@ -106,6 +121,7 @@ export const StaffRoleRegistration: FC = () => {
   // };
 
   const isButtonDisabled = () => {
+    console.log(staffRegistrationData);
     const { role, capacity, site, institution } = staffRegistrationData;
     return (
       role.length === 0 ||
@@ -145,29 +161,29 @@ export const StaffRoleRegistration: FC = () => {
               Role<Asterisk>*</Asterisk>
             </Label>
           }
-          descriptor="Please select all the roles you would like to register for"
           showOther={false}
         />
 
         {(staffRegistrationData.role.includes("Coach") ||
           staffRegistrationData.role.includes("Site Coordinator")) && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-            }}
-          >
-            <Label>
-              Site Overseeing<Asterisk>*</Asterisk>
-            </Label>
-
-            <AdvancedDropdown
-              optionsState={[siteOptions, setSiteOptions]}
-              setCurrentSelected={setCurrentSiteOption}
-              style={{ width: "100%", marginBottom: 20 }}
-            />
-          </div>
+          <>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              <Label>
+                Site Location<Asterisk>*</Asterisk>
+              </Label>
+              <AdvancedDropdown
+                optionsState={[siteOptions, setSiteOptions]}
+                setCurrentSelected={setCurrentSiteOption}
+                style={{ width: "100%", marginBottom: 20 }}
+              />
+            </div>
+          </>
         )}
 
         {staffRegistrationData.role.includes("Site Coordinator") && (
@@ -204,7 +220,8 @@ export const StaffRoleRegistration: FC = () => {
                 Institution<Asterisk>*</Asterisk>
               </Label>
               <AdvancedDropdown
-                optionsState={[siteOptions, setSiteOptions]}
+                isExtendable={false}
+                optionsState={[universityOptions, setUniversityOptions]}
                 setCurrentSelected={setCurrentUniversityOption}
                 style={{ width: "100%", marginBottom: 20 }}
               />
