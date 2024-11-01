@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { sendRequest } from "../../../../utility/request";
 import { TeamDetails } from "./TeamCard";
 import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
-import { CompetitionDetails } from "../../CompetitionPage";
+import { CompetitionDetails, fetchTeams } from "../../CompetitionPage";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -89,10 +89,16 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     setFilters({});
     setApproveTeamIds([]);
   }
-  const confirmTeams = () => {
-    // do something with the approveTeamIds:
-    console.log('accepted', approveTeamIds);
+  const confirmTeams = async () => {
+    if (approveTeamIds.length === 0) {
+      return;
+    }
+    try {
+      await sendRequest.put('/competition/coach/team_assignment_approve', { compId, approveIds: approveTeamIds });
+      await fetchTeams(compId, setTeamList);
+    } catch (error: unknown) {
 
+    }
     disableEditTeamStatus();
   }
 
@@ -106,8 +112,20 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     setApproveTeamIds([]);
     setRejectedTeamIds([]);
   }
-  const confirmNames = () => {
-    // do something with the approveTeamIds and rejectedteamIds:
+  const confirmNames = async () => {
+    if (approveTeamIds.length === 0 && rejectedTeamIds.length === 0) {
+      return;
+    }
+
+    try {
+      await sendRequest.put('/competition/coach/team_name_approve',
+        {compId, approveIds: approveTeamIds, rejectIds: rejectedTeamIds });
+      await fetchTeams(compId, setTeamList);
+    } catch (error: unknown) {
+
+    }
+
+
     console.log('accepted', approveTeamIds);
     console.log('rejected', rejectedTeamIds);
 

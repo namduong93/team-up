@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "./components/PageUtils";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
@@ -42,6 +42,17 @@ export interface CompetitionDetails {
   code?: string;
   region: string;
 };
+
+export const fetchTeams = async (compId: string | undefined, setTeams: React.Dispatch<React.SetStateAction<Array<TeamDetails>>>) => {
+  try {
+    const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
+    const { teamList } = response.data;
+    setTeams(teamList);
+
+  } catch (error: unknown) {
+    console.log(error)
+  }
+}
 
 export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
@@ -94,14 +105,7 @@ export const CompetitionPage: FC = () => {
     };
 
     const fetchCompetitionTeams = async () => {
-      try {
-        const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
-        const { teamList } = response.data;
-        setTeamList(teamList);
-
-      } catch (error: unknown) {
-        console.log(error)
-      }
+      fetchTeams(compId, setTeamList);
     };
 
     const fetchStudents = async () => {
