@@ -11,7 +11,7 @@ import { NarrowDisplayDiv, UserIcon, UserNameContainerDiv, UserNameGrid, Usernam
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 
 
-export enum StaffAccess {
+enum StaffAccess {
   Accepted = 'Accepted',
   Pending = 'Pending',
   Rejected = 'Rejected',
