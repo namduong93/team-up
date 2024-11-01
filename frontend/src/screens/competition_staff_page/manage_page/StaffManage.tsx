@@ -13,9 +13,9 @@ import styled from "styled-components";
 import { StaffActionCard } from "./components/StaffActionCard";
 import { sendRequest } from "../../../utility/request";
 import { useParams } from "react-router-dom";
-import { CompetitionRole } from "../CompetitionPage";
 // import { CompetitionDetails } from "../CompetitionPage";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
+import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 
 // interface StaffManageProps extends React.HTMLAttributes<HTMLDivElement> {
 //   compDetails: CompetitionDetails;

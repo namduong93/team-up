@@ -10,6 +10,7 @@ import DescriptiveTextInput from "../../../components/general_utility/Descriptiv
 import { CompetitionSite } from "../../../../shared_types/Competition/CompetitionSite";
 import MultiRadio from "../../../components/general_utility/MultiRadio";
 import { StaffRegistration } from "../../../../shared_types/Competition/registration/StaffRegistration";
+import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 
 interface University {
   id: string;
@@ -36,9 +37,9 @@ export const StaffRoleRegistration: FC = () => {
   const navigate = useNavigate();
 
   const staffOptions = [
-    { value: "Coach", label: "Coach" },
-    { value: "Site Coordinator", label: "Site Coordinator" },
-    { value: "Administrator", label: "Administrator" },
+    { value: CompetitionRole.Coach, label: "Coach" },
+    { value: CompetitionRole.SiteCoordinator, label: "Site Coordinator" },
+    { value: CompetitionRole.Admin, label: "Administrator" },
   ];
 
   const [staffRegistrationData, setStaffRegistrationData] =
@@ -118,8 +119,8 @@ export const StaffRoleRegistration: FC = () => {
     const { roles: role, capacity, site, institution } = staffRegistrationData;
     return (
       role.length === 0 ||
-      (role.includes("Coach") && institution === "" && site === "") ||
-      (role.includes("Site Coordinator") &&
+      (role.includes(CompetitionRole.Coach) && institution === "" && site === "") ||
+      (role.includes(CompetitionRole.SiteCoordinator) &&
         site === "" &&
         capacity === undefined)
     );
@@ -146,7 +147,7 @@ export const StaffRoleRegistration: FC = () => {
           onChange={(selectedValues) =>
             setStaffRegistrationData({
               ...staffRegistrationData,
-              roles: selectedValues,
+              roles: selectedValues as CompetitionRole[],
             })
           }
           label={
@@ -157,8 +158,8 @@ export const StaffRoleRegistration: FC = () => {
           showOther={false}
         />
 
-        {(staffRegistrationData.roles.includes("Coach") ||
-          staffRegistrationData.roles.includes("Site Coordinator")) && (
+        {(staffRegistrationData.roles.includes(CompetitionRole.Coach) ||
+          staffRegistrationData.roles.includes(CompetitionRole.SiteCoordinator)) && (
           <>
             <div
               style={{
@@ -179,7 +180,7 @@ export const StaffRoleRegistration: FC = () => {
           </>
         )}
 
-        {staffRegistrationData.roles.includes("Site Coordinator") && (
+        {staffRegistrationData.roles.includes(CompetitionRole.SiteCoordinator) && (
           <>
             <TextInput
               label="Capacity Constraints"
@@ -200,7 +201,7 @@ export const StaffRoleRegistration: FC = () => {
           </>
         )}
 
-        {staffRegistrationData.roles.includes("Coach") && (
+        {staffRegistrationData.roles.includes(CompetitionRole.Coach) && (
           <>
             <div
               style={{

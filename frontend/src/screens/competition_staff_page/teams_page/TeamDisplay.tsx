@@ -6,7 +6,7 @@ import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { TeamCard, TeamDetails } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
-import { CompetitionRole } from "../CompetitionPage";
+import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 
 const TeamCardGridDisplay = styled.div`
   flex: 1;

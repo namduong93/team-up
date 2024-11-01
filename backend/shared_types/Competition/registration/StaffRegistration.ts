@@ -1,5 +1,7 @@
+import { CompetitionRole } from "../CompetitionRole";
+
 export interface StaffRegistration {
-  roles: string[];
+  roles: CompetitionRole[];
   capacity?: number;
   site?: string;
   institution?: string;
