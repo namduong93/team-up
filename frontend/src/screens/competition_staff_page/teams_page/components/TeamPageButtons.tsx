@@ -4,7 +4,7 @@ import { TransparentResponsiveButton } from "../../../../components/responsive_f
 import { FaDownload, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
-import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { useParams } from "react-router-dom";
 import { sendRequest } from "../../../../utility/request";
 import { TeamDetails } from "./TeamCard";
 import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
@@ -79,7 +79,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 }) => {
   
   const theme = useTheme();
-
+  const { compId } = useParams<{ compId: string }>();
   const enableEditTeamStatus = () => {
     setIsEditingStatus(true);
     setFilters({ ...filters, Status: ['Pending'] });
@@ -114,11 +114,10 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     disableEditNameStatus();
   }
 
-
   const handleAlgorithmButton = async () => {
-
     // hook it here
-    console.log('running the algorithm...');
+    const response = await sendRequest.post<{ algorithm: string }>('/competition/algorithm', { compId });
+    console.log(response.data.algorithm);
     return true;
   }
 
@@ -127,8 +126,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const downloadCSV = async () => {
     console.log(teamList);
     // Filter only 'Unregistered' teams
-    // const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
-    const unregisteredTeams = teamList;
+    const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
+    // const unregisteredTeams = teamList;
 
     // Group teams by site location and level
     const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
@@ -197,8 +196,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const downloadPDF = async () => {
     console.log(teamList);
     // Filter only 'Unregistered' teams
-    // const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
-    const unregisteredTeams = teamList; // Use all teams for now
+    const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
+    // const unregisteredTeams = teamList; // Use all teams for now
 
     // Grouping teams by site location and level
     const teamsPerSite = unregisteredTeams.reduce((acc, team) => {

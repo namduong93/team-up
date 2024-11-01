@@ -4,7 +4,10 @@ import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../../components/progress_bar/ProgressBar";
 import { useNavigate, useParams } from "react-router-dom";
 import DropdownInputLight from "../../../components/general_utility/DropDownLight";
-import { useMultiStepCompRegoForm } from "./hooks/useMultiStepCompRegoForm";
+import {
+  SiteLocation,
+  useMultiStepCompRegoForm,
+} from "./hooks/useMultiStepCompRegoForm";
 import TextInputLight from "../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import { sendRequest } from "../../../utility/request";
@@ -186,6 +189,12 @@ export const CompetitionIndividual: FC = () => {
       try {
         const infoResponse = await sendRequest.get<User>("/user/profile_info");
         setUser(infoResponse.data);
+        const siteResponse = await sendRequest.get<{ site: SiteLocation }>(
+          "/competition/user/default_site",
+          { code }
+        );
+        setFormData({ ...formData, siteLocation: siteResponse.data.site });
+        console.log("Site info:", siteResponse.data.site);
       } catch (error: unknown) {
         console.log("Error fetching user info:", error);
       }
@@ -272,12 +281,12 @@ export const CompetitionIndividual: FC = () => {
           <Label>
             Site Attendance<Asterisk>*</Asterisk>
           </Label>
-          {/* <Text>Please contact your coach for site location information</Text> */}
 
-          {/* <div style={{display:'flex', alignContent:'center'}}>
-            <Text><em>SITE LOCATION</em></Text>
+          <div style={{ display: "flex", alignContent: "center" }}>
+            <Text>
+              <em>{formData.siteLocation.name}</em>
+            </Text>
           </div>
-          TODO: add site location */}
 
           <RadioButton
             // label="Site Attendance"
@@ -294,10 +303,7 @@ export const CompetitionIndividual: FC = () => {
               setFormData({ ...formData, isRemote });
             }}
             required={true}
-            descriptor={[
-              "Will you be attending on site or remotely?",
-              "(Please contact your coach for site location information.)",
-            ]}
+            descriptor={["Will you be attending on site or remotely?"]}
             width="100%"
           />
 

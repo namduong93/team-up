@@ -3,9 +3,14 @@ import { FirstStepPopUp } from './FirstStepPopUp';
 import { SecondStepPopUp } from './SecondStepPopUp';
 import { ThirdStepPopUp } from './ThirdStepPopUp';
 import styled from "styled-components";
+import { sendRequest } from '../../utility/request';
+import { useParams } from 'react-router-dom';
+import { SitePopup1 } from './SitePopup1';
 
 interface SitePopUpChainProps {
+  compId?: number;
   handleClose: () => void;
+  siteOptionsState?: [{ value: string; label: string; }[], React.Dispatch<React.SetStateAction<{ value: string; label: string; }[]>>];
 }
 
 const Heading = styled.h2`
@@ -17,9 +22,9 @@ const Heading = styled.h2`
   word-break: break-word;
 `
 
-export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) => {
+export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ compId = useParams().compId, handleClose, siteOptionsState = [[{ value: '', label: '' }], () => {}] }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [newSite, setNewSite] = useState('');
+  const [newSite, setNewSite] = useState({ value: '', label: '' });
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -31,7 +36,11 @@ export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) =
   };
 
   const handleSubmit = () => {
-    // TO-DO: add backend routing to submit the newSite request to backend
+    try {
+      sendRequest.put('/competition/student/site_change', { compId, newSiteId: parseInt(newSite.value) });
+    } catch (error: unknown) {
+      
+    }
 
     setCurrentStep((prevStep) => prevStep + 1);
   }
@@ -40,13 +49,14 @@ export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({ handleClose }) =
     switch (currentStep) {
       case 1:
         return (
-          <FirstStepPopUp
+          <SitePopup1
+            siteOptionsState={siteOptionsState}
             heading={<Heading>Change Team Site {"\nLocation"}</Heading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter a location"
-            inputValue={newSite}
-            setInputValue={setNewSite}
+            inputOption={newSite}
+            setInputOption={setNewSite}
           />
         );
       case 2:

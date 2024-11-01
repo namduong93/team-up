@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
 import { ProfileCard } from "./ProfileCard";
@@ -78,9 +78,14 @@ export const TeamDetails: FC = () => {
     teamName: string;
     teamSite: string;
     teamSeat: string;
-    teamLevel: "A" | "B" | "AB";
+    teamLevel: "";
     students: Student[];
   }>();
+
+  useEffect(() => {
+    console.log(teamLevel.includes("A"));
+  }, []);
+
   const [editingPreferences, setEditingPreferences] =
     useState<StudentDetails | null>(null);
 
@@ -130,11 +135,7 @@ export const TeamDetails: FC = () => {
           <div>
             <TeamLabel>Level:</TeamLabel>
             <TeamField>
-              {teamLevel === "A"
-                ? "A (Competitive)"
-                : teamLevel === "B"
-                ? "B (Participation)"
-                : "AB (Mixed)"}
+              {teamLevel}
             </TeamField>
           </div>
         </TeamInfo>

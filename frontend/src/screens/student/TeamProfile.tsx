@@ -24,6 +24,7 @@ export interface ParticipantTeamDetails {
     level: string;
     boersenEligible: boolean;
     isRemote: boolean;
+    // studentAlgoScore?: number;
   }>;
   coach: {
     name: string;
@@ -90,6 +91,7 @@ export const TeamProfile: FC = () => {
       
       const details = response.data;
       setTeamDetails({ ...details, startDate: new Date(details.startDate) });
+      console.log(details);
     };
 
     fetchTeamDetails();

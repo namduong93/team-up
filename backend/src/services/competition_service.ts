@@ -1,7 +1,7 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMPETITION_NOT_FOUND, COMPETITION_STUDENT_REQUIRED, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
+import { ServiceError, ServiceErrorType } from "../errors/service_error.js";
 import { DbError } from "../errors/db_error.js";
-import { ServiceError } from "../errors/service_error.js";
-import { Competition, CompetitionIdObject, CompetitionShortDetailsObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
@@ -133,6 +133,10 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+
+  competitionSites = async (compId: number) => {
+    return await this.competitionRepository.competitionSites(compId);
   }
   
   competitionAttendees = async (userId: number, compId: number) => {
@@ -266,24 +270,49 @@ export class CompetitionService {
     return {};
   }
 
+  competitionUserDefaultSite = async (userId: number, code: string): Promise< CompetitionSiteObject | undefined> => {
+    const competitionId = await this.competitionRepository.competitionIdFromCode(code);
+    if (!competitionId) {
+      throw new ServiceError(ServiceError.NotFound, 'Competition not found');
+    }
+
+    const university = await this.userRepository.userUniversity(userId);
+    if (!university) {
+      throw new ServiceError(ServiceError.NotFound, 'User is not associated with a university');
+    }
+    const defaultSite = await this.competitionRepository.competitionUniversityDefaultSite(competitionId, university);
+    return defaultSite;
+   }
+
+
   competitionStudentJoin = async (code: string, competitionUserInfo: CompetitionUser): Promise<void> => {
     const userTypeObject = await this.userRepository.userType(competitionUserInfo.userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw new DbError(DbError.Auth, 'User is not a student.');
+      throw new ServiceError(ServiceError.Auth, 'User is not a student.');
     }
 
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {
-      throw new DbError(DbError.Query, 'Competition does not exist.');
+      throw new ServiceError(ServiceError.NotFound, 'Competition not found');
     }
 
     competitionUserInfo.competitionId = competitionId;
     const competitionRoles = await this.competitionRepository.competitionRoles(competitionUserInfo.userId, competitionId);
     if (competitionRoles.length > 0) { // either they are already a participant or a staff
-      throw new DbError(DbError.Query, 'User is already a participant in this competition.');
+      throw new ServiceError(ServiceError.Auth, 'User is already a participant or staff for this competition.');
     }
     competitionUserInfo.competitionRoles = [CompetitionUserRole.PARTICIPANT];
-    await this.competitionRepository.competitionStudentJoin(competitionUserInfo);
+
+    const university = await this.userRepository.userUniversity(competitionUserInfo.userId);
+    if(!university) {
+      throw new ServiceError(ServiceError.NotFound, 'University not found');
+    }
+
+    if(!competitionUserInfo.siteLocation || !competitionUserInfo.siteLocation.id) {
+      throw new ServiceError(ServiceError.NotFound, 'Site location not provided');
+    }
+
+    await this.competitionRepository.competitionStudentJoin(competitionUserInfo, university);
     return;
   }
 
@@ -411,6 +440,19 @@ export class CompetitionService {
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {
 
     return [{ id: 1, name: 'Macquarie University' }]
+  }
+
+  competitionAlgorithm = async (compId: number, userId: number): Promise<{}> => {
+    const competition = await this.competitionRepository.competitionGetDetails(compId);
+    if (!competition) {
+      throw new ServiceError(ServiceError.NotFound, 'Competition not found');
+    }
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.COACH)) {
+      throw new ServiceError(ServiceError.Auth, 'User is not a coach');
+    }
+    const teamsParticipating = await this.competitionRepository.competitionAlgorithm(compId, userId);
+    return teamsParticipating;
   }
 
   // Check to make sure every competition name is unique

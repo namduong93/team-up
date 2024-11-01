@@ -119,7 +119,7 @@ export const TeamManage: React.FC = () => {
 
   return (
     <ManageContainer>
-      <TeamActionCard numMembers={students.length} />
+      <TeamActionCard numMembers={students.filter((s) => s.name !== null).length} />
       <InfoContainer>
         <ProfileCard
           name={coach.name}

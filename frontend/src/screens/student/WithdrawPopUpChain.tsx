@@ -3,7 +3,7 @@ import { SecondStepPopUp } from './SecondStepPopUp';
 import styled from "styled-components";
 import InvitePopUp from './InvitePopUp';
 import { OptionPopUp } from './OptionPopUp';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { sendRequest } from '../../utility/request';
 
 interface WithdrawPopUpChainProps {
@@ -23,6 +23,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleCl
   const { compId } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [compCode, setCompCode] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -30,7 +31,8 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleCl
 
   const handleCloseWithReset = () => {
     setCurrentStep(1); 
-    handleClose(); 
+    handleClose();
+    navigate('/dashboard');
   };
 
   const handleSubmit = async () => {
