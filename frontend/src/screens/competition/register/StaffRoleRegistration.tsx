@@ -172,6 +172,7 @@ export const StaffRoleRegistration: FC = () => {
                 Site Location<Asterisk>*</Asterisk>
               </Label>
               <AdvancedDropdown
+                isExtendable={false}
                 optionsState={[siteOptions, setSiteOptions]}
                 setCurrentSelected={setCurrentSiteOption}
                 style={{ width: "100%", marginBottom: 20 }}
