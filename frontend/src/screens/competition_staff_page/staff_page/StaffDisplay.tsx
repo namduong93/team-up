@@ -11,7 +11,7 @@ import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContex
 import { NarrowDisplayDiv, UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideDisplayDiv, WideInfoContainerDiv } from "../students_page/StudentDisplay";
 
 
-export enum StaffAccess {
+enum StaffAccess {
   Accepted = 'Accepted',
   Pending = 'Pending',
   Rejected = 'Rejected',

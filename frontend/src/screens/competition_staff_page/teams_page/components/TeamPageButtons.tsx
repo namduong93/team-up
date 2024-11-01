@@ -11,6 +11,7 @@ import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
 import { CompetitionDetails, fetchTeams } from "../../CompetitionPage";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { DownloadButtons } from "../../components/DownloadButtons";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -326,13 +327,11 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     return true;
   };
 
-  const enableDownloading = () => {
-    setIsDownloading(true);
+  const handleEnableDownloading = () => {
     setFilters({ ...filters, Status: ['Unregistered'] });
   }
 
-  const disableDownloading = () => {
-    setIsDownloading(false);
+  const handleDisableDownloading = () => {
     setFilters({});
   }
 
@@ -408,49 +407,16 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     </div>
     }
 
-    {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <TransparentResponsiveButton actionType="primary"
-          label="Download"
-          icon={<FaDownload />}
-          style={{ backgroundColor: theme.colours.primaryLight }}
-          onClick={enableDownloading} isOpen={false}
-        />
-
-      </div>
-    }
-
-    {isDownloading &&
-    <>
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <TransparentResponsiveButton actionType="error"
-          onClick={disableDownloading} label="Cancel" isOpen={false}
-          icon={<GiCancel />}
-          style={{
-            backgroundColor: theme.colours.cancel,
-        }} />
-      </div>
-      
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <ResponsiveActionButton actionType="secondary"
-          label="Download CSV"
-          question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentCsv />}
-          handleSubmit={downloadCSV}
-        />
-      </div>
-
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-        <ResponsiveActionButton actionType="primary"
-          label="Download PDF"
-          question="Are you sure you would like to register these teams?"
-          icon={<GrDocumentPdf />}
-          handleSubmit={downloadPDF}
-        />
-      </div>
-
-    </>
-    }
+    <DownloadButtons
+      isEditingStatus={isEditingStatus}
+      isEditingNameStatus={isEditingNameStatus}
+      isDownloadingState={[isDownloading, setIsDownloading]}
+      handleEnable={handleEnableDownloading}
+      handleDisable={handleDisableDownloading}
+      downloadCSV={downloadCSV}
+      downloadPDF={downloadPDF}
+    />
+    
   </>
   );
 }

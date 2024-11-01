@@ -57,12 +57,11 @@ export const TeamDisplay: FC = () => {
           teamListState: [teamList, setTeamList],
           universityOption, roles,
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
-          setFilterOptions, setSortOptions, setEnableTeamButtons } = useCompetitionOutletContext('teams');
+          setFilterOptions, setSortOptions } = useCompetitionOutletContext('teams');
 
   useEffect(() => {
     setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
     setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
-    setEnableTeamButtons(!roles.includes(CompetitionRole.SiteCoordinator) && true);
   }, []);
   
   const filteredTeamList = teamList.filter((team: TeamDetails) => {

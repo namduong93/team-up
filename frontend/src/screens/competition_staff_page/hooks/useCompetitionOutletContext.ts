@@ -4,7 +4,14 @@ import { TeamDetails } from "../teams_page/components/TeamCard";
 import { StudentInfo } from "../students_page/StudentDisplay";
 import { AttendeesDetails } from "../attendees_page/AttendeesPage";
 import { StaffDetails } from "../staff_page/StaffDisplay";
-import { CompetitionDetails } from "../CompetitionPage";
+import { CompetitionDetails, CompetitionRole } from "../CompetitionPage";
+
+export interface ButtonConfiguration {
+  enableTeamButtons: boolean;
+  enableAttendeesButtons: boolean;
+  enableStudentButtons: boolean;
+  enableStaffButtons: boolean;
+}
 
 export interface CompetitionPageContext {
   filters: Record<string, Array<string>>;
@@ -13,7 +20,6 @@ export interface CompetitionPageContext {
   removeFilter: (field: string, value: string) => Record<string, string>;
   setFilterOptions: React.Dispatch<React.SetStateAction<Record<string, Array<string>>>>;
   setSortOptions: React.Dispatch<React.SetStateAction<Array<{ label: string, value: string }>>>;
-  setEnableTeamButtons: React.Dispatch<React.SetStateAction<ReactNode>>;
   setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
   editingStatusState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   teamIdsState: [Array<number>, React.Dispatch<React.SetStateAction<Array<number>>>];
@@ -26,6 +32,8 @@ export interface CompetitionPageContext {
   attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
   staffListState: [Array<StaffDetails>, React.Dispatch<React.SetStateAction<Array<StaffDetails>>>];
   compDetails: CompetitionDetails;
+
+  buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
 }
 
 export const useCompetitionOutletContext = (page: string) => {
@@ -37,7 +45,7 @@ export const useCompetitionOutletContext = (page: string) => {
     teamListState: [teamList, setTeamList],
     editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
     rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
-    setFilterOptions, setSortOptions, setEnableTeamButtons,
+    setFilterOptions, setSortOptions, buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
     studentsState: [students, setStudents],
     attendeesListState: [attendeesList, setAttendeesList],
     compDetails,
@@ -51,31 +59,56 @@ export const useCompetitionOutletContext = (page: string) => {
     setRejectedTeamIds([]);
     
     // enable the team buttons on the team page and not on the non-team page
-    if (page !== 'teams') {
-      setEnableTeamButtons(false);
-    } else {
-      setEnableTeamButtons(true);
+    if (page === 'teams') {
+      setButtonConfiguration({
+        enableTeamButtons: (roles.includes(CompetitionRole.Admin) || roles.includes(CompetitionRole.Coach)),
+        enableStudentButtons: false,
+        enableStaffButtons: false,
+        enableAttendeesButtons: false,
+      });
+      return;
     }
   
-    if (page !== 'students') {
-  
-    } else {
-  
+    if (page === 'students') {
+      setButtonConfiguration({
+        enableTeamButtons: false,
+        enableStudentButtons: true,
+        enableStaffButtons: false,
+        enableAttendeesButtons: false,
+      });
+      return;
     }
   
-    if (page !== 'staff') {
-  
-    } else {
-  
+    if (page === 'staff') {
+      setButtonConfiguration({
+        enableTeamButtons: false,
+        enableStudentButtons: false,
+        enableStaffButtons: true,
+        enableAttendeesButtons: false,
+      });
+      return;
     }
   
-    if (page === 'site') {
-  
-    } else {
-      
+    if (page === 'attendees') {
+      setButtonConfiguration({
+        enableTeamButtons: false,
+        enableStudentButtons: false,
+        enableStaffButtons: false,
+        enableAttendeesButtons: true,
+      });
+      return;
     }
 
-  }, []);
+    setButtonConfiguration({
+      enableTeamButtons: false,
+      enableStudentButtons: false,
+      enableStaffButtons: false,
+      enableAttendeesButtons: false,
+    });
+    return;
+    
+
+  }, [roles]);
 
   return context;
 }

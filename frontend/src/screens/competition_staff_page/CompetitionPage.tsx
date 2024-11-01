@@ -13,6 +13,8 @@ import { StudentInfo } from "./students_page/StudentDisplay";
 import { AttendeesDetails } from "./attendees_page/AttendeesPage";
 import { StaffDetails } from "./staff_page/StaffDisplay";
 import { SiteLocation, OtherSiteLocation } from "../competition/creation/CompDetails";
+import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
+import { AttendeesPageButtons } from "./attendees_page/components/AttendeesPageButtons";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -66,8 +68,16 @@ export const CompetitionPage: FC = () => {
   
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
 
+  const [buttonConfiguration, setButtonConfiguration] = useState<ButtonConfiguration>(
+    {
+      enableTeamButtons: false,
+      enableAttendeesButtons: false,
+      enableStudentButtons: false,
+      enableStaffButtons: false,
+    }
+  );
+
   ////
-  const [enableTeamButtons, setEnableTeamButtons] = useState<boolean>(false);
   const [isEditingStatus, setIsEditingStatus] = useState<boolean>(false);
   const [approveTeamIds, setApproveTeamIds] = useState<Array<number>>([]);
   
@@ -202,7 +212,7 @@ export const CompetitionPage: FC = () => {
           filtersState={{ filters, setFilters }}
           searchTermState={{ searchTerm, setSearchTerm }}
           >
-            {enableTeamButtons && <TeamPageButtons
+            {buttonConfiguration.enableTeamButtons && <TeamPageButtons
               universityOption={universityOption}
               filtersState={[filters, setFilters]}
               editingStatusState={[isEditingStatus, setIsEditingStatus]}
@@ -213,6 +223,10 @@ export const CompetitionPage: FC = () => {
               teamListState={[teamList, setTeamList]}
               compDetails={compDetails}
               />}
+
+            {buttonConfiguration.enableAttendeesButtons && <AttendeesPageButtons
+              attendeesListState={[attendeesList, setAttendeesList]}
+            />}
             
             {(roles.includes(CompetitionRole.Admin)) &&
             <AdvancedDropdown style={{ minWidth: '0', maxWidth: '342px', width: '100%' }}
@@ -266,7 +280,8 @@ export const CompetitionPage: FC = () => {
           teamListState: [teamList, setTeamList],
           universityOption,
 
-          setFilterOptions, setSortOptions, setEnableTeamButtons,
+          setFilterOptions, setSortOptions,
+          buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
           studentsState: [students, setStudents],
           attendeesListState: [attendeesList, setAttendeesList],
           staffListState: [staffList, setStaffList],
