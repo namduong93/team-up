@@ -229,6 +229,10 @@ export class CompetitionController {
   });  
 
   competitionStaffJoinCoach = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const code = req.body.code;
+    const competitionStaff = req.body.staffRegistrationData;
+    console.log(competitionStaff);
     res.json({});
     return;
   })

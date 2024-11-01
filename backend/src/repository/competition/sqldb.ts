@@ -377,18 +377,19 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   
     // Query to get site locations related to the competition
     const siteLocationsQuery = `
-      SELECT university_id, name, capacity
+      SELECT id, university_id, name, capacity
       FROM competition_sites
       WHERE competition_id = $1
     `;
     const siteLocationsResult = await this.pool.query(siteLocationsQuery, [competitionId]);
   
     const siteLocations: Array<CompetitionSiteObject> = siteLocationsResult.rows.map(row => ({
+      id: row.id,
       universityId: row.university_id,
       name: row.name,
       capacity: row.capacity,
     }));
-  
+      
     // Constructing the competition object
     const competitionDetails: Competition = {
       id: competitionData.id,

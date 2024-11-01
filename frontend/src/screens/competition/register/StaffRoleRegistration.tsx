@@ -2,20 +2,14 @@ import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { FlexBackground } from "../../../components/general_utility/Background";
-import DropdownInput from "../../../components/general_utility/DropDownInput";
 import TextInput from "../../../components/general_utility/TextInput";
 import { AdvancedDropdown } from "../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../utility/request";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { CompetitionSite } from "../../../../shared_types/Competition/CompetitionSite";
 import MultiRadio from "../../../components/general_utility/MultiRadio";
-import { StaffRegistration } from "../../../../shared_types/Competition/registration/StaffRegistration";
+import { StaffRegistration, University } from "../../../../shared_types/Competition/registration/StaffRegistration";
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
-
-interface University {
-  id: string;
-  name: string;
-}
 
 const Label = styled.label`
   display: block;
@@ -45,9 +39,15 @@ export const StaffRoleRegistration: FC = () => {
   const [staffRegistrationData, setStaffRegistrationData] =
     useState<StaffRegistration>({
       roles: [],
-      capacity: undefined,
-      site: "",
-      institution: "",
+      site: {
+        id: 0,
+        name: "",
+        capacity: undefined,
+      },
+      institution: {
+        id: 0,
+        name: "",
+      },
       competitionBio: "",
     });
 
@@ -58,14 +58,34 @@ export const StaffRoleRegistration: FC = () => {
     Array<{ value: string; label: string }>
   >([]);
 
-  const [currentUniversityOption, setCurrentUniversityOption] = useState({
-    value: "",
-    label: "",
-  });
-  const [currentSiteOption, setCurrentSiteOption] = useState({
-    value: "",
-    label: "",
-  });
+  const [currentSiteOption, setCurrentSiteOption] = useState({ value: "", label: "" });
+  const [currentUniversityOption, setCurrentUniversityOption] = useState({ value: "", label: "" });
+
+  // Use useEffect to watch for changes in currentSiteOption
+  useEffect(() => {
+    if (currentSiteOption.value) {
+      setStaffRegistrationData(prev => ({
+        ...prev,
+        site: {
+          id: currentSiteOption.value !== "" ? Number(currentSiteOption.value) : 0,
+          name: currentSiteOption.label,
+        }
+      }));
+    }
+  }, [currentSiteOption]);
+
+  // Use useEffect to watch for changes in currentUniversityOption
+  useEffect(() => {
+    if (currentUniversityOption.value) {
+      setStaffRegistrationData(prev => ({
+        ...prev,
+        institution: {
+          id: currentUniversityOption.value !== "" ? Number(currentUniversityOption.value) : 0,
+          name: currentUniversityOption.label,
+        }
+      }));
+    }
+  }, [currentUniversityOption]);
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -95,7 +115,9 @@ export const StaffRoleRegistration: FC = () => {
         setSiteOptions(
           sites.map((site) => ({ value: String(site.id), label: site.name }))
         );
-      } catch (error: unknown) {}
+      } catch (error: unknown) {
+        console.error("Error fetching sites:", error);
+      }
     };
 
     fetchUniversities();
@@ -103,7 +125,7 @@ export const StaffRoleRegistration: FC = () => {
   }, []);
 
   const isButtonDisabled = () => {
-    const { roles: role, capacity, competitionBio } = staffRegistrationData;
+    const { roles: role, competitionBio, site: site, institution: institution } = staffRegistrationData;
     console.log(staffRegistrationData);
     if (role.length === 0) {
       return true;
@@ -111,8 +133,8 @@ export const StaffRoleRegistration: FC = () => {
 
     if (role.includes(CompetitionRole.Coach)) {
       if (
-        currentUniversityOption.value === "" ||
-        currentSiteOption.value === "" ||
+        institution?.id === 0 ||
+        site?.id === 0 ||
         competitionBio === ""
       ) {
         return true;
@@ -120,7 +142,8 @@ export const StaffRoleRegistration: FC = () => {
     }
 
     if (role.includes(CompetitionRole.SiteCoordinator)) {
-      if (currentSiteOption.value === "" || capacity === undefined) {
+      if (staffRegistrationData.site?.id === 0 || 
+        site?.capacity === 0) {
         return true;
       }
     }
@@ -130,26 +153,18 @@ export const StaffRoleRegistration: FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // add the site or institution
-    if (
-      staffRegistrationData.roles.includes(CompetitionRole.Coach) ||
-      staffRegistrationData.roles.includes(CompetitionRole.SiteCoordinator)
-    ) {
-      setStaffRegistrationData({
-        ...staffRegistrationData,
-        site: currentSiteOption.value,
-      });
-    }
-
-    if (staffRegistrationData.roles.includes(CompetitionRole.Coach)) {
-      setStaffRegistrationData({
-        ...staffRegistrationData,
-        institution: currentUniversityOption.value,
-      });
-    }
 
     //TO-DO: send staffRegistrationData to backend where request will be sent
     // to admin to grant privileges
+    try {
+      sendRequest.post("/competition/staff/join", {
+        code,
+        staffRegistrationData,
+      });
+    }
+    catch (error: unknown) {
+      console.error("Error submitting staff registration:", error);
+    }
 
     navigate("/dashboard", { state: { isStaffRegoPopUpOpen: true } });
   };
@@ -216,13 +231,18 @@ export const StaffRoleRegistration: FC = () => {
               placeholder="Please enter"
               type="numeric"
               required={true}
-              value={staffRegistrationData.capacity?.toString() || ""}
+              value={staffRegistrationData.site?.capacity?.toString() || ""}
               onChange={(e) => {
                 const value = e.target.value;
-                setStaffRegistrationData({
-                  ...staffRegistrationData,
-                  capacity: value === "" ? undefined : Number(value),
-                });
+                setStaffRegistrationData(prev => ({
+                  ...prev,
+                  site: {
+                    ...prev.site,
+                    id: prev.site?.id || 0,
+                    name: prev.site?.name || "",
+                    capacity: value === "" ? 0 : Number(value),
+                  },
+                }));
               }}
               width="100%"
             />

@@ -202,17 +202,9 @@ app.get('/competition/universities/list', competitionController.competitionUnive
 
 ////////// Competition staff joining with a specific coach, site or admin code.
 
-// PARAMS: { code, universityId, defaultSiteId }
+// PARAMS: { code, staffRegistrationData }
 // RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/coach', competitionController.competitionStaffJoinCoach);
-
-// PARAMS: { code, site, capacity }
-// RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/site_coordinator', competitionController.competitionStaffJoinSiteCoordinator);
-
-// PARAMS: { code }
-// RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/admin', competitionController.competitionStaffJoinAdmin);
+app.post('/competition/staff/join', competitionController.competitionStaffJoinCoach);
 
 // PARAMS: {}
 // RESPONSW: {universities: Array<{id: number, name: string}>}
