@@ -135,6 +135,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const handleAlgorithmButton = async () => {
     // hook it here
     const response = await sendRequest.post<{ algorithm: string }>('/competition/algorithm', { compId });
+    await fetchTeams(compId, setTeamList);
     console.log(response.data.algorithm);
     return true;
   }
