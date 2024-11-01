@@ -8,7 +8,6 @@ const DropdownContainerDiv = styled.div`
   border-radius: 10px;
   box-sizing: border-box;
   position: relative;
-  z-index: 1;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
@@ -32,7 +31,6 @@ const DropdownIconDiv = styled.div`
   position: absolute;
   width: 36px;
   height: 100%;
-  z-index: 5000;
   right: 0;
   top: 0;
   border-left: 1px solid ${({ theme }) => theme.colours.notifDark};
@@ -74,6 +72,7 @@ const DropdownOptionsDiv = styled.div`
   box-sizing: border-box;
   max-height: 150px;
   overflow: auto;
+  z-index: 5;
 
   &::-webkit-scrollbar {
     width: 10px;

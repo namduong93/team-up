@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import DropdownInput from "../../../components/general_utility/DropDownInput";
@@ -7,6 +7,7 @@ import TextInput from "../../../components/general_utility/TextInput";
 import { AdvancedDropdown } from "../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../utility/request";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
+import { CompetitionSite } from "../../../../shared_types/Competition/CompetitionSite";
 
 interface StaffRegistration {
   role: string;
@@ -37,6 +38,7 @@ const Asterisk = styled.span`
 `;
 
 export const StaffRoleRegistration: FC = () => {
+  const { compId } = useParams();
   const navigate = useNavigate();
 
   const staffOptions = [
@@ -85,13 +87,24 @@ export const StaffRoleRegistration: FC = () => {
           label: university.name,
         }));
 
-        setSiteOptions(options);
+        setUniversityOptions(options);
       } catch (error) {
         console.error("Error fetching universities:", error);
       }
     };
 
+    const fetchSites = async () => {
+      try {
+        const response = await sendRequest.get<{ sites: Array<CompetitionSite> }>('/competition/sites', { compId });
+        const { sites } = response.data;
+        setSiteOptions(sites.map((site) => ({ value: String(site.id), label: site.name })));
+      } catch (error: unknown) {
+
+      }
+    }
+
     fetchUniversities();
+    fetchSites();
   }, []);
 
   // const handleSiteChange = (newSelectedSite: {
@@ -172,7 +185,8 @@ export const StaffRoleRegistration: FC = () => {
                 Institution<Asterisk>*</Asterisk>
               </Label>
               <AdvancedDropdown
-                optionsState={[siteOptions, setSiteOptions]}
+                isExtendable={false}
+                optionsState={[universityOptions, setUniversityOptions]}
                 setCurrentSelected={setCurrentUniversityOption}
                 style={{ width: "100%", marginBottom: 20 }}
               />
