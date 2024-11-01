@@ -109,17 +109,6 @@ export const StaffRoleRegistration: FC = () => {
     fetchSites();
   }, []);
 
-  // const handleSiteChange = (newSelectedSite: {
-  //   value: string;
-  //   label: string;
-  // }) => {
-  //   setSelectedSite(newSelectedSite);
-  //   setStaffRegistrationData((prevData) => ({
-  //     ...prevData,
-  //     site: newSelectedSite.value,
-  //   }));
-  // };
-
   const isButtonDisabled = () => {
     console.log(staffRegistrationData);
     const { role, capacity, site, institution } = staffRegistrationData;
@@ -134,7 +123,18 @@ export const StaffRoleRegistration: FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/dashboard", { state: { isStaffRegoPopUpOpen: true } });
+    // add the site or institution
+    if (
+      staffRegistrationData.role.includes("Coach") ||
+      staffRegistrationData.role.includes("Site Coordinator")
+    ) {
+      setStaffRegistrationData({
+        ...staffRegistrationData,
+        site: currentSiteOption.value,
+      });
+    }
+    if (staffRegistrationData.role.includes(""))
+      navigate("/dashboard", { state: { isStaffRegoPopUpOpen: true } });
   };
 
   return (
@@ -175,7 +175,7 @@ export const StaffRoleRegistration: FC = () => {
               }}
             >
               <Label>
-                Site Location<Asterisk>*</Asterisk>
+                Site Overseeing<Asterisk>*</Asterisk>
               </Label>
               <AdvancedDropdown
                 optionsState={[siteOptions, setSiteOptions]}
