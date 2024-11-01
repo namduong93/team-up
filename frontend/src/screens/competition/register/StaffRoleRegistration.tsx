@@ -9,14 +9,8 @@ import { sendRequest } from "../../../utility/request";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { CompetitionSite } from "../../../../shared_types/Competition/CompetitionSite";
 import MultiRadio from "../../../components/general_utility/MultiRadio";
-
-interface StaffRegistration {
-  role: string[];
-  capacity?: number;
-  site?: string;
-  institution?: string;
-  competitionBio?: string;
-}
+import { StaffRegistration } from "../../../../shared_types/Competition/registration/StaffRegistration";
+import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 
 interface University {
   id: string;
@@ -43,14 +37,14 @@ export const StaffRoleRegistration: FC = () => {
   const navigate = useNavigate();
 
   const staffOptions = [
-    { value: "Coach", label: "Coach" },
-    { value: "Site Coordinator", label: "Site Coordinator" },
-    { value: "Administrator", label: "Administrator" },
+    { value: CompetitionRole.Coach, label: "Coach" },
+    { value: CompetitionRole.SiteCoordinator, label: "Site Coordinator" },
+    { value: CompetitionRole.Admin, label: "Administrator" },
   ];
 
   const [staffRegistrationData, setStaffRegistrationData] =
     useState<StaffRegistration>({
-      role: [],
+      roles: [],
       capacity: undefined,
       site: "",
       institution: "",
@@ -111,11 +105,11 @@ export const StaffRoleRegistration: FC = () => {
 
   const isButtonDisabled = () => {
     console.log(staffRegistrationData);
-    const { role, capacity, site, institution } = staffRegistrationData;
+    const { roles: role, capacity, site, institution } = staffRegistrationData;
     return (
       role.length === 0 ||
-      (role.includes("Coach") && institution === "" && site === "") ||
-      (role.includes("Site Coordinator") &&
+      (role.includes(CompetitionRole.Coach) && institution === "" && site === "") ||
+      (role.includes(CompetitionRole.SiteCoordinator) &&
         site === "" &&
         capacity === undefined)
     );
@@ -149,11 +143,11 @@ export const StaffRoleRegistration: FC = () => {
         <Title>Staff Registration</Title>
         <MultiRadio
           options={staffOptions}
-          selectedValues={staffRegistrationData.role}
+          selectedValues={staffRegistrationData.roles}
           onChange={(selectedValues) =>
             setStaffRegistrationData({
               ...staffRegistrationData,
-              role: selectedValues,
+              roles: selectedValues as CompetitionRole[],
             })
           }
           label={
@@ -164,8 +158,8 @@ export const StaffRoleRegistration: FC = () => {
           showOther={false}
         />
 
-        {(staffRegistrationData.role.includes("Coach") ||
-          staffRegistrationData.role.includes("Site Coordinator")) && (
+        {(staffRegistrationData.roles.includes(CompetitionRole.Coach) ||
+          staffRegistrationData.roles.includes(CompetitionRole.SiteCoordinator)) && (
           <>
             <div
               style={{
@@ -178,6 +172,7 @@ export const StaffRoleRegistration: FC = () => {
                 Site Overseeing<Asterisk>*</Asterisk>
               </Label>
               <AdvancedDropdown
+                isExtendable={false}
                 optionsState={[siteOptions, setSiteOptions]}
                 setCurrentSelected={setCurrentSiteOption}
                 style={{ width: "100%", marginBottom: 20 }}
@@ -186,7 +181,7 @@ export const StaffRoleRegistration: FC = () => {
           </>
         )}
 
-        {staffRegistrationData.role.includes("Site Coordinator") && (
+        {staffRegistrationData.roles.includes(CompetitionRole.SiteCoordinator) && (
           <>
             <TextInput
               label="Capacity Constraints"
@@ -207,7 +202,7 @@ export const StaffRoleRegistration: FC = () => {
           </>
         )}
 
-        {staffRegistrationData.role.includes("Coach") && (
+        {staffRegistrationData.roles.includes(CompetitionRole.Coach) && (
           <>
             <div
               style={{

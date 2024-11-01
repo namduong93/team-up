@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole";
 
 interface CheckboxOption {
   value: string;
@@ -9,7 +10,7 @@ interface CheckboxOption {
 interface MultiSelectCheckboxGroupProps {
   options: CheckboxOption[];
   selectedValues: string[];
-  onChange: (values: string[]) => void;
+  onChange: (values: string[] | CompetitionRole[]) => void;
   label: string | React.ReactNode;
   descriptor?: string;
   showOther?: boolean; // New prop to control "Other" visibility

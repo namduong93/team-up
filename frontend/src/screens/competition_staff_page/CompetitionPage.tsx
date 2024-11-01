@@ -13,6 +13,7 @@ import { StudentInfo } from "./students_page/StudentDisplay";
 import { AttendeesDetails } from "./attendees_page/AttendeesPage";
 import { StaffDetails } from "./staff_page/StaffDisplay";
 import { SiteLocation, OtherSiteLocation } from "../competition/creation/CompDetails";
+import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole";
 
 const ToggleOptionTextSpan = styled.span`
   
@@ -21,13 +22,6 @@ const ToggleOptionTextSpan = styled.span`
 const AdminToggleOptionDiv = styled(ToggleOptionDiv)`
   box-sizing: border-box;
 `;
-
-export enum CompetitionRole {
-  Participant = 'Participant',
-  Coach = 'Coach',
-  Admin = 'Admin',
-  SiteCoordinator = 'Site-Coordinator'
-};
 
 export interface CompetitionDetails {
   id?: number;
