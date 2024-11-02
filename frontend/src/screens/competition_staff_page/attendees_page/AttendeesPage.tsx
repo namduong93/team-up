@@ -8,8 +8,10 @@ import Fuse from "fuse.js";
 import { sendRequest } from "../../../utility/request";
 import { CompetitionRole } from "../CompetitionPage";
 import { Field, StudentInfoContainerDiv } from "../students_page/components/StudentInfoCard";
-import { NarrowStatusDiv, StaffStatus, StandardContainerDiv, StandardSpan } from "../staff_page/StaffDisplay";
+import { NarrowStatusDiv } from "../staff_page/StaffDisplay";
 import styled, { useTheme } from "styled-components";
+import { StandardSpan } from "../staff_page/components/WideStaffCard";
+import { StaffRoleDisplay, StaffRoles, StandardContainerDiv } from "../staff_page/components/StaffRole";
 
 export interface AttendeesDetails {
   userId: number;
@@ -31,16 +33,6 @@ export interface AttendeesDetails {
 interface AttendeesCardProps extends React.HTMLAttributes<HTMLDivElement> {
   attendeesDetails: AttendeesDetails;
 }
-
-
-const AttendeesStatus = styled(StaffStatus)<{ $role: CompetitionRole }>`
-  ${({ $role, theme }) => 
-  $role === CompetitionRole.Participant &&
-    `background-color: ${theme.roles.participantBackground};
-    color: ${theme.roles.participantText};
-    border: 1px solid ${theme.roles.participantText};
-    `}
-`;
 
 const BooleanStatus = styled.div<{ $toggled: boolean }>`
   width: 80%;
@@ -66,9 +58,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
       <Field label="Role" 
         value={
           <NarrowStatusDiv>
-            <AttendeesStatus $role={attendeesDetails.roles[0]}>
-              {attendeesDetails.roles[0] === CompetitionRole.SiteCoordinator ? 'Site Coordinator' : attendeesDetails.roles[0]}
-            </AttendeesStatus>
+            <StaffRoles roles={attendeesDetails.roles} />
           </NarrowStatusDiv>
         }
         style={{ width: '20%', minWidth: '125px' }}
@@ -175,9 +165,7 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ..
         <StandardSpan>{attendeesDetails.sex}</StandardSpan>
       </StandardContainerDiv>
 
-      <StandardContainerDiv>
-        <AttendeesStatus $role={attendeesDetails.roles[0]} >{attendeesDetails.roles[0]}</AttendeesStatus>
-      </StandardContainerDiv>
+      <StaffRoles roles={attendeesDetails.roles} />
 
       <StandardContainerDiv>
         <StandardSpan>{attendeesDetails.universityName}</StandardSpan>

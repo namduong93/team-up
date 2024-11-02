@@ -48,7 +48,7 @@ const FieldValue = styled.div`
   height: fit-content;
   text-align: center;
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow: visible;
   /* white-space: nowrap; */
   max-width: 170px;
   display: flex;
