@@ -6,6 +6,19 @@ import { useNavigate, useParams, Outlet } from "react-router-dom";
 import { TeamHeader } from "./TeamHeader";
 import { sendRequest } from "../../utility/request";
 
+export interface Student {
+  userId: number;
+  name: string;
+  email: string;
+  bio: string;
+  preferredContact: string;
+  siteId: number;
+  ICPCEligible: boolean;
+  level: string;
+  boersenEligible: boolean;
+  isRemote: boolean;
+}
+
 export interface ParticipantTeamDetails {
   compName: string;
   teamName: string;

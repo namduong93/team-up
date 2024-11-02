@@ -55,7 +55,9 @@ export const fetchTeams = async (
       { compId }
     );
     const { teamList } = response.data;
-    setTeams(teamList);
+
+    setTeams(teamList.map((team) => ({ ...team, students: team.students.filter((student) => student.userId !== null) })));
+
   } catch (error: unknown) {
     console.log(error);
   }

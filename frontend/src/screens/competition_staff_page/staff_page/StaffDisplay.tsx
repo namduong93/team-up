@@ -7,9 +7,11 @@ import { Field, StudentInfoContainerDiv } from "../students_page/components/Stud
 import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
-import { NarrowDisplayDiv, UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideDisplayDiv, WideInfoContainerDiv } from "../students_page/StudentDisplay";
-import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 
+import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
+import { NarrowDisplayDiv, WideDisplayDiv } from "../students_page/StudentDisplay";
+import { WideStaffCard, WideStaffHeader } from "./components/WideStaffCard";
+import { NarrowStaffCard } from "./components/NarrowStaffCard";
 
 enum StaffAccess {
   Accepted = 'Accepted',
@@ -26,58 +28,11 @@ export interface StaffDetails {
   email: string;
 }
 
-interface StaffCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface StaffCardProps extends React.HTMLAttributes<HTMLDivElement> {
   staffDetails: StaffDetails;
 }
 
-export const StandardContainerDiv = styled.div`
-  width: 20%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-  box-sizing: border-box;
-`;
-
-export const StandardSpan = styled.span``;
-
-export const StaffStatus = styled.div<{ $role: CompetitionRole }>`
-  width: 80%;
-  height: 50%;
-  max-width: 175px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  line-height: 1;
-  justify-content: center;
-  box-sizing: border-box;
-  background-color: ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminBackground :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachBackground :
-    theme.roles.siteCoordinatorBackground
-  )};
-
-  border: 1px solid ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminText :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachText :
-    theme.roles.siteCoordinatorText
-  )};
-
-  color: ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminText :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachText :
-    theme.roles.siteCoordinatorText
-  )};
-`;
-
-const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
+export const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
   width: 80%;
   height: 50%;
   max-width: 130px;
@@ -111,83 +66,7 @@ const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
   )};
 `;
 
-export const WideStaffCard: FC<StaffCardProps> = ({ staffDetails, ...props }) => {
 
-  return (
-    <WideInfoContainerDiv {...props}>
-      <UserNameContainerDiv>
-        <UserNameGrid>
-          <UserIcon />
-          <UsernameTextSpan>
-            {staffDetails.name}
-          </UsernameTextSpan>
-        </UserNameGrid>
-      </UserNameContainerDiv>
-
-      <StandardContainerDiv>
-        <StaffStatus $role={staffDetails.roles[0]}>
-          { staffDetails.roles[0] }
-        </StaffStatus>
-      </StandardContainerDiv>
-
-      <StandardContainerDiv>
-        <StandardSpan>
-          {staffDetails.universityName}
-        </StandardSpan>
-      </StandardContainerDiv>
-
-      <StandardContainerDiv>
-        <StaffAccessLevel $access={staffDetails.access}>
-          {staffDetails.access}
-        </StaffAccessLevel>
-      </StandardContainerDiv>
-
-      <StandardContainerDiv>
-        <StandardSpan>
-          {staffDetails.email}
-        </StandardSpan>
-      </StandardContainerDiv>
-
-
-    </WideInfoContainerDiv>
-  );
-}
-
-
-
-export const WideStaffHeader: FC = () => {
-  const theme = useTheme();
-  return (
-    <WideInfoContainerDiv style={{
-      backgroundColor: theme.colours.userInfoCardHeader,
-      fontWeight: 'bold'
-    }}>
-      <UserNameContainerDiv>
-        <UsernameTextSpan>
-          Full Name
-        </UsernameTextSpan>
-      </UserNameContainerDiv>
-      
-      <StandardContainerDiv>
-        <StandardSpan>Role</StandardSpan>
-      </StandardContainerDiv>
-
-      <StandardContainerDiv>
-        <StandardSpan>Affiliation</StandardSpan>
-      </StandardContainerDiv>
-
-      <StandardContainerDiv>
-        <StandardSpan>Access</StandardSpan>
-      </StandardContainerDiv>
-
-      <StandardContainerDiv>
-        <StandardSpan>Email</StandardSpan>
-      </StandardContainerDiv>
-
-
-    </WideInfoContainerDiv>
-  )
-}
 
 export const NarrowStatusDiv = styled.div`
   width: 100%;
@@ -197,41 +76,6 @@ export const NarrowStatusDiv = styled.div`
   align-items: center;
   margin-bottom: 3px;
 `;
-
-export const NarrowStaffCard: FC<StaffCardProps> = ({ staffDetails, ...props }) => {
-
-  return (
-    <StudentInfoContainerDiv {...props}>
-      <Field label="Full Name" value={staffDetails.name} style={{ width: '20%', minWidth: '120px' }} />
-      <Field label="Role" 
-        value={
-          <NarrowStatusDiv>
-            <StaffStatus $role={staffDetails.roles[0]}>
-              {staffDetails.roles[0] === CompetitionRole.SiteCoordinator ? 'Site Coordinator' : staffDetails.roles[0]}
-            </StaffStatus>
-          </NarrowStatusDiv>
-        }
-        style={{ width: '20%', minWidth: '125px' }}
-      />
-      <Field label="Affiliation" value={staffDetails.universityName} style={{ width: '20%', minWidth: '170px', whiteSpace: 'break-spaces' }} />
-      <Field label="Access" 
-        value={
-          <NarrowStatusDiv>
-            <StaffAccessLevel $access={staffDetails.access}>
-              {staffDetails.access}
-            </StaffAccessLevel>
-          </NarrowStatusDiv>
-        }
-        style={{ width: '20%', minWidth: '125px' }}
-      />
-      <Field label="Email" value={staffDetails.email} style={{ width: '25%', minWidth: '170px' }} />
-      
-      <div style={{ display: 'flex' }}>
-        
-      </div>
-    </StudentInfoContainerDiv>
-  )
-}
 
 const STAFF_DISPLAY_SORT_OPTIONS = [
   { label: "Default", value: "original" },

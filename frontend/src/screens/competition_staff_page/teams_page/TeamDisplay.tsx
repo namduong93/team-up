@@ -1,14 +1,23 @@
 import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { ThemeConsumer, useTheme } from "styled-components";
 import { useLocation, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { TeamCard, TeamDetails } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
-import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 
-const TeamCardGridDisplay = styled.div`
+import { LayoutGroup, motion, PanInfo } from "framer-motion";
+import { Student } from "../../student/TeamProfile";
+import { ResponsiveActionButton } from "../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { FaSave } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
+import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
+import { fetchTeams } from "../CompetitionPage";
+
+export type DragEndEvent = MouseEvent | TouchEvent | PointerEvent;
+
+const TeamCardGridDisplay = styled(motion.div)`
   flex: 1;
   background-color: ${({ theme }) => theme.background};
   display: grid;
@@ -49,6 +58,7 @@ const Heading = styled.h2`
 
 export const TeamDisplay: FC = () => {
   const { compId } = useParams();
+  const theme = useTheme();
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
           editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
@@ -137,6 +147,71 @@ export const TeamDisplay: FC = () => {
     }
   }, [location.state]);
 
+  const [isDragging, setIsDragging] = useState(false);
+  const [isTeamsChanged, setIsTeamsChanged] = useState(false);
+
+  const handleDragDropCard = (event: DragEndEvent, info: PanInfo, student: Student, currentTeamId: number) => {
+    const mouseX = info.point.x;
+    const mouseY = info.point.y;
+
+
+    const elem = (event.target as HTMLElement);
+    const draggedElem = elem.closest('.team-member-cell') as HTMLElement;
+    if (!draggedElem) {
+      return;
+    }
+    draggedElem.style.pointerEvents = 'none';
+
+    const hoveredElement = document.elementFromPoint(mouseX, mouseY);
+    const cell = hoveredElement?.closest('.team-card-cell');
+    draggedElem.style.pointerEvents = 'auto';
+    if (cell) {
+      const postSearchIndex = cell.getAttribute('data-index');
+      if (postSearchIndex) {
+        const newTeamIndex = teamList.findIndex((team) => team.teamId === searchedCompetitions[parseInt(postSearchIndex)].item.teamId);
+        const newTeam = teamList[newTeamIndex];
+        if (newTeam.students.some((currentStudent) => currentStudent.userId === student.userId)) {
+          return;
+        }
+        const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
+        const currentTeam = teamList[currentTeamIndex];
+
+        setIsTeamsChanged(true);
+        if (newTeamIndex < currentTeamIndex) {
+          setTeamList([
+            ...teamList.slice(0, newTeamIndex),
+            { ...newTeam, students: [...newTeam.students, student] },
+            ...teamList.slice(newTeamIndex + 1, currentTeamIndex),
+            { ...currentTeam, students: currentTeam.students.filter((currentStudent) => currentStudent.userId !== student.userId) },
+            ...teamList.slice(currentTeamIndex + 1)
+          ]);
+        } else if (currentTeamIndex < newTeamIndex) {
+          setTeamList([
+            ...teamList.slice(0, currentTeamIndex),
+            { ...currentTeam, students: currentTeam.students.filter((currentStudent) => currentStudent.userId !== student.userId) },
+            ...teamList.slice(currentTeamIndex + 1, newTeamIndex),
+            { ...newTeam, students: [...newTeam.students, student] },
+            ...teamList.slice(newTeamIndex + 1)
+          ])
+        }
+      }
+    }
+
+  }
+
+  const handleClose = async () => {
+    await fetchTeams(compId, setTeamList);
+    setIsTeamsChanged(false);
+  }
+
+  const handleSaveChanges = async () => {
+    // send backend request here
+
+    await handleClose();
+    return true;
+  }
+
+
   return (
     <>
     {isCreationSuccessPopUpOpen && (
@@ -162,19 +237,42 @@ export const TeamDisplay: FC = () => {
         </FilterTagButton>
         ))
       )}
+      {isTeamsChanged &&
+      <div style={{ display: 'flex', marginTop: '5px', marginBottom: '-25px', width: '100%' }}>
+      <ResponsiveActionButton
+        icon={<FaSave />}
+        label="Save"
+        question="Do you want to save your changes"
+        actionType="confirm"
+        handleSubmit={handleSaveChanges}
+      />
+      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+        <TransparentResponsiveButton style={{ backgroundColor: theme.colours.cancel }}
+        isOpen={false}
+        icon={<GiCancel />}
+        label="Cancel"
+        actionType="error"
+        onClick={handleClose}
+        />
+      </div>
+      </div>
+      }
     </div>
-    <TeamCardGridDisplay>
-      {searchedCompetitions.map(({item: teamDetails}, index) => {
-        return (
-        <TeamCard
-        // handler to take in memberId and newTeamID (updates list of teams)
-          teamIdsState={[approveTeamIds, setApproveTeamIds]}
-          rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
-          isEditingStatus={isEditingStatus}
-          isEditingNameStatus={isEditingNameStatus}
-          key={`${teamDetails.teamName}${teamDetails.status}${index}`} teamDetails={teamDetails} />)
-      })}
-    </TeamCardGridDisplay>
+      <TeamCardGridDisplay>
+        {searchedCompetitions.map(({item: teamDetails}, index) => {
+          return (
+          <TeamCard
+          // handler to take in memberId and newTeamID (updates list of teams)
+            data-index={index}
+            handleDragDropCard={handleDragDropCard}
+            isDraggingState={[isDragging, setIsDragging]}
+            teamIdsState={[approveTeamIds, setApproveTeamIds]}
+            rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
+            isEditingStatus={isEditingStatus}
+            isEditingNameStatus={isEditingNameStatus}
+            key={`${teamDetails.teamName}${teamDetails.status}${index}`} teamDetails={teamDetails} />)
+        })}
+      </TeamCardGridDisplay>
     </>
   )
 }
