@@ -8,7 +8,10 @@ import { sendRequest } from "../../../utility/request";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { CompetitionSite } from "../../../../shared_types/Competition/CompetitionSite";
 import MultiRadio from "../../../components/general_utility/MultiRadio";
-import { StaffRegistration, University } from "../../../../shared_types/Competition/registration/StaffRegistration";
+import {
+  StaffRegistration,
+  University,
+} from "../../../../shared_types/Competition/registration/StaffRegistration";
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 
 const Label = styled.label`
@@ -58,18 +61,29 @@ export const StaffRoleRegistration: FC = () => {
     Array<{ value: string; label: string }>
   >([]);
 
-  const [currentSiteOption, setCurrentSiteOption] = useState({ value: "", label: "" });
-  const [currentUniversityOption, setCurrentUniversityOption] = useState({ value: "", label: "" });
+  const [currentSiteOption, setCurrentSiteOption] = useState({
+    value: "",
+    label: "",
+  });
+  const [currentUniversityOption, setCurrentUniversityOption] = useState({
+    value: "",
+    label: "",
+  });
 
   // Use useEffect to watch for changes in currentSiteOption
   useEffect(() => {
     if (currentSiteOption.value) {
-      setStaffRegistrationData(prev => ({
+      setStaffRegistrationData((prev) => ({
         ...prev,
         site: {
-          id: currentSiteOption.value !== "" ? Number(currentSiteOption.value) : 0,
+          id:
+            currentSiteOption.label === ""
+              ? 0
+              : currentSiteOption.value === ""
+              ? -1
+              : Number(currentSiteOption.value),
           name: currentSiteOption.label,
-        }
+        },
       }));
     }
   }, [currentSiteOption]);
@@ -77,12 +91,15 @@ export const StaffRoleRegistration: FC = () => {
   // Use useEffect to watch for changes in currentUniversityOption
   useEffect(() => {
     if (currentUniversityOption.value) {
-      setStaffRegistrationData(prev => ({
+      setStaffRegistrationData((prev) => ({
         ...prev,
         institution: {
-          id: currentUniversityOption.value !== "" ? Number(currentUniversityOption.value) : 0,
+          id:
+            currentUniversityOption.value !== ""
+              ? Number(currentUniversityOption.value)
+              : 0,
           name: currentUniversityOption.label,
-        }
+        },
       }));
     }
   }, [currentUniversityOption]);
@@ -125,25 +142,21 @@ export const StaffRoleRegistration: FC = () => {
   }, []);
 
   const isButtonDisabled = () => {
-    const { roles: role, competitionBio, site: site, institution: institution } = staffRegistrationData;
+    console.log(staffRegistrationData);
+    const { roles: role, competitionBio, site: site } = staffRegistrationData;
     console.log(staffRegistrationData);
     if (role.length === 0) {
       return true;
     }
 
     if (role.includes(CompetitionRole.Coach)) {
-      if (
-        institution?.id === 0 ||
-        site?.id === 0 ||
-        competitionBio === ""
-      ) {
+      if (competitionBio === "") {
         return true;
       }
     }
 
     if (role.includes(CompetitionRole.SiteCoordinator)) {
-      if (staffRegistrationData.site?.id === 0 || 
-        site?.capacity === 0) {
+      if (staffRegistrationData.site?.id === 0 || site?.capacity === 0) {
         return true;
       }
     }
@@ -161,8 +174,7 @@ export const StaffRoleRegistration: FC = () => {
         code,
         staffRegistrationData,
       });
-    }
-    catch (error: unknown) {
+    } catch (error: unknown) {
       console.error("Error submitting staff registration:", error);
     }
 
@@ -196,10 +208,9 @@ export const StaffRoleRegistration: FC = () => {
           showOther={false}
         />
 
-        {(staffRegistrationData.roles.includes(CompetitionRole.Coach) ||
-          staffRegistrationData.roles.includes(
-            CompetitionRole.SiteCoordinator
-          )) && (
+        {staffRegistrationData.roles.includes(
+          CompetitionRole.SiteCoordinator
+        ) && (
           <>
             <div
               style={{
@@ -212,19 +223,13 @@ export const StaffRoleRegistration: FC = () => {
                 Site Overseeing<Asterisk>*</Asterisk>
               </Label>
               <AdvancedDropdown
-                isExtendable={false}
+                isExtendable={true}
                 optionsState={[siteOptions, setSiteOptions]}
                 setCurrentSelected={setCurrentSiteOption}
                 style={{ width: "100%", marginBottom: 20 }}
               />
             </div>
-          </>
-        )}
 
-        {staffRegistrationData.roles.includes(
-          CompetitionRole.SiteCoordinator
-        ) && (
-          <>
             <TextInput
               label="Capacity Constraints"
               descriptor="Please enter the capacity constraints of your selected location"
@@ -234,7 +239,7 @@ export const StaffRoleRegistration: FC = () => {
               value={staffRegistrationData.site?.capacity?.toString() || ""}
               onChange={(e) => {
                 const value = e.target.value;
-                setStaffRegistrationData(prev => ({
+                setStaffRegistrationData((prev) => ({
                   ...prev,
                   site: {
                     ...prev.site,
@@ -251,24 +256,6 @@ export const StaffRoleRegistration: FC = () => {
 
         {staffRegistrationData.roles.includes(CompetitionRole.Coach) && (
           <>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-              }}
-            >
-              <Label>
-                Institution<Asterisk>*</Asterisk>
-              </Label>
-              <AdvancedDropdown
-                isExtendable={false}
-                optionsState={[universityOptions, setUniversityOptions]}
-                setCurrentSelected={setCurrentUniversityOption}
-                style={{ width: "100%", marginBottom: 20 }}
-              />
-            </div>
-
             <DescriptiveTextInput
               label="Competition Biography"
               descriptor="Please write a short description about yourself that would help participants get to know you"
