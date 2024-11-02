@@ -73,7 +73,10 @@ export const TeamCardMember = ({ memberName }: { memberName: string }) => {
   );
 }
 
-const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean, $isEditingNameStatus: boolean, $isDragging: boolean }>`
+const StyledHoverDiv = styled.div<{
+  $isEditingStatus: boolean, $isEditingNameStatus: boolean,
+  $isDragging: boolean, $numMembers: number,
+  }>`
   transition: transform 0.2s ease-in-out !important;
   display: flex;
   flex: 0 1 auto;
@@ -81,7 +84,13 @@ const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean, $isEditingNameSta
   flex-direction: column;
   width: 100%;
   min-height: 260px;
-  max-height: ${({ $isEditingStatus }) => $isEditingStatus ? '280px' : '260px'};
+  max-height: ${({ $isEditingStatus, $numMembers }) => {
+    if ($numMembers > 3) {
+      return $isEditingStatus ? '330px' : '310px';
+    } else {
+      return $isEditingStatus ? '280px' : '260px';
+    }
+  }};
   max-width: 294px;
   min-width: 140px;
   border-radius: 20px 20px 20px 20px;
@@ -365,6 +374,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
       $isDragging={isDragging}
       $isEditingStatus={isEditThisCard}
       $isEditingNameStatus={isEditNameThisCard}
+      $numMembers={teamDetails.students.length}
       {...props}
     >
       {!isEditNameThisCard &&
