@@ -49,7 +49,7 @@ export const fetchTeams = async (compId: string | undefined, setTeams: React.Dis
   try {
     const response = await sendRequest.get<{ teamList: Array<TeamDetails>}>('/competition/teams', { compId });
     const { teamList } = response.data;
-    setTeams(teamList);
+    setTeams(teamList.map((team) => ({ ...team, students: team.students.filter((student) => student.userId !== null) })));
 
   } catch (error: unknown) {
     console.log(error)
