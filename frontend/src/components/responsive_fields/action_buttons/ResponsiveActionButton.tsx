@@ -19,6 +19,8 @@ export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | '
       return theme.colours.primaryLight;
     } else if (actionType === "secondary") {
       return theme.colours.secondaryLight;
+    } else if (actionType === "confirm") {
+      return theme.colours.confirm;
     } else {
       return theme.colours.error;
     }
