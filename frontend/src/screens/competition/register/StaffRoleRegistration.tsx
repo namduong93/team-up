@@ -72,7 +72,7 @@ export const StaffRoleRegistration: FC = () => {
 
   // Use useEffect to watch for changes in currentSiteOption
   useEffect(() => {
-    if (currentSiteOption.value) {
+    if (currentSiteOption.label) {
       setStaffRegistrationData((prev) => ({
         ...prev,
         site: {
@@ -142,7 +142,8 @@ export const StaffRoleRegistration: FC = () => {
   }, []);
 
   const isButtonDisabled = () => {
-    console.log(staffRegistrationData);
+    // console.log(currentSiteOption);
+    // console.log(staffRegistrationData);
     const { roles: role, competitionBio, site: site } = staffRegistrationData;
     console.log(staffRegistrationData);
     if (role.length === 0) {
@@ -191,15 +192,29 @@ export const StaffRoleRegistration: FC = () => {
     >
       <FormContainer onSubmit={handleSubmit}>
         <Title>Staff Registration</Title>
+
         <MultiRadio
           options={staffOptions}
           selectedValues={staffRegistrationData.roles}
-          onChange={(selectedValues) =>
-            setStaffRegistrationData({
-              ...staffRegistrationData,
-              roles: selectedValues as CompetitionRole[],
-            })
-          }
+          onChange={(selectedValues) => {
+            setStaffRegistrationData((prevData) => {
+              const updatedData = {
+                ...prevData,
+                roles: selectedValues as CompetitionRole[],
+              };
+
+              // Clear fields if specific roles are deselected
+              if (!selectedValues.includes(CompetitionRole.Coach)) {
+                updatedData.competitionBio = "";
+              }
+
+              if (!selectedValues.includes(CompetitionRole.SiteCoordinator)) {
+                updatedData.site = { id: 0, name: "", capacity: undefined };
+              }
+
+              return updatedData;
+            });
+          }}
           label={
             <Label>
               Role<Asterisk>*</Asterisk>
