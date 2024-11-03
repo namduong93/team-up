@@ -159,6 +159,15 @@ export class CompetitionService {
     return await this.competitionRepository.competitionTeamDetails(userId, compId);
   }
 
+  competitionTeamInviteCode = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'User is not a participant for this competition.');
+    }
+    return await this.competitionRepository.competitionTeamInviteCode(userId, compId);
+  }
+
   competitionStudentDetails = async (userId: number, compId: number) => {
     const roles = await this.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {

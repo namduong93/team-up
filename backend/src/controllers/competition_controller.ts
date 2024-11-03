@@ -36,6 +36,15 @@ export class CompetitionController {
     res.json(teamDetails);
   });
 
+  competitionTeamInviteCode = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const inviteCode = await this.competitionService.competitionTeamInviteCode(
+      parseInt(userId as string), parseInt(compId as string));
+    
+    res.json({ code: inviteCode });
+  });
+
   competitionStudentDetails = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 

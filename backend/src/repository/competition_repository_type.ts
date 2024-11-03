@@ -19,6 +19,7 @@ export interface CompetitionRepository {
   competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{}>;
   competitionGetDetails(competitionId: number): Promise<Competition | undefined>;
   competitionTeamDetails(userId: number, compId: number): Promise<ParticipantTeamDetails>;
+  competitionTeamInviteCode(userId: number, compId: number): Promise<string>;
   competitionStudentDetails(userId: number, compId: number): Promise<CompetitionStudentDetails>;
 
   competitionUniversityDefaultSite(competitionId: number, university: University): Promise<CompetitionSiteObject | undefined>;

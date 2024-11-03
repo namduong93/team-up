@@ -100,6 +100,19 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return { ...teamDetails, students };
   }
 
+  competitionTeamInviteCode = async (userId: number, compId: number): Promise<string> => {
+    const teamQuery = `
+      SELECT id FROM competition_teams
+      WHERE $1 = ANY(participants) AND competition_id = $2
+    `;
+    const teamResult = await this.pool.query(teamQuery, [userId, compId]);
+    if (teamResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'User is not a participant in any team in this competition.');
+    }
+    const encryptedTeamId = this.encrypt(teamResult.rows[0].id);
+    return encryptedTeamId;
+  }
+
   competitionStudentDetails = async (userId: number, compId: number): Promise<CompetitionStudentDetails> => {
     const dbResult = await this.pool.query(
       `SELECT u.name, u.email, cu.preferred_contact AS "preferredContact", cu.bio AS "competitionBio",
@@ -1179,4 +1192,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   private compareTeams = (team1: any, team2: any) => {
 
   }
+
+  SALTED_TEAM_CODE = 12345;
+  encrypt = (id: number) => {
+    const text = String(id + this.SALTED_TEAM_CODE);
+    return Buffer.from(text).toString('base64').substring(0, 8);
+  };
+
+  decrypt = (encoded: string) => {
+    const text = Buffer.from(encoded, 'base64').toString('utf-8');
+    const id = parseInt(text) - this.SALTED_TEAM_CODE;
+    return id;
+  };
+
 }

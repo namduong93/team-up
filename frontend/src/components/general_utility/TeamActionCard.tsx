@@ -111,6 +111,16 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers, comp
     fetchSiteLocations();
   }, []);
 
+  useEffect(() => {
+    const fetchTeamCode = async () => {
+      const response = await sendRequest.get<{ code: string }>('/competition/team/invite_code', { compId });
+      const { code } = response.data;
+      setTeamCode(code);
+    }
+
+    fetchTeamCode();
+  }, []);
+
   const actions = [
     { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a Friend" },
     { type: "join" as ActionType, icon: FaUsers, text: "Join a Team" },
@@ -152,7 +162,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers, comp
         {modalOpen === "invite" && (
           <InvitePopUp 
             heading={<Heading>Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}</Heading>}
-            text="COMP1234" 
+            text={teamCode}
             onClose={() => setModalOpen(null)}
           />
         )}
