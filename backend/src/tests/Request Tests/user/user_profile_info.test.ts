@@ -33,8 +33,9 @@ describe('GET /user/profile_info', () => {
       const result = await userService.userProfileInfo(userId);
 
       expect(result).toEqual(expect.objectContaining({
-        name: 'Test Student Account 1',
-        preferredName: 'Test Account',
+        id: 5,
+        name: 'New User',
+        preferredName: 'New User',
         email: 'student@example.com',
         gender: 'M',
         pronouns: 'They/them',
@@ -42,7 +43,7 @@ describe('GET /user/profile_info', () => {
         allergies: 'None',
         dietaryReqs: [],
         accessibilityReqs: 'Wheelchair Access',
-        affiliation: 'Monash University',
+        affiliation: 'University of New South Wales',
       }));
     });
   });
