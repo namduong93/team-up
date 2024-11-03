@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useState } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
 import { TeamDetails } from "../../teams_page/components/TeamCard";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
@@ -7,6 +7,8 @@ import { BooleanStatus } from "../../attendees_page/AttendeesPage";
 import { CopyButton } from "../../../../components/general_utility/CopyButton";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { FaArrowRight } from "react-icons/fa";
+import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
@@ -30,7 +32,7 @@ export const TitleDiv = styled.div<{ $isOpen: boolean }>`
   justify-content: center;
   align-items: center;
   font-size: ${({ theme, $isOpen }) => $isOpen ? theme.fonts.fontSizes.title : '0'};
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 `;
 
 const TeamStatusDiv = styled.div<{ $status: TeamStatus }>`
@@ -96,16 +98,17 @@ const MemberListItem = styled.li`
 export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   teamDetails, isOpenState: [isOpen, setIsOpen], children, ...props }) => {
   
-  const theme = useTheme();
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  
 
   return (
-    <InfoBar isOpenState={[isOpen, setIsOpen]} {...props}>
+    <InfoBar isOpenState={[isOpen || isPopupOpen, setIsOpen]} {...props}>
       <InfoBarField style={{ left: 0, top: 0, position: 'absolute' }}>
         <LabelSpan>Team Id:</LabelSpan>
         <span>{teamDetails.teamId}</span>
       </InfoBarField>
 
-      <TitleDiv $isOpen={isOpen}>
+      <TitleDiv $isOpen={isOpen || isPopupOpen}>
         {teamDetails.teamName}
       </TitleDiv>
 
@@ -175,17 +178,18 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
                   <span>{student.userId}</span>
                 </MemberFieldDiv>
 
-                <div style={{ width: '75%', height: '25px' }}>
-                  <TransparentResponsiveButton
-                    style={{ backgroundColor: theme.colours.primaryLight }}
-                    actionType="primary"
-                    isOpen={false}
-                    icon={<FaArrowRight />}
-                    label="Change Team"
-                  />
+                <ResponsiveActionButton style={{ height: '30px' }}
+                  onMouseDown={(e) => e.preventDefault()}
+                  handleClick={() => setPopupOpen(true)}
+                  handleClose={() => setPopupOpen(false)}
+                  icon={<FaArrowRight />}
+                  label="Change Team"
+                  question="What team to change to?"
+                  actionType="primary"
+                >
+                  
 
-                  {/* This should open a popup with a dropdown to select from any of the teams */}
-                </div>
+                </ResponsiveActionButton>
               </MemberListItem>
             )
           })}
