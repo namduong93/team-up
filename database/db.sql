@@ -699,7 +699,7 @@ VALUES
 
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
-(1, 4, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
+(1, 4, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
 (3, 4, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio');
 
 INSERT INTO users (
