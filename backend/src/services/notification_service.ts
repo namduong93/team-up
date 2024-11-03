@@ -13,6 +13,10 @@ export class NotificationService {
     return await this.notificationRepository.notificationCreate(notification);
   }
 
+  notificationRemove = async (notificationId: number): Promise<{}> => {
+    return await this.notificationRepository.notificationRemove(notificationId);
+  }
+
   userNotificationsList = async (userId: number): Promise<Notification[] | undefined> => {
     const result = this.notificationRepository.userNotificationsList(userId);
 
