@@ -7,6 +7,9 @@ import styled, { useTheme } from "styled-components";
 import { ParticipantTeamDetails, Student } from "../../../student/TeamProfile";
 import { motion, PanInfo } from "framer-motion";
 import { DragEndEvent } from "../TeamDisplay";
+import { InfoBar } from "../../components/InfoBar/InfoBar";
+import { TeamInfoBar } from "../../components/InfoBar/TeamInfoBar";
+import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
 
 export enum Member {
   name = 0,
@@ -22,7 +25,7 @@ export interface TeamDetails extends ParticipantTeamDetails {
   // member1?: MemberDetails;
   // member2?: MemberDetails;
   // member3?: MemberDetails;
-  status: 'Pending' | 'Registered' | 'Unregistered';
+  status: TeamStatus;
   teamNameApproved: boolean;
   // teamAlgoScore?: number;
   // icpcEligible?: boolean;
@@ -367,13 +370,18 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
   const isEditThisCard = isEditingStatus && (teamDetails.status === 'Pending');
   const isEditNameThisCard = isEditingNameStatus && (teamDetails.teamNameApproved === false);
 
+  const [infoBarOpen, setInfoBarOpen] = useState(false);
+
   return (
+    <>
+    <TeamInfoBar teamDetails={teamDetails} isOpenState={[infoBarOpen, setInfoBarOpen]} />
     <StyledHoverDiv
       className="team-card-cell"
       $isDragging={isDragging}
       $isEditingStatus={isEditThisCard}
       $isEditingNameStatus={isEditNameThisCard}
       $numMembers={teamDetails.students.length}
+      onDoubleClick={() => setInfoBarOpen((p) => !p)}
       {...props}
     >
       {!isEditNameThisCard &&
@@ -420,5 +428,6 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
       </TeamNameApprovalDiv>
     }
     </StyledHoverDiv>
+    </>
   )
 }

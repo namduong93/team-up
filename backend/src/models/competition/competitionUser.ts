@@ -102,7 +102,7 @@ export const enum DefaultUniCourses {
 }
 
 export const enum TeamStatus {
-  PENDING = 'Pending',
-  REGISTERED = 'Registered',
-  UNREGITERED = 'Unregistered',
+  Pending = 'Pending',
+  Registered = 'Registered',
+  Unregistered = 'Unregistered',
 }
