@@ -8,6 +8,7 @@ import { sendRequest } from "../../../utility/request";
 import { StudentCardInfo, StudentCardProps, StudentInfoCard } from "./components/StudentInfoCard";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { FlexBackground } from "../../../components/general_utility/Background";
+import { StudentsInfoBar } from "../components/InfoBar/StudentsInfoBar";
 
 export const WideDisplayDiv = styled.div`
   flex: 1;
@@ -157,10 +158,12 @@ const EmailSpan = styled.span<{ $isHeader: boolean }>`
 `;
 
 export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
+  const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
 
   return (
-    <WideInfoContainerDiv style={style} {...props}>
-      
+    <>
+    <StudentsInfoBar studentInfo={studentInfo} isOpenState={[isInfoBarOpen, setIsInfoBarOpen]} />
+    <WideInfoContainerDiv onDoubleClick={() => !isHeader && setIsInfoBarOpen((p) => !p)} style={style} {...props}>
        <UserNameContainerDiv>
        {isHeader ? <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan> :
       <UserNameGrid >
@@ -204,6 +207,7 @@ export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHea
         <SmallContainerDiv></SmallContainerDiv>
 
       </WideInfoContainerDiv>
+    </>
   )
 }
 
@@ -334,7 +338,7 @@ export const StudentDisplay = () => {
         teamName: 'Team Name',
         level: 'Level',
         tshirtSize: 'Shirt Size',
-        siteName: 'Site'
+        siteName: 'Site', userId: -1, universityId: -1,
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}

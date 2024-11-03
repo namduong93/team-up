@@ -74,6 +74,7 @@ export const CompetitionPage: FC = () => {
       enableAttendeesButtons: false,
       enableStudentButtons: false,
       enableStaffButtons: false,
+      enableTeamsChangedButtons: false,
     }
   );
 

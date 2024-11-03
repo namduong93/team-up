@@ -10,7 +10,7 @@ interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
 }
 
-const InfoBarField = styled.div`
+export const InfoBarField = styled.div`
   width: 100%;
   display: flex;
   min-height: 25px;
@@ -18,11 +18,11 @@ const InfoBarField = styled.div`
   column-gap: 4px;
 `;
 
-const LabelSpan = styled.span`
+export const LabelSpan = styled.span`
   font-weight: bold;
 `;
 
-const TitleDiv = styled.div<{ $isOpen: boolean }>`
+export const TitleDiv = styled.div<{ $isOpen: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;

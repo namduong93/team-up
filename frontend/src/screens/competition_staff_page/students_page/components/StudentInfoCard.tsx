@@ -1,7 +1,8 @@
-import React, { FC, ReactNode } from "react"
+import React, { FC, ReactNode, useState } from "react"
 import styled from "styled-components"
 import { NarrowStatusDiv } from "../../staff_page/StaffDisplay";
-import { StudentStatus } from "../StudentDisplay";
+import { StudentInfo, StudentStatus } from "../StudentDisplay";
+import { StudentsInfoBar } from "../../components/InfoBar/StudentsInfoBar";
 
 export const StudentInfoContainerDiv = styled.div`
   display: flex;
@@ -83,14 +84,16 @@ export interface StudentCardInfo {
 }
 
 export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  studentInfo: StudentCardInfo;
+  studentInfo: StudentInfo;
   isHeader?: boolean;
 }
 
 export const StudentInfoCard: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
+  const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
 
-  return (
-    <StudentInfoContainerDiv style={style} {...props}>
+  return (<>
+    <StudentsInfoBar studentInfo={studentInfo} isOpenState={[isInfoBarOpen, setIsInfoBarOpen]} />
+    <StudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} style={style} {...props}>
       <Field label="Full Name" value={studentInfo.name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Sex" value={studentInfo.sex} style={{ width: '5%', minWidth: '37px'}} />
       <Field label="Email" value={studentInfo.email} style={{ width: '25%', minWidth: '170px' }} />
@@ -115,5 +118,5 @@ export const StudentInfoCard: FC<StudentCardProps> = ({ style, studentInfo, isHe
         
       </div>
     </StudentInfoContainerDiv>
-  )
+  </>)
 }

@@ -12,7 +12,7 @@ const InfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
   bottom: 0;
   z-index: 50;
   /* TODO: add min-height */
-  transition: width 0.25s ease, height 0.25s ease;
+  transition: width 0.25s ease, min-width 0.25s ease !important;
   width: ${({ $isOpen }) => $isOpen ? '30%' : '0'};
   height: 83%;
   max-width: 380px;
@@ -27,6 +27,8 @@ const InfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
 
   & * {
     font-size: ${({ $isOpen }) => $isOpen ? '1em' : '0'};
+    ${({ $isOpen }) => !$isOpen && 'width: 0'};
+    transition: width 0.25s ease !important;
   }
 `;
 
@@ -58,9 +60,9 @@ export const InfoBar: FC<InfoBarProps> = ({ isOpenState: [isOpen, setIsOpen], ch
     onBlur={() => setIsOpen(false)}
     $isOpen={isOpen} {...props}>
 
-    <InfoContainer>
-      {children}
-    </InfoContainer>
+      <InfoContainer>
+        {children}
+      </InfoContainer>
 
     </InfoBarContainerDiv>
   )
