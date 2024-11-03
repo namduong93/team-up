@@ -83,7 +83,7 @@ const StyledHoverDiv = styled.div<{
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
-  min-height: ${({ $isEditingStatus, $numMembers }) => {
+  height: ${({ $isEditingStatus, $numMembers }) => {
     if ($numMembers > 3) {
       return $isEditingStatus ? '330px' : '310px';
     } else {
