@@ -1200,9 +1200,4 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       }
     });
   }
-
-  // Custom Comparator for algorithm
-  private compareTeams = (team1: any, team2: any) => {
-
-  }
 }
