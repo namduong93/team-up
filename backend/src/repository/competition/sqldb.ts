@@ -6,7 +6,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
 import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
-import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
+import { DEFAULT_TEAM_SIZE, SeatAssignment, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite.js";
@@ -898,6 +898,28 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
       if (rejectResult.rowCount === 0) {
         throw new DbError(DbError.Insert, "No matching teams found for the provided rejected IDs in this competition.");
+      }
+    }
+
+    return {};
+  }
+
+  competitionTeamSeatAssignments = async(seatAssignments: Array<SeatAssignment>): Promise<{}> => {
+    for (const assignment of seatAssignments) {
+      const { siteId, teamSite, teamSeat, teamId , teamName } = assignment;
+
+      // Update the team_seat with teamSeat
+      const updateSeatQuery = `
+        UPDATE competition_teams
+        SET team_seat = $1
+        WHERE id = $2 AND site_attending_id = $3
+        RETURNING id
+      `;
+      const updateSeatResult = await this.pool.query(updateSeatQuery, [teamSeat, teamId, siteId]);
+
+      // If no rows were updated, it implies that no matching records with the siteId and teamId were found
+      if (updateSeatResult.rowCount === 0) {
+        throw new DbError(DbError.Query, `Invalid team site ${teamSite} with siteId ${siteId} for team ${teamName}`);
       }
     }
 

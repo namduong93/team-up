@@ -1,4 +1,5 @@
 import { Notification } from "../models/notification/notification";
+import { SeatAssignment } from "../models/team/team";
 
 export interface NotificationRepository {
   notificationCreate(notification: Notification): Promise<{} | undefined>;
@@ -10,6 +11,7 @@ export interface NotificationRepository {
   notificationApproveTeamNameChange(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   notificationRequestSiteChange(userId: number, competitionId: number): Promise<{}>;
   notificationApproveSiteChange(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
+  notificationTeamSeatAssignments(compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}>;
 
   userNotificationsList(userId: number): Promise<Array<Notification> | undefined>;
 }

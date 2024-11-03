@@ -7,6 +7,7 @@ import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
 import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
+import { SeatAssignment } from "../models/team/team.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -424,6 +425,21 @@ export class CompetitionService {
   
     // Notify team members
     await this.notificationRepository.notificationApproveSiteChange(compId, approveIds, rejectIds);
+  
+    return {};
+  }
+
+  competitionTeamSeatAssignments = async (userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR) && !roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.ADMIN)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a staff for this competition.");
+    }
+
+    // Assign seats to teams
+    await this.competitionRepository.competitionTeamSeatAssignments(seatAssignments);
+
+    // Notifications to teams
+    await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);
   
     return {};
   }

@@ -17,4 +17,13 @@ export const enum TeamStatus {
   UNREGISTERED = 'Unregistered'
 }
 
+export interface SeatAssignment {
+  siteId: string; // ID of the site
+  teamSite: string; // e.g. "CSE Building K17"
+  teamSeat: string; // e.g. "Bongo01"
+  teamId: string; // ID of team who have been assigned that seat
+  teamName: string; // name of team at the assigned seat
+  teamLevel: string; // level of the team
+}
+
 export const DEFAULT_TEAM_SIZE = 3;

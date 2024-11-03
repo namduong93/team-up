@@ -173,28 +173,33 @@ app.post('/competition/student/withdraw', competitionController.competitionStude
 
 // Coach approves the team assignment (changing status from pending to unregistered)
 // PARAMS: { compId: number, approveIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/team_assignment_approve', competitionController.competitionApproveTeamAssignment);
 
 // Student requests to change the team name
 // PARAMS: { compId: number, newTeamName: string }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
 
 // Coach approves the team name change (for many teams in one specific competition at once)
 // PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
 
 // Student requests to change the team site
 // PARAMS: { compId: number, newSiteId: number }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/student/site_change', competitionController.competitionRequestSiteChange);
 
 // Coach approves the team site change (for many teams in one specific competition at once)
 // PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/site_approve', competitionController.competitionApproveSiteChange);
+
+// Coach assigns seats to teams
+// PARAMS: { compId: number, seatAssignments: Array<SeatAssignment> }
+// RESPONSE: {}
+app.put('/competition/staff/seat_assignments', competitionController.competitionTeamSeatAssignments);
 
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
