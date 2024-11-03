@@ -920,16 +920,15 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       await this.pool.query(addAdminQuery, [userId, competitionId, [CompetitionUserRole.ADMIN]]);
     }
     if(roles.includes(CompetitionUserRole.COACH)) {
-      const university = staffCompetitionInfo.university;
       const competitionBio = staffCompetitionInfo.competitionBio;
       if(competitionExistRole.includes(CompetitionUserRole.COACH)) {
         throw new DbError(DbError.Query, "User is already a coach for this competition.");
       }
       const addCoachQuery = `
-        INSERT INTO competition_users (user_id, competition_id, competition_roles, bio, university_id, access_level)
-        VALUES ($1, $2, $3, $4, $5, 'Pending'::competition_access_enum)
+        INSERT INTO competition_users (user_id, competition_id, competition_roles, bio, access_level)
+        VALUES ($1, $2, $3, $4, 'Pending'::competition_access_enum)
       `;
-      await this.pool.query(addCoachQuery, [userId, competitionId, [CompetitionUserRole.COACH], competitionBio, university.id]);
+      await this.pool.query(addCoachQuery, [userId, competitionId, [CompetitionUserRole.COACH], competitionBio]);
     }
     if(roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
       const siteId = staffCompetitionInfo.siteLocation.id;

@@ -130,7 +130,6 @@ CREATE TABLE competition_users (
   competition_coach_id INT REFERENCES competition_users (id),
   
   -- coach info
-  university_id INT REFERENCES universities (id),
 
   -- admin info
 
@@ -202,7 +201,7 @@ AS $$
   SELECT c.id AS id, c.name AS name, created_date, early_reg_deadline, general_reg_deadline
   FROM competition_users as cu
   JOIN competitions AS c ON c.id = cu.competition_id
-  WHERE cu.user_id = u_id;
+  WHERE cu.user_id = u_id AND cu.access_level = 'Accepted' :: competition_access_enum;
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE VIEW user_profile_info AS
@@ -580,11 +579,11 @@ VALUES
 (2, 5, 'K7', 300);
 
 -- Competition Admin(s)
-INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
 VALUES
-(1, 1, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
-(1, 2, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
-(1, 3, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio');
+(1, 1, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
+(1, 2, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
+(1, 3, ARRAY['Admin']::competition_role_enum[], 'Accepted');
 
 -- Competition Coach(es)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
@@ -700,7 +699,7 @@ VALUES
 
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
-(1, 4, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
+(1, 4, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
 (3, 4, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio');
 
 INSERT INTO users (

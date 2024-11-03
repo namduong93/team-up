@@ -202,7 +202,7 @@ app.get('/competition/universities/list', competitionController.competitionUnive
 
 ////////// Competition staff joining with a specific coach, site or admin code.
 
-// PARAMS: { code, staffRegistrationData }
+// PARAMS: { code, staffRegistrationData : { competitionRoles: Array<CompetitionUserRole>, siteLocation?: CompetitionSiteObject }, competitionBio?: string }
 // RESPONSE: {} --- (still receives 200 OK or an error)
 app.post('/competition/staff/join', competitionController.competitionStaffJoin);
 
