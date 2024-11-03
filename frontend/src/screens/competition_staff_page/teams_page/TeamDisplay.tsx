@@ -66,9 +66,10 @@ export const TeamDisplay: FC = () => {
           teamListState: [teamList, setTeamList],
           universityOption, roles,
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
+          buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
           setFilterOptions, setSortOptions } = useCompetitionOutletContext('teams');
 
-  useEffect(() => {
+          useEffect(() => {
     setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
     setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
   }, []);
@@ -147,12 +148,10 @@ export const TeamDisplay: FC = () => {
   }, [location.state]);
 
   const [isDragging, setIsDragging] = useState(false);
-  const [isTeamsChanged, setIsTeamsChanged] = useState(false);
 
   const handleDragDropCard = (event: DragEndEvent, info: PanInfo, student: Student, currentTeamId: number) => {
     const mouseX = info.point.x;
     const mouseY = info.point.y;
-
 
     const elem = (event.target as HTMLElement);
     const draggedElem = elem.closest('.team-member-cell') as HTMLElement;
@@ -175,7 +174,10 @@ export const TeamDisplay: FC = () => {
         const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
         const currentTeam = teamList[currentTeamIndex];
 
-        setIsTeamsChanged(true);
+        setButtonConfiguration((p) => ({
+          ...p,
+          enableTeamsChangedButtons: true
+        }));
         if (newTeamIndex < currentTeamIndex) {
           setTeamList([
             ...teamList.slice(0, newTeamIndex),
@@ -200,7 +202,11 @@ export const TeamDisplay: FC = () => {
 
   const handleClose = async () => {
     await fetchTeams(compId, setTeamList);
-    setIsTeamsChanged(false);
+    setIsDragging(false);
+    setButtonConfiguration((p) => ({
+      ...p,
+      enableTeamsChangedButtons: false
+    }));
   }
 
   const handleSaveChanges = async () => {
@@ -236,7 +242,7 @@ export const TeamDisplay: FC = () => {
         </FilterTagButton>
         ))
       )}
-      {isTeamsChanged &&
+      {buttonConfiguration.enableTeamsChangedButtons &&
       <div style={{ display: 'flex', marginTop: '5px', marginBottom: '-25px', width: '100%' }}>
       <ResponsiveActionButton
         icon={<FaSave />}

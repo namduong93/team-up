@@ -83,8 +83,7 @@ const StyledHoverDiv = styled.div<{
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
-  min-height: 260px;
-  max-height: ${({ $isEditingStatus, $numMembers }) => {
+  min-height: ${({ $isEditingStatus, $numMembers }) => {
     if ($numMembers > 3) {
       return $isEditingStatus ? '330px' : '310px';
     } else {
@@ -394,7 +393,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
                 dragElastic={1}
                 dragConstraints={{left: 0, top: 0, right: 0, bottom: 0}}
                 onDragStart={() => setIsDragging(true)}
-                onDragTransitionEnd={() => setIsDragging(false)}
+                // onDragTransitionEnd={() => setIsDragging(false)}
                 onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
               >
                 <TeamCardMember memberName={member.name} />

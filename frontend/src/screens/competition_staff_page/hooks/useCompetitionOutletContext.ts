@@ -11,6 +11,7 @@ export interface ButtonConfiguration {
   enableAttendeesButtons: boolean;
   enableStudentButtons: boolean;
   enableStaffButtons: boolean;
+  enableTeamsChangedButtons: boolean;
 }
 
 export interface CompetitionPageContext {
@@ -60,51 +61,56 @@ export const useCompetitionOutletContext = (page: string) => {
     
     // enable the team buttons on the team page and not on the non-team page
     if (page === 'teams') {
-      setButtonConfiguration({
+      setButtonConfiguration((p) => ({
+        ...p,
         enableTeamButtons: (roles.includes(CompetitionRole.Admin) || roles.includes(CompetitionRole.Coach)),
         enableStudentButtons: false,
         enableStaffButtons: false,
         enableAttendeesButtons: false,
-      });
+      }));
       return;
     }
   
     if (page === 'students') {
-      setButtonConfiguration({
+      setButtonConfiguration((p) => ({
+        ...p,
         enableTeamButtons: false,
         enableStudentButtons: true,
         enableStaffButtons: false,
         enableAttendeesButtons: false,
-      });
+      }));
       return;
     }
   
     if (page === 'staff') {
-      setButtonConfiguration({
+      setButtonConfiguration((p) => ({
+        ...p,
         enableTeamButtons: false,
         enableStudentButtons: false,
         enableStaffButtons: true,
         enableAttendeesButtons: false,
-      });
+      }));
       return;
     }
   
     if (page === 'attendees') {
-      setButtonConfiguration({
+      setButtonConfiguration((p) => ({
+        ...p,
         enableTeamButtons: false,
         enableStudentButtons: false,
         enableStaffButtons: false,
         enableAttendeesButtons: true,
-      });
+      }));
       return;
     }
 
-    setButtonConfiguration({
+    setButtonConfiguration((p) => ({
+      ...p,
       enableTeamButtons: false,
       enableStudentButtons: false,
       enableStaffButtons: false,
       enableAttendeesButtons: false,
-    });
+    }));
     return;
     
 
