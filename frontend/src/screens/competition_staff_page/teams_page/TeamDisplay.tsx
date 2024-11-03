@@ -168,7 +168,7 @@ export const TeamDisplay: FC = () => {
       if (postSearchIndex) {
         const newTeamIndex = teamList.findIndex((team) => team.teamId === searchedCompetitions[parseInt(postSearchIndex)].item.teamId);
         const newTeam = teamList[newTeamIndex];
-        if (newTeam.students.some((currentStudent) => currentStudent.userId === student.userId)) {
+        if (newTeam.students.length > 3 || newTeam.students.some((currentStudent) => currentStudent.userId === student.userId)) {
           return;
         }
         const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
