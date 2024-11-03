@@ -139,7 +139,7 @@ CREATE TABLE competition_users (
   -- staff info
   access_level competition_access_enum,
 
-  CONSTRAINT unique_competition_user UNIQUE (user_id, competition_id)
+  CONSTRAINT unique_competition_user UNIQUE (user_id, competition_id, competition_roles)
 );
 
 CREATE TYPE competition_team_status AS ENUM ('Registered', 'Unregistered', 'Pending');
@@ -201,7 +201,7 @@ AS $$
   SELECT c.id AS id, c.name AS name, created_date, early_reg_deadline, general_reg_deadline
   FROM competition_users as cu
   JOIN competitions AS c ON c.id = cu.competition_id
-  WHERE cu.user_id = u_id;
+  WHERE cu.user_id = u_id AND cu.access_level = 'Accepted' :: competition_access_enum;
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE VIEW user_profile_info AS
@@ -579,11 +579,11 @@ VALUES
 (2, 5, 'K7', 300);
 
 -- Competition Admin(s)
-INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
+INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
 VALUES
-(1, 1, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
-(1, 2, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
-(1, 3, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio');
+(1, 1, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
+(1, 2, ARRAY['Admin']::competition_role_enum[], 'Accepted'),
+(1, 3, ARRAY['Admin']::competition_role_enum[], 'Accepted');
 
 -- Competition Coach(es)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
@@ -633,7 +633,7 @@ VALUES
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
 VALUES
 (3, 1, ARRAY['Coach']::competition_role_enum[], 1, 'Pending'),
-(11, 1, ARRAY['Coach', 'Site-Coordinator']::competition_role_enum[], 1, 'Rejected');
+(11, 1, ARRAY['Coach']::competition_role_enum[], 1, 'Rejected');
 
 -- Competition Teams
 INSERT INTO competition_teams (
