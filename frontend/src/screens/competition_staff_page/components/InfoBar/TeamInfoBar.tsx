@@ -2,9 +2,11 @@ import { FC, ReactNode } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
 import { TeamDetails } from "../../teams_page/components/TeamCard";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { BooleanStatus } from "../../attendees_page/AttendeesPage";
 import { CopyButton } from "../../../../components/general_utility/CopyButton";
+import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
+import { FaArrowRight } from "react-icons/fa";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
@@ -93,6 +95,8 @@ const MemberListItem = styled.li`
 
 export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   teamDetails, isOpenState: [isOpen, setIsOpen], children, ...props }) => {
+  
+  const theme = useTheme();
 
   return (
     <InfoBar isOpenState={[isOpen, setIsOpen]} {...props}>
@@ -171,6 +175,17 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
                   <span>{student.userId}</span>
                 </MemberFieldDiv>
 
+                <div style={{ width: '75%', height: '25px' }}>
+                  <TransparentResponsiveButton
+                    style={{ backgroundColor: theme.colours.primaryLight }}
+                    actionType="primary"
+                    isOpen={false}
+                    icon={<FaArrowRight />}
+                    label="Change Team"
+                  />
+
+                  {/* This should open a popup with a dropdown to select from any of the teams */}
+                </div>
               </MemberListItem>
             )
           })}

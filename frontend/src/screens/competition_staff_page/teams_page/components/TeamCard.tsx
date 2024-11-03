@@ -76,10 +76,7 @@ export const TeamCardMember = ({ memberName }: { memberName: string }) => {
   );
 }
 
-const StyledHoverDiv = styled.div<{
-  $isEditingStatus: boolean, $isEditingNameStatus: boolean,
-  $isDragging: boolean, $numMembers: number,
-  }>`
+const StyledHoverDiv = styled.div<{$isEditingStatus: boolean, $isEditingNameStatus: boolean, $isDragging: boolean, $numMembers: number}>`
   transition: transform 0.2s ease-in-out !important;
   display: flex;
   flex: 0 1 auto;
@@ -111,7 +108,7 @@ const StyledHoverDiv = styled.div<{
       cursor: pointer;
     }
   }
-`
+`;
 
 const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   background-color: ${(props) => props.$statusColor};
