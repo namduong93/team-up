@@ -23,19 +23,13 @@ export interface CompetitionUser {
 
 export interface CompetitionStaff {
   userId: number;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   competitionRoles: Array<CompetitionUserRole>;
   accessLevel: CompetitionAccessLevel;
-}
-
-export interface CompetitionCoach extends CompetitionStaff {
-  university: University;
-  competitionBio: string;
-}
-
-export interface CompetitionSiteCoordinator extends CompetitionStaff {
-  siteLocation: CompetitionSiteObject;
+  siteLocation?: CompetitionSiteObject; // Coach + Site Coordinator
+  university?: University; // Coach
+  competitionBio?: string; // Coach
 }
 
 export interface CompetitionStudentDetails {

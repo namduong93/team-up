@@ -2,7 +2,7 @@ import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMP
 import { ServiceError, ServiceErrorType } from "../errors/service_error.js";
 import { DbError } from "../errors/db_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
-import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
+import { CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
 import { NotificationRepository } from "../repository/notification_repository_type.js";
@@ -428,18 +428,39 @@ export class CompetitionService {
     return {};
   }
 
-  competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {
+  competitionStaffJoin = async (code: string, competitionStaffInfo: CompetitionStaff ): Promise<{} | undefined> => {
+    const competitionId = await this.competitionRepository.competitionIdFromCode(code);
+    if (!competitionId) {
+      throw new ServiceError(ServiceError.NotFound, 'Competition not found');
+    }
+    let userType = await this.userRepository.userType(competitionStaffInfo.userId);
+    if(userType.type === UserType.STUDENT) {
+      throw new ServiceError(ServiceError.NotFound, 'User not staff');
+    }
+    if(competitionStaffInfo.competitionRoles.includes(CompetitionUserRole.COACH)) {
+      if(!competitionStaffInfo.competitionBio) {
+        throw new ServiceError(ServiceError.NotFound, 'Competition bio not provided');
+      }
+      const university = await this.userRepository.userUniversity(competitionStaffInfo.userId);
+      if (!university) {
+        throw new ServiceError(ServiceError.NotFound, 'User is not associated with this university');
+      }
+      competitionStaffInfo.university = university;
+    }
 
-    return {};
-  }
+    if(competitionStaffInfo.competitionRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      if(!competitionStaffInfo.siteLocation || !competitionStaffInfo.siteLocation.id) {
+        throw new ServiceError(ServiceError.NotFound, 'Site location not provided');
+      }
+      if(!competitionStaffInfo.siteLocation.name) {
+        throw new ServiceError(ServiceError.NotFound, 'Site name not provided');
+      }
+      if(!competitionStaffInfo.siteLocation.capacity) {
+        throw new ServiceError(ServiceError.NotFound, 'Site capacity not provided');
+      }
+    }
 
-  competitionStaffJoinSiteCoordinator = async (code: string, site: string, capacity: number): Promise<{} | undefined> => {
-
-    return {};
-  }
-
-  competitionStaffJoinAdmin = async (code: string): Promise<{} | undefined> => {
-    
+    await this.competitionRepository.competitionStaffJoin(competitionId, competitionStaffInfo);
     return {};
   }
 

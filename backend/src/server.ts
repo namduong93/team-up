@@ -204,7 +204,7 @@ app.get('/competition/universities/list', competitionController.competitionUnive
 
 // PARAMS: { code, staffRegistrationData }
 // RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join', competitionController.competitionStaffJoinCoach);
+app.post('/competition/staff/join', competitionController.competitionStaffJoin);
 
 // PARAMS: {}
 // RESPONSW: {universities: Array<{id: number, name: string}>}
@@ -249,6 +249,9 @@ app.get('/user/notifications', notificationController.userNotificationsList);
 // Get all the details of a team in a competition
 app.get('/competition/team/details', competitionController.competitionTeamDetails);
 
+// PARAMS: { compId }
+// RESPONSE:
+// Sort teams based on userId university
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
 app.get('/competition/attendees', competitionController.competitionAttendees);

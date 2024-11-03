@@ -130,6 +130,7 @@ CREATE TABLE competition_users (
   competition_coach_id INT REFERENCES competition_users (id),
   
   -- coach info
+  university_id INT REFERENCES universities (id),
 
   -- admin info
 
@@ -139,7 +140,7 @@ CREATE TABLE competition_users (
   -- staff info
   access_level competition_access_enum,
 
-  CONSTRAINT unique_competition_user UNIQUE (user_id, competition_id)
+  CONSTRAINT unique_competition_user UNIQUE (user_id, competition_id, competition_roles)
 );
 
 CREATE TYPE competition_team_status AS ENUM ('Registered', 'Unregistered', 'Pending');
@@ -633,7 +634,7 @@ VALUES
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
 VALUES
 (3, 1, ARRAY['Coach']::competition_role_enum[], 1, 'Pending'),
-(11, 1, ARRAY['Coach', 'Site-Coordinator']::competition_role_enum[], 1, 'Rejected');
+(11, 1, ARRAY['Coach']::competition_role_enum[], 1, 'Rejected');
 
 -- Competition Teams
 INSERT INTO competition_teams (

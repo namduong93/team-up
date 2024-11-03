@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CompetitionService } from "../services/competition_service.js";
 import { httpErrorHandler, INVALID_TOKEN } from "./controller_util/http_error_handler.js";
 import { Competition } from "../models/competition/competition.js";
+import { CompetitionAccessLevel, CompetitionStaff } from "../models/competition/competitionUser.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
@@ -228,11 +229,18 @@ export class CompetitionController {
     res.json(result);
   });  
 
-  competitionStaffJoinCoach = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+  competitionStaffJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const code = req.body.code;
-    const competitionStaff = req.body.staffRegistrationData;
-    console.log(competitionStaff);
+    let competitionStaffInfo : CompetitionStaff = {
+      userId: Number(userId),
+      competitionRoles: req.body.staffRegistrationData.roles,
+      accessLevel: CompetitionAccessLevel.PENDING,
+      siteLocation: req.body.staffRegistrationData.site,
+      competitionBio: req.body.staffRegistrationData.competitionBio
+    }
+    console.log(competitionStaffInfo);
+    await this.competitionService.competitionStaffJoin(String(code), competitionStaffInfo);
     res.json({});
     return;
   })
