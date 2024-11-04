@@ -2,16 +2,16 @@ import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import { FlexBackground } from "../../../components/general_utility/Background";
-import { CompetitionRole } from "../CompetitionPage";
 import styled, { useTheme } from "styled-components";
 import { Field, StudentInfoContainerDiv } from "../students_page/components/StudentInfoCard";
 import { sendRequest } from "../../../utility/request";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
+
+import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 import { NarrowDisplayDiv, WideDisplayDiv } from "../students_page/StudentDisplay";
 import { WideStaffCard, WideStaffHeader } from "./components/WideStaffCard";
 import { NarrowStaffCard } from "./components/NarrowStaffCard";
-
 
 enum StaffAccess {
   Accepted = 'Accepted',

@@ -5,7 +5,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
+import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
@@ -220,7 +220,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
     const dbResult = await this.pool.query(
       `SELECT cu.competition_roles AS roles
-      FROM competition_users AS cu WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}`
+      FROM competition_users AS cu WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId} AND access_level = 'Accepted'::competition_access_enum`
     );
     if (dbResult.rows.length === 0) {
       return [];
@@ -347,8 +347,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const competitionId = competitionResult.rows[0].id;
     
     await this.pool.query(
-      `INSERT INTO competition_users (user_id, competition_id, competition_roles)
-      VALUES (${userId}, ${competitionId}, ARRAY['Admin']::competition_role_enum[])`
+      `INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
+      VALUES (${userId}, ${competitionId}, ARRAY['Admin']::competition_role_enum[], 'Accepted'::competition_access_enum)`
     );
     
     // for the normal siteLocations that have university Ids:
@@ -454,18 +454,19 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   
     // Query to get site locations related to the competition
     const siteLocationsQuery = `
-      SELECT university_id, name, capacity
+      SELECT id, university_id, name, capacity
       FROM competition_sites
       WHERE competition_id = $1
     `;
     const siteLocationsResult = await this.pool.query(siteLocationsQuery, [competitionId]);
   
     const siteLocations: Array<CompetitionSiteObject> = siteLocationsResult.rows.map(row => ({
+      id: row.id,
       universityId: row.university_id,
       name: row.name,
       capacity: row.capacity,
     }));
-  
+      
     // Constructing the competition object
     const competitionDetails: Competition = {
       id: competitionData.id,
@@ -1015,18 +1016,43 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
-  competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {
-
-    return {};
-  }
-
-  competitionStaffJoinSiteCoordinator = async (code: string, site: string, capacity: number): Promise<{} | undefined> => {
-
-    return {};
-  }
-
-  competitionStaffJoinAdmin = async (code: string): Promise<{} | undefined> => {
-    
+  competitionStaffJoin = async (competitionId: number, staffCompetitionInfo: CompetitionStaff): Promise<{} | undefined> => {
+    console.log(staffCompetitionInfo);
+    const userId = staffCompetitionInfo.userId;
+    const roles = staffCompetitionInfo.competitionRoles;
+    const competitionExistRole = await this.competitionRoles(userId, competitionId);
+    if(roles.includes(CompetitionUserRole.ADMIN)) {
+      if(competitionExistRole.includes(CompetitionUserRole.ADMIN)) {
+        throw new DbError(DbError.Query, "User is already an admin for this competition.");
+      }
+      const addAdminQuery = `
+        INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
+        VALUES ($1, $2, $3, 'Pending'::competition_access_enum)
+      `;
+      await this.pool.query(addAdminQuery, [userId, competitionId, [CompetitionUserRole.ADMIN]]);
+    }
+    if(roles.includes(CompetitionUserRole.COACH)) {
+      const competitionBio = staffCompetitionInfo.competitionBio;
+      if(competitionExistRole.includes(CompetitionUserRole.COACH)) {
+        throw new DbError(DbError.Query, "User is already a coach for this competition.");
+      }
+      const addCoachQuery = `
+        INSERT INTO competition_users (user_id, competition_id, competition_roles, bio, access_level)
+        VALUES ($1, $2, $3, $4, 'Pending'::competition_access_enum)
+      `;
+      await this.pool.query(addCoachQuery, [userId, competitionId, [CompetitionUserRole.COACH], competitionBio]);
+    }
+    if(roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      const siteId = staffCompetitionInfo.siteLocation.id;
+      if(competitionExistRole.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+        throw new DbError(DbError.Query, "User is already a site coordinator for this competition.");
+      }
+      const addSiteCoordinatorQuery = `
+        INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
+        VALUES ($1, $2, $3, $4, 'Pending'::competition_access_enum)
+      `;
+      await this.pool.query(addSiteCoordinatorQuery, [userId, competitionId, [CompetitionUserRole.SITE_COORDINATOR], siteId]);
+    }
     return {};
   }
 
@@ -1285,11 +1311,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         competitionMap.get(row.id)?.userType.push(userType);
       }
     });
-  }
-
-  // Custom Comparator for algorithm
-  private compareTeams = (team1: any, team2: any) => {
-
   }
 
   SALTED_TEAM_CODE = 12345;

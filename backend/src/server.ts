@@ -202,17 +202,9 @@ app.get('/competition/universities/list', competitionController.competitionUnive
 
 ////////// Competition staff joining with a specific coach, site or admin code.
 
-// PARAMS: { code, universityId, defaultSiteId }
+// PARAMS: { code, staffRegistrationData : { competitionRoles: Array<CompetitionUserRole>, siteLocation?: CompetitionSiteObject }, competitionBio?: string }
 // RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/coach', competitionController.competitionStaffJoinCoach);
-
-// PARAMS: { code, site, capacity }
-// RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/site_coordinator', competitionController.competitionStaffJoinSiteCoordinator);
-
-// PARAMS: { code }
-// RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/admin', competitionController.competitionStaffJoinAdmin);
+app.post('/competition/staff/join', competitionController.competitionStaffJoin);
 
 // PARAMS: {}
 // RESPONSW: {universities: Array<{id: number, name: string}>}
@@ -269,6 +261,7 @@ app.get('/competition/team/invite_code', competitionController.competitionTeamIn
 // Join a team in a competition
 app.post('/competition/team/join', competitionController.competitionTeamJoin);
 
+// Sort teams based on userId university
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
 app.get('/competition/attendees', competitionController.competitionAttendees);
@@ -281,6 +274,10 @@ app.get('/competition/student/details', competitionController.competitionStudent
 // PARAMS: { compId }
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites', competitionController.competitionSites);
+
+// PARAMS: { code }
+// RESPONSE: { sites: Array<CompetitionSite> }
+app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

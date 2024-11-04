@@ -7,9 +7,8 @@ import TextInputLight from "../../../components/general_utility/TextInputLight";
 import { useLocation, useNavigate } from "react-router-dom";
 import SiteLocationForm from "./components/SiteLocationForm";
 import RadioButton from "../../../components/general_utility/RadioButton";
-import moment from 'moment-timezone';
+import moment from "moment-timezone";
 import DropdownInput from "../../../components/general_utility/DropDownInput";
-
 
 const Container = styled.div`
   flex: 1;
@@ -62,12 +61,12 @@ const LocationList = styled.div`
 const LocationItem = styled.div`
   display: contents;
   font-size: 16px;
-  text-align: center; 
+  text-align: center;
 `;
 
 const DeleteIcon = styled.span`
   cursor: pointer;
-  font-size: 18px; 
+  font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
   margin-left: 30px;
 
@@ -91,7 +90,8 @@ const Button = styled.button<{ disabled?: boolean }>`
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight};
   margin-top: 35px;
   margin-bottom: 40px;
   color: ${({ theme }) => theme.fonts.colour};
@@ -99,16 +99,16 @@ const Button = styled.button<{ disabled?: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
-`
+`;
 const Descriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colours.filterText};
   width: 100%;
-`
+`;
 const Asterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
-`
+`;
 
 export interface SiteLocation {
   universityId: number;
@@ -142,7 +142,7 @@ interface CompetitionInformation {
 const createTimezoneOptions = () => {
   const timezones = moment.tz.names().map((tz) => ({
     value: tz,
-    label: tz.replace(/_/g, ' ').replace(/\/(.+)/, ' - $1'), // Format label for better readability
+    label: tz.replace(/_/g, " ").replace(/\/(.+)/, " - $1"), // Format label for better readability
   }));
 
   return [{ value: "", label: "Please Select" }, ...timezones];
@@ -151,32 +151,33 @@ const createTimezoneOptions = () => {
 export const CompetitionDetails: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [locationError, setLocationError] = useState<ReactNode>('');
-  
-  const [optionDisplayList, setOptionDisplayList] = useState<Array<{ value: string, label: string, defaultSite: string }>>(
-    location.state?.optionDisplayList || []
-  );
+  const [locationError, setLocationError] = useState<ReactNode>("");
 
-  const [competitionInfo, setCompetitionInfo] = useState<CompetitionInformation>(
-    location.state?.competitionInfo || {
-      name: "",
-      region: "",
-      timeZone: "",
-      startDate: "",
-      startTime: "",
-      start: "",
-      earlyBird: null,
-      earlyBirdDate: "",
-      earlyBirdTime: "",
-      early:  "",
-      generalDate: "",
-      generalTime: "",
-      general:  "",
-      code: "",
-      siteLocations: [],
-      otherSiteLocations: [],
-    }
-  );
+  const [optionDisplayList, setOptionDisplayList] = useState<
+    Array<{ value: string; label: string; defaultSite: string }>
+  >(location.state?.optionDisplayList || []);
+
+  const [competitionInfo, setCompetitionInfo] =
+    useState<CompetitionInformation>(
+      location.state?.competitionInfo || {
+        name: "",
+        region: "",
+        timeZone: "",
+        startDate: "",
+        startTime: "",
+        start: "",
+        earlyBird: null,
+        earlyBirdDate: "",
+        earlyBirdTime: "",
+        early: "",
+        generalDate: "",
+        generalTime: "",
+        general: "",
+        code: "",
+        siteLocations: [],
+        otherSiteLocations: [],
+      }
+    );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -185,43 +186,67 @@ export const CompetitionDetails: FC = () => {
     setCompetitionInfo({ ...competitionInfo, [field]: e.target.value });
   };
 
-  const addSite = (option: { value: string, label: string }, defaultSite: string) => {
+  const addSite = (
+    option: { value: string; label: string },
+    defaultSite: string
+  ) => {
     setCompetitionInfo((prev) => ({
       ...prev,
-      siteLocations: [...prev.siteLocations, { universityId: parseInt(option.value), defaultSite }]
+      siteLocations: [
+        ...prev.siteLocations,
+        { universityId: parseInt(option.value), defaultSite },
+      ],
       // convert universityId to number before we send to backend;
     }));
 
-    setOptionDisplayList((prev) => ([
+    setOptionDisplayList((prev) => [
       ...prev,
-      { value: option.value, label: option.label, defaultSite }
-    ]));
-  }
+      { value: option.value, label: option.label, defaultSite },
+    ]);
+  };
 
-  const addOtherSite = (option: { value: string, label: string }, defaultSite: string) => {
+  const addOtherSite = (
+    option: { value: string; label: string },
+    defaultSite: string
+  ) => {
     setCompetitionInfo((prev) => ({
       ...prev,
-      otherSiteLocations: [...prev.otherSiteLocations, { universityName: option.label, defaultSite }]
+      otherSiteLocations: [
+        ...prev.otherSiteLocations,
+        { universityName: option.label, defaultSite },
+      ],
     }));
 
-    setOptionDisplayList((prev) => ([
+    setOptionDisplayList((prev) => [
       ...prev,
-      { value: option.value, label: option.label, defaultSite }
-    ]));
-  }
+      { value: option.value, label: option.label, defaultSite },
+    ]);
+  };
 
-  const handleAddSiteLocation = (currentOption: { value: string, label: string }, defaultSite: string) => {
+  const handleAddSiteLocation = (
+    currentOption: { value: string; label: string },
+    defaultSite: string
+  ) => {
     if (!defaultSite) {
-      console.log('hi');
       setLocationError(<p>No site name provided</p>);
       return;
     }
 
-    if (competitionInfo.siteLocations.some((site) => String(site.universityId) === currentOption.value)
-    || competitionInfo.otherSiteLocations.some((otherSite) => otherSite.universityName === currentOption.label)) {
-        
-      setLocationError(<p>You have already entered a default site location for this institution<br />
-      Please delete your previous entry or select a different institution</p>);
+    if (
+      competitionInfo.siteLocations.some(
+        (site) => String(site.universityId) === currentOption.value
+      ) ||
+      competitionInfo.otherSiteLocations.some(
+        (otherSite) => otherSite.universityName === currentOption.label
+      )
+    ) {
+      setLocationError(
+        <p>
+          You have already entered a default site location for this institution
+          <br />
+          Please delete your previous entry or select a different institution
+        </p>
+      );
       return;
     }
 
@@ -234,7 +259,7 @@ export const CompetitionDetails: FC = () => {
     //   return;
     // }
 
-    setLocationError('');
+    setLocationError("");
 
     // if currentOptions value is empty which will be the case when it's a custom option.
     if (!currentOption.value) {
@@ -244,18 +269,29 @@ export const CompetitionDetails: FC = () => {
     }
 
     addSite(currentOption, defaultSite);
-
   };
 
-  const handleDeleteSiteLocation = (deleteObject: { value: string, label: string, defaultSite: string }) => {
-    setOptionDisplayList((prev) => ([
-      ...prev.filter((elem) => !(elem.value === deleteObject.value && elem.label === deleteObject.label))
-    ]));
-    
+  const handleDeleteSiteLocation = (deleteObject: {
+    value: string;
+    label: string;
+    defaultSite: string;
+  }) => {
+    setOptionDisplayList((prev) => [
+      ...prev.filter(
+        (elem) =>
+          !(
+            elem.value === deleteObject.value &&
+            elem.label === deleteObject.label
+          )
+      ),
+    ]);
+
     if (!deleteObject.value) {
       setCompetitionInfo((prev) => ({
         ...prev,
-        otherSiteLocations: prev.otherSiteLocations.filter((elem) => (elem.universityName !== deleteObject.label)),
+        otherSiteLocations: prev.otherSiteLocations.filter(
+          (elem) => elem.universityName !== deleteObject.label
+        ),
       }));
 
       return;
@@ -263,38 +299,39 @@ export const CompetitionDetails: FC = () => {
 
     setCompetitionInfo((prev) => ({
       ...prev,
-      siteLocations: prev.siteLocations.filter((elem) => elem.universityId !== Number(deleteObject.value))
+      siteLocations: prev.siteLocations.filter(
+        (elem) => elem.universityId !== Number(deleteObject.value)
+      ),
     }));
-
   };
 
   const isButtonDisabled = () => {
-    const { name, 
-      earlyBirdDate, 
-      earlyBirdTime, 
-      generalDate, 
-      generalTime, 
-      code, 
-      siteLocations, 
-      otherSiteLocations, 
+    const {
+      name,
+      earlyBirdDate,
+      earlyBirdTime,
+      generalDate,
+      generalTime,
+      code,
+      siteLocations,
+      otherSiteLocations,
       earlyBird,
-      region, 
+      region,
       startDate,
       startTime,
       timeZone,
     } = competitionInfo;
     return (
-      name === '' ||
-      region === '' ||
-      timeZone === '' ||
-      startDate === '' ||
-      startTime === '' ||
+      name === "" ||
+      region === "" ||
+      timeZone === "" ||
+      startDate === "" ||
+      startTime === "" ||
       (earlyBird && !earlyBirdDate && !earlyBirdTime) ||
-      generalDate === '' ||
-      generalTime === '' ||
-      code === '' ||
-      (siteLocations.length === 0 &&
-      otherSiteLocations.length === 0)
+      generalDate === "" ||
+      generalTime === "" ||
+      code === "" ||
+      (siteLocations.length === 0 && otherSiteLocations.length === 0)
     );
   };
 
@@ -303,7 +340,7 @@ export const CompetitionDetails: FC = () => {
   };
 
   const convertToTimezone = (date: string, time: string, timezone: string) => {
-    if (!date || !time || !timezone) return '';
+    if (!date || !time || !timezone) return "";
 
     const dateTimeString = `${date} ${time}`;
     return moment.tz(dateTimeString, timezone).format();
@@ -313,20 +350,44 @@ export const CompetitionDetails: FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const { startDate, startTime, earlyBirdDate, earlyBirdTime, generalDate, generalTime } = competitionInfo;
-    
-    const start = convertToTimezone(startDate, startTime, competitionInfo.timeZone);
-    const early = earlyBirdDate && earlyBirdTime ? convertToTimezone(earlyBirdDate, earlyBirdTime, competitionInfo.timeZone) : '';
-    const general = convertToTimezone(generalDate, generalTime, competitionInfo.timeZone);
+    const {
+      startDate,
+      startTime,
+      earlyBirdDate,
+      earlyBirdTime,
+      generalDate,
+      generalTime,
+    } = competitionInfo;
 
-    const updatedCompetitionInfo = { 
+    const start = convertToTimezone(
+      startDate,
+      startTime,
+      competitionInfo.timeZone
+    );
+    const early =
+      earlyBirdDate && earlyBirdTime
+        ? convertToTimezone(
+            earlyBirdDate,
+            earlyBirdTime,
+            competitionInfo.timeZone
+          )
+        : "";
+    const general = convertToTimezone(
+      generalDate,
+      generalTime,
+      competitionInfo.timeZone
+    );
+
+    const updatedCompetitionInfo = {
       ...competitionInfo,
-      start, 
-      early, 
-      general 
+      start,
+      early,
+      general,
     };
-    
-    navigate("/competition/confirmation", { state: { competitionInfo: updatedCompetitionInfo, optionDisplayList } });
+
+    navigate("/competition/confirmation", {
+      state: { competitionInfo: updatedCompetitionInfo, optionDisplayList },
+    });
   };
 
   return (
@@ -337,7 +398,7 @@ export const CompetitionDetails: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    > 
+    >
       <CompCreationProgressBar progressNumber={0} />
       <Container>
         <FormContainer onSubmit={handleSubmit}>
@@ -374,43 +435,51 @@ export const CompetitionDetails: FC = () => {
             descriptor="Please select the timezone for the Competition"
           />
 
-          <Label>Competition Start<Asterisk>*</Asterisk></Label>
+          <Label>
+            Competition Start<Asterisk>*</Asterisk>
+          </Label>
 
           <DoubleInputContainer>
-              <TextInputLight
-                label="Date"
-                placeholder="dd/mm/yyyy"
-                type="date"
-                required={true}
-                value={competitionInfo.startDate}
-                onChange={(e) => handleChange(e, "startDate")}
-                width="45%"
-              />
+            <TextInputLight
+              label="Date"
+              placeholder="dd/mm/yyyy"
+              type="date"
+              required={true}
+              value={competitionInfo.startDate}
+              onChange={(e) => handleChange(e, "startDate")}
+              width="45%"
+            />
 
-              <TextInputLight
-                label="Time"
-                placeholder="hh:mm"
-                type="time"
-                required={true}
-                value={competitionInfo.startTime}
-                onChange={(e) => handleChange(e, "startTime")}
-                width="45%"
-              />
+            <TextInputLight
+              label="Time"
+              placeholder="hh:mm"
+              type="time"
+              required={true}
+              value={competitionInfo.startTime}
+              onChange={(e) => handleChange(e, "startTime")}
+              width="45%"
+            />
           </DoubleInputContainer>
 
           <Label>Early Bird Registration Deadline</Label>
 
           <RadioButton
             label=""
-            options={['Yes', 'No']}
-            selectedOption={competitionInfo.earlyBird === null ? '' : competitionInfo.earlyBird ? 'Yes' : 'No'}
+            options={["Yes", "No"]}
+            selectedOption={
+              competitionInfo.earlyBird === null
+                ? ""
+                : competitionInfo.earlyBird
+                ? "Yes"
+                : "No"
+            }
             onOptionChange={(e) => {
-              const isEarlyBird = e.target.value === 'Yes';
+              const isEarlyBird = e.target.value === "Yes";
               setCompetitionInfo((prev) => ({
                 ...prev,
                 earlyBird: isEarlyBird,
-                earlyBirdDate: isEarlyBird ? prev.earlyBirdDate : '',
-                earlyBirdTime: isEarlyBird ? prev.earlyBirdTime : '',
+                earlyBirdDate: isEarlyBird ? prev.earlyBirdDate : "",
+                earlyBirdTime: isEarlyBird ? prev.earlyBirdTime : "",
               }));
             }}
             required={true}
@@ -418,36 +487,42 @@ export const CompetitionDetails: FC = () => {
             width="100%"
           />
 
-
           {competitionInfo.earlyBird && (
             <>
-            <Descriptor>Please set the Date and Time of your Early Bird Registration Deadline</Descriptor>
-            <DoubleInputContainer>
-              <TextInputLight
-                label="Date"
-                placeholder="dd/mm/yyyy"
-                type="date"
-                required={true}
-                value={competitionInfo.earlyBirdDate || ""}
-                onChange={(e) => handleChange(e, "earlyBirdDate")}
-                width="45%"
-              />
+              <Descriptor>
+                Please set the Date and Time of your Early Bird Registration
+                Deadline
+              </Descriptor>
+              <DoubleInputContainer>
+                <TextInputLight
+                  label="Date"
+                  placeholder="dd/mm/yyyy"
+                  type="date"
+                  required={true}
+                  value={competitionInfo.earlyBirdDate || ""}
+                  onChange={(e) => handleChange(e, "earlyBirdDate")}
+                  width="45%"
+                />
 
-              <TextInputLight
-                label="Time"
-                placeholder="hh:mm"
-                type="time"
-                required={true}
-                value={competitionInfo.earlyBirdTime || ""}
-                onChange={(e) => handleChange(e, "earlyBirdTime")}
-                width="45%"
-              />
-            </DoubleInputContainer>
+                <TextInputLight
+                  label="Time"
+                  placeholder="hh:mm"
+                  type="time"
+                  required={true}
+                  value={competitionInfo.earlyBirdTime || ""}
+                  onChange={(e) => handleChange(e, "earlyBirdTime")}
+                  width="45%"
+                />
+              </DoubleInputContainer>
             </>
           )}
 
-          <Label>General Registration Deadline<Asterisk>*</Asterisk></Label>
-          <Descriptor>Please set the Date and Time of your General Registration Deadline</Descriptor>
+          <Label>
+            General Registration Deadline<Asterisk>*</Asterisk>
+          </Label>
+          <Descriptor>
+            Please set the Date and Time of your General Registration Deadline
+          </Descriptor>
 
           <DoubleInputContainer>
             <TextInputLight
@@ -481,14 +556,16 @@ export const CompetitionDetails: FC = () => {
             width="100%"
             descriptor="Please type a unique code that will be used to identify your Competition"
           />
-          
+
           <SiteLocationForm onAddLocation={handleAddSiteLocation} />
 
-          {locationError &&
-            <div style={{ color: "red", marginTop: "30px", textAlign: 'center' }}>
+          {locationError && (
+            <div
+              style={{ color: "red", marginTop: "30px", textAlign: "center" }}
+            >
               {locationError}
             </div>
-          }
+          )}
 
           <LocationList>
             {optionDisplayList.map((displayObject, index) => {
@@ -496,16 +573,21 @@ export const CompetitionDetails: FC = () => {
                 <LocationItem key={index}>
                   <div>{displayObject.label}</div>
                   <div>{displayObject.defaultSite}</div>
-                  <DeleteIcon onClick={() => handleDeleteSiteLocation(displayObject)}>x</DeleteIcon> 
+                  <DeleteIcon
+                    onClick={() => handleDeleteSiteLocation(displayObject)}
+                  >
+                    x
+                  </DeleteIcon>
                 </LocationItem>
               );
             })}
-
           </LocationList>
 
           <ButtonContainer>
             <Button onClick={() => navigate("/dashboard")}>Back</Button>
-            <Button type="submit" disabled={isButtonDisabled()}>Next</Button>
+            <Button type="submit" disabled={isButtonDisabled()}>
+              Next
+            </Button>
           </ButtonContainer>
         </FormContainer>
       </Container>
