@@ -641,35 +641,70 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const competitionCode = competitionExistResult.rows[0].code;
     const competitionName = competitionExistResult.rows[0].name;
 
-    const teamRemoveMemberQuery = `
-      UPDATE competition_teams
-      SET participants = array_remove(participants, $1)
+    const teamQuery = `
+      SELECT * FROM competition_teams
       WHERE $1 = ANY(participants) AND competition_id = $2
-      RETURNING id, name
     `;
-    const teamRemoveMemberResult = await this.pool.query(teamRemoveMemberQuery, [userId, compId]);
-    if (teamRemoveMemberResult.rowCount === 0) {
-      throw new DbError(DbError.Query, 'User is not a participant in any team in this competition.');; // TODO: throw error that user is not in a team in this competition
+    const teamResult = await this.pool.query(teamQuery, [userId, compId]);
+    if (teamResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'User is not a participant in any team in this competition.');
     }
-    const teamId = teamRemoveMemberResult.rows[0]?.id;
-    const teamName = teamRemoveMemberResult.rows[0]?.name;
 
-    const teamSetPendingQuery = `
-      UPDATE competition_teams
-      SET team_status = 'Pending'::competition_team_status
-      WHERE id = $1
-    `;
-    await this.pool.query(teamSetPendingQuery, [teamId]);
-    
-    // Remove user from the competition altogether
-    const competitionRemoveParticipantQuery = `
-      DELETE FROM competition_users
-      WHERE user_id = $1
-      AND competition_id = $2
-    `;
-    await this.pool.query(competitionRemoveParticipantQuery, [userId, compId]);
-
-    return { competitionCode, competitionName, teamId, teamName };
+    if(teamResult.rows[0].participants.length === 1) {
+      //Delete notifications for the team
+      const deleteNotificationsQuery = `
+        DELETE FROM notifications
+        WHERE team_id = $1
+      `;
+      await this.pool.query(deleteNotificationsQuery, [teamResult.rows[0].id]);
+      //Delete the team
+      const leaveTeamQuery = `
+        DELETE FROM competition_teams
+        WHERE id = $1
+      `;
+      const leaveTeamResult = await this.pool.query(leaveTeamQuery, [teamResult.rows[0].id]);
+      if (leaveTeamResult.rowCount === 0) {
+        throw new DbError(DbError.Query, 'Could not leave team.');
+      }
+      //Delete the user from the competition
+      const competitionRemoveParticipantQuery = `
+        DELETE FROM competition_users
+        WHERE user_id = $1
+        AND competition_id = $2
+      `;
+      await this.pool.query(competitionRemoveParticipantQuery, [userId, compId]);
+      return { competitionCode, competitionName, teamId: teamResult.rows[0].id, teamName: teamResult.rows[0].name  };
+    }
+    else {
+      // Leave the team
+      const leaveTeamQuery = `
+        UPDATE competition_teams
+        SET participants = $1, team_size = ${teamResult.rows[0].participants.length - 1}, team_status = 'Pending'::competition_team_status
+        WHERE id = $2
+      `;
+      const leaveTeamResult = await this.pool.query(leaveTeamQuery, [teamResult.rows[0].participants.filter((id) => id !== userId), teamResult.rows[0].id]);
+      if (leaveTeamResult.rowCount === 0) {
+        throw new DbError(DbError.Query, 'Could not leave team.');
+      }
+      // Join a new team
+      const newTeamJoinQuery = `
+        INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id, competition_coach_id, site_attending_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id, name
+      `;
+      const newTeamJoinValues = [
+        `${pokemon.getName((teamResult.rows[0].id + 1) % 1000)}`,
+        TeamStatus.PENDING,
+        1,
+        [userId],
+        teamResult.rows[0].university_id,
+        compId,
+        teamResult.rows[0].competition_coach_id,
+        teamResult.rows[0].site_attending_id
+      ];
+      const newTeamJoinResult = await this.pool.query(newTeamJoinQuery, newTeamJoinValues);
+      return { competitionCode, competitionName, teamId: newTeamJoinResult.rows[0].id, teamName: newTeamJoinResult.rows[0].name };
+    }
   }
 
   competitionApproveTeamAssignment = async(userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
