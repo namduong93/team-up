@@ -598,8 +598,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     let siteId = competitionUserInfo.siteLocation.id;
 
     let teamQuery = `
-      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id, competition_coach_id, site_attending_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO competition_teams (name, team_status, team_size, participants, university_id, competition_id, competition_coach_id, site_attending_id, access_level)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Accepted'::competition_access_enum)
       RETURNING id
     `;
     const teamNameValues = [
