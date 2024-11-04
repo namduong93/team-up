@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 export interface InfoBarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -6,15 +6,16 @@ export interface InfoBarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const InfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
-  position: fixed;
+  position: absolute;
   border-radius: 10px;
+  overflow: auto;
   right: 0;
   bottom: 0;
   z-index: 50;
   /* TODO: add min-height */
   transition: width 0.25s ease, min-width 0.25s ease !important;
   width: ${({ $isOpen }) => $isOpen ? '30%' : '0'};
-  height: 90%;
+  height: 95%;
   max-width: 380px;
   min-width: ${({ $isOpen }) => $isOpen ? '320px' : '0'};
   background-color: ${({ theme }) => theme.background};
@@ -34,7 +35,7 @@ const InfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
 
 const InfoContainer = styled.div`
   width: calc(100% - 20px);
-  height: calc(100% - 20px);
+  /* height: calc(100% - 20px); */
   box-sizing: border-box;
   margin: 10px 10px 10px 10px;
   display: flex;
@@ -48,18 +49,37 @@ export const InfoBar: FC<InfoBarProps> = ({ isOpenState: [isOpen, setIsOpen], ch
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (containerRef.current) {
-      isOpen && (containerRef.current as HTMLElement).focus();
-    }
-  }, [isOpen]);
 
+    const handleClick = (e: MouseEvent) => {
+      if (!containerRef.current) {
+        return;
+      }
+      const bounds = (containerRef.current as HTMLElement).getBoundingClientRect();
+
+      if ((e.clientX >= bounds.left
+        && e.clientX <= bounds.right
+        && e.clientY >= bounds.top
+        && e.clientY <= bounds.bottom)) {
+        return;
+      }
+      setIsOpen(false);
+
+    }
+
+    document.addEventListener('mousedown', handleClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    }
+  }, []);
 
   return (
-    <InfoBarContainerDiv ref={containerRef}
-    tabIndex={9999}
-    onBlur={() => setIsOpen(false)}
-    $isOpen={isOpen} {...props}>
-
+    <InfoBarContainerDiv
+      ref={containerRef}
+      tabIndex={9999}
+      $isOpen={isOpen} {...props}
+      onClick={(e) => e.stopPropagation()}
+    >
       <InfoContainer>
         {children}
       </InfoContainer>

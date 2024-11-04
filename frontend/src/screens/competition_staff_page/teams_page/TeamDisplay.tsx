@@ -69,6 +69,7 @@ export const TeamDisplay: FC = () => {
           universityOption, roles,
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
           buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
+          siteOptionsState: [siteOptions, setSiteOptions],
           setFilterOptions, setSortOptions } = useCompetitionOutletContext('teams');
 
           useEffect(() => {
@@ -255,6 +256,7 @@ export const TeamDisplay: FC = () => {
           <TeamCard
           // handler to take in memberId and newTeamID (updates list of teams)
             data-index={index}
+            siteOptionsState={[siteOptions, setSiteOptions]}
             handleDragDropCard={handleDragDropCard}
             isDraggingState={[isDragging, setIsDragging]}
             teamIdsState={[approveTeamIds, setApproveTeamIds]}
@@ -263,7 +265,8 @@ export const TeamDisplay: FC = () => {
             isEditingNameStatus={isEditingNameStatus}
             teamListState={[teamList, setTeamList]}
             buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
-            key={`${teamDetails.teamName}${teamDetails.status}${index}`} teamDetails={teamDetails} />)
+            key={`${teamDetails.teamName}${teamDetails.status}${index}`}
+            teamDetails={teamDetails} />)
         })}
       </TeamCardGridDisplay>
     </>

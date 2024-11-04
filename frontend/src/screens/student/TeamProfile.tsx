@@ -12,7 +12,6 @@ export interface Student {
   email: string;
   bio: string;
   preferredContact: string;
-  siteId: number;
   ICPCEligible: boolean;
   level: string;
   boersenEligible: boolean;
@@ -26,19 +25,7 @@ export interface ParticipantTeamDetails {
   teamSeat?: string;
   teamLevel: string;
   startDate: Date;
-  students: Array<{
-    userId: number;
-    name: string;
-    email: string;
-    bio: string;
-    preferredContact: string;
-    siteId: number;
-    ICPCEligible: boolean;
-    level: string;
-    boersenEligible: boolean;
-    isRemote: boolean;
-    // studentAlgoScore?: number;
-  }>;
+  students: Array<Student>;
   coach: {
     name: string;
     email: string;

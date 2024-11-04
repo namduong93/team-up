@@ -42,6 +42,10 @@ interface TeamCardProps extends React.HTMLAttributes<HTMLDivElement> {
   handleDragDropCard?: (event: DragEndEvent, info: PanInfo, member: Student, currentTeamId: number) => void;
   teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
   buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
+  siteOptionsState: [
+    Array<{ value: string, label: string }>,
+    React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>
+  ];
 };
 
 const TeamMemberContainerDiv = styled.div`
@@ -342,8 +346,10 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
   buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
   isEditingNameStatus = false, isDraggingState: [isDragging, setIsDragging],
-  handleDragDropCard = () => {}, ...props
- }) => {
+  handleDragDropCard = () => {}, 
+  siteOptionsState: [siteOptions, setSiteOptions],
+  ...props
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, _ ] = useState(teamDetails.status);
   const colorMap = {
@@ -374,6 +380,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
 
   const [infoBarOpen, setInfoBarOpen] = useState(false);
 
+
   return (
     <>
     <TeamInfoBar
@@ -381,6 +388,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
       teamListState={[teamList, setTeamlist]}
       isOpenState={[infoBarOpen, setInfoBarOpen]}
       teamDetails={teamDetails}
+      siteOptionsState={[siteOptions, setSiteOptions]}
     />
     <StyledHoverDiv
       className="team-card-cell"

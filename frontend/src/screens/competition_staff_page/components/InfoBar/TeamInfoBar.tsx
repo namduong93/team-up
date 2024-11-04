@@ -1,22 +1,25 @@
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
 import { TeamDetails } from "../../teams_page/components/TeamCard";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
 import styled, { useTheme } from "styled-components";
-import { BooleanStatus } from "../../attendees_page/AttendeesPage";
-import { CopyButton } from "../../../../components/general_utility/CopyButton";
-import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaArrowRight } from "react-icons/fa";
-import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
-import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { Student } from "../../../student/TeamProfile";
 import { addStudentToTeam } from "../../teams_page/utility/addStudentToTeam";
 import { ButtonConfiguration } from "../../hooks/useCompetitionOutletContext";
+import { EditableInput, TeamStudentInfoCard } from "./components/TeamStudentInfoCard";
+import { EditIcon, EditIconButton } from "../../../account/Account";
+import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
+import { FaSave } from "react-icons/fa";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
   teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
   buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
+  siteOptionsState: [
+    Array<{ value: string, label: string }>,
+    React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>
+  ];
 }
 
 export const InfoBarField = styled.div`
@@ -77,12 +80,6 @@ const TeamStatusDiv = styled.div<{ $status: TeamStatus }>`
   )};
 `;
 
-const MemberFieldDiv = styled.div`
-  display: flex;
-  column-gap: 4px;
-  align-items: center;
-`;
-
 const MemberUl = styled.ul`
   display: flex;
   flex-direction: column;
@@ -90,57 +87,82 @@ const MemberUl = styled.ul`
   width: 100%;
   padding-left: 0;
 `;
-const MemberListItem = styled.li`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
-  border-radius: 10px;
-  padding: 2px;
-`;
 
+const Select = styled.select`
+  border-radius: 5px;
+`;
 
 export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   teamDetails, isOpenState: [isOpen, setIsOpen],
   teamListState: [teamList, setTeamList],
   buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
+  siteOptionsState: [siteOptions, setSiteOptions],
   children, ...props }) => {
-  
+  const theme = useTheme();
+
   const [isPopupOpen, setPopupOpen] = useState(false);
-  
-  const [teamOptions, setTeamOptions] 
-    = useState(teamList.map((team) => ({ value: String(team.teamId), label: team.teamName })));
 
-  const [currentTeamOption, setCurrentTeamOption] = useState({ value: '', label: '' });
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleSubmitTeamChange = async (student: Student) => {
+  const [teamData, setTeamData] = useState(teamDetails);
 
-    const newTeamId = parseInt(currentTeamOption.value);
-    const currentTeamId = teamDetails.teamId;
-    
-    const newTeamIndex = teamList.findIndex((team) => team.teamId === newTeamId);
-    const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
+  const [currentSiteOption, setCurrentSiteOption] = useState({ value: '', label: '' });
 
-    if (addStudentToTeam(student, currentTeamIndex, newTeamIndex, [teamList, setTeamList])) {
-      setButtonConfiguration((p) => ({
-        ...p,
-        enableTeamsChangedButtons: true
-      }));
-    };
-    setPopupOpen(false);
-    return true;
+  const [isEdited, setIsEdited] = useState(false);
+  useEffect(() => {
+    if (!currentSiteOption.label || !currentSiteOption.value) {
+      return;
+    }
+    setTeamData((p) => ({ ...p, teamSite: currentSiteOption.label }));
+
+  }, [currentSiteOption]);
+
+
+  useEffect(() => {
+    if (Object.keys(teamData).every((key) => (teamData as Record<string, any>)[key] === (teamDetails as Record<string, any>)[key])) {
+      setIsEdited(false);
+      return;
+    }
+    setIsEdited(true);
+  }, [teamData])
+
+
+  const handleSaveEdit = () => {
+    // send to the backend route here.
+
+    const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
+    setTeamList([
+      ...teamList.slice(0, currentTeamIndex),
+      teamData,
+      ...teamList.slice(currentTeamIndex + 1)
+    ]);
+    setIsEdited(false);
   }
 
   return (
     <InfoBar isOpenState={[isOpen || isPopupOpen, setIsOpen]} {...props}>
-      <InfoBarField style={{ left: 0, top: 0, position: 'absolute' }}>
+      <InfoBarField>
         <LabelSpan>Team Id:</LabelSpan>
         <span>{teamDetails.teamId}</span>
       </InfoBarField>
 
+      <EditIconButton
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => { setIsEditing((p) => !p) }}
+        style={{ position: 'absolute', right: 0, top: 0 }}
+      >
+        <EditIcon />
+      </EditIconButton>
+
+      {isEditing ?
+      <EditableInput
+        defaultValue={teamData.teamName}
+        onChange={(e) => setTeamData((p) => ({ ...p, teamName: e.target.value }))}
+        style={{ width: '50%', height: '47px', fontSize: theme.fonts.fontSizes.title }}
+      /> :
       <TitleDiv $isOpen={isOpen || isPopupOpen}>
-        {teamDetails.teamName}
-      </TitleDiv>
+        {teamData.teamName}
+      </TitleDiv>}
 
       <InfoBarField>
         <LabelSpan>Coach:</LabelSpan>
@@ -154,19 +176,44 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
 
       <InfoBarField>
         <LabelSpan>Level:</LabelSpan>
-        <span>{teamDetails.teamLevel}</span>
+        {isEditing ?
+        <Select onChange={(e) => setTeamData((p) => ({ ...p, teamLevel: e.target.value }))}>
+          <option selected={teamData.teamLevel === 'Level A'} value={'Level A'}>Level A</option>
+          <option selected={!(teamData.teamLevel === 'Level A')} value={'Level B'}>Level B</option>
+        </Select> :
+        <span>{teamData.teamLevel}</span>}
       </InfoBarField>
       
       <InfoBarField>
         <LabelSpan>Site:</LabelSpan>
-        <span>{teamDetails.teamSite}</span>
+        {isEditing ? 
+        <AdvancedDropdown
+          style={{ height: '30px', borderRadius: '5px', width: '100%', marginBottom: '2px' }}
+          defaultSearchTerm={teamData.teamSite}
+          setCurrentSelected={setCurrentSiteOption}
+          optionsState={[siteOptions, setSiteOptions]}
+        /> :
+        <span>{teamData.teamSite}</span>}
       </InfoBarField>
 
       <InfoBarField>
         <LabelSpan>Seat:</LabelSpan>
-        <span>{teamDetails.teamSeat}</span>
+        {isEditing ?
+        <EditableInput
+          defaultValue={teamData.teamSeat}
+          onChange={(e) => setTeamData((p) => ({ ...p, teamSeat: e.target.value }))}
+        /> :
+        <span>{teamData.teamSeat}</span>}
       </InfoBarField>
       <br/>
+
+      {isEdited && <div style={{ maxWidth: '150px', width: '100%', height: '30px' }}>
+       <TransparentResponsiveButton actionType="confirm" label="Save Changes" isOpen={false} onClick={handleSaveEdit}
+             icon={<FaSave />}
+             style={{
+               backgroundColor: theme.colours.confirm,
+             }} />
+      </div>}
       
       <div style={{ width: '100%' }}>
         <LabelSpan>Members:</LabelSpan>
@@ -175,56 +222,14 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
         <MemberUl>
           {teamDetails.students.map((student) => {
             return (
-              <MemberListItem key={student.userId}>
-
-                <MemberFieldDiv>
-                  <LabelSpan>Name:</LabelSpan>
-                  <span>{student.name}</span>
-                </MemberFieldDiv>
-
-                <MemberFieldDiv>
-                  <LabelSpan>Email:</LabelSpan>
-                  <span>{student.email}</span>
-                  <CopyButton textToCopy={student.email} />
-                </MemberFieldDiv>
-                
-                <MemberFieldDiv>
-                  <LabelSpan>Bio:</LabelSpan>
-                  <span>{student.bio}</span>
-                </MemberFieldDiv>
-                
-                <MemberFieldDiv>
-                  <LabelSpan>ICPC Eligibile:</LabelSpan>
-                  <BooleanStatus style={{ height: '25px' }} $toggled={student.ICPCEligible} />
-                </MemberFieldDiv>
-                
-                <MemberFieldDiv>
-                  <LabelSpan>Boersen Eligibile:</LabelSpan>
-                  <BooleanStatus style={{ height: '25px' }} $toggled={student.boersenEligible} />
-                </MemberFieldDiv>
-
-                <MemberFieldDiv>
-                  <LabelSpan>User Id:</LabelSpan>
-                  <span>{student.userId}</span>
-                </MemberFieldDiv>
-
-                <ResponsiveActionButton style={{ height: '30px' }}
-                  onMouseDown={(e) => e.preventDefault()}
-                  handleClick={() => setPopupOpen(true)}
-                  handleClose={() => setPopupOpen(false)}
-                  handleSubmit={async () => handleSubmitTeamChange(student)}
-                  icon={<FaArrowRight />}
-                  label="Change Team"
-                  question={`What team should ${student.name} be in?`}
-                  actionType="primary"
-                >
-                  <AdvancedDropdown
-                    optionsState={[teamOptions, setTeamOptions]}
-                    isExtendable={false}
-                    setCurrentSelected={setCurrentTeamOption}
-                  />
-                </ResponsiveActionButton>
-              </MemberListItem>
+              <TeamStudentInfoCard
+              key={`${student.userId}`}
+              student={student}
+              teamDetails={teamDetails}
+              buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
+              teamListState={[teamList, setTeamList]}
+              popupOpenState={[isPopupOpen, setPopupOpen]}
+              />
             )
           })}
         </MemberUl>

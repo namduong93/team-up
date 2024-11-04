@@ -65,6 +65,10 @@ export interface CompetitionPageContext {
     ButtonConfiguration,
     React.Dispatch<React.SetStateAction<ButtonConfiguration>>
   ];
+  siteOptionsState: [
+    Array<{ value: string; label: string }>,
+    React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
+  ];
 }
 
 export const useCompetitionOutletContext = (page: string) => {

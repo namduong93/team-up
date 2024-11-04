@@ -126,10 +126,6 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
     }
 
-
-    console.log('accepted', approveTeamIds);
-    console.log('rejected', rejectedTeamIds);
-
     disableEditNameStatus();
   }
 

@@ -24,6 +24,7 @@ import {
 import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole";
 import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
 import { AttendeesPageButtons } from "./attendees_page/components/AttendeesPageButtons";
+import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
 
 const ToggleOptionTextSpan = styled.span``;
 
@@ -117,6 +118,8 @@ export const CompetitionPage: FC = () => {
     region: "Unknown",
   });
   ////
+  const [siteOptions, setSiteOptions] = useState([{ value: '', label: '' }]);
+
 
   useEffect(() => {
     const fetchCompetitionDetails = async () => {
@@ -160,6 +163,20 @@ export const CompetitionPage: FC = () => {
       setStaffList(staff);
     };
 
+    const fetchSites = async () => {
+      try {
+        const response = await sendRequest.get<{
+          sites: Array<CompetitionSite>;
+        }>("/competition/sites", { compId });
+        const { sites } = response.data;
+        setSiteOptions(
+          sites.map((site) => ({ value: String(site.id), label: site.name }))
+        );
+      } catch (error: unknown) {
+        console.error("Error fetching sites:", error);
+      }
+    };
+
     const fetchInfo = async () => {
       const roleResponse = await sendRequest.get<{
         roles: Array<CompetitionRole>;
@@ -194,6 +211,8 @@ export const CompetitionPage: FC = () => {
       if (userRoles.includes(CompetitionRole.Admin)) {
         fetchStaffList();
       }
+      
+      fetchSites();
     };
 
     fetchInfo();
@@ -230,8 +249,11 @@ export const CompetitionPage: FC = () => {
           value: String(id),
           label: name,
         })),
-        { value: "", label: "All Universities" },
       ]);
+
+
+      // TODO: Change the default to the users' own university
+      setUniversityOption({ value: String(universities[0].id), label: universities[0].name });
     };
 
     fetchUniversities();
@@ -276,6 +298,7 @@ export const CompetitionPage: FC = () => {
             <AdvancedDropdown
               style={{ minWidth: "0", maxWidth: "342px", width: "100%" }}
               optionsState={[options, setOptions]}
+              defaultSearchTerm={options[0].label}
               setCurrentSelected={setUniversityOption}
               isExtendable={false}
             />
@@ -383,6 +406,7 @@ export const CompetitionPage: FC = () => {
             attendeesListState: [attendeesList, setAttendeesList],
             staffListState: [staffList, setStaffList],
             compDetails,
+            siteOptionsState: [siteOptions, setSiteOptions],
           }}
         />
       </MainPageDiv>

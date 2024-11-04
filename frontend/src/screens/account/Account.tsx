@@ -145,7 +145,7 @@ const ButtonGroup = styled.div`
   gap: 20px;
 `;
 
-const EditIconButton = styled.button`
+export const EditIconButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -153,7 +153,7 @@ const EditIconButton = styled.button`
   box-sizing: border-box;
 `;
 
-const EditIcon = styled(FaEdit)`
+export const EditIcon = styled(FaEdit)`
   width: 20px;
   height: 20px;
   color: ${({ theme }) => theme.colours.secondaryDark};
