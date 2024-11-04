@@ -35,7 +35,7 @@ export type CompetitionShortDetailsObject = {
  };
 
 // TODO: Revise this type
-export type CompetitionSiteObject = { id?: number, universityId?: number, name: string, capacity?: number };
+export type CompetitionSiteObject = { id: number, name: string, universityId?: number, capacity?: number };
 
 export type CompetitionOtherSiteObject = { universityName: number, name: string, capacity?: number };
 

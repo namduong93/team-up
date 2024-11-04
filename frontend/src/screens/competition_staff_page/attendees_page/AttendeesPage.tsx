@@ -6,10 +6,10 @@ import { FlexBackground } from "../../../components/general_utility/Background";
 import { NarrowDisplayDiv, UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideDisplayDiv, WideInfoContainerDiv } from "../students_page/StudentDisplay";
 import Fuse from "fuse.js";
 import { sendRequest } from "../../../utility/request";
-import { CompetitionRole } from "../CompetitionPage";
 import { Field, StudentInfoContainerDiv } from "../students_page/components/StudentInfoCard";
 import { NarrowStatusDiv } from "../staff_page/StaffDisplay";
 import styled, { useTheme } from "styled-components";
+import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 import { StandardSpan } from "../staff_page/components/WideStaffCard";
 import { StaffRoleDisplay, StaffRoles, StandardContainerDiv } from "../staff_page/components/StaffRole";
 

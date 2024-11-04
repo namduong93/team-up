@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { CompetitionRole } from "../../CompetitionPage";
 import React, { FC, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 
 interface StaffRolesProps extends React.HTMLAttributes<HTMLDivElement> {
   roles: CompetitionRole[];

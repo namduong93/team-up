@@ -1,5 +1,5 @@
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
-import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
+import { CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { University } from "../models/university/university.js";
 import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../services/competition_service.js";
@@ -35,10 +35,8 @@ export interface CompetitionRepository {
   competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;
   competitionApproveSiteChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   
-  competitionStaffJoinCoach(code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined>;
-  competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;
-  competitionStaffJoinAdmin(code: string): Promise<{} | undefined>;
-  competitionUniversitiesList(competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
+  competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{} | undefined>;
+  competitionUniversitiesList(compId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
   competitionIdFromCode(code: string): Promise<number | undefined>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined>;

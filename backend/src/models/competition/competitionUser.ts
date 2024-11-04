@@ -1,3 +1,4 @@
+import { University } from "../university/university";
 import { CompetitionSiteObject } from "./competition";
 
 export interface CompetitionUser {
@@ -18,6 +19,17 @@ export interface CompetitionUser {
   pastRegional: boolean;
   competitionBio: string;
   preferredContact: string;
+}
+
+export interface CompetitionStaff {
+  userId: number;
+  name?: string;
+  email?: string;
+  competitionRoles: Array<CompetitionUserRole>;
+  accessLevel: CompetitionAccessLevel;
+  siteLocation?: CompetitionSiteObject; // Coach + Site Coordinator
+  university?: University; // Coach
+  competitionBio?: string; // Coach
 }
 
 export interface CompetitionStudentDetails {
@@ -69,6 +81,12 @@ export interface CompetitionAlgoTeamDetails {
   competitionId: number;
   competitionCoachId: number;
   teamStatus: TeamStatus;
+}
+
+export const enum CompetitionAccessLevel {
+  ACCEPTED = 'Accepted',
+  PENDING = 'Pending',
+  REJECTED = 'Rejected',
 }
 
 export const enum CompetitionUserRole {

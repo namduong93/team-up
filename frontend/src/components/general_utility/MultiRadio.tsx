@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole";
 
 interface CheckboxOption {
   value: string;
@@ -9,10 +10,10 @@ interface CheckboxOption {
 interface MultiSelectCheckboxGroupProps {
   options: CheckboxOption[];
   selectedValues: string[];
-  onChange: (values: string[]) => void;
+  onChange: (values: string[] | CompetitionRole[]) => void;
   label: string | React.ReactNode;
   descriptor?: string;
-  showOther?: boolean;  // New prop to control "Other" visibility
+  showOther?: boolean; // New prop to control "Other" visibility
 }
 
 const Container = styled.div`
@@ -69,13 +70,13 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
   onChange,
   label,
   descriptor,
-  showOther = true,  
+  showOther = true,
 }) => {
-  const [otherValue, setOtherValue] = useState('');
+  const [otherValue, setOtherValue] = useState("");
 
   useEffect(() => {
-    if (!otherValue && selectedValues.includes('other')) {
-      onChange(selectedValues.filter((val) => val !== 'other'));
+    if (!otherValue && selectedValues.includes("other")) {
+      onChange(selectedValues.filter((val) => val !== "other"));
     }
   }, [otherValue, selectedValues, onChange]);
 
@@ -89,16 +90,19 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
 
   const handleOtherBlur = () => {
     if (otherValue && !selectedValues.includes(otherValue)) {
-      onChange([...selectedValues.filter((val) => val !== 'other'), otherValue]);
+      onChange([
+        ...selectedValues.filter((val) => val !== "other"),
+        otherValue,
+      ]);
     }
   };
 
   const handleOtherCheckboxChange = () => {
-    if (selectedValues.includes('other')) {
-      setOtherValue(''); 
-      onChange(selectedValues.filter((val) => val !== 'other'));
+    if (selectedValues.includes("other")) {
+      setOtherValue("");
+      onChange(selectedValues.filter((val) => val !== "other"));
     } else {
-      onChange([...selectedValues, 'other']);
+      onChange([...selectedValues, "other"]);
     }
   };
 
@@ -124,7 +128,7 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
             type="checkbox"
             id="other"
             value="other"
-            checked={selectedValues.includes('other')}
+            checked={selectedValues.includes("other")}
             onChange={handleOtherCheckboxChange}
           />
           <CheckboxLabel htmlFor="other">Other:</CheckboxLabel>
