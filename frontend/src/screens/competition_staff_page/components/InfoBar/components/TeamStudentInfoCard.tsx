@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from "react"
-import { Student } from "../../../../student/TeamProfile";
 import { LabelSpan } from "../TeamInfoBar";
 import { CopyButton } from "../../../../../components/general_utility/CopyButton";
 import { BooleanStatus } from "../../../attendees_page/AttendeesPage";
@@ -8,13 +7,13 @@ import { FaArrowRight, FaSave } from "react-icons/fa";
 import { AdvancedDropdown } from "../../../../../components/AdvancedDropdown/AdvancedDropdown";
 import styled, { useTheme } from "styled-components";
 import { addStudentToTeam } from "../../../teams_page/utility/addStudentToTeam";
-import { TeamDetails } from "../../../teams_page/components/TeamCard";
 import { ButtonConfiguration } from "../../../hooks/useCompetitionOutletContext";
 import { EditIcon, EditIconButton } from "../../../../account/Account";
 import { Input } from "../../../../../components/general_utility/TextInputLight";
 import { TransparentResponsiveButton } from "../../../../../components/responsive_fields/ResponsiveButton";
 import { GiCancel } from "react-icons/gi";
 import { RxReset } from "react-icons/rx";
+import { TeamDetails, Student } from "../../../../../../shared_types/Competition/team/TeamDetails";
 
 
 interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {

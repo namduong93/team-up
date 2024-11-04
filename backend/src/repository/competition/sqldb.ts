@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo, StaffInfo, AttendeesDetails } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject } from "../../models/competition/competition.js";
 
@@ -11,6 +11,7 @@ import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite.js";
 import pokemon from 'pokemon';
+import { ParticipantTeamDetails, TeamDetails } from "../../../shared_types/Competition/team/TeamDetails.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;

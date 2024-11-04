@@ -1,9 +1,7 @@
 import React, { FC, ReactNode, useEffect, useState } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
-import { TeamDetails } from "../../teams_page/components/TeamCard";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
 import styled, { useTheme } from "styled-components";
-import { Student } from "../../../student/TeamProfile";
 import { addStudentToTeam } from "../../teams_page/utility/addStudentToTeam";
 import { ButtonConfiguration } from "../../hooks/useCompetitionOutletContext";
 import { EditableInput, TeamStudentInfoCard } from "./components/TeamStudentInfoCard";
@@ -11,6 +9,7 @@ import { EditIcon, EditIconButton } from "../../../account/Account";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { FaSave } from "react-icons/fa";
+import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;

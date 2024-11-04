@@ -4,13 +4,13 @@ import { FaRegUser } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
 import { LiaTimesSolid } from "react-icons/lia";
 import styled, { useTheme } from "styled-components";
-import { ParticipantTeamDetails, Student } from "../../../student/TeamProfile";
 import { motion, PanInfo } from "framer-motion";
 import { DragEndEvent } from "../TeamDisplay";
 import { InfoBar } from "../../components/InfoBar/InfoBar";
 import { TeamInfoBar } from "../../components/InfoBar/TeamInfoBar";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
 import { ButtonConfiguration } from "../../hooks/useCompetitionOutletContext";
+import { TeamDetails, Student } from "../../../../../shared_types/Competition/team/TeamDetails";
 
 export enum Member {
   name = 0,
@@ -20,17 +20,6 @@ export enum Member {
   boersenEligible = 4,
   isRemote = 5,
 }
-export interface TeamDetails extends ParticipantTeamDetails {
-  teamId: number;
-  universityId: number;
-  // member1?: MemberDetails;
-  // member2?: MemberDetails;
-  // member3?: MemberDetails;
-  status: TeamStatus;
-  teamNameApproved: boolean;
-  // teamAlgoScore?: number;
-  // icpcEligible?: boolean;
-};
 
 interface TeamCardProps extends React.HTMLAttributes<HTMLDivElement> {
   teamDetails: TeamDetails;
