@@ -287,7 +287,12 @@ SELECT cu_source.user_id AS src_user_id,
       'ICPCEligible', cu1.icpc_eligible,
       'level', cu1.competition_level,
       'boersenEligible', cu1.boersen_eligible,
-      'isRemote', cu1.is_remote
+      'isRemote', cu1.is_remote,
+      'universityCourses', cu1.university_courses,
+      'nationalPrizes', cu1.national_prizes,
+      'internationalPrizes', cu1.international_prizes,
+      'codeforcesRating', cu1.codeforces_rating,
+      'pastRegional', cu1.past_regional
     ),
     JSON_BUILD_OBJECT(
       'userId', u2.id,
@@ -298,7 +303,12 @@ SELECT cu_source.user_id AS src_user_id,
       'ICPCEligible', cu2.icpc_eligible,
       'level', cu2.competition_level,
       'boersenEligible', cu2.boersen_eligible,
-      'isRemote', cu2.is_remote
+      'isRemote', cu2.is_remote,
+      'universityCourses', cu2.university_courses,
+      'nationalPrizes', cu2.national_prizes,
+      'internationalPrizes', cu2.international_prizes,
+      'codeforcesRating', cu2.codeforces_rating,
+      'pastRegional', cu2.past_regional
     ),
     JSON_BUILD_OBJECT(
       'userId', u3.id,
@@ -309,7 +319,12 @@ SELECT cu_source.user_id AS src_user_id,
       'ICPCEligible', cu3.icpc_eligible,
       'level', cu3.competition_level,
       'boersenEligible', cu3.boersen_eligible,
-      'isRemote', cu3.is_remote
+      'isRemote', cu3.is_remote,
+      'universityCourses', cu3.university_courses,
+      'nationalPrizes', cu3.national_prizes,
+      'internationalPrizes', cu3.international_prizes,
+      'codeforcesRating', cu3.codeforces_rating,
+      'pastRegional', cu3.past_regional
     )
   ) AS students,
   JSON_BUILD_OBJECT(
