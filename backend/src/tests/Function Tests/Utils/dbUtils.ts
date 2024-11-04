@@ -1,7 +1,5 @@
 // dbUtils.ts
 import { Pool } from 'pg';
-import fs from 'fs';
-import path, { join } from 'path';
 
 // connect to postgres
 const pool = new Pool({
@@ -10,12 +8,6 @@ const pool = new Pool({
   host: 'localhost',
   port: 5432, // Test DB port
   database: 'capstone_db',
-
-  /*user: 'postgres',
-  host: 'localhost',
-  password: 'Jackofspades948',
-  port: 5432,
-  connectionTimeoutMillis: 20000,*/
 });
 
 // deletes test database 

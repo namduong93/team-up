@@ -1,11 +1,41 @@
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
+import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 describe('User Update Profile Function', () => {
   let user_db;
+
+  const mockUser = {
+    name: 'beep boop',
+    preferredName: 'beep',
+    email: 'beepbeepwobwob31@gmail.com',
+    password: 'testPassword',
+    gender: 'F',
+    pronouns: 'He/Him',
+    tshirtSize: 'S',
+    universityId: 1,
+    studentId: 'z1234567'
+  };
+  const newUserInfo = {
+    name: 'beep boop',
+    preferredName: 'beepbeep',
+    email: 'beepbeepwobwob31@gmail.com',
+    password: 'testPassword',
+    gender: 'F',
+    pronouns: 'She/Him',
+    tshirtSize: 'L',
+    universityId: 1,
+    studentId: 'z1234567'
+  };
+  let user: UserIdObject;
+  let id: number;
+
   beforeAll(async () => {
     user_db = new SqlDbUserRepository(pool);
+    user = await user_db.studentRegister(mockUser);
+    // console.log(user)
+    id = user.userId;
   });
 
   afterAll(async () => {
@@ -13,32 +43,8 @@ describe('User Update Profile Function', () => {
   });
 
   test('Sucess case: successfully changed the info of user', async () => {
-
-    const mockStudent = {
-      name: 'beep boop',
-      preferredName: 'beep',
-      email: 'beepbeepwobwob31@gmail.com',
-      password: 'testPassword',
-      gender: 'F',
-      pronouns: 'He/Him',
-      tshirtSize: 'S',
-      universityId: 1,
-      studentId: 'z1234567'
-    };
-    const newUserInfo = {
-      name: 'beep boop',
-      preferredName: 'beepbeep',
-      email: 'beepbeepwobwob31@gmail.com',
-      password: 'testPassword',
-      gender: 'F',
-      pronouns: 'She/Him',
-      tshirtSize: 'L',
-      universityId: 1,
-      studentId: 'z1234567'
-    };
-    const testSubject = await user_db.studentRegister(mockStudent)
-    await user_db.userUpdateProfile(testSubject.userId, newUserInfo);
-    const userInfo = await user_db.userProfileInfo(testSubject.userId);
+    console.log(await user_db.userProfileInfo(id));
+    await user_db.userUpdateProfile(id, newUserInfo);
     const newTestUserInfo = {
       name: 'beep boop',
       preferredName: 'beepbeep',
@@ -50,8 +56,8 @@ describe('User Update Profile Function', () => {
       allergies: null,
       dietaryReqs: [],
       accessibilityReqs: null,
-      id: testSubject.userId,
+      id: id,
     };
-    expect(userInfo).toStrictEqual(newTestUserInfo)
+    expect(await user_db.userProfileInfo(id)).toStrictEqual(newTestUserInfo)
   })
 })

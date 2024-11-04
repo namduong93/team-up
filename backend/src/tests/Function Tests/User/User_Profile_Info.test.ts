@@ -1,34 +1,51 @@
+import { Student } from "../../../models/user/student/student";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
+import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 describe('User Profile Info Function', () => {
   let user_db;
+  const mockUser: Student = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'beepbwopmestoopid@dumdum.com',
+    password: 'ezpass',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'L',
+    universityId: 1,
+    studentId: 'z5381412'
+  };
+  let user: UserIdObject;
+  let id: number;
+
   beforeAll(async () => {
     user_db = new SqlDbUserRepository(pool);
+    user = await user_db.studentRegister(mockUser);
+    id = user.userId;
   });
 
   afterAll(async () => {
     await dropTestDatabase(pool);
   });
   test('Failed case: Unknown Id', async () => {
-    const result = await user_db.userProfileInfo(69);
-    expect(result).toBe(undefined);
+    const tempId = id + 1000;
+    expect(await user_db.userProfileInfo(tempId)).toStrictEqual(undefined);
   })
   test('Sucess case: Returns user info', async () => {
-    const result = await user_db.userProfileInfo(1);
-    expect(result).toStrictEqual({
-      id: 1,
-      name: 'System Admin',
-      preferredName: 'Admin',
-      email: 'admin@example.com',
+    expect(await user_db.userProfileInfo(id)).toStrictEqual({
+      id: id,
+      name: 'Maximillian Maverick',
+      preferredName: 'X',
+      email: 'beepbwopmestoopid@dumdum.com',
       affiliation: 'University of Melbourne',
-      gender: 'M',
-      pronouns: 'he/him',
+      gender: 'Male',
+      pronouns: 'He/Him',
       tshirtSize: 'L',
-      allergies: 'Peanuts',
+      allergies: null,
       dietaryReqs: [],
-      accessibilityReqs: 'None'
+      accessibilityReqs: null
     })
   })
 })
