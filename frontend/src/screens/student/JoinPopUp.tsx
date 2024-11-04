@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
 import TextInputLight from "../../components/general_utility/TextInputLight";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { sendRequest } from "../../utility/request";
 
 
 const Modal = styled.div`
@@ -68,23 +69,32 @@ const Button = styled.button<{ disabled?: boolean }>`
 interface JoinPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
+  currentTeamCode?: string;
 }
 
-const JoinPopUp: React.FC<JoinPopUpProps> = ({ heading, onClose }) => {
+const JoinPopUp: React.FC<JoinPopUpProps> = ({ heading, onClose, currentTeamCode }) => {
   const navigate = useNavigate();
   const [teamCode, setTeamCode] = useState("");
   const [teamName, setTeamName] = useState("");
+  const compId = useParams().compId;
 
-  const isButtonDisabled = () => {
-    // TO-DO: implemented backend routing to check if the teamCode and teamName 
-    // correspond to actual Teams in database
-    
-    return teamCode === "" || teamName === "";
+  const isButtonDisabled = () => {    
+    return teamCode === "" || teamCode === currentTeamCode;
   }
 
   const handleJoin =() => {
-    // TO-DO: implement backend routing to submit join request to backend
-
+    try {
+      const joinTeam = async () => {
+        const response = await sendRequest.post<{ team: string }>('/competition/team/join', { compId, teamCode });
+        const { team } = response.data;
+        setTeamName(team);
+      }
+  
+      joinTeam();
+    }
+    catch (error) {
+      console.log(error);
+    }
     navigate("/dashboard", { state: { joined: true, teamName: teamName }})
   }
 
@@ -102,14 +112,6 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({ heading, onClose }) => {
             required={true}
             value={teamCode}
             onChange={(e) => setTeamCode(e.target.value)}
-            width="100%"
-          />
-          <TextInputLight
-            label="Team Name"
-            placeholder="Please enter"
-            required={true}
-            value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
             width="100%"
           />
         </div>

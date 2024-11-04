@@ -224,6 +224,8 @@ app.post('/user/password_recovery/generate_code', userController.userPasswordRec
 // RESPONSE: {} --- NOTE: No error if successful, error if not successful
 app.post('/user/password_recovery/input_code', userController.userPasswordRecoveryInputCode);
 
+// PARAMS: { compId: number }
+// RESPONSE: { unknown }
 app.get('/competition/teams', competitionController.competitionTeams)
 
 // PARAMS: { compId: number }
@@ -244,6 +246,10 @@ app.post('/notification', notificationController.notificationCreate);
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);
 
+// PARAMS: { notificationId }
+// RESPONSE: {}
+app.delete('/notification', notificationController.notificationRemove);
+
 // PARAMS: { compId }
 // RESPONSE: 
 // Get all the details of a team in a competition
@@ -251,6 +257,14 @@ app.get('/competition/team/details', competitionController.competitionTeamDetail
 
 // PARAMS: { compId }
 // RESPONSE:
+// Get the invite code for a team in a competition
+app.get('/competition/team/invite_code', competitionController.competitionTeamInviteCode);
+
+// PARAMS: { compId, code }
+// RESPONSE: {}
+// Join a team in a competition
+app.post('/competition/team/join', competitionController.competitionTeamJoin);
+
 // Sort teams based on userId university
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 

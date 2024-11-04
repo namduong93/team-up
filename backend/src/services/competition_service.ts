@@ -136,6 +136,28 @@ export class CompetitionService {
     return await this.competitionRepository.competitionTeamDetails(userId, compId);
   }
 
+  competitionTeamInviteCode = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'User is not a participant for this competition.');
+    }
+    return await this.competitionRepository.competitionTeamInviteCode(userId, compId);
+  }
+
+  competitionTeamJoin = async (userId: number, compId: number, teamCode: string) => { 
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'User is not a participant for this competition.');
+    }
+    const university = await this.userRepository.userUniversity(userId);
+    if (!university) {
+      throw new ServiceError(ServiceError.NotFound, 'User is not a part of an university');
+    }
+    return await this.competitionRepository.competitionTeamJoin(userId, compId, teamCode, university);
+  }
+
   competitionStudentDetails = async (userId: number, compId: number) => {
     const roles = await this.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {

@@ -45,6 +45,24 @@ export class CompetitionController {
     res.json(teamDetails);
   });
 
+  competitionTeamInviteCode = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const inviteCode = await this.competitionService.competitionTeamInviteCode(
+      parseInt(userId as string), parseInt(compId as string));
+    
+    res.json({ code: inviteCode });
+  });
+
+  competitionTeamJoin = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const { compId, teamCode } = req.body;
+
+    const teamId = await this.competitionService.competitionTeamJoin(Number(userId), Number(compId), String(teamCode));
+
+    res.json({ teamName: 'teamName' });
+  });
+
   competitionStudentDetails = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 

@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { AlertButton } from '../../../screens/dashboard/Dashboard';
 
 interface Notification {
-  id: string;
+  id: number;
   type:
     | 'withdrawal'
     | 'name'
@@ -162,7 +162,7 @@ export const NotificationButton: FC = () => {
 
         // Transform the backend response to match the frontend Notification structure
         const transformedNotifications = notifResponse.data.map((notif) => ({
-          id: notif.id?.toString() || '',  // Convert id to string
+          id: notif.id,
           type: notif.type as Notification['type'],
           message: notif.message,
           createdAt: new Date(notif.createdAt),  // Use createdAt as date
@@ -208,8 +208,13 @@ export const NotificationButton: FC = () => {
     }
   };
 
-  const handleRemoveNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  const handleRemoveNotification = async(notificationId: number) => {
+    try {
+      await sendRequest.delete<{}>('/notification', { notificationId });
+      setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId));
+    } catch (error: unknown) {
+      console.log('Error fetching notifications:', error);
+    }
   };
 
   const formatDate = (date: Date) => {

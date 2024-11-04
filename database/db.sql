@@ -449,7 +449,7 @@ VALUES
   '{}',
   'Wheelchair Access',
   'student',
-  5,
+  2,
   'z000001'),
 ( -- id: 6
   'Test Student Account 2',
@@ -630,18 +630,19 @@ INSERT INTO competition_users (
   past_regional,
   is_official,
   preferred_contact,
-  bio
+  bio,
+  access_level
 )
 VALUES
-    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Email:example@email.com', 'epic bio'),
-    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Discord:fdc234', 'epic bio'),
-    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Phone:0413421311', 'epic bio'),
-    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Minecraft:EpicMan123', 'epic bio'),
-    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Roblox: epicerrMan123', 'epic bio'),
-    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'faxMachineNumber:98531234', 'epic bio'),
-    (12, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'faxMachineNumber:98531234', 'epic bio'),
-    (13, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Phone:0402067382', 'epic bio'),
-    (14, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Email:anotherexample@email.com', 'epic bio');
+    (5, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Email:example@email.com', 'epic bio', 'Accepted' :: competition_access_enum),
+    (6, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Discord:fdc234', 'epic bio', 'Accepted' :: competition_access_enum ),
+    (7, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Phone:0413421311', 'epic bio', 'Accepted' :: competition_access_enum),
+    (8, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Minecraft:EpicMan123', 'epic bio', 'Accepted' :: competition_access_enum),
+    (9, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Roblox: epicerrMan123', 'epic bio', 'Accepted' :: competition_access_enum),
+    (10, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'faxMachineNumber:98531234', 'epic bio', 'Accepted' :: competition_access_enum),
+    (12, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'faxMachineNumber:98531234', 'epic bio', 'Accepted' :: competition_access_enum),
+    (13, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Phone:0402067382', 'epic bio', 'Accepted' :: competition_access_enum),
+    (14, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Email:anotherexample@email.com', 'epic bio', 'Accepted' :: competition_access_enum);
   
 
 -- Non-access coaches
@@ -657,8 +658,9 @@ INSERT INTO competition_teams (
 )
 VALUES
 (4, 'Bulbasaur', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 2, NULL),
-(4, 'Ivysaur', 'Pending'::competition_team_status, 'Charmander', 3, ARRAY[5, 6, 7], 2, 1, 'Tabla01', 2, NULL),
-(4, 'Venusaur', 'Pending'::competition_team_status, 'Charmeleon', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4);
+(4, 'Ivysaur', 'Pending'::competition_team_status, 'Charmander', 3, ARRAY[5, 7], 2, 1, 'Tabla01', 2, NULL),
+(4, 'Venusaur', 'Pending'::competition_team_status, 'Charmeleon', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4),
+(4, 'Super Team', 'Pending'::competition_team_status, 'No', 3, ARRAY[6], 2, 1, 'Tabla02', 2, NULL);
 
 -- Notifications
 INSERT INTO notifications (
@@ -968,6 +970,23 @@ VALUES
   'student',
   5,
   'z000015'
+),
+
+-- Member from Team ID: 14
+(
+  'Algo User 3',
+  'New Algo User',
+  'algostudent@example.com',
+  '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
+  'M',
+  'he/him',
+  'L',
+  'None',
+  '{}',
+  'None',
+  'student',
+  5,
+  'z000016'
 );
 
 INSERT INTO competition_users (
@@ -986,23 +1005,24 @@ INSERT INTO competition_users (
   past_regional,
   is_official,
   preferred_contact,
-  bio
+  bio,
+  access_level
 )
 VALUES
-  (15, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'AIO', 'IOI', 2537, ARRAY[]::TEXT[], TRUE, FALSE, 'AR', 'bio for AR'),
-  (16, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'INOI', '', 2113, ARRAY[]::TEXT[], TRUE, FALSE, 'AK', 'bio for AK'),
-  (17, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], TRUE, FALSE, 'YF', 'bio for YF'),
-  (18, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'AIO', '', 1624, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'DY', 'bio for DY'),
-  (19, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, 'NOI', '', 2848, ARRAY['COMP1511', 'COMP2521', 'COMP3821'], TRUE, FALSE, 'Kass', 'bio for Kass'),
-  (20, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521'], TRUE, FALSE, 'JL', 'bio for JL'),
-  (21, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, 'NOI', '', 1962, ARRAY['COMP1511', 'COMP2521'], TRUE, FALSE, 'HT', 'bio for HT'),
-  (22, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#1', 'bio for Boersen#1'),
-  (23, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#1', 'bio for Boersen#1'),
-  (24, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#2', 'bio for Boersen#2'),
-  (25, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], TRUE, FALSE, 'Boersen#3', 'bio for Boersen#3'),
-  (26, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511'], TRUE, FALSE, 'Boersen#4', 'bio for Boersen#4'),
-  (27, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], TRUE, FALSE, 'Testing Account', 'bio for Testing Account'),
-  (28, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP4128'], TRUE, FALSE, 'Testing Account 3', 'bio for Testing Account 3');
+  (15, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'AIO', 'IOI', 2537, ARRAY[]::TEXT[], TRUE, FALSE, 'AR', 'bio for AR', 'Accepted' :: competition_access_enum),
+  (16, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'INOI', '', 2113, ARRAY[]::TEXT[], TRUE, FALSE, 'AK', 'bio for AK', 'Accepted' :: competition_access_enum),
+  (17, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], TRUE, FALSE, 'YF', 'bio for YF', 'Accepted' :: competition_access_enum),
+  (18, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, 'AIO', '', 1624, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'DY', 'bio for DY', 'Accepted' :: competition_access_enum),
+  (19, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, 'NOI', '', 2848, ARRAY['COMP1511', 'COMP2521', 'COMP3821'], TRUE, FALSE, 'Kass', 'bio for Kass', 'Accepted' :: competition_access_enum),
+  (20, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', FALSE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521'], TRUE, FALSE, 'JL', 'bio for JL', 'Accepted' :: competition_access_enum),
+  (21, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, 'NOI', '', 1962, ARRAY['COMP1511', 'COMP2521'], TRUE, FALSE, 'HT', 'bio for HT', 'Accepted' :: competition_access_enum),
+  (22, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#1', 'bio for Boersen#1', 'Accepted' :: competition_access_enum),
+  (23, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511', 'COMP2521', 'COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#1', 'bio for Boersen#1', 'Accepted' :: competition_access_enum),
+  (24, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP3121', 'COMP4128'], TRUE, FALSE, 'Boersen#2', 'bio for Boersen#2', 'Accepted' :: competition_access_enum),
+  (25, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], TRUE, FALSE, 'Boersen#3', 'bio for Boersen#3', 'Accepted' :: competition_access_enum),
+  (26, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP1511'], TRUE, FALSE, 'Boersen#4', 'bio for Boersen#4', 'Accepted' :: competition_access_enum),
+  (27, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP2521'], TRUE, FALSE, 'Testing Account', 'bio for Testing Account', 'Accepted' :: competition_access_enum),
+  (28, 4, ARRAY['Participant']::competition_role_enum[], 20, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY['COMP4128'], TRUE, FALSE, 'Testing Account 3', 'bio for Testing Account 3', 'Accepted' :: competition_access_enum);
   
 
 INSERT INTO competition_teams (
@@ -1048,15 +1068,16 @@ INSERT INTO competition_users (
   past_regional,
   is_official,
   preferred_contact,
-  bio
+  bio, 
+  access_level
 )
 VALUES
-    (15, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Email:example@email.com', 'epic bio'),
-    (16, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Discord:fdc234', 'epic bio'),
-    (17, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Phone:0413421311', 'epic bio'),
-    (18, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Minecraft:EpicMan123', 'epic bio'),
-    (19, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Roblox: epicerrMan123', 'epic bio'),
-    (20, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'faxMachineNumber:98531234', 'epic bio');
+    (15, 1, ARRAY['Participant']::competition_role_enum[], 4,  TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Email:example@email.com', 'epic bio', 'Accepted' :: competition_access_enum),
+    (16, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Discord:fdc234', 'epic bio', 'Accepted' :: competition_access_enum),
+    (17, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level A', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, FALSE, 'Phone:0413421311', 'epic bio', 'Accepted' :: competition_access_enum),
+    (18, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Minecraft:EpicMan123', 'epic bio', 'Accepted' :: competition_access_enum),
+    (19, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'Roblox: epicerrMan123', 'epic bio', 'Accepted' :: competition_access_enum),
+    (20, 1, ARRAY['Participant']::competition_role_enum[], 4, TRUE, 'Level B', TRUE, 3, 'CompSci', FALSE, '', '', 0, ARRAY[]::TEXT[], FALSE, TRUE, 'faxMachineNumber:98531234', 'epic bio', 'Accepted' :: competition_access_enum);
   
 INSERT INTO competition_teams (
   competition_coach_id, name, team_status, pending_name,
