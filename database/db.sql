@@ -175,7 +175,8 @@ CREATE TYPE notification_type_enum AS ENUM (
   'deadline',
   'teamStatus',
   'cheer',
-  'invite'
+  'invite',
+  'staffAccount',
 );
 
 CREATE TABLE notifications (
