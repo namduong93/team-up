@@ -141,10 +141,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     // Join the new team
     const newParticipants = [...teamResult.rows[0].participants, userId];
-    console.log(newParticipants);
     const updateTeamQuery = `
       UPDATE competition_teams
-      SET participants = $1
+      SET participants = $1, team_size = ${newParticipants.length}, team_status = 'Pending'::competition_team_status
       WHERE id = $2
     `;
 
@@ -152,7 +151,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     if (updateTeamResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'Could not join team.');
     }
-    
+
     // Leave the current team
     if(currentTeamResult.rows[0].participants.length === 1) {
       const leaveTeamQuery = `
@@ -167,7 +166,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     else {
       const leaveTeamQuery = `
       UPDATE competition_teams
-      SET participants = $1
+      SET participants = $1, team_size = ${currentTeamResult.rows[0].participants.length - 1}, team_status = 'Pending'::competition_team_status
       WHERE id = $2
       `;
       const leaveTeamResult = await this.pool.query(leaveTeamQuery, [currentTeamResult.rows[0].participants.filter((id) => id !== userId), currentTeamResult.rows[0].id]);
@@ -175,7 +174,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         throw new DbError(DbError.Query, 'Could not leave team.');
       }
     }
-    return { teamName: 'teamName' };
+    return { teamName: teamResult.rows[0].name };
   }
 
   competitionStudentDetails = async (userId: number, compId: number): Promise<CompetitionStudentDetails> => {
