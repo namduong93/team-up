@@ -13,5 +13,7 @@ export interface NotificationRepository {
   notificationApproveSiteChange(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   notificationTeamSeatAssignments(compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}>;
 
+  notificationRemove(notificationId: number): Promise<{}>;
+
   userNotificationsList(userId: number): Promise<Array<Notification> | undefined>;
 }

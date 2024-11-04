@@ -25,6 +25,14 @@ export class NotificationController {
     return;
   });
 
+  notificationRemove = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const notificationId = req.query.notificationId;
+    const result = await this.notificationService.notificationRemove(Number(notificationId));
+    res.json(result);
+
+    return;
+  });
+
   userNotificationsList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const notifications = await this.notificationService.userNotificationsList(Number(userId));
