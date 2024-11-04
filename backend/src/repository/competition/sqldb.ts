@@ -192,20 +192,19 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       const dbResult = await this.pool.query(
         `SELECT DISTINCT ON ("teamId")
-          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          src_site_attending_id AS "siteId", "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
         WHERE ctd.src_competition_id = ${compId};
         `
       );
-
       return dbResult.rows;
     }
 
     if (roles.includes(CompetitionUserRole.COACH)) {
       const dbResult = await this.pool.query(
         `SELECT DISTINCT ON ("teamId")
-          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          src_site_attending_id AS "siteId", "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
         WHERE ctd.coach_user_id = ${userId} AND ctd.src_competition_id = ${compId};
@@ -218,7 +217,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
       const dbResult = await this.pool.query(
         `SELECT DISTINCT ON ("teamId")
-          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          src_site_attending_id AS "siteId", "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
         JOIN competition_users AS csu ON csu.site_id = ctd.src_site_attending_id
