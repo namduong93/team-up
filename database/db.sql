@@ -955,6 +955,23 @@ VALUES
   'student',
   5,
   'z000015'
+),
+
+-- Member from Team ID: 14
+(
+  'Algo User 3',
+  'New Algo User',
+  'algostudent@example.com',
+  '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
+  'M',
+  'he/him',
+  'L',
+  'None',
+  '{}',
+  'None',
+  'student',
+  5,
+  'z000016'
 );
 
 INSERT INTO competition_users (
