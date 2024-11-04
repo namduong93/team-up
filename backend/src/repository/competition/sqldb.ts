@@ -126,6 +126,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       WHERE id = $1 AND competition_id = $2 AND university_id = $3
     `;
     const teamResult = await this.pool.query(teamQuery, [teamId, compId, university.id]);
+    console.log(teamId, compId, university.id);
     if (teamResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'Team does not exist or is not part of this competition.');
     }
@@ -154,6 +155,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     // Leave the current team
     if(currentTeamResult.rows[0].participants.length === 1) {
+      const deleteNotiQuery = `
+        DELETE FROM notifications
+        WHERE team_id = $1 AND competition_id = $2
+      `;
+      const deleteNotiResult = await this.pool.query(deleteNotiQuery, [currentTeamResult.rows[0].id, compId]);
+      
       const leaveTeamQuery = `
       DELETE FROM competition_teams
       WHERE id = $1
@@ -1160,6 +1167,16 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     await this.pool.query(teamUpdateQuery, [JSON.stringify(updateData), compId]);
 
+    // Delete notifications for the deleted teams
+    const deleteNotificationsQuery = `
+      DELETE FROM notifications
+      WHERE team_id = ANY($1::int[]) 
+      AND competition_id = $2
+    `
+    const deleteNotiResult = await this.pool.query(deleteNotificationsQuery, [Array.from(deletedTeams), compId]);
+    await this.pool.query(deleteNotificationsQuery, [Array.from(deletedTeams), compId]);
+
+    // Delete the deleted teams
     const deleteTeamsQuery = `
     DELETE FROM competition_teams
     WHERE id = ANY($1::int[])

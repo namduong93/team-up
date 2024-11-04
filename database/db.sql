@@ -434,7 +434,7 @@ VALUES
   '{}',
   'Wheelchair Access',
   'student',
-  5,
+  2,
   'z000001'),
 ( -- id: 6
   'Test Student Account 2',
