@@ -906,7 +906,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   competitionTeamSeatAssignments = async(seatAssignments: Array<SeatAssignment>): Promise<{}> => {
     for (const assignment of seatAssignments) {
-      const { siteId, teamSite, teamSeat, teamId , teamName } = assignment;
+      const { siteId, teamSite, teamSeat, teamId } = assignment;
 
       // Update the team_seat with teamSeat
       const updateSeatQuery = `
@@ -919,7 +919,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
       // If no rows were updated, it implies that no matching records with the siteId and teamId were found
       if (updateSeatResult.rowCount === 0) {
-        throw new DbError(DbError.Query, `Invalid team site ${teamSite} with siteId ${siteId} for team ${teamName}`);
+        throw new DbError(DbError.Query, `No team with id ${teamId} is found, or invalid team site ${teamSite} with siteId ${siteId} for this team.`);
       }
     }
 
