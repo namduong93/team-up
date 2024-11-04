@@ -10,6 +10,7 @@ import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/Advanc
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { FaSave } from "react-icons/fa";
 import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
+import { RxReset } from "react-icons/rx";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
@@ -155,7 +156,7 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
 
       {isEditing ?
       <EditableInput
-        defaultValue={teamData.teamName}
+        value={teamData.teamName}
         onChange={(e) => setTeamData((p) => ({ ...p, teamName: e.target.value }))}
         style={{ width: '50%', height: '47px', fontSize: theme.fonts.fontSizes.title }}
       /> :
@@ -199,19 +200,25 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
         <LabelSpan>Seat:</LabelSpan>
         {isEditing ?
         <EditableInput
-          defaultValue={teamData.teamSeat}
+          value={teamData.teamSeat}
           onChange={(e) => setTeamData((p) => ({ ...p, teamSeat: e.target.value }))}
         /> :
         <span>{teamData.teamSeat}</span>}
       </InfoBarField>
       <br/>
 
-      {isEdited && <div style={{ maxWidth: '150px', width: '100%', height: '30px' }}>
+      {isEdited && <div style={{ width: '100%', height: '30px', display: 'flex', maxWidth: '300px' }}>
+        <TransparentResponsiveButton actionType="error" label="Reset" isOpen={false} onClick={() => setTeamData(teamDetails)}
+             icon={<RxReset />}
+             style={{
+               backgroundColor: theme.colours.cancel,
+             }} />
        <TransparentResponsiveButton actionType="confirm" label="Save Changes" isOpen={false} onClick={handleSaveEdit}
              icon={<FaSave />}
              style={{
                backgroundColor: theme.colours.confirm,
              }} />
+
       </div>}
       
       <div style={{ width: '100%' }}>

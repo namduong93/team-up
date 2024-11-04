@@ -44,8 +44,17 @@ export const EditableInput = styled(Input)`
   margin-bottom: 0;
   border-radius: 5px;
   height: 25px;
-  width: 75%;
+  width: 60%;
   line-height: 0;
+  padding: 0;
+`;
+
+export const EditableTextArea = styled.textarea`
+  margin-bottom: 0;
+  border-radius: 5px;
+  height: 25px;
+  width: 75%;
+  /* line-height: 0; */
   padding: 0;
 `;
 
@@ -103,6 +112,18 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
 
   const handleSaveEdit = () => {
     // send request to backend to edit this student
+
+    const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
+    const studentIndex = teamDetails.students.findIndex((stud) => stud.userId === student.userId);
+    setTeamList([
+      ...teamList.slice(0, currentTeamIndex),
+      { ...teamDetails, students: [
+        ...teamDetails.students.slice(0, studentIndex),
+        studentData,
+        ...teamDetails.students.slice(studentIndex + 1) ] },
+      ...teamList.slice(currentTeamIndex + 1)
+    ]);
+    setIsEdited(false);
   }
 
   return (
@@ -145,9 +166,9 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
 
       <MemberFieldDiv>
         <LabelSpan>Bio:</LabelSpan>
-        {isEditingCard ? <EditableInput
+        {isEditingCard ? <EditableTextArea
           onChange={(e) => setStudentData((p) => ({ ...p, bio: e.target.value }))}
-          defaultValue={studentData.bio}
+          value={studentData.bio}
         />
         : <span>{studentData.bio}</span>}
       </MemberFieldDiv>
@@ -176,6 +197,56 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
         <BooleanStatus style={{ height: '25px' }} $toggled={studentData.boersenEligible} />}
       </MemberFieldDiv>
 
+      <MemberFieldDiv>
+        <LabelSpan>National Prizes:</LabelSpan>
+
+        {isEditingCard ?
+          <EditableInput
+            onChange={(e) => setStudentData((p) => ({ ...p, nationalPrizes: e.target.value }))}
+            value={studentData.nationalPrizes}
+          />
+          : <span>{studentData.nationalPrizes}</span>
+        }
+      </MemberFieldDiv>
+
+      <MemberFieldDiv>
+        <LabelSpan>International Prizes:</LabelSpan>
+
+        {isEditingCard ?
+          <EditableInput
+            onChange={(e) => setStudentData((p) => ({ ...p, internationalPrizes: e.target.value }))}
+            value={studentData.internationalPrizes}
+          />
+          : <span>{studentData.internationalPrizes}</span>
+        }
+      </MemberFieldDiv>
+
+      <MemberFieldDiv>
+        <LabelSpan>Codeforces Rating:</LabelSpan>
+
+        {isEditingCard ?
+          <EditableInput type="number"
+            onChange={(e) => setStudentData((p) => ({ ...p, codeforcesRating: parseInt(e.target.value) }))}
+            value={studentData.codeforcesRating}
+          />
+          : <span>{studentData.codeforcesRating}</span>
+        }
+      </MemberFieldDiv>
+
+      <MemberFieldDiv>
+        <LabelSpan>Past Regional Participation:</LabelSpan>
+
+        {isEditingCard ?
+          <ToggleSelect
+            onChange={(e) => setStudentData((p) => ({ ...p, pastRegional: e.target.value === 'true' }))}
+            $toggled={studentData.pastRegional}
+          >
+            <option selected={studentData.pastRegional} style={{ backgroundColor: theme.colours.confirm }} value="true">Yes</option>
+            <option selected={!studentData.pastRegional} style={{ backgroundColor: theme.colours.cancel }} value="false">No</option>
+          </ToggleSelect> :
+        <BooleanStatus style={{ height: '25px' }} $toggled={studentData.pastRegional} />}
+      </MemberFieldDiv>
+
 
       <div style={{ display: 'flex' }}>
       {!isEditingCard && <ResponsiveActionButton style={{ height: '30px' }}
@@ -195,7 +266,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
         />
       </ResponsiveActionButton>}
      
-      {isEditingCard && <div style={{ maxWidth: '150px', width: '100%', height: '30px' }}>
+      {isEdited && isEditingCard && <div style={{ maxWidth: '150px', width: '100%', height: '30px' }}>
         <TransparentResponsiveButton actionType="error" label="Reset" isOpen={false} onClick={() => setStudentData(student)}
               icon={<RxReset />}
               style={{

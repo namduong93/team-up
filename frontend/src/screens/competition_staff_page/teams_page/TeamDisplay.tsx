@@ -4,18 +4,18 @@ import { useLocation, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
-import { TeamCard, TeamDetails } from "./components/TeamCard";
+import { TeamCard } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
 
 import { LayoutGroup, motion, PanInfo } from "framer-motion";
-import { Student } from "../../student/TeamProfile";
 import { ResponsiveActionButton } from "../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { FaSave } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
 import { fetchTeams } from "../CompetitionPage";
 import { addStudentToTeam } from "./utility/addStudentToTeam";
-
+import { Student, TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
+ 
 export type DragEndEvent = MouseEvent | TouchEvent | PointerEvent;
 
 const TeamCardGridDisplay = styled(motion.div)`
@@ -257,7 +257,7 @@ export const TeamDisplay: FC = () => {
           // handler to take in memberId and newTeamID (updates list of teams)
             data-index={index}
             siteOptionsState={[siteOptions, setSiteOptions]}
-            handleDragDropCard={handleDragDropCard}
+            handleDragDropCard={handleDragDropCard} 
             isDraggingState={[isDragging, setIsDragging]}
             teamIdsState={[approveTeamIds, setApproveTeamIds]}
             rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}

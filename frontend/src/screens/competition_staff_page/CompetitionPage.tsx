@@ -13,7 +13,6 @@ import { sendRequest } from "../../utility/request";
 import { SortOption } from "../../components/page_header/components/SortSelect";
 import { TeamPageButtons } from "./teams_page/components/TeamPageButtons";
 import { AdvancedDropdown } from "../../components/AdvancedDropdown/AdvancedDropdown";
-import { TeamDetails } from "./teams_page/components/TeamCard";
 import { StudentInfo } from "./students_page/StudentDisplay";
 import { AttendeesDetails } from "./attendees_page/AttendeesPage";
 import { StaffDetails } from "./staff_page/StaffDisplay";
@@ -25,6 +24,7 @@ import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRo
 import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
 import { AttendeesPageButtons } from "./attendees_page/components/AttendeesPageButtons";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
+import { TeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
 
 const ToggleOptionTextSpan = styled.span``;
 
@@ -177,6 +177,23 @@ export const CompetitionPage: FC = () => {
       }
     };
 
+    const fetchUniversities = async () => {
+      const response = await sendRequest.get<{
+        universities: Array<{ id: number; name: string }>;
+      }>("/universities/list");
+      const { universities } = response.data;
+      setOptions([
+        ...universities.map(({ id, name }) => ({
+          value: String(id),
+          label: name,
+        })),
+      ]);
+
+
+      // TODO: Change the default to the users' own university
+      setUniversityOption({ value: String(universities[0].id), label: universities[0].name });
+    };
+
     const fetchInfo = async () => {
       const roleResponse = await sendRequest.get<{
         roles: Array<CompetitionRole>;
@@ -210,6 +227,7 @@ export const CompetitionPage: FC = () => {
 
       if (userRoles.includes(CompetitionRole.Admin)) {
         fetchStaffList();
+        fetchUniversities();
       }
       
       fetchSites();
@@ -237,27 +255,7 @@ export const CompetitionPage: FC = () => {
     label: string;
   }>({ value: "", label: "" });
 
-  useEffect(() => {
-    // TODO: change to get only the universities for this competition
-    const fetchUniversities = async () => {
-      const response = await sendRequest.get<{
-        universities: Array<{ id: number; name: string }>;
-      }>("/universities/list");
-      const { universities } = response.data;
-      setOptions([
-        ...universities.map(({ id, name }) => ({
-          value: String(id),
-          label: name,
-        })),
-      ]);
 
-
-      // TODO: Change the default to the users' own university
-      setUniversityOption({ value: String(universities[0].id), label: universities[0].name });
-    };
-
-    fetchUniversities();
-  }, []);
 
   return (
     <OverflowFlexBackground>
