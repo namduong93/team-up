@@ -244,6 +244,10 @@ app.post('/notification', notificationController.notificationCreate);
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);
 
+// PARAMS: { notificationId }
+// RESPONSE: {}
+app.delete('/notification', notificationController.notificationRemove);
+
 // PARAMS: { compId }
 // RESPONSE: 
 // Get all the details of a team in a competition

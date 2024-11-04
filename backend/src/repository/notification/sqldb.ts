@@ -1,6 +1,7 @@
 import { Pool } from "pg";
 import { Notification } from "../../models/notification/notification.js";
 import { NotificationRepository } from "../notification_repository_type.js";
+import { DbError } from "../../errors/db_error.js";
 
 export class SqlDbNotificationRepository implements NotificationRepository {
   private readonly pool: Pool;
@@ -235,6 +236,21 @@ export class SqlDbNotificationRepository implements NotificationRepository {
         AND id = ANY($2::int[])
       `;
       await this.pool.query(approvalNotificationQuery, [compId, approveIds, approvalMessage]);
+    }
+
+    return {};
+  }
+
+  notificationRemove = async(notificationId: number): Promise<{}> => {
+    const deleteNotificationQuery = `
+      DELETE FROM notifications 
+      WHERE id = $1 
+      RETURNING id
+    `;
+    const deleteNotificationResult = await this.pool.query(deleteNotificationQuery, [notificationId]);
+
+    if (deleteNotificationResult.rowCount === 0) {
+      throw new DbError(DbError.Query, `Notification with id ${notificationId} does not exist`);
     }
 
     return {};
