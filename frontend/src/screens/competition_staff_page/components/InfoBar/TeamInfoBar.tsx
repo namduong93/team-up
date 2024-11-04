@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
 import { TeamDetails } from "../../teams_page/components/TeamCard";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
@@ -9,9 +9,14 @@ import { TransparentResponsiveButton } from "../../../../components/responsive_f
 import { FaArrowRight } from "react-icons/fa";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { Student } from "../../../student/TeamProfile";
+import { addStudentToTeam } from "../../teams_page/utility/addStudentToTeam";
+import { ButtonConfiguration } from "../../hooks/useCompetitionOutletContext";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
+  teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
+  buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
 }
 
 export const InfoBarField = styled.div`
@@ -96,10 +101,35 @@ const MemberListItem = styled.li`
 
 
 export const TeamInfoBar: FC<TeamInfoBarProps> = ({
-  teamDetails, isOpenState: [isOpen, setIsOpen], children, ...props }) => {
+  teamDetails, isOpenState: [isOpen, setIsOpen],
+  teamListState: [teamList, setTeamList],
+  buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
+  children, ...props }) => {
   
   const [isPopupOpen, setPopupOpen] = useState(false);
   
+  const [teamOptions, setTeamOptions] 
+    = useState(teamList.map((team) => ({ value: String(team.teamId), label: team.teamName })));
+
+  const [currentTeamOption, setCurrentTeamOption] = useState({ value: '', label: '' });
+
+  const handleSubmitTeamChange = async (student: Student) => {
+
+    const newTeamId = parseInt(currentTeamOption.value);
+    const currentTeamId = teamDetails.teamId;
+    
+    const newTeamIndex = teamList.findIndex((team) => team.teamId === newTeamId);
+    const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
+
+    if (addStudentToTeam(student, currentTeamIndex, newTeamIndex, [teamList, setTeamList])) {
+      setButtonConfiguration((p) => ({
+        ...p,
+        enableTeamsChangedButtons: true
+      }));
+    };
+    setPopupOpen(false);
+    return true;
+  }
 
   return (
     <InfoBar isOpenState={[isOpen || isPopupOpen, setIsOpen]} {...props}>
@@ -182,13 +212,17 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
                   onMouseDown={(e) => e.preventDefault()}
                   handleClick={() => setPopupOpen(true)}
                   handleClose={() => setPopupOpen(false)}
+                  handleSubmit={async () => handleSubmitTeamChange(student)}
                   icon={<FaArrowRight />}
                   label="Change Team"
-                  question="What team to change to?"
+                  question={`What team should ${student.name} be in?`}
                   actionType="primary"
                 >
-                  
-
+                  <AdvancedDropdown
+                    optionsState={[teamOptions, setTeamOptions]}
+                    isExtendable={false}
+                    setCurrentSelected={setCurrentTeamOption}
+                  />
                 </ResponsiveActionButton>
               </MemberListItem>
             )

@@ -13,6 +13,7 @@ import { FaSave } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
 import { fetchTeams } from "../CompetitionPage";
+import { addStudentToTeam } from "./utility/addStudentToTeam";
 
 export type DragEndEvent = MouseEvent | TouchEvent | PointerEvent;
 
@@ -163,40 +164,24 @@ export const TeamDisplay: FC = () => {
     const hoveredElement = document.elementFromPoint(mouseX, mouseY);
     const cell = hoveredElement?.closest('.team-card-cell');
     draggedElem.style.pointerEvents = 'auto';
-    if (cell) {
-      const postSearchIndex = cell.getAttribute('data-index');
-      if (postSearchIndex) {
-        const newTeamIndex = teamList.findIndex((team) => team.teamId === searchedCompetitions[parseInt(postSearchIndex)].item.teamId);
-        const newTeam = teamList[newTeamIndex];
-        if (newTeam.students.length > 3 || newTeam.students.some((currentStudent) => currentStudent.userId === student.userId)) {
-          return;
-        }
-        const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
-        const currentTeam = teamList[currentTeamIndex];
-
-        setButtonConfiguration((p) => ({
-          ...p,
-          enableTeamsChangedButtons: true
-        }));
-        if (newTeamIndex < currentTeamIndex) {
-          setTeamList([
-            ...teamList.slice(0, newTeamIndex),
-            { ...newTeam, students: [...newTeam.students, student] },
-            ...teamList.slice(newTeamIndex + 1, currentTeamIndex),
-            { ...currentTeam, students: currentTeam.students.filter((currentStudent) => currentStudent.userId !== student.userId) },
-            ...teamList.slice(currentTeamIndex + 1)
-          ]);
-        } else if (currentTeamIndex < newTeamIndex) {
-          setTeamList([
-            ...teamList.slice(0, currentTeamIndex),
-            { ...currentTeam, students: currentTeam.students.filter((currentStudent) => currentStudent.userId !== student.userId) },
-            ...teamList.slice(currentTeamIndex + 1, newTeamIndex),
-            { ...newTeam, students: [...newTeam.students, student] },
-            ...teamList.slice(newTeamIndex + 1)
-          ])
-        }
-      }
+    if (!cell) {
+      return;
     }
+    const postSearchIndex = cell.getAttribute('data-index');
+    if (postSearchIndex) {
+      const newTeamIndex = teamList.findIndex((team) => team.teamId === searchedCompetitions[parseInt(postSearchIndex)].item.teamId);
+      const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
+
+      if (!addStudentToTeam(student, currentTeamIndex, newTeamIndex, [teamList, setTeamList])) {
+        return;
+      }
+
+      setButtonConfiguration((p) => ({
+        ...p,
+        enableTeamsChangedButtons: true
+      }));
+      
+      }
 
   }
 
@@ -275,6 +260,8 @@ export const TeamDisplay: FC = () => {
             rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
             isEditingStatus={isEditingStatus}
             isEditingNameStatus={isEditingNameStatus}
+            teamListState={[teamList, setTeamList]}
+            buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
             key={`${teamDetails.teamName}${teamDetails.status}${index}`} teamDetails={teamDetails} />)
         })}
       </TeamCardGridDisplay>

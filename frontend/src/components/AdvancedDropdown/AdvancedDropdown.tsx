@@ -205,7 +205,9 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
         <IoIosArrowDown style={{ height: '50%', width: '50%' }} />
       </DropdownIconDiv>
 
-      <DropdownOptions isExtendable={isExtendable} handleCreate={handleCreate} handleSelectOption={handleSelectOption} display={displayDropdown}
+      <DropdownOptions
+      onMouseDown={(e) => e.preventDefault()}
+      isExtendable={isExtendable} handleCreate={handleCreate} handleSelectOption={handleSelectOption} display={displayDropdown}
         searchTerm={searchTerm} options={filteredOptions} />
     </DropdownContainerDiv>
   )

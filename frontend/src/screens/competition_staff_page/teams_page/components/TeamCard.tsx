@@ -10,6 +10,7 @@ import { DragEndEvent } from "../TeamDisplay";
 import { InfoBar } from "../../components/InfoBar/InfoBar";
 import { TeamInfoBar } from "../../components/InfoBar/TeamInfoBar";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
+import { ButtonConfiguration } from "../../hooks/useCompetitionOutletContext";
 
 export enum Member {
   name = 0,
@@ -39,6 +40,8 @@ interface TeamCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isEditingNameStatus: boolean;
   isDraggingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   handleDragDropCard?: (event: DragEndEvent, info: PanInfo, member: Student, currentTeamId: number) => void;
+  teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
+  buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
 };
 
 const TeamMemberContainerDiv = styled.div`
@@ -334,8 +337,10 @@ const TeamMemberMotionDiv = styled(motion.div)`
 `;
 
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = false,
+  teamListState: [teamList, setTeamlist],
   teamIdsState: [teamIds, setTeamIds],
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+  buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
   isEditingNameStatus = false, isDraggingState: [isDragging, setIsDragging],
   handleDragDropCard = () => {}, ...props
  }) => {
@@ -371,7 +376,12 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
 
   return (
     <>
-    <TeamInfoBar teamDetails={teamDetails} isOpenState={[infoBarOpen, setInfoBarOpen]} />
+    <TeamInfoBar
+      buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
+      teamListState={[teamList, setTeamlist]}
+      isOpenState={[infoBarOpen, setInfoBarOpen]}
+      teamDetails={teamDetails}
+    />
     <StyledHoverDiv
       className="team-card-cell"
       $isDragging={isDragging}
