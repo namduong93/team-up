@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
-import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject } from "../../models/competition/competition.js";
+import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject, CompetitionTeamNameObject } from "../../models/competition/competition.js";
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
@@ -111,6 +111,71 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
     const encryptedTeamId = this.encrypt(teamResult.rows[0].id);
     return encryptedTeamId;
+  }
+
+  competitionTeamJoin = async(userId: number, compId: number, teamCode: string, university: University): Promise<CompetitionTeamNameObject> => {
+    const teamId = this.decrypt(teamCode);
+    const currentTeamQuery = `
+      SELECT id, participants, competition_coach_id FROM competition_teams
+      WHERE $1 = ANY(participants) AND competition_id = $2 AND university_id = $3
+    `;
+    const currentTeamResult = await this.pool.query(currentTeamQuery, [userId, compId, university.id]);
+
+    const teamQuery = `
+      SELECT name, participants, competition_coach_id FROM competition_teams
+      WHERE id = $1 AND competition_id = $2 AND university_id = $3
+    `;
+    const teamResult = await this.pool.query(teamQuery, [teamId, compId, university.id]);
+    if (teamResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'Team does not exist or is not part of this competition.');
+    }
+    if (teamResult.rows[0].participants.includes(userId)) {
+      throw new DbError(DbError.Query, 'User is already part of this team.');
+    }
+    if(teamResult.rows[0].participants.length >= 3) {
+      throw new DbError(DbError.Query, 'Team is already full.');
+    }
+    if (teamResult.rows[0].competition_coach_id !== currentTeamResult.rows[0].competition_coach_id) {
+      throw new DbError(DbError.Query, 'User have to be under the same coach to join the team.');
+    }
+
+    // Join the new team
+    const newParticipants = [...teamResult.rows[0].participants, userId];
+    console.log(newParticipants);
+    const updateTeamQuery = `
+      UPDATE competition_teams
+      SET participants = $1
+      WHERE id = $2
+    `;
+
+    const updateTeamResult = await this.pool.query(updateTeamQuery, [newParticipants, teamId]);
+    if (updateTeamResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'Could not join team.');
+    }
+    
+    // Leave the current team
+    if(currentTeamResult.rows[0].participants.length === 1) {
+      const leaveTeamQuery = `
+      DELETE FROM competition_teams
+      WHERE id = $1
+      `;
+      const leaveTeamResult = await this.pool.query(leaveTeamQuery, [currentTeamResult.rows[0].id]);
+      if (leaveTeamResult.rowCount === 0) {
+        throw new DbError(DbError.Query, 'Could not leave team.');
+      }
+    }
+    else {
+      const leaveTeamQuery = `
+      UPDATE competition_teams
+      SET participants = $1
+      WHERE id = $2
+      `;
+      const leaveTeamResult = await this.pool.query(leaveTeamQuery, [currentTeamResult.rows[0].participants.filter((id) => id !== userId), currentTeamResult.rows[0].id]);
+      if (leaveTeamResult.rowCount === 0) {
+        throw new DbError(DbError.Query, 'Could not leave team.');
+      }
+    }
+    return { teamName: 'teamName' };
   }
 
   competitionStudentDetails = async (userId: number, compId: number): Promise<CompetitionStudentDetails> => {

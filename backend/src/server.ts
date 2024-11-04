@@ -264,6 +264,11 @@ app.get('/competition/team/details', competitionController.competitionTeamDetail
 // Get the invite code for a team in a competition
 app.get('/competition/team/invite_code', competitionController.competitionTeamInviteCode);
 
+// PARAMS: { compId, code }
+// RESPONSE: {}
+// Join a team in a competition
+app.post('/competition/team/join', competitionController.competitionTeamJoin);
+
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
 app.get('/competition/attendees', competitionController.competitionAttendees);
