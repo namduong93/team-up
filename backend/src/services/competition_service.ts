@@ -430,13 +430,8 @@ export class CompetitionService {
   }
 
   competitionTeamSeatAssignments = async (userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
-    const roles = await this.competitionRoles(userId, compId);
-    if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR) && !roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.ADMIN)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a staff for this competition.");
-    }
-
     // Assign seats to teams
-    await this.competitionRepository.competitionTeamSeatAssignments(seatAssignments);
+    await this.competitionRepository.competitionTeamSeatAssignments(userId, compId, seatAssignments);
 
     // Notifications to teams
     await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);

@@ -35,7 +35,7 @@ export interface CompetitionRepository {
   competitionApproveTeamNameChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;
   competitionApproveSiteChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
-  competitionTeamSeatAssignments(seatAssignments: Array<SeatAssignment>): Promise<{}>;
+  competitionTeamSeatAssignments(userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}>;
 
 
   competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{} | undefined>;

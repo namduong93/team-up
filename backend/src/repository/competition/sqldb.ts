@@ -904,7 +904,41 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
-  competitionTeamSeatAssignments = async(seatAssignments: Array<SeatAssignment>): Promise<{}> => {
+  competitionTeamSeatAssignments = async(userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Check if the user is an admin or a site coordinator of this competition.
+    // If the user is a site-coordinator, they can only manage seats in the sites they oversee.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      throw new DbError(DbError.Auth, "User is not a site coordinator or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      const siteIds = seatAssignments.map(assignment => assignment.siteId);
+      const siteCoordinatorCheckQuery = `
+        SELECT site_id
+        FROM competition_users
+        WHERE user_id = $1 AND competition_id = $2 AND site_id = ANY($3::int[]) AND competition_roles @> ARRAY['Site-Coordinator']::competition_role_enum[]
+      `;
+      const siteCoordinatorCheckResult = await this.pool.query(siteCoordinatorCheckQuery, [userId, compId, siteIds]);
+
+      if (siteCoordinatorCheckResult.rowCount !== siteIds.length) {
+        throw new DbError(DbError.Auth, "User is not a site coordinator for all the provided sites.");
+      }
+    }
+
     for (const assignment of seatAssignments) {
       const { siteId, teamSite, teamSeat, teamId } = assignment;
 
