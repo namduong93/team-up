@@ -1,5 +1,5 @@
 import Fuse, { FuseResult } from "fuse.js";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import styled from "styled-components";
 
@@ -57,6 +57,7 @@ interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   >;
   label?: string;
   isExtendable?: boolean;
+  defaultSearchTerm?: string;
 }
 
 const DropdownOptionsDiv = styled.div`
@@ -190,9 +191,13 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
   setCurrentSelected,
   isExtendable = true,
   style,
+  defaultSearchTerm,
   ...props
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  useEffect(() => {
+    setSearchTerm(defaultSearchTerm ?? "")
+  }, [defaultSearchTerm]);
   const [displayDropdown, setDisplayDropdown] = useState(false);
 
   const fuse = new Fuse(options, {
@@ -243,6 +248,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
   return (
     <DropdownContainerDiv style={{ ...style }} {...props}>
       <DropdownTextInput
+        style={{ ...style }}
         type="text"
         onFocus={() => setDisplayDropdown(true)}
         onBlur={() => setDisplayDropdown(false)}
@@ -257,6 +263,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
       </DropdownIconDiv>
 
       <DropdownOptions
+        onMouseDown={(e) => e.preventDefault()}
         isExtendable={isExtendable}
         handleCreate={handleCreate}
         handleSelectOption={handleSelectOption}

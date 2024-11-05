@@ -1,7 +1,6 @@
 import { FC } from "react"
 import { NarrowStatusDiv, StaffAccessLevel, StaffCardProps } from "../StaffDisplay"
 import { Field, StudentInfoContainerDiv } from "../../students_page/components/StudentInfoCard"
-import { CompetitionRole } from "../../CompetitionPage"
 import { StaffRoleDisplay, StaffRoles } from "./StaffRole"
 
 export const NarrowStaffCard: FC<StaffCardProps> = ({ staffDetails, ...props }) => {
@@ -12,7 +11,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({ staffDetails, ...props }) 
       <Field label="Role"
         value={
           <NarrowStatusDiv>
-            <StaffRoles roles={staffDetails.roles} />
+            <StaffRoles style={{ width: '100%' }} roles={staffDetails.roles} />
           </NarrowStatusDiv>
         }
         style={{ width: '20%', minWidth: '125px' }}
