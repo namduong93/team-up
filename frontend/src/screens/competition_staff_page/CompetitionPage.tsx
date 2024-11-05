@@ -13,8 +13,6 @@ import { sendRequest } from "../../utility/request";
 import { SortOption } from "../../components/page_header/components/SortSelect";
 import { TeamPageButtons } from "./teams_page/components/TeamPageButtons";
 import { AdvancedDropdown } from "../../components/AdvancedDropdown/AdvancedDropdown";
-import { TeamDetails } from "./teams_page/components/TeamCard";
-import { StudentInfo } from "./students_page/StudentDisplay";
 import { AttendeesDetails } from "./attendees_page/AttendeesPage";
 import { StaffDetails } from "./staff_page/StaffDisplay";
 import {
@@ -24,6 +22,9 @@ import {
 import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole";
 import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
 import { AttendeesPageButtons } from "./attendees_page/components/AttendeesPageButtons";
+import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
+import { TeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
+import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
 
 const ToggleOptionTextSpan = styled.span``;
 
@@ -55,7 +56,7 @@ export const fetchTeams = async (
       { compId }
     );
     const { teamList } = response.data;
-
+    console.log(teamList);
     setTeams(teamList.map((team) => ({ ...team, students: team.students.filter((student) => student.userId !== null) })));
 
   } catch (error: unknown) {
@@ -83,7 +84,10 @@ export const CompetitionPage: FC = () => {
       enableAttendeesButtons: false,
       enableStudentButtons: false,
       enableStaffButtons: false,
-    });
+      enableTeamsChangedButtons: false,
+    }
+  );
+
 
   ////
   const [isEditingStatus, setIsEditingStatus] = useState<boolean>(false);
@@ -114,6 +118,8 @@ export const CompetitionPage: FC = () => {
     region: "Unknown",
   });
   ////
+  const [siteOptions, setSiteOptions] = useState([{ value: '', label: '' }]);
+
 
   useEffect(() => {
     const fetchCompetitionDetails = async () => {
@@ -157,6 +163,37 @@ export const CompetitionPage: FC = () => {
       setStaffList(staff);
     };
 
+    const fetchSites = async () => {
+      try {
+        const response = await sendRequest.get<{
+          sites: Array<CompetitionSite>;
+        }>("/competition/sites", { compId });
+        const { sites } = response.data;
+        setSiteOptions(
+          sites.map((site) => ({ value: String(site.id), label: site.name }))
+        );
+      } catch (error: unknown) {
+        console.error("Error fetching sites:", error);
+      }
+    };
+
+    const fetchUniversities = async () => {
+      const response = await sendRequest.get<{
+        universities: Array<{ id: number; name: string }>;
+      }>("/universities/list");
+      const { universities } = response.data;
+      setOptions([
+        ...universities.map(({ id, name }) => ({
+          value: String(id),
+          label: name,
+        })),
+      ]);
+
+
+      // TODO: Change the default to the users' own university
+      setUniversityOption({ value: String(universities[0].id), label: universities[0].name });
+    };
+
     const fetchInfo = async () => {
       const roleResponse = await sendRequest.get<{
         roles: Array<CompetitionRole>;
@@ -190,7 +227,10 @@ export const CompetitionPage: FC = () => {
 
       if (userRoles.includes(CompetitionRole.Admin)) {
         fetchStaffList();
+        fetchUniversities();
       }
+      
+      fetchSites();
     };
 
     fetchInfo();
@@ -215,24 +255,7 @@ export const CompetitionPage: FC = () => {
     label: string;
   }>({ value: "", label: "" });
 
-  useEffect(() => {
-    // TODO: change to get only the universities for this competition
-    const fetchUniversities = async () => {
-      const response = await sendRequest.get<{
-        universities: Array<{ id: number; name: string }>;
-      }>("/universities/list");
-      const { universities } = response.data;
-      setOptions([
-        ...universities.map(({ id, name }) => ({
-          value: String(id),
-          label: name,
-        })),
-        { value: "", label: "All Universities" },
-      ]);
-    };
 
-    fetchUniversities();
-  }, []);
 
   return (
     <OverflowFlexBackground>
@@ -273,6 +296,7 @@ export const CompetitionPage: FC = () => {
             <AdvancedDropdown
               style={{ minWidth: "0", maxWidth: "342px", width: "100%" }}
               optionsState={[options, setOptions]}
+              defaultSearchTerm={options[0].label}
               setCurrentSelected={setUniversityOption}
               isExtendable={false}
             />
@@ -380,6 +404,7 @@ export const CompetitionPage: FC = () => {
             attendeesListState: [attendeesList, setAttendeesList],
             staffListState: [staffList, setStaffList],
             compDetails,
+            siteOptionsState: [siteOptions, setSiteOptions],
           }}
         />
       </MainPageDiv>

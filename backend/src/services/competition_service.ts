@@ -7,6 +7,9 @@ import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
 import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
+import { SeatAssignment } from "../models/team/team.js";
+import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
+import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -39,32 +42,13 @@ export enum Member {
   boersenEligible = 4,
   isRemote = 5,
 }
-export interface TeamDetails extends ParticipantTeamDetails {
-  teamId: number;
-  universityId: number;
-  status: 'Pending' | 'Registered' | 'Unregistered';
-  teamNameApproved: boolean;
-};
+
 export interface TeamMateData {
   teamMateEmail: string;
   teamMateName: string;
   teamMateICPCEmail: string;
   teamMateDegreeYear: number;
   teamMateDegree: string;
-};
-
-export interface StudentInfo {
-  userId: number;
-  universityId: number;
-  name: string;
-  sex: string;
-  email: string;
-  studentId: string;
-  status: string;
-  level: string;
-  tshirtSize: string;
-  siteName: string;
-  teamName?: string;
 };
 
 enum StaffAccess {
@@ -79,31 +63,6 @@ export interface StaffInfo {
   universityName: string;
   access: StaffAccess;
   email: string;
-}
-export interface ParticipantTeamDetails {
-  compName: string;
-  teamName: string;
-  teamSite: string;
-  teamSeat?: string;
-  teamLevel: string;
-  startDate: Date;
-  students: Array<{
-    userId: number;
-    name: string;
-    email: string;
-    bio: string;
-    preferredContact: string;
-    siteId: number;
-    ICPCEligible: boolean;
-    level: string;
-    boersenEligible: boolean;
-    isRemote: boolean;
-  }>;
-  coach: {
-    name: string;
-    email: string;
-    bio: string;
-  }
 }
 
 export interface AttendeesDetails {
@@ -163,6 +122,28 @@ export class CompetitionService {
     }
 
     return await this.competitionRepository.competitionTeamDetails(userId, compId);
+  }
+
+  competitionTeamInviteCode = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'User is not a participant for this competition.');
+    }
+    return await this.competitionRepository.competitionTeamInviteCode(userId, compId);
+  }
+
+  competitionTeamJoin = async (userId: number, compId: number, teamCode: string) => { 
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'User is not a participant for this competition.');
+    }
+    const university = await this.userRepository.userUniversity(userId);
+    if (!university) {
+      throw new ServiceError(ServiceError.NotFound, 'User is not a part of an university');
+    }
+    return await this.competitionRepository.competitionTeamJoin(userId, compId, teamCode, university);
   }
 
   competitionStudentDetails = async (userId: number, compId: number) => {
@@ -424,6 +405,16 @@ export class CompetitionService {
   
     // Notify team members
     await this.notificationRepository.notificationApproveSiteChange(compId, approveIds, rejectIds);
+  
+    return {};
+  }
+
+  competitionTeamSeatAssignments = async (userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
+    // Assign seats to teams
+    await this.competitionRepository.competitionTeamSeatAssignments(userId, compId, seatAssignments);
+
+    // Notifications to teams
+    await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);
   
     return {};
   }

@@ -173,28 +173,33 @@ app.post('/competition/student/withdraw', competitionController.competitionStude
 
 // Coach approves the team assignment (changing status from pending to unregistered)
 // PARAMS: { compId: number, approveIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/team_assignment_approve', competitionController.competitionApproveTeamAssignment);
 
 // Student requests to change the team name
 // PARAMS: { compId: number, newTeamName: string }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
 
 // Coach approves the team name change (for many teams in one specific competition at once)
 // PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
 
 // Student requests to change the team site
 // PARAMS: { compId: number, newSiteId: number }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/student/site_change', competitionController.competitionRequestSiteChange);
 
 // Coach approves the team site change (for many teams in one specific competition at once)
 // PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/site_approve', competitionController.competitionApproveSiteChange);
+
+// Coach assigns seats to teams
+// PARAMS: { compId: number, seatAssignments: Array<SeatAssignment> }
+// RESPONSE: {}
+app.put('/competition/staff/seat_assignments', competitionController.competitionTeamSeatAssignments);
 
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
@@ -224,6 +229,8 @@ app.post('/user/password_recovery/generate_code', userController.userPasswordRec
 // RESPONSE: {} --- NOTE: No error if successful, error if not successful
 app.post('/user/password_recovery/input_code', userController.userPasswordRecoveryInputCode);
 
+// PARAMS: { compId: number }
+// RESPONSE: { unknown }
 app.get('/competition/teams', competitionController.competitionTeams)
 
 // PARAMS: { compId: number }
@@ -255,6 +262,14 @@ app.get('/competition/team/details', competitionController.competitionTeamDetail
 
 // PARAMS: { compId }
 // RESPONSE:
+// Get the invite code for a team in a competition
+app.get('/competition/team/invite_code', competitionController.competitionTeamInviteCode);
+
+// PARAMS: { compId, code }
+// RESPONSE: {}
+// Join a team in a competition
+app.post('/competition/team/join', competitionController.competitionTeamJoin);
+
 // Sort teams based on userId university
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 

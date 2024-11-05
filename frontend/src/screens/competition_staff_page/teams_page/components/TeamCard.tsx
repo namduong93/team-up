@@ -4,9 +4,13 @@ import { FaRegUser } from "react-icons/fa";
 import { IoMdCheckmark } from "react-icons/io";
 import { LiaTimesSolid } from "react-icons/lia";
 import styled, { useTheme } from "styled-components";
-import { ParticipantTeamDetails, Student } from "../../../student/TeamProfile";
 import { motion, PanInfo } from "framer-motion";
 import { DragEndEvent } from "../TeamDisplay";
+import { InfoBar } from "../../components/InfoBar/InfoBar";
+import { TeamInfoBar } from "../../components/InfoBar/TeamInfoBar";
+import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
+import { ButtonConfiguration } from "../../hooks/useCompetitionOutletContext";
+import { TeamDetails, Student } from "../../../../../shared_types/Competition/team/TeamDetails";
 
 export enum Member {
   name = 0,
@@ -16,17 +20,8 @@ export enum Member {
   boersenEligible = 4,
   isRemote = 5,
 }
-export interface TeamDetails extends ParticipantTeamDetails {
-  teamId: number;
-  universityId: number;
-  // member1?: MemberDetails;
-  // member2?: MemberDetails;
-  // member3?: MemberDetails;
-  status: 'Pending' | 'Registered' | 'Unregistered';
-  teamNameApproved: boolean;
-  // teamAlgoScore?: number;
-  // icpcEligible?: boolean;
-};
+
+export const DRAG_ANIMATION_DURATION = 0.2;
 
 interface TeamCardProps extends React.HTMLAttributes<HTMLDivElement> {
   teamDetails: TeamDetails;
@@ -36,6 +31,12 @@ interface TeamCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isEditingNameStatus: boolean;
   isDraggingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   handleDragDropCard?: (event: DragEndEvent, info: PanInfo, member: Student, currentTeamId: number) => void;
+  teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
+  buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
+  siteOptionsState: [
+    Array<{ value: string, label: string }>,
+    React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>
+  ];
 };
 
 const TeamMemberContainerDiv = styled.div`
@@ -73,15 +74,20 @@ export const TeamCardMember = ({ memberName }: { memberName: string }) => {
   );
 }
 
-const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean, $isEditingNameStatus: boolean, $isDragging: boolean }>`
+const StyledHoverDiv = styled.div<{$isEditingStatus: boolean, $isEditingNameStatus: boolean, $isDragging: boolean, $numMembers: number}>`
   transition: transform 0.2s ease-in-out !important;
   display: flex;
   flex: 0 1 auto;
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
-  min-height: 260px;
-  max-height: ${({ $isEditingStatus }) => $isEditingStatus ? '280px' : '260px'};
+  height: ${({ $isEditingStatus, $numMembers }) => {
+    if ($numMembers > 3) {
+      return $isEditingStatus ? '330px' : '310px';
+    } else {
+      return $isEditingStatus ? '280px' : '260px';
+    }
+  }};
   max-width: 294px;
   min-width: 140px;
   border-radius: 20px 20px 20px 20px;
@@ -100,7 +106,7 @@ const StyledHoverDiv = styled.div<{ $isEditingStatus: boolean, $isEditingNameSta
       cursor: pointer;
     }
   }
-`
+`;
 
 const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   background-color: ${(props) => props.$statusColor};
@@ -326,11 +332,15 @@ const TeamMemberMotionDiv = styled(motion.div)`
 `;
 
 export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = false,
+  teamListState: [teamList, setTeamlist],
   teamIdsState: [teamIds, setTeamIds],
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+  buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
   isEditingNameStatus = false, isDraggingState: [isDragging, setIsDragging],
-  handleDragDropCard = () => {}, ...props
- }) => {
+  handleDragDropCard = () => {}, 
+  siteOptionsState: [siteOptions, setSiteOptions],
+  ...props
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, _ ] = useState(teamDetails.status);
   const colorMap = {
@@ -359,12 +369,25 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
   const isEditThisCard = isEditingStatus && (teamDetails.status === 'Pending');
   const isEditNameThisCard = isEditingNameStatus && (teamDetails.teamNameApproved === false);
 
+  const [infoBarOpen, setInfoBarOpen] = useState(false);
+
+
   return (
+    <>
+    <TeamInfoBar
+      buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
+      teamListState={[teamList, setTeamlist]}
+      isOpenState={[infoBarOpen, setInfoBarOpen]}
+      teamDetails={teamDetails}
+      siteOptionsState={[siteOptions, setSiteOptions]}
+    />
     <StyledHoverDiv
       className="team-card-cell"
       $isDragging={isDragging}
       $isEditingStatus={isEditThisCard}
       $isEditingNameStatus={isEditNameThisCard}
+      $numMembers={teamDetails.students.length}
+      onDoubleClick={() => setInfoBarOpen((p) => !p)}
       {...props}
     >
       {!isEditNameThisCard &&
@@ -377,14 +400,20 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
           <TeamMatesContainerDiv>
             {teamDetails.students.map((member, index) => (
               <TeamMemberMotionDiv
-                // layoutId={`${member.userId}`}
                 key={`${member.userId}`}
+                layoutId={`${member.userId}`}
+                layout
+                transition={{
+                  type: isDragging ? 'spring' : false,
+                  duration: DRAG_ANIMATION_DURATION
+                }}
+                // animate={{ opacity: isDragging ? 0.8 : 1 }}
                 className="team-member-cell"
                 drag
                 dragElastic={1}
                 dragConstraints={{left: 0, top: 0, right: 0, bottom: 0}}
                 onDragStart={() => setIsDragging(true)}
-                onDragTransitionEnd={() => setIsDragging(false)}
+                // onDragTransitionEnd={() => setIsDragging(false)}
                 onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
               >
                 <TeamCardMember memberName={member.name} />
@@ -411,5 +440,6 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
       </TeamNameApprovalDiv>
     }
     </StyledHoverDiv>
+    </>
   )
 }

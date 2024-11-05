@@ -1,6 +1,7 @@
 import { Pool } from "pg";
 import { Notification } from "../../models/notification/notification.js";
 import { NotificationRepository } from "../notification_repository_type.js";
+import { SeatAssignment } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 
 export class SqlDbNotificationRepository implements NotificationRepository {
@@ -238,6 +239,30 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       await this.pool.query(approvalNotificationQuery, [compId, approveIds, approvalMessage]);
     }
 
+    return {};
+  }
+
+  notificationTeamSeatAssignments = async(compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
+    // Get the competition name
+    const competitionNameQuery = `
+      SELECT name 
+      FROM competitions 
+      WHERE id = $1
+    `;
+    const competitionNameResult = await this.pool.query(competitionNameQuery, [compId]);
+    const competitionName = competitionNameResult.rows[0]?.name;
+
+    for (const seatAssignment of seatAssignments) {
+      const seatAssignmentMessage = `Your team has been assigned to the following seat for competition ${competitionName}: ${seatAssignment.teamSite} - ${seatAssignment.teamSeat}.`;
+      const seatAssignmentNotificationQuery = `
+      INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+      SELECT participant AS user_id, $3, 'site'::notification_type_enum, $1, id AS team_id, NOW()
+      FROM competition_teams, unnest(participants) AS participant
+      WHERE competition_id = $1 
+      AND id = $2
+      `;
+      await this.pool.query(seatAssignmentNotificationQuery, [compId, seatAssignment.teamId, seatAssignmentMessage]);
+    }
     return {};
   }
 

@@ -10,6 +10,7 @@ interface StaffRolesProps extends React.HTMLAttributes<HTMLDivElement> {
 export const StandardContainerDiv = styled.div`
   width: 20%;
   height: 100%;
+  flex: 1;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -83,7 +84,7 @@ export const StaffRoleDisplay = styled.div<{ $role: CompetitionRole, $isMulti?: 
 `;
 
 const StaffRolesContainerDiv = styled(StandardContainerDiv)`
-  min-width: 20%;
+  /* min-width: 20%; */
   overflow: visible;
   flex: 1;
   display: flex;
