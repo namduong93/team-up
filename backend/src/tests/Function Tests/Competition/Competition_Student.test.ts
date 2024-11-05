@@ -1,6 +1,7 @@
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
+// need join
 describe('Competition Student Function', () => {
   let user_db;
   beforeAll(async () => {
