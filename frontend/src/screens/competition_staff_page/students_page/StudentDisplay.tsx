@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import { useParams } from "react-router-dom";
 import Fuse from "fuse.js";
-import { sendRequest } from "../../../utility/request";
-import { StudentCardInfo, StudentCardProps, StudentInfoCard } from "./components/StudentInfoCard";
+import { StudentCardProps, StudentInfoCard } from "./components/StudentInfoCard";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { StudentsInfoBar } from "../components/InfoBar/StudentsInfoBar";
+import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
+import { CompetitionLevel } from "../../../../shared_types/Competition/CompetitionLevel";
 
 export const WideDisplayDiv = styled.div`
   flex: 1;
@@ -20,11 +21,6 @@ export const WideDisplayDiv = styled.div`
   }
 `;
 
-
-export interface StudentInfo extends StudentCardInfo {
-  userId: number;
-  universityId: number;
-};
 
 interface StudentStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   isMatched: boolean;
@@ -157,51 +153,64 @@ const EmailSpan = styled.span<{ $isHeader: boolean }>`
   position: absolute;
 `;
 
-export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, isHeader = false, ...props }) => {
+export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, ...props }) => {
   const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
+
+  const { name, sex, email, status, studentId, teamName, level, tshirtSize, siteName }
+    = studentInfo ?? {
+      name: 'Full Name',
+      sex: 'Sex',
+      email: 'Email',
+      status: 'Status',
+      studentId: 'Identifier',
+      teamName: 'Team Name',
+      level: 'Level',
+      tshirtSize: 'Shirt Size',
+      siteName: 'Site'
+    };
 
   return (
     <>
-    <StudentsInfoBar studentInfo={studentInfo} isOpenState={[isInfoBarOpen, setIsInfoBarOpen]} />
-    <WideInfoContainerDiv onDoubleClick={() => !isHeader && setIsInfoBarOpen((p) => !p)} style={style} {...props}>
+    {studentInfo && <StudentsInfoBar studentInfo={studentInfo} isOpenState={[isInfoBarOpen, setIsInfoBarOpen]} />}
+    <WideInfoContainerDiv onDoubleClick={() => studentInfo && setIsInfoBarOpen((p) => !p)} style={style} {...props}>
        <UserNameContainerDiv>
-       {isHeader ? <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan> :
+       {!studentInfo ? <UsernameTextSpan>{name}</UsernameTextSpan> :
       <UserNameGrid >
         <UserIcon />
-        <UsernameTextSpan>{studentInfo.name}</UsernameTextSpan>
+        <UsernameTextSpan>{name}</UsernameTextSpan>
       </UserNameGrid>}
       </UserNameContainerDiv>
         
         <SmallContainerDiv>
-            {studentInfo.sex}
+            {sex}
         </SmallContainerDiv>
-        <EmailContainerDiv $isHeader={isHeader}>
-          <EmailSpan $isHeader={isHeader}>
-          {studentInfo.email}
+        <EmailContainerDiv $isHeader={!studentInfo}>
+          <EmailSpan $isHeader={!studentInfo}>
+          {email}
           </EmailSpan>
         </EmailContainerDiv>
 
         <StudentIdContainerDiv>
-          {studentInfo.studentId}
+          {studentId}
         </StudentIdContainerDiv>
 
         <StatusContainerDiv>
-          {!isHeader ? <StudentStatus isMatched={studentInfo.status === 'Matched'} >{studentInfo.status}</StudentStatus>
-          : studentInfo.status}
+          {studentInfo ? <StudentStatus isMatched={status === 'Matched'} >{status}</StudentStatus>
+          : status}
         </StatusContainerDiv>
 
         <TeamNameContainerDiv >
-          {studentInfo.teamName}
+          {teamName}
         </TeamNameContainerDiv>
 
-        <SmallContainerDiv>{studentInfo.level}</SmallContainerDiv>
+        <SmallContainerDiv>{level}</SmallContainerDiv>
 
         <SmallContainerDiv>
-          {studentInfo.tshirtSize}
+          {tshirtSize}
         </SmallContainerDiv>
 
         <UniversityContainerDiv>
-          {studentInfo.siteName}
+          {siteName}
         </UniversityContainerDiv>
 
         <SmallContainerDiv></SmallContainerDiv>
@@ -326,19 +335,9 @@ export const StudentDisplay = () => {
     </NarrowDisplayDiv>
 
     <WideDisplayDiv>
-      <StudentInfoDiv isHeader style={{
+      <StudentInfoDiv style={{
         backgroundColor: '#D6D6D6',
         fontWeight: 'bold'
-      }} studentInfo={{
-        name: 'Full Name',
-        sex: 'Sex',
-        email: 'Email',
-        studentId: 'Identifier',
-        status: 'Status',
-        teamName: 'Team Name',
-        level: 'Level',
-        tshirtSize: 'Shirt Size',
-        siteName: 'Site', userId: -1, universityId: -1,
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}

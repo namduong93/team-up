@@ -1,9 +1,10 @@
 import { FC } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
-import { StudentInfo, StudentStatus } from "../../students_page/StudentDisplay";
+import { StudentStatus } from "../../students_page/StudentDisplay";
 import { ProfilePic } from "../../../account/Account";
 import { backendURL } from "../../../../../config/backendURLConfig";
 import { InfoBarField, LabelSpan } from "./TeamInfoBar";
+import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
 
 interface StudentsInfoProps extends InfoBarProps {
   studentInfo: StudentInfo;
