@@ -8,6 +8,7 @@ import { CompetitionRepository, CompetitionRole } from "../repository/competitio
 import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
+import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -47,20 +48,6 @@ export interface TeamMateData {
   teamMateICPCEmail: string;
   teamMateDegreeYear: number;
   teamMateDegree: string;
-};
-
-export interface StudentInfo {
-  userId: number;
-  universityId: number;
-  name: string;
-  sex: string;
-  email: string;
-  studentId: string;
-  status: string;
-  level: string;
-  tshirtSize: string;
-  siteName: string;
-  teamName?: string;
 };
 
 enum StaffAccess {

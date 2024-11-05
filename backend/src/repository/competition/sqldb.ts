@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo, StaffInfo, AttendeesDetails } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo, StaffInfo, AttendeesDetails } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject, CompetitionTeamNameObject } from "../../models/competition/competition.js";
 
@@ -12,6 +12,8 @@ import { University } from "../../models/university/university.js";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite.js";
 import pokemon from 'pokemon';
 import { ParticipantTeamDetails, TeamDetails } from "../../../shared_types/Competition/team/TeamDetails.js";
+import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo.js";
+
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -264,6 +266,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       const dbResult = await this.pool.query(
         `SELECT * FROM competition_coach_students(${userId}, ${compId})`
       );
+      console.log(dbResult.rows);
       return dbResult.rows;
     }
 
