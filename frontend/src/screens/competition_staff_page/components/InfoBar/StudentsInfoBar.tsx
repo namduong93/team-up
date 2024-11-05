@@ -90,7 +90,10 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
         <span>{studentInfo.userId}</span>
       </InfoBarField>
 
-      <ProfilePic $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`} />
+      <ProfilePic
+        style={{ marginBottom: '15px' }}
+        $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
+      />
 
 
       <InfoBarField>

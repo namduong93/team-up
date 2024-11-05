@@ -4,7 +4,7 @@ import { InfoBar, InfoBarProps } from "./InfoBar";
 import { InfoBarField, LabelSpan } from "./TeamInfoBar";
 import { CompetitionInfoContainerDiv } from "./StudentsInfoBar";
 import { EditableTextArea } from "./components/TeamStudentInfoCard";
-import { EditIcon, EditIconButton } from "../../../account/Account";
+import { EditIcon, EditIconButton, ProfilePic } from "../../../account/Account";
 import { StaffRoles } from "../../staff_page/components/StaffRole";
 import { Input } from "../../../../components/general_utility/RegisterPopUp";
 import styled, { useTheme } from "styled-components";
@@ -13,6 +13,7 @@ import { StaffAccessLevel } from "../../staff_page/StaffDisplay";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { RxReset } from "react-icons/rx";
 import { FaSave } from "react-icons/fa";
+import { backendURL } from "../../../../../config/backendURLConfig";
 
 
 interface StaffInfoProps extends InfoBarProps {
@@ -188,6 +189,11 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
         <LabelSpan>User Id:</LabelSpan>
         <span>{staffData.userId}</span>
       </InfoBarField>
+
+      <ProfilePic
+        style={{ marginBottom: '15px' }}
+        $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
+      />
 
       <InfoBarField>
         <LabelSpan>University Name:</LabelSpan>
