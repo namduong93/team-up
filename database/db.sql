@@ -375,12 +375,37 @@ $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION competition_staff(c_id INT)
 RETURNS TABLE(
-  "userId" INT, "name" TEXT, "roles" JSON,
-  "universityName" TEXT, "access" competition_access_enum, email TEXT )
+  "userId" INT,
+  "universityId" INT,
+  "universityName" TEXT,
+  "name" TEXT,
+  "email" TEXT,
+  "sex" TEXT,
+  "pronouns" TEXT,
+  "tshirtSize" TEXT,
+  "allergies" TEXT,
+  "dietaryReqs" TEXT,
+  "accessibilityReqs" TEXT,
+  "bio" TEXT,
+  "roles" JSONB,
+  "access" competition_access_enum
+)
 AS $$
   SELECT
-    u.id AS "userId", u.name AS "name", TO_JSON(cu.competition_roles) AS "roles",
-    uni.name AS "universityName", cu.access_level AS "access", u.email AS "email"
+    u.id AS "userId",
+    u.university_id AS "universityId",
+    uni.name AS "universityName",
+    u.name AS "name",
+    u.email AS "email",
+    u.gender AS "sex",
+    u.pronouns AS "pronouns",
+    u.tshirt_size AS "tshirtSize",
+    u.allergies AS "allergies",
+    u.dietary_reqs AS "dietaryReqs",
+    u.accessibility_reqs AS "accessibilityReqs",
+    cu.bio AS "bio",
+    TO_JSONB(cu.competition_roles) AS "roles",
+    cu.access_level AS "access"
   FROM competition_users AS cu
   JOIN users AS u ON cu.user_id = u.id
   JOIN universities AS uni ON uni.id = u.university_id

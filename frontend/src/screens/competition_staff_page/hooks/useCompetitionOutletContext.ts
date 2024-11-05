@@ -1,12 +1,12 @@
 import React, { ReactNode, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import { TeamDetails } from "../teams_page/components/TeamCard";
-import { StudentInfo } from "../students_page/StudentDisplay";
 import { AttendeesDetails } from "../attendees_page/AttendeesPage";
 import { StaffDetails } from "../staff_page/StaffDisplay";
 // import { CompetitionDetails, CompetitionRole } from "../CompetitionPage";
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 import { CompetitionDetails } from "../CompetitionPage";
+import { TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
+import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
 
 export interface ButtonConfiguration {
   enableTeamButtons: boolean;
