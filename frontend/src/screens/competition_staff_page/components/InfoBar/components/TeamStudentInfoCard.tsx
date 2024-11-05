@@ -234,7 +234,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
       </MemberFieldDiv>
 
       <MemberFieldDiv>
-        <LabelSpan>Past Regional Participation:</LabelSpan>
+        <LabelSpan>Past Regional:</LabelSpan>
 
         {isEditingCard ?
           <ToggleSelect

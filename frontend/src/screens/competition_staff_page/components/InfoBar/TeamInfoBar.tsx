@@ -32,6 +32,7 @@ export const InfoBarField = styled.div`
 
 export const LabelSpan = styled.span`
   font-weight: bold;
+  max-width: 180px;
 `;
 
 export const TitleDiv = styled.div<{ $isOpen: boolean }>`
