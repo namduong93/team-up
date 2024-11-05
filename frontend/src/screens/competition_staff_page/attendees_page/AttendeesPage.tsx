@@ -58,7 +58,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
   return (
     <StudentInfoContainerDiv {...props}>
       <Field label="Full Name" value={attendeesDetails.name} style={{ width: '20%', minWidth: '120px' }} />
-      <Field label="Sex" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
+      <Field label="Gender" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
       <Field label="Role" 
         value={
           <NarrowStatusDiv>
@@ -121,7 +121,7 @@ export const WideAttendeesHeader: FC = () => {
       </UserNameContainerDiv>
 
       <StandardContainerDiv>
-        <StandardSpan>Sex</StandardSpan>
+        <StandardSpan>Gender</StandardSpan>
       </StandardContainerDiv>
       
       <StandardContainerDiv>

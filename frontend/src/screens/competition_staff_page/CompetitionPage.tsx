@@ -13,7 +13,6 @@ import { sendRequest } from "../../utility/request";
 import { SortOption } from "../../components/page_header/components/SortSelect";
 import { TeamPageButtons } from "./teams_page/components/TeamPageButtons";
 import { AdvancedDropdown } from "../../components/AdvancedDropdown/AdvancedDropdown";
-import { StudentInfo } from "./students_page/StudentDisplay";
 import { AttendeesDetails } from "./attendees_page/AttendeesPage";
 import { StaffDetails } from "./staff_page/StaffDisplay";
 import {
@@ -25,6 +24,7 @@ import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
 import { AttendeesPageButtons } from "./attendees_page/components/AttendeesPageButtons";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
 import { TeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
+import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
 
 const ToggleOptionTextSpan = styled.span``;
 
@@ -56,7 +56,7 @@ export const fetchTeams = async (
       { compId }
     );
     const { teamList } = response.data;
-
+    console.log(teamList);
     setTeams(teamList.map((team) => ({ ...team, students: team.students.filter((student) => student.userId !== null) })));
 
   } catch (error: unknown) {

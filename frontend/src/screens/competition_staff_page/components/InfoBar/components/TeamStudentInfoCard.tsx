@@ -46,7 +46,7 @@ export const EditableInput = styled(Input)`
   height: 25px;
   width: 60%;
   line-height: 0;
-  padding: 0;
+  /* padding: 0; */
 `;
 
 export const EditableTextArea = styled.textarea`
@@ -58,7 +58,7 @@ export const EditableTextArea = styled.textarea`
   padding: 0;
 `;
 
-const ToggleSelect = styled.select<{ $toggled: boolean }>`
+export const ToggleSelect = styled.select<{ $toggled: boolean }>`
   border-radius: 5px;
   width: 50%;
   background-color: ${({ $toggled, theme }) => $toggled ? theme.colours.confirm : theme.colours.cancel};

@@ -13,9 +13,9 @@ const InfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
   bottom: 0;
   z-index: 50;
   /* TODO: add min-height */
-  transition: width 0.25s ease, min-width 0.25s ease !important;
+  transition: width 0.25s ease, min-width 0.25s ease, background-color 0.25s ease !important;
   width: ${({ $isOpen }) => $isOpen ? '30%' : '0'};
-  height: 95%;
+  height: 99%;
   max-width: 380px;
   min-width: ${({ $isOpen }) => $isOpen ? '320px' : '0'};
   background-color: ${({ theme }) => theme.background};

@@ -89,7 +89,7 @@ const MemberUl = styled.ul`
   padding-left: 0;
 `;
 
-const Select = styled.select`
+export const Select = styled.select`
   border-radius: 5px;
 `;
 

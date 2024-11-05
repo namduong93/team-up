@@ -153,13 +153,19 @@ const EmailSpan = styled.span<{ $isHeader: boolean }>`
   position: absolute;
 `;
 
-export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, ...props }) => {
+export const StudentInfoDiv: FC<StudentCardProps> = (
+  {
+    style,
+    studentInfo,
+    studentsState: [students, setStudents],
+    ...props
+  }) => {
   const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
 
   const { name, sex, email, status, studentId, teamName, level, tshirtSize, siteName }
     = studentInfo ?? {
       name: 'Full Name',
-      sex: 'Sex',
+      sex: 'Gender',
       email: 'Email',
       status: 'Status',
       studentId: 'Identifier',
@@ -171,7 +177,12 @@ export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, ...pr
 
   return (
     <>
-    {studentInfo && <StudentsInfoBar studentInfo={studentInfo} isOpenState={[isInfoBarOpen, setIsInfoBarOpen]} />}
+    {studentInfo && 
+    <StudentsInfoBar
+      studentsState={[students, setStudents]}
+      studentInfo={studentInfo}
+      isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
+    />}
     <WideInfoContainerDiv onDoubleClick={() => studentInfo && setIsInfoBarOpen((p) => !p)} style={style} {...props}>
        <UserNameContainerDiv>
        {!studentInfo ? <UsernameTextSpan>{name}</UsernameTextSpan> :
@@ -181,7 +192,7 @@ export const StudentInfoDiv: FC<StudentCardProps> = ({ style, studentInfo, ...pr
       </UserNameGrid>}
       </UserNameContainerDiv>
         
-        <SmallContainerDiv>
+        <SmallContainerDiv style={{ width: '10%' }}>
             {sex}
         </SmallContainerDiv>
         <EmailContainerDiv $isHeader={!studentInfo}>
@@ -331,16 +342,16 @@ export const StudentDisplay = () => {
   <FlexBackground>
     <NarrowDisplayDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
-        (<StudentInfoCard key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
+        (<StudentInfoCard studentsState={[students, setStudents]} key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
     </NarrowDisplayDiv>
 
     <WideDisplayDiv>
-      <StudentInfoDiv style={{
+      <StudentInfoDiv studentsState={[students, setStudents]} style={{
         backgroundColor: '#D6D6D6',
         fontWeight: 'bold'
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
-        (<StudentInfoDiv key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
+        (<StudentInfoDiv studentsState={[students, setStudents]} key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
     </WideDisplayDiv>
   </FlexBackground>
   </>

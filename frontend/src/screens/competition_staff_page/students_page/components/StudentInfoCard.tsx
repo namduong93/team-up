@@ -75,18 +75,30 @@ export const Field: FC<FieldContainerProps> = ({ label, value, style, ...props }
 
 export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
   studentInfo?: StudentInfo;
+  studentsState: [Array<StudentInfo>, React.Dispatch<React.SetStateAction<Array<StudentInfo>>>];
 }
 
-export const StudentInfoCard: FC<StudentCardProps> = ({ style, studentInfo, ...props }) => {
+export const StudentInfoCard: FC<StudentCardProps> = (
+  {
+    style,
+    studentInfo,
+    studentsState: [students, setStudents],
+    ...props
+  }) => {
   const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
 
   const { name, sex, email, status, studentId, teamName, level, tshirtSize, siteName }
     = studentInfo ?? {};
   return (<>
-    {studentInfo && <StudentsInfoBar studentInfo={studentInfo} isOpenState={[isInfoBarOpen, setIsInfoBarOpen]} />}
+    {studentInfo &&
+    <StudentsInfoBar
+      studentInfo={studentInfo}
+      isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
+      studentsState={[students, setStudents]}
+    />}
     <StudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} style={style} {...props}>
       <Field label="Full Name" value={name} style={{ width: '20%', minWidth: '120px' }} />
-      <Field label="Sex" value={sex} style={{ width: '5%', minWidth: '37px'}} />
+      <Field label="Gender" value={sex} style={{ width: '10%', minWidth: '60px'}} />
       <Field label="Email" value={email} style={{ width: '25%', minWidth: '170px' }} />
       <Field label="Status" 
         value={
