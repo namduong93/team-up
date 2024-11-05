@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { AttendeesDetails } from "../attendees_page/AttendeesPage";
-import { StaffDetails } from "../staff_page/StaffDisplay";
+import { StaffInfo } from "../staff_page/StaffDisplay";
 // import { CompetitionDetails, CompetitionRole } from "../CompetitionPage";
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 import { CompetitionDetails } from "../CompetitionPage";
@@ -56,8 +56,8 @@ export interface CompetitionPageContext {
     React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>
   ];
   staffListState: [
-    Array<StaffDetails>,
-    React.Dispatch<React.SetStateAction<Array<StaffDetails>>>
+    Array<StaffInfo>,
+    React.Dispatch<React.SetStateAction<Array<StaffInfo>>>
   ];
   compDetails: CompetitionDetails;
 
