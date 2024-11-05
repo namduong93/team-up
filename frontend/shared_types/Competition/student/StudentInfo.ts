@@ -15,6 +15,8 @@ export interface StudentInfo {
   dietaryReqs: string;
   accessibilityReqs: string;
   studentId: string;
+
+  // competition_user info
   roles: CompetitionRole[];
   bio: string;
   ICPCEligible: boolean;
@@ -31,6 +33,8 @@ export interface StudentInfo {
   universityCourses: string[];
   pastRegional: boolean;
   status: string;
+
+  // team info
   teamName: string;
   siteName: string;
   siteId: number;

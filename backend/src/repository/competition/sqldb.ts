@@ -266,7 +266,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       const dbResult = await this.pool.query(
         `SELECT * FROM competition_coach_students(${userId}, ${compId})`
       );
-      console.log(dbResult.rows);
       return dbResult.rows;
     }
 
