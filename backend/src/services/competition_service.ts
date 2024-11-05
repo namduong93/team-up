@@ -7,6 +7,7 @@ import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
 import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
+import { SeatAssignment } from "../models/team/team.js";
 import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 
@@ -404,6 +405,16 @@ export class CompetitionService {
   
     // Notify team members
     await this.notificationRepository.notificationApproveSiteChange(compId, approveIds, rejectIds);
+  
+    return {};
+  }
+
+  competitionTeamSeatAssignments = async (userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
+    // Assign seats to teams
+    await this.competitionRepository.competitionTeamSeatAssignments(userId, compId, seatAssignments);
+
+    // Notifications to teams
+    await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);
   
     return {};
   }

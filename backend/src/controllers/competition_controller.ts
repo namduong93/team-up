@@ -245,7 +245,14 @@ export class CompetitionController {
     const { compId, approveIds, rejectIds } = req.body;
     const result = await this.competitionService.competitionApproveSiteChange(Number(userId), Number(compId), approveIds, rejectIds);
     res.json(result);
-  });  
+  });
+
+  competitionTeamSeatAssignments = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { compId, seatAssignments} = req.body;
+    const result = await this.competitionService.competitionTeamSeatAssignments(Number(userId), Number(compId), seatAssignments);
+    res.json(result);
+  });
 
   competitionStaffJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;

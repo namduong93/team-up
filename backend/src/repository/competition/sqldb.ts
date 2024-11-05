@@ -6,7 +6,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
 import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
-import { DEFAULT_TEAM_SIZE, TeamStatus } from "../../models/team/team.js";
+import { DEFAULT_TEAM_SIZE, SeatAssignment, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite.js";
@@ -1019,6 +1019,62 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
       if (rejectResult.rowCount === 0) {
         throw new DbError(DbError.Insert, "No matching teams found for the provided rejected IDs in this competition.");
+      }
+    }
+
+    return {};
+  }
+
+  competitionTeamSeatAssignments = async(userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Check if the user is an admin or a site coordinator of this competition.
+    // If the user is a site-coordinator, they can only manage seats in the sites they oversee.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      throw new DbError(DbError.Auth, "User is not a site coordinator or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      const siteIds = seatAssignments.map(assignment => assignment.siteId);
+      const siteCoordinatorCheckQuery = `
+        SELECT site_id
+        FROM competition_users
+        WHERE user_id = $1 AND competition_id = $2 AND site_id = ANY($3::int[]) AND competition_roles @> ARRAY['Site-Coordinator']::competition_role_enum[]
+      `;
+      const siteCoordinatorCheckResult = await this.pool.query(siteCoordinatorCheckQuery, [userId, compId, siteIds]);
+
+      if (siteCoordinatorCheckResult.rowCount !== siteIds.length) {
+        throw new DbError(DbError.Auth, "User is not a site coordinator for all the provided sites.");
+      }
+    }
+
+    for (const assignment of seatAssignments) {
+      const { siteId, teamSite, teamSeat, teamId } = assignment;
+
+      // Update the team_seat with teamSeat
+      const updateSeatQuery = `
+        UPDATE competition_teams
+        SET team_seat = $1
+        WHERE id = $2 AND site_attending_id = $3
+        RETURNING id
+      `;
+      const updateSeatResult = await this.pool.query(updateSeatQuery, [teamSeat, teamId, siteId]);
+
+      // If no rows were updated, it implies that no matching records with the siteId and teamId were found
+      if (updateSeatResult.rowCount === 0) {
+        throw new DbError(DbError.Query, `No team with id ${teamId} is found, or invalid team site ${teamSite} with siteId ${siteId} for this team.`);
       }
     }
 

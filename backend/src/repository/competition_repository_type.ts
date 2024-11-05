@@ -5,6 +5,7 @@ import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo, StaffInfo, AttendeesDetails } from "../services/competition_service.js";
 import './competition/sqldb'
 import { CompetitionSite } from '../../shared_types/Competition/CompetitionSite.js';
+import { SeatAssignment } from "../models/team/team.js";
 import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 
@@ -38,7 +39,9 @@ export interface CompetitionRepository {
   competitionApproveTeamNameChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;
   competitionApproveSiteChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
-  
+  competitionTeamSeatAssignments(userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}>;
+
+
   competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{} | undefined>;
   competitionUniversitiesList(compId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
