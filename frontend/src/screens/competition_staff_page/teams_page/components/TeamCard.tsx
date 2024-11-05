@@ -21,6 +21,8 @@ export enum Member {
   isRemote = 5,
 }
 
+export const DRAG_ANIMATION_DURATION = 0.2;
+
 interface TeamCardProps extends React.HTMLAttributes<HTMLDivElement> {
   teamDetails: TeamDetails;
   isEditingStatus: boolean;
@@ -398,8 +400,14 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
           <TeamMatesContainerDiv>
             {teamDetails.students.map((member, index) => (
               <TeamMemberMotionDiv
-                // layoutId={`${member.userId}`}
                 key={`${member.userId}`}
+                layoutId={`${member.userId}`}
+                layout
+                transition={{
+                  type: isDragging ? 'spring' : false,
+                  duration: DRAG_ANIMATION_DURATION
+                }}
+                // animate={{ opacity: isDragging ? 0.8 : 1 }}
                 className="team-member-cell"
                 drag
                 dragElastic={1}

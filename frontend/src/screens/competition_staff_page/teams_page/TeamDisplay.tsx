@@ -4,7 +4,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
-import { TeamCard } from "./components/TeamCard";
+import { DRAG_ANIMATION_DURATION, TeamCard } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
 
 import { LayoutGroup, motion, PanInfo } from "framer-motion";
@@ -183,13 +183,14 @@ export const TeamDisplay: FC = () => {
         enableTeamsChangedButtons: true
       }));
       
+      setTimeout(() => setIsDragging(false), DRAG_ANIMATION_DURATION * 1000);
       }
-
   }
 
   const handleClose = async () => {
+    setIsDragging(true);
     await fetchTeams(compId, setTeamList);
-    setIsDragging(false);
+    setTimeout(() => setIsDragging(false), DRAG_ANIMATION_DURATION * 1000);
     setButtonConfiguration((p) => ({
       ...p,
       enableTeamsChangedButtons: false
@@ -229,16 +230,16 @@ export const TeamDisplay: FC = () => {
         </FilterTagButton>
         ))
       )}
-      {buttonConfiguration.enableTeamsChangedButtons &&
-      <div style={{ display: 'flex', marginTop: '5px', marginBottom: '-25px', width: '100%' }}>
-      <ResponsiveActionButton
+      {
+      <div style={{ display: 'flex', marginTop: '5px', marginBottom: '-25px', width: '100%', height: buttonConfiguration.enableTeamsChangedButtons ? '35px' : '0', transition: 'height 0.25s ease' }}>
+      <ResponsiveActionButton style={{ height: '100%' }}
         icon={<FaSave />}
         label="Save"
         question="Do you want to save your changes"
         actionType="confirm"
         handleSubmit={handleSaveChanges}
       />
-      <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+      <div style={{ maxWidth: '150px', width: '100%', height: '100%' }}>
         <TransparentResponsiveButton style={{ backgroundColor: theme.colours.cancel }}
         isOpen={false}
         icon={<GiCancel />}
