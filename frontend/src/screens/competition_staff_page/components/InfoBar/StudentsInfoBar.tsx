@@ -19,7 +19,7 @@ interface StudentsInfoProps extends InfoBarProps {
   studentsState: [Array<StudentInfo>, React.Dispatch<React.SetStateAction<Array<StudentInfo>>>];
 }
 
-const CompetitionInfoContainerDiv = styled.div`
+export const CompetitionInfoContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -71,6 +71,9 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
     // ]);
 
     const currentStudentIndex = students.findIndex((stud) => stud.userId === studentInfo.userId);
+    if (currentStudentIndex < 0) {
+      return;
+    }
     setStudents([
       ...students.slice(0, currentStudentIndex),
       studentInfo,

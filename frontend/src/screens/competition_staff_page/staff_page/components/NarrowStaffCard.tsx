@@ -1,12 +1,21 @@
-import { FC } from "react"
+import { FC, useState } from "react"
 import { NarrowStatusDiv, StaffAccessLevel, StaffCardProps } from "../StaffDisplay"
 import { Field, StudentInfoContainerDiv } from "../../students_page/components/StudentInfoCard"
 import { StaffRoleDisplay, StaffRoles } from "./StaffRole"
+import { StaffInfoBar } from "../../components/InfoBar/StaffInfoBar"
 
-export const NarrowStaffCard: FC<StaffCardProps> = ({ staffDetails, ...props }) => {
+export const NarrowStaffCard: FC<StaffCardProps> = ({
+  staffDetails, staffListState: [staffList, setStaffList], ...props }) => {
 
-  return (
-    <StudentInfoContainerDiv {...props}>
+  const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
+
+  return (<>
+    <StaffInfoBar
+      isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
+      staffInfo={staffDetails}
+      staffListState={[staffList, setStaffList]}
+    />
+    <StudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen(true)} {...props}>
       <Field label="Full Name" value={staffDetails.name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Role"
         value={
@@ -33,5 +42,5 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({ staffDetails, ...props }) 
         
       </div>
     </StudentInfoContainerDiv>
-  )
+  </>)
 }
