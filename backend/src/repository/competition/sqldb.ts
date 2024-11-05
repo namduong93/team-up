@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo, StaffInfo, AttendeesDetails } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject, CompetitionTeamNameObject } from "../../models/competition/competition.js";
 
@@ -11,6 +11,9 @@ import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite.js";
 import pokemon from 'pokemon';
+import { ParticipantTeamDetails, TeamDetails } from "../../../shared_types/Competition/team/TeamDetails.js";
+import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo.js";
+
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -276,20 +279,19 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       const dbResult = await this.pool.query(
         `SELECT DISTINCT ON ("teamId")
-          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          src_site_attending_id AS "siteId", "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
         WHERE ctd.src_competition_id = ${compId};
         `
       );
-
       return dbResult.rows;
     }
 
     if (roles.includes(CompetitionUserRole.COACH)) {
       const dbResult = await this.pool.query(
         `SELECT DISTINCT ON ("teamId")
-          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          src_site_attending_id AS "siteId", "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
         WHERE ctd.coach_user_id = ${userId} AND ctd.src_competition_id = ${compId};
@@ -302,7 +304,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
       const dbResult = await this.pool.query(
         `SELECT DISTINCT ON ("teamId")
-          "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
+          src_site_attending_id AS "siteId", "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
         JOIN competition_users AS csu ON csu.site_id = ctd.src_site_attending_id

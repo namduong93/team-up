@@ -7,6 +7,8 @@ import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
 import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
+import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
+import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -39,32 +41,13 @@ export enum Member {
   boersenEligible = 4,
   isRemote = 5,
 }
-export interface TeamDetails extends ParticipantTeamDetails {
-  teamId: number;
-  universityId: number;
-  status: 'Pending' | 'Registered' | 'Unregistered';
-  teamNameApproved: boolean;
-};
+
 export interface TeamMateData {
   teamMateEmail: string;
   teamMateName: string;
   teamMateICPCEmail: string;
   teamMateDegreeYear: number;
   teamMateDegree: string;
-};
-
-export interface StudentInfo {
-  userId: number;
-  universityId: number;
-  name: string;
-  sex: string;
-  email: string;
-  studentId: string;
-  status: string;
-  level: string;
-  tshirtSize: string;
-  siteName: string;
-  teamName?: string;
 };
 
 enum StaffAccess {
@@ -79,31 +62,6 @@ export interface StaffInfo {
   universityName: string;
   access: StaffAccess;
   email: string;
-}
-export interface ParticipantTeamDetails {
-  compName: string;
-  teamName: string;
-  teamSite: string;
-  teamSeat?: string;
-  teamLevel: string;
-  startDate: Date;
-  students: Array<{
-    userId: number;
-    name: string;
-    email: string;
-    bio: string;
-    preferredContact: string;
-    siteId: number;
-    ICPCEligible: boolean;
-    level: string;
-    boersenEligible: boolean;
-    isRemote: boolean;
-  }>;
-  coach: {
-    name: string;
-    email: string;
-    bio: string;
-  }
 }
 
 export interface AttendeesDetails {

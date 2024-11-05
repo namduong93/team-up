@@ -36,7 +36,7 @@ CREATE TABLE users (
   tshirt_size TEXT NOT NULL,
 
   allergies TEXT,
-  dietary_reqs TEXT[],
+  dietary_reqs TEXT,
   accessibility_reqs TEXT,
 
   user_type user_type_enum NOT NULL,
@@ -219,36 +219,156 @@ JOIN universities AS uni ON uni.id = u.university_id;
 
 CREATE OR REPLACE FUNCTION competition_coach_students(u_id INT, c_id INT)
 RETURNS TABLE(
-  "userId" INT, "universityId" INT, name TEXT, sex TEXT, email TEXT, "studentId" TEXT,
-  status TEXT, level TEXT, "tshirtSize" TEXT, "siteName" TEXT, "teamName" TEXT)
+  "userId" INT,
+  "universityId" INT, 
+  "universityName" TEXT,
+  "name" TEXT,
+  "preferredName" TEXT,
+  "email" TEXT,
+  "sex" TEXT,
+  "pronouns" TEXT,
+  "tshirtSize" TEXT,
+  "allergies" TEXT,
+  "dietaryReqs" TEXT,
+  "accessibilityReqs" TEXT,
+  "studentId" TEXT,
+  "roles" JSONB,
+  "bio" TEXT,
+  "ICPCEligible" BOOLEAN,
+  "boersenEligible" BOOLEAN,
+  "level" JSONB,
+  "degreeYear" INT,
+  "degree" TEXT,
+  "isRemote" BOOLEAN,
+  "isOfficial" BOOLEAN,
+  "preferredContact" TEXT,
+  "nationalPrizes" TEXT,
+  "internationalPrizes" TEXT,
+  "codeforcesRating" INT,
+  "universityCourses" JSONB,
+  "pastRegional" BOOLEAN,
+  "status" TEXT,
+  "teamName" TEXT,
+  "siteName" TEXT,
+  "siteId" INT
+)
 AS $$
   SELECT
-    u.id AS "userId", u.university_id AS "universityId", u.name,
-    u.gender AS sex, u.email, u.student_id AS "studentId", 'Matched' AS status,
-    cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName",
-    (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName"
+    u.id AS "userId",
+    u.university_id AS "universityId",
+    uni.name AS "universityName",
+    u.name AS "name",
+    u.preferred_name AS "preferredName",
+    u.email AS "email",
+    u.gender AS "sex",
+    u.pronouns AS "pronouns",
+    u.tshirt_size AS "tshirtSize",
+    u.allergies AS "allergies",
+    u.dietary_reqs AS "dietaryReqs",
+    u.accessibility_reqs AS "accessibilityReqs",
+    u.student_id AS "studentId",
+    TO_JSONB(cu.competition_roles) AS "roles",
+    cu.bio AS "bio",
+    cu.icpc_eligible AS "ICPCEligible",
+    cu.boersen_eligible AS "boersenEligible",
+    TO_JSONB(cu.competition_level) AS "level",
+    cu.degree_year AS "degreeYear",
+    cu.degree AS "degree",
+    cu.is_remote AS "isRemote",
+    cu.is_official AS "isOfficial",
+    cu.preferred_contact AS "preferredContact",
+    cu.national_prizes AS "nationalPrizes",
+    cu.international_prizes AS "internationalPrizes",
+    cu.codeforces_rating AS "codeforcesRating",
+    TO_JSONB(cu.university_courses) AS "universityCourses",
+    cu.past_regional AS "pastRegional",
+    'Matched' AS "status",
+    (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName",
+    cs.name AS "siteName",
+    cs.id AS "siteId"
   FROM competition_users AS cu_coach
   JOIN users AS u_coach ON cu_coach.user_id = u_coach.id
   JOIN competition_users AS cu ON cu.competition_coach_id = cu_coach.id
   JOIN users AS u ON u.id = cu.user_id
-  JOIN competition_teams AS ct ON (ct.participants[1] = u.id OR ct.participants[2] = u.id OR ct.participants[3] = u.id)
+  JOIN universities AS uni ON uni.id = u.university_id
+  JOIN competition_teams AS ct ON u.id = ANY(ct.participants) AND ct.competition_id = cu.competition_id
   JOIN competition_sites AS cs ON cs.id = ct.site_attending_id
   WHERE cu.competition_id = c_id AND cu_coach.user_id = u_id;
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION competition_admin_students(c_id INT)
 RETURNS TABLE(
-  "userId" INT, "universityId" INT, name TEXT, sex TEXT, email TEXT, "studentId" TEXT,
-  status TEXT, level TEXT, "tshirtSize" TEXT, "siteName" TEXT, "teamName" TEXT)
+  "userId" INT,
+  "universityId" INT, 
+  "universityName" TEXT,
+  "name" TEXT,
+  "preferredName" TEXT,
+  "email" TEXT,
+  "sex" TEXT,
+  "pronouns" TEXT,
+  "tshirtSize" TEXT,
+  "allergies" TEXT,
+  "dietaryReqs" TEXT,
+  "accessibilityReqs" TEXT,
+  "studentId" TEXT,
+  "roles" JSONB,
+  "bio" TEXT,
+  "ICPCEligible" BOOLEAN,
+  "boersenEligible" BOOLEAN,
+  "level" JSONB,
+  "degreeYear" INT,
+  "degree" TEXT,
+  "isRemote" BOOLEAN,
+  "isOfficial" BOOLEAN,
+  "preferredContact" TEXT,
+  "nationalPrizes" TEXT,
+  "internationalPrizes" TEXT,
+  "codeforcesRating" INT,
+  "universityCourses" JSONB,
+  "pastRegional" BOOLEAN,
+  "status" TEXT,
+  "teamName" TEXT,
+  "siteName" TEXT,
+  "siteId" INT
+)
 AS $$
   SELECT
-    u.id AS "userId", u.university_id AS "universityId", u.name,
-    u.gender AS sex, u.email, u.student_id AS "studentId", 'Matched' AS status,
-    cu.competition_level AS level, u.tshirt_size AS "tshirtSize", cs.name AS "siteName",
-    (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName"
+    u.id AS "userId",
+    u.university_id AS "universityId",
+    uni.name AS "universityName",
+    u.name AS "name",
+    u.preferred_name AS "preferredName",
+    u.email AS "email",
+    u.gender AS "sex",
+    u.pronouns AS "pronouns",
+    u.tshirt_size AS "tshirtSize",
+    u.allergies AS "allergies",
+    u.dietary_reqs AS "dietaryReqs",
+    u.accessibility_reqs AS "accessibilityReqs",
+    u.student_id AS "studentId",
+    TO_JSONB(cu.competition_roles) AS "roles",
+    cu.bio AS "bio",
+    cu.icpc_eligible AS "ICPCEligible",
+    cu.boersen_eligible AS "boersenEligible",
+    TO_JSONB(cu.competition_level) AS "level",
+    cu.degree_year AS "degreeYear",
+    cu.degree AS "degree",
+    cu.is_remote AS "isRemote",
+    cu.is_official AS "isOfficial",
+    cu.preferred_contact AS "preferredContact",
+    cu.national_prizes AS "nationalPrizes",
+    cu.international_prizes AS "internationalPrizes",
+    cu.codeforces_rating AS "codeforcesRating",
+    TO_JSONB(cu.university_courses) AS "universityCourses",
+    cu.past_regional AS "pastRegional",
+    'Matched' AS "status",
+    (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName",
+    cs.name AS "siteName",
+    cs.id AS "siteId"
   FROM competition_users AS cu
   JOIN users AS u ON u.id = cu.user_id
-  JOIN competition_teams AS ct ON (ct.participants[1] = u.id OR ct.participants[2] = u.id OR ct.participants[3] = u.id)
+  JOIN universities AS uni ON uni.id = u.university_id
+  JOIN competition_teams AS ct ON u.id = ANY(ct.participants) AND ct.competition_id = cu.competition_id
   JOIN competition_sites AS cs ON cs.id = ct.site_attending_id
   WHERE cu.competition_id = c_id;
 $$ LANGUAGE sql;
@@ -287,7 +407,12 @@ SELECT cu_source.user_id AS src_user_id,
       'ICPCEligible', cu1.icpc_eligible,
       'level', cu1.competition_level,
       'boersenEligible', cu1.boersen_eligible,
-      'isRemote', cu1.is_remote
+      'isRemote', cu1.is_remote,
+      'universityCourses', cu1.university_courses,
+      'nationalPrizes', cu1.national_prizes,
+      'internationalPrizes', cu1.international_prizes,
+      'codeforcesRating', cu1.codeforces_rating,
+      'pastRegional', cu1.past_regional
     ),
     JSON_BUILD_OBJECT(
       'userId', u2.id,
@@ -298,7 +423,12 @@ SELECT cu_source.user_id AS src_user_id,
       'ICPCEligible', cu2.icpc_eligible,
       'level', cu2.competition_level,
       'boersenEligible', cu2.boersen_eligible,
-      'isRemote', cu2.is_remote
+      'isRemote', cu2.is_remote,
+      'universityCourses', cu2.university_courses,
+      'nationalPrizes', cu2.national_prizes,
+      'internationalPrizes', cu2.international_prizes,
+      'codeforcesRating', cu2.codeforces_rating,
+      'pastRegional', cu2.past_regional
     ),
     JSON_BUILD_OBJECT(
       'userId', u3.id,
@@ -309,7 +439,12 @@ SELECT cu_source.user_id AS src_user_id,
       'ICPCEligible', cu3.icpc_eligible,
       'level', cu3.competition_level,
       'boersenEligible', cu3.boersen_eligible,
-      'isRemote', cu3.is_remote
+      'isRemote', cu3.is_remote,
+      'universityCourses', cu3.university_courses,
+      'nationalPrizes', cu3.national_prizes,
+      'internationalPrizes', cu3.international_prizes,
+      'codeforcesRating', cu3.codeforces_rating,
+      'pastRegional', cu3.past_regional
     )
   ) AS students,
   JSON_BUILD_OBJECT(
@@ -1069,5 +1204,5 @@ INSERT INTO competition_teams (
   team_size, participants, university_id, competition_id, team_seat, site_attending_id, pending_site_attending_id
 )
 VALUES
-(4, 'Charizard', 'Unregistered'::competition_team_status, NULL, 3, ARRAY[15, 16, 17], 2, 1, 'Bongo11', 2, NULL),
-(4, 'Wimpod', 'Unregistered'::competition_team_status, 'Snorlax', 3, ARRAY[18, 19, 20], 2, 1, 'Organ20', 2, 4);
+(4, 'Charizard', 'Unregistered'::competition_team_status, NULL, 3, ARRAY[15, 16, 17], 5, 1, 'Bongo11', 2, NULL),
+(4, 'Wimpod', 'Unregistered'::competition_team_status, 'Snorlax', 3, ARRAY[18, 19, 20], 5, 1, 'Organ20', 2, 4);

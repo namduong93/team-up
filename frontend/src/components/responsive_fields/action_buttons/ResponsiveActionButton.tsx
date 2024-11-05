@@ -107,10 +107,15 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
               {children}
             </div>
             {!timeout ?
-              <ConfirmButton onClick={handleConfirm}>Confirm</ConfirmButton>
-            : <TimeoutConfirmButton bgColor={theme.colours.confirm} seconds={timeout} onClick={handleConfirm}>Confirm</TimeoutConfirmButton>
+              <ConfirmButton
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={handleConfirm}>Confirm</ConfirmButton>
+            : <TimeoutConfirmButton
+              onMouseDown={(e) => e.preventDefault()}
+              bgColor={theme.colours.confirm} seconds={timeout} onClick={handleConfirm}>Confirm</TimeoutConfirmButton>
             }
-            <CancelButton onClick={handleClosePopup}>Cancel</CancelButton>
+            <CancelButton onMouseDown={(e) => e.preventDefault()}
+              onClick={handleClosePopup}>Cancel</CancelButton>
           </PopUpContent>
         </PopUpOverlay>
       )}
