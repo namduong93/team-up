@@ -13,8 +13,6 @@ import { sendRequest } from "../../utility/request";
 import { SortOption } from "../../components/page_header/components/SortSelect";
 import { TeamPageButtons } from "./teams_page/components/TeamPageButtons";
 import { AdvancedDropdown } from "../../components/AdvancedDropdown/AdvancedDropdown";
-import { AttendeesDetails } from "./attendees_page/AttendeesPage";
-import { StaffDetails } from "./staff_page/StaffDisplay";
 import {
   SiteLocation,
   OtherSiteLocation,
@@ -25,6 +23,8 @@ import { AttendeesPageButtons } from "./attendees_page/components/AttendeesPageB
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
 import { TeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
+import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails";
+import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo";
 
 const ToggleOptionTextSpan = styled.span``;
 
@@ -103,7 +103,7 @@ export const CompetitionPage: FC = () => {
   const [attendeesList, setAttendeesList] = useState<Array<AttendeesDetails>>(
     []
   );
-  const [staffList, setStaffList] = useState<Array<StaffDetails>>([]);
+  const [staffList, setStaffList] = useState<Array<StaffInfo>>([]);
   const [compDetails, setCompDetails] = useState<CompetitionDetails>({
     id: 0,
     name: "",
@@ -157,7 +157,7 @@ export const CompetitionPage: FC = () => {
 
     const fetchStaffList = async () => {
       const staffResponse = await sendRequest.get<{
-        staff: Array<StaffDetails>;
+        staff: Array<StaffInfo>;
       }>("/competition/staff", { compId });
       const { staff } = staffResponse.data;
       setStaffList(staff);

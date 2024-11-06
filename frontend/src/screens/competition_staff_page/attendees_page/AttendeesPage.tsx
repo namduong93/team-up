@@ -5,32 +5,16 @@ import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { NarrowDisplayDiv, UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideDisplayDiv, WideInfoContainerDiv } from "../students_page/StudentDisplay";
 import Fuse from "fuse.js";
-import { sendRequest } from "../../../utility/request";
 import { Field, StudentInfoContainerDiv } from "../students_page/components/StudentInfoCard";
 import { NarrowStatusDiv } from "../staff_page/StaffDisplay";
 import styled, { useTheme } from "styled-components";
-import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 import { StandardSpan } from "../staff_page/components/WideStaffCard";
-import { StaffRoleDisplay, StaffRoles, StandardContainerDiv } from "../staff_page/components/StaffRole";
-
-export interface AttendeesDetails {
-  userId: number;
-  universityId: number;
-  siteId: number;
-  pendingSiteId: number;
-  email: string;
-  
-  name: string;
-  sex: string;
-  roles: Array<CompetitionRole>;
-  universityName: string;
-  shirtSize: string;
-  dietaryNeeds: string | null;
-  allergies: string | null;
-  accessibilityNeeds: string | null;
-}
+import { StaffRoles, StandardContainerDiv } from "../staff_page/components/StaffRole";
+import { AttendeesDetails } from "../../../../shared_types/Competition/staff/AttendeesDetails";
+import { AttendeesInfoBar } from "../components/InfoBar/AttendeesInfoBar";
 
 interface AttendeesCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
   attendeesDetails: AttendeesDetails;
 }
 
@@ -53,10 +37,21 @@ export const BooleanStatus = styled.div<{ $toggled: boolean }>`
   }
 `;
 
-export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ...props }) => {
+export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
+  attendeesDetails,
+  attendeesListState: [attendeesList, setAttendeesList],
+  ...props
+}) => {
 
-  return (
-    <StudentInfoContainerDiv {...props}>
+  const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
+
+  return (<>
+    <AttendeesInfoBar
+      attendeesDetails={attendeesDetails}
+      attendeesState={[attendeesList, setAttendeesList]}
+      isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
+    />
+    <StudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} {...props}>
       <Field label="Full Name" value={attendeesDetails.name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Gender" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
       <Field label="Role" 
@@ -69,7 +64,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
       />
       <Field label="University" value={attendeesDetails.universityName} style={{ width: '20%', minWidth: '170px', whiteSpace: 'break-spaces' }} />
       {/* <Field label="Email" value={attendeesDetails.email} style={{ width: '25%', minWidth: '170px' }} /> */}
-      <Field label="Shirt Size" value={attendeesDetails.shirtSize} style={{ width: '20%', minWidth: '170px' }} />
+      <Field label="Shirt Size" value={attendeesDetails.tshirtSize} style={{ width: '20%', minWidth: '170px' }} />
       <Field label="Dietary Needs" style={{ width: '10%', minWidth: '90px' }}
         value={
           <NarrowStatusDiv>
@@ -104,7 +99,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
         
       </div>
     </StudentInfoContainerDiv>
-  )
+  </>)
 }
 
 export const WideAttendeesHeader: FC = () => {
@@ -152,9 +147,21 @@ export const WideAttendeesHeader: FC = () => {
   )
 }
 
-export const WideAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ...props }) => {
-  return (
-    <WideInfoContainerDiv {...props}>
+export const WideAttendeesCard: FC<AttendeesCardProps> = ({
+  attendeesDetails,
+  attendeesListState: [attendeesList, setAttendeesList],
+  ...props
+}) => {
+
+  const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
+
+  return (<>
+    <AttendeesInfoBar
+      attendeesState={[attendeesList, setAttendeesList]}
+      attendeesDetails={attendeesDetails}
+      isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
+    />
+    <WideInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} {...props}>
 
       <UserNameContainerDiv>
         <UserNameGrid>
@@ -176,7 +183,7 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ..
       </StandardContainerDiv>
 
       <StandardContainerDiv>
-        <StandardSpan>{attendeesDetails.shirtSize}</StandardSpan>
+        <StandardSpan>{attendeesDetails.tshirtSize}</StandardSpan>
       </StandardContainerDiv>
 
       <StandardContainerDiv>
@@ -198,7 +205,7 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ..
       </StandardContainerDiv>
 
     </WideInfoContainerDiv>
-  )
+  </>)
 }
 
 const ATTENDEES_DISPLAY_SORT_OPTIONS = [
@@ -217,17 +224,11 @@ export const AttendeesDisplay: FC = () => {
     attendeesListState: [attendeesList, setAttendeesList],
   } = useCompetitionOutletContext('attendees');
 
-  
-
-
   useEffect(() => {
 
     setSortOptions(ATTENDEES_DISPLAY_SORT_OPTIONS);
     setFilterOptions(ATTENDEES_DISPLAY_FILTER_OPTIONS);
     
-
-    
-
   }, []);
 
   const filteredAttendees = attendeesList.filter((attendeesDetails) => {
@@ -276,7 +277,11 @@ export const AttendeesDisplay: FC = () => {
       <NarrowDisplayDiv>
         {searchedAttendees.map(({ item: attendeesDetails }, index) => {
           return (
-            <NarrowAttendeesCard key={`${attendeesDetails.email}${index}`} attendeesDetails={attendeesDetails} />
+            <NarrowAttendeesCard
+              attendeesListState={[attendeesList, setAttendeesList]}
+              key={`${attendeesDetails.email}${index}`}
+              attendeesDetails={attendeesDetails}
+            />
           );
         })}
       </NarrowDisplayDiv>
@@ -285,7 +290,11 @@ export const AttendeesDisplay: FC = () => {
         <WideAttendeesHeader />
         {searchedAttendees.map(({ item: attendeesDetails }, index) => {
           return (
-            <WideAttendeesCard key={`${attendeesDetails.email}${index}`} attendeesDetails={attendeesDetails} />
+            <WideAttendeesCard
+              attendeesListState={[attendeesList, setAttendeesList]}
+              key={`${attendeesDetails.email}${index}`}
+              attendeesDetails={attendeesDetails}
+            />
           );
         })}
 

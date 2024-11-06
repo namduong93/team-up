@@ -11,6 +11,7 @@ import { TeamInfoBar } from "../../components/InfoBar/TeamInfoBar";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
 import { ButtonConfiguration } from "../../hooks/useCompetitionOutletContext";
 import { TeamDetails, Student } from "../../../../../shared_types/Competition/team/TeamDetails";
+import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 
 export enum Member {
   name = 0,
@@ -37,6 +38,7 @@ interface TeamCardProps extends React.HTMLAttributes<HTMLDivElement> {
     Array<{ value: string, label: string }>,
     React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>
   ];
+  roles: Array<CompetitionRole>;
 };
 
 const TeamMemberContainerDiv = styled.div`
@@ -318,7 +320,7 @@ const TeamNameApprovalDiv = styled.div`
   flex-direction: column;
 `;
 
-const TeamMemberMotionDiv = styled(motion.div)`
+const TeamMemberMotionDiv = styled(motion.div)<{ $isDraggable: boolean }>`
   border-radius: 10px;
   border: 1px solid rgb(200, 200, 200);
   width: 85.37%;
@@ -327,7 +329,7 @@ const TeamMemberMotionDiv = styled(motion.div)`
   /* height: 20.79%; */
 
   &:hover {
-    cursor: grabbing;
+    ${({ $isDraggable }) => $isDraggable && `cursor: grabbing`};
   }
 `;
 
@@ -339,6 +341,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
   isEditingNameStatus = false, isDraggingState: [isDragging, setIsDragging],
   handleDragDropCard = () => {}, 
   siteOptionsState: [siteOptions, setSiteOptions],
+  roles,
   ...props
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -371,7 +374,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
 
   const [infoBarOpen, setInfoBarOpen] = useState(false);
 
-
+  const isEditable = !(roles.includes(CompetitionRole.SiteCoordinator) && !roles.includes(CompetitionRole.Coach) && !roles.includes(CompetitionRole.Admin));
   return (
     <>
     <TeamInfoBar
@@ -380,6 +383,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
       isOpenState={[infoBarOpen, setInfoBarOpen]}
       teamDetails={teamDetails}
       siteOptionsState={[siteOptions, setSiteOptions]}
+      isEditable={isEditable}
     />
     <StyledHoverDiv
       className="team-card-cell"
@@ -388,7 +392,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
       $isEditingNameStatus={isEditNameThisCard}
       $numMembers={teamDetails.students.length}
       onDoubleClick={() => setInfoBarOpen((p) => !p)}
-      {...props}
+      {...props} 
     >
       {!isEditNameThisCard &&
       <>
@@ -409,7 +413,10 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
                 }}
                 // animate={{ opacity: isDragging ? 0.8 : 1 }}
                 className="team-member-cell"
-                drag
+                drag={isEditable}
+                $isDraggable={isEditable}
+
+
                 dragElastic={1}
                 dragConstraints={{left: 0, top: 0, right: 0, bottom: 0}}
                 onDragStart={() => setIsDragging(true)}
