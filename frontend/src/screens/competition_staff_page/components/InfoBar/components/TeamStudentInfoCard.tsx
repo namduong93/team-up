@@ -22,6 +22,7 @@ interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   popupOpenState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
   buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
+  isEditable: boolean;
 }
 
 const MemberFieldDiv = styled.div`
@@ -70,6 +71,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
   buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
   teamListState: [teamList, setTeamList],
   popupOpenState: [isPopupOpen, setPopupOpen],
+  isEditable
 }) => {
   const theme = useTheme();
   
@@ -129,13 +131,13 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
   return (
     <MemberListItem key={student.userId}>
 
-      <EditIconButton
+      {isEditable && <EditIconButton
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => { setIsEditingCard((p) => !p) }}
         style={{ position: 'absolute', right: 0, top: 0 }}
         >
         <EditIcon />
-      </EditIconButton>
+      </EditIconButton>}
 
         <MemberFieldDiv>
           <LabelSpan>User Id:</LabelSpan>
@@ -249,7 +251,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
 
 
       <div style={{ display: 'flex' }}>
-      {!isEditingCard && <ResponsiveActionButton style={{ height: '30px' }}
+      {!isEditingCard && isEditable && <ResponsiveActionButton style={{ height: '30px' }}
         onMouseDown={(e) => e.preventDefault()}
         handleClick={() => setPopupOpen(true)}
         handleClose={() => setPopupOpen(false)}

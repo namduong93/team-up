@@ -20,6 +20,7 @@ interface TeamInfoBarProps extends InfoBarProps {
     Array<{ value: string, label: string }>,
     React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>
   ];
+  isEditable: boolean;
 }
 
 export const InfoBarField = styled.div`
@@ -32,7 +33,7 @@ export const InfoBarField = styled.div`
 
 export const LabelSpan = styled.span`
   font-weight: bold;
-  max-width: 180px;
+  /* max-width: 180px; */
 `;
 
 export const TitleDiv = styled.div<{ $isOpen: boolean }>`
@@ -98,6 +99,7 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   teamListState: [teamList, setTeamList],
   buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
   siteOptionsState: [siteOptions, setSiteOptions],
+  isEditable,
   children, ...props }) => {
   const theme = useTheme();
 
@@ -147,13 +149,13 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
         <span>{teamDetails.teamId}</span>
       </InfoBarField>
 
-      <EditIconButton
+      {isEditable && <EditIconButton
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => { setIsEditing((p) => !p) }}
         style={{ position: 'absolute', right: 0, top: 0 }}
       >
         <EditIcon />
-      </EditIconButton>
+      </EditIconButton>}
 
       {isEditing ?
       <EditableInput
@@ -236,6 +238,7 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
               buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
               teamListState={[teamList, setTeamList]}
               popupOpenState={[isPopupOpen, setPopupOpen]}
+              isEditable={isEditable}
               />
             )
           })}

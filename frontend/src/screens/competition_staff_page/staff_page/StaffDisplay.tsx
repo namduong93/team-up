@@ -12,24 +12,11 @@ import { CompetitionRole } from "../../../../shared_types/Competition/Competitio
 import { NarrowDisplayDiv, WideDisplayDiv } from "../students_page/StudentDisplay";
 import { WideStaffCard, WideStaffHeader } from "./components/WideStaffCard";
 import { NarrowStaffCard } from "./components/NarrowStaffCard";
-
-enum StaffAccess {
-  Accepted = 'Accepted',
-  Pending = 'Pending',
-  Rejected = 'Rejected',
-}
-
-export interface StaffDetails {
-  userId: number;
-  name: string;
-  roles: Array<CompetitionRole>;
-  universityName: string;
-  access: StaffAccess;
-  email: string;
-}
+import { StaffAccess, StaffInfo } from "../../../../shared_types/Competition/staff/StaffInfo";
 
 export interface StaffCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  staffDetails: StaffDetails;
+  staffDetails: StaffInfo;
+  staffListState: [Array<StaffInfo>, React.Dispatch<React.SetStateAction<Array<StaffInfo>>>];
 }
 
 export const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
@@ -66,8 +53,6 @@ export const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
   )};
 `;
 
-
-
 export const NarrowStatusDiv = styled.div`
   width: 100%;
   height: 100%;
@@ -93,8 +78,6 @@ export const StaffDisplay: FC = () => {
     setFilterOptions, setSortOptions,
     staffListState: [staffList, setStaffList],
   } = useCompetitionOutletContext('staff');
-
-  
 
 
   useEffect(() => {
@@ -168,7 +151,7 @@ export const StaffDisplay: FC = () => {
       <NarrowDisplayDiv>
         {searchedStaff.map(({ item: staffDetails }, index) => {
           return (
-            <NarrowStaffCard key={`${staffDetails.email}${index}`} staffDetails={staffDetails} />
+            <NarrowStaffCard key={`${staffDetails.email}${index}`} staffDetails={staffDetails} staffListState={[staffList, setStaffList]} />
           );
         })}
       </NarrowDisplayDiv>
@@ -177,7 +160,7 @@ export const StaffDisplay: FC = () => {
         <WideStaffHeader />
         {searchedStaff.map(({ item: staffDetails }, index) => {
           return (
-            <WideStaffCard key={`${staffDetails.email}${index}`} staffDetails={staffDetails} />
+            <WideStaffCard key={`${staffDetails.email}${index}`} staffDetails={staffDetails} staffListState={[staffList, setStaffList]} />
           );
         })}
 
