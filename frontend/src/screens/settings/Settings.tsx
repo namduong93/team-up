@@ -89,7 +89,7 @@ const DropdownHeader = styled.div<{ $isOpen: boolean }>`
 const DropdownContent = styled.div<{ $isOpen: boolean }>`
   max-height: ${({ $isOpen }) => ($isOpen ? "100%" : "0")};
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.3s ease !important;
   margin: 10px 15px;
 `;
 

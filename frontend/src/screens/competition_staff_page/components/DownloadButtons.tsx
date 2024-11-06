@@ -1,0 +1,84 @@
+import React, { FC } from "react";
+import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
+import { ResponsiveActionButton } from "../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { GiCancel } from "react-icons/gi";
+import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
+import { FaDownload } from "react-icons/fa";
+import { useTheme } from "styled-components";
+
+interface DownloadButtonProps {
+  isEditingStatus?: boolean;
+  isEditingNameStatus?: boolean;
+  isDownloadingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  handleEnable?: VoidFunction;
+  handleDisable?: VoidFunction;
+  downloadCSV: () => Promise<boolean>;
+  downloadPDF: () => Promise<boolean>;
+}
+
+export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = false, isEditingNameStatus = false,
+  isDownloadingState: [isDownloading, setIsDownloading],
+  handleEnable = () => {},
+  handleDisable = () => {},
+  downloadCSV = async () => true,
+  downloadPDF = async () => true,
+}) => {
+  const theme = useTheme();
+
+  const enableDownloading = () => {
+    setIsDownloading(true);
+    handleEnable();
+  }
+
+  const disableDownloading = () => {
+    setIsDownloading(false);
+    handleDisable();
+  }
+
+  return (
+    <>
+      {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
+        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+          <TransparentResponsiveButton actionType="primary"
+            label="Download"
+            icon={<FaDownload />}
+            style={{ backgroundColor: theme.colours.primaryLight }}
+            onClick={enableDownloading} isOpen={false}
+          />
+
+        </div>
+      }
+      {isDownloading &&
+      <>
+        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+          <TransparentResponsiveButton actionType="error"
+            onClick={disableDownloading} label="Cancel" isOpen={false}
+            icon={<GiCancel />}
+            style={{
+              backgroundColor: theme.colours.cancel,
+          }} />
+        </div>
+        
+        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+          <ResponsiveActionButton actionType="secondary"
+            label="Download CSV"
+            question="Are you sure you would like to register these teams?"
+            icon={<GrDocumentCsv />}
+            handleSubmit={downloadCSV}
+          />
+        </div>
+
+        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+          <ResponsiveActionButton actionType="primary"
+            label="Download PDF"
+            question="Are you sure you would like to register these teams?"
+            icon={<GrDocumentPdf />}
+            handleSubmit={downloadPDF}
+          />
+        </div>
+      </>
+      }
+    </>
+    
+  )
+}

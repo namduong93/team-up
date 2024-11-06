@@ -1,14 +1,24 @@
 import { FC, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { ThemeConsumer, useTheme } from "styled-components";
 import { useLocation, useParams } from "react-router-dom";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
-import { TeamCard, TeamDetails } from "./components/TeamCard";
+import { DRAG_ANIMATION_DURATION, TeamCard } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/ThirdStepPopUp";
-import { CompetitionRole } from "../CompetitionPage";
 
-const TeamCardGridDisplay = styled.div`
+import { LayoutGroup, motion, PanInfo } from "framer-motion";
+import { ResponsiveActionButton } from "../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { FaSave } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
+import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
+import { fetchTeams } from "../CompetitionPage";
+import { addStudentToTeam } from "./utility/addStudentToTeam";
+import { Student, TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
+ 
+export type DragEndEvent = MouseEvent | TouchEvent | PointerEvent;
+
+const TeamCardGridDisplay = styled(motion.div)`
   flex: 1;
   background-color: ${({ theme }) => theme.background};
   display: grid;
@@ -49,6 +59,7 @@ const Heading = styled.h2`
 
 export const TeamDisplay: FC = () => {
   const { compId } = useParams();
+  const theme = useTheme();
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
           editingStatusState: [isEditingStatus, setIsEditingStatus],
           teamIdsState: [approveTeamIds, setApproveTeamIds],
@@ -57,12 +68,13 @@ export const TeamDisplay: FC = () => {
           teamListState: [teamList, setTeamList],
           universityOption, roles,
           editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
-          setFilterOptions, setSortOptions, setEnableTeamButtons } = useCompetitionOutletContext('teams');
+          buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
+          siteOptionsState: [siteOptions, setSiteOptions],
+          setFilterOptions, setSortOptions } = useCompetitionOutletContext('teams');
 
-  useEffect(() => {
+          useEffect(() => {
     setFilterOptions(TEAM_DISPLAY_FILTER_OPTIONS);
     setSortOptions(TEAM_DISPLAY_SORT_OPTIONS);
-    setEnableTeamButtons(!roles.includes(CompetitionRole.SiteCoordinator) && true);
   }, []);
   
   const filteredTeamList = teamList.filter((team: TeamDetails) => {
@@ -115,14 +127,6 @@ export const TeamDisplay: FC = () => {
     searchedCompetitions = sortedTeamList.map((team) => { return { item: team } });
   }
 
-  // handler based on teamList (all the teams) for moving members around (DOUBLE CLICK)
-  // oldTeam.members = []
-  // newTeam.memebrs = []
-
-  // fitler team list remove those 2 teams, add them, setTeamList
-
-  // and setTeamList
-
   const location = useLocation();
   const [isCreationSuccessPopUpOpen, setIsCreationSuccessPopUpOpen] = useState(false);
 
@@ -137,6 +141,61 @@ export const TeamDisplay: FC = () => {
       setIsCreationSuccessPopUpOpen(true);
     }
   }, [location.state]);
+
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleDragDropCard = (event: DragEndEvent, info: PanInfo, student: Student, currentTeamId: number) => {
+    const mouseX = info.point.x;
+    const mouseY = info.point.y;
+
+    const elem = (event.target as HTMLElement);
+    const draggedElem = elem.closest('.team-member-cell') as HTMLElement;
+    if (!draggedElem) {
+      return;
+    }
+    draggedElem.style.pointerEvents = 'none';
+
+    const hoveredElement = document.elementFromPoint(mouseX, mouseY);
+    const cell = hoveredElement?.closest('.team-card-cell');
+    draggedElem.style.pointerEvents = 'auto';
+    if (!cell) {
+      return;
+    }
+    const postSearchIndex = cell.getAttribute('data-index');
+    if (postSearchIndex) {
+      const newTeamIndex = teamList.findIndex((team) => team.teamId === searchedCompetitions[parseInt(postSearchIndex)].item.teamId);
+      const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
+
+      if (!addStudentToTeam(student, currentTeamIndex, newTeamIndex, [teamList, setTeamList])) {
+        return;
+      }
+
+      setButtonConfiguration((p) => ({
+        ...p,
+        enableTeamsChangedButtons: true
+      }));
+      
+      setTimeout(() => setIsDragging(false), DRAG_ANIMATION_DURATION * 1000);
+      }
+  }
+
+  const handleClose = async () => {
+    setIsDragging(true);
+    await fetchTeams(compId, setTeamList);
+    setTimeout(() => setIsDragging(false), DRAG_ANIMATION_DURATION * 1000);
+    setButtonConfiguration((p) => ({
+      ...p,
+      enableTeamsChangedButtons: false
+    }));
+  }
+
+  const handleSaveChanges = async () => {
+    // send backend request here
+
+    await handleClose();
+    return true;
+  }
+
 
   return (
     <>
@@ -163,19 +222,47 @@ export const TeamDisplay: FC = () => {
         </FilterTagButton>
         ))
       )}
+      {
+      <div style={{ display: 'flex', marginTop: '5px', marginBottom: '-25px', width: '100%', height: buttonConfiguration.enableTeamsChangedButtons ? '35px' : '0', transition: 'height 0.25s ease' }}>
+      <ResponsiveActionButton style={{ height: '100%' }}
+        icon={<FaSave />}
+        label="Save"
+        question="Do you want to save your changes"
+        actionType="confirm"
+        handleSubmit={handleSaveChanges}
+      />
+      <div style={{ maxWidth: '150px', width: '100%', height: '100%' }}>
+        <TransparentResponsiveButton style={{ backgroundColor: theme.colours.cancel }}
+        isOpen={false}
+        icon={<GiCancel />}
+        label="Cancel"
+        actionType="error"
+        onClick={handleClose}
+        />
+      </div>
+      </div>
+      }
     </div>
-    <TeamCardGridDisplay>
-      {searchedCompetitions.map(({item: teamDetails}, index) => {
-        return (
-        <TeamCard
-        // handler to take in memberId and newTeamID (updates list of teams)
-          teamIdsState={[approveTeamIds, setApproveTeamIds]}
-          rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
-          isEditingStatus={isEditingStatus}
-          isEditingNameStatus={isEditingNameStatus}
-          key={`${teamDetails.teamName}${teamDetails.status}${index}`} teamDetails={teamDetails} />)
-      })}
-    </TeamCardGridDisplay>
+      <TeamCardGridDisplay>
+        {searchedCompetitions.map(({item: teamDetails}, index) => {
+          return (
+          <TeamCard
+          // handler to take in memberId and newTeamID (updates list of teams)
+            data-index={index}
+            roles={roles}
+            siteOptionsState={[siteOptions, setSiteOptions]}
+            handleDragDropCard={handleDragDropCard} 
+            isDraggingState={[isDragging, setIsDragging]}
+            teamIdsState={[approveTeamIds, setApproveTeamIds]}
+            rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
+            isEditingStatus={isEditingStatus}
+            isEditingNameStatus={isEditingNameStatus}
+            teamListState={[teamList, setTeamList]}
+            buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
+            key={`${teamDetails.teamName}${teamDetails.status}${index}`}
+            teamDetails={teamDetails} />)
+        })}
+      </TeamCardGridDisplay>
     </>
   )
 }

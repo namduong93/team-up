@@ -5,44 +5,20 @@ import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { NarrowDisplayDiv, UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideDisplayDiv, WideInfoContainerDiv } from "../students_page/StudentDisplay";
 import Fuse from "fuse.js";
-import { sendRequest } from "../../../utility/request";
-import { CompetitionRole } from "../CompetitionPage";
 import { Field, StudentInfoContainerDiv } from "../students_page/components/StudentInfoCard";
-import { NarrowStatusDiv, StaffStatus, StandardContainerDiv, StandardSpan } from "../staff_page/StaffDisplay";
+import { NarrowStatusDiv } from "../staff_page/StaffDisplay";
 import styled, { useTheme } from "styled-components";
-
-export interface AttendeesDetails {
-  userId: number;
-  universityId: number;
-  siteId: number;
-  pendingSiteId: number;
-  email: string;
-  
-  name: string;
-  sex: string;
-  roles: Array<CompetitionRole>;
-  universityName: string;
-  shirtSize: string;
-  dietaryNeeds: string | null;
-  allergies: string | null;
-  accessibilityNeeds: string | null;
-}
+import { StandardSpan } from "../staff_page/components/WideStaffCard";
+import { StaffRoles, StandardContainerDiv } from "../staff_page/components/StaffRole";
+import { AttendeesDetails } from "../../../../shared_types/Competition/staff/AttendeesDetails";
+import { AttendeesInfoBar } from "../components/InfoBar/AttendeesInfoBar";
 
 interface AttendeesCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
   attendeesDetails: AttendeesDetails;
 }
 
-
-const AttendeesStatus = styled(StaffStatus)<{ $role: CompetitionRole }>`
-  ${({ $role, theme }) => 
-  $role === CompetitionRole.Participant &&
-    `background-color: ${theme.roles.participantBackground};
-    color: ${theme.roles.participantText};
-    border: 1px solid ${theme.roles.participantText};
-    `}
-`;
-
-const BooleanStatus = styled.div<{ $toggled: boolean }>`
+export const BooleanStatus = styled.div<{ $toggled: boolean }>`
   width: 80%;
   height: 50%;
   max-width: 130px;
@@ -55,32 +31,45 @@ const BooleanStatus = styled.div<{ $toggled: boolean }>`
   background-color: ${({ theme, $toggled }) => $toggled ? theme.access.acceptedBackground : theme.access.rejectedBackground};
   color: ${({ theme, $toggled }) => $toggled ? theme.access.acceptedText : theme.access.rejectedText};
   border: 1px solid ${({ theme, $toggled }) => $toggled ? theme.access.acceptedText : theme.access.rejectedText};
+
+  &::after {
+    Content: ${({ $toggled }) => $toggled ? "'Yes'" : "'No'"};
+  }
 `;
 
-export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ...props }) => {
+export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
+  attendeesDetails,
+  attendeesListState: [attendeesList, setAttendeesList],
+  ...props
+}) => {
 
-  return (
-    <StudentInfoContainerDiv {...props}>
+  const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
+
+  return (<>
+    <AttendeesInfoBar
+      attendeesDetails={attendeesDetails}
+      attendeesState={[attendeesList, setAttendeesList]}
+      isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
+    />
+    <StudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} {...props}>
       <Field label="Full Name" value={attendeesDetails.name} style={{ width: '20%', minWidth: '120px' }} />
-      <Field label="Sex" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
+      <Field label="Gender" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
       <Field label="Role" 
         value={
           <NarrowStatusDiv>
-            <AttendeesStatus $role={attendeesDetails.roles[0]}>
-              {attendeesDetails.roles[0] === CompetitionRole.SiteCoordinator ? 'Site Coordinator' : attendeesDetails.roles[0]}
-            </AttendeesStatus>
+            <StaffRoles roles={attendeesDetails.roles} />
           </NarrowStatusDiv>
         }
         style={{ width: '20%', minWidth: '125px' }}
       />
       <Field label="University" value={attendeesDetails.universityName} style={{ width: '20%', minWidth: '170px', whiteSpace: 'break-spaces' }} />
       {/* <Field label="Email" value={attendeesDetails.email} style={{ width: '25%', minWidth: '170px' }} /> */}
-      <Field label="Shirt Size" value={attendeesDetails.shirtSize} style={{ width: '20%', minWidth: '170px' }} />
+      <Field label="Shirt Size" value={attendeesDetails.tshirtSize} style={{ width: '20%', minWidth: '170px' }} />
       <Field label="Dietary Needs" style={{ width: '10%', minWidth: '90px' }}
         value={
           <NarrowStatusDiv>
             <BooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
-              {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'}
+              {/* {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'} */}
             </BooleanStatus>
           </NarrowStatusDiv>
         }
@@ -90,7 +79,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
         value={
           <NarrowStatusDiv>
             <BooleanStatus $toggled={!!attendeesDetails.allergies}>
-              {!!attendeesDetails.allergies ? 'Yes' : 'No'}
+              {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
             </BooleanStatus>
           </NarrowStatusDiv>
         }
@@ -100,7 +89,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
         value={
           <NarrowStatusDiv>
             <BooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
-              {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'}
+              {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
             </BooleanStatus>
           </NarrowStatusDiv>
         }
@@ -110,7 +99,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
         
       </div>
     </StudentInfoContainerDiv>
-  )
+  </>)
 }
 
 export const WideAttendeesHeader: FC = () => {
@@ -127,7 +116,7 @@ export const WideAttendeesHeader: FC = () => {
       </UserNameContainerDiv>
 
       <StandardContainerDiv>
-        <StandardSpan>Sex</StandardSpan>
+        <StandardSpan>Gender</StandardSpan>
       </StandardContainerDiv>
       
       <StandardContainerDiv>
@@ -158,9 +147,21 @@ export const WideAttendeesHeader: FC = () => {
   )
 }
 
-export const WideAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ...props }) => {
-  return (
-    <WideInfoContainerDiv {...props}>
+export const WideAttendeesCard: FC<AttendeesCardProps> = ({
+  attendeesDetails,
+  attendeesListState: [attendeesList, setAttendeesList],
+  ...props
+}) => {
+
+  const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
+
+  return (<>
+    <AttendeesInfoBar
+      attendeesState={[attendeesList, setAttendeesList]}
+      attendeesDetails={attendeesDetails}
+      isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
+    />
+    <WideInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} {...props}>
 
       <UserNameContainerDiv>
         <UserNameGrid>
@@ -175,38 +176,36 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ..
         <StandardSpan>{attendeesDetails.sex}</StandardSpan>
       </StandardContainerDiv>
 
-      <StandardContainerDiv>
-        <AttendeesStatus $role={attendeesDetails.roles[0]} >{attendeesDetails.roles[0]}</AttendeesStatus>
-      </StandardContainerDiv>
+      <StaffRoles roles={attendeesDetails.roles} />
 
       <StandardContainerDiv>
         <StandardSpan>{attendeesDetails.universityName}</StandardSpan>
       </StandardContainerDiv>
 
       <StandardContainerDiv>
-        <StandardSpan>{attendeesDetails.shirtSize}</StandardSpan>
+        <StandardSpan>{attendeesDetails.tshirtSize}</StandardSpan>
       </StandardContainerDiv>
 
       <StandardContainerDiv>
         <BooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
-          {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'}
+          {/* {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'} */}
         </BooleanStatus>
       </StandardContainerDiv>
 
       <StandardContainerDiv>
         <BooleanStatus $toggled={!!attendeesDetails.allergies}>
-          {!!attendeesDetails.allergies ? 'Yes' : 'No'}
+          {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
         </BooleanStatus>
       </StandardContainerDiv>
 
       <StandardContainerDiv>
         <BooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
-            {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'}
+            {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
         </BooleanStatus>
       </StandardContainerDiv>
 
     </WideInfoContainerDiv>
-  )
+  </>)
 }
 
 const ATTENDEES_DISPLAY_SORT_OPTIONS = [
@@ -225,17 +224,11 @@ export const AttendeesDisplay: FC = () => {
     attendeesListState: [attendeesList, setAttendeesList],
   } = useCompetitionOutletContext('attendees');
 
-  
-
-
   useEffect(() => {
 
     setSortOptions(ATTENDEES_DISPLAY_SORT_OPTIONS);
     setFilterOptions(ATTENDEES_DISPLAY_FILTER_OPTIONS);
     
-
-    
-
   }, []);
 
   const filteredAttendees = attendeesList.filter((attendeesDetails) => {
@@ -284,7 +277,11 @@ export const AttendeesDisplay: FC = () => {
       <NarrowDisplayDiv>
         {searchedAttendees.map(({ item: attendeesDetails }, index) => {
           return (
-            <NarrowAttendeesCard key={`${attendeesDetails.email}${index}`} attendeesDetails={attendeesDetails} />
+            <NarrowAttendeesCard
+              attendeesListState={[attendeesList, setAttendeesList]}
+              key={`${attendeesDetails.email}${index}`}
+              attendeesDetails={attendeesDetails}
+            />
           );
         })}
       </NarrowDisplayDiv>
@@ -293,7 +290,11 @@ export const AttendeesDisplay: FC = () => {
         <WideAttendeesHeader />
         {searchedAttendees.map(({ item: attendeesDetails }, index) => {
           return (
-            <WideAttendeesCard key={`${attendeesDetails.email}${index}`} attendeesDetails={attendeesDetails} />
+            <WideAttendeesCard
+              attendeesListState={[attendeesList, setAttendeesList]}
+              key={`${attendeesDetails.email}${index}`}
+              attendeesDetails={attendeesDetails}
+            />
           );
         })}
 

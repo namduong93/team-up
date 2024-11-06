@@ -867,7 +867,16 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
       }
     }
     // TODO: route to update team seats based on seat assignments
+    // UPDATE: route is available. However, might need to consult the interface seatAssignment and how to get team details initially
     console.log("Assigned Seats:", seatAssignments);
+
+    // try {
+    //   // Send a request to the backend to update team seats.
+    //   const seatAssignmentsResponse = await sendRequest.put<s{}>('/competition/staff/seat_assignments', { compId, seatAssignments });
+    // } catch (error) {
+    //   console.error("Error withdrawing from the team:", error);
+    // }
+
     console.log("Seats assigned!");
     setTeamSeatAssignments(seatAssignments);
     setSeatModalState(true);

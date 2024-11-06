@@ -2,11 +2,15 @@ import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_CODE_EXISTED, COMP
 import { ServiceError, ServiceErrorType } from "../errors/service_error.js";
 import { DbError } from "../errors/db_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
-import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
+import { CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
 import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
+import { SeatAssignment } from "../models/team/team.js";
+import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
+import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
+import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -39,12 +43,7 @@ export enum Member {
   boersenEligible = 4,
   isRemote = 5,
 }
-export interface TeamDetails extends ParticipantTeamDetails {
-  teamId: number;
-  universityId: number;
-  status: 'Pending' | 'Registered' | 'Unregistered';
-  teamNameApproved: boolean;
-};
+
 export interface TeamMateData {
   teamMateEmail: string;
   teamMateName: string;
@@ -52,76 +51,6 @@ export interface TeamMateData {
   teamMateDegreeYear: number;
   teamMateDegree: string;
 };
-
-export interface StudentInfo {
-  userId: number;
-  universityId: number;
-  name: string;
-  sex: string;
-  email: string;
-  studentId: string;
-  status: string;
-  level: string;
-  tshirtSize: string;
-  siteName: string;
-  teamName?: string;
-};
-
-enum StaffAccess {
-  Accepted = 'Accepted',
-  Pending = 'Pending',
-  Rejected = 'Rejected',
-}
-export interface StaffInfo {
-  userId: number;
-  name: string;
-  roles: CompetitionRole[];
-  universityName: string;
-  access: StaffAccess;
-  email: string;
-}
-export interface ParticipantTeamDetails {
-  compName: string;
-  teamName: string;
-  teamSite: string;
-  teamSeat?: string;
-  teamLevel: string;
-  startDate: Date;
-  students: Array<{
-    userId: number;
-    name: string;
-    email: string;
-    bio: string;
-    preferredContact: string;
-    siteId: number;
-    ICPCEligible: boolean;
-    level: string;
-    boersenEligible: boolean;
-    isRemote: boolean;
-  }>;
-  coach: {
-    name: string;
-    email: string;
-    bio: string;
-  }
-}
-
-export interface AttendeesDetails {
-  userId: number;
-  universityId: number;
-  siteId: number;
-  pendingSiteId: number;
-  email: string;
-  
-  name: string;
-  sex: string;
-  roles: Array<CompetitionRole>;
-  universityName: string;
-  shirtSize: string;
-  dietaryNeeds: string | null;
-  allergies: string | null;
-  accessibilityNeeds: string | null;
-}
 
 
 export class CompetitionService {
@@ -133,6 +62,16 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+  
+  competitionSitesCodes = async (code: string) => {
+    const compId = await this.competitionRepository.competitionIdFromCode(code);
+
+    return await this.competitionSites(compId);
+  }
+
+  competitionSites = async (compId: number) => {
+    return await this.competitionRepository.competitionSites(compId);
   }
   
   competitionAttendees = async (userId: number, compId: number) => {
@@ -153,6 +92,28 @@ export class CompetitionService {
     }
 
     return await this.competitionRepository.competitionTeamDetails(userId, compId);
+  }
+
+  competitionTeamInviteCode = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'User is not a participant for this competition.');
+    }
+    return await this.competitionRepository.competitionTeamInviteCode(userId, compId);
+  }
+
+  competitionTeamJoin = async (userId: number, compId: number, teamCode: string) => { 
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
+      throw new ServiceError(ServiceError.Auth,
+        'User is not a participant for this competition.');
+    }
+    const university = await this.userRepository.userUniversity(userId);
+    if (!university) {
+      throw new ServiceError(ServiceError.NotFound, 'User is not a part of an university');
+    }
+    return await this.competitionRepository.competitionTeamJoin(userId, compId, teamCode, university);
   }
 
   competitionStudentDetails = async (userId: number, compId: number) => {
@@ -248,10 +209,10 @@ export class CompetitionService {
   }
 
   competitionCodeStatus = async (userId: number, code: string): Promise<{} | undefined> => {
-    const userTypeObject = await this.userRepository.userType(userId);
-    if (userTypeObject.type !== UserType.STUDENT) {
-      throw COMPETITION_STUDENT_REQUIRED;
-    }
+    // const userTypeObject = await this.userRepository.userType(userId);
+    // if (userTypeObject.type !== UserType.STUDENT) {
+    //   throw COMPETITION_STUDENT_REQUIRED;
+    // }
 
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {
@@ -418,18 +379,49 @@ export class CompetitionService {
     return {};
   }
 
-  competitionStaffJoinCoach = async (code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined> => {
+  competitionTeamSeatAssignments = async (userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
+    // Assign seats to teams
+    await this.competitionRepository.competitionTeamSeatAssignments(userId, compId, seatAssignments);
 
+    // Notifications to teams
+    await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);
+  
     return {};
   }
 
-  competitionStaffJoinSiteCoordinator = async (code: string, site: string, capacity: number): Promise<{} | undefined> => {
+  competitionStaffJoin = async (code: string, competitionStaffInfo: CompetitionStaff ): Promise<{} | undefined> => {
+    const competitionId = await this.competitionRepository.competitionIdFromCode(code);
+    if (!competitionId) {
+      throw new ServiceError(ServiceError.NotFound, 'Competition not found');
+    }
+    let userType = await this.userRepository.userType(competitionStaffInfo.userId);
+    if(userType.type === UserType.STUDENT) {
+      throw new ServiceError(ServiceError.NotFound, 'User not staff');
+    }
+    if(competitionStaffInfo.competitionRoles.includes(CompetitionUserRole.COACH)) {
+      if(!competitionStaffInfo.competitionBio) {
+        throw new ServiceError(ServiceError.NotFound, 'Competition bio not provided');
+      }
+      const university = await this.userRepository.userUniversity(competitionStaffInfo.userId);
+      if (!university) {
+        throw new ServiceError(ServiceError.NotFound, 'User is not associated with this university');
+      }
+      competitionStaffInfo.university = university;
+    }
 
-    return {};
-  }
+    if(competitionStaffInfo.competitionRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      if(!competitionStaffInfo.siteLocation || !competitionStaffInfo.siteLocation.id) {
+        throw new ServiceError(ServiceError.NotFound, 'Site location not provided');
+      }
+      if(!competitionStaffInfo.siteLocation.name) {
+        throw new ServiceError(ServiceError.NotFound, 'Site name not provided');
+      }
+      if(!competitionStaffInfo.siteLocation.capacity) {
+        throw new ServiceError(ServiceError.NotFound, 'Site capacity not provided');
+      }
+    }
 
-  competitionStaffJoinAdmin = async (code: string): Promise<{} | undefined> => {
-    
+    await this.competitionRepository.competitionStaffJoin(competitionId, competitionStaffInfo);
     return {};
   }
 

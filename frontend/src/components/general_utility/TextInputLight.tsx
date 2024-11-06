@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface TextInputLightProps {
+interface TextInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   placeholder: string;
   type?: string;
@@ -19,9 +19,10 @@ const TextInputLight: React.FC<TextInputLightProps> = ({
   value,
   onChange,
   width = '300px',
+  style
 }) => {
   return (
-    <Container $width={width}>
+    <Container $width={width} style={style}>
       <Label>
         {label}
         {required && <Asterisk>*</Asterisk>}
@@ -58,7 +59,7 @@ const Asterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   padding: 10px 1.5%;
   height: 100%;
   box-sizing: border-box;

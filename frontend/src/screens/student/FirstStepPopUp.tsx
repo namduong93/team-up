@@ -84,7 +84,7 @@ export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({
   // const [inputValue, setInputValue] = useState("");
 
   const isButtonDisabled = () => {
-    return inputValue == ""
+    return inputValue === ""
   }
 
   return (

@@ -1,13 +1,20 @@
-import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
-import { CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
+import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject, CompetitionTeamNameObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
+import { CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { University } from "../models/university/university.js";
 import { UserType } from "../models/user/user.js";
-import { IncompleteTeamIdObject, IndividualTeamInfo, StudentInfo, TeamIdObject, TeamDetails, TeamMateData, UniversityDisplayInfo, StaffInfo, ParticipantTeamDetails, AttendeesDetails } from "../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 import './competition/sqldb'
+import { CompetitionSite } from '../../shared_types/Competition/CompetitionSite.js';
+import { SeatAssignment } from "../models/team/team.js";
+import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
+import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
+import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
+import { AttendeesDetails } from "../../shared_types/Competition/staff/AttendeesDetails.js";
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionSites(compId: number): Promise<Array<CompetitionSite>>;
   competitionAttendees(userId: number, compId: number): Promise<Array<AttendeesDetails>>;
   competitionStaff(userId: number, compId: number): Promise<StaffInfo[]>;
   competitionStudents(userId: number, compId: number): Promise<StudentInfo[]>;
@@ -17,6 +24,8 @@ export interface CompetitionRepository {
   competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{}>;
   competitionGetDetails(competitionId: number): Promise<Competition | undefined>;
   competitionTeamDetails(userId: number, compId: number): Promise<ParticipantTeamDetails>;
+  competitionTeamInviteCode(userId: number, compId: number): Promise<string>;
+  competitionTeamJoin(userId: number, compId: number, teamCode: string, university: University): Promise<CompetitionTeamNameObject>;
   competitionStudentDetails(userId: number, compId: number): Promise<CompetitionStudentDetails>;
 
   competitionUniversityDefaultSite(competitionId: number, university: University): Promise<CompetitionSiteObject | undefined>;
@@ -32,11 +41,11 @@ export interface CompetitionRepository {
   competitionApproveTeamNameChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;
   competitionApproveSiteChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
-  
-  competitionStaffJoinCoach(code: string, universityId: number, defaultSiteId: number ): Promise<{} | undefined>;
-  competitionStaffJoinSiteCoordinator(code: string, site: string, capacity: number): Promise<{} | undefined>;
-  competitionStaffJoinAdmin(code: string): Promise<{} | undefined>;
-  competitionUniversitiesList(competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
+  competitionTeamSeatAssignments(userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}>;
+
+
+  competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{} | undefined>;
+  competitionUniversitiesList(compId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
   competitionIdFromCode(code: string): Promise<number | undefined>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined>;

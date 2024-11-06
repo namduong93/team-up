@@ -173,28 +173,33 @@ app.post('/competition/student/withdraw', competitionController.competitionStude
 
 // Coach approves the team assignment (changing status from pending to unregistered)
 // PARAMS: { compId: number, approveIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/team_assignment_approve', competitionController.competitionApproveTeamAssignment);
 
 // Student requests to change the team name
 // PARAMS: { compId: number, newTeamName: string }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/student/team_name_change', competitionController.competitionRequestTeamNameChange);
 
 // Coach approves the team name change (for many teams in one specific competition at once)
 // PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/team_name_approve', competitionController.competitionApproveTeamNameChange);
 
 // Student requests to change the team site
 // PARAMS: { compId: number, newSiteId: number }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/student/site_change', competitionController.competitionRequestSiteChange);
 
 // Coach approves the team site change (for many teams in one specific competition at once)
 // PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
-// RESPONSE: { }
+// RESPONSE: {}
 app.put('/competition/coach/site_approve', competitionController.competitionApproveSiteChange);
+
+// Coach assigns seats to teams
+// PARAMS: { compId: number, seatAssignments: Array<SeatAssignment> }
+// RESPONSE: {}
+app.put('/competition/staff/seat_assignments', competitionController.competitionTeamSeatAssignments);
 
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
@@ -202,17 +207,9 @@ app.get('/competition/universities/list', competitionController.competitionUnive
 
 ////////// Competition staff joining with a specific coach, site or admin code.
 
-// PARAMS: { code, universityId, defaultSiteId }
+// PARAMS: { code, staffRegistrationData : { competitionRoles: Array<CompetitionUserRole>, siteLocation?: CompetitionSiteObject }, competitionBio?: string }
 // RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/coach', competitionController.competitionStaffJoinCoach);
-
-// PARAMS: { code, site, capacity }
-// RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/site_coordinator', competitionController.competitionStaffJoinSiteCoordinator);
-
-// PARAMS: { code }
-// RESPONSE: {} --- (still receives 200 OK or an error)
-app.post('/competition/staff/join/admin', competitionController.competitionStaffJoinAdmin);
+app.post('/competition/staff/join', competitionController.competitionStaffJoin);
 
 // PARAMS: {}
 // RESPONSW: {universities: Array<{id: number, name: string}>}
@@ -232,6 +229,8 @@ app.post('/user/password_recovery/generate_code', userController.userPasswordRec
 // RESPONSE: {} --- NOTE: No error if successful, error if not successful
 app.post('/user/password_recovery/input_code', userController.userPasswordRecoveryInputCode);
 
+// PARAMS: { compId: number }
+// RESPONSE: { unknown }
 app.get('/competition/teams', competitionController.competitionTeams)
 
 // PARAMS: { compId: number }
@@ -252,11 +251,26 @@ app.post('/notification', notificationController.notificationCreate);
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);
 
+// PARAMS: { notificationId }
+// RESPONSE: {}
+app.delete('/notification', notificationController.notificationRemove);
+
 // PARAMS: { compId }
 // RESPONSE: 
 // Get all the details of a team in a competition
 app.get('/competition/team/details', competitionController.competitionTeamDetails);
 
+// PARAMS: { compId }
+// RESPONSE:
+// Get the invite code for a team in a competition
+app.get('/competition/team/invite_code', competitionController.competitionTeamInviteCode);
+
+// PARAMS: { compId, code }
+// RESPONSE: {}
+// Join a team in a competition
+app.post('/competition/team/join', competitionController.competitionTeamJoin);
+
+// Sort teams based on userId university
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
 app.get('/competition/attendees', competitionController.competitionAttendees);
@@ -265,6 +279,14 @@ app.get('/competition/attendees', competitionController.competitionAttendees);
 // { studentDetails: {...} }
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
+
+// PARAMS: { compId }
+// RESPONSE: { sites: Array<CompetitionSite> }
+app.get('/competition/sites', competitionController.competitionSites);
+
+// PARAMS: { code }
+// RESPONSE: { sites: Array<CompetitionSite> }
+app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

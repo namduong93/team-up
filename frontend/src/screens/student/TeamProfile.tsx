@@ -6,34 +6,8 @@ import { useNavigate, useParams, Outlet } from "react-router-dom";
 import { TeamHeader } from "./TeamHeader";
 import { sendRequest } from "../../utility/request";
 
-export interface ParticipantTeamDetails {
-  compName: string;
-  teamName: string;
-  teamSite: string;
-  teamSeat?: string;
-  teamLevel: string;
-  startDate: Date;
-  students: Array<{
-    userId: number;
-    name: string;
-    email: string;
-    bio: string;
-    preferredContact: string;
-    siteId: number;
-    ICPCEligible: boolean;
-    level: string;
-    boersenEligible: boolean;
-    isRemote: boolean;
-    // studentAlgoScore?: number;
-  }>;
-  coach: {
-    name: string;
-    email: string;
-    bio: string;
-  }
-};
-
 import { WithdrawPopUpChain } from "./WithdrawPopUpChain";
+import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
 
 const TeamToggleOptionDiv = styled(ToggleOptionDiv)`
 `;
