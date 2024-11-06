@@ -375,12 +375,37 @@ $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION competition_staff(c_id INT)
 RETURNS TABLE(
-  "userId" INT, "name" TEXT, "roles" JSON,
-  "universityName" TEXT, "access" competition_access_enum, email TEXT )
+  "userId" INT,
+  "universityId" INT,
+  "universityName" TEXT,
+  "name" TEXT,
+  "email" TEXT,
+  "sex" TEXT,
+  "pronouns" TEXT,
+  "tshirtSize" TEXT,
+  "allergies" TEXT,
+  "dietaryReqs" TEXT,
+  "accessibilityReqs" TEXT,
+  "bio" TEXT,
+  "roles" JSONB,
+  "access" competition_access_enum
+)
 AS $$
   SELECT
-    u.id AS "userId", u.name AS "name", TO_JSON(cu.competition_roles) AS "roles",
-    uni.name AS "universityName", cu.access_level AS "access", u.email AS "email"
+    u.id AS "userId",
+    u.university_id AS "universityId",
+    uni.name AS "universityName",
+    u.name AS "name",
+    u.email AS "email",
+    u.gender AS "sex",
+    u.pronouns AS "pronouns",
+    u.tshirt_size AS "tshirtSize",
+    u.allergies AS "allergies",
+    u.dietary_reqs AS "dietaryReqs",
+    u.accessibility_reqs AS "accessibilityReqs",
+    cu.bio AS "bio",
+    TO_JSONB(cu.competition_roles) AS "roles",
+    cu.access_level AS "access"
   FROM competition_users AS cu
   JOIN users AS u ON cu.user_id = u.id
   JOIN universities AS uni ON uni.id = u.university_id
@@ -475,6 +500,36 @@ WHERE (cu1.competition_id = cu_coach.competition_id OR cu1.competition_id IS NUL
   AND (cu2.competition_id = cu_coach.competition_id OR cu2.competition_id IS NULL)
   AND (cu3.competition_id = cu_coach.competition_id OR cu3.competition_id IS NULL);
 
+
+CREATE OR REPLACE VIEW competition_attendees AS
+SELECT
+  ct.competition_id AS competition_id,
+  cu.user_id AS "userId",
+  uni.id AS "universityId", 
+  uni.name AS "universityName",
+  u.name AS "name",
+  u.preferred_name AS "preferredName",
+  u.email AS "email",
+  u.gender AS "sex",
+  u.tshirt_size AS "tshirtSize",
+  u.dietary_reqs AS "dietaryNeeds",
+  u.accessibility_reqs AS "accessibilityNeeds",
+  u.allergies AS "allergies",
+  cu.competition_roles AS "roles",
+
+  ct.site_attending_id AS "siteId",
+  ct.pending_site_attending_id AS "pendingSiteId",
+  cs.name AS "siteName",
+  cs_pending.name AS "pendingSiteName",
+  cs.capacity AS "siteCapacity",
+  cs_pending.capacity AS "pendingSiteCapacity"
+
+FROM competition_teams AS ct
+JOIN universities AS uni ON uni.id = ct.university_id
+JOIN users AS u ON u.id = ANY(ct.participants)
+JOIN competition_users AS cu ON cu.user_id = u.id AND cu.competition_id = ct.competition_id
+LEFT JOIN competition_sites AS cs ON cs.id = ct.site_attending_id
+LEFT JOIN competition_sites AS cs_pending ON cs_pending.id = ct.pending_site_attending_id;
 
 
 INSERT INTO universities (name) 

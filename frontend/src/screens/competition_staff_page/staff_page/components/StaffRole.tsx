@@ -128,8 +128,7 @@ const AdditionalRolesContainer = styled.div<{ $numContents: number }>`
   top: calc(100% + 2px);
 `;
 
-export const StaffRoles: FC<StaffRolesProps> = ({ roles: staffRoles, children, ...props }) => {
-  const [roles, setRoles] = useState([...staffRoles]);
+export const StaffRoles: FC<StaffRolesProps> = ({ roles, children, ...props }) => {
   const isMulti = roles.length > 1;
 
 

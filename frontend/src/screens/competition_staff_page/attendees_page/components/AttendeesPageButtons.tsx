@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react"
 import { DownloadButtons } from "../../components/DownloadButtons"
-import { AttendeesDetails } from "../AttendeesPage";
+import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
 
 interface AttendeesButtonsProps {
   attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];

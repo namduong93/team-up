@@ -18,7 +18,7 @@ interface User {
   pronouns: "She/Her" | "He/Him" | "They/Them" | "Other";
   tshirtSize: string;
   allergies: string;
-  dietaryReqs: string[];
+  dietaryReqs: string;
   accessibilityReqs: string;
 };
 
@@ -217,7 +217,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     profilePic: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
     tshirtSize: "",
     allergies: "",
-    dietaryReqs: [],
+    dietaryReqs: "",
     accessibilityReqs: "",
   });
 
@@ -404,8 +404,8 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                 {isEditingUser ? (
                   <Input
                     type="text"
-                    value={newDetails.dietaryReqs.join(', ')}
-                    onChange={(e) => setNewDetails({ ...newDetails, dietaryReqs: e.target.value.split(',').map((item) => item.trim()) })}
+                    value={newDetails.dietaryReqs}
+                    onChange={(e) => setNewDetails({ ...newDetails, dietaryReqs: e.target.value })}
                   />
                 ) : (
                   <DetailsText>{user.dietaryReqs}</DetailsText>

@@ -10,6 +10,7 @@ import { UserRepository } from "../repository/user_repository_type.js";
 import { SeatAssignment } from "../models/team/team.js";
 import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
+import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -50,37 +51,6 @@ export interface TeamMateData {
   teamMateDegreeYear: number;
   teamMateDegree: string;
 };
-
-enum StaffAccess {
-  Accepted = 'Accepted',
-  Pending = 'Pending',
-  Rejected = 'Rejected',
-}
-export interface StaffInfo {
-  userId: number;
-  name: string;
-  roles: CompetitionRole[];
-  universityName: string;
-  access: StaffAccess;
-  email: string;
-}
-
-export interface AttendeesDetails {
-  userId: number;
-  universityId: number;
-  siteId: number;
-  pendingSiteId: number;
-  email: string;
-  
-  name: string;
-  sex: string;
-  roles: Array<CompetitionRole>;
-  universityName: string;
-  shirtSize: string;
-  dietaryNeeds: string | null;
-  allergies: string | null;
-  accessibilityNeeds: string | null;
-}
 
 
 export class CompetitionService {

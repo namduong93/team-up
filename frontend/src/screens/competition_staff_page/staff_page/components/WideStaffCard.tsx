@@ -1,8 +1,9 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../../students_page/StudentDisplay";
 import styled, { useTheme } from "styled-components";
 import { StaffAccessLevel, StaffCardProps } from "../StaffDisplay";
 import { StaffRoles, StandardContainerDiv } from "./StaffRole";
+import { StaffInfoBar } from "../../components/InfoBar/StaffInfoBar";
 
 
 export const StandardSpan = styled.span``;
@@ -42,10 +43,19 @@ export const WideStaffHeader: FC = () => {
   )
 }
 
-export const WideStaffCard: FC<StaffCardProps> = ({ staffDetails, ...props }) => {
+export const WideStaffCard: FC<StaffCardProps> = ({
+  staffDetails, staffListState: [staffList, setStaffList],
+  ...props  }) => {
 
-  return (
-    <WideInfoContainerDiv {...props}>
+  const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
+
+  return (<>
+    <StaffInfoBar
+      isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
+      staffInfo={staffDetails}
+      staffListState={[staffList, setStaffList]}
+    />
+    <WideInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen(true)} {...props}>
       <UserNameContainerDiv>
         <UserNameGrid>
           <UserIcon />
@@ -77,5 +87,5 @@ export const WideStaffCard: FC<StaffCardProps> = ({ staffDetails, ...props }) =>
 
 
     </WideInfoContainerDiv>
-  );
+  </>);
 }
