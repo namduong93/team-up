@@ -1,24 +1,37 @@
+import { Student } from "../../../models/user/student/student";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import { UserIdObject } from "../../../repository/user_repository_type";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 describe('User Type Function', () => {
-  let poolean;
-  const testDbName = "capstone_db"
+  let user_db;
+  const mockUser: Student = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'Iissleepy@eepy.com',
+    password: 'ezpass',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'L',
+    universityId: 1,
+    studentId: 'z5381412'
+  };
+  let user: UserIdObject;
+  let id: number;
 
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
+    user = await user_db.studentRegister(mockUser);
+    id = user.userId;
   });
 
+
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Sucess case: returns user type', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-
-    const result = await user_db.userType(1);
-    expect(result).toStrictEqual({ type: 'system_admin' });
+    expect(await user_db.userType(id)).toStrictEqual({ type: 'student' });
   })
 })

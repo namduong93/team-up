@@ -1,52 +1,49 @@
+import { userInfo } from "os";
 import { Staff } from "../../../models/user/staff/staff";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
-
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Staff Register Function', () => {
-  let poolean;
+  let user_db;
 
-  const testDbName = "capstone_db"
+  const mockStaff: Staff = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'beepboopmeupscotty@gmail.com',
+    password: 'testPassword',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'M',
+    universityId: 1,
+  };
 
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
+
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
-
-  test('Failed case: Email Taken', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-    const mockStaff: Staff = {
-      name: 'Maximillian Maverick',
-      preferredName: 'X',
-      email: 'coach@example.com',
-      password: 'testPassword',
-      gender: 'Male',
-      pronouns: 'He/Him',
-      tshirtSize: 'M',
-      universityId: 1,
-    };
-
-    const result = await user_db.staffRegister(mockStaff);
-    expect(result).toBe(undefined);
-  })
   test('Sucess case: makes a new staff user', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-    const mockStaff: Staff = {
+    const result = await user_db.staffRegister(mockStaff);
+    expect(result).toEqual({ userId: expect.any(Number) });
+    expect(await user_db.userProfileInfo(result.userId)).toStrictEqual({
+      id: result.userId,
       name: 'Maximillian Maverick',
       preferredName: 'X',
       email: 'beepboopmeupscotty@gmail.com',
-      password: 'testPassword',
+      affiliation: 'University of Melbourne',
       gender: 'Male',
       pronouns: 'He/Him',
       tshirtSize: 'M',
-      universityId: 1,
-    };
-
+      allergies: null,
+      dietaryReqs: [],
+      accessibilityReqs: null
+    })
+  })
+  test('Failed case: Email Taken', async () => {
     const result = await user_db.staffRegister(mockStaff);
-    expect(result).toEqual({ userId: expect.any(Number) });
+    expect(result).toBe(undefined);
   })
 })

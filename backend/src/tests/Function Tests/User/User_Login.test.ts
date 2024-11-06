@@ -1,36 +1,44 @@
+import { Student } from "../../../models/user/student/student";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 describe('User Login Function', () => {
-  let poolean;
-  const testDbName = "capstone_db"
+  let user_db;
+
+  const mockUser: Student = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'OwOwhudis@OwO.com',
+    password: 'ezpass',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'L',
+    universityId: 1,
+    studentId: 'z5381412'
+  };
+
+  let user;
 
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
+    user = await user_db.studentRegister(mockUser);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Failed case: Wrong Username', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-
-    const result = await user_db.userLogin("whatdafuq@gmail.com", "passwordfail");
+    const result = await user_db.userLogin("whatdafuq@gmail.com", "ezpass");
     expect(result).toBe(undefined);
   })
   test('Failed case: Wrong Password', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-
-    const result = await user_db.userLogin("admin@example.com", "passwordfail");
+    const result = await user_db.userLogin("OwOwhudis@OwO.com", "passwordfail");
     expect(result).toBe(undefined);
   })
   test('Sucess case: returns a number', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-
-    const result = await user_db.userLogin("admin@example.com", "admin");
-    expect(result).toEqual({ userId: expect.any(Number) });
+    const result = await user_db.userLogin("OwOwhudis@OwO.com", "ezpass");
+    expect(result).toEqual({ userId: user.userId });
   })
 })

@@ -1,24 +1,32 @@
+import { Student } from "../../../models/user/student/student";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
-
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('User Dash Info Function', () => {
-  let poolean;
-  const testDbName = "capstone_db"
+  let user_db;
+
+  const mockUser: Student = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'anotherEmail@forogt.com',
+    password: 'testPassword',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'L',
+    universityId: 1,
+    studentId: 'z5381412'
+  };
 
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Sucess case: Returns user dash info', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-
-    const result = await user_db.userDashInfo(1);
-    expect(result).toStrictEqual({ preferredName: 'Admin', affiliation: 'University of Melbourne' })
+    const userId = await user_db.studentRegister(mockUser);
+    expect(await user_db.userDashInfo(userId.userId)).toStrictEqual({ preferredName: 'X', affiliation: 'University of Melbourne' })
   })
 })

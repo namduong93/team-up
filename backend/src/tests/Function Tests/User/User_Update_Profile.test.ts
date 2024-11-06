@@ -1,51 +1,63 @@
 import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import { UserIdObject } from "../../../repository/user_repository_type";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 describe('User Update Profile Function', () => {
-  let poolean;
-  const testDbName = "capstone_db"
+  let user_db;
+
+  const mockUser = {
+    name: 'beep boop',
+    preferredName: 'beep',
+    email: 'beepbeepwobwob31@gmail.com',
+    password: 'testPassword',
+    gender: 'F',
+    pronouns: 'He/Him',
+    tshirtSize: 'S',
+    universityId: 1,
+    studentId: 'z1234567'
+  };
+  const newUserInfo = {
+    name: 'beep boop',
+    preferredName: 'beepbeep',
+    email: 'beepbeepwobwob31@gmail.com',
+    password: 'testPassword',
+    gender: 'F',
+    pronouns: 'She/Him',
+    tshirtSize: 'L',
+    universityId: 1,
+    studentId: 'z1234567'
+  };
+  let user: UserIdObject;
+  let id: number;
 
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbUserRepository(pool);
+    user = await user_db.studentRegister(mockUser);
+    // console.log(user)
+    id = user.userId;
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Sucess case: successfully changed the info of user', async () => {
-    const user_db = new SqlDbUserRepository(poolean);
-
-    const newUserInfo = {
-      name: 'System Admin;',
-      preferredName: 'A',
-      email: 'admin@example.com',
-      affiliation: 'University of Melbourne',
-      gender: 'M',
-      pronouns: 'he/Him',
-      tshirtSize: 'L',
-      allergies: 'Peanuts',
-      dietaryReqs: [],
-      accessibilityReqs: 'None',
-    };
-
-    await user_db.userUpdateProfile(1, newUserInfo);
-    const userInfo = await user_db.userProfileInfo(1);
+    console.log(await user_db.userProfileInfo(id));
+    await user_db.userUpdateProfile(id, newUserInfo);
     const newTestUserInfo = {
-      name: 'System Admin;',
-      preferredName: 'A',
-      email: 'admin@example.com',
+      name: 'beep boop',
+      preferredName: 'beepbeep',
+      email: 'beepbeepwobwob31@gmail.com',
       affiliation: 'University of Melbourne',
-      gender: 'M',
-      pronouns: 'he/Him',
+      gender: 'F',
+      pronouns: 'She/Him',
       tshirtSize: 'L',
-      allergies: 'Peanuts',
+      allergies: null,
       dietaryReqs: [],
-      accessibilityReqs: 'None',
-      id: 1,
+      accessibilityReqs: null,
+      id: id,
     };
-    expect(userInfo).toStrictEqual(newTestUserInfo)
+    expect(await user_db.userProfileInfo(id)).toStrictEqual(newTestUserInfo)
   })
 })

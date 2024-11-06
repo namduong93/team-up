@@ -1,39 +1,35 @@
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { createTestDatabase, dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
+// makenot hardcode
 describe('Competition Team Detail Function', () => {
-  let poolean;
-
-  const testDbName = "capstone_db"
-
+  let user_db;
   beforeAll(async () => {
-    poolean = await createTestDatabase(testDbName);
+    user_db = new SqlDbCompetitionRepository(pool);
   });
 
   afterAll(async () => {
-    await poolean.end();
-    await dropTestDatabase(testDbName);
+    await dropTestDatabase(pool);
   });
 
   test('Sucess case: returns the users team details', async () => {
-    const user_db = new SqlDbCompetitionRepository(poolean);
     const result = await user_db.competitionTeamDetails(5, 1);
 
     expect(result).toStrictEqual({
       compName: 'South Pacific Preliminary Contest 2024',
-      teamName: 'This Unapproved Name',
+      src_competition_id: 1,
+      teamName: 'Charmander',
       teamSite: 'Computer Science Building',
       teamSeat: 'Tabla01',
       teamLevel: 'Level A',
-      startDate: new Date('2025-09-30 00:00:00'),
+      startDate: new Date('2025-09-30T00:00:00Z'),
       students: [
         {
           userId: 5,
-          name: 'Test Student Account 1',
+          name: 'New User',
           email: 'student@example.com',
           bio: 'epic bio',
           preferredContact: 'Email:example@email.com',
-          siteId: 2,
           ICPCEligible: true,
           level: 'Level A',
           boersenEligible: true,
@@ -45,7 +41,6 @@ describe('Competition Team Detail Function', () => {
           email: 'teststudent2@example.com',
           bio: 'epic bio',
           preferredContact: 'Discord:fdc234',
-          siteId: 2,
           ICPCEligible: true,
           level: 'Level A',
           boersenEligible: true,
@@ -57,7 +52,6 @@ describe('Competition Team Detail Function', () => {
           email: 'teststudent3@example.com',
           bio: 'epic bio',
           preferredContact: 'Phone:0413421311',
-          siteId: 2,
           ICPCEligible: true,
           level: 'Level A',
           boersenEligible: true,
