@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../../components/progress_bar/ProgressBar";
@@ -9,6 +9,7 @@ import TextInput from "../../../components/general_utility/TextInput";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { sendRequest } from "../../../utility/request";
+import { Course, CourseCategory } from "../../../../shared_types/University/Course";
 
 const Container = styled.div`
   flex: 1;
@@ -160,12 +161,23 @@ export const CompetitionExperience: FC = () => {
 
   };
 
-  const courseOptions = [
-    { value: 'Introduction to Programming / Programming Fundamentals', label: 'Introduction to Programming / Programming Fundamentals (and any advanced versions' },
-    { value: 'Data Structures and Algorithms', label: 'Data Structures and Algorithms (and any advanced versions)' },
-    { value: 'Algorithm Design and Analysis', label: 'Algorithm Design and Analysis (and any advanced versions' },
-    { value: 'Programming Challenges and Problems', label: 'Programming Challenges and Problems (and any advanced versions' },
-  ];
+  const [courseOptions, setCourseOptions] = useState([
+    { value: CourseCategory.Introduction, label: 'Introduction to Programming / Programming Fundamentals (and any advanced versions' },
+    { value: CourseCategory.DataStructures, label: 'Data Structures and Algorithms (and any advanced versions)' },
+    { value: CourseCategory.AlgorithmDesign, label: 'Algorithm Design and Analysis (and any advanced versions' },
+    { value: CourseCategory.ProgrammingChallenges, label: 'Programming Challenges and Problems (and any advanced versions' },
+  ]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const response = await sendRequest.get<{ courses: Array<Course> }>('/university/courses');
+      const { courses } = response.data;
+
+      setCourseOptions(courses.map((course) => ({ value: course.category, label: course.courseName })));
+    }
+
+    fetchCourses();
+  }, []);
 
   // useEffect(() => {
   //   const fetchCourses = async () => {
