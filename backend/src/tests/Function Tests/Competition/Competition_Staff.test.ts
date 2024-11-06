@@ -6,7 +6,6 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-// should make more staff join the competition when you finish implementing the test for join
 describe('Competition Staff Function', () => {
   let user_db;
   let comp_db;

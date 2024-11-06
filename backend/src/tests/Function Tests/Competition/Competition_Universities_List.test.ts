@@ -1,7 +1,7 @@
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-// TODO
+// have not been implemented
 describe.skip('Staff Register Function', () => {
   let user_db;
   beforeAll(async () => {

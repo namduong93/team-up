@@ -49,6 +49,10 @@ describe('Competition Roles Function', () => {
     expect(comp).toStrictEqual({ competitionId: expect.any(Number) })
   });
 
+  afterAll(async () => {
+    await dropTestDatabase(pool);
+  });
+
   test('Failure case: returns an empty array', async () => {
     expect(await comp_db.competitionRoles(id, comp.competitionId + 1)).toStrictEqual([])
   })

@@ -26,7 +26,6 @@ describe('Student Register Function', () => {
     await dropTestDatabase(pool);
   });
 
-  
   test('Sucess case: new student user made', async () => {
     const result = await user_db.studentRegister(mockStudent);
     expect(result).toEqual({ userId: expect.any(Number) });

@@ -3,8 +3,9 @@ import { Staff } from "../../../models/user/staff/staff";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
-import pool, {  dropTestDatabase } from "../Utils/dbUtils";
+import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
+// system admin update seems buggy
 describe.skip('System Admin Update Function', () => {
   let user_db;
   let comp_db;
@@ -67,7 +68,7 @@ describe.skip('System Admin Update Function', () => {
       region: 'Australia'
     }
 
-    await expect(user_db.competitionSystemAdminUpdate(id + 1, UpdatedMockCompetition)).rejects.toThrow("User is not an admin for this competition.")
+    await expect(comp_db.competitionSystemAdminUpdate(id + 1, UpdatedMockCompetition)).rejects.toThrow("User is not an admin for this competition.")
   })
 
   test('Failure case: competition does not exist', async () => {
@@ -84,7 +85,7 @@ describe.skip('System Admin Update Function', () => {
       region: 'Australia'
     }
 
-    await expect(user_db.competitionSystemAdminUpdate(1, UpdatedMockCompetition)).rejects.toThrow("Competition does not exist.")
+    await expect(comp_db.competitionSystemAdminUpdate(1, UpdatedMockCompetition)).rejects.toThrow("Competition does not exist.")
   })
 
   test('Success case: Competition is updated ', async () => {
@@ -101,7 +102,7 @@ describe.skip('System Admin Update Function', () => {
       region: 'Australia'
     }
 
-    const result = await user_db.competitionSystemAdminUpdate(id, UpdatedMockCompetition);
+    const result = await comp_db.competitionSystemAdminUpdate(id, UpdatedMockCompetition);
 
     await expect(result).toStrictEqual({});
     console.log(await comp_db.competitionGetDetails(comp.competitionId));

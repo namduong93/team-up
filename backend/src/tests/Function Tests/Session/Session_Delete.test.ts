@@ -1,0 +1,16 @@
+import { SqlDbSessionRepository } from "../../../repository/session/sqldb";
+
+import pool, { dropTestDatabase } from "../Utils/dbUtils"
+
+// need session create
+describe.skip('Session Delete Function', () => {
+  let session_db;
+
+  beforeAll(async () => {
+    session_db = new SqlDbSessionRepository(pool)
+  });
+
+  afterAll(async () => {
+    await dropTestDatabase(pool);
+  });
+})
