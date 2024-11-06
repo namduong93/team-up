@@ -5,11 +5,16 @@ import path, { join } from 'path';
 
 // connect to postgres
 const pool = new Pool({
+  // user: 'postgres',
+  // host: 'localhost',
+  // password: 'Jackofspades948',
+  // port: 5432,
+  // connectionTimeoutMillis: 20000,
   user: 'postgres',
+  password: 'ab',
   host: 'localhost',
-  password: 'Jackofspades948',
-  port: 5432,
-  connectionTimeoutMillis: 20000,
+  port: 5432, // Test DB port
+  database: 'capstone_db',
 });
 
 //creates a new test database
@@ -24,12 +29,17 @@ export const createTestDatabase = async (testDbName: string) => {
     const startIndex = lines.findIndex(line => line.trim() === '\\c capstone_db;');
 
     const newPool = new Pool({
+      // user: 'postgres',
+      // host: 'localhost',
+      // database: testDbName,
+      // password: 'Jackofspades948',
+      // port: 5432,
+      // connectionTimeoutMillis: 20000,
       user: 'postgres',
+      password: 'ab',
       host: 'localhost',
-      database: testDbName,
-      password: 'Jackofspades948',
-      port: 5432,
-      connectionTimeoutMillis: 20000,
+      port: 5432, // Test DB port
+      database: 'capstone_db',
     });
 
     if (startIndex !== -1) {
