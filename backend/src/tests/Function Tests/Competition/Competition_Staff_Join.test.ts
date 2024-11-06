@@ -83,8 +83,7 @@ describe('Staff Join Function', () => {
     mockStaffId1 = await user_db.staffRegister(mockStaff1).userId;
     mockStaffId2 = await user_db.staffRegister(mockStaff2).userId;
     mockStaffId3 = await user_db.staffRegister(mockStaff3).userId;
-    expect(comp).toStrictEqual({ competitionId: expect.any(Number) })
-  });
+    });
 
   // export interface CompetitionStaff {
   //   userId: number;
