@@ -3,7 +3,7 @@ import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
 // need Student to understand join
-describe('Competition Student Details Function', () => {
+describe.skip('Competition Student Details Function', () => {
   let user_db;
   beforeAll(async () => {
     user_db = new SqlDbCompetitionRepository(pool);

@@ -21,7 +21,11 @@ describe('Competition Get Details Function', () => {
     earlyRegDeadline: earlyDate,
     startDate: startDate,
     generalRegDeadline: generalDate,
-    siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
+    siteLocations: [{
+      universityId: 1,
+      name: 'TestRoom',
+      capacity: 2000
+    }],
     code: 'TC2',
     region: 'Australia'
   }
@@ -68,7 +72,12 @@ describe('Competition Get Details Function', () => {
       startDate: new Date(startDate),
       code: 'TC2',
       region: 'Australia',
-      siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 0 }]
+      siteLocations: [{
+        universityId: 1,
+        name: 'TestRoom',
+        capacity: 0,
+        id: expect.any(Number)
+      }]
     })
   })
 })

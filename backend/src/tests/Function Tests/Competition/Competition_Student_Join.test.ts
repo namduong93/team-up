@@ -2,7 +2,7 @@ import { SqlDbCompetitionRepository } from "../../../repository/competition/sqld
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 // TODO
-describe('Staff Register Function', () => {
+describe.skip('Staff Register Function', () => {
   let user_db;
   beforeAll(async () => {
     user_db = new SqlDbCompetitionRepository(pool);

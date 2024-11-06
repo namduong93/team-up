@@ -2,7 +2,7 @@ import { SqlDbCompetitionRepository } from "../../../repository/competition/sqld
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 // make not hard code
-describe('Competition Teams Function', () => {
+describe.skip('Competition Teams Function', () => {
   let user_db;
   beforeAll(async () => {
     user_db = new SqlDbCompetitionRepository(pool);

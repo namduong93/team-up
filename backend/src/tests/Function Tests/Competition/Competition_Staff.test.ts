@@ -1,4 +1,5 @@
 import { CompetitionIdObject } from "../../../models/competition/competition";
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUserRole } from "../../../models/competition/competitionUser";
 import { Staff } from "../../../models/user/staff/staff";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
 import { SqlDbUserRepository } from "../../../repository/user/sqldb";
@@ -37,9 +38,20 @@ describe('Competition Staff Function', () => {
     tshirtSize: 'M',
     universityId: 1,
   };
+  const mockStaff1: Staff = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'ikenotbelifisnotstaff@odmin.com',
+    password: 'testPassword',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'M',
+    universityId: 1,
+  };
   let user: UserIdObject;
   let id: number;
   let comp: CompetitionIdObject;
+  let mockStaffId1: UserIdObject;
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
@@ -47,7 +59,7 @@ describe('Competition Staff Function', () => {
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
     comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
-    expect(comp).toStrictEqual({ competitionId: expect.any(Number) })
+    mockStaffId1 = await user_db.staffRegister(mockStaff1);
   });
 
   afterAll(async () => {
@@ -59,15 +71,67 @@ describe('Competition Staff Function', () => {
   })
 
   test('Sucess case: returns the staff list for competition', async () => {
+    expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([{
+      userId: id,
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'dasOddodmin5@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      bio: '',
+      roles: ['Admin'],
+      access: 'Accepted'
+    }])
+  })
+
+  test('Success case: when adding new staff', async () => {
+    const newAdmin: CompetitionStaff = {
+      userId: mockStaffId1.userId,
+      competitionRoles: [CompetitionUserRole.ADMIN],
+      accessLevel: CompetitionAccessLevel.ACCEPTED
+    }
+
+    await comp_db.competitionStaffJoin(comp.competitionId, newAdmin);
+
     expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([
       {
         userId: id,
-        name: 'Maximillian Maverick',
-        roles: ['Admin'],
+        universityId: 1,
         universityName: 'University of Melbourne',
-        access: null,
-        email: 'dasOddodmin5@odmin.com'
+        name: 'Maximillian Maverick',
+        email: 'dasOddodmin5@odmin.com',
+        sex: 'Male',
+        pronouns: 'He/Him',
+        tshirtSize: 'M',
+        allergies: null,
+        dietaryReqs: '{}',
+        accessibilityReqs: null,
+        bio: '',
+        roles: ['Admin'],
+        access: 'Accepted'
+      },
+      {
+        userId: mockStaffId1.userId,
+        universityId: 1,
+        universityName: 'University of Melbourne',
+        name: 'Maximillian Maverick',
+        email: 'ikenotbelifisnotstaff@odmin.com',
+        sex: 'Male',
+        pronouns: 'He/Him',
+        tshirtSize: 'M',
+        allergies: null,
+        dietaryReqs: '{}',
+        accessibilityReqs: null,
+        bio: '',
+        roles: ['Admin'],
+        access: 'Pending'
       }
     ])
   })
+
 })

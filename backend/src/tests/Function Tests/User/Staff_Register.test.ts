@@ -38,7 +38,7 @@ describe('Staff Register Function', () => {
       pronouns: 'He/Him',
       tshirtSize: 'M',
       allergies: null,
-      dietaryReqs: [],
+      dietaryReqs: "{}",
       accessibilityReqs: null
     })
   })

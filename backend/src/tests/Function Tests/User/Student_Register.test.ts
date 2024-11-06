@@ -41,7 +41,7 @@ describe('Student Register Function', () => {
       pronouns: 'He/Him',
       tshirtSize: 'L',
       allergies: null,
-      dietaryReqs: [],
+      dietaryReqs: "{}",
       accessibilityReqs: null
     })
   })

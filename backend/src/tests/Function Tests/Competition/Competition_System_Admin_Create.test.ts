@@ -65,7 +65,12 @@ describe('System Admin Create Function', () => {
       startDate: new Date(startDate),
       code: 'TC1',
       region: 'Australia',
-      siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 0 }]
+      siteLocations: [{
+        universityId: 1,
+        name: 'TestRoom',
+        capacity: 0,
+        id: expect.any(Number)
+      }]
     })
   })
 

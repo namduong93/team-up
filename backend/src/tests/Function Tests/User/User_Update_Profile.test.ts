@@ -43,7 +43,6 @@ describe('User Update Profile Function', () => {
   });
 
   test('Sucess case: successfully changed the info of user', async () => {
-    console.log(await user_db.userProfileInfo(id));
     await user_db.userUpdateProfile(id, newUserInfo);
     const newTestUserInfo = {
       name: 'beep boop',
@@ -54,7 +53,7 @@ describe('User Update Profile Function', () => {
       pronouns: 'She/Him',
       tshirtSize: 'L',
       allergies: null,
-      dietaryReqs: [],
+      dietaryReqs:"{}",
       accessibilityReqs: null,
       id: id,
     };
