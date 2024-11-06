@@ -11,11 +11,11 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     this.pool = pool;
   }
 
-  notificationCreate = async(notification: Notification): Promise<{} | undefined> => {
+  notificationCreate = async (notification: Notification): Promise<{} | undefined> => {
     return undefined;
   }
 
-  notificationWithdrawal = async(userId: number, competitionId: number, competitionName: string, teamId: number, teamName: string): Promise<{} | undefined> => {
+  notificationWithdrawal = async (userId: number, competitionId: number, competitionName: string, teamId: number, teamName: string): Promise<{} | undefined> => {
     // Get student's name
     const studentNameQuery = `
       SELECT name FROM users WHERE id = $1
@@ -33,7 +33,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       AND id = $2
     `;
     await this.pool.query(teamMembersNotificationQuery, [competitionId, teamId, teamMemberWithdrawalNotification]);
-    
+
     const coachNotification = `${studentName} has withdrawn from team ${teamName} from competition ${competitionName}.`;
     const coachNotificationQuery = `
       INSERT INTO notifications (user_id, message, type, competition_id, created_at)
@@ -49,7 +49,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  notificationRequestTeamNameChange = async(teamId: number, competitionId: number): Promise<{} | undefined> => {
+  notificationRequestTeamNameChange = async (teamId: number, competitionId: number): Promise<{} | undefined> => {
     // Get the old team name and the pending team name
     const teamNameQuery = `
       SELECT name, pending_name 
@@ -87,8 +87,8 @@ export class SqlDbNotificationRepository implements NotificationRepository {
 
     return {};
   }
-  
-  notificationApproveTeamNameChange = async(compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+
+  notificationApproveTeamNameChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
     // Get the competition name
     const competitionNameQuery = `
       SELECT name 
@@ -146,7 +146,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     const oldSiteName = siteIdResult.rows[0]?.old_site_name;
     const newSiteName = siteIdResult.rows[0]?.new_site_name;
     const teamName = siteIdResult.rows[0]?.name;
-  
+
     // Get the competition name
     const competitionNameQuery = `
       SELECT name 
@@ -155,10 +155,10 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     `;
     const competitionNameResult = await this.pool.query(competitionNameQuery, [competitionId]);
     const competitionName = competitionNameResult.rows[0]?.name;
-  
+
     // Create notification message
     const notificationMessage = `Team ${teamName} has requested to change site from ${oldSiteName} to ${newSiteName} for competition ${competitionName}.`;
-  
+
     // Insert notification into the database
     const notificationQuery = `
       INSERT INTO notifications (user_id, message, type, competition_id, created_at)
@@ -170,12 +170,12 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       AND ct.id = $2
     `;
     await this.pool.query(notificationQuery, [competitionId, teamId, notificationMessage]);
-  
+
     return {};
   }
 
-  
-  
+
+
   notificationApproveSiteChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
     // Get the competition name
     const competitionNameQuery = `
@@ -215,8 +215,8 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  
-  notificationApproveTeamAssignment = async(compId: number, approveIds: Array<number>): Promise<{}> => {
+
+  notificationApproveTeamAssignment = async (compId: number, approveIds: Array<number>): Promise<{}> => {
     // Get the competition name
     const competitionNameQuery = `
       SELECT name 
@@ -242,7 +242,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  notificationTeamSeatAssignments = async(compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
+  notificationTeamSeatAssignments = async (compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
     // Get the competition name
     const competitionNameQuery = `
       SELECT name 
@@ -266,7 +266,68 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  notificationRemove = async(notificationId: number): Promise<{}> => {
+  notificationPendingStaffApproval = async (userId: number): Promise<{}> => {
+    // Get all competition IDs that the user is responsible for
+    const competitionIdsQuery = `
+      SELECT competition_id 
+      FROM competition_users 
+      WHERE user_id = $1 
+      AND competition_roles @> ARRAY['Admin'::competition_role_enum]
+    `;
+    const competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
+    const competitionIds = competitionIdsResult.rows.map(row => row.competition_id);
+
+    if (competitionIds.length === 0) {
+      throw new DbError(DbError.Query, `User with ID ${userId} is not an admin for any competitions`);
+    }
+
+    // Check if there are any users with access_level 'Pending' in any competition
+    const pendingUsersQuery = `
+      SELECT COUNT(*) 
+      FROM competition_users 
+      WHERE competition_id = ANY($1::int[]) 
+      AND access_level = 'Pending'
+    `;
+    const pendingUsersResult = await this.pool.query(pendingUsersQuery, [competitionIds]);
+    const pendingUsersCount = parseInt(pendingUsersResult.rows[0].count, 10);
+
+    if (pendingUsersCount > 0) {
+      // Create notification message
+      const notificationMessage = `New staff account(s) pending approval. Please review in the staff management panel.`;
+
+      // Check if the same type of notification has been added in the last 24 hours
+      const existingNotificationQuery = `
+      SELECT id 
+      FROM notifications 
+      WHERE user_id = $1 
+      AND message = $2 
+      AND type = 'staffAccount'::notification_type_enum 
+      AND created_at >= NOW() - INTERVAL '24 hours'
+      `;
+      const existingNotificationResult = await this.pool.query(existingNotificationQuery, [userId, notificationMessage]);
+
+      if (existingNotificationResult.rowCount > 0) {
+        // Update the existing notification's created_at
+        const updateNotificationQuery = `
+          UPDATE notifications 
+          SET created_at = NOW() 
+          WHERE id = $1
+        `;
+        await this.pool.query(updateNotificationQuery, [existingNotificationResult.rows[0].id]);
+      } else {
+        // Insert a new notification
+        const notificationQuery = `
+          INSERT INTO notifications (user_id, message, type, created_at)
+          VALUES ($1, $2, 'staffAccount'::notification_type_enum, NOW())
+        `;
+        await this.pool.query(notificationQuery, [userId, notificationMessage]);
+      }
+    }
+
+    return {};
+  }
+
+  notificationRemove = async (notificationId: number): Promise<{}> => {
     const deleteNotificationQuery = `
       DELETE FROM notifications 
       WHERE id = $1 
@@ -281,8 +342,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  userNotificationsList = async(userId: number): Promise<Array<Notification> | undefined> => {
-    // TODO: add criteria to sort notifications
+  userNotificationsList = async (userId: number): Promise<Array<Notification> | undefined> => {
     const notifications = await this.pool.query(
       `SELECT id, type, message, created_at AS "createdAt", team_name as "teamName",
       student_name AS "studentName", competition_name AS "competitionName", new_team_name AS "newTeamName",
@@ -303,5 +363,5 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     });
 
     return parsedNotifications;
-  }  
+  }
 }

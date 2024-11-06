@@ -187,8 +187,8 @@ export class SqlDbUserRepository implements UserRepository {
     return ;
   }
 
-  userType = async (userId: number): Promise<UserTypeObject | undefined> => {
-    
+  userType = async (userId: number): Promise<UserTypeObject> => {
+
     const dbResult = await this.pool.query(
       `SELECT user_type AS "userType" FROM users WHERE id = ${userId}`
     );

@@ -45,11 +45,6 @@ const pool = new Pool({
 //Middleware to authenticate request
 const authenticator = new Authenticator();
 
-// Notification Registry
-const notificationRepository = new SqlDbNotificationRepository(pool);
-const notificationService = new NotificationService(notificationRepository);
-const notificationController = new NotificationController(notificationService);
-
 // User Registry
 const sessionRepository = new SqlDbSessionRepository(pool);
 app.use(authenticator.authenticationMiddleware(sessionRepository));
@@ -58,6 +53,11 @@ app.use(authenticator.authenticationMiddleware(sessionRepository));
 const userRepository = new SqlDbUserRepository(pool);
 const userService = new UserService(userRepository, sessionRepository);
 const userController = new UserController(userService);
+
+// Notification Registry
+const notificationRepository = new SqlDbNotificationRepository(pool);
+const notificationService = new NotificationService(notificationRepository, userRepository);
+const notificationController = new NotificationController(notificationService);
 
 // Competition Registry
 const competitionRepository = new SqlDbCompetitionRepository(pool);
