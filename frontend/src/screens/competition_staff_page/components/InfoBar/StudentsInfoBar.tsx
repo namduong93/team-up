@@ -95,7 +95,6 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
       />
 
-
       <InfoBarField>
         <LabelSpan>Name:</LabelSpan>
         <span>{studentInfo.name}</span>

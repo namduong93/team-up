@@ -342,7 +342,11 @@ export const StudentDisplay = () => {
   <FlexBackground>
     <NarrowDisplayDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
-        (<StudentInfoCard studentsState={[students, setStudents]} key={`${studentInfo.email}${index}`} studentInfo={studentInfo} />))}
+        (<StudentInfoCard
+          studentsState={[students, setStudents]}
+          key={`${studentInfo.email}${index}`}
+          studentInfo={studentInfo}
+        />))}
     </NarrowDisplayDiv>
 
     <WideDisplayDiv>
@@ -351,7 +355,11 @@ export const StudentDisplay = () => {
         fontWeight: 'bold'
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
-        (<StudentInfoDiv studentsState={[students, setStudents]} key={`${studentInfo.email}${index + students.length}`} studentInfo={studentInfo} />))}
+        (<StudentInfoDiv
+          studentsState={[students, setStudents]}
+          key={`${studentInfo.email}${index + students.length}`}
+          studentInfo={studentInfo}
+        />))}
     </WideDisplayDiv>
   </FlexBackground>
   </>

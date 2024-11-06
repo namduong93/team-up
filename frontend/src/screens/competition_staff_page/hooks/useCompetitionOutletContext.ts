@@ -1,12 +1,12 @@
 import React, { ReactNode, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import { AttendeesDetails } from "../attendees_page/AttendeesPage";
-import { StaffInfo } from "../staff_page/StaffDisplay";
 // import { CompetitionDetails, CompetitionRole } from "../CompetitionPage";
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 import { CompetitionDetails } from "../CompetitionPage";
 import { TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
 import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
+import { StaffInfo } from "../../../../shared_types/Competition/staff/StaffInfo";
+import { AttendeesDetails } from "../../../../shared_types/Competition/staff/AttendeesDetails";
 
 export interface ButtonConfiguration {
   enableTeamButtons: boolean;
@@ -42,7 +42,7 @@ export interface CompetitionPageContext {
     React.Dispatch<React.SetStateAction<Array<number>>>
   ];
   universityOption: { value: string; label: string };
-  roles: Array<string>;
+  roles: Array<CompetitionRole>;
   teamListState: [
     Array<TeamDetails>,
     React.Dispatch<React.SetStateAction<Array<TeamDetails>>>

@@ -13,8 +13,6 @@ import { sendRequest } from "../../utility/request";
 import { SortOption } from "../../components/page_header/components/SortSelect";
 import { TeamPageButtons } from "./teams_page/components/TeamPageButtons";
 import { AdvancedDropdown } from "../../components/AdvancedDropdown/AdvancedDropdown";
-import { AttendeesDetails } from "./attendees_page/AttendeesPage";
-import { StaffInfo } from "./staff_page/StaffDisplay";
 import {
   SiteLocation,
   OtherSiteLocation,
@@ -25,6 +23,8 @@ import { AttendeesPageButtons } from "./attendees_page/components/AttendeesPageB
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
 import { TeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
+import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails";
+import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo";
 
 const ToggleOptionTextSpan = styled.span``;
 
