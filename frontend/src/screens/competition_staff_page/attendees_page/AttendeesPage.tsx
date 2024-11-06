@@ -34,7 +34,7 @@ interface AttendeesCardProps extends React.HTMLAttributes<HTMLDivElement> {
   attendeesDetails: AttendeesDetails;
 }
 
-const BooleanStatus = styled.div<{ $toggled: boolean }>`
+export const BooleanStatus = styled.div<{ $toggled: boolean }>`
   width: 80%;
   height: 50%;
   max-width: 130px;
@@ -47,6 +47,10 @@ const BooleanStatus = styled.div<{ $toggled: boolean }>`
   background-color: ${({ theme, $toggled }) => $toggled ? theme.access.acceptedBackground : theme.access.rejectedBackground};
   color: ${({ theme, $toggled }) => $toggled ? theme.access.acceptedText : theme.access.rejectedText};
   border: 1px solid ${({ theme, $toggled }) => $toggled ? theme.access.acceptedText : theme.access.rejectedText};
+
+  &::after {
+    Content: ${({ $toggled }) => $toggled ? "'Yes'" : "'No'"};
+  }
 `;
 
 export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ...props }) => {
@@ -54,7 +58,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
   return (
     <StudentInfoContainerDiv {...props}>
       <Field label="Full Name" value={attendeesDetails.name} style={{ width: '20%', minWidth: '120px' }} />
-      <Field label="Sex" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
+      <Field label="Gender" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
       <Field label="Role" 
         value={
           <NarrowStatusDiv>
@@ -70,7 +74,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
         value={
           <NarrowStatusDiv>
             <BooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
-              {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'}
+              {/* {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'} */}
             </BooleanStatus>
           </NarrowStatusDiv>
         }
@@ -80,7 +84,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
         value={
           <NarrowStatusDiv>
             <BooleanStatus $toggled={!!attendeesDetails.allergies}>
-              {!!attendeesDetails.allergies ? 'Yes' : 'No'}
+              {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
             </BooleanStatus>
           </NarrowStatusDiv>
         }
@@ -90,7 +94,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, 
         value={
           <NarrowStatusDiv>
             <BooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
-              {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'}
+              {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
             </BooleanStatus>
           </NarrowStatusDiv>
         }
@@ -117,7 +121,7 @@ export const WideAttendeesHeader: FC = () => {
       </UserNameContainerDiv>
 
       <StandardContainerDiv>
-        <StandardSpan>Sex</StandardSpan>
+        <StandardSpan>Gender</StandardSpan>
       </StandardContainerDiv>
       
       <StandardContainerDiv>
@@ -177,19 +181,19 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({ attendeesDetails, ..
 
       <StandardContainerDiv>
         <BooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
-          {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'}
+          {/* {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'} */}
         </BooleanStatus>
       </StandardContainerDiv>
 
       <StandardContainerDiv>
         <BooleanStatus $toggled={!!attendeesDetails.allergies}>
-          {!!attendeesDetails.allergies ? 'Yes' : 'No'}
+          {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
         </BooleanStatus>
       </StandardContainerDiv>
 
       <StandardContainerDiv>
         <BooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
-            {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'}
+            {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
         </BooleanStatus>
       </StandardContainerDiv>
 

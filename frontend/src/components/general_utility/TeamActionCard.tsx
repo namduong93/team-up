@@ -95,9 +95,10 @@ const Heading = styled.h2`
   box-sizing: border-box;
 `;
 
-export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers, compId = useParams().compId }) => {
+export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) => {
   const [modalOpen, setModalOpen] = useState<"invite" | "join" | "name" | "site" | null>(null);
   const [teamCode, setTeamCode] = useState('');
+  const { compId } = useParams<{ compId: string }>();
 
   const [siteLocationOptions, setSiteLocationOptions] = useState([{ value: '', label: '' }]);
 
@@ -109,6 +110,16 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers, comp
     }
 
     fetchSiteLocations();
+  }, []);
+
+  useEffect(() => {
+    const fetchTeamCode = async () => {
+      const response = await sendRequest.get<{ code: string }>('/competition/team/invite_code', { compId });
+      const { code } = response.data;
+      setTeamCode(code);
+    }
+
+    fetchTeamCode();
   }, []);
 
   const actions = [
@@ -152,7 +163,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers, comp
         {modalOpen === "invite" && (
           <InvitePopUp 
             heading={<Heading>Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}</Heading>}
-            text="COMP1234" 
+            text={teamCode}
             onClose={() => setModalOpen(null)}
           />
         )}
@@ -161,6 +172,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers, comp
           <JoinPopUp 
             heading={<Heading>Enter the details of the {"\nTeam you would like to join"}</Heading>}
             onClose={() => setModalOpen(null)}
+            currentTeamCode={teamCode}
           />
         )}
 

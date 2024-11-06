@@ -8,7 +8,6 @@ import {
   Field,
   StudentInfoContainerDiv,
 } from "../../students_page/components/StudentInfoCard";
-// import { CompetitionRole } from "../../CompetitionPage"
 import { StaffRoleDisplay, StaffRoles } from "./StaffRole";
 
 export const NarrowStaffCard: FC<StaffCardProps> = ({
@@ -26,7 +25,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
         label="Role"
         value={
           <NarrowStatusDiv>
-            <StaffRoles roles={staffDetails.roles} />
+            <StaffRoles style={{ width: "100%" }} roles={staffDetails.roles} />
           </NarrowStatusDiv>
         }
         style={{ width: "20%", minWidth: "125px" }}
