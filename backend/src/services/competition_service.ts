@@ -52,24 +52,6 @@ export interface TeamMateData {
 };
 
 
-export interface AttendeesDetails {
-  userId: number;
-  universityId: number;
-  siteId: number;
-  pendingSiteId: number;
-  email: string;
-  
-  name: string;
-  sex: string;
-  roles: Array<CompetitionRole>;
-  universityName: string;
-  shirtSize: string;
-  dietaryNeeds: string | null;
-  allergies: string | null;
-  accessibilityNeeds: string | null;
-}
-
-
 export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;

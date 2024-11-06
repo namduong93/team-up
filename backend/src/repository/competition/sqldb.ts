@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo, AttendeesDetails } from "../../services/competition_service.js";
+import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject, CompetitionTeamNameObject } from "../../models/competition/competition.js";
 
@@ -14,7 +14,7 @@ import pokemon from 'pokemon';
 import { ParticipantTeamDetails, TeamDetails } from "../../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js";
-
+import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -40,20 +40,27 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       const dbResult = await this.pool.query(
-        `SELECT cu.user_id AS "userId", uni.id AS "universityId", 
-          ct.site_attending_id AS "siteId", ct.pending_site_attending_id AS "pendingSiteId",
-          u.email AS "email", u.name AS "name", u.gender AS "sex", cu.competition_roles AS "roles",
-          uni.name AS "universityName", cs.name AS "siteName", cs_pending.name AS "pendingSiteName",
-          u.tshirt_size AS "shirtSize", u.dietary_reqs AS "dietaryNeeds",
-          u.allergies AS "allergies", u.accessibility_reqs AS "accessibilityNeeds"
-        
-        FROM competition_teams AS ct
-        JOIN universities AS uni ON uni.id = ct.university_id
-        JOIN users AS u ON u.id = ANY(ct.participants)
-        JOIN competition_users AS cu ON cu.user_id = u.id
-        LEFT JOIN competition_sites AS cs ON cs.id = ct.site_attending_id
-        LEFT JOIN competition_sites AS cs_pending ON cs_pending.id = ct.pending_site_attending_id
-        WHERE ct.competition_id = $1;`, [compId]
+        `SELECT 
+          "userId",
+          "universityId",
+          "universityName",
+          "name",
+          "preferredName",
+          "email",
+          "sex",
+          "tshirtSize",
+          "dietaryNeeds",
+          "accessibilityNeeds",
+          "allergies",
+          "roles",
+          "siteId",
+          "pendingSiteId",
+          "siteName",
+          "pendingSiteName",
+          "siteCapacity",
+          "pendingSiteCapacity"
+          FROM competition_attendees AS ca
+        WHERE ca.competition_id = $1;`, [compId]
       );
       
       return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
@@ -61,20 +68,27 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   
     if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
       const dbResult = await this.pool.query(
-        `SELECT cu.user_id AS "userId", uni.id AS "universityId", 
-          ct.site_attending_id AS "siteId", ct.pending_site_attending_id AS "pendingSiteId",
-          u.email AS "email", u.name AS "name", u.gender AS "sex", cu.competition_roles AS "roles",
-          uni.name AS "universityName", cs.name AS "siteName", cs_pending.name AS "pendingSiteName",
-          u.tshirt_size AS "shirtSize", u.dietary_reqs AS "dietaryNeeds",
-          u.allergies AS "allergies", u.accessibility_reqs AS "accessibilityNeeds"
-        
-        FROM competition_teams AS ct
-        JOIN universities AS uni ON uni.id = ct.university_id
-        JOIN competition_users AS cu ON cu.user_id = ANY(ct.participants) AND cu.competition_id = ct.competition_id
-        JOIN users AS u ON u.id = cu.user_id
-        LEFT JOIN competition_sites AS cs ON cs.id = ct.site_attending_id
-        LEFT JOIN competition_sites AS cs_pending ON cs_pending.id = ct.pending_site_attending_id
-        WHERE ct.competition_id = $1 AND ct.site_attending_id = (SELECT site_id FROM competition_users WHERE user_id = $2 LIMIT 1);`, [compId, userId]
+        `SELECT 
+          "userId",
+          "universityId",
+          "universityName",
+          "name",
+          "preferredName",
+          "email",
+          "sex",
+          "tshirtSize",
+          "dietaryNeeds",
+          "accessibilityNeeds",
+          "allergies",
+          "roles",
+          "siteId",
+          "pendingSiteId",
+          "siteName",
+          "pendingSiteName",
+          "siteCapacity",
+          "pendingSiteCapacity"
+        FROM competition_attendees AS ca
+        WHERE ca.competition_id = $1 AND ca."siteId" = (SELECT site_id FROM competition_users WHERE user_id = $2 AND competition_id = $1 LIMIT 1);`, [compId, userId]
       );
 
       return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
