@@ -105,6 +105,8 @@ app.get('/user/profile_info', userController.userProfileInfo);
 // RESPONSE: {}
 app.put('/user/profile_info', userController.userUpdateProfile);
 
+app.put('/user/password', userController.userUpdatePassword);
+
 // This should return things that need to be displayed on the dash
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return

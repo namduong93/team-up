@@ -104,6 +104,14 @@ export class UserController {
     return;
   });
 
+  userUpdatePassword = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { oldPassword, newPassword } = req.body;
+    await this.userService.userUpdatePassword(Number(userId), oldPassword, newPassword);
+    res.json({});
+    return;
+  });
+
   userType = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const userDashInfo = await this.userService.userType(Number(userId));
