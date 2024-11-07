@@ -47,7 +47,7 @@ import { StudentDisplay } from "./screens/competition_staff_page/students_page/S
 import { StaffManage } from "./screens/competition_staff_page/manage_page/StaffManage";
 import { AttendeesDisplay } from "./screens/competition_staff_page/attendees_page/AttendeesPage";
 import { StaffRoleRegistration } from "./screens/competition/register/StaffRoleRegistration";
-import { StaffAccounts } from "./screens/StaffAccounts";
+import { StaffAccounts } from "./screens/staff_access/StaffAccounts";
 
 const themeMap = {
   default: defaultTheme,
