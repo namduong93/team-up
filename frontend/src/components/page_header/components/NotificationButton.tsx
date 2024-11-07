@@ -22,7 +22,8 @@ interface Notification {
     | 'invite'
     | 'welcomeAccount'
     | 'welcomeCompetition'
-    | 'update';
+    | 'update'
+    | 'staffAccount';
   message: string;
   createdAt: Date;
   competitionId?: string;
