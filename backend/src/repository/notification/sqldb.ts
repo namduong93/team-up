@@ -11,11 +11,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     this.pool = pool;
   }
 
-  notificationCreate = async (notification: Notification): Promise<{} | undefined> => {
-    return undefined;
-  }
-
-  notificationWithdrawal = async (userId: number, competitionId: number, competitionName: string, teamId: number, teamName: string): Promise<{} | undefined> => {
+  notificationWithdrawal = async (userId: number, competitionId: number, competitionName: string, teamId: number, teamName: string): Promise<{}> => {
     // Get student's name
     const studentNameQuery = `
       SELECT name FROM users WHERE id = $1
@@ -49,7 +45,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  notificationRequestTeamNameChange = async (teamId: number, competitionId: number): Promise<{} | undefined> => {
+  notificationRequestTeamNameChange = async (teamId: number, competitionId: number): Promise<{}> => {
     // Get the old team name and the pending team name
     const teamNameQuery = `
       SELECT name, pending_name 
@@ -88,7 +84,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  notificationApproveTeamNameChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+  notificationApproveTeamNameChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
     // Get the competition name
     const competitionNameQuery = `
       SELECT name 
@@ -127,7 +123,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  notificationRequestSiteChange = async (teamId: number, competitionId: number): Promise<{} | undefined> => {
+  notificationRequestSiteChange = async (teamId: number, competitionId: number): Promise<{}> => {
     // Get the old site ID and the pending site ID
     const siteQuery = `
     SELECT 
@@ -176,7 +172,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
 
 
 
-  notificationApproveSiteChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
+  notificationApproveSiteChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
     // Get the competition name
     const competitionNameQuery = `
       SELECT name 
@@ -242,7 +238,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  notificationTeamSeatAssignments = async (compId: number, seatAssignments: Array<SeatAssignment>): Promise<{} | undefined> => {
+  notificationTeamSeatAssignments = async (compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}> => {
     // Get the competition name
     const competitionNameQuery = `
       SELECT name 
@@ -342,7 +338,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  userNotificationsList = async (userId: number): Promise<Array<Notification> | undefined> => {
+  userNotificationsList = async (userId: number): Promise<Array<Notification>> => {
     const notifications = await this.pool.query(
       `SELECT id, type, message, created_at AS "createdAt", team_name as "teamName",
       student_name AS "studentName", competition_name AS "competitionName", new_team_name AS "newTeamName",
@@ -351,7 +347,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     );
 
     if (notifications.rowCount === 0) {
-      return undefined;
+      return [];
     }
 
     // Parse the type to remove brackets
