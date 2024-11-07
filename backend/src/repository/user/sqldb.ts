@@ -1,13 +1,10 @@
 import { Pool } from "pg";
 import { UserIdObject, UserRepository } from "../user_repository_type.js";
-import { StudentDashInfo } from "../../models/user/student/student_dash_info.js";
-import { StaffDashInfo } from "../../models/user/staff/staff_dash_info.js";
-import { SystemAdminDashInfo } from "../../models/user/staff/system_admin/system_admin_dash_info.js";
 import { Student } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
 import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 import { Staff } from "../../models/user/staff/staff.js";
-import { UserType, UserTypeObject } from "../../models/user/user.js";
+import { UserTypeObject } from "../../models/user/user.js";
 import { UserDashInfo } from "../../models/user/user_dash_info.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
@@ -19,8 +16,7 @@ export class SqlDbUserRepository implements UserRepository {
     this.pool = pool;
   }
 
-  // TODO: handle sessionTimestamp
-  studentRegister = async (student: Student): Promise<UserIdObject | undefined> => {
+  studentRegister = async (student: Student): Promise<UserIdObject> => {
     // Use the params to run an sql insert on the db
 
     let name = student.name;
@@ -33,8 +29,6 @@ export class SqlDbUserRepository implements UserRepository {
     let allergies = student.allergies;
     let dietaryReqs = student.dietaryReqs || [];
     let accessibilityReqs = student.accessibilityReqs;
-    let universityId = student.universityId;
-    let studentId = student.studentId;
 
     // Check if user with email already exists
     const checkUserQuery = `
@@ -42,12 +36,12 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
-      return undefined;
+      throw new DbError(DbError.Query, 'Student with this email already exists');
     }
 
     //Add user to users table
     const userQuery =
-    `INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs,
+      `INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs,
       user_type, university_id, student_id)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING id;
@@ -73,10 +67,8 @@ export class SqlDbUserRepository implements UserRepository {
     return { userId: newUserId };
   }
 
-  // TODO: Handle sessionTimestamp
-  staffRegister = async (staff: Staff): Promise<UserIdObject | undefined> => {
+  staffRegister = async (staff: Staff): Promise<UserIdObject> => {
     // Use the params to run an sql insert on the db
-
     let name = staff.name;
     let preferredName = staff.preferredName;
     let email = staff.email;
@@ -87,7 +79,6 @@ export class SqlDbUserRepository implements UserRepository {
     let allergies = staff.allergies;
     let dietaryReqs = staff.dietaryReqs || [];
     let accessibilityReqs = staff.accessibilityReqs;
-    let universityId = staff.universityId;
 
     // Check if user with email already exists
     const checkUserQuery = `
@@ -95,7 +86,7 @@ export class SqlDbUserRepository implements UserRepository {
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
-      return undefined;
+      throw new DbError(DbError.Query, 'Staff with this email already exists');
     }
 
     const userQuery = `INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs,
@@ -124,39 +115,36 @@ export class SqlDbUserRepository implements UserRepository {
     return { userId: newUserId };
   }
 
-  userAuthenticate = async (email: string, password: string): Promise<UserIdObject | undefined> => {
-
-    return { userId: 1 };
-  }
-
-  userLogin = async (email: string, password: string): Promise<UserIdObject | undefined> => {
-
+  userLogin = async (email: string, password: string): Promise<UserIdObject> => {
     const userQuery = `SELECT id, hashed_password FROM users WHERE email = $1;`;
     const userResult = await this.pool.query(userQuery, [email]);
 
     if (userResult.rowCount === 0) {
-      return undefined;
+      throw new DbError(DbError.Query, 'User with email does not exist');
     }
+
     if (!await bcrypt.compare(password, userResult.rows[0].hashed_password)) {
-      return undefined;
+      throw new DbError(DbError.Auth, 'Incorrect password');
     }
 
     return { userId: userResult.rows[0].id };
   }
 
-  userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
-    const userQuery = 
-    `SELECT id, name, preferred_name AS "preferredName", email, affiliation, gender, pronouns,
+  userProfileInfo = async (userId: number): Promise<UserProfileInfo> => {
+    const userQuery =
+      `SELECT id, name, preferred_name AS "preferredName", email, affiliation, gender, pronouns,
       tshirt_size AS "tshirtSize", allergies, dietary_reqs AS "dietaryReqs",
       accessibility_reqs AS "accessibilityReqs" FROM user_profile_info WHERE id = $1 LIMIT 1`;
+
     const userResult = await this.pool.query(userQuery, [userId]);
     if (userResult.rowCount === 0) {
-      return undefined; // User not found
+      throw new DbError(DbError.Query, 'User not found');
     }
+
     return userResult.rows[0];
   }
 
-  userUpdateProfile = async (userId : number, userProfile: UserProfileInfo): Promise<void> => {
+  userUpdateProfile = async (userId: number, userProfile: UserProfileInfo): Promise<void> => {
     const userQuery = `
       UPDATE users 
       SET 
@@ -184,7 +172,7 @@ export class SqlDbUserRepository implements UserRepository {
       userProfile.accessibilityReqs,
     ];
     await this.pool.query(userQuery, userValues);
-    return ;
+    return;
   }
 
   userType = async (userId: number): Promise<UserTypeObject> => {
@@ -193,29 +181,38 @@ export class SqlDbUserRepository implements UserRepository {
       `SELECT user_type AS "userType" FROM users WHERE id = ${userId}`
     );
 
+    if (dbResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'User not found');
+    }
+
     return { type: dbResult.rows[0].userType };
   }
 
-  userDashInfo = async(userId: number): Promise<UserDashInfo | undefined> => {
+  userDashInfo = async (userId: number): Promise<UserDashInfo> => {
     const dbResult = await this.pool.query(
       `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = ${userId}`
     );
 
+    if (dbResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'User not found');
+    }
+
     return dbResult.rows[0];
   }
 
-  userUniversity = async (userId: number): Promise<University | undefined> => {
+  userUniversity = async (userId: number): Promise<University> => {
     const universityIdResult = await this.pool.query(`SELECT university_id FROM users WHERE id = $1`, [userId]);
     if (universityIdResult.rowCount === 0) {
-      return undefined;
+      throw new DbError(DbError.Query, 'User not found');
     }
     const universityId = universityIdResult.rows[0].university_id;
+
     const universityNameResult = await this.pool.query(`SELECT name FROM universities WHERE id = $1`, [universityId]);
     if (universityNameResult.rowCount === 0) {
-      return undefined;
+      throw new DbError(DbError.Query, 'University not found');
     }
     const universityName = universityNameResult.rows[0].name;
+
     return { id: universityId, name: universityName };
   }
-
 }
