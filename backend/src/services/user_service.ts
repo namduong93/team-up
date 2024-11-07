@@ -105,6 +105,14 @@ export class UserService {
   }
 
   userUpdatePassword = async (userId: number, oldPassword: string, newPassword: string): Promise<void> => {
+    if (!oldPassword || oldPassword.length === 0) {
+      throw createHttpError(400, 'Old password is required');
+    }
+
+    if (!newPassword || newPassword.length === 0) {
+      throw createHttpError(400, 'New password is required');
+    }
+    
     await this.userRepository.userUpdatePassword(userId, oldPassword, newPassword);
     return;
   }
