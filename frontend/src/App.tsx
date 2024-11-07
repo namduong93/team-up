@@ -47,6 +47,7 @@ import { StudentDisplay } from "./screens/competition_staff_page/students_page/S
 import { StaffManage } from "./screens/competition_staff_page/manage_page/StaffManage";
 import { AttendeesDisplay } from "./screens/competition_staff_page/attendees_page/AttendeesPage";
 import { StaffRoleRegistration } from "./screens/competition/register/StaffRoleRegistration";
+import { StaffAccounts } from "./screens/StaffAccounts";
 
 const themeMap = {
   default: defaultTheme,
@@ -171,6 +172,10 @@ function App() {
             <Route
               path="/dashboard"
               element={<Dashboard dashInfo={dashInfo} />}
+            />
+            <Route
+              path="/staffAccounts"
+              element={<StaffAccounts />}
             />
             <Route
               path="/account"
