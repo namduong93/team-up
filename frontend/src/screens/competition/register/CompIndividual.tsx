@@ -125,8 +125,6 @@ export const CompetitionIndividual: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepCompRegoForm();
   const { code } = useParams<{ code?: string }>();
-  const [platform, setPlatform] = useState("");
-  const [handle, setHandle] = useState("");
 
   const handleBack = () => {
     navigate(`/competition/information/${code}`);
@@ -169,7 +167,7 @@ export const CompetitionIndividual: FC = () => {
     );
   }
 
-  const [user, setUser] = useState<User>({
+  const [, setUser] = useState<User>({
     role: "student",
     profilePic: "",
     name: "",

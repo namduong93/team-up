@@ -59,35 +59,9 @@ export const Button = styled.button<{ $disabled?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-const Label = styled.label`
-  display: block;
-  text-align: left;
-  margin-bottom: 0.5rem;
-  margin-top: 10px;
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  font-size: 18px;
-  width: 100%;
-`;
 const Asterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
   margin-left: 5px; // Add space between label and asterisk
-`;
-// const Text = styled.label`
-//   display: block;
-//   text-align: left;
-//   margin-bottom: 20px;
-//   margin-top: 10px;
-//   font-family: ${({ theme }) => theme.fonts.fontFamily};
-//   font-size: 16px;
-//   width: 100%;
-// `
-
-const Descriptor = styled.div`
-  margin-bottom: 5px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colours.filterText};
-  width: 100%;
 `;
 
 export const CompetitionExperience: FC = () => {
