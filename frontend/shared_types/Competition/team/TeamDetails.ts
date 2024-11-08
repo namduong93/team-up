@@ -6,7 +6,6 @@ export interface Student {
   email: string;
   bio: string;
   preferredContact: string;
-  siteId: number;
   ICPCEligible: boolean;
   level: string;
   boersenEligible: boolean;
@@ -22,6 +21,7 @@ export interface ParticipantTeamDetails {
   compName: string;
   teamName: string;
   teamSite: string;
+  siteId: number;
   teamSeat?: string;
   teamLevel: string;
   startDate: Date;
