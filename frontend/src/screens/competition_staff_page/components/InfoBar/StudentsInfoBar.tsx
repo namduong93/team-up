@@ -3,7 +3,7 @@ import { InfoBar, InfoBarProps } from "./InfoBar";
 import { StudentStatus } from "../../students_page/StudentDisplay";
 import { EditIcon, EditIconButton, ProfilePic } from "../../../account/Account";
 import { backendURL } from "../../../../../config/backendURLConfig";
-import { InfoBarField, LabelSpan, Select } from "./TeamInfoBar";
+import { InfoBarField, LabelSpan, NoWrapLabelSpan, Select, VerticalInfoBarField } from "./TeamInfoBar";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
 import { CompetitionLevel } from "../../../../../shared_types/Competition/CompetitionLevel";
 import { StaffRoles } from "../../staff_page/components/StaffRole";
@@ -23,7 +23,7 @@ export const CompetitionInfoContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* gap: 2px; */
+  gap: 10px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
   border-radius: 10px;
   padding: 2px;
@@ -95,20 +95,20 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
       />
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Name:</LabelSpan>
         <span>{studentInfo.name}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Perferred Name:</LabelSpan>
         <span>{studentInfo.preferredName}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Email:</LabelSpan>
         <span>{studentInfo.email}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
       <InfoBarField>
         <LabelSpan>Gender:</LabelSpan>
@@ -125,36 +125,36 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
         <span>{studentInfo.tshirtSize}</span>
       </InfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Allergies:</LabelSpan>
         <span>{studentInfo.allergies}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Dietary Requirements:</LabelSpan>
         <span>{studentInfo.dietaryReqs}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Accessibility Info:</LabelSpan>
         <span>{studentInfo.accessibilityReqs}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Student Id:</LabelSpan>
         <span>{studentInfo.studentId}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
       {/* Team info */}
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Team:</LabelSpan>
         <span>{studentInfo.teamName}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Site:</LabelSpan>
         <span>{studentInfo.siteName}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
 
       {/* Competition user info */}
@@ -169,16 +169,16 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
           </EditIconButton>
         </InfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Bio:</LabelSpan>
           {isEditing ? <EditableTextArea
             onChange={(e) => setStudentData((p) => ({ ...p, bio: e.target.value }))}
             value={studentData.bio}
           />
           : <span>{studentData.bio}</span>}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>ICPC Eligibile:</LabelSpan>
           {isEditing ?
             <ToggleSelect
@@ -188,9 +188,9 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
               <option selected={!studentData.ICPCEligible} style={{ backgroundColor: theme.colours.cancel }} value='no'>No</option>
             </ToggleSelect> :
           <BooleanStatus style={{ height: '25px' }} $toggled={studentData.ICPCEligible} />}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>boersen Eligibile:</LabelSpan>
           {isEditing ?
             <ToggleSelect
@@ -200,9 +200,9 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
               <option selected={!studentData.boersenEligible} style={{ backgroundColor: theme.colours.cancel }} value='no'>No</option>
             </ToggleSelect> :
           <BooleanStatus style={{ height: '25px' }} $toggled={studentData.boersenEligible} />}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Level:</LabelSpan>
           {isEditing ?
           <Select onChange={(e) => setStudentData((p) => ({ ...p, level: (e.target.value as CompetitionLevel) }))}>
@@ -210,10 +210,10 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
             <option selected={!(studentData.level === 'Level A')} value={CompetitionLevel.LevelB}>Level B</option>
           </Select> :
           <span>{studentData.level}</span>}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
-          <LabelSpan>Degree Year:</LabelSpan>
+        <InfoBarField style={{ width: '75%' }}>
+          <NoWrapLabelSpan>Degree Year:</NoWrapLabelSpan>
           {isEditing ?
           <EditableInput type="number"
             value={studentData.degreeYear}
@@ -222,7 +222,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
           <span>{studentData.degreeYear}</span>}
         </InfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Degree:</LabelSpan>
           {isEditing ?
           <EditableInput
@@ -230,9 +230,9 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
             onChange={(e) => setStudentData((p) => ({ ...p, degree: e.target.value }))}
           /> :
           <span>{studentData.degree}</span>}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Is Remote:</LabelSpan>
           {isEditing ?
             <ToggleSelect
@@ -242,9 +242,9 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
               <option selected={!studentData.isRemote} style={{ backgroundColor: theme.colours.cancel }} value='no'>No</option>
             </ToggleSelect> :
           <BooleanStatus style={{ height: '25px' }} $toggled={studentData.isRemote} />}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Is Official:</LabelSpan>
           {isEditing ?
             <ToggleSelect
@@ -254,9 +254,9 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
               <option selected={!studentData.isOfficial} style={{ backgroundColor: theme.colours.cancel }} value='no'>No</option>
             </ToggleSelect> :
           <BooleanStatus style={{ height: '25px' }} $toggled={studentData.isOfficial} />}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Preferred Contact:</LabelSpan>
           {isEditing ?
           <EditableInput
@@ -264,9 +264,9 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
             onChange={(e) => setStudentData((p) => ({ ...p, preferredContact: e.target.value }))}
           /> :
           <span>{studentData.preferredContact}</span>}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>National Prizes:</LabelSpan>
           {isEditing ?
           <EditableInput
@@ -274,9 +274,9 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
             onChange={(e) => setStudentData((p) => ({ ...p, nationalPrizes: e.target.value }))}
           /> :
           <span>{studentData.nationalPrizes}</span>}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>International Prizes:</LabelSpan>
           {isEditing ?
           <EditableInput
@@ -284,10 +284,10 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
             onChange={(e) => setStudentData((p) => ({ ...p, internationalPrizes: e.target.value }))}
           /> :
           <span>{studentData.internationalPrizes}</span>}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
-          <LabelSpan>Codeforces Rating:</LabelSpan>
+        <InfoBarField style={{ width: '75%' }}>
+          <NoWrapLabelSpan>Codeforces Rating:</NoWrapLabelSpan>
           {isEditing ?
           <EditableInput type="number"
             value={studentData.codeforcesRating}
@@ -296,14 +296,14 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
           <span>{studentData.codeforcesRating}</span>}
         </InfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Status:</LabelSpan>
           <StudentStatus style={{ height: '25px' }}
             isMatched={studentInfo.status === 'Matched'}
           >
             {studentInfo.status}
           </StudentStatus>
-        </InfoBarField>
+        </VerticalInfoBarField>
 
       {isEdited && 
       <div style={{ display: 'flex' }}>
