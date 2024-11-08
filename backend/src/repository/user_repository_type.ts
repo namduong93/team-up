@@ -15,6 +15,7 @@ export interface UserRepository {
 
   userProfileInfo(userId: number): Promise<UserProfileInfo | undefined>;
   userUpdateProfile(userId: number, userProfile: UserProfileInfo): Promise<void>;
+  userUpdatePassword(userId: number, oldPassword: string, newPassword: string): Promise<void>;
 
   userType(userId: number): Promise<UserTypeObject | undefined>;
   userDashInfo(userId: number): Promise<UserDashInfo | undefined>;
