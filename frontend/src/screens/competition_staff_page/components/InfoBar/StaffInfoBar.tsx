@@ -1,12 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import { StaffAccess, StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
 import { InfoBar, InfoBarProps } from "./InfoBar";
-import { InfoBarField, LabelSpan } from "./TeamInfoBar";
+import { InfoBarField, LabelSpan, NoWrapLabelSpan, VerticalInfoBarField } from "./TeamInfoBar";
 import { CompetitionInfoContainerDiv } from "./StudentsInfoBar";
 import { EditableTextArea } from "./components/TeamStudentInfoCard";
 import { EditIcon, EditIconButton, ProfilePic } from "../../../account/Account";
 import { StaffRoles } from "../../staff_page/components/StaffRole";
-import { Input } from "../../../../components/general_utility/RegisterPopUp";
 import styled, { useTheme } from "styled-components";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccessLevel } from "../../staff_page/StaffDisplay";
@@ -195,20 +194,20 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
       />
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>University Name:</LabelSpan>
         <span>{staffData.universityName}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Name:</LabelSpan>
         <span>{staffData.name}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Email:</LabelSpan>
         <span>{staffData.email}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
       <InfoBarField>
         <LabelSpan>Gender:</LabelSpan>
@@ -225,20 +224,20 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
         <span>{staffData.tshirtSize}</span>
       </InfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Allergies:</LabelSpan>
         <span>{staffData.allergies}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Dietary Requirements:</LabelSpan>
         <span>{staffData.dietaryReqs}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan style={{ maxWidth: '115px' }}>Accessibility Requirements:</LabelSpan>
+      <VerticalInfoBarField>
+        <NoWrapLabelSpan>Accessibility Requirements:</NoWrapLabelSpan>
         <span>{staffData.accessibilityReqs}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
       <CompetitionInfoContainerDiv>
         <EditIconButton
@@ -249,16 +248,16 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
         </EditIconButton>
 
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Bio:</LabelSpan>
           {isEditing ? <EditableTextArea
             onChange={(e) => setStaffData((p) => ({ ...p, bio: e.target.value }))}
             value={staffData.bio}
           />
           : <span>{staffData.bio}</span>}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Roles:</LabelSpan>
           {isEditing ? <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
             <InfoBarField>
@@ -289,11 +288,13 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
               <RoleLabelDiv $role={CompetitionRole.SiteCoordinator}>Site-Coordinator</RoleLabelDiv>
             </InfoBarField>
           </div> :
-          <StaffRoles roles={staffData.roles} />}
-        </InfoBarField>
+          <InfoBarField style={{ maxWidth: '160px' }}>
+            <StaffRoles roles={staffData.roles} />
+          </InfoBarField>}
+        </VerticalInfoBarField>
 
 
-        <InfoBarField>
+        <VerticalInfoBarField>
           <LabelSpan>Access:</LabelSpan>
           {isEditing ? <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
             <InfoBarField>
@@ -328,7 +329,7 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
             </InfoBarField>
           </div> :
           <StaffAccessLevel $access={staffData.access}>{staffData.access}</StaffAccessLevel>}
-        </InfoBarField>
+        </VerticalInfoBarField>
 
         {isEdited && 
       <div style={{ display: 'flex' }}>
