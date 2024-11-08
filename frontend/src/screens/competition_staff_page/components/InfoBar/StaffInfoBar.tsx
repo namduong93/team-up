@@ -13,6 +13,8 @@ import { TransparentResponsiveButton } from "../../../../components/responsive_f
 import { RxReset } from "react-icons/rx";
 import { FaSave } from "react-icons/fa";
 import { backendURL } from "../../../../../config/backendURLConfig";
+import { sendRequest } from "../../../../utility/request";
+import { useParams } from "react-router-dom";
 
 
 interface StaffInfoProps extends InfoBarProps {
@@ -133,6 +135,7 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
   isOpenState: [isOpen, setIsOpen]
  }) => {
   const theme = useTheme();
+  const { compId } = useParams();
 
   const [staffData, setStaffData] = useState(staffInfo);
 
@@ -166,7 +169,7 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
 
   }
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     // send backend request here
 
     const currentStaffIndex = staffList.findIndex((staff) => staff.userId === staffData.userId);
@@ -178,6 +181,7 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
       staffData,
       ...staffList.slice(currentStaffIndex + 1)
     ]);
+    await sendRequest.post('/competition/staff/update', { staffList: [staffData], compId });
     setIsEdited(false);
   }
 
