@@ -4,13 +4,14 @@ import { DbError } from "../errors/db_error.js";
 import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
 import { CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
-import { CompetitionRepository, CompetitionRole } from "../repository/competition_repository_type.js";
+import { CompetitionRepository } from "../repository/competition_repository_type.js";
 import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
 import { SeatAssignment } from "../models/team/team.js";
 import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
+import { CompetitionRole } from "../../shared_types/Competition/CompetitionRole.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -62,6 +63,22 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+
+  competitionTeamsUpdate = async (userId: number, teamList: TeamDetails[], compId: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      if (!roles.includes(CompetitionUserRole.COACH)) {
+        throw new ServiceError(ServiceError.Auth, 'User is not an Admin or Coach');
+      }
+
+      await this.competitionRepository.coachCheckIds(userId, teamList.map((team) => team.teamId), compId);
+
+    }
+
+
+    await this.competitionRepository.competitionTeamsUpdate(teamList, compId);
+    return;
   }
   
   competitionSitesCodes = async (code: string) => {

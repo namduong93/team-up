@@ -1,4 +1,4 @@
-import { CompetitionUserRole } from "./competitionUser";
+import { CompetitionRole } from "./competitionUser";
 
 export interface Competition {
   id?: number,
@@ -30,7 +30,7 @@ export type CompetitionShortDetailsObject = {
   compName: string,
   location: string,
   compDate: string,
-  roles: CompetitionUserRole[],
+  roles: CompetitionRole[],
   compCreatedDate: string
  };
 

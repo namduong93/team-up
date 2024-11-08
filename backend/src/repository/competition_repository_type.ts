@@ -14,6 +14,8 @@ import { AttendeesDetails } from "../../shared_types/Competition/staff/Attendees
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  coachCheckIds(userId: number, teamIds: Array<number>, compId: number): Promise<void>;
+  competitionTeamsUpdate(teamList: Array<TeamDetails>, compId: number): Promise<void>;
   competitionSites(compId: number): Promise<Array<CompetitionSite>>;
   competitionAttendees(userId: number, compId: number): Promise<Array<AttendeesDetails>>;
   competitionStaff(userId: number, compId: number): Promise<StaffInfo[]>;

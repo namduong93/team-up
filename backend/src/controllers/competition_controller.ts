@@ -3,6 +3,7 @@ import { CompetitionService } from "../services/competition_service.js";
 import { httpErrorHandler, INVALID_TOKEN } from "./controller_util/http_error_handler.js";
 import { Competition } from "../models/competition/competition.js";
 import { CompetitionAccessLevel, CompetitionStaff } from "../models/competition/competitionUser.js";
+import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
@@ -10,6 +11,15 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionTeamsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const teamList = req.body.teamList as Array<TeamDetails>;
+    const compId = req.body.compId as number;
+
+    await this.competitionService.competitionTeamsUpdate(parseInt(userId as string), teamList, compId);
+    res.json({});
+  });
 
   competitionSitesCodes = httpErrorHandler(async (req: Request, res: Response) => {
     const { code } = req.query;
