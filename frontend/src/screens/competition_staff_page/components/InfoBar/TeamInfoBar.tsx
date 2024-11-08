@@ -10,6 +10,8 @@ import { TransparentResponsiveButton } from "../../../../components/responsive_f
 import { FaSave } from "react-icons/fa";
 import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 import { RxReset } from "react-icons/rx";
+import { sendRequest } from "../../../../utility/request";
+import { useParams } from "react-router-dom";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
@@ -121,7 +123,10 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   siteOptionsState: [siteOptions, setSiteOptions],
   isEditable,
   children, ...props }) => {
+  
+  const { compId } = useParams();
   const theme = useTheme();
+
 
   const [isPopupOpen, setPopupOpen] = useState(false);
 
@@ -150,7 +155,7 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   }, [teamData])
 
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     // send to the backend route here.
 
     const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
@@ -159,6 +164,8 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
       teamData,
       ...teamList.slice(currentTeamIndex + 1)
     ]);
+
+    await sendRequest.post('/competition/teams/update', { teamList: [teamData], compId });
     setIsEdited(false);
   }
 

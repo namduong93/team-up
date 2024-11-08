@@ -9,12 +9,12 @@ import styled, { useTheme } from "styled-components";
 import { addStudentToTeam } from "../../../teams_page/utility/addStudentToTeam";
 import { ButtonConfiguration } from "../../../hooks/useCompetitionOutletContext";
 import { EditIcon, EditIconButton } from "../../../../account/Account";
-import { Input } from "../../../../../components/general_utility/TextInputLight";
 import { TransparentResponsiveButton } from "../../../../../components/responsive_fields/ResponsiveButton";
-import { GiCancel } from "react-icons/gi";
 import { RxReset } from "react-icons/rx";
 import { TeamDetails, Student } from "../../../../../../shared_types/Competition/team/TeamDetails";
 import { TextArea } from "../../../../student/EditCompPreferences";
+import { sendRequest } from "../../../../../utility/request";
+import { useParams } from "react-router-dom";
 
 
 interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -89,6 +89,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
   isEditable
 }) => {
   const theme = useTheme();
+  const { compId } = useParams();
   
   const [teamOptions, setTeamOptions] 
   = useState(teamList.map((team) => ({ value: String(team.teamId), label: team.teamName })));
@@ -127,19 +128,22 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
 
   }, [studentData]);
 
-  const handleSaveEdit = () => {
-    // send request to backend to edit this student
+  const handleSaveEdit = async () => {
 
     const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
     const studentIndex = teamDetails.students.findIndex((stud) => stud.userId === student.userId);
+    const newStudentsArray =  [
+      ...teamDetails.students.slice(0, studentIndex),
+      studentData,
+      ...teamDetails.students.slice(studentIndex + 1) ];
+      
     setTeamList([
       ...teamList.slice(0, currentTeamIndex),
-      { ...teamDetails, students: [
-        ...teamDetails.students.slice(0, studentIndex),
-        studentData,
-        ...teamDetails.students.slice(studentIndex + 1) ] },
+      { ...teamDetails, students: newStudentsArray },
       ...teamList.slice(currentTeamIndex + 1)
     ]);
+
+    await sendRequest.post('/competition/teams/update', { teamList: [{ ...teamDetails, students: newStudentsArray }], compId });
     setIsEdited(false);
   }
 
@@ -161,13 +165,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
 
       <VerticalMemberFieldDiv>
         <LabelSpan>Name:</LabelSpan>
-        {/* {isEditingCard ? 
-        <EditableInput
-          onChange={(e) => setStudentData((p) => ({ ...p, name: e.target.value }))}
-          defaultValue={studentData.name}
-        /> : */}
         <span>{studentData.name}</span>
-        {/* } */}
       </VerticalMemberFieldDiv>
 
       <VerticalMemberFieldDiv>
