@@ -75,7 +75,6 @@ describe('System Admin Create Function', () => {
   })
 
   test('Failure case: Code in use', async () => {
-    const result = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
-    expect(result).toStrictEqual(undefined)
+    await expect(comp_db.competitionSystemAdminCreate(id, mockCompetition)).rejects.toThrow("Competition code is already in use.")
   })
 })

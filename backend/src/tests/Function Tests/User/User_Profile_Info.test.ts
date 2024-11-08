@@ -30,8 +30,7 @@ describe('User Profile Info Function', () => {
     await dropTestDatabase(pool);
   });
   test('Failed case: Unknown Id', async () => {
-    const tempId = id + 1000;
-    expect(await user_db.userProfileInfo(tempId)).toStrictEqual(undefined);
+    await expect(user_db.userProfileInfo(id + 1000)).rejects.toThrow("User not found")
   })
   test('Sucess case: Returns user info', async () => {
     expect(await user_db.userProfileInfo(id)).toStrictEqual({

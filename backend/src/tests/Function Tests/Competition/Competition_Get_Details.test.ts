@@ -57,8 +57,7 @@ describe('Competition Get Details Function', () => {
   });
 
   test('Failure case: Competition does not exist', async () => {
-    const result = await comp_db.competitionGetDetails(comp.competitionId + 10000);
-    expect(result).toStrictEqual(undefined);
+    await expect(comp_db.competitionGetDetails(comp.competitionId + 10000)).rejects.toThrow("Competition does not exist.")
   })
 
   test('Sucess case: returns the competition details', async () => {

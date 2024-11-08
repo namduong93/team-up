@@ -45,7 +45,6 @@ describe('Student Register Function', () => {
     })
   })
   test('Failed case: Email Taken', async () => {
-    const result = await user_db.studentRegister(mockStudent);
-    expect(result).toBe(undefined);
+    await expect(user_db.studentRegister(mockStudent)).rejects.toThrow("Student with this email already exists");
   })
 })

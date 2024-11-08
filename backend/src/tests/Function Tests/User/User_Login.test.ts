@@ -30,12 +30,10 @@ describe('User Login Function', () => {
   });
 
   test('Failed case: Wrong Username', async () => {
-    const result = await user_db.userLogin("whatdafuq@gmail.com", "ezpass");
-    expect(result).toBe(undefined);
+    await expect(user_db.userLogin("whatdafuq@gmail.com", "ezpass")).rejects.toThrow("User with email does not exist")
   })
   test('Failed case: Wrong Password', async () => {
-    const result = await user_db.userLogin("OwOwhudis@OwO.com", "passwordfail");
-    expect(result).toBe(undefined);
+    await expect(user_db.userLogin("OwOwhudis@OwO.com", "passwordfail")).rejects.toThrow("Incorrect password")
   })
   test('Sucess case: returns a number', async () => {
     const result = await user_db.userLogin("OwOwhudis@OwO.com", "ezpass");

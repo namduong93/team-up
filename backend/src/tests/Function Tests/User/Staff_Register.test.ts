@@ -43,7 +43,6 @@ describe('Staff Register Function', () => {
     })
   })
   test('Failed case: Email Taken', async () => {
-    const result = await user_db.staffRegister(mockStaff);
-    expect(result).toBe(undefined);
+    await expect(user_db.staffRegister(mockStaff)).rejects.toThrow("Staff with this email already exists")
   })
 })

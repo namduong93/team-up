@@ -53,8 +53,7 @@ describe('Get Comp Id from Code Function', () => {
   });
 
   test('Failure case: code does not exist', async () => {
-    const result = await comp_db.competitionIdFromCode('ASJDKJHABNDKW');
-    expect(result).toBe(undefined);
+    await expect(comp_db.competitionIdFromCode('ASJDKJHABNDKW')).rejects.toThrow("Competition not found.")
   })
 
   test('Sucess case: returns the users team details', async () => {
