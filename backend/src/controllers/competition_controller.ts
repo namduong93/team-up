@@ -4,6 +4,7 @@ import { httpErrorHandler, INVALID_TOKEN } from "./controller_util/http_error_ha
 import { Competition } from "../models/competition/competition.js";
 import { CompetitionAccessLevel, CompetitionStaff } from "../models/competition/competitionUser.js";
 import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
+import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
@@ -11,6 +12,16 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionStudentsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const studentList = req.body.studentList as Array<StudentInfo>;
+    const compId = req.body.compId as number;
+
+    await this.competitionService.competitionStudentsUpdate(parseInt(userId as string), studentList, compId);
+
+    res.json({});
+  });
 
   competitionTeamsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;

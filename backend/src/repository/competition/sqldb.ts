@@ -24,6 +24,53 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
+  competitionStudentsUpdate = async (userId: number, studentList: StudentInfo[], compId: number) => {
+    
+    for (const student of studentList) {
+      console.log(student);
+      try {
+        await this.pool.query(
+          `UPDATE competition_users
+          SET
+            bio = '${student.bio}',
+            icpc_eligible = ${student.ICPCEligible},
+            boersen_eligible = ${student.boersenEligible},
+            competition_level = '${student.level}',
+            degree_year = ${student.degreeYear},
+            degree = '${student.degree}',
+            is_remote = ${student.isRemote},
+            is_official = ${student.isOfficial},
+            preferred_contact = '${student.preferredContact}',
+            national_prizes = '${student.nationalPrizes}',
+            international_prizes = '${student.internationalPrizes}',
+            codeforces_rating = ${student.codeforcesRating}
+          WHERE user_id = ${student.userId} AND competition_id = ${compId};
+          `
+        );
+
+      } catch (error: unknown) {
+        throw new DbError(DbError.Insert, 'Failed to update a user in the db');
+      }
+    }
+
+  }
+
+  coachCheckIdsStudent = async (userId: number, userIds: Array<number>, compId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT cu.user_id AS "userId"
+      FROM competition_users AS cu_coach
+      JOIN competition_users AS cu ON cu.competition_coach_id = cu_coach.id
+      WHERE cu_coach.user_id = ${userId} AND cu_coach.competition_id = ${compId}
+      `
+    );
+
+    const resultIds = dbResult.rows.map((row) => row.userId);
+
+    if (!userIds.every((id) => resultIds.includes(id))) {
+      throw new DbError(DbError.Auth, "Coach is not coaching some of the students in the provided list");
+    }
+  }
+
   coachCheckIds = async (userId: number, teamIds: Array<number>, compId: number) => {
     // Check if the coach is coaching all the teams in approveIds
     const coachCheckQuery = `
@@ -38,8 +85,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     )
     `;
     const coachCheckResult = await this.pool.query(coachCheckQuery, [teamIds, compId, userId]);
+    const resultIds = coachCheckResult.rows.map((row) => row.id);
     
-    if (coachCheckResult.rowCount !== teamIds.length) {
+    if (!teamIds.every((id) => resultIds.includes(id))) {
       throw new DbError(DbError.Auth, "Coach is not coaching some of the teams in the provided team IDs.");
     }
 
