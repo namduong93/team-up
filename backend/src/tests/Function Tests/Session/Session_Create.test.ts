@@ -1,4 +1,3 @@
-
 import { Session } from "../../../models/session/session";
 import { Student } from "../../../models/user/student/student";
 import { SqlDbSessionRepository } from "../../../repository/session/sqldb";
@@ -37,11 +36,18 @@ describe.skip('Session Create Function', () => {
   });
 
   test('Success case: a new session is created', async () => {
+    console.log(timeStamp);
     const newSession: Session = {
-      sessionId: 'theresNoWAYThisSeshIDisKnown',
+      sessionId: 'ezID',
       createdAt: timeStamp,
       userId: student.userId
     }
-    console.log(await session_db.create(newSession));
+    await session_db.create(newSession);
+    console.log(await session_db.find('ezID'));
+    expect(await session_db.find('ezID')).toStrictEqual({
+      sessionId: 'ezID                                ',
+      userId: student.userId,
+      createdAt: new Date(timeStamp)
+    })
   })
 })

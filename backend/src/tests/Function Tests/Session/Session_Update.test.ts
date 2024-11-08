@@ -13,4 +13,8 @@ describe.skip('Session Update Function', () => {
   afterAll(async () => {
     await dropTestDatabase(pool);
   });
+
+  test('husk', () => {
+    expect(1 + 1).toBe(2);
+  })
 })

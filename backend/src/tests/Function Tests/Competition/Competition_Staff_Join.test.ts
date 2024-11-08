@@ -26,14 +26,14 @@ describe('Staff Join Function', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
-    code: 'TC8',
+    code: 'TC14',
     region: 'Australia'
   }
 
   const mockStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'dasOddodmin7@odmin.com',
+    email: 'dasOddodmin13@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -106,7 +106,7 @@ describe('Staff Join Function', () => {
         universityId: 1,
         universityName: 'University of Melbourne',
         name: 'Maximillian Maverick',
-        email: 'dasOddodmin7@odmin.com',
+        email: 'dasOddodmin13@odmin.com',
         sex: 'Male',
         pronouns: 'He/Him',
         tshirtSize: 'M',
@@ -161,7 +161,7 @@ describe('Staff Join Function', () => {
         universityId: 1,
         universityName: 'University of Melbourne',
         name: 'Maximillian Maverick',
-        email: 'dasOddodmin7@odmin.com',
+        email: 'dasOddodmin13@odmin.com',
         sex: 'Male',
         pronouns: 'He/Him',
         tshirtSize: 'M',
@@ -225,7 +225,7 @@ describe('Staff Join Function', () => {
         universityId: 1,
         universityName: 'University of Melbourne',
         name: 'Maximillian Maverick',
-        email: 'dasOddodmin7@odmin.com',
+        email: 'dasOddodmin13@odmin.com',
         sex: 'Male',
         pronouns: 'He/Him',
         tshirtSize: 'M',

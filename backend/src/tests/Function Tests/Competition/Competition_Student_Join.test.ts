@@ -9,7 +9,7 @@ import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 // competition student join seems bugged
-describe.skip('Student Join Competition Function', () => {
+describe('Student Join Competition Function', () => {
   let user_db;
   let comp_db;
 
@@ -84,6 +84,51 @@ describe.skip('Student Join Competition Function', () => {
     await dropTestDatabase(pool);
   });
 
+  test('Failure case: university is not signed up to the competition', async () => {
+    const mockStudent: Student = {
+      name: 'Maximillian Maverick',
+      preferredName: 'X',
+      email: 'iwobuppies@gmail.com',
+      password: 'testPassword',
+      gender: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'L',
+      universityId: 2,
+      studentId: 'z5381412'
+    };
+
+    const newStudent: UserIdObject = await user_db.studentRegister(mockStudent);
+
+    const newContender: CompetitionUser = {
+      userId: newStudent.userId,
+      competitionId: comp.competitionId,
+      competitionRoles: [CompetitionUserRole.PARTICIPANT],
+      ICPCEligible: true,
+      competitionLevel: 'No Preference',
+      siteLocation: {
+        id: 1,
+        name: 'TestRoom',
+      },
+      boersenEligible: true,
+      degreeYear: 3,
+      degree: 'ComSci',
+      isRemote: true,
+      nationalPrizes: 'none',
+      internationalPrizes: 'none',
+      codeforcesRating: 7,
+      universityCourses: ['4511', '9911', '911'],
+      pastRegional: true,
+      competitionBio: 'I good, promise',
+      preferredContact: 'Pigeon Carrier',
+    }
+
+    const studentUni: University = {
+      id: 2,
+      name: 'Monash University'
+    }
+    await expect(comp_db.competitionStudentJoin(newContender, studentUni)).rejects.toThrow("Your university is not registered for this competition.")
+  })
+
   test('Sucess case: returns the users team details', async () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
@@ -127,6 +172,41 @@ describe.skip('Student Join Competition Function', () => {
       name: 'University of Melbourne'
     }
     await comp_db.competitionStudentJoin(newContender, studentUni)
-    console.log(await comp_db.competitionStudents(id, comp.competitionId))
+    expect(await comp_db.competitionStudents(id, comp.competitionId)).toStrictEqual([
+      {
+        userId: newStudent.userId,
+        universityId: 1,
+        universityName: 'University of Melbourne',
+        name: 'Maximillian Maverick',
+        preferredName: 'X',
+        email: 'igibupman@gmail.com',
+        sex: 'Male',
+        pronouns: 'He/Him',
+        tshirtSize: 'L',
+        allergies: null,
+        dietaryReqs: '{}',
+        accessibilityReqs: null,
+        studentId: 'z5381412',
+        roles: ['Participant'],
+        bio: 'I good, promise',
+        ICPCEligible: true,
+        boersenEligible: true,
+        level: 'No Preference',
+        degreeYear: 3,
+        degree: 'ComSci',
+        isRemote: true,
+        isOfficial: null,
+        preferredContact: 'Pigeon Carrier',
+        nationalPrizes: 'none',
+        internationalPrizes: 'none',
+        codeforcesRating: 7,
+        universityCourses: ['4511', '9911', '911'],
+        pastRegional: true,
+        status: 'Matched',
+        teamName: 'Bulbasaur',
+        siteName: 'Library',
+        siteId: 1
+      }
+    ])
   })
 })

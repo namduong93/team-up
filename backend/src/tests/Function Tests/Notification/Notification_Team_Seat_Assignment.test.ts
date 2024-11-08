@@ -17,4 +17,8 @@ describe.skip('Notification Team Seat Assignment Function', () => {
   afterAll(async () => {
     await dropTestDatabase(pool);
   });
+
+  test('husk', () => {
+    expect(1 + 1).toBe(2);
+  })
 })
