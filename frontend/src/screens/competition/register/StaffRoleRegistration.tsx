@@ -142,10 +142,8 @@ export const StaffRoleRegistration: FC = () => {
   }, []);
 
   const isButtonDisabled = () => {
-    // console.log(currentSiteOption);
-    // console.log(staffRegistrationData);
-    const { roles: role, competitionBio, site: site } = staffRegistrationData;
     console.log(staffRegistrationData);
+    const { roles: role, competitionBio, site: site } = staffRegistrationData;
     if (role.length === 0) {
       return true;
     }
@@ -157,7 +155,11 @@ export const StaffRoleRegistration: FC = () => {
     }
 
     if (role.includes(CompetitionRole.SiteCoordinator)) {
-      if (staffRegistrationData.site?.id === 0 || site?.capacity === 0) {
+      if (
+        staffRegistrationData.site?.id === 0 ||
+        site?.capacity === 0 ||
+        site?.capacity === undefined
+      ) {
         return true;
       }
     }
@@ -168,8 +170,6 @@ export const StaffRoleRegistration: FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    //TO-DO: send staffRegistrationData to backend where request will be sent
-    // to admin to grant privileges
     try {
       sendRequest.post("/competition/staff/join", {
         code,
@@ -203,7 +203,6 @@ export const StaffRoleRegistration: FC = () => {
                 roles: selectedValues as CompetitionRole[],
               };
 
-              // Clear fields if specific roles are deselected
               if (!selectedValues.includes(CompetitionRole.Coach)) {
                 updatedData.competitionBio = "";
               }

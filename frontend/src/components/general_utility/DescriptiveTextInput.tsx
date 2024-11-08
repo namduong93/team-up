@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 interface DescriptiveTextInputProps {
   label?: string;
@@ -27,7 +27,7 @@ const Label = styled.label`
   margin-top: 10px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
-  color: ${({ theme}) => theme.fonts.colour};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const Descriptor = styled.div`
@@ -51,6 +51,7 @@ const StyledTextarea = styled.textarea<{ $height: string }>`
   font-size: 16px;
   height: ${({ $height }) => $height};
   width: 100%;
+  padding: 10px;
 `;
 
 const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
@@ -60,12 +61,12 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   required = false,
   value,
   onChange,
-  width = '600px',
-  height = '100px',
+  width = "600px",
+  height = "100px",
 }) => {
   return (
     <Container width={width}>
-       {label && (
+      {label && (
         <Label>
           {label}
           {required && <Asterisk>*</Asterisk>}
