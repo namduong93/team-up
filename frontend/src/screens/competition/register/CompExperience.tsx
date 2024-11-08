@@ -124,6 +124,7 @@ export const CompetitionExperience: FC = () => {
     };
 
     try {
+      console.log(payload);
       const allFieldsFalse = Object.values(editRego).every(
         (value) => value === false
       );
