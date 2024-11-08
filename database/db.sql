@@ -184,7 +184,8 @@ CREATE TYPE notification_type_enum AS ENUM (
   'deadline',
   'teamStatus',
   'cheer',
-  'invite'
+  'invite',
+  'staffAccount'
 );
 
 CREATE TABLE notifications (
@@ -193,7 +194,7 @@ CREATE TABLE notifications (
   user_id INT NOT NULL REFERENCES users (id),
   team_id INT REFERENCES competition_teams (id),
   competition_id INT REFERENCES competitions (id),
-  type TEXT NOT NULL,
+  type notification_type_enum NOT NULL,
   message TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL,
   
@@ -787,7 +788,7 @@ VALUES
 -- Competition Coach(es)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
-(2, 1, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio'),
+(2, 1, ARRAY['Coach']::competition_role_enum[], 'Pending', 'epic bio'),
 (2, 2, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio'),
 (2, 3, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio');
 
@@ -853,31 +854,31 @@ INSERT INTO notifications (
 )
 VALUES 
 (
-  5, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
+  5, NULL, NULL, 'welcomeCompetition'::notification_type_enum, 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  5, NULL, NULL, ARRAY['welcomeAccount']::notification_type_enum[], 'Welcome to TeamUP!', NOW(),
+  5, NULL, NULL, 'welcomeAccount'::notification_type_enum, 'Welcome to TeamUP!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  6, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
+  6, NULL, NULL, 'welcomeCompetition'::notification_type_enum, 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  7, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
+  7, NULL, NULL, 'welcomeCompetition'::notification_type_enum, 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  8, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
+  8, NULL, NULL, 'welcomeCompetition'::notification_type_enum, 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  9, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
+  9, NULL, NULL, 'welcomeCompetition'::notification_type_enum, 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 ),
 (
-  10, NULL, NULL, ARRAY['welcomeCompetition']::notification_type_enum[], 'Welcome to the competition!', NOW(),
+  10, NULL, NULL, 'welcomeCompetition'::notification_type_enum, 'Welcome to the competition!', NOW(),
   NULL, NULL, NULL, NULL, NULL
 );
 
@@ -889,14 +890,15 @@ VALUES
 
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
 VALUES 
-(4, 5, 'J17 K17 Building', 100),
+(4, 5, 'J17 K17 Building UNSW', 100),
 (1, 1, 'Ainsworth Building', 100),
 (1, 1, 'Krusty Krab', 100),
 (1, 1, 'Spooky Manor', 100),
 (1, 1, 'Mickey Mouse Clubhouse', 100),
 (1, 1, 'afternoon chance some', 100),
 (1, 1, 'charge back finish', 100),
-(1, 1, 'chemical captured choose', 100);
+(1, 1, 'chemical captured choose', 100),
+(4, 2, 'J17 K17 Building UNSW', 100);
 
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES

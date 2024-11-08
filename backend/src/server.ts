@@ -45,11 +45,6 @@ const pool = new Pool({
 //Middleware to authenticate request
 const authenticator = new Authenticator();
 
-// Notification Registry
-const notificationRepository = new SqlDbNotificationRepository(pool);
-const notificationService = new NotificationService(notificationRepository);
-const notificationController = new NotificationController(notificationService);
-
 // User Registry
 const sessionRepository = new SqlDbSessionRepository(pool);
 app.use(authenticator.authenticationMiddleware(sessionRepository));
@@ -58,6 +53,11 @@ app.use(authenticator.authenticationMiddleware(sessionRepository));
 const userRepository = new SqlDbUserRepository(pool);
 const userService = new UserService(userRepository, sessionRepository);
 const userController = new UserController(userService);
+
+// Notification Registry
+const notificationRepository = new SqlDbNotificationRepository(pool);
+const notificationService = new NotificationService(notificationRepository, userRepository);
+const notificationController = new NotificationController(notificationService);
 
 // Competition Registry
 const competitionRepository = new SqlDbCompetitionRepository(pool);
@@ -104,6 +104,8 @@ app.get('/user/profile_info', userController.userProfileInfo);
 // PARAMS: { name, preferredName, email, affiliation, gender, pronouns, tshirtSize, allergies, dietaryReqs, accessibilityReqs }
 // RESPONSE: {}
 app.put('/user/profile_info', userController.userUpdateProfile);
+
+app.put('/user/password', userController.userUpdatePassword);
 
 // This should return things that need to be displayed on the dash
 // DEV: If you need this to return more things, you can just start assuming it does
@@ -243,9 +245,6 @@ app.get('/competition/roles', competitionController.competitionRoles);
 app.get('/competition/students', competitionController.competitionStudents);
 
 app.get('/competition/staff', competitionController.competitionStaff);
-
-// Create and post a notification
-app.post('/notification', notificationController.notificationCreate);
 
 // PARAMS: {}
 // Get all notifications for a user

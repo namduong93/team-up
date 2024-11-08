@@ -10,21 +10,6 @@ export class NotificationController {
     this.notificationService = notificationService;
   }
 
-  notificationCreate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const notification: Notification = {
-      userId: req.body.userId,
-      competitionId: req.body.competitionId,
-      type: req.body.type,
-      message: req.body.message,
-      createdAt: req.body.createdAt,
-    };
-
-    const result = await this.notificationService.notificationCreate(notification);
-    res.json(result);
-
-    return;
-  });
-
   notificationRemove = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const notificationId = req.query.notificationId;
     const result = await this.notificationService.notificationRemove(Number(notificationId));

@@ -26,17 +26,23 @@ export class SqlDbUniversityRepository implements UniversityRepository {
     return dbResult.rows;
   }
 
-  universitiesList = async (): Promise<UniversityListObject | undefined> => {
+  universitiesList = async (): Promise<UniversityListObject> => {
     let universityQuery = `
       SELECT * FROM universities;
     `;
     const universityResult = await this.pool.query(universityQuery);
+
+    if (universityResult.rowCount === 0) {
+      throw new Error('No university found');
+    }
+
     const universitiesList: UniversityListObject = {
       universities: universityResult.rows.map(row => ({
         id: row.id,
         name: row.name,
       })),
     };
+
     return universitiesList;
   }
 }
