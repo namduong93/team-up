@@ -13,6 +13,8 @@ import styled, { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { RxReset } from "react-icons/rx";
 import { FaSave } from "react-icons/fa";
+import { sendRequest } from "../../../../utility/request";
+import { useParams } from "react-router-dom";
 
 interface StudentsInfoProps extends InfoBarProps {
   studentInfo: StudentInfo;
@@ -39,6 +41,8 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
     ...props
   }) => {
   
+  const { compId } = useParams();
+  
   const theme = useTheme();
 
   
@@ -56,29 +60,23 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
     setIsEdited(true);
   }, [studentData]);
 
-  const handleSaveEdit = () => {
-    // send request to backend to edit this student
+  const handleSaveEdit = async () => {
+    
 
-    // const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
-    // const studentIndex = teamDetails.students.findIndex((stud) => stud.userId === student.userId);
-    // setTeamList([
-    //   ...teamList.slice(0, currentTeamIndex),
-    //   { ...teamDetails, students: [
-    //     ...teamDetails.students.slice(0, studentIndex),
-    //     studentData,
-    //     ...teamDetails.students.slice(studentIndex + 1) ] },
-    //   ...teamList.slice(currentTeamIndex + 1)
-    // ]);
-
-    const currentStudentIndex = students.findIndex((stud) => stud.userId === studentInfo.userId);
+    const currentStudentIndex = students.findIndex((stud) => stud.userId === studentData.userId);
     if (currentStudentIndex < 0) {
       return;
     }
-    setStudents([
+
+    const newStudents = [
       ...students.slice(0, currentStudentIndex),
-      studentInfo,
+      studentData,
       ...students.slice(currentStudentIndex + 1),
-    ]);
+    ];
+
+    setStudents(newStudents);
+    await sendRequest.post('/competition/students/update', { studentList: [studentData], compId });
+
     setIsEdited(false);
   }
 
