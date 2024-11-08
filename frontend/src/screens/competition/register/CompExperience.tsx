@@ -129,14 +129,14 @@ export const CompetitionExperience: FC = () => {
         (value) => value === false
       );
 
-      const apiEndpoint = allFieldsFalse
-        ? "/competition/student/join"
-        : "NEW_ONE"; // change when the other API is done
-
       // TO-DO: uncomment when the other API is confirmed
 
-      const response = await sendRequest.post(apiEndpoint, payload);
-      console.log("Response:", response.data);
+      // const apiEndpoint = allFieldsFalse
+      //   ? "/competition/student/join"
+      //   : "NEW_ONE"; // change when the other API is done
+
+      // const response = await sendRequest.post(apiEndpoint, payload);
+      // console.log("Response:", response.data);
 
       navigate("/dashboard", {
         state: {
@@ -196,9 +196,9 @@ export const CompetitionExperience: FC = () => {
   // TO-DO: call the EditRego interface for the competition from backend
   const [editRego] = useState<EditRego>({
     codeforces: false,
-    nationalOlympiad: false,
+    nationalOlympiad: true,
     internationalOlympiad: false,
-    regionalParticipation: false,
+    regionalParticipation: true,
   });
 
   return (
