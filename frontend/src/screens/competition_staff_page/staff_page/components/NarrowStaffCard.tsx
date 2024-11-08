@@ -20,10 +20,12 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
       <Field label="Role"
         value={
           <NarrowStatusDiv>
-            <StaffRoles style={{ width: '100%' }} roles={staffDetails.roles} />
+            <NarrowStatusDiv style={{ width: '90%' }}>
+              <StaffRoles style={{ width: '100%' }} roles={staffDetails.roles} />
+            </NarrowStatusDiv>
           </NarrowStatusDiv>
         }
-        style={{ width: '20%', minWidth: '125px' }}
+        style={{ width: '20%', minWidth: '140px' }}
       />
       <Field label="Affiliation" value={staffDetails.universityName} style={{ width: '20%', minWidth: '170px', whiteSpace: 'break-spaces' }} />
       <Field label="Access" 
