@@ -1,3 +1,4 @@
+/* eslint-disable no-irregular-whitespace */
 import { FC } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { styled } from "styled-components";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
@@ -57,7 +58,7 @@ export const StaffRoleRegistration: FC = () => {
   const [siteOptions, setSiteOptions] = useState<
     Array<{ value: string; label: string }>
   >([]);
-  const [universityOptions, setUniversityOptions] = useState<
+  const [, setUniversityOptions] = useState<
     Array<{ value: string; label: string }>
   >([]);
 
@@ -65,7 +66,7 @@ export const StaffRoleRegistration: FC = () => {
     value: "",
     label: "",
   });
-  const [currentUniversityOption, setCurrentUniversityOption] = useState({
+  const [currentUniversityOption] = useState({
     value: "",
     label: "",
   });

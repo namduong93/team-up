@@ -9,6 +9,7 @@ import TextInput from "../../../components/general_utility/TextInput";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { sendRequest } from "../../../utility/request";
+import { EditRego } from "../../../../shared_types/Competition/staff/Edit";
 
 const Container = styled.div`
   flex: 1;
@@ -74,7 +75,6 @@ export const CompetitionExperience: FC = () => {
   const [hasInternationalPrize, setHasInternationalPrize] = useState<
     boolean | undefined
   >(undefined);
-  // const [courseOptions, setCourseOptions] = useState<Array<{ value: string; label: string }>>([]);
 
   const handleBack = () => {
     navigate(`/competition/individual/${code}`);
@@ -124,10 +124,17 @@ export const CompetitionExperience: FC = () => {
     };
 
     try {
-      const response = await sendRequest.post(
-        "/competition/student/join ",
-        payload
+      const allFieldsFalse = Object.values(editRego).every(
+        (value) => value === false
       );
+
+      const apiEndpoint = allFieldsFalse
+        ? "/competition/student/join"
+        : "NEW_ONE"; // change when the other API is done
+
+      // TO-DO: uncomment when the other API is confirmed
+
+      const response = await sendRequest.post(apiEndpoint, payload);
       console.log("Response:", response.data);
 
       navigate("/dashboard", {
@@ -173,14 +180,25 @@ export const CompetitionExperience: FC = () => {
     } else {
       return (
         courses.length === 0 ||
-        hasNationalPrize === undefined ||
+        (!editRego.nationalOlympiad && hasNationalPrize === undefined) ||
         (hasNationalPrize && nationalPrizes === "") ||
-        hasInternationalPrize === undefined ||
+        (!editRego.internationalOlympiad &&
+          hasInternationalPrize === undefined) ||
         (hasInternationalPrize && internationalPrizes === "") ||
-        (degreeYear !== 1 && pastRegional === undefined)
+        (!editRego.regionalParticipation &&
+          degreeYear !== 1 &&
+          pastRegional === undefined)
       );
     }
   }
+
+  // TO-DO: call the EditRego interface for the competition from backend
+  const [editRego] = useState<EditRego>({
+    codeforces: false,
+    nationalOlympiad: false,
+    internationalOlympiad: false,
+    regionalParticipation: false,
+  });
 
   return (
     <FlexBackground
@@ -212,7 +230,7 @@ export const CompetitionExperience: FC = () => {
             showOther={false}
           />
 
-          {formData.competitionLevel !== "Level B" && (
+          {!editRego.codeforces && formData.competitionLevel !== "Level B" && (
             <TextInput
               label="Codeforces Score"
               placeholder="Please enter"
@@ -228,7 +246,8 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          {formData.degreeYear.toString() !== "1" &&
+          {!editRego.regionalParticipation &&
+            formData.degreeYear.toString() !== "1" &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
                 label="ICPC Regional Participation"
@@ -250,26 +269,27 @@ export const CompetitionExperience: FC = () => {
               />
             )}
 
-          {formData.competitionLevel !== "Level B" && (
-            <RadioButton
-              label="National Olympiad Prizes in Mathematics or Informatics"
-              options={["Yes", "No"]}
-              selectedOption={
-                hasNationalPrize === undefined
-                  ? ""
-                  : hasNationalPrize
-                  ? "Yes"
-                  : "No"
-              }
-              onOptionChange={(e) => {
-                const nationalPrize = e.target.value === "Yes";
-                setHasNationalPrize(nationalPrize);
-              }}
-              required={true}
-              descriptor="Have you ever won any related National Olympiad in Mathematics or Informatics prizes?"
-              width="100%"
-            />
-          )}
+          {!editRego.nationalOlympiad &&
+            formData.competitionLevel !== "Level B" && (
+              <RadioButton
+                label="National Olympiad Prizes in Mathematics or Informatics"
+                options={["Yes", "No"]}
+                selectedOption={
+                  hasNationalPrize === undefined
+                    ? ""
+                    : hasNationalPrize
+                    ? "Yes"
+                    : "No"
+                }
+                onOptionChange={(e) => {
+                  const nationalPrize = e.target.value === "Yes";
+                  setHasNationalPrize(nationalPrize);
+                }}
+                required={true}
+                descriptor="Have you ever won any related National Olympiad in Mathematics or Informatics prizes?"
+                width="100%"
+              />
+            )}
 
           {hasNationalPrize && (
             <DescriptiveTextInput
@@ -284,26 +304,27 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          {formData.competitionLevel !== "Level B" && (
-            <RadioButton
-              label="International Olympiad Prizes in Mathematics or Informatics"
-              options={["Yes", "No"]}
-              selectedOption={
-                hasInternationalPrize === undefined
-                  ? ""
-                  : hasInternationalPrize
-                  ? "Yes"
-                  : "No"
-              }
-              onOptionChange={(e) => {
-                const internationalPrize = e.target.value === "Yes";
-                setHasInternationalPrize(internationalPrize);
-              }}
-              required={true}
-              descriptor="Have you ever won any related International Olympiad prizes?"
-              width="100%"
-            />
-          )}
+          {!editRego.internationalOlympiad &&
+            formData.competitionLevel !== "Level B" && (
+              <RadioButton
+                label="International Olympiad Prizes in Mathematics or Informatics"
+                options={["Yes", "No"]}
+                selectedOption={
+                  hasInternationalPrize === undefined
+                    ? ""
+                    : hasInternationalPrize
+                    ? "Yes"
+                    : "No"
+                }
+                onOptionChange={(e) => {
+                  const internationalPrize = e.target.value === "Yes";
+                  setHasInternationalPrize(internationalPrize);
+                }}
+                required={true}
+                descriptor="Have you ever won any related International Olympiad prizes?"
+                width="100%"
+              />
+            )}
 
           {hasInternationalPrize && (
             <DescriptiveTextInput
