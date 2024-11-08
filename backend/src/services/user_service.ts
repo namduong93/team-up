@@ -22,7 +22,7 @@ export class UserService {
   }
 
   studentRegister = async (student: Student): Promise<SessionTokenObject | undefined> => {
-    if (!student.pronouns) { 
+    if (!student.pronouns) {
       student.pronouns = convertGenderToP(student.gender);
     }
     const validated = validateStudent(student);
@@ -41,7 +41,7 @@ export class UserService {
   }
 
   staffRegister = async (staff: Staff): Promise<SessionTokenObject | undefined> => {
-    if (!staff.pronouns) { 
+    if (!staff.pronouns) {
       staff.pronouns = convertGenderToP(staff.gender);
     }
     const validated = validateStaff(staff);
@@ -61,11 +61,10 @@ export class UserService {
   }
 
   userLogin = async (email: string, password: string): Promise<SessionTokenObject | undefined> => {
-    if(!email || email.length === 0) {
+    if (!email || email.length === 0) {
       throw createHttpError(400, 'Email is required');
     }
-    
-    if(!password || password.length === 0) {
+    if (!password || password.length === 0) {
       throw createHttpError(400, 'Password is required');
     }
 
@@ -82,7 +81,7 @@ export class UserService {
 
   userLogout = async (sessionToken: string): Promise<void> => {
     await this.sessionRepository.delete(sessionToken);
-    return ;
+    return;
   }
 
   userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
@@ -90,9 +89,22 @@ export class UserService {
     return userProfileInfo;
   }
 
-  userUpdateProfile = async (userId:number, userProfile : UserProfileInfo): Promise<void> => {
+  userUpdatePassword = async (userId: number, oldPassword: string, newPassword: string): Promise<void> => {
+    if (!oldPassword || oldPassword.length === 0) {
+      throw createHttpError(400, 'Old password is required');
+    }
+
+    if (!newPassword || newPassword.length === 0) {
+      throw createHttpError(400, 'New password is required');
+    }
+    
+    await this.userRepository.userUpdatePassword(userId, oldPassword, newPassword);
+    return;
+  }
+
+  userUpdateProfile = async (userId: number, userProfile: UserProfileInfo): Promise<void> => {
     await this.userRepository.userUpdateProfile(userId, userProfile);
-    return ;
+    return;
   }
 
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {

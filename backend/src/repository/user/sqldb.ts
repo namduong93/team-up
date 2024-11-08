@@ -175,6 +175,35 @@ export class SqlDbUserRepository implements UserRepository {
     return;
   }
 
+  userUpdatePassword = async(userId: number, oldPassword: string, newPassword: string): Promise<void> => {
+    const userQuery = `SELECT hashed_password FROM users WHERE id = $1;`;
+    const userResult = await this.pool.query(userQuery, [userId]);
+
+    if (userResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "User not found");
+    }
+
+    // Check if old password is correct
+    if (!await bcrypt.compare(oldPassword, userResult.rows[0].hashed_password)) {
+      throw new DbError(DbError.Query, "Current password is incorrect");
+    }
+
+    if (await bcrypt.compare(newPassword, userResult.rows[0].hashed_password)) {
+      throw new DbError(DbError.Query, "New password must be different from old password");
+    }
+
+    // Update new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const updateQuery = `UPDATE users SET hashed_password = $2 WHERE id = $1;`;
+    await this.pool.query(updateQuery, [userId, hashedPassword]);
+
+    // Delete all associated sessions after the password update
+    const deleteSessionsQuery = `DELETE FROM sessions WHERE user_id = $1;`;
+    await this.pool.query(deleteSessionsQuery, [userId]);
+
+    return;
+  }
+
   userType = async (userId: number): Promise<UserTypeObject> => {
 
     const dbResult = await this.pool.query(
