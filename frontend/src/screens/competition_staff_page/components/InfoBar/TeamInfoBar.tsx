@@ -1,8 +1,7 @@
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
 import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
 import styled, { useTheme } from "styled-components";
-import { addStudentToTeam } from "../../teams_page/utility/addStudentToTeam";
 import { ButtonConfiguration } from "../../hooks/useCompetitionOutletContext";
 import { EditableInput, TeamStudentInfoCard } from "./components/TeamStudentInfoCard";
 import { EditIcon, EditIconButton } from "../../../account/Account";
@@ -11,6 +10,8 @@ import { TransparentResponsiveButton } from "../../../../components/responsive_f
 import { FaSave } from "react-icons/fa";
 import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 import { RxReset } from "react-icons/rx";
+import { sendRequest } from "../../../../utility/request";
+import { useParams } from "react-router-dom";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
@@ -26,14 +27,32 @@ interface TeamInfoBarProps extends InfoBarProps {
 export const InfoBarField = styled.div`
   width: 100%;
   display: flex;
-  min-height: 25px;
   align-items: center;
   column-gap: 4px;
 `;
 
-export const LabelSpan = styled.span`
+export const VerticalInfoBarField = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 25px;
+  justify-content: center;
+  column-gap: 4px;
+`;
+
+export const LabelSpan = styled.span<{ $isEditing?: boolean }>`
   font-weight: bold;
-  /* max-width: 180px; */
+  color: ${({ theme, $isEditing: isEditing }) => isEditing ? theme.colours.secondaryDark : theme.colours.primaryDark };
+  /* min-width: 50%; */
+  /* max-width: 160px; */
+`;
+
+export const NoWrapLabelSpan = styled(LabelSpan)`
+  white-space: nowrap;
+`;
+
+const TeamDetailsLabelSpan = styled(LabelSpan)`
+  width: 65px;
 `;
 
 export const TitleDiv = styled.div<{ $isOpen: boolean }>`
@@ -42,13 +61,13 @@ export const TitleDiv = styled.div<{ $isOpen: boolean }>`
   justify-content: center;
   align-items: center;
   font-size: ${({ theme, $isOpen }) => $isOpen ? theme.fonts.fontSizes.title : '0'};
-  margin-bottom: 10px;
 `;
 
 const TeamStatusDiv = styled.div<{ $status: TeamStatus }>`
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 25px;
   box-sizing: border-box;
   max-width: 175px;
   border-radius: 10px;
@@ -91,7 +110,10 @@ const MemberUl = styled.ul`
 `;
 
 export const Select = styled.select`
+  width: 75%;
   border-radius: 5px;
+  min-height: 30px;
+  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
 `;
 
 export const TeamInfoBar: FC<TeamInfoBarProps> = ({
@@ -101,7 +123,10 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   siteOptionsState: [siteOptions, setSiteOptions],
   isEditable,
   children, ...props }) => {
+  
+  const { compId } = useParams();
   const theme = useTheme();
+
 
   const [isPopupOpen, setPopupOpen] = useState(false);
 
@@ -116,7 +141,7 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
     if (!currentSiteOption.label || !currentSiteOption.value) {
       return;
     }
-    setTeamData((p) => ({ ...p, teamSite: currentSiteOption.label }));
+    setTeamData((p) => ({ ...p, teamSite: currentSiteOption.label, siteId: parseInt(currentSiteOption.value) }));
 
   }, [currentSiteOption]);
 
@@ -130,7 +155,7 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   }, [teamData])
 
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     // send to the backend route here.
 
     const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
@@ -139,13 +164,15 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
       teamData,
       ...teamList.slice(currentTeamIndex + 1)
     ]);
+
+    await sendRequest.post('/competition/teams/update', { teamList: [teamData], compId });
     setIsEdited(false);
   }
 
   return (
     <InfoBar isOpenState={[isOpen || isPopupOpen, setIsOpen]} {...props}>
       <InfoBarField>
-        <LabelSpan>Team Id:</LabelSpan>
+        <TeamDetailsLabelSpan>Team Id:</TeamDetailsLabelSpan>
         <span>{teamDetails.teamId}</span>
       </InfoBarField>
 
@@ -167,47 +194,49 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
         {teamData.teamName}
       </TitleDiv>}
 
-      <InfoBarField>
-        <LabelSpan>Coach:</LabelSpan>
+      <VerticalInfoBarField>
+        <TeamDetailsLabelSpan>Coach:</TeamDetailsLabelSpan>
         <span>{teamDetails.coach.name}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
       
-      <InfoBarField>
-        <LabelSpan>Status:</LabelSpan>
+      <VerticalInfoBarField>
+        <TeamDetailsLabelSpan>Status:</TeamDetailsLabelSpan>
         <TeamStatusDiv $status={teamDetails.status}>{teamDetails.status}</TeamStatusDiv>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Level:</LabelSpan>
+      <VerticalInfoBarField>
+        <TeamDetailsLabelSpan $isEditing={isEditing}>Level:</TeamDetailsLabelSpan>
         {isEditing ?
         <Select onChange={(e) => setTeamData((p) => ({ ...p, teamLevel: e.target.value }))}>
           <option selected={teamData.teamLevel === 'Level A'} value={'Level A'}>Level A</option>
           <option selected={!(teamData.teamLevel === 'Level A')} value={'Level B'}>Level B</option>
         </Select> :
         <span>{teamData.teamLevel}</span>}
-      </InfoBarField>
+      </VerticalInfoBarField>
       
-      <InfoBarField>
-        <LabelSpan>Site:</LabelSpan>
+      <VerticalInfoBarField>
+        <TeamDetailsLabelSpan $isEditing={isEditing}>Site:</TeamDetailsLabelSpan>
         {isEditing ? 
+        <div style={{ width: '100%' }}>
         <AdvancedDropdown
+          isExtendable={false}
           style={{ height: '30px', borderRadius: '5px', width: '100%', marginBottom: '2px' }}
           defaultSearchTerm={teamData.teamSite}
           setCurrentSelected={setCurrentSiteOption}
           optionsState={[siteOptions, setSiteOptions]}
-        /> :
+        /></div> :
         <span>{teamData.teamSite}</span>}
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Seat:</LabelSpan>
+      <VerticalInfoBarField>
+        <TeamDetailsLabelSpan $isEditing={isEditing}>Seat:</TeamDetailsLabelSpan>
         {isEditing ?
         <EditableInput
           value={teamData.teamSeat}
           onChange={(e) => setTeamData((p) => ({ ...p, teamSeat: e.target.value }))}
         /> :
         <span>{teamData.teamSeat}</span>}
-      </InfoBarField>
+      </VerticalInfoBarField>
       <br/>
 
       {isEdited && <div style={{ width: '100%', height: '30px', display: 'flex', maxWidth: '300px' }}>
@@ -224,7 +253,7 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
 
       </div>}
       
-      <div style={{ width: '100%' }}>
+      <div style={{ width: '100%', marginBottom: '-20px' }}>
         <LabelSpan>Members:</LabelSpan>
       </div>
       <InfoBarField>

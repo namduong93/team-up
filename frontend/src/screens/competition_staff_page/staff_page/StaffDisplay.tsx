@@ -22,7 +22,8 @@ export interface StaffCardProps extends React.HTMLAttributes<HTMLDivElement> {
 export const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
   width: 80%;
   height: 50%;
-  max-width: 130px;
+  min-height: 25px;
+  max-width: 160px;
   border-radius: 10px;
   display: flex;
   align-items: center;

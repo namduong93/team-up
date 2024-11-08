@@ -9,11 +9,12 @@ import styled, { useTheme } from "styled-components";
 import { addStudentToTeam } from "../../../teams_page/utility/addStudentToTeam";
 import { ButtonConfiguration } from "../../../hooks/useCompetitionOutletContext";
 import { EditIcon, EditIconButton } from "../../../../account/Account";
-import { Input } from "../../../../../components/general_utility/TextInputLight";
 import { TransparentResponsiveButton } from "../../../../../components/responsive_fields/ResponsiveButton";
-import { GiCancel } from "react-icons/gi";
 import { RxReset } from "react-icons/rx";
 import { TeamDetails, Student } from "../../../../../../shared_types/Competition/team/TeamDetails";
+import { TextArea } from "../../../../student/EditCompPreferences";
+import { sendRequest } from "../../../../../utility/request";
+import { useParams } from "react-router-dom";
 
 
 interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -27,41 +28,55 @@ interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const MemberFieldDiv = styled.div`
   display: flex;
+  /* flex-direction: column; */
   column-gap: 4px;
   align-items: center;
+`;
+
+const VerticalMemberFieldDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const MemberListItem = styled.li`
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 10px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
   border-radius: 10px;
   padding: 2px;
   position: relative;
 `;
 
-export const EditableInput = styled(Input)`
+export const EditableInput = styled.input`
   margin-bottom: 0;
   border-radius: 5px;
-  height: 25px;
-  width: 60%;
+  height: 30px;
+  width: 75%;
   line-height: 0;
-  /* padding: 0; */
+  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  padding: auto 0 0 0;
+  box-sizing: border-box;
 `;
 
-export const EditableTextArea = styled.textarea`
+export const EditableTextArea = styled(TextArea)`
   margin-bottom: 0;
   border-radius: 5px;
-  height: 25px;
+  height: 30px;
   width: 75%;
-  /* line-height: 0; */
-  padding: 0;
+  box-sizing: border-box;
+  resize: both;
+  padding: 2px 0 0 3px;
+  font: inherit;
+  
 `;
 
 export const ToggleSelect = styled.select<{ $toggled: boolean }>`
   border-radius: 5px;
-  width: 50%;
+  width: 75%;
+  height: 30px;
+  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   background-color: ${({ $toggled, theme }) => $toggled ? theme.colours.confirm : theme.colours.cancel};
 `
 
@@ -74,6 +89,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
   isEditable
 }) => {
   const theme = useTheme();
+  const { compId } = useParams();
   
   const [teamOptions, setTeamOptions] 
   = useState(teamList.map((team) => ({ value: String(team.teamId), label: team.teamName })));
@@ -112,19 +128,22 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
 
   }, [studentData]);
 
-  const handleSaveEdit = () => {
-    // send request to backend to edit this student
+  const handleSaveEdit = async () => {
 
     const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
     const studentIndex = teamDetails.students.findIndex((stud) => stud.userId === student.userId);
+    const newStudentsArray =  [
+      ...teamDetails.students.slice(0, studentIndex),
+      studentData,
+      ...teamDetails.students.slice(studentIndex + 1) ];
+      
     setTeamList([
       ...teamList.slice(0, currentTeamIndex),
-      { ...teamDetails, students: [
-        ...teamDetails.students.slice(0, studentIndex),
-        studentData,
-        ...teamDetails.students.slice(studentIndex + 1) ] },
+      { ...teamDetails, students: newStudentsArray },
       ...teamList.slice(currentTeamIndex + 1)
     ]);
+
+    await sendRequest.post('/competition/teams/update', { teamList: [{ ...teamDetails, students: newStudentsArray }], compId });
     setIsEdited(false);
   }
 
@@ -144,39 +163,30 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
           <span>{student.userId}</span>
         </MemberFieldDiv>
 
-      <MemberFieldDiv>
+      <VerticalMemberFieldDiv>
         <LabelSpan>Name:</LabelSpan>
-        {/* {isEditingCard ? 
-        <EditableInput
-          onChange={(e) => setStudentData((p) => ({ ...p, name: e.target.value }))}
-          defaultValue={studentData.name}
-        /> : */}
         <span>{studentData.name}</span>
-        {/* } */}
-      </MemberFieldDiv>
+      </VerticalMemberFieldDiv>
 
-      <MemberFieldDiv>
+      <VerticalMemberFieldDiv>
         <LabelSpan>Email:</LabelSpan>
-        {/* {isEditingCard ? <EditableInput
-          onChange={(e) => setStudentData((p) => ({ ...p, email: e.target.value }))}
-          defaultValue={studentData.email}
-        /> : */}
-        <span>{studentData.email}</span>
-        {/* } */}
-        <CopyButton textToCopy={studentData.email} />
-      </MemberFieldDiv>
+        <div>
+          <span>{studentData.email}</span>
+          <CopyButton textToCopy={studentData.email} />
+        </div>
+      </VerticalMemberFieldDiv>
 
-      <MemberFieldDiv>
-        <LabelSpan>Bio:</LabelSpan>
+      <VerticalMemberFieldDiv>
+        <LabelSpan $isEditing={isEditingCard}>Bio:</LabelSpan>
         {isEditingCard ? <EditableTextArea
           onChange={(e) => setStudentData((p) => ({ ...p, bio: e.target.value }))}
           value={studentData.bio}
         />
         : <span>{studentData.bio}</span>}
-      </MemberFieldDiv>
+      </VerticalMemberFieldDiv>
 
-      <MemberFieldDiv>
-        <LabelSpan>ICPC Eligibile:</LabelSpan>
+      <VerticalMemberFieldDiv>
+        <LabelSpan $isEditing={isEditingCard}>ICPC Eligibile:</LabelSpan>
         {isEditingCard ?
           <ToggleSelect
             onChange={(e) => setStudentData((p) => ({ ...p, ICPCEligible: e.target.value === 'yes' }))} $toggled={studentData.ICPCEligible}
@@ -185,10 +195,10 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
             <option selected={!studentData.ICPCEligible} style={{ backgroundColor: theme.colours.cancel }} value='no'>No</option>
           </ToggleSelect> :
         <BooleanStatus style={{ height: '25px' }} $toggled={studentData.ICPCEligible} />}
-      </MemberFieldDiv>
+      </VerticalMemberFieldDiv>
 
-      <MemberFieldDiv>
-        <LabelSpan>Boersen Eligibile:</LabelSpan>
+      <VerticalMemberFieldDiv>
+        <LabelSpan $isEditing={isEditingCard}>Boersen Eligibile:</LabelSpan>
         {isEditingCard ?
           <ToggleSelect
             onChange={(e) => setStudentData((p) => ({ ...p, boersenEligible: e.target.value === 'yes' }))} $toggled={studentData.boersenEligible}
@@ -197,37 +207,37 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
             <option selected={!studentData.boersenEligible} style={{ backgroundColor: theme.colours.cancel }} value='no'>No</option>
           </ToggleSelect> :
         <BooleanStatus style={{ height: '25px' }} $toggled={studentData.boersenEligible} />}
-      </MemberFieldDiv>
+      </VerticalMemberFieldDiv>
 
-      <MemberFieldDiv>
-        <LabelSpan>National Prizes:</LabelSpan>
+      <VerticalMemberFieldDiv>
+        <LabelSpan $isEditing={isEditingCard}>National Prizes:</LabelSpan>
 
         {isEditingCard ?
-          <EditableInput
+          <EditableTextArea
             onChange={(e) => setStudentData((p) => ({ ...p, nationalPrizes: e.target.value }))}
             value={studentData.nationalPrizes}
           />
-          : <span>{studentData.nationalPrizes}</span>
+          : <span>{studentData.nationalPrizes ? studentData.nationalPrizes : 'None'}</span>
         }
-      </MemberFieldDiv>
+      </VerticalMemberFieldDiv>
 
-      <MemberFieldDiv>
-        <LabelSpan>International Prizes:</LabelSpan>
+      <VerticalMemberFieldDiv>
+        <LabelSpan $isEditing={isEditingCard}>International Prizes:</LabelSpan>
 
         {isEditingCard ?
-          <EditableInput
+          <EditableTextArea
             onChange={(e) => setStudentData((p) => ({ ...p, internationalPrizes: e.target.value }))}
             value={studentData.internationalPrizes}
           />
-          : <span>{studentData.internationalPrizes}</span>
+          : <span>{studentData.internationalPrizes ? studentData.internationalPrizes : 'None'}</span>
         }
-      </MemberFieldDiv>
+      </VerticalMemberFieldDiv>
 
-      <MemberFieldDiv>
-        <LabelSpan>Codeforces Rating:</LabelSpan>
+      <MemberFieldDiv style={{ width: '75%' }}>
+        <LabelSpan $isEditing={isEditingCard}>Codeforces Rating:</LabelSpan>
 
         {isEditingCard ?
-          <EditableInput type="number"
+          <EditableInput style={{ flex: 1 }} type="number"
             onChange={(e) => setStudentData((p) => ({ ...p, codeforcesRating: parseInt(e.target.value) }))}
             value={studentData.codeforcesRating}
           />
@@ -235,8 +245,8 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
         }
       </MemberFieldDiv>
 
-      <MemberFieldDiv>
-        <LabelSpan>Past Regional:</LabelSpan>
+      <VerticalMemberFieldDiv>
+        <LabelSpan $isEditing={isEditingCard}>Past Regional:</LabelSpan>
 
         {isEditingCard ?
           <ToggleSelect
@@ -247,7 +257,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
             <option selected={!studentData.pastRegional} style={{ backgroundColor: theme.colours.cancel }} value="false">No</option>
           </ToggleSelect> :
         <BooleanStatus style={{ height: '25px' }} $toggled={studentData.pastRegional} />}
-      </MemberFieldDiv>
+      </VerticalMemberFieldDiv>
 
 
       <div style={{ display: 'flex' }}>

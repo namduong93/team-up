@@ -112,8 +112,8 @@ CREATE TABLE competition_users (
 
   -- participant info
   icpc_eligible BOOLEAN,
-  competition_level competition_level_enum DEFAULT 'Level B',
   boersen_eligible BOOLEAN,
+  competition_level competition_level_enum DEFAULT 'Level B',
   degree_year INT,
   degree TEXT,
   is_remote BOOLEAN,

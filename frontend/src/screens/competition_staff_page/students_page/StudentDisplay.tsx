@@ -32,7 +32,8 @@ export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = fa
     <div style={{
       width: '80%',
       height: '50%',
-      maxWidth: '130px',
+      minHeight: '25px',
+      maxWidth: '160px',
       lineHeight: '1',
       backgroundColor: isMatched ? 'rgba(139, 223, 165, 54%)' : 'rgba(255, 29, 32, 28%)',
       color: isMatched ? '#63A577' : '#ED1E21',

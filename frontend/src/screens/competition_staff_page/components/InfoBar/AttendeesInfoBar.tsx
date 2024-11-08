@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
 import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
-import { InfoBarField, LabelSpan } from "./TeamInfoBar";
+import { InfoBarField, LabelSpan, VerticalInfoBarField } from "./TeamInfoBar";
 import { backendURL } from "../../../../../config/backendURLConfig";
 import { ProfilePic } from "../../../account/Account";
 import { StaffRoles } from "../../staff_page/components/StaffRole";
@@ -32,20 +32,20 @@ export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
       />
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Name:</LabelSpan>
         <span>{attendeesData.name}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Preferred Name:</LabelSpan>
         <span>{attendeesData.preferredName}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Email:</LabelSpan>
         <span>{attendeesData.email}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
       <InfoBarField>
         <LabelSpan>Gender:</LabelSpan>
@@ -57,44 +57,46 @@ export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
         <span>{attendeesData.tshirtSize}</span>
       </InfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Dietary Requirements:</LabelSpan>
         <span>{attendeesData.dietaryNeeds}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Allergies:</LabelSpan>
         <span>{attendeesData.allergies}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Accessibility Needs:</LabelSpan>
         <span>{attendeesData.accessibilityNeeds}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Roles:</LabelSpan>
-        <StaffRoles roles={attendeesData.roles} />
-      </InfoBarField>
+        <InfoBarField style={{ maxWidth: '130px' }}>
+          <StaffRoles roles={attendeesData.roles} />
+        </InfoBarField>
+      </VerticalInfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Site:</LabelSpan>
         <span>{attendeesData.siteName}</span>
-      </InfoBarField>
+      </VerticalInfoBarField>
 
       <InfoBarField>
         <LabelSpan>Site Capacity:</LabelSpan>
         <span>{attendeesData.siteCapacity}</span>
       </InfoBarField>
 
-      <InfoBarField>
+      <VerticalInfoBarField>
         <LabelSpan>Pending Site:</LabelSpan>
-        <span>{attendeesData.pendingSiteName}</span>
-      </InfoBarField>
+        <span>{attendeesData.pendingSiteName ? attendeesData.pendingSiteName : 'None'}</span>
+      </VerticalInfoBarField>
 
       <InfoBarField>
         <LabelSpan>Pending Site Capacity:</LabelSpan>
-        <span>{attendeesData.pendingSiteCapacity}</span>
+        <span>{attendeesData.pendingSiteCapacity ? attendeesData.pendingSiteCapacity : 'N/A'}</span>
       </InfoBarField>
 
     </InfoBar>
