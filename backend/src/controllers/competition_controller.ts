@@ -5,6 +5,7 @@ import { Competition } from "../models/competition/competition.js";
 import { CompetitionAccessLevel, CompetitionStaff } from "../models/competition/competitionUser.js";
 import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
+import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
@@ -12,6 +13,16 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionStaffUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const staffList = req.body.staffList as Array<StaffInfo>;
+    const compId = req.body.compId as number;
+    
+    await this.competitionService.competitionStaffUpdate(parseInt(userId as string), staffList, compId);
+
+    res.json({});
+  });
 
   competitionStudentsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;

@@ -24,10 +24,30 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
+  competitionStaffUpdate = async (userId: number, staffList: StaffInfo[], compId: number) => {
+    for (const staff of staffList) {
+      try {
+        await this.pool.query(
+          `UPDATE competition_users
+          SET
+            bio = '${staff.bio}',
+            competition_roles = '{${staff.roles}}',
+            access_level = '${staff.access}'
+            WHERE user_id = ${staff.userId} AND competition_id = ${compId};
+          `
+        );
+
+      } catch (error: unknown) {
+        throw new DbError(DbError.Insert, 'Failed to update a user in the db');
+      }
+    }
+
+    return;
+  }
+
   competitionStudentsUpdate = async (userId: number, studentList: StudentInfo[], compId: number) => {
     
     for (const student of studentList) {
-      console.log(student);
       try {
         await this.pool.query(
           `UPDATE competition_users
@@ -53,6 +73,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       }
     }
 
+    return;
   }
 
   coachCheckIdsStudent = async (userId: number, userIds: Array<number>, compId: number) => {
