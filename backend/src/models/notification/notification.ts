@@ -23,4 +23,5 @@ export enum NotificationType {
   TEAM_STATUS = 'teamStatus',
   CHEER = 'cheer',
   INVITE = 'invite',
+  STAFF_ACCOUNT = 'staffAccount',
 }
