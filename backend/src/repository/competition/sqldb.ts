@@ -334,7 +334,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return [];
   };
 
-  competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject | undefined> => {
+  competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject> => {
     // Set default team size to 3 if not provided
     const teamSize = competition.teamSize ?? DEFAULT_TEAM_SIZE;
 
@@ -346,7 +346,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     `;
     const codeCheckResult = await this.pool.query(codeCheckQuery, [competition.code]);
     if (codeCheckResult.rowCount > 0) {
-      return undefined; // TODO: throw unique error
+      throw new DbError(DbError.Query, "Competition code is already in use.");
     }
     
     // Insert competition into competitions table
@@ -457,11 +457,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       return {};
     }
 
-    // TODO: handle site updates
     return {};
   }
 
-  competitionGetDetails = async(competitionId: number): Promise<Competition | undefined> => {
+  competitionGetDetails = async(competitionId: number): Promise<Competition> => {
     const competitionQuery = `
       SELECT id, name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region
       FROM competitions
@@ -471,7 +470,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     
     // Verify if competition exists
     if (competitionResult.rowCount === 0) {
-      return undefined; // TODO: throw unique error
+      throw new DbError(DbError.Query, "Competition does not exist.");
     }
   
     const competitionData = competitionResult.rows[0];
@@ -510,7 +509,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   // Returns only shortened competition details that are displayed on a dashboard. Sites details are not included.
   // Returns competitions that the user is a part of.
-  competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject> | undefined> => {
+  competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject>> => {
     const comps = await this.pool.query(
       `SELECT id, name, created_date AS "createdDate", early_reg_deadline AS "earlyRegDeadline",
         general_reg_deadline AS "generalRegDeadline" FROM competition_list(${userId})`
@@ -529,22 +528,28 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitions;
   }
 
-  competitionUniversityDefaultSite = async(competitionId: number, university: University): Promise<CompetitionSiteObject | undefined> => {
+  competitionUniversityDefaultSite = async(competitionId: number, university: University): Promise<CompetitionSiteObject> => {
     const siteResult = await this.pool.query(
       `SELECT id, name FROM competition_sites
       WHERE competition_id = $1 AND university_id = $2
       LIMIT 1`,
       [competitionId, university.id]
     );
+
+    if (siteResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Site not found.");
+    }
+
     let site = {
       id: siteResult.rows[0].id || 0,
       universityId: university.id,
       name: siteResult.rows[0].name || "Not Found",
     };
+    
     return site;
   }
 
-  competitionStudentJoin = async (competitionUserInfo: CompetitionUser, university: University): Promise<{} | undefined> => {
+  competitionStudentJoin = async (competitionUserInfo: CompetitionUser, university: University): Promise<{}> => {
     // First insert the user into the competition_users table
     let userId = competitionUserInfo.userId;
     let competitionId = competitionUserInfo.competitionId;
@@ -643,18 +648,18 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   }
 
   competitionStudentJoin1 = async (sessionToken: string, individualInfo: IndividualTeamInfo,
-    teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined> => {
+    teamMate1: TeamMateData): Promise<IncompleteTeamIdObject> => {
 
     return { incompleteTeamId: 1 };
   }
 
   competitionStudentJoin2 = async (sessionToken: string, teamInfo: TeamDetails,
-    teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
+    teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject> => {
 
     return { teamId: 1 };
   }
 
-  competitionStudentWithdraw = async (userId: number, compId: number): Promise<CompetitionWithdrawalReturnObject | undefined> => {
+  competitionStudentWithdraw = async (userId: number, compId: number): Promise<CompetitionWithdrawalReturnObject> => {
     // Check if the competition exists
     const competitionExistQuery = `
       SELECT code, name FROM competitions WHERE id = $1
@@ -1096,43 +1101,56 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
-  competitionStaffJoin = async (competitionId: number, staffCompetitionInfo: CompetitionStaff): Promise<{} | undefined> => {
+  competitionStaffJoin = async (competitionId: number, staffCompetitionInfo: CompetitionStaff): Promise<{}> => {
     console.log(staffCompetitionInfo);
     const userId = staffCompetitionInfo.userId;
     const roles = staffCompetitionInfo.competitionRoles;
     const competitionExistRole = await this.competitionRoles(userId, competitionId);
+
+    // Admin staff
     if(roles.includes(CompetitionUserRole.ADMIN)) {
       if(competitionExistRole.includes(CompetitionUserRole.ADMIN)) {
         throw new DbError(DbError.Query, "User is already an admin for this competition.");
       }
+
       const addAdminQuery = `
         INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
         VALUES ($1, $2, $3, 'Pending'::competition_access_enum)
       `;
+
       await this.pool.query(addAdminQuery, [userId, competitionId, [CompetitionUserRole.ADMIN]]);
     }
+
+    // Coach staff
     if(roles.includes(CompetitionUserRole.COACH)) {
       const competitionBio = staffCompetitionInfo.competitionBio;
       if(competitionExistRole.includes(CompetitionUserRole.COACH)) {
         throw new DbError(DbError.Query, "User is already a coach for this competition.");
       }
+
       const addCoachQuery = `
         INSERT INTO competition_users (user_id, competition_id, competition_roles, bio, access_level)
         VALUES ($1, $2, $3, $4, 'Pending'::competition_access_enum)
       `;
+
       await this.pool.query(addCoachQuery, [userId, competitionId, [CompetitionUserRole.COACH], competitionBio]);
     }
+
+    // Site coordinator staff
     if(roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
       const siteId = staffCompetitionInfo.siteLocation.id;
       if(competitionExistRole.includes(CompetitionUserRole.SITE_COORDINATOR)) {
         throw new DbError(DbError.Query, "User is already a site coordinator for this competition.");
       }
+
       const addSiteCoordinatorQuery = `
         INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
         VALUES ($1, $2, $3, $4, 'Pending'::competition_access_enum)
       `;
+
       await this.pool.query(addSiteCoordinatorQuery, [userId, competitionId, [CompetitionUserRole.SITE_COORDINATOR], siteId]);
     }
+
     return {};
   }
 
@@ -1300,6 +1318,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       }
     }
   }
+
   formTeams = (teams: CompetitionAlgoTeamDetails[], deletedTeams: Set<number>) => {
     for(let i = 0; i < teams.length; i++) {
       if(deletedTeams.has(teams[i].id)) {
@@ -1356,6 +1375,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       }
     }
   }
+
   sortTeams = (teams: CompetitionAlgoTeamDetails[], studentMap: Map<number, CompetitionAlgoStudentDetails>) => {  
     teams.sort((teamA, teamB) => {
       const teamAMaxPoint = Math.max(...teamA.participants.map(p => 
@@ -1370,6 +1390,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     });
     return teams;
   }
+
   competitionCoachIdFromCompId = async (compId: number, userId: number): Promise<number | undefined> => {
     const competitionCoachIdQuery = `
       SELECT id
@@ -1383,12 +1404,13 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitionCoachIdResult.rows[0].id;
   }
 
-  competitionIdFromCode = async (code: string): Promise<number | undefined> => {
+  competitionIdFromCode = async (code: string): Promise<number> => {
     const competitionIdQuery = `SELECT id FROM competitions WHERE code = $1 LIMIT 1`;
     const competitionIdResult = await this.pool.query(competitionIdQuery, [code]);
     if (competitionIdResult.rowCount === 0) {
-      return undefined; 
+      throw new DbError(DbError.Query, "Competition not found.");
     }
+
     return competitionIdResult.rows[0].id;
   }
 
@@ -1414,5 +1436,4 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const id = parseInt(text) - this.SALTED_TEAM_CODE;
     return id;
   };
-
 }

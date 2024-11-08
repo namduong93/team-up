@@ -13,10 +13,6 @@ export class NotificationService {
     this.userRepository = userRepository;
   }
 
-  notificationCreate = async (notification: Notification): Promise<{} | undefined> => {
-    return await this.notificationRepository.notificationCreate(notification);
-  }
-
   notificationRemove = async (notificationId: number): Promise<{}> => {
     return await this.notificationRepository.notificationRemove(notificationId);
   }
@@ -29,10 +25,6 @@ export class NotificationService {
     }
     
     const result = this.notificationRepository.userNotificationsList(userId);
-
-    if (!result) {
-      throw BAD_REQUEST;
-    }
 
     return result;
   }

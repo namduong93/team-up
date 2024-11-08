@@ -246,9 +246,6 @@ app.get('/competition/students', competitionController.competitionStudents);
 
 app.get('/competition/staff', competitionController.competitionStaff);
 
-// Create and post a notification
-app.post('/notification', notificationController.notificationCreate);
-
 // PARAMS: {}
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);

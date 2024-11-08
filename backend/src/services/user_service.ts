@@ -31,14 +31,10 @@ export class UserService {
     }
 
     const userIdObject = await this.userRepository.studentRegister(student);
-    if (!userIdObject) {
-      throw createHttpError(400, 'Student with this email already exists');
-    }
-
-    let session: Session = {
-      sessionId: uuidv4(),
-      userId: userIdObject.userId,
-      createdAt: Math.floor(Date.now() / 1000)
+    let session : Session = { 
+      sessionId: uuidv4(), 
+      userId: userIdObject.userId, 
+      createdAt: Math.floor(Date.now() / 1000) 
     };
     await this.sessionRepository.create(session);
     return { sessionId: session.sessionId };
@@ -53,17 +49,14 @@ export class UserService {
       throw createHttpError(400, validated);
     }
 
-    let userIdObject = await this.userRepository.staffRegister(staff);
-    if (!userIdObject) {
-      throw createHttpError(400, 'Student with this email already exists');
-    }
-
-    let session: Session = {
-      sessionId: uuidv4(),
-      userId: userIdObject.userId,
-      createdAt: Math.floor(Date.now() / 1000)
+    let userIdObject = await this.userRepository.staffRegister(staff); 
+    let session : Session = { 
+      sessionId: uuidv4(), 
+      userId: userIdObject.userId, 
+      createdAt: Math.floor(Date.now() / 1000) 
     };
     await this.sessionRepository.create(session);
+
     return { sessionId: session.sessionId };
   }
 
@@ -76,16 +69,13 @@ export class UserService {
     }
 
     const userIdObject = await this.userRepository.userLogin(email, password);
-    if (!userIdObject) {
-      throw createHttpError(401, 'Invalid email or password');
-    }
-
-    let session: Session = {
-      sessionId: uuidv4(),
-      userId: userIdObject.userId,
-      createdAt: Math.floor(Date.now() / 1000)
+    let session : Session = { 
+     sessionId: uuidv4(), 
+     userId: userIdObject.userId, 
+     createdAt: Math.floor(Date.now() / 1000)
     };
     await this.sessionRepository.create(session);
+    
     return { sessionId: session.sessionId };
   }
 
@@ -96,11 +86,6 @@ export class UserService {
 
   userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
     const userProfileInfo = await this.userRepository.userProfileInfo(userId);
-
-    if (!userProfileInfo) {
-      throw createHttpError(400, 'User not found');
-    }
-
     return userProfileInfo;
   }
 
@@ -129,10 +114,6 @@ export class UserService {
 
   userDashInfo = async (userId: number): Promise<UserDashInfo | undefined> => {
     const userDashInfo = await this.userRepository.userDashInfo(userId);
-    if (!userDashInfo) {
-      throw createHttpError(400, 'User not found');
-    }
     return userDashInfo;
   }
-
 }

@@ -7,18 +7,17 @@ import { University } from "../models/university/university.js";
 
 export type UserIdObject = { userId: number };
 export interface UserRepository {
-  studentRegister(student: Student): Promise< UserIdObject | undefined>;
-  staffRegister(staff: Staff): Promise<UserIdObject | undefined>;
+  studentRegister(student: Student): Promise<UserIdObject>;
+  staffRegister(staff: Staff): Promise<UserIdObject>;
 
-  userAuthenticate(email: string, password: string): Promise<UserIdObject | undefined>;
-  userLogin(email: string, password: string): Promise<UserIdObject | undefined>;
+  userLogin(email: string, password: string): Promise<UserIdObject>;
 
-  userProfileInfo(userId: number): Promise<UserProfileInfo | undefined>;
+  userProfileInfo(userId: number): Promise<UserProfileInfo>;
   userUpdateProfile(userId: number, userProfile: UserProfileInfo): Promise<void>;
   userUpdatePassword(userId: number, oldPassword: string, newPassword: string): Promise<void>;
 
-  userType(userId: number): Promise<UserTypeObject | undefined>;
-  userDashInfo(userId: number): Promise<UserDashInfo | undefined>;
+  userType(userId: number): Promise<UserTypeObject>;
+  userDashInfo(userId: number): Promise<UserDashInfo>;
 
-  userUniversity(userId: number): Promise<University | undefined>;
+  userUniversity(userId: number): Promise<University>;
 };
