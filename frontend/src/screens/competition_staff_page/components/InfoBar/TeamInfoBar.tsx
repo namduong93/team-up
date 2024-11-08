@@ -136,7 +136,7 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
     if (!currentSiteOption.label || !currentSiteOption.value) {
       return;
     }
-    setTeamData((p) => ({ ...p, teamSite: currentSiteOption.label }));
+    setTeamData((p) => ({ ...p, teamSite: currentSiteOption.label, siteId: parseInt(currentSiteOption.value) }));
 
   }, [currentSiteOption]);
 

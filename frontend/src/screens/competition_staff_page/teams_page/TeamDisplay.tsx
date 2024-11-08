@@ -15,6 +15,7 @@ import { TransparentResponsiveButton } from "../../../components/responsive_fiel
 import { fetchTeams } from "../CompetitionPage";
 import { addStudentToTeam } from "./utility/addStudentToTeam";
 import { Student, TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
+import { sendRequest } from "../../../utility/request";
  
 export type DragEndEvent = MouseEvent | TouchEvent | PointerEvent;
 
@@ -190,7 +191,7 @@ export const TeamDisplay: FC = () => {
   }
 
   const handleSaveChanges = async () => {
-    // send backend request here
+    await sendRequest.post('/competition/teams/update', { teamList, compId });
 
     await handleClose();
     return true;
