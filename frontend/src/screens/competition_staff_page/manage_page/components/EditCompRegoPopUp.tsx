@@ -138,7 +138,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
   const handleToggle = (field: keyof EditRego) => {
     setRegoFields((prevFields) => ({
       ...prevFields,
-      [field]: !prevFields[field], // Toggle the value of the specific field
+      [field]: !prevFields[field],
     }));
   };
 
@@ -163,7 +163,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
           <Column>
             <ToggleButton
               isOn={regoFields.codeforces}
-              onToggle={() => handleToggle("codeforces")} // Update codeforces state on toggle
+              onToggle={() => handleToggle("codeforces")}
             />
           </Column>
         </RowContainer>
@@ -179,7 +179,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
           <Column>
             <ToggleButton
               isOn={regoFields.regionalParticipation}
-              onToggle={() => handleToggle("regionalParticipation")} // Update regionalParticipation state on toggle
+              onToggle={() => handleToggle("regionalParticipation")}
             />
           </Column>
         </RowContainer>
@@ -195,7 +195,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
           <Column>
             <ToggleButton
               isOn={regoFields.nationalOlympiad}
-              onToggle={() => handleToggle("nationalOlympiad")} // Update nationalOlympiad state on toggle
+              onToggle={() => handleToggle("nationalOlympiad")}
             />
           </Column>
         </RowContainer>
@@ -211,7 +211,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
           <Column>
             <ToggleButton
               isOn={regoFields.internationalOlympiad}
-              onToggle={() => handleToggle("internationalOlympiad")} // Update internationalOlympiad state on toggle
+              onToggle={() => handleToggle("internationalOlympiad")}
             />
           </Column>
         </RowContainer>
