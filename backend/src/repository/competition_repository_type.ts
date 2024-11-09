@@ -15,6 +15,7 @@ import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionStaffUpdateRegoToggles(userId: number, compId: number, regoFields: EditRego, universityId?: number): Promise<void>;
   competitionStaffRegoToggles(userId: number, compId: number, universityId?: number): Promise<EditRego>;
   competitionCoachCheck(userId: number, compId: number): Promise<void>;
   competitionStaffUpdate(userId: number, staffList: StaffInfo[], compId: number): Promise<void>;
