@@ -287,6 +287,9 @@ app.get('/competition/sites', competitionController.competitionSites);
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
+
+app.get('/university/courses', universityController.universityCourses);
+
 app.post('/competition/teams/update', competitionController.competitionTeamsUpdate);
 
 app.post('/competition/students/update', competitionController.competitionStudentsUpdate);

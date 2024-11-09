@@ -9,6 +9,7 @@ import TextInput from "../../../components/general_utility/TextInput";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { sendRequest } from "../../../utility/request";
+import { Course, CourseCategory } from "../../../../shared_types/University/Course";
 import { EditRego } from "../../../../shared_types/Competition/staff/Edit";
 import { DEFAULT_REGO_FIELDS } from "../../competition_staff_page/manage_page/components/StaffActionCard";
 
@@ -152,6 +153,25 @@ export const CompetitionExperience: FC = () => {
     }
   };
 
+  const [courseOptions, setCourseOptions] = useState([
+    { value: CourseCategory.Introduction, label: 'Introduction to Programming / Programming Fundamentals (and any advanced versions' },
+    { value: CourseCategory.DataStructures, label: 'Data Structures and Algorithms (and any advanced versions)' },
+    { value: CourseCategory.AlgorithmDesign, label: 'Algorithm Design and Analysis (and any advanced versions' },
+    { value: CourseCategory.ProgrammingChallenges, label: 'Programming Challenges and Problems (and any advanced versions' },
+  ]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const response = await sendRequest.get<{ courses: Array<Course> }>('/university/courses');
+      const { courses } = response.data;
+
+      setCourseOptions(courses.map((course) => ({ value: course.category, label: course.courseName })));
+    }
+
+    fetchCourses();
+  }, []);
+
+    
   const courseOptions = [
     {
       value: "Introduction to Programming / Programming Fundamentals",

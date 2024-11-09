@@ -11,10 +11,19 @@ CREATE TABLE universities (
   name TEXT NOT NULL
 );
 
+CREATE TYPE course_category_enum AS ENUM (
+  'Introduction',
+  'Data Structures',
+  'Algorithm Design',
+  'Programming Challenges'
+);
+
 CREATE TABLE courses (
   id SERIAL PRIMARY KEY,
   
   name TEXT NOT NULL, -- Full Name of course including any course codes
+
+  category course_category_enum,
   
   university_id INT NOT NULL REFERENCES universities (id)
 );
@@ -1284,3 +1293,10 @@ INSERT INTO competition_registration_toggles (
   enable_international_prizes_field, enable_regional_participation_field
 )
 VALUES (4, 5, TRUE, TRUE, FALSE, TRUE);
+
+INSERT INTO courses (name, category, university_id)
+VALUES
+('COMP1511 Programming Fundamentals', 'Introduction' :: course_category_enum, 5),
+('COMP2521 Data Structures and Algorithms', 'Data Structures' :: course_category_enum, 5),
+('COMP3121 Algorithm Design or COMP 3821 Extended Algorithm Design', 'Algorithm Design' :: course_category_enum, 5),
+('COMP4128 Programming Challenges', 'Programming Challenges' :: course_category_enum, 5);

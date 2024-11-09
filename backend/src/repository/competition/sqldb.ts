@@ -5,7 +5,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
+import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, SeatAssignment, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
@@ -15,6 +15,7 @@ import { ParticipantTeamDetails, TeamDetails } from "../../../shared_types/Compe
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails.js";
+import { CourseCategory } from "../../../shared_types/University/Course.js";
 import { error } from "console";
 import { EditRego } from "../../../shared_types/Competition/staff/Edit.js";
 
@@ -1499,16 +1500,16 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       if(student.codeforcesRating) {
         student.algoPoint = Math.max(student.algoPoint, student.codeforcesRating);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.INTRO_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.Introduction)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTRO_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.DSA_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.DataStructures)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.DSA_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.ADVANCED_ALGO_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.AlgorithmDesign)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.ADVANCED_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.CHALLENGE_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.ProgrammingChallenges)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.CHALLENGE_COURSE);
       }
       if(student.nationalPrizes) {
