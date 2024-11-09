@@ -77,7 +77,7 @@ const Checkbox = styled.input`
   margin-right: 5px;
 `;
 
-const TextArea = styled.textarea`
+export const TextArea = styled.textarea`
   width: 100%;
   padding: 8px;
   border-radius: 8px;

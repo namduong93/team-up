@@ -22,7 +22,7 @@ export class UserService {
   }
 
   studentRegister = async (student: Student): Promise<SessionTokenObject | undefined> => {
-    if (!student.pronouns) { 
+    if (!student.pronouns) {
       student.pronouns = convertGenderToP(student.gender);
     }
     const validated = validateStudent(student);
@@ -31,10 +31,6 @@ export class UserService {
     }
 
     const userIdObject = await this.userRepository.studentRegister(student);
-    if (!userIdObject) {
-      throw createHttpError(400, 'Student with this email already exists');
-    }
-
     let session : Session = { 
       sessionId: uuidv4(), 
       userId: userIdObject.userId, 
@@ -45,7 +41,7 @@ export class UserService {
   }
 
   staffRegister = async (staff: Staff): Promise<SessionTokenObject | undefined> => {
-    if (!staff.pronouns) { 
+    if (!staff.pronouns) {
       staff.pronouns = convertGenderToP(staff.gender);
     }
     const validated = validateStaff(staff);
@@ -53,60 +49,62 @@ export class UserService {
       throw createHttpError(400, validated);
     }
 
-    let userIdObject = await this.userRepository.staffRegister(staff);
-    if (!userIdObject) {
-      throw createHttpError(400, 'Student with this email already exists');
-    }
-    
+    let userIdObject = await this.userRepository.staffRegister(staff); 
     let session : Session = { 
       sessionId: uuidv4(), 
       userId: userIdObject.userId, 
       createdAt: Math.floor(Date.now() / 1000) 
     };
     await this.sessionRepository.create(session);
+
     return { sessionId: session.sessionId };
   }
 
   userLogin = async (email: string, password: string): Promise<SessionTokenObject | undefined> => {
-    if(!email || email.length === 0) {
+    if (!email || email.length === 0) {
       throw createHttpError(400, 'Email is required');
     }
-    if(!password || password.length === 0) {
+    if (!password || password.length === 0) {
       throw createHttpError(400, 'Password is required');
     }
 
     const userIdObject = await this.userRepository.userLogin(email, password);
-    if (!userIdObject) {
-      throw createHttpError(401, 'Invalid email or password');
-    }
-
     let session : Session = { 
      sessionId: uuidv4(), 
      userId: userIdObject.userId, 
      createdAt: Math.floor(Date.now() / 1000)
     };
     await this.sessionRepository.create(session);
+    
     return { sessionId: session.sessionId };
   }
 
   userLogout = async (sessionToken: string): Promise<void> => {
     await this.sessionRepository.delete(sessionToken);
-    return ;
+    return;
   }
 
   userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
     const userProfileInfo = await this.userRepository.userProfileInfo(userId);
-    
-    if (!userProfileInfo) {
-      throw createHttpError(400, 'User not found');
-    }
-
     return userProfileInfo;
   }
 
-  userUpdateProfile = async (userId:number, userProfile : UserProfileInfo): Promise<void> => {
+  userUpdatePassword = async (userId: number, oldPassword: string, newPassword: string): Promise<void> => {
+    if (!oldPassword || oldPassword.length === 0) {
+      throw createHttpError(400, 'Old password is required');
+    }
+
+    if (!newPassword || newPassword.length === 0) {
+      throw createHttpError(400, 'New password is required');
+    }
+    
+    await this.userRepository.userUpdatePassword(userId, oldPassword, newPassword);
+    return;
+  }
+
+  userUpdateProfile = async (userId: number, userProfile: UserProfileInfo): Promise<void> => {
     await this.userRepository.userUpdateProfile(userId, userProfile);
-    return ;
+    return;
   }
 
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
@@ -116,10 +114,6 @@ export class UserService {
 
   userDashInfo = async (userId: number): Promise<UserDashInfo | undefined> => {
     const userDashInfo = await this.userRepository.userDashInfo(userId);
-    if (!userDashInfo) {
-      throw createHttpError(400, 'User not found');
-    }
     return userDashInfo;
   }
-  
 }

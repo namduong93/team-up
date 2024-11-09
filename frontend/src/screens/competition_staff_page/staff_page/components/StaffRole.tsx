@@ -22,6 +22,7 @@ export const StaffRoleDisplay = styled.div<{ $role: CompetitionRole, $isMulti?: 
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 25px;
   box-sizing: border-box;
   max-width: 175px;
   border-radius: 10px;
@@ -95,13 +96,16 @@ const StaffRolesContainerDiv = styled(StandardContainerDiv)`
 
 
 const StaffRoleContainer = styled.div<{ $isOpen: boolean }>`
-  width: 80%;
+  width: 100%;
   user-select: none;
   height: 50%;
   max-width: 175px;
   border-radius: 10px 10px 0 0;
   transition: background-color 0s !important;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   ${({ $isOpen, theme }) => $isOpen && `
     border-bottom: 3px solid ${theme.colours.sidebarLine};
     margin-top: 2px;

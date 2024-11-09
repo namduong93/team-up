@@ -105,6 +105,8 @@ app.get('/user/profile_info', userController.userProfileInfo);
 // RESPONSE: {}
 app.put('/user/profile_info', userController.userUpdateProfile);
 
+app.put('/user/password', userController.userUpdatePassword);
+
 // This should return things that need to be displayed on the dash
 // DEV: If you need this to return more things, you can just start assuming it does
 // on the frontend and then tell the backend team which more things you need it to return
@@ -244,9 +246,6 @@ app.get('/competition/students', competitionController.competitionStudents);
 
 app.get('/competition/staff', competitionController.competitionStaff);
 
-// Create and post a notification
-app.post('/notification', notificationController.notificationCreate);
-
 // PARAMS: {}
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);
@@ -287,6 +286,13 @@ app.get('/competition/sites', competitionController.competitionSites);
 // PARAMS: { code }
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
+
+
+app.post('/competition/teams/update', competitionController.competitionTeamsUpdate);
+
+app.post('/competition/students/update', competitionController.competitionStudentsUpdate);
+
+app.post('/competition/staff/update', competitionController.competitionStaffUpdate);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

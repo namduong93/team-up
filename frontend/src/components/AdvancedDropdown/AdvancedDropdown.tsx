@@ -17,7 +17,7 @@ const DropdownTextInput = styled.input`
   width: 100%;
   border-radius: 10px;
   box-sizing: border-box;
-  border: 1px solid ${({ theme }) => theme.colours.notifDark};
+  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
