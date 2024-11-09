@@ -296,6 +296,8 @@ app.post('/competition/staff/update', competitionController.competitionStaffUpda
 
 app.get('/competition/staff/rego_toggles', competitionController.competitionStaffRegoToggles);
 
+// app.post('/competition/staff/update_rego_toggles', competitionController.competitionStaffUpdateRegoToggles);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

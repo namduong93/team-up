@@ -65,15 +65,25 @@ export class CompetitionService {
     this.notificationRepository = notificationRepository;
   }
 
-  competitionStaffRegoToggles = async (userId: number, compId: number) => {
+  competitionStaffRegoToggles = async (userId: number, compId: number, universityId?: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 
     if (!roles.includes(CompetitionUserRole.ADMIN)) {
       if (!roles.includes(CompetitionUserRole.COACH)) {
+
         throw new ServiceError(ServiceError.Auth, 'User is not an Admin or a Coach');
       }
 
       await this.competitionRepository.competitionCoachCheck(userId, compId);
+
+
+    } else {
+
+      if (!universityId) {
+        throw new ServiceError(ServiceError.Auth, 'Admins need to provide a university id');
+      }
+
+      return await this.competitionRepository.competitionStaffRegoToggles(userId, compId, universityId as number);
     }
 
     return await this.competitionRepository.competitionStaffRegoToggles(userId, compId); 
