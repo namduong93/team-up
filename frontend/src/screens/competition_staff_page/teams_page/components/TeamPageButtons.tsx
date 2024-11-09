@@ -25,47 +25,6 @@ export interface PageButtonsProps {
   compDetails: CompetitionDetails;
 };
 
-// interface tShirtData {
-//   gender: "Male" | "Female" | "Unisex"; // cut of the t-shirt
-//   size: "XS" | "S" | "M" | "L" | "XL"; // size of the t-shirt
-//   quantity: number; // how many of this type of t-shirt required
-// };
-
-// interface dietaryDetails {
-//   name: string; // e.g. "John Smith"
-//   email: string; // e.g. "testemail@example.com"
-//   affiliation: string; // e.g. "UNSW"
-//   details: string; // e.g. "No cheese"
-// };
-
-// interface dietaryData {
-//   requirement: string; // e.g. "dairy", "gluten-free" etc.
-//   attendees: dietaryDetails[]; // list of details of all the attendees that have this dietary requirement
-//   quantity: number; // number of attendees with this type of dietary requirement
-// };
-
-// interface accessibilityDetails {
-//   name: string; // e.g. "John Smith"
-//   email: string; // e.g. "testemail@example.com"
-//   affiliation: string; // e.g. "UNSW"
-//   details: string; // e.g. "Needs ramp"
-// };
-
-// interface accessibilityData {
-//   requirement: string; // e.g. "wheelchair access" etc.
-//   attendees: accessibilityDetails[]; // list of details of all the attendees that have this accessibility requirement
-//   quantity: number; // number of attendees with this type of accessibility requirement
-// };
-
-// interface SiteDownload {
-//   format: "PDF" | "CSV"; // format of the downloaded content
-//   siteName: string; // e.g. "CSE Building K17"
-//   siteCapacity: number // e.g. 30 (computers/seats)
-//   tShirtQuantities: tShirtData[]; // data for each type of t-shirt required by attendees for this site
-//   dietaryQuantities: dietaryData[]; // data for each type of dietary requiremnent by attendees for this site
-//   accessibilityQuantities: accessibilityData[]; // data for each type of accessibility requiremnent by attendees for this site
-// };
-
 export const TeamPageButtons: FC<PageButtonsProps> = ({
   filtersState: [filters, setFilters],
   editingStatusState: [isEditingStatus, setIsEditingStatus],
