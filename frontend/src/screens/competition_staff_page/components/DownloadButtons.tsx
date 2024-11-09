@@ -3,7 +3,7 @@ import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
 import { ResponsiveActionButton } from "../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { GiCancel } from "react-icons/gi";
 import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
-import { FaDownload } from "react-icons/fa";
+import { FaDownload, FaStamp } from "react-icons/fa";
 import { useTheme } from "styled-components";
 
 interface DownloadButtonProps {
@@ -14,6 +14,7 @@ interface DownloadButtonProps {
   handleDisable?: VoidFunction;
   downloadCSV: () => Promise<boolean>;
   downloadPDF: () => Promise<boolean>;
+  updateTeamStatus: () => Promise<boolean>;
 }
 
 export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = false, isEditingNameStatus = false,
@@ -22,6 +23,7 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
   handleDisable = () => {},
   downloadCSV = async () => true,
   downloadPDF = async () => true,
+  updateTeamStatus = async () => true,
 }) => {
   const theme = useTheme();
 
@@ -74,6 +76,15 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
             question="Are you sure you would like to register these teams?"
             icon={<GrDocumentPdf />}
             handleSubmit={downloadPDF}
+          />
+        </div>
+
+        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+          <ResponsiveActionButton actionType="confirm"
+            label="Update Status"
+            question="Are you sure you have registered these teams on ICPC and would like to update their status to 'Registered'?"
+            icon={<FaStamp />}
+            handleSubmit={updateTeamStatus}
           />
         </div>
       </>

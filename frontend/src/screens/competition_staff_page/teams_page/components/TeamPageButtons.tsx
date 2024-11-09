@@ -1,17 +1,18 @@
-import { FC, SetStateAction, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaDownload, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
+import { FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { useParams } from "react-router-dom";
 import { sendRequest } from "../../../../utility/request";
 import { TeamDetails } from "./TeamCard";
-import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
 import { CompetitionDetails, fetchTeams } from "../../CompetitionPage";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { DownloadButtons } from "../../components/DownloadButtons";
+import { CompetitionSite, SiteDetails } from "../../../../../shared_types/Competition/CompetitionSite";
+import { ParticipantTeamDetails, Student } from "../../../../../shared_types/Competition/team/TeamDetails";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -130,7 +131,6 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   }
 
   const handleAlgorithmButton = async () => {
-    // hook it here
     const response = await sendRequest.post<{ algorithm: string }>('/competition/algorithm', { compId });
     await fetchTeams(compId, setTeamList);
     console.log(response.data.algorithm);
@@ -138,59 +138,48 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   }
 
   const [isDownloading, setIsDownloading] = useState(false);
-  
+
   const downloadCSV = async () => {
-    console.log(teamList);
     // Filter only 'Unregistered' teams
-    const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
-    // const unregisteredTeams = teamList;
+    const unregisteredTeams = teamList.filter((team: TeamDetails) => team.status === 'Unregistered');
 
     // Group teams by site location and level
-    const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
-        const siteName = team.teamSite || "Unknown Site"; // Default to 'Unknown Site' if missing
-        const teamLevel = team.teamLevel || "Unknown Level"; // Default to 'Unknown Level' if missing
-        const existingSite = acc.find((site) => site.siteName === siteName);
-
-        const mappedTeam = {
-            teamName: team.teamName,
-            level: teamLevel,
-            students: team.students.map(({ name, email }) => ({ name, email })),
-        };
-
-        if (existingSite) {
-            const existingLevelGroup = existingSite.levelGroups.find(levelGroup => levelGroup.level === teamLevel);
-            
-            if (existingLevelGroup) {
-                existingLevelGroup.teams.push(mappedTeam);
-            } else {
-                existingSite.levelGroups.push({ level: teamLevel, teams: [mappedTeam] });
-            }
-        } else {
-            acc.push({
-                siteName,
-                levelGroups: [{ level: teamLevel, teams: [mappedTeam] }]
-            });
-        }
-        return acc;
-    }, [] as Array<{
-        siteName: string;
-        levelGroups: { level: string; teams: { teamName: string; students: { name: string; email: string }[] }[] }[]
-    }>);
+    const teamsPerSite = unregisteredTeams.reduce((acc: SiteDetails[], team: TeamDetails) => {
+      const siteName = team.teamSite || "Unknown Site"; // Default to 'Unknown Site' if missing
+      const teamLevel = team.teamLevel || "Unknown Level"; // Default to 'Unknown Level' if missing
+      const existingSite = acc.find((site) => site.name === siteName);
+  
+      if (existingSite) {
+          const existingLevelGroup = existingSite.levelGroups.find(levelGroup => levelGroup.level === teamLevel);
+  
+          if (existingLevelGroup) {
+              existingLevelGroup.teams.push(team);
+          } else {
+              existingSite.levelGroups.push({ level: teamLevel, teams: [team] });
+          }
+      } else {
+          acc.push({
+              siteName, // Now this is valid as `siteName` is part of `SiteDetails`
+              levelGroups: [{ level: teamLevel, teams: [team] }]
+          });
+      }
+      return acc;
+    }, [] as SiteDetails[]);
 
     // Sort levels by A then B
-    teamsPerSite.forEach(site => {
+    teamsPerSite.forEach((site: SiteDetails) => {
         site.levelGroups.sort((a, b) => a.level.localeCompare(b.level));
     });
 
     // Generate CSV
     let csvContent = "Site Location,Team Level,Team Name,Member Name,Member Email\n";
 
-    teamsPerSite.forEach(({ siteName, levelGroups }) => {
-        levelGroups.forEach(({ level, teams }) => {
+    teamsPerSite.forEach((site: SiteDetails) => {
+        site.levelGroups.forEach(({ level, teams }) => {
             teams.forEach((team) => {
                 const teamName = team.teamName.split(',')[0];
                 team.students.forEach((student) => {
-                    csvContent += `${siteName},${level},${teamName},${student.name},${student.email}\n`;
+                    csvContent += `${site.name},${level},${teamName},${student.name},${student.email}\n`;
                 });
             });
         });
@@ -210,10 +199,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   };
 
   const downloadPDF = async () => {
-    console.log(teamList);
     // Filter only 'Unregistered' teams
     const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
-    // const unregisteredTeams = teamList; // Use all teams for now
 
     // Grouping teams by site location and level
     const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
@@ -331,6 +318,11 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     setFilters({});
   }
 
+  const updateTeamStatus = async () => {
+    // TODO: hook to update team status from unregistered to registered 
+    return true;
+  }
+
   return (
   <>
     {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
@@ -411,6 +403,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
       handleDisable={handleDisableDownloading}
       downloadCSV={downloadCSV}
       downloadPDF={downloadPDF}
+      updateTeamStatus={updateTeamStatus}
     />
     
   </>
