@@ -65,7 +65,11 @@ export const WideStaffCard: FC<StaffCardProps> = ({
         </UserNameGrid>
       </UserNameContainerDiv>
 
-      <StaffRoles roles={staffDetails.roles} />
+      <StandardContainerDiv style={{ overflow: 'visible' }}>
+        <StandardContainerDiv style={{ maxWidth: '90%', overflow: 'visible' }}>
+          <StaffRoles roles={staffDetails.roles} />
+        </StandardContainerDiv>
+      </StandardContainerDiv>
 
       <StandardContainerDiv>
         <StandardSpan>

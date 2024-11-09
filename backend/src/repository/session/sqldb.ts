@@ -23,7 +23,7 @@ export class SqlDbSessionRepository implements SessionRepository {
       return { sessionId: session.session_id, userId: session.user_id, createdAt: session.created_at };
     }
 
-    async create(session: Session): Promise<SessionTokenObject | null> {
+    async create(session: Session): Promise<{} | null> {
       const sessionQuery = `
           INSERT INTO sessions (session_id, user_id, created_at)
           VALUES ($1, $2, to_timestamp($3))
@@ -34,8 +34,8 @@ export class SqlDbSessionRepository implements SessionRepository {
       if (sessionResult.rowCount === 0) {
           return null;
       }
-      const newSession = sessionResult.rows[0];
-      return { sessionId: newSession.token };
+      // const newSession = sessionResult.rows[0];
+      return {};
     }
 
     async update(session: Session): Promise<Session | null> {

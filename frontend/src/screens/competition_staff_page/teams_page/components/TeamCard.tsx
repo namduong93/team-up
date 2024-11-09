@@ -420,7 +420,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
                 dragElastic={1}
                 dragConstraints={{left: 0, top: 0, right: 0, bottom: 0}}
                 onDragStart={() => setIsDragging(true)}
-                // onDragTransitionEnd={() => setIsDragging(false)}
+                onDragTransitionEnd={() => setIsDragging(false)}
                 onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
               >
                 <TeamCardMember memberName={member.name} />

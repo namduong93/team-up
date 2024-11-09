@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { sendRequest } from "../../utility/request";
 import { SearchBar } from "../competition_staff_page/components/PageUtils";
 import { FaChevronDown } from "react-icons/fa";
-import { ProfileCard } from "../student/ProfileCard";
+import { ProfileCard } from "../student/components/ProfileCard";
 import { backendURL } from "../../../config/backendURLConfig";
 
 import staffFAQs from "./faq_staff.json";
@@ -16,11 +16,11 @@ import Fuse from "fuse.js";
 interface FAQ {
   question: string;
   answer: string;
-};
+}
 
 interface ThemeButtonProps {
   $newTheme: "light" | "dark" | "christmas" | "colourblind";
-};
+}
 
 const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
@@ -30,12 +30,15 @@ const Background = styled(FlexBackground)`
   align-items: center;
 `;
 
-const ThemeButton = styled.button<ThemeButtonProps & { $isSelected: boolean, $isLight: boolean }>`
-  background-color: ${({ theme, $newTheme: newTheme }) => theme.themes[newTheme]};
-  color: ${({ $isLight: isLight }) => isLight ? "black" : "white"};
+const ThemeButton = styled.button<
+  ThemeButtonProps & { $isSelected: boolean; $isLight: boolean }
+>`
+  background-color: ${({ theme, $newTheme: newTheme }) =>
+    theme.themes[newTheme]};
+  color: ${({ $isLight: isLight }) => (isLight ? "black" : "white")};
   padding: 10px 15px;
   margin: 5px;
-  border: ${({ theme, $isSelected: isSelected }) => 
+  border: ${({ theme, $isSelected: isSelected }) =>
     isSelected ? `3px solid ${theme.colours.cancel}` : "3px solid transparent"};
   border-radius: 5px;
   cursor: pointer;
@@ -82,7 +85,8 @@ const DropdownHeader = styled.div<{ $isOpen: boolean }>`
 
   svg {
     transition: transform 0.3s ease;
-    transform: ${({ $isOpen }) => ($isOpen ? "rotate(180deg)" : "rotate(0deg)")};
+    transform: ${({ $isOpen }) =>
+      $isOpen ? "rotate(180deg)" : "rotate(0deg)"};
   }
 `;
 
@@ -110,7 +114,9 @@ export const Settings: FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        const typeResponse = await sendRequest.get<{ type: string }>("/user/type");
+        const typeResponse = await sendRequest.get<{ type: string }>(
+          "/user/type"
+        );
         const savedTheme = localStorage.getItem("theme");
         if (savedTheme) setTheme(savedTheme);
         fetchFAQs(typeResponse.data.type);
@@ -191,10 +197,38 @@ export const Settings: FC = () => {
               <FaChevronDown />
             </DropdownHeader>
             <DropdownContent $isOpen={appearancesOpen}>
-              <ThemeButton $isLight={true} $newTheme={"light"} $isSelected={theme === "light"} onClick={() => changeTheme("light")}>Light</ThemeButton>
-              <ThemeButton $isLight={false} $newTheme={"dark"} $isSelected={theme === "dark"} onClick={() => changeTheme("dark")}>Dark</ThemeButton>
-              <ThemeButton $isLight={false} $newTheme={"christmas"} $isSelected={theme === "christmas"} onClick={() => changeTheme("christmas")}>Christmas</ThemeButton>
-              <ThemeButton $isLight={false} $newTheme={"colourblind"} $isSelected={theme === "colourblind"} onClick={() => changeTheme("colourblind")}>Colour Blind</ThemeButton>
+              <ThemeButton
+                $isLight={true}
+                $newTheme={"light"}
+                $isSelected={theme === "light"}
+                onClick={() => changeTheme("light")}
+              >
+                Light
+              </ThemeButton>
+              <ThemeButton
+                $isLight={false}
+                $newTheme={"dark"}
+                $isSelected={theme === "dark"}
+                onClick={() => changeTheme("dark")}
+              >
+                Dark
+              </ThemeButton>
+              <ThemeButton
+                $isLight={false}
+                $newTheme={"christmas"}
+                $isSelected={theme === "christmas"}
+                onClick={() => changeTheme("christmas")}
+              >
+                Christmas
+              </ThemeButton>
+              <ThemeButton
+                $isLight={false}
+                $newTheme={"colourblind"}
+                $isSelected={theme === "colourblind"}
+                onClick={() => changeTheme("colourblind")}
+              >
+                Colour Blind
+              </ThemeButton>
             </DropdownContent>
           </DropdownContainer>
 
@@ -207,41 +241,44 @@ export const Settings: FC = () => {
               <FaChevronDown />
             </DropdownHeader>
             <DropdownContent $isOpen={creditsOpen}>
-              <p>We are a team of computer science students from UNSW who created TeamUP!</p>
-              <ProfileCard 
-                name="Julian Zincone" 
-                email="https://www.linkedin.com/in/julian-zincone/" 
+              <p>
+                We are a team of computer science students from UNSW who created
+                TeamUP!
+              </p>
+              <ProfileCard
+                name="Julian Zincone"
+                email="https://www.linkedin.com/in/julian-zincone/"
                 bio="An aspiring Full Stack developer who studies Computer Science and Tutors Computer Networks at UNSW."
                 image={`${backendURL.HOST}:${backendURL.PORT}/images/julian_credits.jpg`}
               />
-              <ProfileCard 
-                name="Tuyet Nguyen" 
-                email="https://www.linkedin.com/in/tuyet-nguyen-431192221" 
+              <ProfileCard
+                name="Tuyet Nguyen"
+                email="https://www.linkedin.com/in/tuyet-nguyen-431192221"
                 bio="Currently studying a Bachelors Degree in Mechanical and Manufacturing Engineering (Hon), and Computer Science. I’m an experienced Laboratory Assistant and Tutor at UNSW specialising in Python coding."
                 image={`${backendURL.HOST}:${backendURL.PORT}/images/tuyet_credits.jpg`}
               />
-              <ProfileCard 
-                name="Olivia Chen" 
-                email="https://www.linkedin.com/in/olivia-chen-oc2601" 
+              <ProfileCard
+                name="Olivia Chen"
+                email="https://www.linkedin.com/in/olivia-chen-oc2601"
                 bio="Currently studying a Double Degree in Eletrical Engineering and Computer Science. Born to girlie, forced grind."
                 image={`${backendURL.HOST}:${backendURL.PORT}/images/olivia_credits.jpg`}
               />
-              <ProfileCard 
-                name="Quan Hoang" 
-                email="https://www.linkedin.com/in/tung-quan-hoang/" 
+              <ProfileCard
+                name="Quan Hoang"
+                email="https://www.linkedin.com/in/tung-quan-hoang/"
                 bio="Final year student in Commerce/Computer Science. Currently working as a simple IT handyman fixing Google Sheets and printing machines for small businesses."
                 image={`${backendURL.HOST}:${backendURL.PORT}/images/quan_credits.png`}
               />
-              <ProfileCard 
-                name="Van Nam Duong" 
-                email="https://www.linkedin.com/in/namduong93/" 
+              <ProfileCard
+                name="Van Nam Duong"
+                email="https://www.linkedin.com/in/namduong93/"
                 bio="Software Engineer currently studying final year Computer Science at UNSW. I love solving ridiculously hard problems."
                 image={`${backendURL.HOST}:${backendURL.PORT}/images/nam_credits.png`}
               />
-              <ProfileCard 
-                name="X Maverick" 
-                email="x@gmail.com" 
-                bio="Backend Dev" 
+              <ProfileCard
+                name="X Maverick"
+                email="x@gmail.com"
+                bio="Backend Dev"
               />
             </DropdownContent>
           </DropdownContainer>

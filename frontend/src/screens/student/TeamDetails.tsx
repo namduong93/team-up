@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
-import { ProfileCard } from "./ProfileCard";
-import { EditCompPreferences } from "./EditCompPreferences";
-import { StudentDetails } from "./EditCompPreferences";
+import { ProfileCard } from "./components/ProfileCard";
+import { EditCompPreferences } from "./components/EditCompPreferences";
+import { StudentDetails } from "./components/EditCompPreferences";
 import { backendURL } from "../../../config/backendURLConfig";
 
 const DetailsContainer = styled.div`
@@ -71,16 +71,17 @@ export interface Student {
   bio: string;
   image?: string;
   preferredContact?: string;
-};
+}
 
 export const TeamDetails: FC = () => {
-  const { teamName, teamSite, teamSeat, teamLevel, students } = useOutletContext<{
-    teamName: string;
-    teamSite: string;
-    teamSeat: string;
-    teamLevel: "";
-    students: Student[];
-  }>();
+  const { teamName, teamSite, teamSeat, teamLevel, students } =
+    useOutletContext<{
+      teamName: string;
+      teamSite: string;
+      teamSeat: string;
+      teamLevel: "";
+      students: Student[];
+    }>();
 
   useEffect(() => {
     console.log(teamLevel.includes("A"));
@@ -134,9 +135,7 @@ export const TeamDetails: FC = () => {
           </div>
           <div>
             <TeamLabel>Level:</TeamLabel>
-            <TeamField>
-              {teamLevel}
-            </TeamField>
+            <TeamField>{teamLevel}</TeamField>
           </div>
         </TeamInfo>
       </TeamDetailsContainer>
@@ -147,10 +146,15 @@ export const TeamDetails: FC = () => {
             name={student.name}
             email={student.email}
             bio={student.bio}
-            image={student.image || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` }
+            image={
+              student.image ||
+              `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
+            }
             preferredContact={student.preferredContact}
             isFirst={index === 0}
-            onEdit={() => setEditingPreferences(fetchStudentDetails(student.id))}
+            onEdit={() =>
+              setEditingPreferences(fetchStudentDetails(student.id))
+            }
           />
         ))}
       </StudentsContainer>
