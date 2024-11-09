@@ -344,7 +344,7 @@ teamsPerSite.forEach((site: SiteDetails) => {
   }
 
   const updateTeamStatus = async () => {
-    // TODO: hook to update team status from unregistered to registered 
+    // TODO: hook to update team status from unregistered to registered
     return true;
   }
 
@@ -429,6 +429,8 @@ teamsPerSite.forEach((site: SiteDetails) => {
       downloadCSV={downloadCSV}
       downloadPDF={downloadPDF}
       updateTeamStatus={updateTeamStatus}
+      downloadQuestion="Are you sure you would like to register these teams?"
+      isSiteDownload={false}
     />
     
   </>

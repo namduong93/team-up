@@ -14,7 +14,9 @@ interface DownloadButtonProps {
   handleDisable?: VoidFunction;
   downloadCSV: () => Promise<boolean>;
   downloadPDF: () => Promise<boolean>;
-  updateTeamStatus: () => Promise<boolean>;
+  updateTeamStatus?: () => Promise<boolean>;
+  downloadQuestion: string;
+  isSiteDownload: boolean;
 }
 
 export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = false, isEditingNameStatus = false,
@@ -24,6 +26,8 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
   downloadCSV = async () => true,
   downloadPDF = async () => true,
   updateTeamStatus = async () => true,
+  downloadQuestion,
+  isSiteDownload,
 }) => {
   const theme = useTheme();
 
@@ -64,7 +68,7 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
         <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
           <ResponsiveActionButton actionType="secondary"
             label="Download CSV"
-            question="Are you sure you would like to register these teams?"
+            question={downloadQuestion}
             icon={<GrDocumentCsv />}
             handleSubmit={downloadCSV}
           />
@@ -73,20 +77,22 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
         <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
           <ResponsiveActionButton actionType="primary"
             label="Download PDF"
-            question="Are you sure you would like to register these teams?"
+            question={downloadQuestion}
             icon={<GrDocumentPdf />}
             handleSubmit={downloadPDF}
           />
         </div>
 
-        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-          <ResponsiveActionButton actionType="confirm"
-            label="Update Status"
-            question="Are you sure you have registered these teams on ICPC and would like to update their status to 'Registered'?"
-            icon={<FaStamp />}
-            handleSubmit={updateTeamStatus}
-          />
-        </div>
+        {!isSiteDownload &&
+          <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+            <ResponsiveActionButton actionType="confirm"
+              label="Update Status"
+              question="Are you sure you have registered these teams on ICPC and would like to update their status to 'Registered'?"
+              icon={<FaStamp />}
+              handleSubmit={updateTeamStatus}
+            />
+          </div>
+        }
       </>
       }
     </>
