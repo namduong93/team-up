@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaFileSignature,
@@ -10,6 +10,9 @@ import {
 import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
+import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
+import { sendRequest } from "../../../../utility/request";
+import { useParams } from "react-router-dom";
 type ActionType =
   | "code"
   | "competition"
@@ -25,13 +28,6 @@ interface StaffActionCardProps {
 
 interface ActionCardProps {
   $actionType: ActionType;
-}
-
-interface EditRego {
-  codeforces: boolean;
-  nationalOlympiad: boolean;
-  internationalOlympiad: boolean;
-  regionalParticipation: boolean;
 }
 
 const StandardContainerDiv = styled.div`
@@ -171,6 +167,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
 }) => {
+  const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
@@ -252,11 +249,20 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
   // TO-DO: call the backend to retrive the previous options
   const [regoFields, setRegoFields] = useState<EditRego>({
-    codeforces: false,
-    nationalOlympiad: false,
-    internationalOlympiad: false,
-    regionalParticipation: false,
+    enableCodeforcesField: false,
+    enableNationalPrizesField: false,
+    enableInternationalPrizesField: false,
+    enableRegionalParticipationField: false,
   });
+
+  useEffect(() => {
+    const fetchRegoFields = async () => {
+      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles', { compId });
+      const { regoFields: receivedRegoFields } = response.data;
+      setRegoFields(receivedRegoFields);
+    }
+    fetchRegoFields();
+  }, []);
 
   const handleRegoEditSubmit = (regoFields: EditRego) => {
     // TO-DO: send the EditRego to backend for storage
