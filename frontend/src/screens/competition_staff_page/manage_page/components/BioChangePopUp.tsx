@@ -93,6 +93,7 @@ const StyledTextarea = styled.textarea<{ $height: string }>`
   height: ${({ $height }) => $height};
   width: 100%;
   margin-top: 25px;
+  box-sizing: border-box;
 `;
 
 const Container = styled.div`
@@ -102,12 +103,13 @@ const Container = styled.div`
   gap: 5%;
   overflow: hidden;
   align-items: flex-start;
+  box-sizing: border-box;
 `;
 
 const ContentField = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   width: 100%;
 `;
 
