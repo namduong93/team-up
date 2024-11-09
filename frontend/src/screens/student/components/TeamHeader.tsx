@@ -1,16 +1,20 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { NotificationButton } from "../../components/page_header/components/NotificationButton";
-import { PageHeaderContainerDiv, PageTitle, PageDescriptionSpan } from "../../components/page_header/PageHeader";
+import { NotificationButton } from "../../../components/page_header/components/NotificationButton";
+import {
+  PageHeaderContainerDiv,
+  PageTitle,
+  PageDescriptionSpan,
+} from "../../../components/page_header/PageHeader";
 import { CompCountdownBar } from "./CompCountdownBar";
-import { ActionButton } from "../../components/responsive_fields/action_buttons/ActionButton";
+import { ActionButton } from "../../../components/responsive_fields/action_buttons/ActionButton";
 
 interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   compName: string;
   teamName: string;
   compCountdown: number;
   onWithdrawClick: () => void;
-};
+}
 
 const TeamTitle = styled(PageTitle)`
   color: ${({ theme }) => theme.colours.primaryDark};
@@ -69,7 +73,12 @@ const ResponsiveHeader = styled(PageHeaderContainerDiv)`
   margin: 0 auto;
 `;
 
-export const TeamHeader: FC<HeaderAttributes> = ({ compName, teamName, compCountdown, onWithdrawClick }) => {
+export const TeamHeader: FC<HeaderAttributes> = ({
+  compName,
+  teamName,
+  compCountdown,
+  onWithdrawClick,
+}) => {
   return (
     <ResponsiveHeader>
       <HeaderContent>

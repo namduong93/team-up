@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
-import TextInputLight from "../../components/general_utility/TextInputLight";
+import TextInputLight from "../../../components/general_utility/TextInputLight";
 import { useNavigate, useParams } from "react-router-dom";
-import { sendRequest } from "../../utility/request";
-
+import { sendRequest } from "../../../utility/request";
 
 const Modal = styled.div`
   position: fixed;
@@ -24,8 +23,7 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
-
+`;
 
 const CloseButton = styled.button`
   background: transparent;
@@ -35,14 +33,14 @@ const CloseButton = styled.button`
   top: 10px;
   right: 10px;
   font-size: 20px;
-  color: #d9534f; 
+  color: #d9534f;
   transition: color 0.2s;
   font-size: 26px;
 
   &:hover {
     color: #c9302c;
   }
-`
+`;
 
 const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
@@ -51,20 +49,26 @@ const Button = styled.button<{ disabled?: boolean }>`
   height: 35px;
   border: 0px;
   border-radius: 30px;
-  background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight)};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colours.sidebarBackground : theme.colours.primaryLight};
   margin-top: 35px;
   margin-bottom: 40px;
   color: ${({ theme }) => theme.fonts.colour};
   font-size: 16px;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer' )};
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 
   &:hover {
-    color: ${({ theme, disabled }) => (disabled ? theme.fonts.colour : theme.background)};
-    font-weight: ${({ theme, disabled }) => (disabled ? theme.fonts.fontWeights.regular : theme.fonts.fontWeights.bold)};
-    background-color: ${({ theme, disabled }) => (disabled ? theme.colours.sidebarBackground : theme.colours.primaryDark)};
+    color: ${({ theme, disabled }) =>
+      disabled ? theme.fonts.colour : theme.background};
+    font-weight: ${({ theme, disabled }) =>
+      disabled
+        ? theme.fonts.fontWeights.regular
+        : theme.fonts.fontWeights.bold};
+    background-color: ${({ theme, disabled }) =>
+      disabled ? theme.colours.sidebarBackground : theme.colours.primaryDark};
   }
-`
+`;
 
 interface JoinPopUpProps {
   heading: React.ReactNode;
@@ -72,31 +76,37 @@ interface JoinPopUpProps {
   currentTeamCode?: string;
 }
 
-const JoinPopUp: React.FC<JoinPopUpProps> = ({ heading, onClose, currentTeamCode }) => {
+const JoinPopUp: React.FC<JoinPopUpProps> = ({
+  heading,
+  onClose,
+  currentTeamCode,
+}) => {
   const navigate = useNavigate();
   const [teamCode, setTeamCode] = useState("");
   const [teamName, setTeamName] = useState("");
   const compId = useParams().compId;
 
-  const isButtonDisabled = () => {    
+  const isButtonDisabled = () => {
     return teamCode === "" || teamCode === currentTeamCode;
-  }
+  };
 
-  const handleJoin =() => {
+  const handleJoin = () => {
     try {
       const joinTeam = async () => {
-        const response = await sendRequest.post<{ team: string }>('/competition/team/join', { compId, teamCode });
+        const response = await sendRequest.post<{ team: string }>(
+          "/competition/team/join",
+          { compId, teamCode }
+        );
         const { team } = response.data;
         setTeamName(team);
-      }
-  
+      };
+
       joinTeam();
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
-    navigate("/dashboard", { state: { joined: true, teamName: teamName }})
-  }
+    navigate("/dashboard", { state: { joined: true, teamName: teamName } });
+  };
 
   return (
     <>
@@ -105,7 +115,7 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({ heading, onClose, currentTeamCode
           <FaTimes />
         </CloseButton>
         <div>{heading}</div>
-        <div style={{ width: "80%"}}>
+        <div style={{ width: "80%" }}>
           <TextInputLight
             label="Team Code"
             placeholder="Please enter"

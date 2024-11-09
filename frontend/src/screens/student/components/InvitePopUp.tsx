@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
-import { CopyButton } from "../../components/general_utility/CopyButton";
+import { CopyButton } from "../../../components/general_utility/CopyButton";
 
 // Modal styles
 const Modal = styled.div`
@@ -22,8 +22,7 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
-
+`;
 
 // Close button styles
 const CloseButton = styled.button`
@@ -41,31 +40,31 @@ const CloseButton = styled.button`
   &:hover {
     color: #c9302c; // Change color on hover
   }
-`
+`;
 
 const CopyContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 10px; 
+  margin-top: 10px;
   margin-bottom: 30px;
-`
+`;
 
 const CopyText = styled.p`
-  font-size: 18px; 
+  font-size: 18px;
   font-style: italic;
-  margin: 0; 
-  padding: 10px; 
+  margin: 0;
+  padding: 10px;
   border: 1px solid ${({ theme }) => theme.colours.confirmDark};
-  border-radius: 8px; 
-  display: inline-block; 
-`
+  border-radius: 8px;
+  display: inline-block;
+`;
 
 const LargeCopyButtonWrapper = styled.div`
-  transform: scale(1.5); 
-  display: inline-flex; 
+  transform: scale(1.5);
+  display: inline-flex;
   margin-left: 20px;
-`
+`;
 
 interface InvitePopUpProps {
   heading: React.ReactNode;
@@ -73,8 +72,11 @@ interface InvitePopUpProps {
   onClose: () => void;
 }
 
-
-const InvitePopUp: React.FC<InvitePopUpProps> = ({ heading, text, onClose }) => {
+const InvitePopUp: React.FC<InvitePopUpProps> = ({
+  heading,
+  text,
+  onClose,
+}) => {
   return (
     <>
       <Modal>
@@ -85,7 +87,7 @@ const InvitePopUp: React.FC<InvitePopUpProps> = ({ heading, text, onClose }) => 
         <CopyContainer>
           <CopyText>{text}</CopyText>
           <LargeCopyButtonWrapper>
-            <CopyButton textToCopy={text} /> 
+            <CopyButton textToCopy={text} />
           </LargeCopyButtonWrapper>
         </CopyContainer>
       </Modal>
