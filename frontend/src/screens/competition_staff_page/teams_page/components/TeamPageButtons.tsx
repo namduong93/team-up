@@ -11,8 +11,7 @@ import { CompetitionDetails, fetchTeams } from "../../CompetitionPage";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { DownloadButtons } from "../../components/DownloadButtons";
-import { CompetitionSite, SiteDetails } from "../../../../../shared_types/Competition/CompetitionSite";
-import { ParticipantTeamDetails, Student } from "../../../../../shared_types/Competition/team/TeamDetails";
+import { SiteDetails } from "../../../../../shared_types/Competition/CompetitionSite";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -139,13 +138,13 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const mapToTitle = (pronouns: string): string => {
-    switch (pronouns) {
-      case "He/Him":
+  const mapToTitle = (sex: string): string => {
+    switch (sex) {
+      case "M":
         return "Mr";
-      case "She/Her":
+      case "F":
         return "Ms";
-      case "They/Them":
+      case "NB":
         return "None";
       default:
         return "None";
@@ -154,7 +153,10 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
   const downloadCSV = async () => {
     // Filter only 'Unregistered' teams
-    const unregisteredTeams = teamList.filter((team: TeamDetails) => team.status === 'Unregistered');
+    let unregisteredTeams = teamList.filter((team: TeamDetails) => team.status === 'Unregistered');
+    if (universityOption.value) {
+      unregisteredTeams = teamList.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value));
+    };
 
     // Group teams by site location and level
     const teamsPerSite = unregisteredTeams.reduce((acc: SiteDetails[], team: TeamDetails) => {
@@ -212,109 +214,120 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
   const downloadPDF = async () => {
     // Filter only 'Unregistered' teams
-    const unregisteredTeams = teamList.filter((team) => team.status === 'Unregistered');
+    let unregisteredTeams = teamList.filter((team: TeamDetails) => team.status === 'Unregistered');
+    if (universityOption.value) {
+      unregisteredTeams = teamList.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value));
+    };
 
-    // Grouping teams by site location and level
-    const teamsPerSite = unregisteredTeams.reduce((acc, team) => {
-        const siteName = team.teamSite || "Unknown Site";
-        const teamLevel = team.teamLevel || "Unknown Level"; // Assuming 'teamLevel' is a property in your team object
-        const existingSite = acc.find((site) => site.siteName === siteName);
 
-        const mappedTeam = {
-            teamName: team.teamName,
-            level: teamLevel,
-            students: team.students.map(({ name, email }) => ({ name, email })),
-        };
+    // Group teams by site location and level
+    const teamsPerSite = unregisteredTeams.reduce((acc: SiteDetails[], team: TeamDetails) => {
+      const existingSite = acc.find((site) => site.name === team.teamSite);
+  
+      if (existingSite) {
+          const existingLevelGroup = existingSite.levelGroups.find(levelGroup => levelGroup.level === team.teamLevel);
+  
+          if (existingLevelGroup) {
+              existingLevelGroup.teams.push(team);
+          } else {
+              existingSite.levelGroups.push({ level: team.teamLevel, teams: [team] });
+          }
+      } else {
+          acc.push({
+            id: team.siteId,
+            name: team.teamSite,
+            levelGroups: [{ level: team.teamLevel, teams: [team] }]
+          });
+      }
+      return acc;
+    }, [] as SiteDetails[]);
 
-        if (existingSite) {
-            const existingLevelGroup = existingSite.levelGroups.find(levelGroup => levelGroup.level === teamLevel);
-
-            if (existingLevelGroup) {
-                existingLevelGroup.teams.push(mappedTeam);
-            } else {
-                existingSite.levelGroups.push({ level: teamLevel, teams: [mappedTeam] });
-            }
-        } else {
-            acc.push({
-                siteName,
-                levelGroups: [{ level: teamLevel, teams: [mappedTeam] }]
-            });
-        }
-        return acc;
-    }, [] as Array<{
-        siteName: string;
-        levelGroups: { level: string; teams: { teamName: string; students: { name: string; email: string }[] }[] }[]
-    }>);
-
-    // Sort levels to display Level A first and then Level B
-    teamsPerSite.forEach(site => {
-        site.levelGroups.sort((a, b) => {
-            if (a.level === "Level A" && b.level !== "Level A") return -1;
-            if (a.level === "Level B" && b.level === "Level A") return 1;
-            return 0; // If both are the same or not Level A or B, maintain original order
-        });
-    });
+    // Sort levels by A then B
+    teamsPerSite.forEach((site: SiteDetails) => {
+      site.levelGroups.sort((a, b) => a.level.localeCompare(b.level));
+  });
 
     // Initialize jsPDF
-    const doc = new jsPDF();
-    let yPos = 10;
+const doc = new jsPDF();
+let yPos = 10;
 
-    // Add title to the PDF
-    doc.setFontSize(16);
-    doc.text("Team Registration Data Report", 10, yPos);
-    yPos += 10;
+// Add title to the PDF
+doc.setFontSize(16);
+doc.text("Team Registration Data Report", 10, yPos);
+yPos += 10;
 
-    teamsPerSite.forEach(({ siteName, levelGroups }) => {
-        // Add site location header
-        doc.setFontSize(12);
-        doc.text(`Site location: ${siteName}`, 10, yPos);
-        yPos += 10;
+teamsPerSite.forEach((site: SiteDetails) => {
+  // Add site location header
+  doc.setFontSize(12);
+  doc.text(`Site location: ${site.name}`, 10, yPos);
+  yPos += 10;
 
-        levelGroups.forEach(({ level, teams }) => {
-            // Add level header
-            doc.setFontSize(12);
-            doc.text(`Level: ${level}`, 10, yPos);
-            yPos += 5;
+  site.levelGroups.forEach(({ level, teams }) => {
+    // Add level header
+    doc.setFontSize(12);
+    doc.text(`Level: ${level}`, 10, yPos);
+    yPos += 5;
 
-            teams.forEach((team) => {
-                // Add a new table for each team
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (doc as any).autoTable({
-                    startY: yPos,
-                    head: [
-                        [{ content: `Team name:`, styles: { halign: 'left' } }, { content: team.teamName, styles: { halign: 'right' } }]
-                    ],
-                    body: team.students.map((student) => [
-                        { content: `${student.name}`, styles: { halign: 'left' } },
-                        { content: `${student.email}`, styles: { halign: 'right' } },
-                    ]),
-                    theme: "grid",
-                    styles: { fontSize: 10 },
-                    columnStyles: {
-                        0: { cellWidth: 'auto' },
-                        1: { cellWidth: 'auto' }
-                    },
-                    headStyles: {
-                      fillColor: [102, 136, 210],
-                      textColor: [255, 255, 255],
-                      fontSize: 12
-                    },
-                    margin: { left: 10, right: 10 },
-                });
+    teams.forEach((team) => {
+      // Add a new table for each team
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (doc as any).autoTable({
+        startY: yPos,
+        head: [
+          [
+            { content: 'Team Name:', styles: { halign: 'left', fillColor: [188, 207, 248], textColor: [0, 0, 0] } },
+            { content: team.teamName, colSpan: 4, styles: { halign: 'left', fillColor: [188, 207, 248], textColor: [0, 0, 0] } }
+          ],
+          [
+            'Student Name',
+            'Student email',
+            'Student Title',
+            'Student sex',
+            'Student preferred name'
+          ]
+        ],
+        body: team.students.map((student) => [
+          student.name,
+          student.email,
+          mapToTitle(student.sex),
+          student.sex,
+          student.preferredName
+        ]),
+        theme: 'grid',
+        styles: {
+          fontSize: 10,
+          cellPadding: 2
+        },
+        columnStyles: {
+          0: { cellWidth: 'auto' },
+          1: { cellWidth: 'auto' },
+          2: { cellWidth: 'auto' },
+          3: { cellWidth: 'auto' },
+          4: { cellWidth: 'auto' }
+        },
+        headStyles: {
+          fillColor: [102, 136, 210],
+          textColor: [255, 255, 255],
+          fontSize: 10
+        },
+        margin: { left: 10, right: 10 }
+      });
 
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                yPos = (doc as any).lastAutoTable.finalY + 10;
-                if (yPos + 20 > doc.internal.pageSize.height) {
-                    doc.addPage();
-                    yPos = 10; // Reset Y position for the new page
-                }
-            });
+      // Update Y position for next content
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      yPos = (doc as any).lastAutoTable.finalY + 10;
 
-            yPos += 10;
-        });
-
-        yPos += 20;
+      // Add new page if needed
+      if (yPos + 20 > doc.internal.pageSize.height) {
+        doc.addPage();
+        yPos = 10;
+      }
     });
+    yPos += 10;
+  });
+  yPos += 20;
+});
+  
 
     // Save the PDF
     doc.save(`unregistered_teams_report_${compDetails.name}.pdf`);
