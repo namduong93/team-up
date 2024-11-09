@@ -38,6 +38,7 @@ const InfoContainer = styled.div`
   /* height: calc(100% - 20px); */
   box-sizing: border-box;
   margin: 10px 10px 10px 10px;
+  gap: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;

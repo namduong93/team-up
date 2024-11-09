@@ -8,9 +8,8 @@ import {
   FaCopy,
 } from "react-icons/fa";
 import { AssignSeats } from "../AssignSeats";
-import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { BioChangePopUp } from "./BioChangePopUp";
-import { FaBullseye } from "react-icons/fa6";
+import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
 type ActionType =
   | "code"
   | "competition"
@@ -26,6 +25,13 @@ interface StaffActionCardProps {
 
 interface ActionCardProps {
   $actionType: ActionType;
+}
+
+interface EditRego {
+  codeforces: boolean;
+  nationalOlympiad: boolean;
+  internationalOlympiad: boolean;
+  regionalParticipation: boolean;
 }
 
 const StandardContainerDiv = styled.div`
@@ -153,12 +159,21 @@ const CodeCardText = styled(CardText)`
   font-size: 1.25rem;
 `;
 
+const Title2 = styled.h2`
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  white-space: pre-wrap;
+  word-break: break-word;
+`;
+
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
 }) => {
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
+  const [showEditRego, setShowEditRego] = useState(false);
 
   const actions = [
     {
@@ -209,6 +224,8 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       setShowManageSite(true);
     } else if (actionType === "contact") {
       setShowContactBio(true);
+    } else if (actionType === "registration") {
+      setShowEditRego(true);
     }
   };
 
@@ -221,17 +238,31 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     }
   };
 
+  // TO-DO: get the currentBio from the database
+  const [currentBio, setCurrentBio] = useState(
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+  );
+
   const handleBioChange = () => {
-    console.log("Submitted");
+    console.log(currentBio);
     // TO-DO: submit the edited Contact Biography (string) to be changed in the
     // database
     setShowContactBio(false);
   };
 
-  // TO-DO: get the currentBio from the database
-  const [currentBio, setCurrentBio] = useState(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
-  );
+  // TO-DO: call the backend to retrive the previous options
+  const [regoFields, setRegoFields] = useState<EditRego>({
+    codeforces: false,
+    nationalOlympiad: false,
+    internationalOlympiad: false,
+    regionalParticipation: false,
+  });
+
+  const handleRegoEditSubmit = (regoFields: EditRego) => {
+    // TO-DO: send the EditRego to backend for storage
+    console.log(regoFields);
+    console.log("submitted");
+  };
 
   return (
     <StandardContainerDiv>
@@ -282,6 +313,21 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
               onNext={handleBioChange}
               inputValue={currentBio}
               onChange={(e) => setCurrentBio(e.target.value)}
+            />
+          )}
+
+          {showEditRego && (
+            <EditCompRegoPopUp
+              heading={
+                <Title2>
+                  Please select the fields you would like to {"\n"} to remove
+                  from the Competition Registration Form
+                </Title2>
+              }
+              onClose={() => setShowEditRego(false)}
+              regoFields={regoFields}
+              setRegoFields={setRegoFields}
+              onSubmit={handleRegoEditSubmit}
             />
           )}
         </>

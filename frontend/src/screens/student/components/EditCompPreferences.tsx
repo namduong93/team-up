@@ -1,5 +1,5 @@
 import { FC, useState, ChangeEvent, FormEvent } from "react";
-import { Student } from "./TeamDetails";
+import { Student } from "../TeamDetails";
 import styled from "styled-components";
 
 export interface StudentDetails extends Student {
@@ -77,7 +77,7 @@ const Checkbox = styled.input`
   margin-right: 5px;
 `;
 
-const TextArea = styled.textarea`
+export const TextArea = styled.textarea`
   width: 100%;
   padding: 8px;
   border-radius: 8px;
@@ -111,9 +111,9 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
     isRemote: student.isRemote ?? false, // Default to false
     codeforce: student.codeforce ?? undefined, // Ensure it's undefined if not provided
     regional: student.regional ?? false, // Default to false
-    nationalPrizes: student.nationalPrizes ?? '', // Default to empty string
-    internationalPrizes: student.internationalPrizes ?? '', // Default to empty string
-    bio: student.bio ?? '', // Default to empty string
+    nationalPrizes: student.nationalPrizes ?? "", // Default to empty string
+    internationalPrizes: student.internationalPrizes ?? "", // Default to empty string
+    bio: student.bio ?? "", // Default to empty string
     courses: student.courses || [], // Default to an empty array
   });
 
@@ -190,7 +190,9 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  courses: e.target.value.split(",").map((course) => course.trim()),
+                  courses: e.target.value
+                    .split(",")
+                    .map((course) => course.trim()),
                 })
               }
               rows={3} // Set rows for better height control
@@ -249,7 +251,11 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
           </Field>
           <Field>
             <Label>Boersen Eligible</Label>
-            <Input type="text" value={formData.boersenEligible ? "Yes" : "No"} readOnly />
+            <Input
+              type="text"
+              value={formData.boersenEligible ? "Yes" : "No"}
+              readOnly
+            />
           </Field>
           <Button type="submit">Save</Button>
           <Button type="button" onClick={onCancel}>

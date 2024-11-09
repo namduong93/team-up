@@ -107,9 +107,8 @@ export const BioChangePopUp: React.FC<BioChangePopUpProps> = ({
   inputValue,
   onChange,
 }) => {
-  const [_, setTextAreaHeight] = useState("auto");
+  const [, setTextAreaHeight] = useState("auto");
 
-  // Adjust the height based on content
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextAreaHeight("auto");
     setTextAreaHeight(`${e.target.scrollHeight}px`);

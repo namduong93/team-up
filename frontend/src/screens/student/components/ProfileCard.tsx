@@ -1,9 +1,9 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { CopyButton } from "../../components/general_utility/CopyButton";
+import { CopyButton } from "../../../components/general_utility/CopyButton";
 import { FaEdit, FaUserTie } from "react-icons/fa";
-import { backendURL } from "../../../config/backendURLConfig";
-import { InfoLink } from "./TeamManage";
+import { backendURL } from "../../../../config/backendURLConfig";
+import { InfoLink } from "../TeamManage";
 
 interface ProfileCardProps {
   name: string;
@@ -20,8 +20,9 @@ const StudentCard = styled.div<{ $isFirst?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  border: 2px solid ${({ theme, $isFirst }) =>
-    $isFirst ? theme.colours.secondaryLight : theme.colours.primaryLight};
+  border: 2px solid
+    ${({ theme, $isFirst }) =>
+      $isFirst ? theme.colours.secondaryLight : theme.colours.primaryLight};
   border-radius: 12px;
   background-color: ${({ theme }) => theme.background};
   width: 100%;
@@ -165,7 +166,6 @@ export const ProfileCard: FC<ProfileCardProps> = ({
   return (
     <StudentCard $isFirst={isFirst}>
       <StudentCardContent>
-        
         <ContentContainer>
           {isCoach ? (
             <IconWrapper>
@@ -173,7 +173,10 @@ export const ProfileCard: FC<ProfileCardProps> = ({
             </IconWrapper>
           ) : (
             <StudentImage
-              src={image || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`} // Use defaultProfile if image is undefined
+              src={
+                image ||
+                `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
+              } // Use defaultProfile if image is undefined
               alt={`${name}'s profile`}
             />
           )}
@@ -182,9 +185,13 @@ export const ProfileCard: FC<ProfileCardProps> = ({
               <StudentContact>
                 <StudentName>{name}</StudentName>
                 <StudentEmail>
-                    <InfoLink href={email} target="_blank" rel="noopener noreferrer">
-                      {email}
-                    </InfoLink>
+                  <InfoLink
+                    href={email}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {email}
+                  </InfoLink>
                   <CopyButton textToCopy={email} />
                 </StudentEmail>
                 {!isCoach && preferredContact && contactParts.length === 2 ? (
@@ -195,19 +202,19 @@ export const ProfileCard: FC<ProfileCardProps> = ({
                     </PreferredContactHandle>
                     <CopyButton textToCopy={contactParts[1]} />
                   </PreferredContact>
-                ) : ( // only students should have a preferred contact
-                  isCoach && (<CoachContact>No preferred contact available.</CoachContact>)
+                ) : (
+                  // only students should have a preferred contact
+                  isCoach && (
+                    <CoachContact>No preferred contact available.</CoachContact>
+                  )
                 )}
               </StudentContact>
-              {isFirst && onEdit && (
-                <EditIcon onClick={onEdit} />
-              )}
+              {isFirst && onEdit && <EditIcon onClick={onEdit} />}
             </ContactEdit>
             <StudentBio>{bio}</StudentBio>
           </StudentInfo>
         </ContentContainer>
       </StudentCardContent>
-      
     </StudentCard>
   );
 };

@@ -1,16 +1,20 @@
-import { FC, useEffect, useState  } from "react";
-import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../competition_staff_page/components/PageUtils";
+import { FC, useEffect, useState } from "react";
+import {
+  MainPageDiv,
+  OverflowFlexBackground,
+  PageOptionsContainerDiv,
+  ToggleOptionDiv,
+} from "../competition_staff_page/components/PageUtils";
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
 import styled from "styled-components";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
-import { TeamHeader } from "./TeamHeader";
+import { TeamHeader } from "./components/TeamHeader";
 import { sendRequest } from "../../utility/request";
 
-import { WithdrawPopUpChain } from "./WithdrawPopUpChain";
+import { WithdrawPopUpChain } from "./components/WithdrawPopUpChain";
 import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
 
-const TeamToggleOptionDiv = styled(ToggleOptionDiv)`
-`;
+const TeamToggleOptionDiv = styled(ToggleOptionDiv)``;
 
 const ToggleOptionTextSpan = styled.span`
   font-size: ${({ theme }) => theme.fonts.fontSizes.subheading};
@@ -35,34 +39,33 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
-`
+`;
 
 export const TeamProfile: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
-  const [teamDetails, setTeamDetails] = useState<ParticipantTeamDetails>(
-    {
-      compName: '',
-      teamName: '',
-      teamSite: '',
-      teamSeat: '',
-      teamLevel: '',
-      startDate: new Date(),
-      students: [],
-      coach: {
-        name: '',
-        email: '',
-        bio: '',
-      }
-    }
-  );
+  const [teamDetails, setTeamDetails] = useState<ParticipantTeamDetails>({
+    compName: "",
+    teamName: "",
+    teamSite: "",
+    teamSeat: "",
+    teamLevel: "",
+    startDate: new Date(),
+    students: [],
+    coach: {
+      name: "",
+      email: "",
+      bio: "",
+    },
+  });
 
   useEffect(() => {
-
     const fetchTeamDetails = async () => {
       const response = await sendRequest.get<ParticipantTeamDetails>(
-        '/competition/team/details', { compId });
-      
+        "/competition/team/details",
+        { compId }
+      );
+
       const details = response.data;
       setTeamDetails({ ...details, startDate: new Date(details.startDate) });
       console.log(details);
@@ -70,43 +73,58 @@ export const TeamProfile: FC = () => {
 
     fetchTeamDetails();
   }, []);
-  
 
   const teamOutletProps = {
     ...teamDetails,
     compId,
   };
 
-
-  const compCountdown =  Math.round(((teamDetails.startDate.getTime()-Date.now())/(1000*60*60*24)));
+  const compCountdown = Math.round(
+    (teamDetails.startDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+  );
 
   const [withdrawPopUpOpen, setWithdrawPopUpOpen] = useState(false);
 
   const handleWithdrawClick = () => {
     setWithdrawPopUpOpen(true);
-  }
-  
+  };
+
   return (
-  <TeamOverflowFlexBackground>
-    <MainPageDiv>
+    <TeamOverflowFlexBackground>
+      <MainPageDiv>
+        <Overlay $isOpen={withdrawPopUpOpen}>
+          <WithdrawPopUpChain handleClose={() => setWithdrawPopUpOpen(false)} />
+        </Overlay>
 
-    <Overlay $isOpen={withdrawPopUpOpen}>
-      <WithdrawPopUpChain handleClose={() => setWithdrawPopUpOpen(false)}/>
-    </Overlay>
-
-      <TeamHeader compName={teamDetails.compName} teamName={teamDetails.teamName} compCountdown={compCountdown} onWithdrawClick={handleWithdrawClick} />
-      <PageOptionsContainerDiv>
-        <CustomToggleSwitch style={{ width: '100%', height: '100%' }} defaultBorderIndex={0}>
-          <TeamToggleOptionDiv onClick={() => { navigate(`/competition/participant/${compId}/details`) }}>
-            <ToggleOptionTextSpan>Details</ToggleOptionTextSpan>
-          </TeamToggleOptionDiv>
-          <TeamToggleOptionDiv onClick={() => { navigate(`/competition/participant/${compId}/manage`) }}>
-            <ToggleOptionTextSpan>Manage</ToggleOptionTextSpan>
-          </TeamToggleOptionDiv>
-        </CustomToggleSwitch>
-      </PageOptionsContainerDiv>
-      <TeamProfileViews context={teamOutletProps}/>
-    </MainPageDiv>
-  </TeamOverflowFlexBackground>
+        <TeamHeader
+          compName={teamDetails.compName}
+          teamName={teamDetails.teamName}
+          compCountdown={compCountdown}
+          onWithdrawClick={handleWithdrawClick}
+        />
+        <PageOptionsContainerDiv>
+          <CustomToggleSwitch
+            style={{ width: "100%", height: "100%" }}
+            defaultBorderIndex={0}
+          >
+            <TeamToggleOptionDiv
+              onClick={() => {
+                navigate(`/competition/participant/${compId}/details`);
+              }}
+            >
+              <ToggleOptionTextSpan>Details</ToggleOptionTextSpan>
+            </TeamToggleOptionDiv>
+            <TeamToggleOptionDiv
+              onClick={() => {
+                navigate(`/competition/participant/${compId}/manage`);
+              }}
+            >
+              <ToggleOptionTextSpan>Manage</ToggleOptionTextSpan>
+            </TeamToggleOptionDiv>
+          </CustomToggleSwitch>
+        </PageOptionsContainerDiv>
+        <TeamProfileViews context={teamOutletProps} />
+      </MainPageDiv>
+    </TeamOverflowFlexBackground>
   );
-}
+};
