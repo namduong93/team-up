@@ -1,13 +1,3 @@
-// should be able to edit competition details (APPLIES TO ALL UNIS - ADMIN ONLY)
-
-// should be able to edit rego form (APPLIES TO 1 UNI - COACH)
-// should be able to assign seats (APPLIES TO 1 UNI - SITE COORD)
-
-// COACHES CAN UDPATE THEIR REGISTRATION FORM FOR THIS COMP
-// COACHES CAN UPDATE THEIR COMP BLURB FOR THIS COMP
-
-// SITE COORD ACTION BUTTON LEADS TO MANAGE SITE
-
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { StaffActionCard } from "./components/StaffActionCard";
@@ -42,8 +32,6 @@ export const StaffManage: FC = () => {
     fetchRoles();
   }, [])
 
-  // COMP CODE (TO REGO) HARDCODED FOR NOW
-  // TODO: Fetch comp code fom backend
   return (
     <ManageContainer>
       <StaffActionCard staffRoles={roles} compCode={compCode}/>

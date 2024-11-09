@@ -11,7 +11,7 @@ interface TextInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: string;
 }
 
-const TextInputLight: React.FC<TextInputLightProps> = ({
+export const TextInputLight: React.FC<TextInputLightProps> = ({
   label,
   placeholder,
   type = 'text',

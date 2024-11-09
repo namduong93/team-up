@@ -41,11 +41,23 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   z-index: 999;
 `;
 
+const mockAnnouncement = `
+The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.
+
+3 students, 5 hours  
+1 computer, 12 problems* (typical, but varies per contest)
+
+In 2021, more than 50,000 of the finest students in computing disciplines from over 3,000 universities competed worldwide in the regional phases of this contest. We conduct ICPC contests for the South Pacific region, with top teams qualifying to the World Finals.
+
+The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
+`;
+
 export const TeamProfile: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
   const [teamDetails, setTeamDetails] = useState<ParticipantTeamDetails>({
     compName: "",
+    siteId: 0,
     teamName: "",
     teamSite: "",
     teamSeat: "",
@@ -58,6 +70,7 @@ export const TeamProfile: FC = () => {
       bio: "",
     },
   });
+  const [announcements, setAnnouncements] = useState("");  // for coach to set specific comp details/announcements
 
   useEffect(() => {
     const fetchTeamDetails = async () => {
@@ -72,11 +85,19 @@ export const TeamProfile: FC = () => {
     };
 
     fetchTeamDetails();
+
+    // TODO: Hook the backend get comp annocunements
+    // const fetchCompAnnouncements = async () => {
+    //   const response = await sendRequest.get<string>("/competition/announcements"), { compId });
+    //   setAnnouncements(response.data.announcements);
+    // }
+    setAnnouncements(mockAnnouncement);
   }, []);
 
   const teamOutletProps = {
     ...teamDetails,
     compId,
+    announcements,
   };
 
   const compCountdown = Math.round(

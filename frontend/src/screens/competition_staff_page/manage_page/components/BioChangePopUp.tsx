@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import { FC } from "react";
 import { FaTimes } from "react-icons/fa";
 import { styled } from "styled-components";
+import { Heading } from "./StaffActionCard";
+import ReactMarkdownEditorLite from "react-markdown-editor-lite";
+import "react-markdown-editor-lite/lib/index.css";
+import MarkdownIt from "markdown-it";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -20,8 +24,7 @@ const Modal = styled.div`
   top: 50%;
   left: 50%;
   min-width: 290px;
-  max-width: 450px;
-  box-sizing: border-box;
+  max-width: 800px;
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 12px;
@@ -89,52 +92,122 @@ const StyledTextarea = styled.textarea<{ $height: string }>`
   font-size: 16px;
   height: ${({ $height }) => $height};
   width: 100%;
-  padding: 10px;
+  margin-top: 25px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 5%;
+  overflow: hidden;
+  align-items: flex-start;
+`;
+
+const ContentField = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  width: 100%;
+`;
+
+const ContentMarkdown = styled(ContentField)`
+  flex: 2;
+`;
+
+const ContentBio = styled(ContentField)`
+  flex: 1;
+`;
+
+const View = styled.div`
+  width: 100%;
+  height: 625px;
+  overflow: hidden;
+`;
+
+const EditorContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-height: 400px;
+  overflow: auto;
+  background-color: ${({ theme }) => theme.background};
 `;
 
 interface BioChangePopUpProps {
-  heading: React.ReactNode;
   onClose: () => void;
   onNext: () => void;
-  inputValue: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  bioValue: string;
+  announcementValue: string;
+  onBioChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onAnnouncementChange: (value: string) => void;
 }
 
-export const BioChangePopUp: React.FC<BioChangePopUpProps> = ({
-  heading,
+export const BioChangePopUp: FC<BioChangePopUpProps> = ({
   onClose,
   onNext,
-  inputValue,
-  onChange,
+  bioValue,
+  onBioChange,
+  announcementValue,
+  onAnnouncementChange,
 }) => {
-  const [, setTextAreaHeight] = useState("auto");
-
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextAreaHeight("auto");
-    setTextAreaHeight(`${e.target.scrollHeight}px`);
-    onChange(e);
-  };
-
-  const isButtonDisabled = () => inputValue === "";
+  const isButtonDisabled = () => bioValue === "" || announcementValue === "";
 
   return (
     <ModalOverlay>
       <Modal>
-        <CloseButton onClick={onClose}>
-          <FaTimes />
-        </CloseButton>
-        <div>{heading}</div>
+        <View>
+          <CloseButton onClick={onClose}>
+            <FaTimes />
+          </CloseButton>
 
-        <StyledTextarea
-          value={inputValue}
-          onChange={handleTextChange}
-          $height="100px"
-          required={false}
-        />
+          <Container>
+            <ContentBio>
+              <Heading>Update Your Contact Bio</Heading>
+              <StyledTextarea
+                value={bioValue}
+                onChange={onBioChange}
+                $height="100px"
+                required={false}
+                placeholder={bioValue}
+              />
+            </ContentBio>
+            <ContentMarkdown>
+              <Heading>Update Announcements to Your Teams</Heading>
+              <EditorContainer>
+                <ReactMarkdownEditorLite
+                  value={announcementValue}
+                  onChange={({ text }) => onAnnouncementChange(text)}
+                  style={{ height: "100%" }}
+                  renderHTML={(text: string) => MarkdownIt().render(text)}
+                  config={{
+                    placeholder: "Write announcement here...",
+                    toolbar: [
+                      "bold",
+                      "italic",
+                      "strikethrough",
+                      "header",
+                      "|",
+                      "unordered-list",
+                      "ordered-list",
+                      "quote",
+                      "|",
+                      "link",
+                      "image",
+                      "|",
+                      "preview",
+                      "undo",
+                      "redo",
+                    ],
+                  }}
+                />
+              </EditorContainer>
+            </ContentMarkdown>
+          </Container>
 
-        <Button disabled={isButtonDisabled()} onClick={onNext}>
-          Save Changes
-        </Button>
+          <Button disabled={isButtonDisabled()} onClick={onNext}>
+            Save Changes
+          </Button>
+        </View>
       </Modal>
     </ModalOverlay>
   );

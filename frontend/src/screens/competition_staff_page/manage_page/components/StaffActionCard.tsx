@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaFileSignature,
@@ -10,6 +10,7 @@ import {
 import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
+
 type ActionType =
   | "code"
   | "competition"
@@ -146,7 +147,7 @@ const CopyCard = styled.div`
   box-sizing: border-box;
   padding: 5px;
 `;
-const Heading = styled.h2`
+export const Heading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
@@ -167,6 +168,17 @@ const Title2 = styled.h2`
   word-break: break-word;
 `;
 
+const mockAnnouncement = `
+The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.
+
+3 students, 5 hours  
+1 computer, 12 problems* (typical, but varies per contest)
+
+In 2021, more than 50,000 of the finest students in computing disciplines from over 3,000 universities competed worldwide in the regional phases of this contest. We conduct ICPC contests for the South Pacific region, with top teams qualifying to the World Finals.
+
+The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
+`;
+
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
@@ -174,6 +186,8 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
+  const [currentBio, setCurrentBio] = useState("epic bio");
+  const [announcement, setAnnouncement] = useState(mockAnnouncement);
 
   const actions = [
     {
@@ -203,7 +217,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     {
       type: "contact" as ActionType,
       icon: FaChair,
-      text: "Update Your Contact Bio",
+      text: "Update Your Bio and Annoucements",
       roles: ["Admin", "Coach"],
     },
     {
@@ -232,20 +246,21 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const handleCopyCode = async () => {
     try {
       await navigator.clipboard.writeText(compCode);
-      alert("Competition code copied to clipboard!");
     } catch (err) {
       alert(err);
     }
   };
 
-  // TO-DO: get the currentBio from the database
-  const [currentBio, setCurrentBio] = useState(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
-  );
+
+
+  // TO-DO: get current bio and annoucements from database
+  useEffect(() => {
+    
+  }, []);
 
   const handleBioChange = () => {
     console.log(currentBio);
-    // TO-DO: submit the edited Contact Biography (string) to be changed in the
+    // TO-DO: submit the edited Contact Biography (string) and announcemnets (string) to be changed in the
     // database
     setShowContactBio(false);
   };
@@ -306,13 +321,12 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
           {showContactBio && (
             <BioChangePopUp
-              heading={
-                <Heading>Edit your {"\n Competition Biography"}</Heading>
-              }
               onClose={() => setShowContactBio(false)}
               onNext={handleBioChange}
-              inputValue={currentBio}
-              onChange={(e) => setCurrentBio(e.target.value)}
+              bioValue={currentBio}
+              announcementValue={announcement}
+              onBioChange={(e) => setCurrentBio(e.target.value)}
+              onAnnouncementChange={(value: SetStateAction<string>) => setAnnouncement(value)}
             />
           )}
 
