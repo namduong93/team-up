@@ -1,27 +1,10 @@
 import { FC, useState, ChangeEvent, FormEvent } from "react";
-import { Student } from "../TeamDetails";
+import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
 import styled from "styled-components";
 
-export interface StudentDetails extends Student {
-  name: string;
-  email: string;
-  degreeYear: number;
-  degree: string;
-  ICPCEligibility?: boolean;
-  isRemote?: boolean;
-  competitionLevel: string;
-  boersenEligible?: boolean;
-  courses: string[];
-  codeforce?: number;
-  regional?: boolean;
-  nationalPrizes?: string;
-  internationalPrizes?: string;
-  bio: string; // Ensure bio is included in the StudentDetails type
-}
-
 interface EditCompPreferencesProps {
-  student: StudentDetails;
-  onSave: (updatedStudent: StudentDetails) => void;
+  student: StudentInfo;
+  onSave: (updatedStudent: StudentInfo) => void;
   onCancel: () => void;
 }
 
@@ -39,63 +22,102 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   background-color: ${({ theme }) => theme.background};
-  padding: 20px;
-  border-radius: 12px; // Rounded edges
-  width: 90%;
-  max-width: 800px; // Wider for 2-column layout
+  padding: 30px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  max-height: 800px;
 `;
 
 const Title = styled.h2`
-  margin-bottom: 20px; // Space below the title
-  text-align: center; // Center the title
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 24px;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const Form = styled.form`
-  display: grid; // Use grid layout for two columns
-  grid-template-columns: 1fr 1fr; // Two equal columns
-  gap: 20px; // Gap between fields
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
 `;
 
 const Field = styled.div`
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px; // Adjusted spacing between fields
 `;
 
 const Label = styled.label`
-  display: block;
+  font-size: 16px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const Input = styled.input`
-  width: 100%;
-  padding: 8px;
+  padding: 10px;
   border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+  font-size: 14px;
+  color: ${({ theme }) => theme.fonts.colour};
+  background-color: ${({ theme }) => theme.background};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colours.sidebarLine};
+  }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.fonts.colour};
+    outline: none;
+  }
 `;
 
 const Checkbox = styled.input`
-  margin-right: 5px;
+  margin-right: 8px;
 `;
 
 export const TextArea = styled.textarea`
-  width: 100%;
-  padding: 8px;
+  padding: 10px;
   border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  resize: none; // Prevent resizing
+  font-size: 14px;
+  resize: none;
+  min-height: 100px;
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.fonts.colour};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colours.sidebarLine};
+  }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colours.sidebarBackground};
+    outline: none;
+  }
 `;
 
 const Button = styled.button`
-  margin-top: 10px;
-  padding: 10px;
+  padding: 12px 20px;
   border-radius: 8px;
   border: none;
+  background-color: ${({ theme }) => theme.colours.primaryLight};
+  color: ${({ theme }) => theme.fonts.colour};
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+  font-size: 16px;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.colours.primaryDark};
-  color: white;
+  transition: background-color 0.2s;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colours.secondaryDark};
+    background-color: ${({ theme }) => theme.colours.primaryDark};
+    color: ${({ theme }) => theme.background};
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colours.sidebarBackground};
+    cursor: not-allowed;
   }
 `;
 
@@ -104,24 +126,10 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   onSave,
   onCancel,
 }) => {
-  // Initialize form data with default values
-  const [formData, setFormData] = useState<StudentDetails>({
-    ...student,
-    ICPCEligibility: student.ICPCEligibility ?? false, // Default to false
-    isRemote: student.isRemote ?? false, // Default to false
-    codeforce: student.codeforce ?? undefined, // Ensure it's undefined if not provided
-    regional: student.regional ?? false, // Default to false
-    nationalPrizes: student.nationalPrizes ?? "", // Default to empty string
-    internationalPrizes: student.internationalPrizes ?? "", // Default to empty string
-    bio: student.bio ?? "", // Default to empty string
-    courses: student.courses || [], // Default to an empty array
-  });
+  const [formData, setFormData] = useState<StudentInfo>(student);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target;
-
     if (target instanceof HTMLInputElement && target.type === "checkbox") {
       setFormData((prev) => ({
         ...prev,
@@ -138,7 +146,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSave(formData);
-    onCancel(); // Call onCancel after saving
+    onCancel();
   };
 
   return (
@@ -169,7 +177,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Checkbox
               type="checkbox"
               name="ICPCEligibility"
-              checked={formData.ICPCEligibility}
+              checked={formData.ICPCEligible}
               onChange={handleChange}
             />
           </Field>
@@ -186,16 +194,16 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Label>Courses</Label>
             <TextArea
               name="courses"
-              value={formData.courses.join(", ")}
+              value={formData.universityCourses.join(", ")}
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  courses: e.target.value
+                  universityCourses: e.target.value
                     .split(",")
                     .map((course) => course.trim()),
                 })
               }
-              rows={3} // Set rows for better height control
+              rows={3}
             />
           </Field>
           <Field>
@@ -203,7 +211,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Input
               type="number"
               name="codeforce"
-              value={formData.codeforce || ""} // Handle undefined case
+              value={formData.codeforcesRating || ""}
               onChange={handleChange}
             />
           </Field>
@@ -212,7 +220,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
             <Checkbox
               type="checkbox"
               name="regional"
-              checked={formData.regional}
+              checked={formData.isRemote}
               onChange={handleChange}
             />
           </Field>
@@ -241,7 +249,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
               name="bio"
               value={formData.bio}
               onChange={handleChange}
-              rows={3} // Adjust row count as needed
+              rows={3}
             />
           </Field>
           {/* Displaying but not editing competition level and boersen eligibility */}

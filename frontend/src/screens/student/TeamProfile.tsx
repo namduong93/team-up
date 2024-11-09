@@ -46,6 +46,7 @@ export const TeamProfile: FC = () => {
   const { compId } = useParams();
   const [teamDetails, setTeamDetails] = useState<ParticipantTeamDetails>({
     compName: "",
+    siteId: 0,
     teamName: "",
     teamSite: "",
     teamSeat: "",

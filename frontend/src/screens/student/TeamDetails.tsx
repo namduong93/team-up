@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
 import { ProfileCard } from "./components/ProfileCard";
 import { EditCompPreferences } from "./components/EditCompPreferences";
-import { StudentDetails } from "./components/EditCompPreferences";
 import { backendURL } from "../../../config/backendURLConfig";
+import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -64,15 +64,6 @@ const StudentsContainer = styled.div`
   flex-direction: column;
 `;
 
-export interface Student {
-  id: string;
-  name: string;
-  email: string;
-  bio: string;
-  image?: string;
-  preferredContact?: string;
-}
-
 export const TeamDetails: FC = () => {
   const { teamName, teamSite, teamSeat, teamLevel, students } =
     useOutletContext<{
@@ -80,41 +71,18 @@ export const TeamDetails: FC = () => {
       teamSite: string;
       teamSeat: string;
       teamLevel: "";
-      students: Student[];
+      students: StudentInfo[];
     }>();
 
   useEffect(() => {
-    console.log(teamLevel.includes("A"));
+    // TODO: Backend hook to get student INfo for the whole team
   }, []);
 
   const [editingPreferences, setEditingPreferences] =
-    useState<StudentDetails | null>(null);
+    useState<StudentInfo | null>(null);
 
-  const handleSave = (updatedStudent: StudentDetails) => {
+  const handleSave = (updatedStudent: StudentInfo) => {
     alert(`Saved details for: ${updatedStudent.name}`);
-  };
-
-  // TODO: waiting for backend route to get 1 paritcipant comp details
-  const fetchStudentDetails = (id: string): StudentDetails => {
-    return {
-      name: "John Doe",
-      email: "john.doe@example.com",
-      bio: "Passionate coder and team player.",
-      image: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
-      id,
-      preferredContact: "Discord:john_doe",
-      degreeYear: 3,
-      degree: "Computer Science",
-      ICPCEligibility: true,
-      isRemote: false,
-      competitionLevel: "A",
-      boersenEligible: true,
-      courses: ["COMP1511", "COMP3121"],
-      codeforce: 1652,
-      regional: false,
-      nationalPrizes: "",
-      internationalPrizes: "",
-    };
   };
 
   return (
@@ -142,18 +110,17 @@ export const TeamDetails: FC = () => {
       <StudentsContainer>
         {students.map((student, index) => (
           <ProfileCard
-            key={student.id}
-            name={student.name}
+            key={student.userId}
+            name={student.preferredName}
             email={student.email}
             bio={student.bio}
             image={
-              student.image ||
               `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
             }
             preferredContact={student.preferredContact}
             isFirst={index === 0}
             onEdit={() =>
-              setEditingPreferences(fetchStudentDetails(student.id))
+              setEditingPreferences(student)
             }
           />
         ))}
