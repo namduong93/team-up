@@ -785,7 +785,7 @@ VALUES
 -- Competition Coach(es)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
-(2, 1, ARRAY['Coach']::competition_role_enum[], 'Pending', 'epic bio'),
+(2, 1, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio'),
 (2, 2, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio'),
 (2, 3, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio');
 
@@ -841,7 +841,7 @@ INSERT INTO competition_teams (
 VALUES
 (4, 'Bulbasaur', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 2, NULL),
 (4, 'Ivysaur', 'Pending'::competition_team_status, 'Charmander', 3, ARRAY[5, 7], 2, 1, 'Tabla01', 2, NULL),
-(4, 'Venusaur', 'Pending'::competition_team_status, 'Charmeleon', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4),
+(4, 'Venusaur', 'Unregistered'::competition_team_status, 'Charmeleon', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4),
 (4, 'Super Team', 'Pending'::competition_team_status, 'No', 3, ARRAY[6], 2, 1, 'Tabla02', 2, NULL);
 
 -- Notifications

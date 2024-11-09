@@ -203,6 +203,11 @@ app.put('/competition/coach/site_approve', competitionController.competitionAppr
 // RESPONSE: {}
 app.put('/competition/staff/seat_assignments', competitionController.competitionTeamSeatAssignments);
 
+// Coach registers teams for competition
+// PARAMS: { compId: number, teamIds: Array<number> }
+// RESPONSE: {}
+app.put('/competition/staff/register_teams', competitionController.competitionRegisterTeams);
+
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
 app.get('/competition/universities/list', competitionController.competitionUniversitiesList)
