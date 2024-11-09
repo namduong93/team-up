@@ -12,9 +12,9 @@ import { EditIcon, EditIconButton } from "../../../../account/Account";
 import { TransparentResponsiveButton } from "../../../../../components/responsive_fields/ResponsiveButton";
 import { RxReset } from "react-icons/rx";
 import { TeamDetails, Student } from "../../../../../../shared_types/Competition/team/TeamDetails";
-import { TextArea } from "../../../../student/EditCompPreferences";
 import { sendRequest } from "../../../../../utility/request";
 import { useParams } from "react-router-dom";
+import { TextArea } from "../../../../student/components/EditCompPreferences";
 
 
 interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
