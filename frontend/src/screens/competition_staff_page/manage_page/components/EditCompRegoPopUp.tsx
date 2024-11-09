@@ -2,6 +2,7 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 import { ToggleButton } from "./ToggleButton";
+import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -112,13 +113,6 @@ const Column = styled.div`
   gap: 10px;
   padding: 5px;
 `;
-
-interface EditRego {
-  codeforces: boolean;
-  nationalOlympiad: boolean;
-  internationalOlympiad: boolean;
-  regionalParticipation: boolean;
-}
 
 interface EditCompRegoPopUpProps {
   heading: React.ReactNode;

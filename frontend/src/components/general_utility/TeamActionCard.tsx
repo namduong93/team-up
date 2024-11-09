@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaUserPlus, FaUsers, FaEdit, FaGlobe } from "react-icons/fa";
-import InvitePopUp from "../../screens/student/InvitePopUp";
-import JoinPopUp from "../../screens/student/JoinPopUp";
-import { SitePopUpChain } from "../../screens/student/SitePopUpChain";
-import { NamePopUpChain } from "../../screens/student/NamePopUpChain";
+import InvitePopUp from "../../screens/student/components/InvitePopUp";
+import JoinPopUp from "../../screens/student/components/JoinPopUp";
+import { SitePopUpChain } from "../../screens/student/components/SitePopUpChain";
+import { NamePopUpChain } from "../../screens/student/components/NamePopUpChain";
 import { sendRequest } from "../../utility/request";
 import { useParams } from "react-router-dom";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
@@ -16,12 +16,12 @@ const MAX_MEMBERS = 3; // Maximum number of team members
 interface ActionCardProps {
   $actionType: ActionType;
   $disabled: boolean;
-};
+}
 
 interface TeamActionCardProps {
   numMembers: number;
   compId?: number;
-};
+}
 
 const ActionsContainer = styled.div`
   display: grid;
@@ -44,7 +44,9 @@ const ActionCard = styled.button<ActionCardProps>`
   background-color: ${({ theme, $actionType, $disabled }) =>
     $disabled ? theme.disabledBg : theme.teamProfile[$actionType]};
   border: ${({ $disabled, theme, $actionType }) =>
-    $disabled ? "none" : `1px solid ${theme.teamProfile[`${$actionType}Border`]}`};
+    $disabled
+      ? "none"
+      : `1px solid ${theme.teamProfile[`${$actionType}Border`]}`};
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -54,7 +56,8 @@ const ActionCard = styled.button<ActionCardProps>`
   box-sizing: border-box;
 
   &:hover {
-    transform: ${({ $disabled }) => ($disabled ? "none" : "translate(2px, 2px)")};
+    transform: ${({ $disabled }) =>
+      $disabled ? "none" : "translate(2px, 2px)"};
   }
 `;
 
@@ -95,29 +98,43 @@ const Heading = styled.h2`
   box-sizing: border-box;
 `;
 
-export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) => {
-  const [modalOpen, setModalOpen] = useState<"invite" | "join" | "name" | "site" | null>(null);
-  const [teamCode, setTeamCode] = useState('');
+export const TeamActionCard: React.FC<TeamActionCardProps> = ({
+  numMembers,
+}) => {
+  const [modalOpen, setModalOpen] = useState<
+    "invite" | "join" | "name" | "site" | null
+  >(null);
+  const [teamCode, setTeamCode] = useState("");
   const { compId } = useParams<{ compId: string }>();
 
-  const [siteLocationOptions, setSiteLocationOptions] = useState([{ value: '', label: '' }]);
+  const [siteLocationOptions, setSiteLocationOptions] = useState([
+    { value: "", label: "" },
+  ]);
 
   useEffect(() => {
     const fetchSiteLocations = async () => {
-      const response = await sendRequest.get<{ sites: Array<CompetitionSite> }>('/competition/sites', { compId });
+      const response = await sendRequest.get<{ sites: Array<CompetitionSite> }>(
+        "/competition/sites",
+        { compId }
+      );
       const { sites } = response.data;
-      setSiteLocationOptions(sites.map((site) => ({ value: String(site.id), label: site.name })));
-    }
+      setSiteLocationOptions(
+        sites.map((site) => ({ value: String(site.id), label: site.name }))
+      );
+    };
 
     fetchSiteLocations();
   }, []);
 
   useEffect(() => {
     const fetchTeamCode = async () => {
-      const response = await sendRequest.get<{ code: string }>('/competition/team/invite_code', { compId });
+      const response = await sendRequest.get<{ code: string }>(
+        "/competition/team/invite_code",
+        { compId }
+      );
       const { code } = response.data;
       setTeamCode(code);
-    }
+    };
 
     fetchTeamCode();
   }, []);
@@ -126,14 +143,16 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
     { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a Friend" },
     { type: "join" as ActionType, icon: FaUsers, text: "Join a Team" },
     { type: "name" as ActionType, icon: FaEdit, text: "Change Team Name" },
-    { type: "site" as ActionType, icon: FaGlobe, text: "Change Team Site" }
+    { type: "site" as ActionType, icon: FaGlobe, text: "Change Team Site" },
   ];
 
   // Determine which actions should be disabled based on the number of members
   const isDisabled = (actionType: ActionType) => {
     if (numMembers === 1) return actionType === "name" || actionType === "site";
-    if (numMembers > 1 && numMembers < MAX_MEMBERS) return actionType === "join";
-    if (numMembers >= MAX_MEMBERS) return actionType === "invite" || actionType === "join";
+    if (numMembers > 1 && numMembers < MAX_MEMBERS)
+      return actionType === "join";
+    if (numMembers >= MAX_MEMBERS)
+      return actionType === "invite" || actionType === "join";
     return false;
   };
 
@@ -146,7 +165,9 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
         {actions.map((action, index) => (
           <ActionCard
             key={index}
-            onClick={() => !isDisabled(action.type) && setModalOpen(action.type)}
+            onClick={() =>
+              !isDisabled(action.type) && setModalOpen(action.type)
+            }
             $actionType={action.type}
             $disabled={isDisabled(action.type)}
           >
@@ -158,31 +179,45 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({ numMembers }) =>
         ))}
       </ActionsContainer>
 
-      <Overlay $isOpen={modalOpen !== null} onClick={() => setModalOpen(null)} />
+      <Overlay
+        $isOpen={modalOpen !== null}
+        onClick={() => setModalOpen(null)}
+      />
 
-        {modalOpen === "invite" && (
-          <InvitePopUp 
-            heading={<Heading>Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}</Heading>}
-            text={teamCode}
-            onClose={() => setModalOpen(null)}
-          />
-        )}
+      {modalOpen === "invite" && (
+        <InvitePopUp
+          heading={
+            <Heading>
+              Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}
+            </Heading>
+          }
+          text={teamCode}
+          onClose={() => setModalOpen(null)}
+        />
+      )}
 
-        {modalOpen === "join" && (
-          <JoinPopUp 
-            heading={<Heading>Enter the details of the {"\nTeam you would like to join"}</Heading>}
-            onClose={() => setModalOpen(null)}
-            currentTeamCode={teamCode}
-          />
-        )}
+      {modalOpen === "join" && (
+        <JoinPopUp
+          heading={
+            <Heading>
+              Enter the details of the {"\nTeam you would like to join"}
+            </Heading>
+          }
+          onClose={() => setModalOpen(null)}
+          currentTeamCode={teamCode}
+        />
+      )}
 
-        {modalOpen === "site" && (
-          <SitePopUpChain siteOptionsState={[siteLocationOptions, setSiteLocationOptions]} handleClose={() => setModalOpen(null)} />
-        )}
+      {modalOpen === "site" && (
+        <SitePopUpChain
+          siteOptionsState={[siteLocationOptions, setSiteLocationOptions]}
+          handleClose={() => setModalOpen(null)}
+        />
+      )}
 
-        {modalOpen === "name" && (
-          <NamePopUpChain handleClose={() => setModalOpen(null)} />
-        )}
+      {modalOpen === "name" && (
+        <NamePopUpChain handleClose={() => setModalOpen(null)} />
+      )}
     </>
   );
 };

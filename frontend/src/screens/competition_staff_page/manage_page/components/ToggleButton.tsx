@@ -1,12 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-// // Define props for the styled components
-// interface ToggleProps {
-//   ison: boolean;
-//   onToggle: () => void; // Correctly typed onToggle function
-// }
-
 // Styled component for the container
 const ToggleContainer = styled.div<{ $isOn: boolean }>`
   display: flex;
