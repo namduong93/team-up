@@ -29,7 +29,7 @@ const ManageContainer = styled.div`
 export const StaffManage: FC = () => {
   const { compId } = useParams();
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
-  const { compDetails  } = useCompetitionOutletContext('manage'); 
+  const { compDetails, universityOption  } = useCompetitionOutletContext('manage'); 
   const compCode = compDetails.code ?? "COMP1234";
 
   // Fetch the user type and set the state accordingly
@@ -46,7 +46,7 @@ export const StaffManage: FC = () => {
   // TODO: Fetch comp code fom backend
   return (
     <ManageContainer>
-      <StaffActionCard staffRoles={roles} compCode={compCode}/>
+      <StaffActionCard universityOption={universityOption} staffRoles={roles} compCode={compCode}/>
     </ManageContainer>
   );
 };

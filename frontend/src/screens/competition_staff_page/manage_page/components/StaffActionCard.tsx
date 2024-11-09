@@ -24,6 +24,7 @@ type ActionType =
 interface StaffActionCardProps {
   staffRoles: string[];
   compCode: string;
+  universityOption: { value: string; label: string };
 }
 
 interface ActionCardProps {
@@ -163,9 +164,17 @@ const Title2 = styled.h2`
   word-break: break-word;
 `;
 
+const DEFAULT_REGO_FIELDS = {
+  enableCodeforcesField: false,
+  enableNationalPrizesField: false,
+  enableInternationalPrizesField: false,
+  enableRegionalParticipationField: false,
+}
+
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
+  universityOption,
 }) => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
@@ -248,21 +257,17 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   };
 
   // TO-DO: call the backend to retrive the previous options
-  const [regoFields, setRegoFields] = useState<EditRego>({
-    enableCodeforcesField: false,
-    enableNationalPrizesField: false,
-    enableInternationalPrizesField: false,
-    enableRegionalParticipationField: false,
-  });
+  const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
 
   useEffect(() => {
     const fetchRegoFields = async () => {
-      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles', { compId });
+      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
+        { compId, universityId: universityOption.value });
       const { regoFields: receivedRegoFields } = response.data;
-      setRegoFields(receivedRegoFields);
+      setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
     }
     fetchRegoFields();
-  }, []);
+  }, [universityOption]);
 
   const handleRegoEditSubmit = (regoFields: EditRego) => {
     // TO-DO: send the EditRego to backend for storage
