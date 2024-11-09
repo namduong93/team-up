@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../../components/progress_bar/ProgressBar";
@@ -10,6 +10,7 @@ import RadioButton from "../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { sendRequest } from "../../../utility/request";
 import { EditRego } from "../../../../shared_types/Competition/staff/Edit";
+import { DEFAULT_REGO_FIELDS } from "../../competition_staff_page/manage_page/components/StaffActionCard";
 
 const Container = styled.div`
   flex: 1;
@@ -136,7 +137,10 @@ export const CompetitionExperience: FC = () => {
       //   : "NEW_ONE"; // change when the other API is done
 
       // const response = await sendRequest.post(apiEndpoint, payload);
-      // console.log("Response:", response.data);
+      
+      const response = await sendRequest.post('/competition/student/join', payload);
+      console.log("Response:", response.data);
+      
 
       navigate("/dashboard", {
         state: {
@@ -181,12 +185,12 @@ export const CompetitionExperience: FC = () => {
     } else {
       return (
         courses.length === 0 ||
-        (!editRego.enableNationalPrizesField && hasNationalPrize === undefined) ||
+        (editRego.enableNationalPrizesField && hasNationalPrize === undefined) ||
         (hasNationalPrize && nationalPrizes === "") ||
-        (!editRego.enableInternationalPrizesField &&
+        (editRego.enableInternationalPrizesField &&
           hasInternationalPrize === undefined) ||
         (hasInternationalPrize && internationalPrizes === "") ||
-        (!editRego.enableRegionalParticipationField &&
+        (editRego.enableRegionalParticipationField &&
           degreeYear !== 1 &&
           pastRegional === undefined)
       );
@@ -194,12 +198,22 @@ export const CompetitionExperience: FC = () => {
   }
 
   // TO-DO: call the EditRego interface for the competition from backend
-  const [editRego] = useState<EditRego>({
+  const [editRego, setEditRego] = useState<EditRego>({
     enableCodeforcesField: false,
-    enableNationalPrizesField: true,
+    enableNationalPrizesField: false,
     enableInternationalPrizesField: false,
-    enableRegionalParticipationField: true,
+    enableRegionalParticipationField: false,
   });
+
+  useEffect(() => {
+    const fetchEditRego = async () => {
+      const response = await sendRequest.get<{ regoFields: EditRego }>(
+        '/competition/students/rego_toggles', { code });
+      const { regoFields } = response.data;
+      setEditRego(regoFields || DEFAULT_REGO_FIELDS);
+    }
+    fetchEditRego();
+  }, []);
 
   return (
     <FlexBackground
@@ -231,7 +245,7 @@ export const CompetitionExperience: FC = () => {
             showOther={false}
           />
 
-          {!editRego.enableCodeforcesField && formData.competitionLevel !== "Level B" && (
+          {editRego.enableCodeforcesField && formData.competitionLevel !== "Level B" && (
             <TextInput
               label="Codeforces Score"
               placeholder="Please enter"
@@ -247,7 +261,7 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          {!editRego.enableRegionalParticipationField &&
+          {editRego.enableRegionalParticipationField &&
             formData.degreeYear.toString() !== "1" &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
@@ -270,7 +284,7 @@ export const CompetitionExperience: FC = () => {
               />
             )}
 
-          {!editRego.enableNationalPrizesField &&
+          {editRego.enableNationalPrizesField &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
                 label="National Olympiad Prizes in Mathematics or Informatics"
@@ -305,7 +319,7 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          {!editRego.enableInternationalPrizesField &&
+          {editRego.enableInternationalPrizesField &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
                 label="International Olympiad Prizes in Mathematics or Informatics"

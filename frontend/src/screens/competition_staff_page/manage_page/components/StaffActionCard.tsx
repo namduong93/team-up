@@ -164,7 +164,7 @@ const Title2 = styled.h2`
   word-break: break-word;
 `;
 
-const DEFAULT_REGO_FIELDS = {
+export const DEFAULT_REGO_FIELDS = {
   enableCodeforcesField: true,
   enableNationalPrizesField: true,
   enableInternationalPrizesField: true,
