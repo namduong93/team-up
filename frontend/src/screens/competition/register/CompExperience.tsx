@@ -181,12 +181,12 @@ export const CompetitionExperience: FC = () => {
     } else {
       return (
         courses.length === 0 ||
-        (!editRego.nationalOlympiad && hasNationalPrize === undefined) ||
+        (!editRego.enableNationalPrizesField && hasNationalPrize === undefined) ||
         (hasNationalPrize && nationalPrizes === "") ||
-        (!editRego.internationalOlympiad &&
+        (!editRego.enableInternationalPrizesField &&
           hasInternationalPrize === undefined) ||
         (hasInternationalPrize && internationalPrizes === "") ||
-        (!editRego.regionalParticipation &&
+        (!editRego.enableRegionalParticipationField &&
           degreeYear !== 1 &&
           pastRegional === undefined)
       );
@@ -195,10 +195,10 @@ export const CompetitionExperience: FC = () => {
 
   // TO-DO: call the EditRego interface for the competition from backend
   const [editRego] = useState<EditRego>({
-    codeforces: false,
-    nationalOlympiad: true,
-    internationalOlympiad: false,
-    regionalParticipation: true,
+    enableCodeforcesField: false,
+    enableNationalPrizesField: true,
+    enableInternationalPrizesField: false,
+    enableRegionalParticipationField: true,
   });
 
   return (
@@ -231,7 +231,7 @@ export const CompetitionExperience: FC = () => {
             showOther={false}
           />
 
-          {!editRego.codeforces && formData.competitionLevel !== "Level B" && (
+          {!editRego.enableCodeforcesField && formData.competitionLevel !== "Level B" && (
             <TextInput
               label="Codeforces Score"
               placeholder="Please enter"
@@ -247,7 +247,7 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          {!editRego.regionalParticipation &&
+          {!editRego.enableRegionalParticipationField &&
             formData.degreeYear.toString() !== "1" &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
@@ -270,7 +270,7 @@ export const CompetitionExperience: FC = () => {
               />
             )}
 
-          {!editRego.nationalOlympiad &&
+          {!editRego.enableNationalPrizesField &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
                 label="National Olympiad Prizes in Mathematics or Informatics"
@@ -305,7 +305,7 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          {!editRego.internationalOlympiad &&
+          {!editRego.enableInternationalPrizesField &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
                 label="International Olympiad Prizes in Mathematics or Informatics"
