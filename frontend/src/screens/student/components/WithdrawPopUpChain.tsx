@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { SecondStepPopUp } from './SecondStepPopUp';
+import React, { useState } from "react";
+import { SecondStepPopUp } from "./SecondStepPopUp";
 import styled from "styled-components";
-import InvitePopUp from './InvitePopUp';
-import { OptionPopUp } from './OptionPopUp';
-import { useNavigate, useParams } from 'react-router-dom';
-import { sendRequest } from '../../utility/request';
+import InvitePopUp from "./InvitePopUp";
+import { OptionPopUp } from "./OptionPopUp";
+import { useNavigate, useParams } from "react-router-dom";
+import { sendRequest } from "../../../utility/request";
 
 interface WithdrawPopUpChainProps {
   handleClose: () => void;
@@ -19,7 +19,9 @@ const Heading = styled.h2`
   word-break: break-word;
 `;
 
-export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleClose }) => {
+export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
+  handleClose,
+}) => {
   const { compId } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [compCode, setCompCode] = useState<string>("");
@@ -30,63 +32,74 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({ handleCl
   };
 
   const handleCloseWithReset = () => {
-    setCurrentStep(1); 
+    setCurrentStep(1);
     handleClose();
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   const handleSubmit = async () => {
     try {
       // Send a request to the backend to withdraw from the team.
-      const withdrawResponse = await sendRequest.post<string>('/competition/student/withdraw', { compId });
+      const withdrawResponse = await sendRequest.post<string>(
+        "/competition/student/withdraw",
+        { compId }
+      );
 
       // Retrieve the competition code from the response and update the state.
       setCompCode(withdrawResponse.data);
-      
+
       setCurrentStep((prevStep) => prevStep + 1);
     } catch (error) {
       console.error("Error withdrawing from the team:", error);
     }
-  }
+  };
 
   const renderModal = () => {
     switch (currentStep) {
       case 1:
         return (
           <OptionPopUp
-            heading={<Heading>Withdrawing from the Team 
-              {"\nwill make you ineligible"} 
-              {"\n to compete in the Competition"}
-              {"\n\nThis action is final and"}
-              {"\ncannot be undone"}
-              {"\n\nDo you still wish"}
-              {"\nto proceed?"}
-            </Heading>}
+            heading={
+              <Heading>
+                Withdrawing from the Team
+                {"\nwill make you ineligible"}
+                {"\n to compete in the Competition"}
+                {"\n\nThis action is final and"}
+                {"\ncannot be undone"}
+                {"\n\nDo you still wish"}
+                {"\nto proceed?"}
+              </Heading>
+            }
             onClose={handleCloseWithReset}
             onNext={handleNext}
-            actionButtonText='Proceed'
+            actionButtonText="Proceed"
           />
         );
       case 2:
         return (
           <SecondStepPopUp
-            heading={<Heading>Are you sure you would {"\nlike to withdraw?"}</Heading>}
+            heading={
+              <Heading>Are you sure you would {"\nlike to withdraw?"}</Heading>
+            }
             onClose={handleCloseWithReset}
             onNext={handleSubmit}
           />
         );
       case 3:
         return (
-          <InvitePopUp 
-            heading={<Heading>Copy and send your 
-              {"\nTeam Code"}
-              {"\nto invite your Substitute"} 
-              {"\nto the Team"} 
-              {"\n\nAlternatively, you can wait"}
-              {"\nfor a Random Replacement"} 
-              {"\nto be assigned"} 
-            </Heading>}
-            text={compCode} 
+          <InvitePopUp
+            heading={
+              <Heading>
+                Copy and send your
+                {"\nTeam Code"}
+                {"\nto invite your Substitute"}
+                {"\nto the Team"}
+                {"\n\nAlternatively, you can wait"}
+                {"\nfor a Random Replacement"}
+                {"\nto be assigned"}
+              </Heading>
+            }
+            text={compCode}
             onClose={handleCloseWithReset}
           />
         );

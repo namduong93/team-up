@@ -1,13 +1,16 @@
-import React from 'react';
-import { FaTimes } from 'react-icons/fa';
-import { styled } from 'styled-components';
-import { CancelButton, ConfirmButton } from '../../components/responsive_fields/action_buttons/ActionButton';
+import React from "react";
+import { FaTimes } from "react-icons/fa";
+import { styled } from "styled-components";
+import {
+  ConfirmButton,
+  CancelButton,
+} from "../../../components/responsive_fields/action_buttons/ActionButton";
 
 const Modal = styled.div`
   position: fixed;
   top: 50%;
   min-width: 290px;
-  max-width: 350px;
+  max-width: 450px;
   box-sizing: border-box;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -21,7 +24,7 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 
 const CloseButton = styled.button`
   background: transparent;
@@ -31,14 +34,14 @@ const CloseButton = styled.button`
   top: 10px;
   right: 10px;
   font-size: 20px;
-  color: #d9534f; 
+  color: #d9534f;
   transition: color 0.2s;
   font-size: 26px;
 
   &:hover {
     color: #c9302c;
   }
-`
+`;
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -46,17 +49,19 @@ const ButtonContainer = styled.div`
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-`
+`;
 
-interface OptionPopUpProps {
+interface SecondStepPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
   onNext: () => void;
-  actionButtonText: string;
 }
 
-export const OptionPopUp: React.FC<OptionPopUpProps> = ({ heading, onClose, onNext, actionButtonText }) => {
-
+export const SecondStepPopUp: React.FC<SecondStepPopUpProps> = ({
+  heading,
+  onClose,
+  onNext,
+}) => {
   return (
     <>
       <Modal>
@@ -66,12 +71,10 @@ export const OptionPopUp: React.FC<OptionPopUpProps> = ({ heading, onClose, onNe
         <div>{heading}</div>
 
         <ButtonContainer>
-          <ConfirmButton onClick={onNext}>{actionButtonText}</ConfirmButton>
-          <CancelButton onClick={onClose}>Cancel</CancelButton>
+          <ConfirmButton onClick={onNext}>Yes</ConfirmButton>
+          <CancelButton onClick={onClose}>No</CancelButton>
         </ButtonContainer>
-
       </Modal>
     </>
   );
 };
-

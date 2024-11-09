@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { FirstStepPopUp } from './FirstStepPopUp';
-import { SecondStepPopUp } from './SecondStepPopUp';
-import { ThirdStepPopUp } from './ThirdStepPopUp';
+import React, { useState } from "react";
+import { FirstStepPopUp } from "./FirstStepPopUp";
+import { SecondStepPopUp } from "./SecondStepPopUp";
+import { ThirdStepPopUp } from "./ThirdStepPopUp";
 import styled from "styled-components";
-import { useParams } from 'react-router-dom';
-import { sendRequest } from '../../utility/request';
+import { useParams } from "react-router-dom";
+import { sendRequest } from "../../../utility/request";
 
 interface NamePopUpChainProps {
   handleClose: () => void;
@@ -19,10 +19,12 @@ const Heading = styled.h2`
   word-break: break-word;
 `;
 
-export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) => {
+export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({
+  handleClose,
+}) => {
   const { compId } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
-  const [newTeamName, setNewTeamName] = useState('');
+  const [newTeamName, setNewTeamName] = useState("");
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -30,17 +32,20 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) =>
 
   const handleCloseWithReset = () => {
     setCurrentStep(1);
-    handleClose(); 
+    handleClose();
   };
 
   const handleSubmit = async () => {
     try {
-      await sendRequest.put<{}>('/competition/student/team_name_change', { compId, newTeamName });
+      await sendRequest.put<{}>("/competition/student/team_name_change", {
+        compId,
+        newTeamName,
+      });
       setCurrentStep((prevStep) => prevStep + 1);
     } catch (error) {
       console.error("Error requesting a team name change:", error);
     }
-  }
+  };
 
   const renderModal = () => {
     switch (currentStep) {
@@ -58,7 +63,12 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) =>
       case 2:
         return (
           <SecondStepPopUp
-            heading={<Heading>Are you sure you would {"\nlike to change your Team's"} {"\nname?"}</Heading>}
+            heading={
+              <Heading>
+                Are you sure you would {"\nlike to change your Team's"}{" "}
+                {"\nname?"}
+              </Heading>
+            }
             onClose={handleCloseWithReset}
             onNext={handleSubmit}
           />
@@ -66,7 +76,12 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({ handleClose}) =>
       case 3:
         return (
           <ThirdStepPopUp
-            heading={<Heading>Your team's new name {"\nis now pending approval"} {"\nfrom your coach"}</Heading>}
+            heading={
+              <Heading>
+                Your team's new name {"\nis now pending approval"}{" "}
+                {"\nfrom your coach"}
+              </Heading>
+            }
             onClose={handleCloseWithReset}
           />
         );
