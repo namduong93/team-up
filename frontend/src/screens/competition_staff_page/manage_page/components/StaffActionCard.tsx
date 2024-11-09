@@ -258,8 +258,15 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
   // TO-DO: call the backend to retrive the previous options
   const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   useEffect(() => {
+    if (isFirstLoad) {
+      // ensures that on first load it doesn't request the data since it will be re-requested once
+      // the universityOption is set
+      setIsFirstLoad(false);
+      return;
+    }
     const fetchRegoFields = async () => {
       const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
         { compId, universityId: universityOption.value });
@@ -269,8 +276,10 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     fetchRegoFields();
   }, [universityOption]);
 
-  const handleRegoEditSubmit = (regoFields: EditRego) => {
+  const handleRegoEditSubmit = async (regoFields: EditRego) => {
     // TO-DO: send the EditRego to backend for storage
+    await sendRequest.post('/competition/staff/update_rego_toggles',
+      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
     console.log(regoFields);
     console.log("submitted");
   };
