@@ -10,6 +10,9 @@ import {
 import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
+import { sendRequest } from "../../../../utility/request";
+import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
+import { useParams } from "react-router-dom";
 
 type ActionType =
   | "code"
@@ -186,8 +189,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
-  const [currentBio, setCurrentBio] = useState("epic bio");
+  const [currentBio, setCurrentBio] = useState("Default Bio");
   const [announcement, setAnnouncement] = useState(mockAnnouncement);
+  const compId = useParams<{ compId: string }>().compId;
 
   const actions = [
     {
@@ -255,7 +259,21 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
   // TO-DO: get current bio and annoucements from database
   useEffect(() => {
-    
+    // Create a separate async function inside useEffect
+    const fetchStaffInfo = async () => {
+      try {
+        const response = await sendRequest.get<{ staffDetails: StaffInfo }>(
+          '/competition/staff/details', 
+          { compId }
+        );
+        setCurrentBio(response.data.staffDetails.bio);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    // Call the async function
+    fetchStaffInfo();
   }, []);
 
   const handleBioChange = () => {

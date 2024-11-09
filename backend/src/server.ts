@@ -244,6 +244,8 @@ app.get('/competition/roles', competitionController.competitionRoles);
 // all the above are strings
 app.get('/competition/students', competitionController.competitionStudents);
 
+// PARAMS: { compId: number }
+// RESPONSE: { staffs: Array<StaffInfo> }
 app.get('/competition/staff', competitionController.competitionStaff);
 
 // PARAMS: {}
@@ -273,11 +275,17 @@ app.post('/competition/team/join', competitionController.competitionTeamJoin);
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
 app.get('/competition/attendees', competitionController.competitionAttendees);
+
 // PARAMS: { compId }
 // RESPONSE: 
 // { studentDetails: {...} }
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
+
+
+// PARAMS: { compId }
+// RESPONSE: { staffDetails: StaffInfo }
+app.get('/competition/staff/details', competitionController.competitionStaffDetails);
 
 // PARAMS: { compId }
 // RESPONSE: { sites: Array<CompetitionSite> }

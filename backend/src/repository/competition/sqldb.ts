@@ -16,6 +16,7 @@ import { StudentInfo } from "../../../shared_types/Competition/student/StudentIn
 import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails.js";
 import { error } from "console";
+import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -378,6 +379,50 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     };
 
     return studentDetails;
+  }
+
+  competitionStaffDetails = async(userId: number, compId: number): Promise<StaffInfo> => {
+    const dbResult = await this.pool.query(
+      `SELECT 
+        "userId", 
+        "universityId", 
+        "universityName", 
+        name, 
+        email, 
+        sex, 
+        pronouns, 
+        "tshirtSize", 
+        allergies, 
+        "dietaryReqs", 
+        "accessibilityReqs", 
+        bio, 
+        roles, 
+        access
+       FROM competition_staff($1)
+       WHERE "userId" = $2`,
+      [compId, userId]
+    );
+  
+    if(dbResult.rows.length === 0) {
+      throw new DbError(DbError.Query, 'Staff does not exist or is not a part of this competition.');
+    }
+    const result = dbResult.rows[0];
+    return {
+      userId: result.userId,
+      universityId: result.universityId,
+      universityName: result.universityName,
+      name: result.name,
+      email: result.email,
+      sex: result.sex,
+      pronouns: result.pronouns,
+      tshirtSize: result.tshirtSize,
+      allergies: result.allergies,
+      dietaryReqs: result.dietaryReqs,
+      accessibilityReqs: result.accessibilityReqs,
+      bio: result.bio,
+      roles: parse(result.roles) as CompetitionRole[],
+      access: result.access
+    };
   }
 
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {

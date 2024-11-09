@@ -32,6 +32,7 @@ export interface CompetitionRepository {
   competitionTeamInviteCode(userId: number, compId: number): Promise<string>;
   competitionTeamJoin(userId: number, compId: number, teamCode: string, university: University): Promise<CompetitionTeamNameObject>;
   competitionStudentDetails(userId: number, compId: number): Promise<CompetitionStudentDetails>;
+  competitionStaffDetails(userId: number, compId: number): Promise<StaffInfo>;
 
   competitionUniversityDefaultSite(competitionId: number, university: University): Promise<CompetitionSiteObject>;
   competitionStudentJoin(competitionUserInfo: CompetitionUser, university: University): Promise<{}>;
