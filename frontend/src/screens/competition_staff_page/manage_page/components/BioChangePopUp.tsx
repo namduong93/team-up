@@ -138,7 +138,7 @@ const EditorContainer = styled.div`
 interface BioChangePopUpProps {
   onClose: () => void;
   onNext: () => void;
-  bioValue: string;
+  bioValue: string | undefined;
   announcementValue: string;
   onBioChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onAnnouncementChange: (value: string) => void;

@@ -288,6 +288,10 @@ app.get('/competition/student/details', competitionController.competitionStudent
 app.get('/competition/staff/details', competitionController.competitionStaffDetails);
 
 // PARAMS: { compId }
+// RESPONSE: { }
+app.put('/competition/staff/details', competitionController.competitionStaffDetailsUpdate);
+
+// PARAMS: { compId }
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites', competitionController.competitionSites);
 

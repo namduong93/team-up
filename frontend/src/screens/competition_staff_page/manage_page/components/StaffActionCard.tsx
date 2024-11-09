@@ -190,6 +190,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [showContactBio, setShowContactBio] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
   const [currentBio, setCurrentBio] = useState("Default Bio");
+  const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcement, setAnnouncement] = useState(mockAnnouncement);
   const compId = useParams<{ compId: string }>().compId;
 
@@ -267,8 +268,10 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           { compId }
         );
         setCurrentBio(response.data.staffDetails.bio);
+        setStaffInfo(response.data.staffDetails);
+        console.log(response.data.staffDetails);
       } catch (err) {
-        console.log(err);
+        console.log("Error fetching staff info", err);
       }
     };
   
@@ -276,11 +279,22 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     fetchStaffInfo();
   }, []);
 
-  const handleBioChange = () => {
-    console.log(currentBio);
-    // TO-DO: submit the edited Contact Biography (string) and announcemnets (string) to be changed in the
-    // database
-    setShowContactBio(false);
+  const handleBioChange = async () => {
+    if (staffInfo) {
+      const updatedStaffInfo = {
+        ...staffInfo,
+        bio: currentBio
+      };
+      try {
+        await sendRequest.put('/competition/staff/details', {
+          staffInfo: updatedStaffInfo,
+          compId
+        });
+        setShowContactBio(false);
+      } catch (err) {
+        console.log("Error updating staff info", err);
+      }
+    }
   };
 
   // TO-DO: call the backend to retrive the previous options

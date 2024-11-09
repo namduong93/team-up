@@ -176,6 +176,14 @@ export class CompetitionService {
     return await this.competitionRepository.competitionStaffDetails(userId, compId);
   }
 
+  competitionStaffDetailsUpdate = async (userId: number, compId: number, staffInfo: StaffInfo) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.ADMIN) && !roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a staff for this competition.");
+    }
+    await this.competitionRepository.competitionStaffDetailsUpdate(userId, compId, staffInfo);
+  }
+
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
     return await this.competitionRepository.competitionStaff(userId, compId);
   }

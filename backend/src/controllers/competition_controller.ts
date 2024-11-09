@@ -112,6 +112,15 @@ export class CompetitionController {
 
     res.json({staffDetails});
   });
+
+  competitionStaffDetailsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const { compId } = req.body;
+    const staffDetails = req.body.staffInfo as StaffInfo;
+    await this.competitionService.competitionStaffDetailsUpdate(
+      parseInt(userId as string), parseInt(compId as string), staffDetails);
+    res.json({});
+  });
   
   competitionStaff = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;

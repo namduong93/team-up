@@ -420,9 +420,30 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       dietaryReqs: result.dietaryReqs,
       accessibilityReqs: result.accessibilityReqs,
       bio: result.bio,
-      roles: parse(result.roles) as CompetitionRole[],
+      roles: result.roles,
       access: result.access
     };
+  }
+
+
+  competitionStaffDetailsUpdate = async (userId: number, compId: number, staffInfo: StaffInfo): Promise<{}> => {
+    if(!staffInfo) {
+      return {};
+    }
+    const dbResult = await this.pool.query(
+      `UPDATE competition_users
+      SET
+        bio = '${staffInfo.bio}',
+        competition_roles = '{${staffInfo.roles}}',
+        access_level = '${staffInfo.access}'
+      WHERE user_id = ${staffInfo.userId} AND competition_id = ${compId};
+      `
+    );
+
+    if (dbResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'Staff does not exist or is not a part of this competition.');
+    }
+    return {};
   }
 
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
