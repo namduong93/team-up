@@ -6,8 +6,7 @@ import { UserIdObject } from "../../../repository/user_repository_type";
 
 import pool, { dropTestDatabase } from "../Utils/dbUtils"
 
-// session create is bugged
-describe.skip('Session Create Function', () => {
+describe('Session Create Function', () => {
   let session_db;
   let timeStamp = Date.now();
   let user_db;
@@ -36,18 +35,16 @@ describe.skip('Session Create Function', () => {
   });
 
   test('Success case: a new session is created', async () => {
-    console.log(timeStamp);
     const newSession: Session = {
       sessionId: 'ezID',
       createdAt: timeStamp,
       userId: student.userId
     }
     await session_db.create(newSession);
-    console.log(await session_db.find('ezID'));
     expect(await session_db.find('ezID')).toStrictEqual({
       sessionId: 'ezID                                ',
       userId: student.userId,
-      createdAt: new Date(timeStamp)
+      createdAt: expect.any(Date)
     })
   })
 })

@@ -1,11 +1,127 @@
+import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
+import { University } from "../../../models/university/university";
+import { Staff } from "../../../models/user/staff/staff";
+import { Student } from "../../../models/user/student/student";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
+import { SqlDbUserRepository } from "../../../repository/user/sqldb";
+import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-// need student join
-describe.skip('Competition Teams Function', () => {
+describe('Competition Teams Function', () => {
   let user_db;
+  let comp_db;
+
+  let dateNow = Date.now()
+  let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
+  let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
+  let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
+
+  const mockCompetition = {
+    name: 'TestComp',
+    teamSize: 5,
+    createdDate: dateNow,
+    earlyRegDeadline: earlyDate,
+    startDate: startDate,
+    generalRegDeadline: generalDate,
+    siteLocations: [{
+      universityId: 1,
+      name: 'TestRoom',
+      capacity: 2000
+    }],
+    code: 'TC17',
+    region: 'Australia'
+  }
+
+  const SucessStaff: Staff = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'dasOddodmin16@odmin.com',
+    password: 'testPassword',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'M',
+    universityId: 1,
+  };
+  let user: UserIdObject;
+  let id: number;
+  let comp: CompetitionIdObject;
+  let newStudent: UserIdObject;
+  let teamInfo;
+
   beforeAll(async () => {
-    user_db = new SqlDbCompetitionRepository(pool);
+    comp_db = new SqlDbCompetitionRepository(pool);
+    user_db = new SqlDbUserRepository(pool)
+    user = await user_db.staffRegister(SucessStaff);
+    id = user.userId;
+    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+
+    const userSiteLocation: CompetitionSiteObject = {
+      id: 1,
+      name: 'the place in the ring',
+    }
+    const newCoach: CompetitionStaff = {
+      userId: id,
+      competitionRoles: [CompetitionUserRole.COACH],
+      accessLevel: CompetitionAccessLevel.ACCEPTED,
+      university: {
+        id: 1,
+        name: 'University of Melbourne'
+      },
+      competitionBio: 'i good, trust',
+      siteLocation: userSiteLocation
+    }
+    const newCoordinator: CompetitionStaff = {
+      userId: id,
+      competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
+      accessLevel: CompetitionAccessLevel.ACCEPTED,
+      siteLocation: userSiteLocation
+    }
+    await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
+    await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
+
+    const mockStudent: Student = {
+      name: 'Maximillian Maverick',
+      preferredName: 'X',
+      email: 'newStudentSacrifice8@gmail.com',
+      password: 'testPassword',
+      gender: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'L',
+      universityId: 1,
+      studentId: 'z5381412'
+    };
+
+    newStudent = await user_db.studentRegister(mockStudent);
+
+    const newContender: CompetitionUser = {
+      userId: newStudent.userId,
+      competitionId: comp.competitionId,
+      competitionRoles: [CompetitionUserRole.PARTICIPANT],
+      ICPCEligible: true,
+      competitionLevel: 'No Preference',
+      siteLocation: {
+        id: 1,
+        name: 'TestRoom',
+      },
+      boersenEligible: true,
+      degreeYear: 3,
+      degree: 'ComSci',
+      isRemote: true,
+      nationalPrizes: 'none',
+      internationalPrizes: 'none',
+      codeforcesRating: 7,
+      universityCourses: ['4511', '9911', '911'],
+      pastRegional: true,
+      competitionBio: 'I good, promise',
+      preferredContact: 'Pigeon Carrier',
+    }
+    const studentUni: University = {
+      id: 1,
+      name: 'University of Melbourne'
+    }
+    await comp_db.competitionStudentJoin(newContender, studentUni)
+    teamInfo = await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
   });
 
   afterAll(async () => {
@@ -13,478 +129,79 @@ describe.skip('Competition Teams Function', () => {
   });
 
   test('Failure case: User has no access to this list', async () => {
-    const result = await user_db.competitionTeams(5, 1);
-    expect(result).toStrictEqual([])
+    expect(await comp_db.competitionTeams(id + 100, comp.competitionId)).toStrictEqual([])
   })
 
   test('Sucess case: returns a list of teams in competition', async () => {
-    const result = await user_db.competitionTeams(1, 1);
-    expect(result).toStrictEqual([
+    expect(await comp_db.competitionTeams(id, comp.competitionId)).toStrictEqual([
       {
-        teamId: 1,
-        universityId: 2,
-        status: 'Registered',
+        siteId: 1,
+        teamId: expect.any(Number),
+        universityId: 1,
+        status: 'Pending',
         teamNameApproved: true,
-        compName: 'South Pacific Preliminary Contest 2024',
+        compName: 'TestComp',
         teamName: 'Bulbasaur',
-        teamSite: 'Computer Science Building',
-        teamSeat: 'Bongo11',
-        teamLevel: 'Level B',
-        startDate: new Date('2025-09-30T00:00:00Z'),
+        teamSite: 'Library',
+        teamSeat: null,
+        teamLevel: 'No Preference',
+        startDate: new Date(startDate),
         students: [{
           "ICPCEligible": true,
-          "bio": "epic bio",
+          "bio": "I good, promise",
           "boersenEligible": true,
-          "email": "teststudent4@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 4",
-          "preferredContact": "Minecraft:EpicMan123",
-          "userId": 8,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent5@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 5",
-          "preferredContact": "Roblox: epicerrMan123",
-          "userId": 9,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent6@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 6",
-          "preferredContact": "faxMachineNumber:98531234",
-          "userId": 10,
-        }],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      },
-      {
-        teamId: 2,
-        universityId: 2,
-        status: 'Pending',
-        teamNameApproved: false,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Charmander',
-        teamSite: 'Computer Science Building',
-        teamSeat: 'Tabla01',
-        teamLevel: 'Level A',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "student@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "New User",
-          "preferredContact": "Email:example@email.com",
-          "userId": 5,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent2@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "Test Student Account 2",
-          "preferredContact": "Discord:fdc234",
-          "userId": 6,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent3@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "Test Student Account 3",
-          "preferredContact": "Phone:0413421311",
-          "userId": 7,
-        },],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      },
-      {
-        teamId: 3,
-        universityId: 2,
-        status: 'Pending',
-        teamNameApproved: false,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Charmeleon',
-        teamSite: 'K7',
-        teamSeat: 'Organ20',
-        teamLevel: 'Level B',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent7@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 7",
-          "preferredContact": "faxMachineNumber:98531234",
-          "userId": 12,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent8@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 8",
-          "preferredContact": "Phone:0402067382",
-          "userId": 13,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent9@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 9",
-          "preferredContact": "Email:anotherexample@email.com",
-          "userId": 14,
-        },],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      },
-      {
-        teamId: 16,
-        universityId: 2,
-        status: 'Unregistered',
-        teamNameApproved: true,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Charizard',
-        teamSite: 'Computer Science Building',
-        teamSeat: 'Bongo11',
-        teamLevel: 'Level A',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "ar@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "AR",
-          "preferredContact": "Email:example@email.com",
-          "userId": 15,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "ak@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "AK",
-          "preferredContact": "Discord:fdc234",
-          "userId": 16,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "yf@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "YF",
-          "preferredContact": "Phone:0413421311",
-          "userId": 17,
-        },],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      },
-      {
-        teamId: 17,
-        universityId: 2,
-        status: 'Unregistered',
-        teamNameApproved: false,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Snorlax',
-        teamSite: 'K7',
-        teamSeat: 'Organ20',
-        teamLevel: 'Level B',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "dy@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "DY",
-          "preferredContact": "Minecraft:EpicMan123",
-          "userId": 18,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "kass@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Kass",
-          "preferredContact": "Roblox: epicerrMan123",
-          "userId": 19,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "jl@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "JL",
-          "preferredContact": "faxMachineNumber:98531234",
-          "userId": 20,
-        }],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      }
-    ])
-  })
+          "codeforcesRating": 7,
+          "email": "newStudentSacrifice8@gmail.com",
+          "internationalPrizes": "none",
+          "isRemote": true,
+          "level": "No Preference",
+          "name": "Maximillian Maverick",
+          "nationalPrizes": "none",
+          "pastRegional": true,
+          "preferredContact": "Pigeon Carrier",
+          "universityCourses": [
+            "4511",
+            "9911",
+            "911",
+          ],
 
-  test('Sucess case 2: Coaches has access to some list', async () => {
-    const result = await user_db.competitionTeams(2, 1);
-    expect(result).toStrictEqual([
-      {
-        teamId: 1,
-        universityId: 2,
-        status: 'Registered',
-        teamNameApproved: true,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Bulbasaur',
-        teamSite: 'Computer Science Building',
-        teamSeat: 'Bongo11',
-        teamLevel: 'Level B',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent4@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 4",
-          "preferredContact": "Minecraft:EpicMan123",
-          "userId": 8,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent5@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 5",
-          "preferredContact": "Roblox: epicerrMan123",
-          "userId": 9,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent6@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 6",
-          "preferredContact": "faxMachineNumber:98531234",
-          "userId": 10,
+          "userId": newStudent.userId,
+        }, {
+          "ICPCEligible": null,
+          "bio": null,
+          "boersenEligible": null,
+          "codeforcesRating": null,
+          "email": null,
+          "internationalPrizes": null,
+          "isRemote": null,
+          "level": null,
+          "name": null,
+          "nationalPrizes": null,
+          "pastRegional": null,
+          "preferredContact": null,
+          "universityCourses": null,
+          "userId": null,
+        }, {
+          "ICPCEligible": null,
+          "bio": null,
+          "boersenEligible": null,
+          "codeforcesRating": null,
+          "email": null,
+          "internationalPrizes": null,
+          "isRemote": null,
+          "level": null,
+          "name": null,
+          "nationalPrizes": null,
+          "pastRegional": null,
+          "preferredContact": null,
+          "universityCourses": null,
+          "userId": null,
         }],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      },
-      {
-        teamId: 2,
-        universityId: 2,
-        status: 'Pending',
-        teamNameApproved: false,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Charmander',
-        teamSite: 'Computer Science Building',
-        teamSeat: 'Tabla01',
-        teamLevel: 'Level A',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "student@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "New User",
-          "preferredContact": "Email:example@email.com",
-          "userId": 5,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent2@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "Test Student Account 2",
-          "preferredContact": "Discord:fdc234",
-          "userId": 6,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent3@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "Test Student Account 3",
-          "preferredContact": "Phone:0413421311",
-          "userId": 7,
-        },],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      },
-      {
-        teamId: 3,
-        universityId: 2,
-        status: 'Pending',
-        teamNameApproved: false,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Charmeleon',
-        teamSite: 'K7',
-        teamSeat: 'Organ20',
-        teamLevel: 'Level B',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent7@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 7",
-          "preferredContact": "faxMachineNumber:98531234",
-          "userId": 12,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent8@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 8",
-          "preferredContact": "Phone:0402067382",
-          "userId": 13,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "teststudent9@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Test Student Account 9",
-          "preferredContact": "Email:anotherexample@email.com",
-          "userId": 14,
-        },],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      },
-      {
-        teamId: 16,
-        universityId: 2,
-        status: 'Unregistered',
-        teamNameApproved: true,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Charizard',
-        teamSite: 'Computer Science Building',
-        teamSeat: 'Bongo11',
-        teamLevel: 'Level A',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "ar@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "AR",
-          "preferredContact": "Email:example@email.com",
-          "userId": 15,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "ak@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "AK",
-          "preferredContact": "Discord:fdc234",
-          "userId": 16,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "yf@example.com",
-          "isRemote": false,
-          "level": "Level A",
-          "name": "YF",
-          "preferredContact": "Phone:0413421311",
-          "userId": 17,
-        },],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
-      },
-      {
-        teamId: 17,
-        universityId: 2,
-        status: 'Unregistered',
-        teamNameApproved: false,
-        compName: 'South Pacific Preliminary Contest 2024',
-        teamName: 'Snorlax',
-        teamSite: 'K7',
-        teamSeat: 'Organ20',
-        teamLevel: 'Level B',
-        startDate: new Date('2025-09-30T00:00:00Z'),
-        students: [{
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "dy@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "DY",
-          "preferredContact": "Minecraft:EpicMan123",
-          "userId": 18,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "kass@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "Kass",
-          "preferredContact": "Roblox: epicerrMan123",
-          "userId": 19,
-        },
-        {
-          "ICPCEligible": true,
-          "bio": "epic bio",
-          "boersenEligible": true,
-          "email": "jl@example.com",
-          "isRemote": false,
-          "level": "Level B",
-          "name": "JL",
-          "preferredContact": "faxMachineNumber:98531234",
-          "userId": 20,
-        }],
-        coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
+        coach: {
+          name: 'Maximillian Maverick',
+          email: 'dasOddodmin16@odmin.com',
+          bio: 'i good, trust'
+        }
       }
     ])
   })

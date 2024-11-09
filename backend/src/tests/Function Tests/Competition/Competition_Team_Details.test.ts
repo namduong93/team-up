@@ -1,64 +1,199 @@
+import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
+import { University } from "../../../models/university/university";
+import { Staff } from "../../../models/user/staff/staff";
+import { Student } from "../../../models/user/student/student";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
+import { SqlDbUserRepository } from "../../../repository/user/sqldb";
+import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-// need student join
-describe.skip('Competition Team Detail Function', () => {
+describe('Competition Team Detail Function', () => {
   let user_db;
+  let comp_db;
+
+  let dateNow = Date.now()
+  let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
+  let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
+  let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
+
+  const mockCompetition = {
+    name: 'TestComp',
+    teamSize: 5,
+    createdDate: dateNow,
+    earlyRegDeadline: earlyDate,
+    startDate: startDate,
+    generalRegDeadline: generalDate,
+    siteLocations: [{
+      universityId: 1,
+      name: 'TestRoom',
+      capacity: 2000
+    }],
+    code: 'TC18',
+    region: 'Australia'
+  }
+
+  const SucessStaff: Staff = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'dasOddodmin17@odmin.com',
+    password: 'testPassword',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'M',
+    universityId: 1,
+  };
+  let user: UserIdObject;
+  let id: number;
+  let comp: CompetitionIdObject;
+  let newStudent: UserIdObject;
+  let teamInfo;
+
   beforeAll(async () => {
-    user_db = new SqlDbCompetitionRepository(pool);
+    comp_db = new SqlDbCompetitionRepository(pool);
+    user_db = new SqlDbUserRepository(pool)
+    user = await user_db.staffRegister(SucessStaff);
+    id = user.userId;
+    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+
+    const userSiteLocation: CompetitionSiteObject = {
+      id: 1,
+      name: 'the place in the ring',
+    }
+    const newCoach: CompetitionStaff = {
+      userId: id,
+      competitionRoles: [CompetitionUserRole.COACH],
+      accessLevel: CompetitionAccessLevel.ACCEPTED,
+      university: {
+        id: 1,
+        name: 'University of Melbourne'
+      },
+      competitionBio: 'i good, trust',
+      siteLocation: userSiteLocation
+    }
+    const newCoordinator: CompetitionStaff = {
+      userId: id,
+      competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
+      accessLevel: CompetitionAccessLevel.ACCEPTED,
+      siteLocation: userSiteLocation
+    }
+    await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
+    await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
+
+    const mockStudent: Student = {
+      name: 'Maximillian Maverick',
+      preferredName: 'X',
+      email: 'newStudentSacrifice7@gmail.com',
+      password: 'testPassword',
+      gender: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'L',
+      universityId: 1,
+      studentId: 'z5381412'
+    };
+
+    newStudent = await user_db.studentRegister(mockStudent);
+
+    const newContender: CompetitionUser = {
+      userId: newStudent.userId,
+      competitionId: comp.competitionId,
+      competitionRoles: [CompetitionUserRole.PARTICIPANT],
+      ICPCEligible: true,
+      competitionLevel: 'No Preference',
+      siteLocation: {
+        id: 1,
+        name: 'TestRoom',
+      },
+      boersenEligible: true,
+      degreeYear: 3,
+      degree: 'ComSci',
+      isRemote: true,
+      nationalPrizes: 'none',
+      internationalPrizes: 'none',
+      codeforcesRating: 7,
+      universityCourses: ['4511', '9911', '911'],
+      pastRegional: true,
+      competitionBio: 'I good, promise',
+      preferredContact: 'Pigeon Carrier',
+    }
+    const studentUni: University = {
+      id: 1,
+      name: 'University of Melbourne'
+    }
+    await comp_db.competitionStudentJoin(newContender, studentUni)
+    teamInfo = await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
   });
+
 
   afterAll(async () => {
     await dropTestDatabase(pool);
   });
 
   test('Sucess case: returns the users team details', async () => {
-    const result = await user_db.competitionTeamDetails(5, 1);
 
-    expect(result).toStrictEqual({
-      compName: 'South Pacific Preliminary Contest 2024',
-      src_competition_id: 1,
-      teamName: 'Charmander',
-      teamSite: 'Computer Science Building',
-      teamSeat: 'Tabla01',
-      teamLevel: 'Level A',
-      startDate: new Date('2025-09-30T00:00:00Z'),
+    expect(await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId)).toStrictEqual({
+      compName: 'TestComp',
+      teamName: 'Bulbasaur',
+      teamSite: 'Library',
+      teamSeat: null,
+      teamLevel: 'No Preference',
+      startDate: new Date(startDate),
       students: [
         {
-          userId: 5,
-          name: 'New User',
-          email: 'student@example.com',
-          bio: 'epic bio',
-          preferredContact: 'Email:example@email.com',
+          userId: newStudent.userId,
+          name: 'Maximillian Maverick',
+          email: 'newStudentSacrifice7@gmail.com',
+          bio: 'I good, promise',
+          preferredContact: 'Pigeon Carrier',
           ICPCEligible: true,
-          level: 'Level A',
+          level: 'No Preference',
           boersenEligible: true,
-          isRemote: false
+          isRemote: true,
+          universityCourses: ["4511", "9911", "911"],
+          nationalPrizes: 'none',
+          internationalPrizes: 'none',
+          codeforcesRating: 7,
+          pastRegional: true
         },
         {
-          userId: 6,
-          name: 'Test Student Account 2',
-          email: 'teststudent2@example.com',
-          bio: 'epic bio',
-          preferredContact: 'Discord:fdc234',
-          ICPCEligible: true,
-          level: 'Level A',
-          boersenEligible: true,
-          isRemote: false
+          userId: null,
+          name: null,
+          email: null,
+          bio: null,
+          preferredContact: null,
+          ICPCEligible: null,
+          level: null,
+          boersenEligible: null,
+          isRemote: null,
+          universityCourses: null,
+          nationalPrizes: null,
+          internationalPrizes: null,
+          codeforcesRating: null,
+          pastRegional: null
         },
         {
-          userId: 7,
-          name: 'Test Student Account 3',
-          email: 'teststudent3@example.com',
-          bio: 'epic bio',
-          preferredContact: 'Phone:0413421311',
-          ICPCEligible: true,
-          level: 'Level A',
-          boersenEligible: true,
-          isRemote: false
+          userId: null,
+          name: null,
+          email: null,
+          bio: null,
+          preferredContact: null,
+          ICPCEligible: null,
+          level: null,
+          boersenEligible: null,
+          isRemote: null,
+          universityCourses: null,
+          nationalPrizes: null,
+          internationalPrizes: null,
+          codeforcesRating: null,
+          pastRegional: null
         }
       ],
-      coach: { name: 'Coach 1', email: 'coach@example.com', bio: 'epic bio' }
+      coach: {
+        name: 'Maximillian Maverick',
+        email: 'dasOddodmin17@odmin.com',
+        bio: 'i good, trust'
+      },
+      src_competition_id: comp.competitionId
     })
   })
 })

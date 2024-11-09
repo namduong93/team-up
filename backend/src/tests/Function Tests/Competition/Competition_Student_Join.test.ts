@@ -8,7 +8,6 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-// competition student join seems bugged
 describe('Student Join Competition Function', () => {
   let user_db;
   let comp_db;

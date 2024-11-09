@@ -1,11 +1,125 @@
+import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
+import { University } from "../../../models/university/university";
+import { Staff } from "../../../models/user/staff/staff";
+import { Student } from "../../../models/user/student/student";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
+import { SqlDbUserRepository } from "../../../repository/user/sqldb";
+import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-// needs student join
-describe.skip('Competition Student Function', () => {
+describe('Competition Student Function', () => {
   let user_db;
+  let comp_db;
+
+  let dateNow = Date.now()
+  let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
+  let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
+  let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
+
+  const mockCompetition = {
+    name: 'TestComp',
+    teamSize: 5,
+    createdDate: dateNow,
+    earlyRegDeadline: earlyDate,
+    startDate: startDate,
+    generalRegDeadline: generalDate,
+    siteLocations: [{
+      universityId: 1,
+      name: 'TestRoom',
+      capacity: 2000
+    }],
+    code: 'TC13',
+    region: 'Australia'
+  }
+
+  const SucessStaff: Staff = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'dasOddodmin12@odmin.com',
+    password: 'testPassword',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'M',
+    universityId: 1,
+  };
+  let user: UserIdObject;
+  let id: number;
+  let comp: CompetitionIdObject;
+  let newStudent: UserIdObject;
+
   beforeAll(async () => {
-    user_db = new SqlDbCompetitionRepository(pool);
+    comp_db = new SqlDbCompetitionRepository(pool);
+    user_db = new SqlDbUserRepository(pool)
+    user = await user_db.staffRegister(SucessStaff);
+    id = user.userId;
+    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+
+    const userSiteLocation: CompetitionSiteObject = {
+      id: 1,
+      name: 'the place in the ring',
+    }
+    const newCoach: CompetitionStaff = {
+      userId: id,
+      competitionRoles: [CompetitionUserRole.COACH],
+      accessLevel: CompetitionAccessLevel.ACCEPTED,
+      university: {
+        id: 1,
+        name: 'University of Melbourne'
+      },
+      competitionBio: 'i good, trust',
+      siteLocation: userSiteLocation
+    }
+    const newCoordinator: CompetitionStaff = {
+      userId: id,
+      competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
+      accessLevel: CompetitionAccessLevel.ACCEPTED,
+      siteLocation: userSiteLocation
+    }
+    await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
+    await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
+
+    const mockStudent: Student = {
+      name: 'Maximillian Maverick',
+      preferredName: 'X',
+      email: 'newStudentSacrifice4@gmail.com',
+      password: 'testPassword',
+      gender: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'L',
+      universityId: 1,
+      studentId: 'z5381412'
+    };
+
+    newStudent = await user_db.studentRegister(mockStudent);
+
+    const newContender: CompetitionUser = {
+      userId: newStudent.userId,
+      competitionId: comp.competitionId,
+      competitionRoles: [CompetitionUserRole.PARTICIPANT],
+      ICPCEligible: true,
+      competitionLevel: 'No Preference',
+      siteLocation: {
+        id: 1,
+        name: 'TestRoom',
+      },
+      boersenEligible: true,
+      degreeYear: 3,
+      degree: 'ComSci',
+      isRemote: true,
+      nationalPrizes: 'none',
+      internationalPrizes: 'none',
+      codeforcesRating: 7,
+      universityCourses: ['4511', '9911', '911'],
+      pastRegional: true,
+      competitionBio: 'I good, promise',
+      preferredContact: 'Pigeon Carrier',
+    }
+    const studentUni: University = {
+      id: 1,
+      name: 'University of Melbourne'
+    }
+    await comp_db.competitionStudentJoin(newContender, studentUni)
   });
 
   afterAll(async () => {
@@ -13,563 +127,45 @@ describe.skip('Competition Student Function', () => {
   });
 
   test('Failure case: user does not have access to this list', async () => {
-    const result = await user_db.competitionStudents(5, 1);
-    expect(result).toStrictEqual([])
+    expect(await comp_db.competitionStudents(newStudent.userId, comp.competitionId)).toStrictEqual([])
   })
 
-  test('Sucess case 1: returns List of students participating in competition', async () => {
-    const result = await user_db.competitionStudents(1, 1);
-    expect(result).toStrictEqual([
+  test('Sucess case: returns List of students participating in competition', async () => {
+    const teamInfo = await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+    expect(await comp_db.competitionStudents(id, comp.competitionId)).toStrictEqual([
       {
-        userId: 5,
-        universityId: 5,
-        name: 'New User',
-        sex: 'M',
-        email: 'student@example.com',
-        studentId: 'z000001',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 6,
-        universityId: 2,
-        name: 'Test Student Account 2',
-        sex: 'M',
-        email: 'teststudent2@example.com',
-        studentId: 'z000002',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 7,
-        universityId: 2,
-        name: 'Test Student Account 3',
-        sex: 'M',
-        email: 'teststudent3@example.com',
-        studentId: 'z000003',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 8,
-        universityId: 2,
-        name: 'Test Student Account 4',
-        sex: 'M',
-        email: 'teststudent4@example.com',
-        studentId: 'z000004',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Bulbasaur'
-      },
-      {
-        userId: 9,
-        universityId: 2,
-        name: 'Test Student Account 5',
-        sex: 'M',
-        email: 'teststudent5@example.com',
-        studentId: 'z000005',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Bulbasaur'
-      },
-      {
-        userId: 10,
-        universityId: 2,
-        name: 'Test Student Account 6',
-        sex: 'M',
-        email: 'teststudent6@example.com',
-        studentId: 'z000006',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Bulbasaur'
-      },
-      {
-        userId: 12,
-        universityId: 2,
-        name: 'Test Student Account 7',
-        sex: 'M',
-        email: 'teststudent7@example.com',
-        studentId: 'z000007',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmeleon'
-      },
-      {
-        userId: 13,
-        universityId: 2,
-        name: 'Test Student Account 8',
-        sex: 'M',
-        email: 'teststudent8@example.com',
-        studentId: 'z000008',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmeleon'
-      },
-      {
-        userId: 14,
-        universityId: 2,
-        name: 'Test Student Account 9',
-        sex: 'M',
-        email: 'teststudent9@example.com',
-        studentId: 'z000009',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'XL',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmeleon'
-      },
-      {
-        userId: 15,
-        universityId: 5,
-        name: 'AR',
-        sex: 'M',
-        email: 'ar@example.com',
-        studentId: 'z000002',
-        status: 'Matched',
-        level: 'Level A',
+        userId: newStudent.userId,
+        universityId: 1,
+        universityName: 'University of Melbourne',
+        name: 'Maximillian Maverick',
+        preferredName: 'X',
+        email: 'newStudentSacrifice4@gmail.com',
+        sex: 'Male',
+        pronouns: 'He/Him',
         tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Bulbasaur'
-      },
-      {
-        userId: 15,
-        universityId: 5,
-        name: 'AR',
-        sex: 'M',
-        email: 'ar@example.com',
-        studentId: 'z000002',
+        allergies: null,
+        dietaryReqs: '{}',
+        accessibilityReqs: null,
+        studentId: 'z5381412',
+        roles: ['Participant'],
+        bio: 'I good, promise',
+        ICPCEligible: true,
+        boersenEligible: true,
+        level: 'No Preference',
+        degreeYear: 3,
+        degree: 'ComSci',
+        isRemote: true,
+        isOfficial: null,
+        preferredContact: 'Pigeon Carrier',
+        nationalPrizes: 'none',
+        internationalPrizes: 'none',
+        codeforcesRating: 7,
+        universityCourses: ['4511', '9911', '911'],
+        pastRegional: true,
         status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charizard'
-      },
-      {
-        userId: 16,
-        universityId: 5,
-        name: 'AK',
-        sex: 'M',
-        email: 'ak@example.com',
-        studentId: 'z000003',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Ivysaur'
-      },
-      {
-        userId: 16,
-        universityId: 5,
-        name: 'AK',
-        sex: 'M',
-        email: 'ak@example.com',
-        studentId: 'z000003',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charizard'
-      },
-      {
-        userId: 17,
-        universityId: 5,
-        name: 'YF',
-        sex: 'M',
-        email: 'yf@example.com',
-        studentId: 'z000004',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Ivysaur'
-      },
-      {
-        userId: 17,
-        universityId: 5,
-        name: 'YF',
-        sex: 'M',
-        email: 'yf@example.com',
-        studentId: 'z000004',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charizard'
-      },
-      {
-        userId: 18,
-        universityId: 5,
-        name: 'DY',
-        sex: 'M',
-        email: 'dy@example.com',
-        studentId: 'z000005',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Venusaur'
-      },
-      {
-        userId: 18,
-        universityId: 5,
-        name: 'DY',
-        sex: 'M',
-        email: 'dy@example.com',
-        studentId: 'z000005',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Snorlax'
-      },
-      {
-        userId: 19,
-        universityId: 5,
-        name: 'Kass',
-        sex: 'M',
-        email: 'kass@example.com',
-        studentId: 'z000006',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 19,
-        universityId: 5,
-        name: 'Kass',
-        sex: 'M',
-        email: 'kass@example.com',
-        studentId: 'z000006',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Snorlax'
-      },
-      {
-        userId: 20,
-        universityId: 5,
-        name: 'JL',
-        sex: 'M',
-        email: 'jl@example.com',
-        studentId: 'z000007',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 20,
-        universityId: 5,
-        name: 'JL',
-        sex: 'M',
-        email: 'jl@example.com',
-        studentId: 'z000007',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Snorlax'
-      }
-    ])
-  })
-  test('Sucess case 2: check if coaches also have access', async () => {
-    const result = await user_db.competitionStudents(2, 1);
-    expect(result).toStrictEqual([
-      {
-        userId: 5,
-        universityId: 5,
-        name: 'New User',
-        sex: 'M',
-        email: 'student@example.com',
-        studentId: 'z000001',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 6,
-        universityId: 2,
-        name: 'Test Student Account 2',
-        sex: 'M',
-        email: 'teststudent2@example.com',
-        studentId: 'z000002',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 7,
-        universityId: 2,
-        name: 'Test Student Account 3',
-        sex: 'M',
-        email: 'teststudent3@example.com',
-        studentId: 'z000003',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 8,
-        universityId: 2,
-        name: 'Test Student Account 4',
-        sex: 'M',
-        email: 'teststudent4@example.com',
-        studentId: 'z000004',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Bulbasaur'
-      },
-      {
-        userId: 9,
-        universityId: 2,
-        name: 'Test Student Account 5',
-        sex: 'M',
-        email: 'teststudent5@example.com',
-        studentId: 'z000005',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Bulbasaur'
-      },
-      {
-        userId: 10,
-        universityId: 2,
-        name: 'Test Student Account 6',
-        sex: 'M',
-        email: 'teststudent6@example.com',
-        studentId: 'z000006',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Bulbasaur'
-      },
-      {
-        userId: 12,
-        universityId: 2,
-        name: 'Test Student Account 7',
-        sex: 'M',
-        email: 'teststudent7@example.com',
-        studentId: 'z000007',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmeleon'
-      },
-      {
-        userId: 13,
-        universityId: 2,
-        name: 'Test Student Account 8',
-        sex: 'M',
-        email: 'teststudent8@example.com',
-        studentId: 'z000008',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'S',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmeleon'
-      },
-      {
-        userId: 14,
-        universityId: 2,
-        name: 'Test Student Account 9',
-        sex: 'M',
-        email: 'teststudent9@example.com',
-        studentId: 'z000009',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'XL',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmeleon'
-      },
-      {
-        userId: 15,
-        universityId: 5,
-        name: 'AR',
-        sex: 'M',
-        email: 'ar@example.com',
-        studentId: 'z000002',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Bulbasaur'
-      },
-      {
-        userId: 15,
-        universityId: 5,
-        name: 'AR',
-        sex: 'M',
-        email: 'ar@example.com',
-        studentId: 'z000002',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charizard'
-      },
-      {
-        userId: 16,
-        universityId: 5,
-        name: 'AK',
-        sex: 'M',
-        email: 'ak@example.com',
-        studentId: 'z000003',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Ivysaur'
-      },
-      {
-        userId: 16,
-        universityId: 5,
-        name: 'AK',
-        sex: 'M',
-        email: 'ak@example.com',
-        studentId: 'z000003',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charizard'
-      },
-      {
-        userId: 17,
-        universityId: 5,
-        name: 'YF',
-        sex: 'M',
-        email: 'yf@example.com',
-        studentId: 'z000004',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Ivysaur'
-      },
-      {
-        userId: 17,
-        universityId: 5,
-        name: 'YF',
-        sex: 'M',
-        email: 'yf@example.com',
-        studentId: 'z000004',
-        status: 'Matched',
-        level: 'Level A',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charizard'
-      },
-      {
-        userId: 18,
-        universityId: 5,
-        name: 'DY',
-        sex: 'M',
-        email: 'dy@example.com',
-        studentId: 'z000005',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Venusaur'
-      },
-      {
-        userId: 18,
-        universityId: 5,
-        name: 'DY',
-        sex: 'M',
-        email: 'dy@example.com',
-        studentId: 'z000005',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Snorlax'
-      },
-      {
-        userId: 19,
-        universityId: 5,
-        name: 'Kass',
-        sex: 'M',
-        email: 'kass@example.com',
-        studentId: 'z000006',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 19,
-        universityId: 5,
-        name: 'Kass',
-        sex: 'M',
-        email: 'kass@example.com',
-        studentId: 'z000006',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Snorlax'
-      },
-      {
-        userId: 20,
-        universityId: 5,
-        name: 'JL',
-        sex: 'M',
-        email: 'jl@example.com',
-        studentId: 'z000007',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Charmander'
-      },
-      {
-        userId: 20,
-        universityId: 5,
-        name: 'JL',
-        sex: 'M',
-        email: 'jl@example.com',
-        studentId: 'z000007',
-        status: 'Matched',
-        level: 'Level B',
-        tshirtSize: 'L',
-        siteName: 'Computer Science Building',
-        teamName: 'Snorlax'
+        teamName: teamInfo.teamName,
+        siteName: 'Library',
+        siteId: 1
       }
     ])
   })
