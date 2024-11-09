@@ -165,10 +165,10 @@ const Title2 = styled.h2`
 `;
 
 const DEFAULT_REGO_FIELDS = {
-  enableCodeforcesField: false,
-  enableNationalPrizesField: false,
-  enableInternationalPrizesField: false,
-  enableRegionalParticipationField: false,
+  enableCodeforcesField: true,
+  enableNationalPrizesField: true,
+  enableInternationalPrizesField: true,
+  enableRegionalParticipationField: true,
 }
 
 export const StaffActionCard: FC<StaffActionCardProps> = ({
