@@ -6,7 +6,7 @@ import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { useParams } from "react-router-dom";
 import { sendRequest } from "../../../../utility/request";
-import { TeamDetails } from "./TeamCard";
+import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 import { CompetitionDetails, fetchTeams } from "../../CompetitionPage";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -135,9 +135,22 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     await fetchTeams(compId, setTeamList);
     console.log(response.data.algorithm);
     return true;
-  }
+  };
 
   const [isDownloading, setIsDownloading] = useState(false);
+
+  const mapToTitle = (pronouns: string): string => {
+    switch (pronouns) {
+      case "He/Him":
+        return "Mr";
+      case "She/Her":
+        return "Ms";
+      case "They/Them":
+        return "None";
+      default:
+        return "None";
+    }
+  };
 
   const downloadCSV = async () => {
     // Filter only 'Unregistered' teams
@@ -145,22 +158,21 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
     // Group teams by site location and level
     const teamsPerSite = unregisteredTeams.reduce((acc: SiteDetails[], team: TeamDetails) => {
-      const siteName = team.teamSite || "Unknown Site"; // Default to 'Unknown Site' if missing
-      const teamLevel = team.teamLevel || "Unknown Level"; // Default to 'Unknown Level' if missing
-      const existingSite = acc.find((site) => site.name === siteName);
+      const existingSite = acc.find((site) => site.name === team.teamSite);
   
       if (existingSite) {
-          const existingLevelGroup = existingSite.levelGroups.find(levelGroup => levelGroup.level === teamLevel);
+          const existingLevelGroup = existingSite.levelGroups.find(levelGroup => levelGroup.level === team.teamLevel);
   
           if (existingLevelGroup) {
               existingLevelGroup.teams.push(team);
           } else {
-              existingSite.levelGroups.push({ level: teamLevel, teams: [team] });
+              existingSite.levelGroups.push({ level: team.teamLevel, teams: [team] });
           }
       } else {
           acc.push({
-              siteName, // Now this is valid as `siteName` is part of `SiteDetails`
-              levelGroups: [{ level: teamLevel, teams: [team] }]
+            id: team.siteId,
+            name: team.teamSite,
+            levelGroups: [{ level: team.teamLevel, teams: [team] }]
           });
       }
       return acc;
@@ -172,14 +184,14 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     });
 
     // Generate CSV
-    let csvContent = "Site Location,Team Level,Team Name,Member Name,Member Email\n";
+    let csvContent = "Site Location,Team Level,Team Name,Member Name,Member Email,Title,Sex,Preferred Name\n";
 
     teamsPerSite.forEach((site: SiteDetails) => {
         site.levelGroups.forEach(({ level, teams }) => {
             teams.forEach((team) => {
                 const teamName = team.teamName.split(',')[0];
                 team.students.forEach((student) => {
-                    csvContent += `${site.name},${level},${teamName},${student.name},${student.email}\n`;
+                    csvContent += `${site.name},${level},${teamName},${student.name},${student.email},${mapToTitle(student.sex)},${student.sex},${student.preferredName}\n`;
                 });
             });
         });
