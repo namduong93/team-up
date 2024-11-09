@@ -10,10 +10,13 @@ import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competit
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../shared_types/Competition/staff/AttendeesDetails.js";
+import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionStaffRegoToggles(userId: number, compId: number): Promise<EditRego>;
+  competitionCoachCheck(userId: number, compId: number): Promise<void>;
   competitionStaffUpdate(userId: number, staffList: StaffInfo[], compId: number): Promise<void>;
   competitionStudentsUpdate(userId: number, studentList: StudentInfo[], compId: number): Promise<void>;
   coachCheckIdsStudent (userId: number, userIds: Array<number>, compId: number): Promise<void>;

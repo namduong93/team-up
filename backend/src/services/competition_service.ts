@@ -65,6 +65,20 @@ export class CompetitionService {
     this.notificationRepository = notificationRepository;
   }
 
+  competitionStaffRegoToggles = async (userId: number, compId: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      if (!roles.includes(CompetitionUserRole.COACH)) {
+        throw new ServiceError(ServiceError.Auth, 'User is not an Admin or a Coach');
+      }
+
+      await this.competitionRepository.competitionCoachCheck(userId, compId);
+    }
+
+    return await this.competitionRepository.competitionStaffRegoToggles(userId, compId); 
+  }
+
   competitionStaffUpdate = async (userId: number, staffList: StaffInfo[], compId: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 

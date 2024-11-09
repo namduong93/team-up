@@ -14,6 +14,14 @@ export class CompetitionController {
     this.competitionService = competitionService;
   }
 
+  competitionStaffRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const regoFields = await this.competitionService.competitionStaffRegoToggles(
+      parseInt(userId as string), parseInt(compId as string));
+    res.json({ regoFields });
+  });
+
   competitionStaffUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const staffList = req.body.staffList as Array<StaffInfo>;

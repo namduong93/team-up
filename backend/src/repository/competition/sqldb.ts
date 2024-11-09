@@ -24,6 +24,37 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
+  competitionStaffRegoToggles = async (userId: number, compId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT 
+        enable_codeforces_field AS "enableCodeforcesField",
+        enable_national_prizes_field AS "enableNationalPrizesField",
+        enable_international_prizes_field AS "enableInternatioalPrizesField",
+        enable_regional_participation_field AS "enableRegionalParticipationField"
+      FROM competition_registration_toggles AS crt
+      JOIN competition_users AS cu ON cu.competition_id = crt.competition_id
+      JOIN users AS u ON u.id = cu.user_id
+      WHERE u.id = ${userId} AND u.university_id = crt.university_id AND crt.competition_id = ${compId};
+      `
+    )
+    
+    return dbResult.rows[0];
+  }
+
+  competitionCoachCheck = async (userId: number, compId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT cu.competition_id AS "competitionId"
+      FROM competition_users AS cu
+      WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}
+      `
+    );
+    if (!dbResult.rowCount) {
+      throw new DbError(DbError.Auth, 'User is not a coach for this competition');
+    }
+
+    return;
+  }
+
   competitionStaffUpdate = async (userId: number, staffList: StaffInfo[], compId: number) => {
     for (const staff of staffList) {
       try {
