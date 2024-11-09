@@ -66,6 +66,10 @@ export class CompetitionService {
     this.notificationRepository = notificationRepository;
   }
 
+  competitionStudentsRegoToggles = async (userId: number, code: string) => {
+    return await this.competitionRepository.competitionStudentsRegoToggles(userId, code);
+  }
+
   competitionStaffUpdateRegoToggles = async (userId: number, compId: number, regoFields: EditRego, universityId: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 

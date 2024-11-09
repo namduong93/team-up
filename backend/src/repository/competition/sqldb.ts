@@ -25,6 +25,23 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
+  competitionStudentsRegoToggles = async (userId: number, code: string) => {
+    const dbResult = await this.pool.query(
+      `SELECT 
+        enable_codeforces_field,
+        enable_national_prizes_field,
+        enable_international_prizes_field,
+        enable_regional_participation_field
+      FROM competition_registration_toggles AS crt
+      JOIN competitions AS c ON c.id = crt.competition_id
+      JOIN competition_users AS cu ON cu.competition_id = crt.competition_id
+      WHERE cu.user_id = ${userId} AND c.code = '{${code}}'
+      `
+    );
+
+    return dbResult.rows[0];
+  }
+
   competitionStaffUpdateRegoToggles = async (userId: number, compId: number, regoFields: EditRego, universityId?: number) => {
 
     const uniId = universityId || (await this.pool.query(

@@ -14,11 +14,19 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionStudentsRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, code } = req.query;
+    const regoFields = await this.competitionService.competitionStudentsRegoToggles(
+      parseInt(userId as string), code as string);
+
+    res.json({ regoFields });
+  });
   
   competitionStaffUpdateRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const { compId, regoFields, universityId } = req.body as {
-    compId: number, regoFields: EditRego, universityId?: number 
+      compId: number, regoFields: EditRego, universityId?: number 
     };
 
     await this.competitionService.competitionStaffUpdateRegoToggles(
