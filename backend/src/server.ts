@@ -292,6 +292,7 @@ app.get('/competition/sites', competitionController.competitionSites);
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
+
 app.get('/university/courses', universityController.universityCourses);
 
 app.post('/competition/teams/update', competitionController.competitionTeamsUpdate);
@@ -299,6 +300,12 @@ app.post('/competition/teams/update', competitionController.competitionTeamsUpda
 app.post('/competition/students/update', competitionController.competitionStudentsUpdate);
 
 app.post('/competition/staff/update', competitionController.competitionStaffUpdate);
+
+app.get('/competition/staff/rego_toggles', competitionController.competitionStaffRegoToggles);
+
+app.post('/competition/staff/update_rego_toggles', competitionController.competitionStaffUpdateRegoToggles);
+
+app.get('/competition/students/rego_toggles', competitionController.competitionStudentsRegoToggles);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
