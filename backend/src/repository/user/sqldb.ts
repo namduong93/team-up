@@ -315,38 +315,17 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   staffList = async (userId: number): Promise<Array<StaffInfo>> => {
-    const userCheckAdmin = await this.pool.query('SELECT user_type FROM users u WHERE u.id = $1', [userId])
-    const userAccess = userCheckAdmin.rows
-
-    if (userAccess[0].user_type !== 'system_admin') {
-      throw new DbError(DbError.Query, 'User cannot access this list.');
-    }
-
     const dbResult = await this.pool.query('SELECT * FROM users WHERE user_access IN ($1, $2) AND user_type != $3', ['Pending', 'Accepted', 'student'])
     return dbResult.rows;
   }
 
   staffApprove = async (userId: number, acceptedIds: number[]): Promise<void> => {
-    const userCheckAdmin = await this.pool.query('SELECT user_type FROM users u WHERE u.id = $1', [userId])
-    const userAccess = userCheckAdmin.rows
-
-    if (userAccess[0].user_type !== 'system_admin') {
-      throw new DbError(DbError.Query, 'User cannot access this list.');
-    }
-
-    for (let x = 0; x < acceptedIds.length; x++){
+    for (let x = 0; x < acceptedIds.length; x++) {
       await this.pool.query('UPDATE users SET user_access = $1 WHERE id = $2;', ['Accepted', acceptedIds[x]])
     }
   }
 
   staffReject = async (userId: number, rejectIds: number[]): Promise<void> => {
-    const userCheckAdmin = await this.pool.query('SELECT user_type FROM users u WHERE u.id = $1', [userId])
-    const userAccess = userCheckAdmin.rows
-
-    if (userAccess[0].user_type !== 'system_admin') {
-      throw new DbError(DbError.Query, 'User cannot access this list.');
-    }
-
     for (let x = 0; x < rejectIds.length; x++) {
       await this.pool.query('UPDATE users SET user_access = $1 WHERE id = $2;', ['Rejected', rejectIds[x]])
     }
