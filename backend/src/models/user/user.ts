@@ -1,3 +1,6 @@
+/**
+ * Represents a user in the system
+ */
 export interface User {
   id?: number;
   name: string;
@@ -48,12 +51,18 @@ export function validateUser(user: User): string {
   return "";
 }
 
+/**
+ * Represents the type of user in the system.
+ */
 export const enum UserType {
   STUDENT = 'student',
   STAFF = 'staff',
   SYSTEM_ADMIN = 'system_admin'
 }
 
+/**
+ * Represents a user type object.
+ */
 export type UserTypeObject = { type: UserType };
 
 /**

@@ -1,4 +1,6 @@
-// TODO: Add more fields later
+/**
+ * Represents the profile info of a user.
+ */
 export interface UserProfileInfo {
   name: string;
   preferredName: string;
