@@ -13,7 +13,8 @@ export const WideStaffHeader: FC = () => {
   const theme = useTheme();
   return (
     <WideInfoContainerDiv style={{
-      backgroundColor: theme.colours.userInfoCardHeader,
+      backgroundColor: theme.colours.sidebarBackground,
+      color: theme.fonts.colour,
       fontWeight: 'bold'
     }}>
       <UserNameContainerDiv>

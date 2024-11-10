@@ -1,16 +1,18 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { StaffAccessCardProps } from "./StaffAccounts";
-import { StaffAccessLevel } from "../competition_staff_page/staff_page/StaffDisplay";
 import { StandardContainerDiv } from "../competition_staff_page/staff_page/components/StaffRole";
 import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../competition_staff_page/students_page/StudentDisplay";
 import { StandardSpan } from "../competition_staff_page/staff_page/components/WideStaffCard";
 import { useTheme } from "styled-components";
+import { AccessDropdown } from "./AccessDropdown";
+import { StaffAccess } from "../../../shared_types/Competition/staff/StaffInfo";
 
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
   return (
     <WideInfoContainerDiv style={{
-      backgroundColor: theme.colours.userInfoCardHeader,
+      backgroundColor: theme.colours.sidebarBackground,
+      color: theme.fonts.colour,
       fontWeight: 'bold'
     }}>
       <UserNameContainerDiv>
@@ -40,9 +42,11 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,
   ...props  }) => {
 
-  useEffect(() => {
-    // console.log(staffDetails);
-  }, []);
+  const handleAccessChange = async (newAccess: StaffAccess) => {
+    console.log(newAccess);
+
+    // TODO: Backend hook to update user's access
+  };
 
   return (
   <>
@@ -63,9 +67,10 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
       </StandardContainerDiv>
 
       <StandardContainerDiv>
-        <StaffAccessLevel $access={staffDetails.access}>
-          {staffDetails.access}
-        </StaffAccessLevel>
+        <AccessDropdown
+          currentAccess={staffDetails.access}
+          onChange={(newAccess) => handleAccessChange(newAccess)}
+        />
       </StandardContainerDiv>
 
       <StandardContainerDiv>

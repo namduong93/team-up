@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import Fuse from "fuse.js";
 import { FlexBackground } from "../../components/general_utility/Background";
 import { StaffAccess, StaffAccessInfo } from "../../../shared_types/Competition/staff/StaffInfo";
-import {  WideDisplayDiv } from "../competition_staff_page/students_page/StudentDisplay";
+import {  NarrowDisplayDiv, WideDisplayDiv } from "../competition_staff_page/students_page/StudentDisplay";
 // import { StaffAccessLevel, NarrowStatusDiv } from "../competition_staff_page/staff_page/StaffDisplay";
 
 import { WideStaffAccessCard, WideStaffAccessHeader } from "./WideStaffAccessCard";
@@ -11,6 +11,8 @@ import { Background } from "../account/Account";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { styled } from "styled-components";
 import { FilterTagButton, RemoveFilterIcon } from "../dashboard/Dashboard";
+import { NarrowStaffAccessCard } from "./NarrowStaffAccessCard";
+import { StaffAccessButtons } from "./StaffAccessButtons";
 
 const mockStaffData: StaffAccessInfo[] = [
   {
@@ -85,10 +87,16 @@ export const StaffAccounts: FC = () => {
   >({});
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Check if filters contain only "Pending"
+  const isPendingOnly = filters["Access"]?.length === 1 && filters["Access"].includes(StaffAccess.Pending);
+
   useEffect(() => {
     setSortOption(STAFF_DISPLAY_SORT_OPTIONS[0].value);
-    setStaffList(mockStaffData);
     setFilterOptions(STAFF_DISPLAY_FILTER_OPTIONS);
+    
+    // TODO: Backend, get the staffList from backend
+    setStaffList(mockStaffData);
+
   }, []);
 
   const filteredStaff = staffList.filter((staffDetails) => {
@@ -129,6 +137,38 @@ export const StaffAccounts: FC = () => {
     });
   };
 
+  const handleApproveAll = async (): Promise<boolean> => {
+    // Filter by pending
+    const pendingStaffList = staffList.filter((staffDetails) => staffDetails.access === StaffAccess.Pending);
+  
+    // Perform backend hook to update status to 'approved'
+    console.log("all pending staff accounts approved: ", pendingStaffList);
+  
+    // replace with the put hook
+    return new Promise((resolve) => {
+      setFilters({});
+      // await fetch updated staff list here
+
+      resolve(true);
+    });
+  };
+
+  const handleRejectAll = async (): Promise<boolean> => {
+    // Filter by pending
+    const pendingStaffList = staffList.filter((staffDetails) => staffDetails.access === StaffAccess.Pending);
+  
+    // Perform backend hook to update status to 'rejected'
+    console.log("all pending staff accounts rejected: ", pendingStaffList);
+  
+    // replace with the put hook
+    return new Promise((resolve) => {
+      setFilters({});
+      // await fetch updated staff list here
+
+      resolve(true);
+    });
+  };
+
   return (
     <PageBackground>
       <PageHeader
@@ -139,7 +179,10 @@ export const StaffAccounts: FC = () => {
         filterOptions={filterOptions}
         filtersState={{ filters, setFilters }}
         searchTermState={{ searchTerm, setSearchTerm }}
-      />
+      >
+        <StaffAccessButtons onApproveAll={handleApproveAll} onRejectAll={handleRejectAll} editingForAll={isPendingOnly}/>
+      </PageHeader>
+
 
       <FilterTagContainer>
         {Object.entries(filters).map(([field, values]) =>
@@ -158,18 +201,29 @@ export const StaffAccounts: FC = () => {
       </FilterTagContainer>
 
       <StaffContainer>
-        <WideStaffAccessHeader />
-        <StaffRecords>
-          {searchedStaff.length > 0 ? (
-            searchedStaff.map(({ item: staffDetails }) => (
-              <WideDisplayDiv key={`${staffDetails.userId}`}>
-                <WideStaffAccessCard staffDetails={staffDetails} />
-              </WideDisplayDiv>
-            ))
-          ) : (
-            <p>No staff members found.</p>
-          )}
-        </StaffRecords>
+        <NarrowDisplayDiv>
+          <StaffRecords>
+              {searchedStaff.length > 0 ? (
+                searchedStaff.map(({ item: staffDetails }) => (
+                    <NarrowStaffAccessCard staffDetails={staffDetails} />
+                ))
+              ) : (
+                <p>No staff members found.</p>
+              )}
+            </StaffRecords>
+        </NarrowDisplayDiv>
+        <WideDisplayDiv>
+          <WideStaffAccessHeader />
+          <StaffRecords>
+            {searchedStaff.length > 0 ? (
+              searchedStaff.map(({ item: staffDetails }) => (
+                  <WideStaffAccessCard staffDetails={staffDetails} />
+              ))
+            ) : (
+              <p>No staff members found.</p>
+            )}
+          </StaffRecords>
+        </WideDisplayDiv>
       </StaffContainer>
     </PageBackground>
   );

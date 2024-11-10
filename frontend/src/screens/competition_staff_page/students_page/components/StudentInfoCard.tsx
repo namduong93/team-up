@@ -4,7 +4,6 @@ import { NarrowStatusDiv } from "../../staff_page/StaffDisplay";
 import { StudentStatus } from "../StudentDisplay";
 import { StudentsInfoBar } from "../../components/InfoBar/StudentsInfoBar";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
-import { CompetitionLevel } from "../../../../../shared_types/Competition/CompetitionLevel";
 
 export const StudentInfoContainerDiv = styled.div`
   display: flex;
@@ -12,11 +11,11 @@ export const StudentInfoContainerDiv = styled.div`
   width: 100%;
   height: auto;
   flex-wrap: wrap;
-  /* background-color: lightgrey; */
   border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
   /* border-radius: 10px; */
   box-sizing: border-box;
   font-size: 13px;
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const ContainerDiv = styled.div`
@@ -30,6 +29,8 @@ const ContainerDiv = styled.div`
   min-height: 60px;
   height: auto;
   row-gap: 3px;
+  color: ${({ theme }) => theme.fonts.colour};
+  
 `
 
 const FieldTitle = styled.div`
@@ -40,7 +41,7 @@ const FieldTitle = styled.div`
   align-content: end;
   font-weight: bold;
   border-bottom: 1px solid ${({ theme }) => theme.colours.sidebarLine};
-  background-color: #D9D9D9;
+  background-color: ${({ theme }) => theme.colours.sidebarBackground};
   box-sizing: border-box;
 `;
 
