@@ -139,10 +139,10 @@ export const StaffAccounts: FC = () => {
 
   const handleApproveAll = async (): Promise<boolean> => {
     // Filter by pending
-    const pendingStaffList = staffList.filter((staffDetails) => staffDetails.access === StaffAccess.Pending);
+    const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.access === StaffAccess.Pending).map((staffDetails) => staffDetails.userId);
   
     // Perform backend hook to update status to 'approved'
-    console.log("all pending staff accounts approved: ", pendingStaffList);
+    console.log("all pending staff accounts approved: ", pendingStaffListIds);
   
     // replace with the put hook
     return new Promise((resolve) => {
@@ -155,10 +155,10 @@ export const StaffAccounts: FC = () => {
 
   const handleRejectAll = async (): Promise<boolean> => {
     // Filter by pending
-    const pendingStaffList = staffList.filter((staffDetails) => staffDetails.access === StaffAccess.Pending);
+    const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.access === StaffAccess.Pending).map((staffDetails) => staffDetails.userId);
   
     // Perform backend hook to update status to 'rejected'
-    console.log("all pending staff accounts rejected: ", pendingStaffList);
+    console.log("all pending staff accounts rejected: ", pendingStaffListIds);
   
     // replace with the put hook
     return new Promise((resolve) => {

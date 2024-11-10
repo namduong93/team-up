@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { StaffAccess } from "../../../shared_types/Competition/staff/StaffInfo";
 
 interface AccessDropdownProps {
+  staffId: number;
   currentAccess: StaffAccess;
   onChange: (newAccess: StaffAccess) => void;
 }
@@ -57,7 +58,7 @@ const Option = styled.option<{ $access: StaffAccess }>`
       : theme.access.rejectedText};
 `;
 
-export const AccessDropdown: FC<AccessDropdownProps> = ({ currentAccess, onChange }) => {
+export const AccessDropdown: FC<AccessDropdownProps> = ({ staffId, currentAccess, onChange }) => {
   const [selectedAccess, setSelectedAccess] = useState<StaffAccess>(currentAccess);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -66,6 +67,7 @@ export const AccessDropdown: FC<AccessDropdownProps> = ({ currentAccess, onChang
     onChange(newAccess);
 
     // TODO: Backend hook to update the individual staff access level
+    console.log("updating access level for staff: ", staffId);
   };
 
   return (

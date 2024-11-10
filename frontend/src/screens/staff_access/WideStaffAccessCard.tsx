@@ -68,6 +68,7 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
 
       <StandardContainerDiv>
         <AccessDropdown
+          staffId={staffDetails.userId}
           currentAccess={staffDetails.access}
           onChange={(newAccess) => handleAccessChange(newAccess)}
         />

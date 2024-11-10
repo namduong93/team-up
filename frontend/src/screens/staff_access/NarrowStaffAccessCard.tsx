@@ -25,6 +25,7 @@ export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
         value={
           <NarrowStatusDiv>
             <AccessDropdown
+              staffId={staffDetails.userId}
               currentAccess={staffDetails.access}
               onChange={(newAccess) => handleAccessChange(newAccess)}
             />
