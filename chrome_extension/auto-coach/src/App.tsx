@@ -1,69 +1,107 @@
+import styled from 'styled-components';
 import './App.css'
-import { useState } from 'react'
+import React, { useState } from 'react'
+
+
+const InputLabel = styled.label`
+  min-width: 145px;
+  max-width: 200px;
+  min-height: 35px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F9F9F9;
+  border: 1px solid black;
+  margin-bottom: 10px;
+  font-weight: 600;
+  transition: background-color 0.5s ease;
+
+  &:hover {
+    cursor: pointer;
+    background-color: lightblue;
+  }
+`;
+
+const StyledButton = styled.button`
+  width: 145px;
+  height: 35px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F9F9F9;
+  border: 1px solid black;
+  transition: background-color 0.5s ease;
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid black;
+    background-color: lightblue;
+  }
+`;
+
+interface Member {
+  name: string;
+  email: string;
+  title: string;
+  sex: string;
+};
+
+interface Team {
+  teamName: string;
+  members: Member[]
+}
+
+const parseFile = async (file: File) => {
+  return new Promise<Team[]>((resolve, _) => {
+    if (file.type !== 'text/csv') {
+      alert('File must be a csv file');
+      return [];
+    }
+
+    const teamObject: Record<string, Member[]> = {};
+
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      if (!e.target) {
+        return;
+      }
+      const lines = (e.target.result as string).trim().split('\n');
+      
+      for (const line of lines.slice(1)) {
+        const [_, __, teamName, name, email, title, sex, ___] = line.split(',');
+        
+        if (!teamObject[teamName]) {
+          teamObject[teamName] = [];
+        }
+      
+        teamObject[teamName].push({ 
+          name, email, title, sex
+        });
+        
+      }
+
+      resolve(Object.entries(teamObject).map(([teamName, members]) => ({ teamName, members })) as Team[]);
+    }
+
+    fileReader.readAsText(file);
+  });
+}
 
 function App() {
 
-  const [teamList, _] = useState([
-    {
-      teamName: "Charizard",
-      members: [
-        {
-          preferredName: "this_username",
-          title: "Mr.",
-          name: "Jimmy Johnson",
-          sex: "Male",
-          email: "jimmysemail2222@gmail.com",
-        },
-        {
-          preferredName: "eeeefasf",
-          title: "Mr.",
-          name: "bonkski ronkski",
-          sex: "Male",
-          email: "bonkskif2222@gmail.com",
-        }
-      ]
-    },
-    {
-      teamName: "Watermelon",
-      members: [
-        {
-          preferredName: "bing",
-          title: "Mr.",
-          name: "bing",
-          sex: "Male",
-          email: "bingbing@gmail.com",
-        },
-        {
-          preferredName: "edge",
-          title: "Mr.",
-          name: "edge zing",
-          sex: "Female",
-          email: "edgeedge@gmail.com",
-        }
-      ]
-    },
-    {
-      teamName: "Munchlax",
-      members: [
-        {
-          preferredName: "Lizardon",
-          title: "Mr.",
-          name: "Lizardon Charizardion",
-          sex: "Male",
-          email: "lizerdrizzerd@gmail.com",
-        },
-        {
-          preferredName: "Reprentles",
-          title: "Mr.",
-          name: "freprentles cremples",
-          sex: "Male",
-          email: "brentlesremples@gmail.com",
-        }
-      ]
-    }
-  ]);
+  const [file, setFile] = useState<File | undefined>();
 
   const handleClick = async () => {
+
+    if (!file) {
+      alert('Please upload a csv file');
+      return;
+    }
+
+    const teamList = await parseFile(file);
+
     let [tab] = await chrome.tabs.query({ active: true });
     chrome.scripting.executeScript({
       target: { tabId: tab.id! },
@@ -72,6 +110,9 @@ function App() {
         const addTeamButton = document.querySelector(
           "#root > div > div > main > div > div:nth-child(2) > div > div > div:nth-child(1) > div.MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-2 > span > button"
         ) as HTMLButtonElement;
+
+        const inputEvent = new Event('input', { bubbles: true });
+        const keyboardSelectEvent = new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' });
 
         for (const team of teamList) {
           const nameInputs = document.querySelectorAll("#margin-none");
@@ -105,17 +146,71 @@ function App() {
                   const lastNameInput = elements[elements.length - 2] as HTMLInputElement;
             
                   usernameInput.value = member.email;
-                  usernameInput.dispatchEvent(new Event('input', { bubbles: true }));
+                  usernameInput.dispatchEvent(inputEvent);
 
                   const nameList = member.name.split(' ');
                   const firstName = nameList[0];
                   const lastName = nameList[nameList.length - 1];
 
                   firstNameInput.value = firstName;
-                  firstNameInput.dispatchEvent(new Event('input', { bubbles: true }));
+                  firstNameInput.dispatchEvent(inputEvent);
 
                   lastNameInput.value = lastName;
-                  lastNameInput.dispatchEvent(new Event('input', { bubbles: true }));
+                  lastNameInput.dispatchEvent(inputEvent);
+
+                  const selectElements = document.getElementsByClassName(
+                    'MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input'
+                  );
+
+                  const [titleSelectElement, sexSelectElement] = selectElements;
+
+                  titleSelectElement.dispatchEvent(keyboardSelectEvent);
+
+                  const titleInterval = setInterval(() => {
+                    const titleElements = document.getElementsByClassName(
+                      'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button'
+                    );
+
+                    if (!titleElements.length) {
+                      return;
+                    }
+
+                    for (const titleElement of titleElements) {
+                      if ((titleElement as HTMLElement).innerText === member.title) {
+                        (titleElement as HTMLElement).click();
+                      }
+                    }
+                    clearInterval(titleInterval);
+
+                    // interval has already been cleared at this point so doesn't risk having crazy
+                    // nested intervals
+
+                    if (!member.sex) {
+                      return;
+                    }
+
+                    sexSelectElement.dispatchEvent(keyboardSelectEvent);
+                    const sexInterval = setInterval(() => {
+
+                      const sexElements =  document.getElementsByClassName(
+                        'MuiButtonBase-root MuiListItem-root MuiMenuItem-root MuiMenuItem-gutters MuiListItem-gutters MuiListItem-button'
+                      );
+
+                      if (!sexElements.length) {
+                        return;
+                      }
+
+                      for (const sexElement of sexElements) {
+                        if ((sexElement as HTMLElement).innerText === member.sex) {
+                          (sexElement as HTMLElement).click();
+                        }
+                      }
+
+                      clearInterval(sexInterval);
+
+                    }, 100);
+
+                  }, 100);
               
                   clearInterval(userRegInterval);
               }, 100);
@@ -132,13 +227,27 @@ function App() {
     })
   }
 
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    setFile(e.target.files[0]);
+  }
+
   return (
     <>
       <h1>Auto Coach</h1>
       <div className="card">
-        <button onClick={handleClick}>
+        
+        <div style={{ display: 'flex', gap: '10px' }}>
+        <input onChange={handleFileChange} style={{ display: 'none' }} id="csv-input" type='file' />
+        <InputLabel htmlFor='csv-input'>{file?.name || 'CSV File Upload'}</InputLabel>
+
+        <StyledButton onClick={handleClick}>
           Submit Teams
-        </button>
+        </StyledButton>
+        </div>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
