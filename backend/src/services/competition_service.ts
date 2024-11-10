@@ -13,6 +13,7 @@ import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { CompetitionRole } from "../../shared_types/Competition/CompetitionRole.js";
 import {Announcement} from "../../shared_types/Competition/staff/Announcement.js";
+import { University } from "../models/university/university.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -480,27 +481,41 @@ export class CompetitionService {
     return {};
   }
 
-  competitionAnnouncement = async (userId: number, compId: number): Promise< {} | undefined> => {
-    let university = await this.userRepository.userUniversity(userId);
-
-    if(!university) {
-      throw new ServiceError(ServiceError.NotFound, 'User not belong to any university');
+  competitionAnnouncement = async (userId: number, compId: number, universityId: number | undefined): Promise< {} | undefined> => {
+    const roles = await this.competitionRoles(userId, compId);
+    if(!roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.ADMIN)) {
+      throw new ServiceError(ServiceError.Auth, 'User is not a coach or admin for this competition.');
     }
-
+    let university : University = { id: 0, name: '' };  
+    if(!universityId) {
+      university = await this.userRepository.userUniversity(userId);
+      if(!university) {
+        throw new ServiceError(ServiceError.NotFound, 'User not belong to any university');
+      }
+    }
+    else {
+      university.id = universityId;
+    }
     let announcement = await this.competitionRepository.competitionAnnouncement(compId, university);
     return { announcement };
   }
 
-  competitionAnnouncementUpdate = async (userId: number, compId: number, announcementMessage: string): Promise<void> => {
+  competitionAnnouncementUpdate = async (userId: number, compId: number, announcementMessage: string, universityId : number | undefined): Promise<void> => {
     const roles = await this.competitionRoles(userId, compId);
-    if (!roles.includes(CompetitionUserRole.COACH)) {
+    if (!roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.ADMIN)) {
       throw new ServiceError(ServiceError.Auth, 'User is not a coach for this competition.');
     }
-    let university = await this.userRepository.userUniversity(userId);
-
-    if (!university) {
-      throw new ServiceError(ServiceError.NotFound, 'University not found');
+    let university : University = { id: 0, name: '' };
+    if(!universityId) {
+      university = await this.userRepository.userUniversity(userId);
+      if(!university) {
+        throw new ServiceError(ServiceError.NotFound, 'User not belong to any university');
+      }
     }
+    else {
+      university.id = universityId;
+    }
+    
     let announcement = {
       competitionId: compId,
       userId: userId,

@@ -328,9 +328,9 @@ export class CompetitionController {
   })
 
   competitionAnnouncement = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const { userId, compId } = req.query;
+    const { userId, compId, universityId } = req.query;
     const announcement = await this.competitionService.competitionAnnouncement(
-      parseInt(userId as string), parseInt(compId as string));
+      parseInt(userId as string), parseInt(compId as string), parseInt(universityId as string));
     
     res.json(announcement);
     return;
@@ -338,10 +338,10 @@ export class CompetitionController {
 
   competitionAnnouncementUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId } = req.query;
-    const { compId } = req.body;
+    const { compId, universityId } = req.body;
     const announcementMessage = req.body.announcementMessage;
     await this.competitionService.competitionAnnouncementUpdate(
-      parseInt(userId as string), parseInt(compId as string), announcementMessage);
+      parseInt(userId as string), parseInt(compId as string), announcementMessage, parseInt(universityId as string));
     res.json({});
     return;
   });
