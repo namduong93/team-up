@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { useOutletContext } from "react-router-dom";
 import { ProfileCard } from "./components/ProfileCard";
 import { EditCompPreferences } from "./components/EditCompPreferences";
-import { StudentDetails } from "./components/EditCompPreferences";
 import { backendURL } from "../../../config/backendURLConfig";
+import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
+import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole";
+import { CompetitionLevel } from "../../../shared_types/Competition/CompetitionLevel";
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -88,32 +90,56 @@ export const TeamDetails: FC = () => {
   }, []);
 
   const [editingPreferences, setEditingPreferences] =
-    useState<StudentDetails | null>(null);
+    useState<StudentInfo | null>(null);
 
-  const handleSave = (updatedStudent: StudentDetails) => {
-    alert(`Saved details for: ${updatedStudent.name}`);
+  const handleSave = (updatedStudent: StudentInfo) => {
+    // alert(`Saved details for: ${updatedStudent.name}`);
+    // TODO: hook backend to update student's competition preferences
+    console.log("save details for: ", updatedStudent.name);
   };
 
   // TODO: waiting for backend route to get 1 paritcipant comp details
-  const fetchStudentDetails = (id: string): StudentDetails => {
+  const fetchStudentDetails = (id: string): StudentInfo => {
+    console.log("fetching for studentID: ", id);
+    // BACKEND FETCH HERE:
+
     return {
+      userId: 0,
+      universityId: 0,
+      universityName: "UNSW",
       name: "John Doe",
-      email: "john.doe@example.com",
-      bio: "Passionate coder and team player.",
-      image: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
-      id,
-      preferredContact: "Discord:john_doe",
+      preferredName: "Johnny",
+      email: "john@example.com",
+      sex: "M",
+      pronouns: "He/Him",
+      tshirtSize: "MXL",
+      allergies: "",
+      dietaryReqs: "",
+      accessibilityReqs: "",
+      studentId: "z1234",
+
+      // competition_user info
+      roles: [CompetitionRole.Participant],
+      bio: "epic bio",
+      ICPCEligible: true,
+      boersenEligible: false,
+      level: CompetitionLevel.LevelA,
       degreeYear: 3,
-      degree: "Computer Science",
-      ICPCEligibility: true,
+      degree: "Comp Sci",
       isRemote: false,
-      competitionLevel: "A",
-      boersenEligible: true,
-      courses: ["COMP1511", "COMP3121"],
-      codeforce: 1652,
-      regional: false,
+      isOfficial: true,
+      preferredContact: "discord:@hello",
       nationalPrizes: "",
       internationalPrizes: "",
+      codeforcesRating: 0,
+      universityCourses: ["COMP1234"],
+      pastRegional: false,
+      status: "Matched",
+
+      // team info
+      teamName: "UNSW Koalas",
+      siteName: "CSE Building",
+      siteId: 0,
     };
   };
 
@@ -162,7 +188,7 @@ export const TeamDetails: FC = () => {
         <EditCompPreferences
           student={editingPreferences}
           onSave={handleSave}
-          onCancel={() => setEditingPreferences(null)}
+          onClose={() => setEditingPreferences(null)}
         />
       )}
     </DetailsContainer>
