@@ -593,7 +593,7 @@ VALUES
 ( -- id: 1
   'System Admin',
   'Admin',
-  'admin@example.com',
+  'h',
   '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO',
   'M',
   'he/him',

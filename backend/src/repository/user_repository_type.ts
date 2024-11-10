@@ -22,7 +22,7 @@ export interface UserRepository {
 
   userUniversity(userId: number): Promise<University>;
 
-  staffList(userId: number): Promise<Array<StaffInfo>>;
-  staffApprove(userId: number, acceptedIds: number[]): Promise<void>;
-  staffReject(userId: number, rejectIds: number[]): Promise<void>;
+  staffList(): Promise<Array<StaffInfo>>;
+  staffApprove(acceptedIds: number): Promise<void>;
+  staffRejects(rejectIds: number): Promise<void>;
 };
