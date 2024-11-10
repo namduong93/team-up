@@ -4,7 +4,7 @@ import { University } from "../models/university/university.js";
 import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 import './competition/sqldb'
-import { CompetitionSite } from '../../shared_types/Competition/CompetitionSite.js';
+import { CompetitionSite, CompetitionSiteCapacity } from '../../shared_types/Competition/CompetitionSite.js';
 import { SeatAssignment } from "../models/team/team.js";
 import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
@@ -65,4 +65,6 @@ export interface CompetitionRepository {
   competitionIdFromCode(code: string): Promise<number>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject>>;
   competitionAlgorithm(compId: number, userId: number): Promise<{} | undefined>;
+
+  competitionSiteCapacity(compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity> | undefined>;
 }
