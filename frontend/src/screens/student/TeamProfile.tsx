@@ -49,7 +49,6 @@ export const TeamProfile: FC = () => {
     siteId: 0,
     teamName: "",
     teamSite: "",
-    siteId: 0,
     teamSeat: "",
     teamLevel: "",
     startDate: new Date(),

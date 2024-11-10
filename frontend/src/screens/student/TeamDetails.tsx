@@ -90,7 +90,7 @@ export const TeamDetails: FC = () => {
   };
 
   // TODO: waiting for backend route to get 1 paritcipant comp details
-  const fetchStudentDetails = (id: string): StudentInfo => {
+  const fetchStudentDetails = (id: number): StudentInfo => {
     console.log("fetching for studentID: ", id);
     // BACKEND FETCH HERE:
 
@@ -176,7 +176,7 @@ export const TeamDetails: FC = () => {
       </StudentsContainer>
       {editingPreferences && (
         <EditCompPreferences
-          student={editingPreferences}
+          student={fetchStudentDetails(editingPreferences.userId)}
           onSave={handleSave}
           onClose={() => setEditingPreferences(null)}
         />
