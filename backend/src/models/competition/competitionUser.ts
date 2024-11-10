@@ -112,12 +112,12 @@ export const enum AlgoConversion {
   INTERNATION_PRIZE = 1800,
 }
 
-export const enum DefaultUniCourses {
-  INTRO_COURSE = 'Introduction to Programming / Programming Fundamentals',
-  DSA_COURSE = 'Data Structures and Algorithms',
-  ADVANCED_ALGO_COURSE = 'Algorithm Design and Analysis',
-  CHALLENGE_COURSE = 'Programming Challenges and Problems',
-}
+// export const enum DefaultUniCourses {
+//   INTRO_COURSE = 'Introduction to Programming / Programming Fundamentals',
+//   DSA_COURSE = 'Data Structures and Algorithms',
+//   ADVANCED_ALGO_COURSE = 'Algorithm Design and Analysis',
+//   CHALLENGE_COURSE = 'Programming Challenges and Problems',
+// }
 
 export const enum TeamStatus {
   Pending = 'Pending',

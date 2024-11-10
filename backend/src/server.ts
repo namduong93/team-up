@@ -203,6 +203,11 @@ app.put('/competition/coach/site_approve', competitionController.competitionAppr
 // RESPONSE: {}
 app.put('/competition/staff/seat_assignments', competitionController.competitionTeamSeatAssignments);
 
+// Coach registers teams for competition
+// PARAMS: { compId: number, teamIds: Array<number> }
+// RESPONSE: {}
+app.put('/competition/staff/register_teams', competitionController.competitionRegisterTeams);
+
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
 app.get('/competition/universities/list', competitionController.competitionUniversitiesList)
@@ -288,11 +293,19 @@ app.get('/competition/sites', competitionController.competitionSites);
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
 
+app.get('/university/courses', universityController.universityCourses);
+
 app.post('/competition/teams/update', competitionController.competitionTeamsUpdate);
 
 app.post('/competition/students/update', competitionController.competitionStudentsUpdate);
 
 app.post('/competition/staff/update', competitionController.competitionStaffUpdate);
+
+app.get('/competition/staff/rego_toggles', competitionController.competitionStaffRegoToggles);
+
+app.post('/competition/staff/update_rego_toggles', competitionController.competitionStaffUpdateRegoToggles);
+
+app.get('/competition/students/rego_toggles', competitionController.competitionStudentsRegoToggles);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
