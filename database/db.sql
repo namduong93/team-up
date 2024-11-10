@@ -53,12 +53,13 @@ CREATE TABLE users (
   
 
   university_id INT REFERENCES universities (id),
+  user_access user_access_enum,
 
   -- student info
   student_id TEXT, --- NULL if not a student
 
   -- staff info
-  user_access user_access_enum,
+  
 
   -- system admin info
 

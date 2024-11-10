@@ -23,4 +23,5 @@ export interface UserRepository {
   userUniversity(userId: number): Promise<University>;
 
   staffList(userId: number): Promise<Array<StaffInfo>>;
+  staffApprove(userId: number, acceptedIds: number[]): Promise<void>;
 };

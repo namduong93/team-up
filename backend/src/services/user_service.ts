@@ -189,4 +189,8 @@ export class UserService {
   staffList = async (userId: number): Promise<Array<StaffInfo> | undefined> => {
     return this.userRepository.staffList(userId);
   }
+
+  staffApprove = async (userId: number, acceptedIds: number[]): Promise<void> => {
+    await this.userRepository.staffApprove(userId, acceptedIds);
+  }
 }

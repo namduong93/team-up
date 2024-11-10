@@ -124,6 +124,8 @@ app.get('/user/type', userController.userType);
 // RESPONSE: { staff: Array<{id: number, name: string, email: string}>}
 app.get('/user/staff_list', userController.staffList);
 
+app.put('/user/staff_approve', userController.staffApprove)
+
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
 // PARAMS: { name: string, earlyRegDeadline, generalRegDeadline, code, startDate, region,

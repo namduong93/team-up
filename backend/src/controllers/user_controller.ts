@@ -173,4 +173,12 @@ export class UserController {
     res.json(staffList);
     return;
   })
+
+  staffApprove = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { approveIds } = req.body;
+    const result = await this.userService.staffApprove(Number(userId), approveIds);
+    res.json(result);
+    return;
+  });
 }

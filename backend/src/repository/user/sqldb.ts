@@ -50,8 +50,8 @@ export class SqlDbUserRepository implements UserRepository {
     //Add user to users table
     const userQuery =
       `INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs,
-      user_type, university_id, student_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+      user_type, university_id, student_id, user_access)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, &14)
       RETURNING id;
     `;
     const userValues = [
@@ -67,7 +67,8 @@ export class SqlDbUserRepository implements UserRepository {
       accessibilityReqs,
       'student',
       student.universityId,
-      student.studentId
+      student.studentId,
+      'Accepted'
     ];
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id;
@@ -105,8 +106,8 @@ export class SqlDbUserRepository implements UserRepository {
     }
 
     const userQuery = `INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs,
-      user_type, university_id, student_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+      user_type, university_id, student_id, user_access)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING id;
     `;
     const userValues = [
@@ -122,7 +123,8 @@ export class SqlDbUserRepository implements UserRepository {
       accessibilityReqs,
       'staff',
       staff.universityId,
-      null
+      null,
+      'Pending'
     ];
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id;
@@ -322,5 +324,18 @@ export class SqlDbUserRepository implements UserRepository {
 
     const dbResult = await this.pool.query('SELECT * FROM users WHERE user_access IN ($1, $2) AND user_type != $3', ['Pending', 'Accepted', 'student'])
     return dbResult.rows;
+  }
+
+  staffApprove = async (userId: number, acceptedIds: number[]): Promise<void> => {
+    const userCheckAdmin = await this.pool.query('SELECT user_type FROM users u WHERE u.id = $1', [userId])
+    const userAccess = userCheckAdmin.rows
+
+    if (userAccess[0].user_type !== 'system_admin') {
+      throw new DbError(DbError.Query, 'User cannot access this list.');
+    }
+
+    for (let x = 0; x < acceptedIds.length; x++){
+      await this.pool.query('UPDATE users SET user_access = $1 WHERE id = $2;', ['Accepted', acceptedIds[x]])
+    }
   }
 }
