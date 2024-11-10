@@ -324,6 +324,6 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   staffRejects = async (rejectIds: number): Promise<void> => {
-    await this.pool.query('UPDATE users SET user_access = $1 WHERE id = $1;', ['Rejected', rejectIds])
+    await this.pool.query('DELETE FROM users WHERE user_access = $1 AND id = $2;', ['Rejected', rejectIds])
   }
 }
