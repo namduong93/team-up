@@ -294,11 +294,11 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   }, [universityOption]);
 
   const handleRegoEditSubmit = async (regoFields: EditRego) => {
-    // await sendRequest.post("/competition/staff/update_rego_toggles", {
-    //   compId: parseInt(compId as string),
-    //   regoFields,
-    //   universityId: parseInt(universityOption.value),
-    // });
+    await sendRequest.post("/competition/staff/update_rego_toggles", {
+      compId: parseInt(compId as string),
+      regoFields,
+      universityId: parseInt(universityOption.value),
+    });
     // TO-DO: send the edited courses to backend and store for competition
     console.log(editCourse);
     console.log(regoFields);
