@@ -31,7 +31,6 @@ export const StaffManage: FC = () => {
   return (
     <ManageContainer>
       <StaffActionCard universityOption={universityOption} staffRoles={roles} compCode={compCode}/>
-
     </ManageContainer>
   );
 };

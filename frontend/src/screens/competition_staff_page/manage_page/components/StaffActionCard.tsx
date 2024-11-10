@@ -11,8 +11,10 @@ import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
 import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
+import { EditSiteCapacityPopUp } from "./EditSiteCapacityPopUp";
 import { sendRequest } from "../../../../utility/request";
 import { useParams } from "react-router-dom";
+
 type ActionType =
   | "code"
   | "competition"
@@ -156,13 +158,13 @@ const CodeCardText = styled(CardText)`
   font-size: 1.25rem;
 `;
 
-const Title2 = styled.h2`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 22px;
-  white-space: pre-wrap;
-  word-break: break-word;
-`;
+// const Title2 = styled.h2`
+//   margin-top: 40px;
+//   margin-bottom: 20px;
+//   font-size: 22px;
+//   white-space: pre-wrap;
+//   word-break: break-word;
+// `;
 
 export const DEFAULT_REGO_FIELDS = {
   enableCodeforcesField: true,
@@ -179,7 +181,8 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
-  const [showEditRego, setShowEditRego] = useState(false);
+  // const [showEditRego, setShowEditRego] = useState(false);
+  const [showEditCapacity, setShowEditCapacity] = useState(false);
 
   const actions = [
     {
@@ -231,7 +234,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     } else if (actionType === "contact") {
       setShowContactBio(true);
     } else if (actionType === "registration") {
-      setShowEditRego(true);
+      // setShowEditRego(true);
+    } else if (actionType === "capacity") {
+      setShowEditCapacity(true);
     }
   };
 
@@ -257,7 +262,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   };
 
   // TO-DO: call the backend to retrive the previous options
-  const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
+  // const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   useEffect(() => {
@@ -267,21 +272,28 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       setIsFirstLoad(false);
       return;
     }
-    const fetchRegoFields = async () => {
-      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
-        { compId, universityId: universityOption.value });
-      const { regoFields: receivedRegoFields } = response.data;
-      setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
-    }
-    fetchRegoFields();
+    // const fetchRegoFields = async () => {
+    //   const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
+    //     { compId, universityId: universityOption.value });
+    //   const { regoFields: receivedRegoFields } = response.data;
+    //   setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
+    // }
+    // fetchRegoFields();
   }, [universityOption]);
 
-  const handleRegoEditSubmit = async (regoFields: EditRego) => {
-    // TO-DO: send the EditRego to backend for storage
-    await sendRequest.post('/competition/staff/update_rego_toggles',
-      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
-    console.log(regoFields);
-    console.log("submitted");
+  // const handleRegoEditSubmit = async (regoFields: EditRego) => {
+  //   // TO-DO: send the EditRego to backend for storage
+  //   await sendRequest.post('/competition/staff/update_rego_toggles',
+  //     { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
+  //   console.log(regoFields);
+  //   console.log("submitted");
+  // };
+
+  const handleSiteCapacityChange = (site: { label: string, value: number }, capacity: number) => {
+    // TODO: backend PUT (update) the site capacity for a given site Id and new capacity
+    console.log(`updating site ${site.label} with id ${site.value} with capacity: ${capacity}`);
+
+    setShowEditCapacity(false);
   };
 
   return (
@@ -336,7 +348,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
             />
           )}
 
-          {showEditRego && (
+          {/* {showEditRego && (
             <EditCompRegoPopUp
               heading={
                 <Title2>
@@ -348,6 +360,14 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
               regoFields={regoFields}
               setRegoFields={setRegoFields}
               onSubmit={handleRegoEditSubmit}
+            />
+          )} */}
+
+          {showEditCapacity && (
+            <EditSiteCapacityPopUp 
+              heading={"Update Site Capacities"} 
+              onClose={() => setShowEditCapacity(false)} 
+              onSubmit={handleSiteCapacityChange}            
             />
           )}
         </>
