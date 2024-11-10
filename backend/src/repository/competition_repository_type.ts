@@ -10,10 +10,15 @@ import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competit
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../shared_types/Competition/staff/AttendeesDetails.js";
+import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionStudentsRegoToggles(userId: number, code: string): Promise<EditRego>;
+  competitionStaffUpdateRegoToggles(userId: number, compId: number, regoFields: EditRego, universityId?: number): Promise<void>;
+  competitionStaffRegoToggles(userId: number, compId: number, universityId?: number): Promise<EditRego>;
+  competitionCoachCheck(userId: number, compId: number): Promise<void>;
   competitionStaffUpdate(userId: number, staffList: StaffInfo[], compId: number): Promise<void>;
   competitionStudentsUpdate(userId: number, studentList: StudentInfo[], compId: number): Promise<void>;
   coachCheckIdsStudent (userId: number, userIds: Array<number>, compId: number): Promise<void>;
@@ -47,7 +52,7 @@ export interface CompetitionRepository {
   competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;
   competitionApproveSiteChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   competitionTeamSeatAssignments(userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}>;
-
+  competitionRegisterTeams(userId: number, compId: number, teamIds: Array<number>): Promise<{}>;
 
   competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{}>;
   competitionUniversitiesList(compId: number): Promise<Array<UniversityDisplayInfo> | undefined>;

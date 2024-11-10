@@ -1,18 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface TextInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PasswordInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
-  name?: string;
   placeholder?: string;
-  type?: string;
+  type: string;
   required?: boolean;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   width?: string;
 }
 
-export const TextInputLight: React.FC<TextInputLightProps> = ({
+export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
   label,
   placeholder,
   type = 'text',
@@ -65,12 +64,10 @@ export const Input = styled.input`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
+  border: 1px solid ${({ theme }) => theme.colours.notifDark};
   border-radius: 10px;
   margin-bottom: 5px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
 `;
-
-export default TextInputLight;

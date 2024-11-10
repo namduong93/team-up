@@ -5,7 +5,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
+import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, SeatAssignment, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
@@ -15,13 +15,128 @@ import { ParticipantTeamDetails, TeamDetails } from "../../../shared_types/Compe
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails.js";
+import { CourseCategory } from "../../../shared_types/University/Course.js";
 import { error } from "console";
+import { EditRego } from "../../../shared_types/Competition/staff/Edit.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
 
   constructor(pool: Pool) {
     this.pool = pool;
+  }
+
+  competitionStudentsRegoToggles = async (userId: number, code: string) => {
+    const dbResult = await this.pool.query(
+      `SELECT 
+        enable_codeforces_field,
+        enable_national_prizes_field,
+        enable_international_prizes_field,
+        enable_regional_participation_field
+      FROM competition_registration_toggles AS crt
+      JOIN competitions AS c ON c.id = crt.competition_id
+      JOIN competition_users AS cu ON cu.competition_id = crt.competition_id
+      WHERE cu.user_id = ${userId} AND c.code = '{${code}}'
+      `
+    );
+
+    return dbResult.rows[0];
+  }
+
+  competitionStaffUpdateRegoToggles = async (userId: number, compId: number, regoFields: EditRego, universityId?: number) => {
+
+    const uniId = universityId || (await this.pool.query(
+      `SELECT u.university_id AS "universityId"
+      FROM users AS u
+      WHERE u.id = ${userId}
+      `)).rows[0].universityId;
+
+    // if (!universityId) {
+
+      await this.pool.query(
+        `INSERT INTO competition_registration_toggles (
+          competition_id,
+          university_id,
+          enable_codeforces_field,
+          enable_national_prizes_field,
+          enable_international_prizes_field,
+          enable_regional_participation_field
+        )
+        VALUES (${compId}, ${uniId},
+          ${regoFields.enableCodeforcesField}, ${regoFields.enableNationalPrizesField},
+          ${regoFields.enableInternationalPrizesField}, ${regoFields.enableRegionalParticipationField}
+        )
+        ON CONFLICT (competition_id, university_id)
+        DO UPDATE
+        SET
+          enable_codeforces_field = ${regoFields.enableCodeforcesField},
+          enable_national_prizes_field = ${regoFields.enableNationalPrizesField},
+          enable_international_prizes_field = ${regoFields.enableInternationalPrizesField},
+          enable_regional_participation_field = ${regoFields.enableRegionalParticipationField}
+        `
+      );
+      return;
+    // }
+
+    // await this.pool.query(
+    //   `UPDATE competition_registration_toggles
+    //   SET
+    //     enable_codeforces_field = ${regoFields.enableCodeforcesField},
+    //     enable_national_prizes_field = ${regoFields.enableNationalPrizesField},
+    //     enable_international_prizes_field = ${regoFields.enableInternationalPrizesField},
+    //     enable_regional_participation_field = ${regoFields.enableRegionalParticipationField}
+    //   WHERE competition_id = ${compId} AND university_id = ${universityId}
+    //   `
+    // );
+    // return;
+  }
+
+  competitionStaffRegoToggles = async (userId: number, compId: number, universityId?: number) => {
+
+    if (!universityId) {
+      // If user did not provide a uni id assume they are the coach of the competition and find for their uni
+      const dbResult = await this.pool.query(
+        `SELECT 
+          enable_codeforces_field AS "enableCodeforcesField",
+          enable_national_prizes_field AS "enableNationalPrizesField",
+          enable_international_prizes_field AS "enableInternationalPrizesField",
+          enable_regional_participation_field AS "enableRegionalParticipationField"
+        FROM competition_registration_toggles AS crt
+        JOIN competition_users AS cu ON cu.competition_id = crt.competition_id
+        JOIN users AS u ON u.id = cu.user_id
+        WHERE u.id = ${userId} AND u.university_id = crt.university_id AND crt.competition_id = ${compId};
+        `
+      )
+
+      return dbResult.rows[0];
+    }
+
+    // otherwise
+    const dbResult = await this.pool.query(
+      `SELECT 
+        enable_codeforces_field AS "enableCodeforcesField",
+        enable_national_prizes_field AS "enableNationalPrizesField",
+        enable_international_prizes_field AS "enableInternationalPrizesField",
+        enable_regional_participation_field AS "enableRegionalParticipationField"
+      FROM competition_registration_toggles AS crt
+      WHERE crt.university_id = ${universityId} AND crt.competition_id = ${compId};
+      `
+    );
+    return dbResult.rows[0];
+  }
+
+  competitionCoachCheck = async (userId: number, compId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT cu.competition_id AS "competitionId"
+      FROM competition_users AS cu
+      WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}
+      `
+    );
+    if (!dbResult.rowCount) {
+      throw new DbError(DbError.Auth, 'User is not a coach for this competition');
+    }
+
+    return;
   }
 
   competitionStaffUpdate = async (userId: number, staffList: StaffInfo[], compId: number) => {
@@ -92,7 +207,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
   }
 
-  coachCheckIds = async (userId: number, teamIds: Array<number>, compId: number) => {
+  coachCheckIds = 
+  async (userId: number, teamIds: Array<number>, compId: number) => {
     // Check if the coach is coaching all the teams in approveIds
     const coachCheckQuery = `
     SELECT id
@@ -1191,6 +1307,48 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
+  competitionRegisterTeams = async(userId: number, compId: number, teamIds: Array<number>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      await this.coachCheckIds(userId, teamIds, compId);
+    }
+
+    // Update the team status to 'Registered'
+    const registerQuery = `
+      UPDATE competition_teams
+      SET team_status = 'Registered'::competition_team_status
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+    `;
+    const registerResult = await this.pool.query(registerQuery, [teamIds, compId]);
+
+    // If no rows were updated, it implies that no matching records were found
+    if (registerResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "No matching teams found for the provided team IDs in this competition.");
+    }
+
+    return {};
+  }
+
   competitionStaffJoin = async (competitionId: number, staffCompetitionInfo: CompetitionStaff): Promise<{}> => {
     console.log(staffCompetitionInfo);
     const userId = staffCompetitionInfo.userId;
@@ -1385,16 +1543,16 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       if(student.codeforcesRating) {
         student.algoPoint = Math.max(student.algoPoint, student.codeforcesRating);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.INTRO_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.Introduction)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTRO_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.DSA_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.DataStructures)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.DSA_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.ADVANCED_ALGO_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.AlgorithmDesign)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.ADVANCED_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.CHALLENGE_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.ProgrammingChallenges)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.CHALLENGE_COURSE);
       }
       if(student.nationalPrizes) {
