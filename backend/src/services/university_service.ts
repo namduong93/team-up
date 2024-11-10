@@ -5,14 +5,18 @@ import { UniversityRepository } from "../repository/university_repository_type.j
 export type SessionIdObject = { sessionId: string };
 
 export class UniversityService {
-  private userRepository: UniversityRepository;
-
+  private universityRepository: UniversityRepository;
+  
   constructor(userRepository: UniversityRepository) {
-    this.userRepository = userRepository;
+    this.universityRepository = userRepository;
+  }
+
+  universityCourses = async (userId: number) => {
+    return await this.universityRepository.universityCourses(userId);
   }
 
   universitiesList = async (): Promise<UniversityListObject> => {
-    let universitiesList = await this.userRepository.universitiesList();
+    let universitiesList = await this.universityRepository.universitiesList();
     return universitiesList;
   };
 

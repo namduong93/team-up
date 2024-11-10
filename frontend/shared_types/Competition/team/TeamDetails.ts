@@ -4,6 +4,8 @@ import { StudentInfo } from "../student/StudentInfo";
 export interface Student {
   userId: number;
   name: string;
+  preferredName: string;
+  sex: string;
   email: string;
   bio: string;
   preferredContact: string;
