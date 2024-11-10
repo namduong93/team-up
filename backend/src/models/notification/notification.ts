@@ -1,3 +1,6 @@
+/**
+ * Represents a notification.
+ */
 export interface Notification {
   id?: number;
   userId: number;
@@ -13,6 +16,9 @@ export interface Notification {
   siteLocation?: string;
 }
 
+/**
+ * Enum representing different types of notifications.
+ */
 export enum NotificationType {
   WELCOME_ACCOUNT = 'welcomeAccount',
   WELCOME_COMPETITION = 'welcomeCompetition',

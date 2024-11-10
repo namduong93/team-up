@@ -10,6 +10,9 @@ export class NotificationController {
     this.notificationService = notificationService;
   }
 
+  /**
+   * Handles the removal of a notification.
+   */
   notificationRemove = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const notificationId = req.query.notificationId;
     const result = await this.notificationService.notificationRemove(Number(notificationId));
@@ -18,6 +21,9 @@ export class NotificationController {
     return;
   });
 
+  /**
+   * Handles the request to get the list of notifications for a user.
+   */
   userNotificationsList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const notifications = await this.notificationService.userNotificationsList(Number(userId));
