@@ -299,6 +299,15 @@ app.get('/competition/sites', competitionController.competitionSites);
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
+// PARAMS: { compId }
+// RESPONSE: { announcement: Announcement }
+app.get('/competition/announcements', competitionController.competitionAnnouncement);
+
+// PARAMS: { compId, announcementMessage: string }
+// RESPONSE: {}
+app.put('/competition/announcements', competitionController.competitionAnnouncementUpdate);
+
+
 
 app.post('/competition/teams/update', competitionController.competitionTeamsUpdate);
 

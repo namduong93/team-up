@@ -10,6 +10,7 @@ import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competit
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../shared_types/Competition/staff/AttendeesDetails.js";
+import { Announcement } from "../../shared_types/Competition/staff/Announcement.js";
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
@@ -52,6 +53,8 @@ export interface CompetitionRepository {
 
 
   competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{}>;
+  competitionAnnouncement(compId: number, university: University): Promise< Announcement | undefined>;
+  competitionAnnouncementUpdate(compId: number, university: University, announcement: Announcement): Promise<void>;
   competitionUniversitiesList(compId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
   competitionIdFromCode(code: string): Promise<number>;

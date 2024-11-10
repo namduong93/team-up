@@ -164,6 +164,16 @@ CREATE TABLE competition_teams (
   competition_id INT NOT NULL REFERENCES competitions (id)
 );
 
+CREATE TABLE competition_announcements (
+  id SERIAL PRIMARY KEY,
+  
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  user_id INT NOT NULL REFERENCES users (id),
+  university_id INT NOT NULL REFERENCES universities (id),
+  message TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL
+);
+
 CREATE TYPE notification_type_enum AS ENUM (
   'welcomeAccount',
   'welcomeCompetition',

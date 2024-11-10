@@ -12,6 +12,7 @@ import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js"
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { CompetitionRole } from "../../shared_types/Competition/CompetitionRole.js";
+import {Announcement} from "../../shared_types/Competition/staff/Announcement.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -471,6 +472,38 @@ export class CompetitionService {
     await this.competitionRepository.competitionStaffJoin(competitionId, competitionStaffInfo);
     
     return {};
+  }
+
+  competitionAnnouncement = async (userId: number, compId: number): Promise< {} | undefined> => {
+    let university = await this.userRepository.userUniversity(userId);
+
+    if(!university) {
+      throw new ServiceError(ServiceError.NotFound, 'User not belong to any university');
+    }
+
+    let announcement = await this.competitionRepository.competitionAnnouncement(compId, university);
+    return { announcement };
+  }
+
+  competitionAnnouncementUpdate = async (userId: number, compId: number, announcementMessage: string): Promise<void> => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.COACH)) {
+      throw new ServiceError(ServiceError.Auth, 'User is not a coach for this competition.');
+    }
+    let university = await this.userRepository.userUniversity(userId);
+
+    if (!university) {
+      throw new ServiceError(ServiceError.NotFound, 'University not found');
+    }
+    let announcement = {
+      competitionId: compId,
+      userId: userId,
+      message: announcementMessage,
+      universityId: university.id,
+      createdAt: Date.now()
+    };
+
+    await this.competitionRepository.competitionAnnouncementUpdate(compId, university, announcement);
   }
 
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {

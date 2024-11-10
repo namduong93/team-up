@@ -17,6 +17,7 @@ import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js"
 import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails.js";
 import { error } from "console";
 import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole.js";
+import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
@@ -1308,6 +1309,55 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
 
     return {};
+  }
+
+  competitionAnnouncement = async (compId: number, university: University): Promise< Announcement | undefined> => {
+    const announcementResult = await this.pool.query(
+      `SELECT id, message, created_date AS "createdDate", university_id AS "universityId"
+      FROM competition_announcements
+      WHERE competition_id = $1 AND university_id = $2`,
+      [compId, university.id]
+    );
+    if(announcementResult.rowCount === 0) {
+      return;
+    }
+    const announcement = announcementResult.rows[0];
+    return {
+      competitionId: compId,
+      message: announcement.message,
+      createdAt: announcement.createdDate,
+      universityId: announcement.universityId
+    };
+  }
+
+  competitionAnnouncementUpdate = async (compId: number, university: University, announcement: Announcement): Promise<void> => {
+    const announcementResult = await this.pool.query(`
+      SELECT id, message, created_date AS "createdDate", university_id AS "universityId"
+      FROM competition_announcements
+      WHERE competition_id = $1 AND university_id = $2`,
+      [compId, university.id]
+    );
+    if(announcementResult.rowCount === 0) {
+      const announcementInsertResult = await this.pool.query(`
+        INSERT INTO competition_announcements (competition_id, user_id, message, university_id, created_at)
+        VALUES ($1, $2, $3, $4, $5)`, 
+        [compId, announcement.userId, announcement.message, announcement.universityId, announcement.createdAt]);
+      if(announcementInsertResult.rowCount === 0) {
+        throw new DbError(DbError.Insert, "Failed to insert announcement.");
+      }
+    }
+    else {
+      const announcementUpdateResult = await this.pool.query(`
+        UPDATE competition_announcements
+        SET message = $1, created_date = $2
+        WHERE competition_id = $3 AND university_id = $4`,
+        [announcement.message, announcement.createdAt, compId, university.id]
+      );
+      if(announcementUpdateResult.rowCount === 0) {
+        throw new DbError(DbError.Update, "Failed to update announcement.");
+      }
+    }
+    return ;
   }
 
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {

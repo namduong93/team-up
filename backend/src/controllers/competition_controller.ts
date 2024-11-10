@@ -320,10 +320,29 @@ export class CompetitionController {
     return;
   })
 
+  competitionAnnouncement = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId, compId } = req.query;
+    const announcement = await this.competitionService.competitionAnnouncement(
+      parseInt(userId as string), parseInt(compId as string));
+    
+    res.json(announcement);
+    return;
+  });
+
+  competitionAnnouncementUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId } = req.query;
+    const { compId } = req.body;
+    const announcementMessage = req.body.announcementMessage;
+    await this.competitionService.competitionAnnouncementUpdate(
+      parseInt(userId as string), parseInt(compId as string), announcementMessage);
+    res.json({});
+    return;
+  });
+
   competitionStaffJoinSiteCoordinator = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({});
     return;
-  })
+  });
 
   competitionStaffJoinAdmin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({});
