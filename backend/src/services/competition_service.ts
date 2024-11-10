@@ -12,6 +12,7 @@ import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js"
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { CompetitionRole } from "../../shared_types/Competition/CompetitionRole.js";
+import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -63,6 +64,57 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+
+  competitionStudentsRegoToggles = async (userId: number, code: string) => {
+    return await this.competitionRepository.competitionStudentsRegoToggles(userId, code);
+  }
+
+  competitionStaffUpdateRegoToggles = async (userId: number, compId: number, regoFields: EditRego, universityId: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      if (!roles.includes(CompetitionUserRole.COACH)) {
+        throw new ServiceError(ServiceError.Auth, 'User is not an Admin or a Coach');
+      }
+
+      await this.competitionRepository.competitionCoachCheck(userId, compId);
+    } else {
+
+      if (!universityId) {
+        throw new ServiceError(ServiceError.Auth, 'Admins need to provide a university id');
+      }
+
+      await this.competitionRepository.competitionStaffUpdateRegoToggles(userId, compId, regoFields, universityId as number);
+      return;
+    }
+
+    await this.competitionRepository.competitionStaffUpdateRegoToggles(userId, compId, regoFields);
+    return;
+  }
+
+  competitionStaffRegoToggles = async (userId: number, compId: number, universityId?: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      if (!roles.includes(CompetitionUserRole.COACH)) {
+
+        throw new ServiceError(ServiceError.Auth, 'User is not an Admin or a Coach');
+      }
+
+      await this.competitionRepository.competitionCoachCheck(userId, compId);
+
+
+    } else {
+
+      if (!universityId) {
+        throw new ServiceError(ServiceError.Auth, 'Admins need to provide a university id');
+      }
+
+      return await this.competitionRepository.competitionStaffRegoToggles(userId, compId, universityId as number);
+    }
+
+    return await this.competitionRepository.competitionStaffRegoToggles(userId, compId); 
   }
 
   competitionStaffUpdate = async (userId: number, staffList: StaffInfo[], compId: number) => {

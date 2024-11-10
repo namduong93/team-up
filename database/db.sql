@@ -92,6 +92,20 @@ CREATE TABLE competitions (
   region TEXT NOT NULL
 );
 
+CREATE TABLE competition_registration_toggles (
+  id SERIAL PRIMARY KEY,
+
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  university_id INT NOT NULL REFERENCES universities (id),
+
+  enable_codeforces_field BOOLEAN DEFAULT TRUE,
+  enable_national_prizes_field BOOLEAN DEFAULT TRUE,
+  enable_international_prizes_field BOOLEAN DEFAULT TRUE,
+  enable_regional_participation_field BOOLEAN DEFAULT TRUE,
+
+  CONSTRAINT unique_competition_uni_toggle UNIQUE (competition_id, university_id)
+);
+
 CREATE TABLE competition_sites (
   id SERIAL PRIMARY KEY,
 
@@ -1278,6 +1292,13 @@ INSERT INTO competition_teams (
 VALUES
 (4, 'Charizard', 'Unregistered'::competition_team_status, NULL, 3, ARRAY[15, 16, 17], 5, 1, 'Bongo11', 2, NULL),
 (4, 'Wimpod', 'Unregistered'::competition_team_status, 'Snorlax', 3, ARRAY[18, 19, 20], 5, 1, 'Organ20', 2, 4);
+
+INSERT INTO competition_registration_toggles (
+  competition_id, university_id,
+  enable_codeforces_field, enable_national_prizes_field,
+  enable_international_prizes_field, enable_regional_participation_field
+)
+VALUES (4, 5, TRUE, TRUE, FALSE, TRUE);
 
 INSERT INTO courses (name, category, university_id)
 VALUES
