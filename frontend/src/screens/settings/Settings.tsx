@@ -12,6 +12,7 @@ import staffFAQs from "./faq_staff.json";
 import studentFAQs from "./faq_student.json";
 import adminFAQs from "./faq_admin.json";
 import Fuse from "fuse.js";
+import { UpdatePassword } from "./UpdatePassword";
 
 interface FAQ {
   question: string;
@@ -95,6 +96,7 @@ const DropdownContent = styled.div<{ $isOpen: boolean }>`
   overflow: hidden;
   transition: max-height 0.3s ease !important;
   margin: 10px 15px;
+  width: 100%;
 `;
 
 const FAQSearchBar = styled(SearchBar)`
@@ -103,6 +105,7 @@ const FAQSearchBar = styled(SearchBar)`
 
 export const Settings: FC = () => {
   const [theme, setTheme] = useState<string>("light");
+  const [passwordOpen, setPasswordOpen] = useState<boolean>(false);
   const [faq, setFAQ] = useState<FAQ[]>([]);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [faqOpen, setFaqOpen] = useState(false);
@@ -161,6 +164,19 @@ export const Settings: FC = () => {
       <Background>
         <SettingsContainer>
           <Title>Settings Page</Title>
+
+          <DropdownContainer>
+            <DropdownHeader
+              $isOpen={passwordOpen}
+              onClick={() => setPasswordOpen(!passwordOpen)}
+            >
+              Update Password
+              <FaChevronDown />
+            </DropdownHeader>
+            <DropdownContent $isOpen={passwordOpen}>
+              <UpdatePassword isOpen={passwordOpen} />
+            </DropdownContent>
+          </DropdownContainer>
 
           <DropdownContainer>
             <DropdownHeader
