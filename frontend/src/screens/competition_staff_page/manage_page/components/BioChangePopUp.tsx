@@ -152,7 +152,7 @@ export const BioChangePopUp: FC<BioChangePopUpProps> = ({
   announcementValue,
   onAnnouncementChange,
 }) => {
-  const isButtonDisabled = () => bioValue === "" || announcementValue === "";
+  const isButtonDisabled = () => bioValue === "" && announcementValue === "";
 
   return (
     <ModalOverlay>

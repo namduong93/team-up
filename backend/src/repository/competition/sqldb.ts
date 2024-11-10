@@ -5,7 +5,7 @@ import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, Compet
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
-import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole, DefaultUniCourses } from "../../models/competition/competitionUser.js";
+import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../../models/competition/competitionUser.js";
 import { DEFAULT_TEAM_SIZE, SeatAssignment, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
@@ -15,6 +15,7 @@ import { ParticipantTeamDetails, TeamDetails } from "../../../shared_types/Compe
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails.js";
+import { CourseCategory } from "../../../shared_types/University/Course.js";
 import { error } from "console";
 import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole.js";
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
@@ -94,7 +95,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
   }
 
-  coachCheckIds = async (userId: number, teamIds: Array<number>, compId: number) => {
+  coachCheckIds = 
+  async (userId: number, teamIds: Array<number>, compId: number) => {
     // Check if the coach is coaching all the teams in approveIds
     const coachCheckQuery = `
     SELECT id
@@ -1258,6 +1260,48 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return {};
   }
 
+  competitionRegisterTeams = async(userId: number, compId: number, teamIds: Array<number>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      await this.coachCheckIds(userId, teamIds, compId);
+    }
+
+    // Update the team status to 'Registered'
+    const registerQuery = `
+      UPDATE competition_teams
+      SET team_status = 'Registered'::competition_team_status
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+    `;
+    const registerResult = await this.pool.query(registerQuery, [teamIds, compId]);
+
+    // If no rows were updated, it implies that no matching records were found
+    if (registerResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "No matching teams found for the provided team IDs in this competition.");
+    }
+
+    return {};
+  }
+
   competitionStaffJoin = async (competitionId: number, staffCompetitionInfo: CompetitionStaff): Promise<{}> => {
     console.log(staffCompetitionInfo);
     const userId = staffCompetitionInfo.userId;
@@ -1503,16 +1547,16 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       if(student.codeforcesRating) {
         student.algoPoint = Math.max(student.algoPoint, student.codeforcesRating);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.INTRO_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.Introduction)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTRO_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.DSA_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.DataStructures)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.DSA_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.ADVANCED_ALGO_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.AlgorithmDesign)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.ADVANCED_COURSE);
       }
-      if(student.universityCourses.includes(DefaultUniCourses.CHALLENGE_COURSE)) {
+      if(student.universityCourses.includes(CourseCategory.ProgrammingChallenges)) {
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.CHALLENGE_COURSE);
       }
       if(student.nationalPrizes) {

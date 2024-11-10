@@ -50,7 +50,7 @@ export interface CompetitionRepository {
   competitionRequestSiteChange(userId: number, compId: number, newSiteId: number): Promise<number>;
   competitionApproveSiteChange(userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}>;
   competitionTeamSeatAssignments(userId: number, compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}>;
-
+  competitionRegisterTeams(userId: number, compId: number, teamIds: Array<number>): Promise<{}>;
 
   competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{}>;
   competitionAnnouncement(compId: number, university: University): Promise< Announcement | undefined>;
