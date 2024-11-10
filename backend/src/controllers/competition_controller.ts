@@ -163,6 +163,24 @@ export class CompetitionController {
 
     res.json({studentDetails});
   });
+
+  competitionStaffDetails = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const staffDetails = await this.competitionService.competitionStaffDetails(
+      parseInt(userId as string), parseInt(compId as string));
+
+    res.json({staffDetails});
+  });
+
+  competitionStaffDetailsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const { compId } = req.body;
+    const staffDetails = req.body.staffInfo as StaffInfo;
+    await this.competitionService.competitionStaffDetailsUpdate(
+      parseInt(userId as string), parseInt(compId as string), staffDetails);
+    res.json({});
+  });
   
   /**
    * Handles the request to get competition staff by user ID and competition ID.
@@ -428,10 +446,29 @@ export class CompetitionController {
     return;
   })
 
+  competitionAnnouncement = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId, compId, universityId } = req.query;
+    const announcement = await this.competitionService.competitionAnnouncement(
+      parseInt(userId as string), parseInt(compId as string), parseInt(universityId as string));
+    
+    res.json(announcement);
+    return;
+  });
+
+  competitionAnnouncementUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId } = req.query;
+    const { compId, universityId } = req.body;
+    const announcementMessage = req.body.announcementMessage;
+    await this.competitionService.competitionAnnouncementUpdate(
+      parseInt(userId as string), parseInt(compId as string), announcementMessage, parseInt(universityId as string));
+    res.json({});
+    return;
+  });
+
   competitionStaffJoinSiteCoordinator = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({});
     return;
-  })
+  });
 
   competitionStaffJoinAdmin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({});

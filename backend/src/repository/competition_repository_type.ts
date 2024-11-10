@@ -11,6 +11,7 @@ import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../shared_types/Competition/staff/AttendeesDetails.js";
 import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { Announcement } from "../../shared_types/Competition/staff/Announcement.js";
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
@@ -37,6 +38,8 @@ export interface CompetitionRepository {
   competitionTeamInviteCode(userId: number, compId: number): Promise<string>;
   competitionTeamJoin(userId: number, compId: number, teamCode: string, university: University): Promise<CompetitionTeamNameObject>;
   competitionStudentDetails(userId: number, compId: number): Promise<CompetitionStudentDetails>;
+  competitionStaffDetails(userId: number, compId: number): Promise<StaffInfo>;
+  competitionStaffDetailsUpdate(userId: number, compId: number, staffInfo: StaffInfo): Promise<{}>;
 
   competitionUniversityDefaultSite(competitionId: number, university: University): Promise<CompetitionSiteObject>;
   competitionStudentJoin(competitionUserInfo: CompetitionUser, university: University): Promise<{}>;
@@ -55,6 +58,8 @@ export interface CompetitionRepository {
   competitionRegisterTeams(userId: number, compId: number, teamIds: Array<number>): Promise<{}>;
 
   competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{}>;
+  competitionAnnouncement(compId: number, university: University): Promise< Announcement | undefined>;
+  competitionAnnouncementUpdate(compId: number, university: University, announcement: Announcement): Promise<void>;
   competitionUniversitiesList(compId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
   competitionIdFromCode(code: string): Promise<number>;

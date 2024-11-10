@@ -17,6 +17,8 @@ import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js"
 import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails.js";
 import { CourseCategory } from "../../../shared_types/University/Course.js";
 import { error } from "console";
+import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole.js";
+import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
 import { EditRego } from "../../../shared_types/Competition/staff/Edit.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
@@ -580,6 +582,71 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     };
 
     return studentDetails;
+  }
+
+  competitionStaffDetails = async(userId: number, compId: number): Promise<StaffInfo> => {
+    const dbResult = await this.pool.query(
+      `SELECT 
+        "userId", 
+        "universityId", 
+        "universityName", 
+        name, 
+        email, 
+        sex, 
+        pronouns, 
+        "tshirtSize", 
+        allergies, 
+        "dietaryReqs", 
+        "accessibilityReqs", 
+        bio, 
+        roles, 
+        access
+       FROM competition_staff($1)
+       WHERE "userId" = $2`,
+      [compId, userId]
+    );
+  
+    if(dbResult.rows.length === 0) {
+      throw new DbError(DbError.Query, 'Staff does not exist or is not a part of this competition.');
+    }
+    const result = dbResult.rows[0];
+    return {
+      userId: result.userId,
+      universityId: result.universityId,
+      universityName: result.universityName,
+      name: result.name,
+      email: result.email,
+      sex: result.sex,
+      pronouns: result.pronouns,
+      tshirtSize: result.tshirtSize,
+      allergies: result.allergies,
+      dietaryReqs: result.dietaryReqs,
+      accessibilityReqs: result.accessibilityReqs,
+      bio: result.bio,
+      roles: result.roles,
+      access: result.access
+    };
+  }
+
+
+  competitionStaffDetailsUpdate = async (userId: number, compId: number, staffInfo: StaffInfo): Promise<{}> => {
+    if(!staffInfo) {
+      return {};
+    }
+    const dbResult = await this.pool.query(
+      `UPDATE competition_users
+      SET
+        bio = '${staffInfo.bio}',
+        competition_roles = '{${staffInfo.roles}}',
+        access_level = '${staffInfo.access}'
+      WHERE user_id = ${staffInfo.userId} AND competition_id = ${compId};
+      `
+    );
+
+    if (dbResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'Staff does not exist or is not a part of this competition.');
+    }
+    return {};
   }
 
   /**
@@ -1671,6 +1738,57 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
 
     return {};
+  }
+
+  competitionAnnouncement = async (compId: number, university: University): Promise< Announcement | undefined> => {
+    const announcementResult = await this.pool.query(
+      `SELECT id, message, created_date AS "createdDate", university_id AS "universityId"
+      FROM competition_announcements
+      WHERE competition_id = $1 AND university_id = $2`,
+      [compId, university.id]
+    );
+    if(announcementResult.rowCount === 0) {
+      return;
+    }
+    const announcement = announcementResult.rows[0];
+    return {
+      competitionId: compId,
+      message: announcement.message,
+      createdAt: announcement.createdDate,
+      universityId: announcement.universityId
+    };
+  }
+
+  competitionAnnouncementUpdate = async (compId: number, university: University, announcement: Announcement): Promise<void> => {
+    const announcementResult = await this.pool.query(`
+      SELECT id, message, created_date AS "createdDate", university_id AS "universityId"
+      FROM competition_announcements
+      WHERE competition_id = $1 AND university_id = $2`,
+      [compId, university.id]
+    );
+
+    if(announcementResult.rowCount === 0) {
+      const announcementInsertResult = await this.pool.query(`
+        INSERT INTO competition_announcements (competition_id, user_id, message, university_id, created_date)
+        VALUES ($1, $2, $3, $4, $5)`, 
+        [compId, announcement.userId, announcement.message, announcement.universityId, new Date(announcement.createdAt).toISOString()]
+      );
+      if(announcementInsertResult.rowCount === 0) {
+        throw new DbError(DbError.Insert, "Failed to insert announcement.");
+      }
+    }
+    else {
+      const announcementUpdateResult = await this.pool.query(`
+        UPDATE competition_announcements
+        SET message = $1, created_date = $2
+        WHERE competition_id = $3 AND university_id = $4`,
+        [announcement.message, new Date(announcement.createdAt).toISOString(), compId, university.id]
+      );
+      if(announcementUpdateResult.rowCount === 0) {
+        throw new DbError(DbError.Update, "Failed to update announcement.");
+      }
+    }
+    return ;
   }
 
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {

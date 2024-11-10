@@ -8,8 +8,8 @@ interface CopyButtonProps {
 
 const IconButton = styled(FaRegCopy)<{ $copied: boolean }>`
   margin-left: 3%;
-  width: 1rem;
-  height: 1rem;
+  width: auto;
+  height: auto;
   cursor: pointer;
   color: ${({ theme, $copied }) =>
     $copied ? theme.colours.confirm : theme.colours.primaryDark};
