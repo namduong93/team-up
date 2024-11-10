@@ -240,7 +240,7 @@ export class SqlDbUserRepository implements UserRepository {
    * @returns A promise that resolves when the password has been successfully updated.
    * @throws {DbError} If the user is not found, the current password is incorrect, or the new password is the same as the old password.
    */
-  userUpdatePassword = async(userId: number, oldPassword: string, newPassword: string): Promise<void> => {
+  userUpdatePassword = async (userId: number, oldPassword: string, newPassword: string): Promise<void> => {
     const userQuery = `SELECT hashed_password FROM users WHERE id = $1;`;
     const userResult = await this.pool.query(userQuery, [userId]);
 
@@ -320,7 +320,7 @@ export class SqlDbUserRepository implements UserRepository {
       throw new DbError(DbError.Query, 'User cannot access this list.');
     }
 
-    const dbResult = await this.pool.query('SELECT * FROM users WHERE staff_access IN ($1, $2)', ['Pending', 'Accepted'])
+    const dbResult = await this.pool.query('SELECT * FROM users WHERE user_access IN ($1, $2) AND user_type != $3', ['Pending', 'Accepted', 'student'])
     return dbResult.rows;
   }
 }

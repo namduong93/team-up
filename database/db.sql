@@ -29,7 +29,7 @@ CREATE TABLE courses (
 );
 
 CREATE TYPE user_type_enum AS ENUM ('student', 'staff', 'system_admin');
-CREATE TYPE staff_access_enum AS ENUM ('Accepted', 'Pending', 'Rejected');
+CREATE TYPE user_access_enum AS ENUM ('Accepted', 'Pending', 'Rejected');
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -58,13 +58,13 @@ CREATE TABLE users (
   student_id TEXT, --- NULL if not a student
 
   -- staff info
-  staff_access staff_access_enum,
+  user_access user_access_enum,
 
   -- system admin info
 
   CHECK (
-    ((user_type = 'student' AND student_id IS NOT NULL AND staff_access IS NULL) OR
-      (user_type in ('staff', 'system_admin') AND student_id IS NULL AND staff_access IS NOT NULL))
+    ((user_type = 'student' AND student_id IS NOT NULL) OR
+      (user_type in ('staff', 'system_admin') AND student_id IS NULL))
   )
 );
 
@@ -587,7 +587,7 @@ INSERT INTO users (
   user_type,
   university_id,
   student_id,
-  staff_access)
+  user_access)
 VALUES
 ( -- id: 1
   'System Admin',
@@ -663,7 +663,7 @@ VALUES
   'student',
   2,
   'z000001',
-  NULL),
+  'Accepted'),
 ( -- id: 6
   'Test Student Account 2',
   'Test Account',
@@ -678,7 +678,7 @@ VALUES
   'student',
   2,
   'z000002',
-  NULL),
+  'Accepted'),
 ( -- id: 7
   'Test Student Account 3',
   'Test Account',
@@ -693,7 +693,7 @@ VALUES
   'student',
   2,
   'z000003',
-  NULL),
+  'Accepted'),
 ( -- id: 8
   'Test Student Account 4',
   'Test Account',
@@ -708,7 +708,7 @@ VALUES
   'student',
   2,
   'z000004',
-  NULL),
+  'Accepted'),
 ( -- id: 9
   'Test Student Account 5',
   'Test Account',
@@ -723,7 +723,7 @@ VALUES
   'student',
   2,
   'z000005',
-  NULL),
+  'Accepted'),
 ( -- id: 10
   'Test Student Account 6',
   'Test Account',
@@ -738,7 +738,7 @@ VALUES
   'student',
   2,
   'z000006',
-  NULL),
+  'Accepted'),
 ( -- id: 11
   'Coach 3',
   'Coach Three',
@@ -768,7 +768,7 @@ VALUES
   'student',
   2,
   'z000007',
-  NULL),
+  'Accepted'),
 ( -- id: 13
   'Test Student Account 8',
   'Test Account',
@@ -777,13 +777,13 @@ VALUES
   'M',
   'They/them',
   'MS',
-  NULL,
+  'Accepted',
   '{}',
   'Wheelchair Access',
   'student',
   2,
   'z000008',
-  NULL),
+  'Accepted'),
 ( -- id: 14
   'Test Student Account 9',
   'Test Account',
@@ -794,11 +794,11 @@ VALUES
   'MXL',
   'None',
   '{}',
-  NULL,
+  'Accepted',
   'student',
   2,
   'z000009',
-  NULL); --- password is pleasechange
+  'Accepted'); --- password is pleasechange
 
 -- Competitions
 INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region)
@@ -956,7 +956,7 @@ INSERT INTO users (
   user_type,
   university_id,
   student_id,
-  staff_access)
+  user_access)
 VALUES
 -- Member from Team ID: 2
 ( 
@@ -973,7 +973,7 @@ VALUES
   'student',
   5,
   'z000002',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 3, Member 1
@@ -991,7 +991,7 @@ VALUES
   'student',
   5,
   'z000003',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 3, Member 2
@@ -1009,7 +1009,7 @@ VALUES
   'student',
   5,
   'z000004',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 4
@@ -1027,7 +1027,7 @@ VALUES
   'student',
   5,
   'z000005',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 5, Member 1
@@ -1045,7 +1045,7 @@ VALUES
   'student',
   5,
   'z000006',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 5, Member 2
@@ -1063,7 +1063,7 @@ VALUES
   'student',
   5,
   'z000007',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 6
@@ -1081,7 +1081,7 @@ VALUES
   'student',
   5,
   'z000008',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 7
@@ -1099,7 +1099,7 @@ VALUES
   'student',
   5,
   'z000009',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 8
@@ -1117,7 +1117,7 @@ VALUES
   'student',
   5,
   'z000010',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 9
@@ -1135,7 +1135,7 @@ VALUES
   'student',
   5,
   'z000011',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 10
@@ -1153,7 +1153,7 @@ VALUES
   'student',
   5,
   'z000012',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 11
@@ -1171,7 +1171,7 @@ VALUES
   'student',
   5,
   'z000013',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 12
@@ -1189,7 +1189,7 @@ VALUES
   'student',
   5,
   'z000014',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 13
@@ -1207,7 +1207,7 @@ VALUES
   'student',
   5,
   'z000015',
-  NULL
+  'Accepted'
 ),
 
 -- Member from Team ID: 14
@@ -1225,7 +1225,7 @@ VALUES
   'student',
   5,
   'z000016',
-  NULL
+  'Accepted'
 );
 
 INSERT INTO competition_users (
