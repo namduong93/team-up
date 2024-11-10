@@ -301,11 +301,11 @@ app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
 // PARAMS: { compId }
 // RESPONSE: { announcement: Announcement }
-app.get('/competition/announcements', competitionController.competitionAnnouncement);
+app.get('/competition/announcement', competitionController.competitionAnnouncement);
 
 // PARAMS: { compId, announcementMessage: string }
 // RESPONSE: {}
-app.put('/competition/announcements', competitionController.competitionAnnouncementUpdate);
+app.put('/competition/announcement', competitionController.competitionAnnouncementUpdate);
 
 
 

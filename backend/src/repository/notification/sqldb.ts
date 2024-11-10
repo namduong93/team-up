@@ -22,7 +22,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     // Add notifications for other team members and the coach
     const teamMemberWithdrawalNotification = `${studentName} has withdrawn from your team from competition ${competitionName}. Please invite a substitute via your team code or wait to receive a random replacement member.`;
     const teamMembersNotificationQuery = `
-      INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+      INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_date)
       SELECT participant AS user_id, $3, 'withdrawal'::notification_type_enum, $1, $2, NOW()
       FROM competition_teams, unnest(participants) AS participant
       WHERE competition_id = $1 
@@ -32,7 +32,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
 
     const coachNotification = `${studentName} has withdrawn from team ${teamName} from competition ${competitionName}.`;
     const coachNotificationQuery = `
-      INSERT INTO notifications (user_id, message, type, competition_id, created_at)
+      INSERT INTO notifications (user_id, message, type, competition_id, created_date)
       SELECT u.id AS user_id, $3, 'withdrawal'::notification_type_enum, $1, NOW()
       FROM competition_teams AS ct
       JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
@@ -71,7 +71,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
 
     // Insert notification into the database
     const notificationQuery = `
-      INSERT INTO notifications (user_id, message, type, competition_id, created_at)
+      INSERT INTO notifications (user_id, message, type, competition_id, created_date)
       SELECT u.id AS user_id, $3, 'name'::notification_type_enum, $1, NOW()
       FROM competition_teams AS ct
       JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
@@ -98,7 +98,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     if (approveIds.length > 0) {
       const approvalMessage = `Your coach has approved your new team name for competition ${competitionName}.`;
       const approvalNotificationQuery = `
-        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_date)
         SELECT participant AS user_id, $3, 'name'::notification_type_enum, $1, id AS team_id, NOW()
         FROM competition_teams, unnest(participants) AS participant
         WHERE competition_id = $1 
@@ -111,7 +111,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     if (rejectIds.length > 0) {
       const rejectionMessage = `Your coach has rejected your new team name for competition ${competitionName}.`;
       const rejectionNotificationQuery = `
-        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_date)
         SELECT participant AS user_id, $3, 'name'::notification_type_enum, $1, id AS team_id, NOW()
         FROM competition_teams, unnest(participants) AS participant
         WHERE competition_id = $1 
@@ -157,7 +157,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
 
     // Insert notification into the database
     const notificationQuery = `
-      INSERT INTO notifications (user_id, message, type, competition_id, created_at)
+      INSERT INTO notifications (user_id, message, type, competition_id, created_date)
       SELECT u.id AS user_id, $3, 'site'::notification_type_enum, $1, NOW()
       FROM competition_teams AS ct
       JOIN competition_users AS cu ON cu.id = ct.competition_coach_id
@@ -186,7 +186,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     if (approveIds.length > 0) {
       const approvalMessage = `Your coach has approved your site change for competition ${competitionName}.`;
       const approvalNotificationQuery = `
-        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_date)
         SELECT participant AS user_id, $3, 'site'::notification_type_enum, $1, id AS team_id, NOW()
         FROM competition_teams, unnest(participants) AS participant
         WHERE competition_id = $1 
@@ -199,7 +199,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     if (rejectIds.length > 0) {
       const rejectionMessage = `Your coach has rejected your site change for competition ${competitionName}.`;
       const rejectionNotificationQuery = `
-        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_date)
         SELECT participant AS user_id, $3, 'site'::notification_type_enum, $1, id AS team_id, NOW()
         FROM competition_teams, unnest(participants) AS participant
         WHERE competition_id = $1 
@@ -226,7 +226,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     if (approveIds.length > 0) {
       const approvalMessage = `You have been assigned to a team for competition ${competitionName}.`;
       const approvalNotificationQuery = `
-        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+        INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_date)
         SELECT participant AS user_id, $3, 'teamStatus'::notification_type_enum, $1, id AS team_id, NOW()
         FROM competition_teams, unnest(participants) AS participant
         WHERE competition_id = $1 
@@ -251,7 +251,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     for (const seatAssignment of seatAssignments) {
       const seatAssignmentMessage = `Your team has been assigned to the following seat for competition ${competitionName}: ${seatAssignment.teamSite} - ${seatAssignment.teamSeat}.`;
       const seatAssignmentNotificationQuery = `
-      INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_at)
+      INSERT INTO notifications (user_id, message, type, competition_id, team_id, created_date)
       SELECT participant AS user_id, $3, 'site'::notification_type_enum, $1, id AS team_id, NOW()
       FROM competition_teams, unnest(participants) AS participant
       WHERE competition_id = $1 
@@ -298,22 +298,22 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       WHERE user_id = $1 
       AND message = $2 
       AND type = 'staffAccount'::notification_type_enum 
-      AND created_at >= NOW() - INTERVAL '24 hours'
+      AND created_date >= NOW() - INTERVAL '24 hours'
       `;
       const existingNotificationResult = await this.pool.query(existingNotificationQuery, [userId, notificationMessage]);
 
       if (existingNotificationResult.rowCount > 0) {
-        // Update the existing notification's created_at
+        // Update the existing notification's created_date
         const updateNotificationQuery = `
           UPDATE notifications 
-          SET created_at = NOW() 
+          SET created_date = NOW() 
           WHERE id = $1
         `;
         await this.pool.query(updateNotificationQuery, [existingNotificationResult.rows[0].id]);
       } else {
         // Insert a new notification
         const notificationQuery = `
-          INSERT INTO notifications (user_id, message, type, created_at)
+          INSERT INTO notifications (user_id, message, type, created_date)
           VALUES ($1, $2, 'staffAccount'::notification_type_enum, NOW())
         `;
         await this.pool.query(notificationQuery, [userId, notificationMessage]);
@@ -340,7 +340,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
 
   userNotificationsList = async (userId: number): Promise<Array<Notification>> => {
     const notifications = await this.pool.query(
-      `SELECT id, type, message, created_at AS "createdAt", team_name as "teamName",
+      `SELECT id, type, message, created_date AS "createdAt", team_name as "teamName",
       student_name AS "studentName", competition_name AS "competitionName", new_team_name AS "newTeamName",
       site_location AS "siteLocation" FROM notifications WHERE user_id = $1`,
       [userId]

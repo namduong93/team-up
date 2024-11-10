@@ -1337,11 +1337,13 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       WHERE competition_id = $1 AND university_id = $2`,
       [compId, university.id]
     );
+
     if(announcementResult.rowCount === 0) {
       const announcementInsertResult = await this.pool.query(`
-        INSERT INTO competition_announcements (competition_id, user_id, message, university_id, created_at)
+        INSERT INTO competition_announcements (competition_id, user_id, message, university_id, created_date)
         VALUES ($1, $2, $3, $4, $5)`, 
-        [compId, announcement.userId, announcement.message, announcement.universityId, announcement.createdAt]);
+        [compId, announcement.userId, announcement.message, announcement.universityId, new Date(announcement.createdAt).toISOString()]
+      );
       if(announcementInsertResult.rowCount === 0) {
         throw new DbError(DbError.Insert, "Failed to insert announcement.");
       }
@@ -1351,7 +1353,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         UPDATE competition_announcements
         SET message = $1, created_date = $2
         WHERE competition_id = $3 AND university_id = $4`,
-        [announcement.message, announcement.createdAt, compId, university.id]
+        [announcement.message, new Date(announcement.createdAt).toISOString(), compId, university.id]
       );
       if(announcementUpdateResult.rowCount === 0) {
         throw new DbError(DbError.Update, "Failed to update announcement.");

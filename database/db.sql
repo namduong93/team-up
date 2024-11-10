@@ -66,7 +66,7 @@ CREATE TABLE sessions (
   user_id INT NOT NULL REFERENCES users (id),
 
   -- The time the session was created
-  created_at TIMESTAMP NOT NULL
+  created_date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE competitions (
@@ -171,7 +171,7 @@ CREATE TABLE competition_announcements (
   user_id INT NOT NULL REFERENCES users (id),
   university_id INT NOT NULL REFERENCES universities (id),
   message TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL
+  created_date TIMESTAMP NOT NULL
 );
 
 CREATE TYPE notification_type_enum AS ENUM (
@@ -195,7 +195,7 @@ CREATE TABLE notifications (
   competition_id INT REFERENCES competitions (id),
   type notification_type_enum NOT NULL,
   message TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL,
+  created_date TIMESTAMP NOT NULL,
   
   team_name TEXT,
   student_name TEXT,
@@ -864,7 +864,7 @@ VALUES
 
 -- Notifications
 INSERT INTO notifications (
-  user_id, team_id, competition_id, type, message, created_at,
+  user_id, team_id, competition_id, type, message, created_date,
   team_name, student_name, competition_name, new_team_name, site_location
 )
 VALUES 

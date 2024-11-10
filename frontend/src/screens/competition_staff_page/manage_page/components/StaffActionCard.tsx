@@ -171,17 +171,6 @@ const Title2 = styled.h2`
   word-break: break-word;
 `;
 
-const mockAnnouncement = `
-The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.
-
-3 students, 5 hours  
-1 computer, 12 problems* (typical, but varies per contest)
-
-In 2021, more than 50,000 of the finest students in computing disciplines from over 3,000 universities competed worldwide in the regional phases of this contest. We conduct ICPC contests for the South Pacific region, with top teams qualifying to the World Finals.
-
-The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
-`;
-
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
@@ -191,7 +180,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [showEditRego, setShowEditRego] = useState(false);
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
-  const [announcement, setAnnouncement] = useState(mockAnnouncement);
+  const [announcementMessage, setAnnouncementMessage] = useState("");
   const compId = useParams<{ compId: string }>().compId;
 
   const actions = [
@@ -269,17 +258,28 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         );
         setCurrentBio(response.data.staffDetails.bio);
         setStaffInfo(response.data.staffDetails);
-        console.log(response.data.staffDetails);
       } catch (err) {
         console.log("Error fetching staff info", err);
       }
     };
+    const fetchAnnouncementMessage = async () => {
+      try {
+        const response = await sendRequest.get<{ announcement: string }>(
+          '/competition/announcement', 
+          { compId }
+        );
+        setAnnouncementMessage(response.data.announcement);
+      } catch (err) {
+        console.log("Error fetching announcement", err);
+      }
+    }
   
     // Call the async function
     fetchStaffInfo();
+    fetchAnnouncementMessage();
   }, []);
 
-  const handleBioChange = async () => {
+  const handleChange = async () => {
     if (staffInfo) {
       const updatedStaffInfo = {
         ...staffInfo,
@@ -294,6 +294,14 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       } catch (err) {
         console.log("Error updating staff info", err);
       }
+    }
+    try {
+      await sendRequest.put('/competition/announcement', {
+        announcementMessage,
+        compId
+      });
+    } catch (err) {
+      console.log("Error updating announcement info", err);
     }
   };
 
@@ -354,11 +362,11 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           {showContactBio && (
             <BioChangePopUp
               onClose={() => setShowContactBio(false)}
-              onNext={handleBioChange}
+              onNext={handleChange}
               bioValue={currentBio}
-              announcementValue={announcement}
+              announcementValue={announcementMessage}
               onBioChange={(e) => setCurrentBio(e.target.value)}
-              onAnnouncementChange={(value: SetStateAction<string>) => setAnnouncement(value)}
+              onAnnouncementChange={(value: SetStateAction<string>) => setAnnouncementMessage(value)}
             />
           )}
 
