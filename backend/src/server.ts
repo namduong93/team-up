@@ -283,10 +283,9 @@ app.get('/competition/attendees', competitionController.competitionAttendees);
 
 // PARAMS: { compId }
 // RESPONSE: 
-// { studentDetails: {...} }
+// { studentDetails: StudentInfo }
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
-
 
 // PARAMS: { compId }
 // RESPONSE: { staffDetails: StaffInfo }

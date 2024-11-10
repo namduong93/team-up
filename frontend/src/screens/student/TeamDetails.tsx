@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { ProfileCard } from "./components/ProfileCard";
 import { EditCompPreferences } from "./components/EditCompPreferences";
 import { backendURL } from "../../../config/backendURLConfig";
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
-import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole";
-import { CompetitionLevel } from "../../../shared_types/Competition/CompetitionLevel";
+import { sendRequest } from "../../utility/request";
+import { set } from "date-fns";
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -75,63 +75,39 @@ export const TeamDetails: FC = () => {
       teamLevel: "";
       students: StudentInfo[];
     }>();
+  const { compId } = useParams();
 
   useEffect(() => {
-    console.log(teamLevel.includes("A"));
+    const fetchStudentInfo = async () => {
+      try {
+        const response = await sendRequest.get<{ studentDetails: StudentInfo }>(
+          '/competition/student/details',
+          { compId, }
+        );
+        setStudenInfo(response.data.studentDetails);
+        console.log("Student info fetched", response.data);
+      } catch (err) {
+        console.log("Error fetching student info", err);
+      }
+    };
+    fetchStudentInfo();
   }, []);
 
-  const [editingPreferences, setEditingPreferences] =
+  const [studentInfo, setStudenInfo] =
     useState<StudentInfo | null>(null);
 
   const handleSave = (updatedStudent: StudentInfo) => {
     // alert(`Saved details for: ${updatedStudent.name}`);
     // TODO: hook backend to update student's competition preferences
-    console.log("save details for: ", updatedStudent.name);
-  };
-
-  // TODO: waiting for backend route to get 1 paritcipant comp details
-  const fetchStudentDetails = (id: number): StudentInfo => {
-    console.log("fetching for studentID: ", id);
-    // BACKEND FETCH HERE:
-
-    return {
-      userId: 0,
-      universityId: 0,
-      universityName: "UNSW",
-      name: "John Doe",
-      preferredName: "Johnny",
-      email: "john@example.com",
-      sex: "M",
-      pronouns: "He/Him",
-      tshirtSize: "MXL",
-      allergies: "",
-      dietaryReqs: "",
-      accessibilityReqs: "",
-      studentId: "z1234",
-
-      // competition_user info
-      roles: [CompetitionRole.Participant],
-      bio: "epic bio",
-      ICPCEligible: true,
-      boersenEligible: false,
-      level: CompetitionLevel.LevelA,
-      degreeYear: 3,
-      degree: "Comp Sci",
-      isRemote: false,
-      isOfficial: true,
-      preferredContact: "discord:@hello",
-      nationalPrizes: "",
-      internationalPrizes: "",
-      codeforcesRating: 0,
-      universityCourses: ["COMP1234"],
-      pastRegional: false,
-      status: "Matched",
-
-      // team info
-      teamName: "UNSW Koalas",
-      siteName: "CSE Building",
-      siteId: 0,
+    const fetchStudentInfo = async () => {
+      try {
+        const response = await sendRequest.get<{studentInfo: StudentInfo}>('competition/student/details', {compId});
+        console.log("Student info fetched", response.data.studentInfo);
+      } catch (err) {
+        console.log("Error fetching student info", err);
+      }
     };
+    fetchStudentInfo();
   };
 
   return (
@@ -169,16 +145,16 @@ export const TeamDetails: FC = () => {
             preferredContact={student.preferredContact}
             isFirst={index === 0}
             onEdit={() =>
-              setEditingPreferences(student)
+              setStudenInfo(student)
             }
           />
         ))}
       </StudentsContainer>
-      {editingPreferences && (
+      {studentInfo && (
         <EditCompPreferences
-          student={fetchStudentDetails(editingPreferences.userId)}
+          student={studentInfo}
           onSave={handleSave}
-          onClose={() => setEditingPreferences(null)}
+          onClose={() => setStudenInfo(null)}
         />
       )}
     </DetailsContainer>

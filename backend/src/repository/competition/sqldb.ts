@@ -544,16 +544,47 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
    * @returns A promise that resolves to an object containing the student's competition details.
    * @throws {DbError} If the user does not exist or is not a participant in the specified competition.
    */
-  competitionStudentDetails = async (userId: number, compId: number): Promise<CompetitionStudentDetails> => {
+  competitionStudentDetails = async (userId: number, compId: number): Promise<StudentInfo> => {
     const dbResult = await this.pool.query(
-      `SELECT u.name, u.email, cu.preferred_contact AS "preferredContact", cu.bio AS "competitionBio",
-        cu.competition_level AS "competitionLevel", cu.icpc_eligible AS "ICPCEligible", cu.boersen_eligible AS "boersenEligible",
-        cu.degree_year AS "degreeYear", cu.degree, cu.is_remote AS "isRemote", cu.national_prizes AS "nationalPrizes",
-        cu.international_prizes AS "internationalPrizes", cu.codeforces_rating AS "codeforcesRating", cu.university_courses AS "universityCourses",
-        cu.past_regional AS "pastRegional"
-      FROM users u
-      JOIN competition_users cu ON u.id = cu.user_id
-      WHERE cu.user_id = $1 AND cu.competition_id = $2`,
+      `SELECT 
+        competition_id,
+        "userId",
+        "universityId",
+        "universityName",
+        "name",
+        "preferredName",
+        email,
+        sex,
+        pronouns,
+        "tshirtSize",
+        "dietaryNeeds",
+        "accessibilityNeeds",
+        allergies,
+        "studentId",
+        roles,
+        bio,
+        "ICPCEligible",
+        "boersenEligible",
+        level,
+        "degreeYear",
+        degree,
+        "isRemote",
+        "isOfficial",
+        "preferredContact",
+        "nationalPrizes",
+        "internationalPrizes",
+        "codeforcesRating",
+        "universityCourses",
+        "pastRegional",
+        status,
+        "siteId",
+        "pendingSiteId",
+        "siteName",
+        "pendingSiteName",
+        "siteCapacity",
+        "pendingSiteCapacity"
+      FROM competition_attendees
+      WHERE "userId" = $1 AND competition_id = $2`,
       [userId, compId]
     );
 
@@ -563,22 +594,36 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     const result = dbResult.rows[0];
 
-    const studentDetails: CompetitionStudentDetails = {
+    const studentDetails: StudentInfo = {
+      userId: result.userId,
+      universityId: result.universityId,
+      universityName: result.universityName,
       name: result.name,
+      preferredName: result.preferredName,
       email: result.email,
-      preferredContact: result.preferredContact,
-      competitionBio: result.competitionBio,
-      competitionLevel: result.competitionLevel,
+      sex: result.sex,
+      pronouns: result.pronouns,
+      tshirtSize: result.tshirtSize,
+      dietaryReqs: result.dietaryNeeds,
+      accessibilityReqs: result.accessibilityNeeds,
+      allergies: result.allergies,
+      studentId: result.studentId,
+      roles: result.roles,
+      bio: result.bio,
       ICPCEligible: result.ICPCEligible,
       boersenEligible: result.boersenEligible,
+      level: result.level,
       degreeYear: result.degreeYear,
       degree: result.degree,
       isRemote: result.isRemote,
+      isOfficial: result.isOfficial,
+      preferredContact: result.preferredContact,
       nationalPrizes: result.nationalPrizes,
       internationalPrizes: result.internationalPrizes,
       codeforcesRating: result.codeforcesRating,
       universityCourses: result.universityCourses,
-      pastRegional: result.pastRegional
+      pastRegional: result.pastRegional,
+      status: result.status
     };
 
     return studentDetails;
