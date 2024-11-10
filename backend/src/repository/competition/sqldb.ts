@@ -478,7 +478,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       WHERE id = $1 AND competition_id = $2 AND university_id = $3
     `;
     const teamResult = await this.pool.query(teamQuery, [teamId, compId, university.id]);
-    console.log(teamId, compId, university.id);
     if (teamResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'Team does not exist or is not part of this competition.');
     }
@@ -627,6 +626,47 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     };
 
     return studentDetails;
+  }
+
+  /**
+   * Updates the details of a student in a specific competition.
+   *
+   * @param userId The ID of the user performing the update.
+   * @param compId The ID of the competition.
+   * @param updatedStudent An object containing the updated student details.
+   * @returns A promise that resolves when the update is complete.
+   * @throws {DbError} If there is an error updating the student details.
+   */
+  competitionStudentDetailsUpdate = async(userId: number, compId: number, studentInfo: StudentInfo): Promise<{}> => {
+    if (!studentInfo) {
+      return {};
+    }
+
+    const dbResult = await this.pool.query(
+      `UPDATE competition_users
+      SET
+        bio = '${studentInfo.bio}',
+        icpc_eligible = ${studentInfo.ICPCEligible},
+        boersen_eligible = ${studentInfo.boersenEligible},
+        competition_level = '${studentInfo.level}',
+        degree_year = ${studentInfo.degreeYear},
+        degree = '${studentInfo.degree}',
+        is_remote = ${studentInfo.isRemote},
+        is_official = ${studentInfo.isOfficial},
+        preferred_contact = '${studentInfo.preferredContact}',
+        national_prizes = '${studentInfo.nationalPrizes}',
+        international_prizes = '${studentInfo.internationalPrizes}',
+        codeforces_rating = ${studentInfo.codeforcesRating},
+        past_regional = ${studentInfo.pastRegional}
+      WHERE user_id = ${studentInfo.userId} AND competition_id = ${compId};
+      `
+    );
+
+    if (dbResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'Student does not exist or is not a part of this competition.');
+    }
+
+    return {};
   }
 
   competitionStaffDetails = async(userId: number, compId: number): Promise<StaffInfo> => {
@@ -1733,7 +1773,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
    * @throws {DbError} If the user is already assigned the specified role in the competition.
    */
   competitionStaffJoin = async (competitionId: number, staffCompetitionInfo: CompetitionStaff): Promise<{}> => {
-    console.log(staffCompetitionInfo);
     const userId = staffCompetitionInfo.userId;
     const roles = staffCompetitionInfo.competitionRoles;
     const competitionExistRole = await this.competitionRoles(userId, competitionId);

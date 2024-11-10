@@ -85,7 +85,6 @@ export const TeamDetails: FC = () => {
           { compId, }
         );
         setStudenInfo(response.data.studentDetails);
-        console.log("Student info fetched", response.data);
       } catch (err) {
         console.log("Error fetching student info", err);
       }
@@ -95,20 +94,25 @@ export const TeamDetails: FC = () => {
 
   const [studentInfo, setStudenInfo] =
     useState<StudentInfo | null>(null);
+  
+  const updateStudentInfo = async (studentInfo: StudentInfo) => {
+    try {
+      const response = await sendRequest.put<{ studentDetails: StudentInfo }>(
+        '/competition/student/details',
+        { compId, studentInfo }
+      );
+      setStudenInfo(response.data.studentDetails);
+    } catch (err) {
+      console.log("Error updating student info", err);
+    }
+  };
 
-  const handleSave = (updatedStudent: StudentInfo) => {
+  const handleSave = (studentInfo: StudentInfo) => {
     // alert(`Saved details for: ${updatedStudent.name}`);
     // TODO: hook backend to update student's competition preferences
-    const fetchStudentInfo = async () => {
-      try {
-        const response = await sendRequest.get<{studentInfo: StudentInfo}>('competition/student/details', {compId});
-        console.log("Student info fetched", response.data.studentInfo);
-      } catch (err) {
-        console.log("Error fetching student info", err);
-      }
-    };
-    fetchStudentInfo();
+    updateStudentInfo(studentInfo);
   };
+
 
   return (
     <DetailsContainer>
@@ -135,7 +139,7 @@ export const TeamDetails: FC = () => {
       <StudentsContainer>
         {students.map((student, index) => (
           <ProfileCard
-            key={student.userId}
+            key={`student-${index}`}
             name={student.preferredName}
             email={student.email}
             bio={student.bio}

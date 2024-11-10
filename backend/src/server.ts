@@ -287,11 +287,16 @@ app.get('/competition/attendees', competitionController.competitionAttendees);
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
 
+// PARAMS: { compId, studentInfo: StudentInfo }
+// RESPONSE: { }
+app.put('/competition/student/details', competitionController.competitionStudentDetailsUpdate);
+
+
 // PARAMS: { compId }
 // RESPONSE: { staffDetails: StaffInfo }
 app.get('/competition/staff/details', competitionController.competitionStaffDetails);
 
-// PARAMS: { compId }
+// PARAMS: { compId, staffInfo: StaffInfo }
 // RESPONSE: { }
 app.put('/competition/staff/details', competitionController.competitionStaffDetailsUpdate);
 
