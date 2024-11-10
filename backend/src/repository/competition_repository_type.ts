@@ -60,6 +60,4 @@ export interface CompetitionRepository {
   competitionIdFromCode(code: string): Promise<number>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject>>;
   competitionAlgorithm(compId: number, userId: number): Promise<{} | undefined>;
-
-  competitionStaffList(userId: number, compId: number): Promise<Array<StaffInfo>>;
 }

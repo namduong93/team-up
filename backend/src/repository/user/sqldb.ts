@@ -8,6 +8,7 @@ import { UserTypeObject } from "../../models/user/user.js";
 import { UserDashInfo } from "../../models/user/user_dash_info.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
+import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -175,7 +176,7 @@ export class SqlDbUserRepository implements UserRepository {
     return;
   }
 
-  userUpdatePassword = async(userId: number, oldPassword: string, newPassword: string): Promise<void> => {
+  userUpdatePassword = async (userId: number, oldPassword: string, newPassword: string): Promise<void> => {
     const userQuery = `SELECT hashed_password FROM users WHERE id = $1;`;
     const userResult = await this.pool.query(userQuery, [userId]);
 
@@ -243,5 +244,17 @@ export class SqlDbUserRepository implements UserRepository {
     const universityName = universityNameResult.rows[0].name;
 
     return { id: universityId, name: universityName };
+  }
+
+  staffList = async (userId: number): Promise<Array<StaffInfo>> => {
+    const userCheckAdmin = await this.pool.query('SELECT user_type FROM users u WHERE u.id = $1', [userId])
+    const userAccess = userCheckAdmin.rows
+
+    if (userAccess[0].user_type !== 'system_admin') {
+      throw new DbError(DbError.Query, 'User cannot access this list.');
+    }
+
+    const dbResult = await this.pool.query('SELECT * FROM users WHERE staff_access IN ($1, $2)', ['Pending', 'Accepted'])
+    return dbResult.rows;
   }
 }

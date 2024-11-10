@@ -1,11 +1,11 @@
-import { SqlDbCompetitionRepository } from "../repository/competition/sqldb";
+import { SqlDbUserRepository } from "../repository/user/sqldb";
 import pool from "./test_util/test_utilities";
 
 describe('User Type Function', () => {
-  let comp_db;
+  let user_db;
 
   beforeAll(async () => {
-    comp_db = new SqlDbCompetitionRepository(pool);
+    user_db = new SqlDbUserRepository(pool);
   });
 
 
@@ -14,6 +14,6 @@ describe('User Type Function', () => {
   });
 
   test('Sucess case: returns list of staff', async () => {
-    console.log(await comp_db.competitionStaffList(1, 1))
+    console.log(await user_db.staffList(1))
   })
 })

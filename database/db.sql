@@ -29,6 +29,7 @@ CREATE TABLE courses (
 );
 
 CREATE TYPE user_type_enum AS ENUM ('student', 'staff', 'system_admin');
+CREATE TYPE staff_access_enum AS ENUM ('Accepted', 'Pending', 'Rejected');
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -54,15 +55,16 @@ CREATE TABLE users (
   university_id INT REFERENCES universities (id),
 
   -- student info
-  student_id TEXT, --- NULL iff not a student
+  student_id TEXT, --- NULL if not a student
 
   -- staff info
+  staff_access staff_access_enum,
 
   -- system admin info
 
   CHECK (
-    ((user_type = 'student' AND student_id IS NOT NULL) OR
-      (user_type in ('staff', 'system_admin') AND student_id IS NULL))
+    ((user_type = 'student' AND student_id IS NOT NULL AND staff_access IS NULL) OR
+      (user_type in ('staff', 'system_admin') AND student_id IS NULL AND staff_access IS NOT NULL))
   )
 );
 
@@ -584,7 +586,8 @@ INSERT INTO users (
   accessibility_reqs,
   user_type,
   university_id,
-  student_id)
+  student_id,
+  staff_access)
 VALUES
 ( -- id: 1
   'System Admin',
@@ -599,7 +602,8 @@ VALUES
   'None',
   'system_admin',
   1,
-  NULL), -- password is 'admin'
+  NULL,
+  'Accepted'), -- password is 'admin'
 ( -- id: 2
   'Coach 1',
   'Coach One',
@@ -613,7 +617,8 @@ VALUES
   'Stairs Access',
   'staff',
   2,
-  NULL), -- password is 'pleasechange'
+  NULL,
+  'Accepted'), -- password is 'pleasechange'
 ( -- id: 3
   'Algorithm Coach',
   'Algorithm',
@@ -627,7 +632,8 @@ VALUES
   'Stairs Access',
   'staff',
   5,
-  NULL), -- password is 'pleasechange'
+  NULL,
+  'Accepted'), -- password is 'pleasechange'
 ( -- id: 4
   'Site Coordinator 1',
   'Site Coord One',
@@ -641,7 +647,8 @@ VALUES
   'Stairs Access',
   'staff',
   2,
-  NULL), -- password is 'pleasechange'
+  NULL,
+  'Pending'), -- password is 'pleasechange'
 ( -- id: 5
   'New User',
   'New User',
@@ -655,7 +662,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000001'),
+  'z000001',
+  NULL),
 ( -- id: 6
   'Test Student Account 2',
   'Test Account',
@@ -669,7 +677,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000002'),
+  'z000002',
+  NULL),
 ( -- id: 7
   'Test Student Account 3',
   'Test Account',
@@ -683,7 +692,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000003'),
+  'z000003',
+  NULL),
 ( -- id: 8
   'Test Student Account 4',
   'Test Account',
@@ -697,7 +707,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000004'),
+  'z000004',
+  NULL),
 ( -- id: 9
   'Test Student Account 5',
   'Test Account',
@@ -711,7 +722,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000005'),
+  'z000005',
+  NULL),
 ( -- id: 10
   'Test Student Account 6',
   'Test Account',
@@ -725,8 +737,9 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000006'),
-  ( -- id: 11
+  'z000006',
+  NULL),
+( -- id: 11
   'Coach 3',
   'Coach Three',
   'testcoach3@example.com',
@@ -739,8 +752,9 @@ VALUES
   'Stairs Access',
   'staff',
   3,
-  NULL), -- password is 'pleasechange'
-  ( -- id: 12
+  NULL,
+  'Accepted'), -- password is 'pleasechange'
+( -- id: 12
   'Test Student Account 7',
   'Test Account',
   'teststudent7@example.com',
@@ -753,7 +767,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000007'),
+  'z000007',
+  NULL),
 ( -- id: 13
   'Test Student Account 8',
   'Test Account',
@@ -767,7 +782,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000008'),
+  'z000008',
+  NULL),
 ( -- id: 14
   'Test Student Account 9',
   'Test Account',
@@ -781,7 +797,8 @@ VALUES
   NULL,
   'student',
   2,
-  'z000009'); --- password is pleasechange
+  'z000009',
+  NULL); --- password is pleasechange
 
 -- Competitions
 INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region)
@@ -938,7 +955,8 @@ INSERT INTO users (
   accessibility_reqs,
   user_type,
   university_id,
-  student_id)
+  student_id,
+  staff_access)
 VALUES
 -- Member from Team ID: 2
 ( 
@@ -954,7 +972,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000002'
+  'z000002',
+  NULL
 ),
 
 -- Member from Team ID: 3, Member 1
@@ -971,7 +990,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000003'
+  'z000003',
+  NULL
 ),
 
 -- Member from Team ID: 3, Member 2
@@ -988,7 +1008,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000004'
+  'z000004',
+  NULL
 ),
 
 -- Member from Team ID: 4
@@ -1005,7 +1026,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000005'
+  'z000005',
+  NULL
 ),
 
 -- Member from Team ID: 5, Member 1
@@ -1022,7 +1044,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000006'
+  'z000006',
+  NULL
 ),
 
 -- Member from Team ID: 5, Member 2
@@ -1039,7 +1062,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000007'
+  'z000007',
+  NULL
 ),
 
 -- Member from Team ID: 6
@@ -1056,7 +1080,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000008'
+  'z000008',
+  NULL
 ),
 
 -- Member from Team ID: 7
@@ -1073,7 +1098,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000009'
+  'z000009',
+  NULL
 ),
 
 -- Member from Team ID: 8
@@ -1090,7 +1116,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000010'
+  'z000010',
+  NULL
 ),
 
 -- Member from Team ID: 9
@@ -1107,7 +1134,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000011'
+  'z000011',
+  NULL
 ),
 
 -- Member from Team ID: 10
@@ -1124,7 +1152,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000012'
+  'z000012',
+  NULL
 ),
 
 -- Member from Team ID: 11
@@ -1141,7 +1170,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000013'
+  'z000013',
+  NULL
 ),
 
 -- Member from Team ID: 12
@@ -1158,7 +1188,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000014'
+  'z000014',
+  NULL
 ),
 
 -- Member from Team ID: 13
@@ -1175,7 +1206,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000015'
+  'z000015',
+  NULL
 ),
 
 -- Member from Team ID: 14
@@ -1192,7 +1224,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000016'
+  'z000016',
+  NULL
 );
 
 INSERT INTO competition_users (

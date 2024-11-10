@@ -11,6 +11,7 @@ import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
 import { convertGenderToP, UserTypeObject } from "../models/user/user.js";
 import { UserDashInfo } from "../models/user/user_dash_info.js";
+import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -114,6 +115,11 @@ export class UserService {
 
   userDashInfo = async (userId: number): Promise<UserDashInfo | undefined> => {
     const userDashInfo = await this.userRepository.userDashInfo(userId);
+    return userDashInfo;
+  }
+
+  staffList = async (userId: number): Promise<Array<StaffInfo> | undefined> => {
+    const userDashInfo = await this.userRepository.staffList(userId);
     return userDashInfo;
   }
 }

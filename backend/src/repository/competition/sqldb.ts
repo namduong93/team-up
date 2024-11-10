@@ -1684,16 +1684,4 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const id = parseInt(text) - this.SALTED_TEAM_CODE;
     return id;
   };
-
-  competitionStaffList = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
-    const userCheckAdmin = await this.pool.query('SELECT user_type FROM users u WHERE u.id = $1', [userId])
-    const userAccess = userCheckAdmin.rows
-
-    if (userAccess[0].user_type !== 'system_admin') {
-      throw new DbError(DbError.Query, 'User cannot access this list.');
-    }
-
-    const dbResult = await this.pool.query('SELECT * FROM competition_staff($1) WHERE access IN ($2, $3)', [compId, 'Pending', 'Accepted'])
-    return dbResult.rows;
-  }
 }

@@ -138,4 +138,11 @@ export class UserController {
     res.json({});
     return;
   })
+
+  staffList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const staffList = await this.userService.staffList(Number(userId));
+    res.json(staffList);
+    return;
+  })
 }

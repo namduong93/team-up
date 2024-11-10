@@ -119,6 +119,11 @@ app.get('/user/dash_info', userController.userDashInfo);
 // RESPONSE: { type: string }
 app.get('/user/type', userController.userType);
 
+// Gets the list of all staff including staff that has requested in competition
+// PARAMS: { userid }
+// RESPONSE: { staff: Array<{id: number, name: string, email: string}>}
+app.get('/user/staff_list', userController.staffList);
+
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
 // PARAMS: { name: string, earlyRegDeadline, generalRegDeadline, code, startDate, region,
@@ -306,11 +311,6 @@ app.get('/competition/staff/rego_toggles', competitionController.competitionStaf
 app.post('/competition/staff/update_rego_toggles', competitionController.competitionStaffUpdateRegoToggles);
 
 app.get('/competition/students/rego_toggles', competitionController.competitionStudentsRegoToggles);
-
-// Gets the list of all staff including staff that has requested to become admins
-// PARAMS: {}
-// RESPONSE: { staff: Array<{id: number, name: string, email: string}>}
-// app.get('/competition/staff_list', competitionController.staffList);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

@@ -361,12 +361,4 @@ export class CompetitionController {
     res.json(teamParticipant);
     return;
   });
-
-  competitionStaffList = httpErrorHandler(async (req: Request, res: Response) => {
-    const { userId, compId } = req.query;
-    const staff = await this.competitionService.competitionStaffList(
-      parseInt(userId as string), parseInt(compId as string));
-
-    res.json({ staff });
-  });
 }
