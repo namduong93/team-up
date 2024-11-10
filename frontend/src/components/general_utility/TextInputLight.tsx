@@ -65,7 +65,7 @@ export const Input = styled.input`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.colours.notifDark};
+  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
   border-radius: 10px;
   margin-bottom: 5px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};

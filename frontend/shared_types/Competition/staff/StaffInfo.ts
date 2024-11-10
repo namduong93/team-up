@@ -23,3 +23,12 @@ export interface StaffInfo {
   roles: CompetitionRole[];
   access: StaffAccess;
 }
+
+export interface StaffAccessInfo {
+  userId: number;
+  universityId: number;
+  universityName: string;
+  name: string;
+  email: string;
+  access: StaffAccess;
+}

@@ -42,7 +42,7 @@ export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | '
 `;
 
 interface ResponsiveActionButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
-  icon: ReactNode;
+  icon?: ReactNode;
   label: string;
   question: string;
   redirectPath?: string;

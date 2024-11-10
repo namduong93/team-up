@@ -4,7 +4,7 @@ import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
 import { ProfileCard } from "./components/ProfileCard";
 import { useOutletContext } from "react-router-dom";
-import { Student } from "./TeamDetails";
+import { Student } from "../../../shared_types/Competition/team/TeamDetails";
 
 const ManageContainer = styled.div`
   display: flex;
@@ -43,6 +43,23 @@ const InfoLabel = styled.h3`
   margin: 0;
   color: ${({ theme }) => theme.colours.primaryDark};
   margin-bottom: 5%;
+`;
+
+export const InfoButton = styled.button`
+  font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
+  background-color: ${({ theme }) => theme.background};
+  border: none;
+  color: ${({ theme }) => theme.colours.primaryDark};
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin: none;
+  padding-left: 0px;
+  box-sizing: border-box;
+
+  &:hover {
+    color: ${({ theme }) => theme.colours.primaryLight};
+  }
 `;
 
 export const InfoLink = styled.a`
