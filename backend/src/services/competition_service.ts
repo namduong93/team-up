@@ -413,6 +413,12 @@ export class CompetitionService {
     return {};
   }
 
+  competitionRegisterTeams = async (userId: number, compId: number, teamIds: Array<number>): Promise<{} | undefined> => {
+    // Register teams
+    await this.competitionRepository.competitionRegisterTeams(userId, compId, teamIds);
+    return {};
+  }
+
   competitionStaffJoin = async (code: string, competitionStaffInfo: CompetitionStaff ): Promise<{} | undefined> => {
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {

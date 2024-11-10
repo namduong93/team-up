@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 // import { CompetitionDetails, CompetitionRole } from "../CompetitionPage";
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
