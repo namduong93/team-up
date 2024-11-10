@@ -173,6 +173,7 @@ export const BioChangePopUp: FC<BioChangePopUpProps> = ({
                 placeholder={bioValue}
               />
             </ContentBio>
+            
             <ContentMarkdown>
               <Heading>Update Announcements to Your Teams</Heading>
               <EditorContainer>
