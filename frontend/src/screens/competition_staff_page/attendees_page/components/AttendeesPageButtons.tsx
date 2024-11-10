@@ -352,14 +352,13 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
   };
   
   return (
-    <>
     <DownloadButtons
       isDownloadingState={[isDownloading, setIsDownloading]}
       downloadCSV={downloadCSV}
       downloadPDF={downloadPDF}
       downloadQuestion="Are you sure you want to see the attendees' details for this site?"
       isSiteDownload={true}
+      hasAttendeesToDownload={attendeesList.length > 0}
     />
-    </>
   )
 }

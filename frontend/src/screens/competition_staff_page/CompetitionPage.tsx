@@ -263,6 +263,10 @@ export const CompetitionPage: FC = () => {
     setUniversityOption(options[0]);
   }, [options]);
 
+  useEffect(() => {
+    setUniversityOption(options[0]);
+  }, []);
+
   return (
     <OverflowFlexBackground>
       <MainPageDiv>
