@@ -2,7 +2,6 @@ import { Pool } from "pg";
 import { UniversityListObject } from "../../models/university/university.js";
 import { UniversityRepository } from "../university_repository_type.js";
 import { Course } from "../../../shared_types/University/Course.js";
-import { DbError } from "../../errors/db_error.js";
 
 export class SqlDbUniversityRepository implements UniversityRepository {
   private readonly pool: Pool;
@@ -11,12 +10,6 @@ export class SqlDbUniversityRepository implements UniversityRepository {
     this.pool = pool;
   }
 
-  /**
-   * Retrieves a list of courses associated with the university of a given user.
-   *
-   * @param userId The ID of the user whose university courses are to be retrieved.
-   * @returns {Promise<Array<Course>>} A promise that resolves to an array of Course objects, each containing the course ID, course name, and category.
-   */
   universityCourses = async (userId: number): Promise<Array<Course>> => {
     
     const dbResult = await this.pool.query(
@@ -33,12 +26,6 @@ export class SqlDbUniversityRepository implements UniversityRepository {
     return dbResult.rows;
   }
 
-  /**
-   * Retrieves a list of universities from the database.
-   *
-   * @returns {Promise<UniversityListObject>} A promise that resolves to an object containing a list of universities.
-   * @throws {DbError} If no universities are found in the database.
-   */
   universitiesList = async (): Promise<UniversityListObject> => {
     let universityQuery = `
       SELECT * FROM universities;
@@ -46,7 +33,7 @@ export class SqlDbUniversityRepository implements UniversityRepository {
     const universityResult = await this.pool.query(universityQuery);
 
     if (universityResult.rowCount === 0) {
-      throw new DbError(DbError.Query, 'No university found');
+      throw new Error('No university found');
     }
 
     const universitiesList: UniversityListObject = {

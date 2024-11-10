@@ -44,9 +44,6 @@ export class CompetitionController {
     res.json({ regoFields });
   });
 
-  /**
-   * Updates the details of a number of staff for a competition.
-   */
   competitionStaffUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const staffList = req.body.staffList as Array<StaffInfo>;
@@ -57,9 +54,6 @@ export class CompetitionController {
     res.json({});
   });
 
-  /**
-   * Updates the details of a number of students for a competition.
-   */
   competitionStudentsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const studentList = req.body.studentList as Array<StudentInfo>;
@@ -70,9 +64,6 @@ export class CompetitionController {
     res.json({});
   });
 
-  /**
-   * Updates the details of a number of teams in a competition.
-   */
   competitionTeamsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const teamList = req.body.teamList as Array<TeamDetails>;
@@ -82,9 +73,6 @@ export class CompetitionController {
     res.json({});
   });
 
-  /**
-   * Handles the request to get competition site codes based on the provided code query parameter.
-   */
   competitionSitesCodes = httpErrorHandler(async (req: Request, res: Response) => {
     const { code } = req.query;
 
@@ -93,9 +81,6 @@ export class CompetitionController {
     res.json({ sites });
   });
 
-  /**
-   * Handles the request to get competition sites based on the competition ID.
-   */
   competitionSites = httpErrorHandler(async (req: Request, res: Response) => {
     const { compId } = req.query;
 
@@ -104,9 +89,6 @@ export class CompetitionController {
     res.json({ sites });
   });
 
-  /**
-   * Handles the request to get the attendees of a competition.
-   */
   competitionAttendees = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 
@@ -116,9 +98,6 @@ export class CompetitionController {
     res.json({ attendees });
   });
 
-  /**
-   * Handles the request to get the details of a team in a competition.
-   */
   competitionTeamDetails = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 
@@ -128,9 +107,6 @@ export class CompetitionController {
     res.json(teamDetails);
   });
 
-  /**
-   * Handles the request to generate an invite code for a competition team.
-   */
   competitionTeamInviteCode = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 
@@ -140,9 +116,6 @@ export class CompetitionController {
     res.json({ code: inviteCode });
   });
 
-  /**
-   * Handles the request to join a competition team by a user.
-   */
   competitionTeamJoin = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const { compId, teamCode } = req.body;
@@ -152,9 +125,6 @@ export class CompetitionController {
     res.json({ teamName: 'teamName' });
   });
 
-  /**
-   * Handles the request to get student details for a specific competition.
-   */
   competitionStudentDetails = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 
@@ -164,9 +134,6 @@ export class CompetitionController {
     res.json({studentDetails});
   });
   
-  /**
-   * Handles the request to get competition staff by user ID and competition ID.
-   */
   competitionStaff = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
     const staff = await this.competitionService.competitionStaff(
@@ -175,9 +142,6 @@ export class CompetitionController {
     res.json({ staff });
   });
 
-  /**
-   * Handles the request to get students participating in a competition.
-   */
   competitionStudents = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
     const students = await this.competitionService.competitionStudents(
@@ -186,9 +150,6 @@ export class CompetitionController {
     res.json({ students });
   });
 
-  /**
-   * Handles the request to get competition roles for a user in a specific competition.
-   */
   competitionRoles = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
     const roles = await this.competitionService.competitionRoles(
@@ -197,9 +158,6 @@ export class CompetitionController {
     res.json({ roles });
   });
   
-  /**
-   * Handles the request to get the list of teams in a competition.
-   */
   competitionTeams = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 
@@ -207,11 +165,9 @@ export class CompetitionController {
       parseInt(userId as string), parseInt(compId as string));
 
     res.json({ teamList })
+
   });
 
-  /**
-   * Handles the creation of a new competition by a system admin.
-   */
   competitionsSystemAdminCreate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
 
@@ -234,9 +190,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Updates competition details by system admin.
-   */
   competitionSystemAdminUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
 
@@ -259,9 +212,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the request to get competition details by competition ID.
-   */
   competitionGetDetails = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const competitionId = req.query.compId;
     const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
@@ -271,9 +221,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the request to get a list of competitions that the user is a part of.
-   */
   competitionsList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
 
@@ -283,9 +230,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the request to verify a competition code.
-   */
   competitionCodeStatus = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId, code } = req.query;
     const codeStatus = await this.competitionService.competitionCodeStatus(Number(userId), String(code));
@@ -293,9 +237,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the request to get the default site for a competition user.
-   */
   competitionUserDefaultSite = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId, code } = req.query;
     const defaultSite = await this.competitionService.competitionUserDefaultSite(Number(userId), String(code));
@@ -303,9 +244,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the request for a student to join a competition by code.
-   */
   competitionStudentJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const code = req.body.code;
     const competitionUserInfo = req.body.competitionUser;
@@ -325,9 +263,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the withdrawal of a student from a competition.
-   */
   competitionStudentWithdraw = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const compId = req.body.compId;
@@ -336,9 +271,6 @@ export class CompetitionController {
     return;
   });
   
-  /**
-   * Approves team assignments for a competition.
-   */
   competitionApproveTeamAssignment = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { compId, approveIds } = req.body;
@@ -347,9 +279,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles a request to change a team's name in a competition.
-   */
   competitionRequestTeamNameChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { compId, newTeamName } = req.body;
@@ -358,9 +287,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Approves or rejects team name change requests for a competition.
-   */
   competitionApproveTeamNameChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { compId, approveIds, rejectIds } = req.body;
@@ -369,9 +295,6 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the request to change the site of a competition for a user.
-   */
   competitionRequestSiteChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { compId, newSiteId } = req.body;
@@ -379,9 +302,6 @@ export class CompetitionController {
     res.json(result);
   });
 
-  /**
-   * Handles the approval or rejection of site changes for a competition.
-   */
   competitionApproveSiteChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { compId, approveIds, rejectIds } = req.body;
@@ -389,9 +309,6 @@ export class CompetitionController {
     res.json(result);
   });
 
-  /**
-   * Handles the assignment of team seats in a competition.
-   */
   competitionTeamSeatAssignments = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { compId, seatAssignments} = req.body;
@@ -399,9 +316,6 @@ export class CompetitionController {
     res.json(result);
   });
 
-  /**
-   * Registers teams for a competition.
-   */
   competitionRegisterTeams = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { compId, teamIds } = req.body;
@@ -409,9 +323,6 @@ export class CompetitionController {
     res.json(result);
   });
 
-  /**
-   * Handles the request for a user to join a competition as staff.
-   */
   competitionStaffJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const code = req.body.code;

@@ -1,7 +1,4 @@
 
-/**
- * Represents a user session.
- */
 export interface Session {
   sessionId: string;
   createdAt: EpochTimeStamp; // seconds since epoch

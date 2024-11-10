@@ -11,16 +11,6 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     this.pool = pool;
   }
 
-  /**
-   * Sends notifications to other team members and the coach when a user withdraws from a competition.
-   *
-   * @param userId The ID of the user withdrawing from the competition.
-   * @param competitionId The ID of the competition.
-   * @param competitionName The name of the competition.
-   * @param teamId The ID of the team the user is withdrawing from.
-   * @param teamName The name of the team the user is withdrawing from.
-   * @returns A promise that resolves to an empty object.
-   */
   notificationWithdrawal = async (userId: number, competitionId: number, competitionName: string, teamId: number, teamName: string): Promise<{}> => {
     // Get student's name
     const studentNameQuery = `
@@ -55,13 +45,6 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Sends a notification to the coach when a team requests a name change.
-   *
-   * @param teamId The ID of the team requesting the name change.
-   * @param competitionId The ID of the competition in which the team is participating.
-   * @returns A promise that resolves to an empty object.
-   */
   notificationRequestTeamNameChange = async (teamId: number, competitionId: number): Promise<{}> => {
     // Get the old team name and the pending team name
     const teamNameQuery = `
@@ -101,14 +84,6 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Sends notifications to participants of a competition team regarding the approval or rejection of their new team name.
-   *
-   * @param compId The ID of the competition.
-   * @param approveIds An array of team IDs whose new team names have been approved.
-   * @param rejectIds An array of team IDs whose new team names have been rejected.
-   * @returns A promise that resolves to an empty object.
-   */
   notificationApproveTeamNameChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
     // Get the competition name
     const competitionNameQuery = `
@@ -148,13 +123,6 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Sends a notification to the coach when a team requests a site change.
-   * 
-   * @param teamId The ID of the team requesting the site change.
-   * @param competitionId The ID of the competition in which the site change is requested.
-   * @returns A promise that resolves to an empty object.
-   */
   notificationRequestSiteChange = async (teamId: number, competitionId: number): Promise<{}> => {
     // Get the old site ID and the pending site ID
     const siteQuery = `
@@ -202,14 +170,8 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Sends notifications to participants of a team about the approval or rejection of their site change requests for a competition.
-   *
-   * @param compId The ID of the competition.
-   * @param approveIds An array of team IDs whose site change requests have been approved.
-   * @param rejectIds An array of team IDs whose site change requests have been rejected.
-   * @returns A promise that resolves to an empty object.
-   */
+
+
   notificationApproveSiteChange = async (compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{}> => {
     // Get the competition name
     const competitionNameQuery = `
@@ -249,13 +211,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Sends a notification to participants about their team assignment for a competition.
-   *
-   * @param compId The ID of the competition.
-   * @param approveIds An array of team IDs whose members are to be notified.
-   * @returns A promise that resolves to an empty object.
-   */
+
   notificationApproveTeamAssignment = async (compId: number, approveIds: Array<number>): Promise<{}> => {
     // Get the competition name
     const competitionNameQuery = `
@@ -282,13 +238,6 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Sends notifications to team members about their seat assignments for a specific competition.
-   *
-   * @param compId The ID of the competition.
-   * @param seatAssignments An array of seat assignments containing team site and team seat information.
-   * @returns A promise that resolves to an empty object.
-   */
   notificationTeamSeatAssignments = async (compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}> => {
     // Get the competition name
     const competitionNameQuery = `
@@ -313,16 +262,6 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Checks if there are any staff accounts pending approval for the competitions
-   * that the given user is responsible for. If there are pending approvals, it
-   * creates a notification for the user. If a similar notification has been created
-   * in the last 24 hours, it updates the existing notification's timestamp instead.
-   *
-   * @param userId The ID of the user (admin) to check for pending staff approvals.
-   * @returns A promise that resolves to an empty object.
-   * @throws {DbError} If the user is not an admin for any competitions.
-   */
   notificationPendingStaffApproval = async (userId: number): Promise<{}> => {
     // Get all competition IDs that the user is responsible for
     const competitionIdsQuery = `
@@ -384,13 +323,6 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Removes a notification from the database by its ID.
-   *
-   * @param {number} notificationId The ID of the notification to be removed.
-   * @returns A promise that resolves to an empty object if the notification was successfully removed.
-   * @throws {DbError} If the notification with the specified ID does not exist.
-   */
   notificationRemove = async (notificationId: number): Promise<{}> => {
     const deleteNotificationQuery = `
       DELETE FROM notifications 
@@ -406,12 +338,6 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     return {};
   }
 
-  /**
-   * Retrieves a list of notifications for a specific user.
-   *
-   * @param userId - The ID of the user whose notifications are to be retrieved.
-   * @returns A promise that resolves to an array of `Notification` objects.
-   */
   userNotificationsList = async (userId: number): Promise<Array<Notification>> => {
     const notifications = await this.pool.query(
       `SELECT id, type, message, created_at AS "createdAt", team_name as "teamName",

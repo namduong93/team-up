@@ -13,9 +13,6 @@ export class UserController {
     this.userService = userService;
   }
 
-  /**
-   * Handles the registration of a new student.
-   */
   studentRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     // Use stuff from Request parameters to call methods on this.userService and res.json it.
     const new_student: Student = {
@@ -40,9 +37,6 @@ export class UserController {
     return;
   });
 
-  /**
-   * Handles the registration of a staff.
-   */
   staffRegister = httpErrorHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const new_staff: Staff = {
       name: req.body.name,
@@ -65,10 +59,6 @@ export class UserController {
     return;
   });
 
-  
-  /**
-   * Handles user login, sets session cookie, and returns an empty JSON response.
-   */
   userLogin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const email = req.body.email;
     const password = req.body.password;
@@ -80,9 +70,6 @@ export class UserController {
     return;
   });
 
-  /**
-   * Logs out the user by clearing the session cookie and ending the session.
-   */
   userLogout = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const sessionId = req.cookies.sessionId;
     await this.userService.userLogout(sessionId);
@@ -91,9 +78,6 @@ export class UserController {
     return;
   });
 
-  /**
-   * Retrieves user profile information based on the provided user ID.
-   */
   userProfileInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const userProfileInfo = await this.userService.userProfileInfo(Number(userId));
@@ -101,19 +85,6 @@ export class UserController {
     return;
   });
 
-  /**
-   * Retrieves user dashboard information (name + university) based on the provided user ID.
-   */
-  userDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const userId = req.query.userId;
-    const userDashInfo = await this.userService.userDashInfo(Number(userId));
-    res.json(userDashInfo);
-    return;
-  });
-
-  /**
-   * Updates the user profile with the provided information.
-   */
   userUpdateProfile = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const userProfile : UserProfileInfo = {
@@ -133,9 +104,6 @@ export class UserController {
     return;
   });
 
-  /**
-   * Updates the user's password given the old and new passwords.
-   */
   userUpdatePassword = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { oldPassword, newPassword } = req.body;
@@ -144,13 +112,17 @@ export class UserController {
     return;
   });
 
-  /**
-   * Handles the request to get the user type.
-   */
   userType = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const userDashInfo = await this.userService.userType(Number(userId));
     res.json({...userDashInfo, profilePic: ''});
+    return;
+  });
+
+  userDashInfo = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const userDashInfo = await this.userService.userDashInfo(Number(userId));
+    res.json(userDashInfo);
     return;
   });
 

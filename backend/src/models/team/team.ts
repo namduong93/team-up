@@ -1,8 +1,5 @@
 import { CompetitionUser } from "../competition/competitionUser";
 
-/**
- * Represents a team participating in a competition.
- */
 export interface Team {
   id?: number;
   name: string;
@@ -14,18 +11,12 @@ export interface Team {
   competitionId: number;
 }
 
-/**
- * Enum representing the status of a team.
- */
 export const enum TeamStatus {
   PENDING = 'Pending',
   REGISTERED = 'Registered',
   UNREGISTERED = 'Unregistered'
 }
 
-/**
- * Represents the assignment of a team to a specific seat at a site.
- */
 export interface SeatAssignment {
   siteId: string; // ID of the site
   teamSite: string; // e.g. "CSE Building K17"
@@ -35,5 +26,4 @@ export interface SeatAssignment {
   teamLevel: string; // level of the team
 }
 
-// Default team size for ICPC is 3
 export const DEFAULT_TEAM_SIZE = 3;
