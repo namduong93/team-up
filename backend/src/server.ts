@@ -203,6 +203,11 @@ app.put('/competition/coach/site_approve', competitionController.competitionAppr
 // RESPONSE: {}
 app.put('/competition/staff/seat_assignments', competitionController.competitionTeamSeatAssignments);
 
+// Coach registers teams for competition
+// PARAMS: { compId: number, teamIds: Array<number> }
+// RESPONSE: {}
+app.put('/competition/staff/register_teams', competitionController.competitionRegisterTeams);
+
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
 app.get('/competition/universities/list', competitionController.competitionUniversitiesList)
@@ -287,6 +292,7 @@ app.get('/competition/sites', competitionController.competitionSites);
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
+app.get('/university/courses', universityController.universityCourses);
 
 app.post('/competition/teams/update', competitionController.competitionTeamsUpdate);
 

@@ -14,7 +14,6 @@ import { IoIosCreate } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
 import { DashInfo } from "./hooks/useDashInfo";
 import { ResponsiveActionButton } from "../../components/responsive_fields/action_buttons/ResponsiveActionButton";
-import { OptionPopUp } from "../student/OptionPopUp";
 import { ErrorMessage } from "../authentication/registration/AccountInformation";
 
 interface Competition {
@@ -357,7 +356,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
         console.error("Failed to validate competition code:", error);
         setErrorMessage("Invalid competition code. Please try again."); // Set error message
         return false;
-      } finally {
       }
     };
 
