@@ -532,6 +532,10 @@ export class CompetitionService {
     return teamsParticipating;
   }
 
+  competitionStaffList = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
+    return await this.competitionRepository.competitionStaffList(userId, compId);
+  }
+
   // Check to make sure every competition name is unique
   // checkUniqueSiteNames = (competition: Competition): boolean => {
   //   const allLocations = [];

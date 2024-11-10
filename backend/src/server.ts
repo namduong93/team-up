@@ -307,6 +307,11 @@ app.post('/competition/staff/update_rego_toggles', competitionController.competi
 
 app.get('/competition/students/rego_toggles', competitionController.competitionStudentsRegoToggles);
 
+// Gets the list of all staff including staff that has requested to become admins
+// PARAMS: {}
+// RESPONSE: { staff: Array<{id: number, name: string, email: string}>}
+// app.get('/competition/staff_list', competitionController.staffList);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })
