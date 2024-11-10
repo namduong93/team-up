@@ -9,7 +9,10 @@ import TextInput from "../../../components/general_utility/TextInput";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
 import { sendRequest } from "../../../utility/request";
-import { Course, CourseCategory } from "../../../../shared_types/University/Course";
+import {
+  Course,
+  CourseCategory,
+} from "../../../../shared_types/University/Course";
 import { EditRego } from "../../../../shared_types/Competition/staff/Edit";
 import { DEFAULT_REGO_FIELDS } from "../../competition_staff_page/manage_page/components/StaffActionCard";
 
@@ -138,10 +141,12 @@ export const CompetitionExperience: FC = () => {
       //   : "NEW_ONE"; // change when the other API is done
 
       // const response = await sendRequest.post(apiEndpoint, payload);
-      
-      const response = await sendRequest.post('/competition/student/join', payload);
+
+      const response = await sendRequest.post(
+        "/competition/student/join",
+        payload
+      );
       console.log("Response:", response.data);
-      
 
       navigate("/dashboard", {
         state: {
@@ -154,19 +159,39 @@ export const CompetitionExperience: FC = () => {
   };
 
   const [courseOptions, setCourseOptions] = useState([
-    { value: CourseCategory.Introduction, label: 'Introduction to Programming / Programming Fundamentals (and any advanced versions' },
-    { value: CourseCategory.DataStructures, label: 'Data Structures and Algorithms (and any advanced versions)' },
-    { value: CourseCategory.AlgorithmDesign, label: 'Algorithm Design and Analysis (and any advanced versions' },
-    { value: CourseCategory.ProgrammingChallenges, label: 'Programming Challenges and Problems (and any advanced versions' },
+    {
+      value: CourseCategory.Introduction,
+      label:
+        "Introduction to Programming / Programming Fundamentals (and any advanced versions)",
+    },
+    {
+      value: CourseCategory.DataStructures,
+      label: "Data Structures and Algorithms (and any advanced versions)",
+    },
+    {
+      value: CourseCategory.AlgorithmDesign,
+      label: "Algorithm Design and Analysis (and any advanced versions)",
+    },
+    {
+      value: CourseCategory.ProgrammingChallenges,
+      label: "Programming Challenges and Problems (and any advanced versions)",
+    },
   ]);
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const response = await sendRequest.get<{ courses: Array<Course> }>('/university/courses');
+      const response = await sendRequest.get<{ courses: Array<Course> }>(
+        "/university/courses"
+      );
       const { courses } = response.data;
 
-      setCourseOptions(courses.map((course) => ({ value: course.category, label: course.courseName })));
-    }
+      setCourseOptions(
+        courses.map((course) => ({
+          value: course.category,
+          label: course.courseName,
+        }))
+      );
+    };
 
     fetchCourses();
   }, []);
@@ -184,7 +209,8 @@ export const CompetitionExperience: FC = () => {
     } else {
       return (
         courses.length === 0 ||
-        (editRego.enableNationalPrizesField && hasNationalPrize === undefined) ||
+        (editRego.enableNationalPrizesField &&
+          hasNationalPrize === undefined) ||
         (hasNationalPrize && nationalPrizes === "") ||
         (editRego.enableInternationalPrizesField &&
           hasInternationalPrize === undefined) ||
@@ -207,10 +233,12 @@ export const CompetitionExperience: FC = () => {
   useEffect(() => {
     const fetchEditRego = async () => {
       const response = await sendRequest.get<{ regoFields: EditRego }>(
-        '/competition/students/rego_toggles', { code });
+        "/competition/students/rego_toggles",
+        { code }
+      );
       const { regoFields } = response.data;
       setEditRego(regoFields || DEFAULT_REGO_FIELDS);
-    }
+    };
     fetchEditRego();
   }, []);
 
@@ -244,21 +272,22 @@ export const CompetitionExperience: FC = () => {
             showOther={false}
           />
 
-          {editRego.enableCodeforcesField && formData.competitionLevel !== "Level B" && (
-            <TextInput
-              label="Codeforces Score"
-              placeholder="Please enter"
-              type="numeric"
-              required={false}
-              value={formData.codeforce?.toString() || ""}
-              onChange={(e) => {
-                const value = e.target.value;
-                setFormData({ ...formData, codeforce: Number(value) });
-              }}
-              width="100%"
-              descriptor="Please enter your current Codeforce score if applicable"
-            />
-          )}
+          {editRego.enableCodeforcesField &&
+            formData.competitionLevel !== "Level B" && (
+              <TextInput
+                label="Codeforces Score"
+                placeholder="Please enter"
+                type="numeric"
+                required={false}
+                value={formData.codeforce?.toString() || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFormData({ ...formData, codeforce: Number(value) });
+                }}
+                width="100%"
+                descriptor="Please enter your current Codeforce score if applicable"
+              />
+            )}
 
           {editRego.enableRegionalParticipationField &&
             formData.degreeYear.toString() !== "1" &&

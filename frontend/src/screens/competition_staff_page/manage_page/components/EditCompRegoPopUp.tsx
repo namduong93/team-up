@@ -2,8 +2,11 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 import { ToggleButton } from "./ToggleButton";
-import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
-import TextInputLight from "../../../../components/general_utility/TextInputLight";
+import {
+  EditRego,
+  EditCourse,
+} from "../../../../../shared_types/Competition/staff/Edit";
+import { CourseCategory } from "../../../../../shared_types/University/Course";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -23,7 +26,7 @@ const Modal = styled.div`
   top: 50%;
   left: 50%;
   min-width: 290px;
-  max-width: 800px;
+  max-width: 1000px;
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 12px;
@@ -96,24 +99,24 @@ const Text = styled.span`
 
 const RowContainer = styled.div`
   display: grid;
-  grid-template-columns: 75% 25%;
+  grid-template-columns: 85% 15%;
   align-items: center;
   justify-content: center;
   gap: 10px;
   margin-top: 10px;
   margin-bottom: 30px;
-  width: 85%;
+  width: 100%;
 `;
 
-const RowContainer1 = styled.div`
+const RowContainer2 = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 60px;
   margin-top: 10px;
   margin-bottom: 30px;
-  width: 85%;
+  width: 95%;
 `;
 
 const Input = styled.input`
@@ -139,26 +142,54 @@ const Column = styled.div`
   padding: 5px;
 `;
 
+const Title2 = styled.h2`
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: center; // Add this line to center the text
+`;
+
+const FirstDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 5px;
+  width: 100%;
+  margin-bottom: 32px;
+`;
+
 interface EditCompRegoPopUpProps {
-  heading: React.ReactNode;
   onClose: () => void;
   regoFields: EditRego;
   setRegoFields: React.Dispatch<React.SetStateAction<EditRego>>;
   onSubmit: (regoFields: EditRego) => void;
+  editCourses: EditCourse; // Received editCourse prop
+  setCourses: (category: CourseCategory, value: string) => void;
 }
 
 export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
-  heading,
   onClose,
   regoFields,
   setRegoFields,
   onSubmit,
+  editCourses,
+  setCourses,
 }) => {
   const handleToggle = (field: keyof EditRego) => {
     setRegoFields((prevFields) => ({
       ...prevFields,
       [field]: !prevFields[field],
     }));
+  };
+
+  const handleInputChange = (
+    category: CourseCategory,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setCourses(category, event.target.value); // Pass the value of the input field
   };
 
   const handleSubmit = () => {
@@ -172,88 +203,130 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
         <CloseButton onClick={onClose}>
           <FaTimes />
         </CloseButton>
-        <div>{heading}</div>
 
-        <div style={{ alginItems: "left" }}>
-          <Label>
-            Input the relevant course codes for your university programming
-            subjects{" "}
-          </Label>
-        </div>
+        <RowContainer2>
+          <FirstDiv>
+            <div style={{ width: "100%", textAlign: "center" }}>
+              <Title2>
+                Input the relevant course codes {"\n"}and names for your
+                university
+                {"\n"}programming subjects
+              </Title2>
+            </div>
 
-        <RowContainer1>
-          <Column>
-            <Label>
-              Introduction to Programming / Programming Fundamentals
-            </Label>
-          </Column>
-          
-          <Column>
-            <Input type="text" placeholder="COMP1234" value=/>
-          </Column>
-
-        </RowContainer1>
-
-        <RowContainer>
-          <Column>
-            <Label>Codeforces</Label>
-            <Text>Students enter their current Codeforces score</Text>
-          </Column>
-          <Column>
-            <ToggleButton
-              isOn={regoFields.enableCodeforcesField}
-              onToggle={() => handleToggle("enableCodeforcesField")}
+            <Label>Introduction to Programming</Label>
+            <Input
+              type="text"
+              placeholder="COMP1234 Introduction to Programming"
+              value={editCourses[CourseCategory.Introduction]}
+              onChange={(e) =>
+                handleInputChange(CourseCategory.Introduction, e)
+              }
             />
-          </Column>
-        </RowContainer>
 
-        <RowContainer>
-          <Column>
-            <Label>ICPC Regional Participation</Label>
-            <Text>
-              Students specify if they have ever competed in a regional ICPC
-              round
-            </Text>
-          </Column>
-          <Column>
-            <ToggleButton
-              isOn={regoFields.enableRegionalParticipationField}
-              onToggle={() => handleToggle("enableRegionalParticipationField")}
+            <Label>Data Structures and Algorithms</Label>
+            <Input
+              type="text"
+              placeholder="COMP1234 Data Structures and Algorithms"
+              value={editCourses[CourseCategory.DataStructures]}
+              onChange={(e) =>
+                handleInputChange(CourseCategory.DataStructures, e)
+              }
             />
-          </Column>
-        </RowContainer>
 
-        <RowContainer>
-          <Column>
-            <Label>National Olympiad Prizes</Label>
-            <Text>
-              Students specify if they have ever won any related National
-              Olympiad Prizes in Mathematics or Informatics
-            </Text>
-          </Column>
-          <Column>
-            <ToggleButton
-              isOn={regoFields.enableNationalPrizesField}
-              onToggle={() => handleToggle("enableNationalPrizesField")}
+            <Label>Algorithm Design and Analysis</Label>
+            <Input
+              type="text"
+              placeholder="COMP1234 Algorithm Design and Analysis"
+              value={editCourses[CourseCategory.AlgorithmDesign]}
+              onChange={(e) =>
+                handleInputChange(CourseCategory.AlgorithmDesign, e)
+              }
             />
-          </Column>
-        </RowContainer>
 
-        <RowContainer>
-          <Column>
-            <Label>International Olympiad Prizes</Label>
-            <Text>
-              Students specify if they have ever won any related International
-              Olympiad Prizes in Mathematics or Informatics
-            </Text>
-          </Column>
-          <Column>
-            <ToggleButton
-              isOn={regoFields.enableInternationalPrizesField}
-              onToggle={() => handleToggle("enableInternationalPrizesField")}
+            <Label>Programming Challenges and Problems</Label>
+            <Input
+              type="text"
+              placeholder="COMP1234 Programming Challenges and Problems"
+              value={editCourses[CourseCategory.ProgrammingChallenges]}
+              onChange={(e) =>
+                handleInputChange(CourseCategory.ProgrammingChallenges, e)
+              }
             />
-          </Column>
-        </RowContainer>
+          </FirstDiv>
+
+          <div>
+            <Title2>
+              Please toggle the fields you would {"\n"} like to show on the
+              Competition Registration Form
+            </Title2>
+
+            <RowContainer>
+              <Column>
+                <Label>Codeforces</Label>
+                <Text>Students enter their current Codeforces score</Text>
+              </Column>
+              <Column>
+                <ToggleButton
+                  isOn={regoFields.enableCodeforcesField}
+                  onToggle={() => handleToggle("enableCodeforcesField")}
+                />
+              </Column>
+            </RowContainer>
+
+            <RowContainer>
+              <Column>
+                <Label>ICPC Regional Participation</Label>
+                <Text>
+                  Students specify if they have ever competed in a regional ICPC
+                  round
+                </Text>
+              </Column>
+              <Column>
+                <ToggleButton
+                  isOn={regoFields.enableRegionalParticipationField}
+                  onToggle={() =>
+                    handleToggle("enableRegionalParticipationField")
+                  }
+                />
+              </Column>
+            </RowContainer>
+
+            <RowContainer>
+              <Column>
+                <Label>National Olympiad Prizes</Label>
+                <Text>
+                  Students specify if they have ever won any related National
+                  Olympiad Prizes in Mathematics or Informatics
+                </Text>
+              </Column>
+              <Column>
+                <ToggleButton
+                  isOn={regoFields.enableNationalPrizesField}
+                  onToggle={() => handleToggle("enableNationalPrizesField")}
+                />
+              </Column>
+            </RowContainer>
+
+            <RowContainer>
+              <Column>
+                <Label>International Olympiad Prizes</Label>
+                <Text>
+                  Students specify if they have ever won any related
+                  International Olympiad Prizes in Mathematics or Informatics
+                </Text>
+              </Column>
+              <Column>
+                <ToggleButton
+                  isOn={regoFields.enableInternationalPrizesField}
+                  onToggle={() =>
+                    handleToggle("enableInternationalPrizesField")
+                  }
+                />
+              </Column>
+            </RowContainer>
+          </div>
+        </RowContainer2>
 
         <Button onClick={handleSubmit}>Save Changes</Button>
       </Modal>

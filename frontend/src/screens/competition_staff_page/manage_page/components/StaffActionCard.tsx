@@ -10,7 +10,11 @@ import {
 import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
-import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
+import {
+  EditRego,
+  EditCourse,
+} from "../../../../../shared_types/Competition/staff/Edit";
+import { CourseCategory } from "../../../../../shared_types/University/Course";
 import { sendRequest } from "../../../../utility/request";
 import { useParams } from "react-router-dom";
 type ActionType =
@@ -156,20 +160,12 @@ const CodeCardText = styled(CardText)`
   font-size: 1.25rem;
 `;
 
-const Title2 = styled.h2`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 22px;
-  white-space: pre-wrap;
-  word-break: break-word;
-`;
-
 export const DEFAULT_REGO_FIELDS = {
   enableCodeforcesField: true,
   enableNationalPrizesField: true,
   enableInternationalPrizesField: true,
   enableRegionalParticipationField: true,
-}
+};
 
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
@@ -256,9 +252,25 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     setShowContactBio(false);
   };
 
-  // TO-DO: call the backend to retrive the previous options
   const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+
+  // currently it's persisting the entries, so I don't know if you want
+  // it to do that or not, feel free to call something from backend or something
+  const [editCourse, setEditCourse] = useState<EditCourse>({
+    [CourseCategory.Introduction]: "",
+    [CourseCategory.DataStructures]: "",
+    [CourseCategory.AlgorithmDesign]: "",
+    [CourseCategory.ProgrammingChallenges]: "",
+  });
+
+  // updates the editCourse object with the user's input
+  const handleEditCourseChange = (category: CourseCategory, value: string) => {
+    setEditCourse((prevEditCourse) => ({
+      ...prevEditCourse,
+      [category]: value,
+    }));
+  };
 
   useEffect(() => {
     if (isFirstLoad) {
@@ -268,20 +280,25 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       return;
     }
     const fetchRegoFields = async () => {
-      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
-        { compId, universityId: universityOption.value });
+      const response = await sendRequest.get<{ regoFields: EditRego }>(
+        "/competition/staff/rego_toggles",
+        { compId, universityId: universityOption.value }
+      );
       const { regoFields: receivedRegoFields } = response.data;
       setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
-    }
+    };
     fetchRegoFields();
   }, [universityOption]);
 
   const handleRegoEditSubmit = async (regoFields: EditRego) => {
-    // TO-DO: send the EditRego to backend for storage
-    await sendRequest.post('/competition/staff/update_rego_toggles',
-      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
+    // await sendRequest.post("/competition/staff/update_rego_toggles", {
+    //   compId: parseInt(compId as string),
+    //   regoFields,
+    //   universityId: parseInt(universityOption.value),
+    // });
+    // TO-DO: send the edited courses to backend and store for competition
+    console.log(editCourse);
     console.log(regoFields);
-    console.log("submitted");
   };
 
   return (
@@ -338,16 +355,12 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
           {showEditRego && (
             <EditCompRegoPopUp
-              heading={
-                <Title2>
-                  Please toggle the fields you would like to {"\n"} to show on
-                  the Competition Registration Form
-                </Title2>
-              }
               onClose={() => setShowEditRego(false)}
               regoFields={regoFields}
               setRegoFields={setRegoFields}
               onSubmit={handleRegoEditSubmit}
+              editCourses={editCourse}
+              setCourses={handleEditCourseChange}
             />
           )}
         </>
