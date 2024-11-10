@@ -181,4 +181,12 @@ export class UserController {
     res.json(result);
     return;
   });
+
+  staffReject = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { rejectIds } = req.body;
+    const result = await this.userService.staffReject(Number(userId), rejectIds);
+    res.json(result);
+    return;
+  });
 }

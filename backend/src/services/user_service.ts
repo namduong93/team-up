@@ -193,4 +193,8 @@ export class UserService {
   staffApprove = async (userId: number, acceptedIds: number[]): Promise<void> => {
     await this.userRepository.staffApprove(userId, acceptedIds);
   }
+
+  staffReject = async (userId: number, rejectIds: number[]): Promise<void> => {
+    await this.userRepository.staffReject(userId, rejectIds);
+  }
 }
