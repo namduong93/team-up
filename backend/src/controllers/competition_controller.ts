@@ -316,6 +316,13 @@ export class CompetitionController {
     res.json(result);
   });
 
+  competitionRegisterTeams = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { compId, teamIds } = req.body;
+    const result = await this.competitionService.competitionRegisterTeams(Number(userId), Number(compId), teamIds);
+    res.json(result);
+  });
+
   competitionStaffJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const code = req.body.code;

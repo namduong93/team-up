@@ -207,7 +207,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
   }
 
-  coachCheckIds = async (userId: number, teamIds: Array<number>, compId: number) => {
+  coachCheckIds = 
+  async (userId: number, teamIds: Array<number>, compId: number) => {
     // Check if the coach is coaching all the teams in approveIds
     const coachCheckQuery = `
     SELECT id
@@ -1301,6 +1302,48 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       if (updateSeatResult.rowCount === 0) {
         throw new DbError(DbError.Query, `No team with id ${teamId} is found, or invalid team site ${teamSite} with siteId ${siteId} for this team.`);
       }
+    }
+
+    return {};
+  }
+
+  competitionRegisterTeams = async(userId: number, compId: number, teamIds: Array<number>): Promise<{}> => {
+    // Verify if competition exists
+    const competitionExistQuery = `
+      SELECT 1
+      FROM competitions
+      WHERE id = $1
+    `;
+    const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
+
+    if (competitionExistResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "Competition not found.");
+    }
+
+    // Check if the user is an admin or a coach of this competition.
+    // If the user is a coach, they can only approve teams that they are a coach of.
+    const userRoles = await this.competitionRoles(userId, compId);
+
+    if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
+      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+    }
+
+    if (userRoles.includes(CompetitionUserRole.COACH)) {
+      await this.coachCheckIds(userId, teamIds, compId);
+    }
+
+    // Update the team status to 'Registered'
+    const registerQuery = `
+      UPDATE competition_teams
+      SET team_status = 'Registered'::competition_team_status
+      WHERE id = ANY($1::int[])
+      AND competition_id = $2
+    `;
+    const registerResult = await this.pool.query(registerQuery, [teamIds, compId]);
+
+    // If no rows were updated, it implies that no matching records were found
+    if (registerResult.rowCount === 0) {
+      throw new DbError(DbError.Query, "No matching teams found for the provided team IDs in this competition.");
     }
 
     return {};
