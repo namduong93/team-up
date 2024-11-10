@@ -11,6 +11,8 @@ import { FaBell, FaChair, FaDownload, FaTimes } from "react-icons/fa";
 import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
 import { TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
+import { sendRequest } from "../../../utility/request";
+import { useParams } from "react-router-dom";
 
 interface AssignSeatsProps {
   siteName: string;
@@ -287,6 +289,7 @@ const AssignPopupText = styled.h2`
 `;
 
 export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) => {
+  const { compId } = useParams();
   const [seatInputType, setSeatInputType] = useState<string>("Text"); // either string or inputs
   const [seatAB, setSeatAB] = useState<string>("Together"); // seat level a and b either together or separately
   const [isSeatedTogether, setIsSeatedTogether] = useState<boolean>(true); // by default, don't split level a and b
@@ -305,6 +308,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) =
   const [existingSeats, setExistingSeats] = useState<string[]>([]);
   const [teamSeatAssignments, setTeamSeatAssignments] = useState<SeatAssignment[]>([]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { teamListState: [teamList, setTeamList] } = useCompetitionOutletContext("teams");
 
   // Update seat count whenever the seat string changes
@@ -421,7 +425,6 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) =
     setSeatCodeInputB(e.target.value);
   };
 
-  // TODO: for the seat string input, need to sort by team levels a and b
   const generateSeats = () => {
     const newSeats: string[] = [];
     
@@ -463,7 +466,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) =
     return isFormAInvalid && isFormBInvalid;
   };
 
-  const distributeSeats = () => {
+  const distributeSeats = async () => {
     
     // Assign one seat per team, skipping two each time
     const seatAssignments: SeatAssignment[] = [];
@@ -542,18 +545,14 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) =
         }
       }
     }
-    // TODO: route to update team seats based on seat assignments
-    // UPDATE: route is available. However, might need to consult the interface seatAssignment and how to get team details initially
-    console.log("Assigned Seats:", seatAssignments);
 
-    // try {
-    //   // Send a request to the backend to update team seats.
-    //   const seatAssignmentsResponse = await sendRequest.put<s{}>('/competition/staff/seat_assignments', { compId, seatAssignments });
-    // } catch (error) {
-    //   console.error("Error withdrawing from the team:", error);
-    // }
+    try {
+      // Send a request to the backend to update team seats.
+      await sendRequest.put('/competition/staff/seat_assignments', { compId: compId, seatAssignments: seatAssignments });
+    } catch (error) {
+      console.error("Error withdrawing from the team:", error);
+    }
 
-    console.log("Seats assigned!");
     setTeamSeatAssignments(seatAssignments);
     setSeatModalState(true);
   };
@@ -734,7 +733,10 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) =
         <ModalOverlay>
           <ModalContainer>
             <CloseButtonContainer>
-              <CloseButton onClick={() => setSeatModalState(false)}>
+              <CloseButton onClick={() => {
+                setSeatModalState(false);
+                setSeatString("");
+              }}>
                 <FaTimes />
               </CloseButton>
             </CloseButtonContainer>

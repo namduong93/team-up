@@ -315,8 +315,21 @@ teamsPerSite.forEach((site: SiteDetails) => {
       console.log("Error updating teams' status to registerd: ", error);
     }
 
+    setFilters({});
+    setIsDownloading(false);
+    await fetchTeams(compId, setTeamList);
     return true;
   }
+
+  const checkHasTeamsToDownload = (): boolean =>  {
+    // Filter only 'Unregistered' teams
+    let unregisteredTeamIds = teamList.filter((team: TeamDetails) => team.status === 'Unregistered').map(team => team.teamId);
+    if (universityOption.value) {
+      unregisteredTeamIds = teamList.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value)).map(team => team.teamId);
+    };
+
+    return unregisteredTeamIds.length > 0;
+  };
 
   return (
   <>
@@ -401,6 +414,7 @@ teamsPerSite.forEach((site: SiteDetails) => {
       updateTeamStatus={updateTeamStatus}
       downloadQuestion="Are you sure you would like to register these teams?"
       isSiteDownload={false}
+      hasTeamsToDownload={checkHasTeamsToDownload()}
     />
     
   </>

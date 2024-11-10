@@ -17,6 +17,7 @@ interface DownloadButtonProps {
   updateTeamStatus?: () => Promise<boolean>;
   downloadQuestion: string;
   isSiteDownload: boolean;
+  hasTeamsToDownload: boolean;
 }
 
 export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = false, isEditingNameStatus = false,
@@ -28,6 +29,7 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
   updateTeamStatus = async () => true,
   downloadQuestion,
   isSiteDownload,
+  hasTeamsToDownload,
 }) => {
   const theme = useTheme();
 
@@ -54,7 +56,7 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
 
         </div>
       }
-      {isDownloading &&
+      {isDownloading && hasTeamsToDownload &&
       <>
         <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
           <TransparentResponsiveButton actionType="error"
@@ -83,7 +85,7 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
           />
         </div>
 
-        {!isSiteDownload &&
+        {!isSiteDownload && hasTeamsToDownload &&
           <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
             <ResponsiveActionButton actionType="confirm"
               label="Update Status"
