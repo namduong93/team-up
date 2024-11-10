@@ -257,6 +257,8 @@ app.get('/competition/roles', competitionController.competitionRoles);
 // all the above are strings
 app.get('/competition/students', competitionController.competitionStudents);
 
+// PARAMS: { compId: number }
+// RESPONSE: { staffs: Array<StaffInfo> }
 app.get('/competition/staff', competitionController.competitionStaff);
 
 // PARAMS: {}
@@ -286,11 +288,21 @@ app.post('/competition/team/join', competitionController.competitionTeamJoin);
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
 app.get('/competition/attendees', competitionController.competitionAttendees);
+
 // PARAMS: { compId }
 // RESPONSE: 
 // { studentDetails: {...} }
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
+
+
+// PARAMS: { compId }
+// RESPONSE: { staffDetails: StaffInfo }
+app.get('/competition/staff/details', competitionController.competitionStaffDetails);
+
+// PARAMS: { compId }
+// RESPONSE: { }
+app.put('/competition/staff/details', competitionController.competitionStaffDetailsUpdate);
 
 // PARAMS: { compId }
 // RESPONSE: { sites: Array<CompetitionSite> }
@@ -299,6 +311,14 @@ app.get('/competition/sites', competitionController.competitionSites);
 // PARAMS: { code }
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
+
+// PARAMS: { compId }
+// RESPONSE: { announcement: Announcement }
+app.get('/competition/announcement', competitionController.competitionAnnouncement);
+
+// PARAMS: { compId, announcementMessage: string }
+// RESPONSE: {}
+app.put('/competition/announcement', competitionController.competitionAnnouncementUpdate);
 
 
 app.get('/university/courses', universityController.universityCourses);
