@@ -53,6 +53,13 @@ interface Team {
   members: Member[]
 }
 
+const sexMap: Record<string, string> = {
+  "Male": "Male",
+  "Female": "Female",
+  "M": "Male",
+  "F": "Female"
+}
+
 const parseFile = async (file: File) => {
   return new Promise<Team[]>((resolve, _) => {
     if (file.type !== 'text/csv') {
@@ -77,7 +84,7 @@ const parseFile = async (file: File) => {
         }
       
         teamObject[teamName].push({ 
-          name, email, title, sex
+          name, email, title, sex: sexMap[sex] 
         });
         
       }
@@ -119,7 +126,13 @@ function App() {
           const nameInput = nameInputs[nameInputs.length - 1] as HTMLInputElement;
           nameInput.value = team.teamName;
           nameInput.dispatchEvent(new Event('input', { bubbles: true }));
-          const registerUserButtons = document.getElementsByClassName('MuiTypography-root MuiTypography-caption');
+          const captionElements = document.getElementsByClassName('MuiTypography-root MuiTypography-caption');
+          const registerUserButtons = [];
+          for (const captionElement of captionElements) {
+            if ((captionElement as HTMLElement).innerText === 'Register new person.') {
+              registerUserButtons.push(captionElement);
+            }
+          }
 
           for (const [index, member] of team.members.entries()) {
 
@@ -129,7 +142,7 @@ function App() {
             memberInput.value = member.email;
             memberInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-            const currentRegisterUserButton = registerUserButtons[registerUserButtons.length - 1 - 5 - (2 - index)] as HTMLSpanElement;
+            const currentRegisterUserButton = registerUserButtons[registerUserButtons.length - 1 - (2 - index)] as HTMLSpanElement;
 
             currentRegisterUserButton.addEventListener('click', async () => {
 

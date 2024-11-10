@@ -101,9 +101,9 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const mapToTitle = (sex: string): string => {
     switch (sex) {
       case "M":
-        return "Mr";
+        return "Mr.";
       case "F":
-        return "Ms";
+        return "Ms.";
       case "NB":
         return "None";
       default:
