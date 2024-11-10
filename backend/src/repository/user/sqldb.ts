@@ -17,6 +17,13 @@ export class SqlDbUserRepository implements UserRepository {
     this.pool = pool;
   }
 
+  /**
+   * Registers a new student in the database.
+   *
+   * @param {Student} student The student object containing the registration details.
+   * @returns {Promise<UserIdObject>} A promise that resolves to an object containing the new user's ID.
+   * @throws {DbError} Throws an error if a student with the given email already exists.
+   */
   studentRegister = async (student: Student): Promise<UserIdObject> => {
     // Use the params to run an sql insert on the db
 
@@ -68,6 +75,13 @@ export class SqlDbUserRepository implements UserRepository {
     return { userId: newUserId };
   }
 
+  /**
+   * Registers a new staff member in the database.
+   *
+   * @param {Staff} staff The staff object containing the details of the staff member to be registered.
+   * @returns {Promise<UserIdObject>} A promise that resolves to an object containing the new user's ID.
+   * @throws {DbError} Throws an error if a staff member with the same email already exists.
+   */
   staffRegister = async (staff: Staff): Promise<UserIdObject> => {
     // Use the params to run an sql insert on the db
     let name = staff.name;
@@ -116,6 +130,14 @@ export class SqlDbUserRepository implements UserRepository {
     return { userId: newUserId };
   }
 
+  /**
+   * Authenticates a user by their email and password.
+   *
+   * @param email The email address of the user attempting to log in.
+   * @param password The plaintext password of the user attempting to log in.
+   * @returns {Promise<UserIdObject>} A promise that resolves to an object containing the user's ID if authentication is successful.
+   * @throws {DbError} If the user does not exist or the password is incorrect.
+   */
   userLogin = async (email: string, password: string): Promise<UserIdObject> => {
     const userQuery = `SELECT id, hashed_password FROM users WHERE email = $1;`;
     const userResult = await this.pool.query(userQuery, [email]);
@@ -131,6 +153,13 @@ export class SqlDbUserRepository implements UserRepository {
     return { userId: userResult.rows[0].id };
   }
 
+  /**
+   * Retrieves the profile information of a user by their user ID.
+   *
+   * @param userId The unique identifier of the user.
+   * @returns {Promise<UserProfileInfo>} A promise that resolves to the user's profile information.
+   * @throws {DbError} If the user is not found in the database.
+   */
   userProfileInfo = async (userId: number): Promise<UserProfileInfo> => {
     const userQuery =
       `SELECT id, name, preferred_name AS "preferredName", email, affiliation, gender, pronouns,
@@ -145,6 +174,32 @@ export class SqlDbUserRepository implements UserRepository {
     return userResult.rows[0];
   }
 
+  /**
+   * Retrieves the dashboard information (name + university) for a user by their user ID.
+   *
+   * @param userId The ID of the user whose dashboard information is to be retrieved.
+   * @returns {Promise<UserDashInfo>} A promise that resolves to the user's dashboard information.
+   * @throws {DbError} If the user is not found in the database.
+   */
+  userDashInfo = async (userId: number): Promise<UserDashInfo> => {
+    const dbResult = await this.pool.query(
+      `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = ${userId}`
+    );
+
+    if (dbResult.rowCount === 0) {
+      throw new DbError(DbError.Query, 'User not found');
+    }
+
+    return dbResult.rows[0];
+  }
+
+  /**
+   * Updates the profile information of a user in the database.
+   *
+   * @param userId The unique identifier of the user.
+   * @param {UserProfileInfo} userProfile An object containing the user's profile information.
+   * @returns A promise that resolves when the user's profile has been updated.
+   */
   userUpdateProfile = async (userId: number, userProfile: UserProfileInfo): Promise<void> => {
     const userQuery = `
       UPDATE users 
@@ -176,7 +231,16 @@ export class SqlDbUserRepository implements UserRepository {
     return;
   }
 
-  userUpdatePassword = async (userId: number, oldPassword: string, newPassword: string): Promise<void> => {
+  /**
+   * Updates the password for a user.
+   *
+   * @param userId The ID of the user whose password is to be updated.
+   * @param oldPassword The current password of the user.
+   * @param newPassword The new password to be set for the user.
+   * @returns A promise that resolves when the password has been successfully updated.
+   * @throws {DbError} If the user is not found, the current password is incorrect, or the new password is the same as the old password.
+   */
+  userUpdatePassword = async(userId: number, oldPassword: string, newPassword: string): Promise<void> => {
     const userQuery = `SELECT hashed_password FROM users WHERE id = $1;`;
     const userResult = await this.pool.query(userQuery, [userId]);
 
@@ -205,6 +269,13 @@ export class SqlDbUserRepository implements UserRepository {
     return;
   }
 
+  /**
+   * Retrieves the user type for a given user ID.
+   *
+   * @param userId The ID of the user whose type is to be retrieved.
+   * @returns {Promise<UserTypeObject>} A promise that resolves to an object containing the user type.
+   * @throws {DbError} If the user is not found in the database.
+   */
   userType = async (userId: number): Promise<UserTypeObject> => {
 
     const dbResult = await this.pool.query(
@@ -218,18 +289,13 @@ export class SqlDbUserRepository implements UserRepository {
     return { type: dbResult.rows[0].userType };
   }
 
-  userDashInfo = async (userId: number): Promise<UserDashInfo> => {
-    const dbResult = await this.pool.query(
-      `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = ${userId}`
-    );
-
-    if (dbResult.rowCount === 0) {
-      throw new DbError(DbError.Query, 'User not found');
-    }
-
-    return dbResult.rows[0];
-  }
-
+  /**
+   * Retrieves the university information for a given user.
+   *
+   * @param userId The ID of the user whose university information is to be retrieved.
+   * @returns {Promise<University>} A promise that resolves to an object containing the university ID and name.
+   * @throws {DbError} If the user is not found or the university is not found.
+   */
   userUniversity = async (userId: number): Promise<University> => {
     const universityIdResult = await this.pool.query(`SELECT university_id FROM users WHERE id = $1`, [userId]);
     if (universityIdResult.rowCount === 0) {

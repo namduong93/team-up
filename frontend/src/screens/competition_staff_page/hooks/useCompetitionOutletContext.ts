@@ -69,6 +69,14 @@ export interface CompetitionPageContext {
     Array<{ value: string; label: string }>,
     React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
   ];
+  universityOptionsState: [
+    Array<{ value: string; label: string }>,
+    React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
+  ];
+  dropdownOptionsState: [
+    Array<{ value: string; label: string }>,
+    React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
+  ];
 }
 
 export const useCompetitionOutletContext = (page: string) => {
@@ -91,6 +99,9 @@ export const useCompetitionOutletContext = (page: string) => {
     buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
     studentsState: [students, setStudents],
     attendeesListState: [attendeesList, setAttendeesList],
+    universityOptionsState: [universityOptions, setUniversityOptions],
+    siteOptionsState: [siteOptions, setSiteOptions],
+    dropdownOptionsState: [dropdownOptions, setDropdownOptions],
     compDetails,
   } = context;
 
@@ -100,6 +111,12 @@ export const useCompetitionOutletContext = (page: string) => {
     setFilters({});
     setIsEditingNameStatus(false);
     setRejectedTeamIds([]);
+
+    if (page === 'attendees') {
+      setDropdownOptions(siteOptions);
+    } else {
+      setDropdownOptions(universityOptions);
+    }
 
     // enable the team buttons on the team page and not on the non-team page
     if (page === 'teams') {
