@@ -482,10 +482,6 @@ export class CompetitionService {
   }
 
   competitionAnnouncement = async (userId: number, compId: number, universityId: number | undefined): Promise< {} | undefined> => {
-    const roles = await this.competitionRoles(userId, compId);
-    if(!roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.ADMIN)) {
-      throw new ServiceError(ServiceError.Auth, 'User is not a coach or admin for this competition.');
-    }
     let university : University = { id: 0, name: '' };  
     if(!universityId) {
       university = await this.userRepository.userUniversity(userId);
@@ -515,7 +511,7 @@ export class CompetitionService {
     else {
       university.id = universityId;
     }
-    
+
     let announcement = {
       competitionId: compId,
       userId: userId,
