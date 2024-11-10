@@ -14,6 +14,7 @@ import { sendRequest } from "../../../../utility/request";
 import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
 import { useParams } from "react-router-dom";
 import { Announcement } from "../../../../../shared_types/Competition/staff/Announcement";
+import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 
 type ActionType =
   | "code"
@@ -194,6 +195,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
   const compId = useParams<{ compId: string }>().compId;
+  const { universityOption  } = useCompetitionOutletContext("teams");
 
   const actions = [
     {
@@ -257,44 +259,64 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     }
   };
 
-
-
-  // TO-DO: get current bio and annoucements from database
   useEffect(() => {
-    // Create a separate async function inside useEffect
+    // If admin is requesting, check the particular uni they are updating bio and announcement for
     const fetchStaffInfo = async () => {
       try {
-        const response = await sendRequest.get<{ staffDetails: StaffInfo }>(
-          '/competition/staff/details', 
-          { compId }
-        );
+        let response;
+        if (universityOption.value) {
+          const universityId = universityOption.value;
+          response = await sendRequest.get<{ staffDetails: StaffInfo }>(
+            '/competition/staff/details',
+            { compId, universityId }
+          );
+        } else {
+          response = await sendRequest.get<{ staffDetails: StaffInfo }>(
+            '/competition/staff/details',
+            { compId }
+          );
+        }
         setCurrentBio(response.data.staffDetails.bio);
         setStaffInfo(response.data.staffDetails);
       } catch (err) {
         console.log("Error fetching staff info", err);
       }
     };
+  
     const fetchAnnouncementMessage = async () => {
       try {
-        const response = await sendRequest.get<{ announcement: Announcement }>(
-          '/competition/announcement', 
-          { compId }
-        );
-        if(response.data.announcement === undefined) {
+        let response;
+        if (universityOption.value) {
+          const universityId = universityOption.value;
+          response = await sendRequest.get<{ announcement: Announcement }>(
+            '/competition/announcement',
+            { compId, universityId }
+          );
+        } else {
+          response = await sendRequest.get<{ announcement: Announcement }>(
+            '/competition/announcement',
+            { compId }
+          );
+        }
+  
+        if (response.data.announcement === undefined) {
           setAnnouncementMessage(defaultAnnouncement);
           return;
         }
+  
         setAnnouncementMessage(response.data.announcement.message);
         console.log(response.data.announcement);
       } catch (err) {
         console.log("Error fetching announcement", err);
       }
-    }
+    };
   
-    // Call the async function
+    // Call the async functions
     fetchStaffInfo();
     fetchAnnouncementMessage();
-  }, []);
+  
+  }, [universityOption]);
+  
 
   const handleChange = async () => {
     if (staffInfo) {
@@ -303,20 +325,39 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         bio: currentBio
       };
       try {
-        await sendRequest.put('/competition/staff/details', {
-          staffInfo: updatedStaffInfo,
-          compId
-        });
+        if (universityOption.value) {
+          const universityId = universityOption.value;
+          await sendRequest.put('/competition/staff/details', {
+            staffInfo: updatedStaffInfo,
+            compId,
+            universityId
+          });
+        } else {
+          await sendRequest.put('/competition/staff/details', {
+            staffInfo: updatedStaffInfo,
+            compId
+          });
+        }
         setShowContactBio(false);
       } catch (err) {
         console.log("Error updating staff info", err);
       }
     }
+
     try {
-      await sendRequest.put('/competition/announcement', {
-        announcementMessage,
-        compId
-      });
+      if (universityOption.value) {
+        const universityId = universityOption.value;
+        await sendRequest.put('/competition/announcement', {
+          announcementMessage,
+          compId,
+          universityId
+        });
+      } else {
+        await sendRequest.put('/competition/announcement', {
+          announcementMessage,
+          compId
+        });
+      }
     } catch (err) {
       console.log("Error updating announcement info", err);
     }

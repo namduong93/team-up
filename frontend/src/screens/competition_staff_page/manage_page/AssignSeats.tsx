@@ -19,34 +19,6 @@ interface AssignSeatsProps {
   siteCapacity: number;
 };
 
-// const mockSeatString: string = "Bongo00,Bongo01,Bongo02,Bongo03,Bongo04,Bongo05,Bongo06,Bongo07,Bongo08,Bongo09,Brass00,Brass01,Brass02,Brass03,Brass04,Brass05,Brass06,Brass07,Brass08,Brass09";
-// const mockRooms: Room[] = [
-//   {
-//     roomName: "Bongo",
-//     level: "A",
-//     seatCodes: ["Bongo00", "Bongo01", "Bongo02", "Bongo03", "Bongo04"],
-//     numSeats: 10,
-//   },
-//   {
-//     roomName: "Bongo",
-//     level: "B",
-//     seatCodes: ["Bongo05", "Bongo06", "Bongo07", "Bongo08", "Bongo09"],
-//     numSeats: 10,
-//   },
-//   {
-//     roomName: "Brass",
-//     level: "A",
-//     seatCodes: ["Brass00", "Brass01", "Brass02", "Brass03", "Brass04"],
-//     numSeats: 10,
-//   },
-//   {
-//     roomName: "Brass",
-//     level: "B",
-//     seatCodes: ["Brass05", "Brass06", "Brass07", "Brass08", "Brass09"],
-//     numSeats: 10,
-//   },
-// ];
-
 interface SeatAssignment {
   siteId: number; // ID of the site
   teamSite: string; // e.g. "CSE Building K17"
@@ -68,8 +40,6 @@ interface Room {
   seatCodes: string[]; // text string input of available seat codes for this room
   numSeats: number; // length of the seat codes array
 };
-
-// TODO route: send the new seat string for a team given the teamID
 
 const ManageContainer = styled.div`
   display: flex;
@@ -288,7 +258,7 @@ const AssignPopupText = styled.h2`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) => {
+export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) => {
   const { compId } = useParams();
   const [seatInputType, setSeatInputType] = useState<string>("Text"); // either string or inputs
   const [seatAB, setSeatAB] = useState<string>("Together"); // seat level a and b either together or separately
@@ -309,7 +279,13 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) =
   const [teamSeatAssignments, setTeamSeatAssignments] = useState<SeatAssignment[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { teamListState: [teamList, setTeamList] } = useCompetitionOutletContext("teams");
+  const { teamListState: [teamList, setTeamList], universityOption } = useCompetitionOutletContext("teams");
+
+  // Filter by uni
+  let teamListToAssign = teamList;
+  if (universityOption.value) {
+    teamListToAssign = teamList.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value));
+  };
 
   // Update seat count whenever the seat string changes
   useEffect(() => {
@@ -470,7 +446,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) =
     
     // Assign one seat per team, skipping two each time
     const seatAssignments: SeatAssignment[] = [];
-    const teamsToAssign = teamList;
+    const teamsToAssign = teamListToAssign;
 
     const levelATeams = [];
     const levelBTeams = [];
@@ -608,13 +584,15 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, }) =
         <Title>Manage Seats for CSE Building K17</Title>
         <DistributeSeats>
           <SeatCount>Team Seats Available: {seatCount}</SeatCount>
-          <AssignSeatsButton 
-            actionType="secondary" 
-            onClick={distributeSeats} 
-            label="Assign Seats" 
-            isOpen={false} 
-            icon={<FaChair />}
-          />
+          {(seatString.length > 0 || rooms.length > 0) &&
+            <AssignSeatsButton 
+              actionType="secondary" 
+              onClick={distributeSeats} 
+              label="Assign Seats" 
+              isOpen={false} 
+              icon={<FaChair />}
+            />
+          }
         </DistributeSeats>
       </Header>
 

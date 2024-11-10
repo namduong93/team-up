@@ -168,25 +168,25 @@ export const CompetitionExperience: FC = () => {
   }, []);
 
     
-  const courseOptions = [
-    {
-      value: "Introduction to Programming / Programming Fundamentals",
-      label:
-        "Introduction to Programming / Programming Fundamentals (and any advanced versions)",
-    },
-    {
-      value: "Data Structures and Algorithms",
-      label: "Data Structures and Algorithms (and any advanced versions)",
-    },
-    {
-      value: "Algorithm Design and Analysis",
-      label: "Algorithm Design and Analysis (and any advanced versions)",
-    },
-    {
-      value: "Programming Challenges and Problems",
-      label: "Programming Challenges and Problems (and any advanced versions)",
-    },
-  ];
+  // const courseOptions = [
+  //   {
+  //     value: "Introduction to Programming / Programming Fundamentals",
+  //     label:
+  //       "Introduction to Programming / Programming Fundamentals (and any advanced versions)",
+  //   },
+  //   {
+  //     value: "Data Structures and Algorithms",
+  //     label: "Data Structures and Algorithms (and any advanced versions)",
+  //   },
+  //   {
+  //     value: "Algorithm Design and Analysis",
+  //     label: "Algorithm Design and Analysis (and any advanced versions)",
+  //   },
+  //   {
+  //     value: "Programming Challenges and Problems",
+  //     label: "Programming Challenges and Problems (and any advanced versions)",
+  //   },
+  // ];
 
   function isButtonDisabled(): boolean | undefined {
     const {
