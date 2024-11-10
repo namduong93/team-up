@@ -176,6 +176,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
+  const [showEditComp, setShowEditComp] = useState(false);
 
   const actions = [
     {
@@ -228,6 +229,8 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       setShowContactBio(true);
     } else if (actionType === "registration") {
       setShowEditRego(true);
+    } else if (actionType === "competition") {
+      setShowEditComp(true);
     }
   };
 
@@ -354,6 +357,17 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           )}
 
           {showEditRego && (
+            <EditCompRegoPopUp
+              onClose={() => setShowEditRego(false)}
+              regoFields={regoFields}
+              setRegoFields={setRegoFields}
+              onSubmit={handleRegoEditSubmit}
+              editCourses={editCourse}
+              setCourses={handleEditCourseChange}
+            />
+          )}
+
+          {showEditComp && (
             <EditCompRegoPopUp
               onClose={() => setShowEditRego(false)}
               regoFields={regoFields}
