@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
-import styled from "styled-components";
+import { FaHome, FaUser, FaCog, FaSignOutAlt,FaIdBadge } from "react-icons/fa";
+import styled from "styled-components"; 
 import { sendRequest } from "../../utility/request";
 import { ProfilePic } from "../../screens/account/Account";
 import { backendURL } from "../../../config/backendURLConfig";
@@ -171,6 +171,7 @@ const LogoutButton = styled.button`
 `;
 
 export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, sidebarInfo, style, ...props }) => {
+  const [isSysAdmin, setIsSysAdmin] = useState(false);
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
@@ -181,7 +182,21 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, s
     e.preventDefault();
     await sendRequest.post('/user/logout');
     handleNavigation('/');
-  }
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const typeResponse = await sendRequest.get<{ type: string }>("/user/type");
+        setIsSysAdmin(typeResponse.data.type === "system_admin");
+      } catch (error: unknown) {
+        sendRequest.handleErrorStatus(error, [403], () => {
+          navigate("/");
+          console.log("Authentication Error: ", error);
+        });
+      }
+    })();
+  }, []);
 
   return (
     <SidebarContainer $cropState={cropState} style={style} {...props}>
@@ -202,6 +217,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, s
           >
             <FaHome /> {!cropState && <span>Dashboard</span>}
           </NavButton>
+          {isSysAdmin && 
+            <NavButton 
+              $active={location.pathname === "/staffAccounts"}
+              onClick={() => handleNavigation('/staffAccounts')}
+            >
+              <FaIdBadge /> {!cropState && <span>Staff Accounts</span>}
+            </NavButton>
+          }
           <NavButton 
             $active={location.pathname === "/account"}
             onClick={() => handleNavigation('/account')}

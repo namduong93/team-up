@@ -22,7 +22,7 @@ interface User {
   accessibilityReqs: string;
 };
 
-const Background = styled(FlexBackground)`
+export const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
   width: 100%;
   height: 100%;
