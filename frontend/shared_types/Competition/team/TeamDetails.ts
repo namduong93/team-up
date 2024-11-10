@@ -1,5 +1,4 @@
 import { TeamStatus } from "./TeamStatus";
-import { StudentInfo } from "../student/StudentInfo";
 
 export interface Student {
   userId: number;
