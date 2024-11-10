@@ -10,6 +10,9 @@ export class UniversityController {
     this.universityService = universityService;
   }
 
+  /**
+   * Handles the request to retrieve university courses for a specific user.
+   */
   universityCourses = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const courses = await this.universityService.universityCourses(parseInt(userId as string));
@@ -18,6 +21,9 @@ export class UniversityController {
     return;
   });
 
+  /**
+   * Handles the request to get the list of universities.
+   */
   universitiesList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     let universitiesList = await this.universityService.universitiesList();
     res.json(universitiesList);

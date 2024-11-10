@@ -92,6 +92,20 @@ CREATE TABLE competitions (
   region TEXT NOT NULL
 );
 
+CREATE TABLE competition_registration_toggles (
+  id SERIAL PRIMARY KEY,
+
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  university_id INT NOT NULL REFERENCES universities (id),
+
+  enable_codeforces_field BOOLEAN DEFAULT TRUE,
+  enable_national_prizes_field BOOLEAN DEFAULT TRUE,
+  enable_international_prizes_field BOOLEAN DEFAULT TRUE,
+  enable_regional_participation_field BOOLEAN DEFAULT TRUE,
+
+  CONSTRAINT unique_competition_uni_toggle UNIQUE (competition_id, university_id)
+);
+
 CREATE TABLE competition_sites (
   id SERIAL PRIMARY KEY,
 
@@ -872,10 +886,10 @@ INSERT INTO competition_teams (
   team_size, participants, university_id, competition_id, team_seat, site_attending_id, pending_site_attending_id
 )
 VALUES
-(4, 'Bulbasaur', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 2, NULL),
-(4, 'Ivysaur', 'Pending'::competition_team_status, 'Charmander', 3, ARRAY[5, 7], 2, 1, 'Tabla01', 2, NULL),
-(4, 'Venusaur', 'Unregistered'::competition_team_status, 'Charmeleon', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4),
-(4, 'Super Team', 'Pending'::competition_team_status, 'No', 3, ARRAY[6], 2, 1, 'Tabla02', 2, NULL);
+(4, 'Bulbasaur', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 1, NULL),
+(4, 'Ivysaur', 'Pending'::competition_team_status, 'Charmander', 3, ARRAY[5, 7], 2, 1, 'Tabla01', 1, NULL),
+(4, 'Venusaur', 'Unregistered'::competition_team_status, 'Charmeleon', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 1, 4),
+(4, 'Super Team', 'Pending'::competition_team_status, 'No', 3, ARRAY[6], 2, 1, 'Tabla02', 1, NULL);
 
 -- Notifications
 INSERT INTO notifications (
@@ -1302,6 +1316,13 @@ INSERT INTO competition_teams (
 VALUES
 (4, 'Charizard', 'Unregistered'::competition_team_status, NULL, 3, ARRAY[15, 16, 17], 5, 1, 'Bongo11', 2, NULL),
 (4, 'Wimpod', 'Unregistered'::competition_team_status, 'Snorlax', 3, ARRAY[18, 19, 20], 5, 1, 'Organ20', 2, 4);
+
+INSERT INTO competition_registration_toggles (
+  competition_id, university_id,
+  enable_codeforces_field, enable_national_prizes_field,
+  enable_international_prizes_field, enable_regional_participation_field
+)
+VALUES (4, 5, TRUE, TRUE, FALSE, TRUE);
 
 INSERT INTO courses (name, category, university_id)
 VALUES

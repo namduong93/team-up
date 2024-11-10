@@ -10,6 +10,7 @@ import {
 import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
+import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
 import { sendRequest } from "../../../../utility/request";
 import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
 import { useParams } from "react-router-dom";
@@ -27,17 +28,11 @@ type ActionType =
 interface StaffActionCardProps {
   staffRoles: string[];
   compCode: string;
+  universityOption: { value: string; label: string };
 }
 
 interface ActionCardProps {
   $actionType: ActionType;
-}
-
-interface EditRego {
-  codeforces: boolean;
-  nationalOlympiad: boolean;
-  internationalOlympiad: boolean;
-  regionalParticipation: boolean;
 }
 
 const StandardContainerDiv = styled.div`
@@ -184,17 +179,24 @@ In 2021, more than 50,000 of the finest students in computing disciplines from o
 The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
 `;
 
+export const DEFAULT_REGO_FIELDS = {
+  enableCodeforcesField: true,
+  enableNationalPrizesField: true,
+  enableInternationalPrizesField: true,
+  enableRegionalParticipationField: true,
+}
+
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
 }) => {
+  const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
-  const compId = useParams<{ compId: string }>().compId;
   const { universityOption  } = useCompetitionOutletContext("teams");
 
   const actions = [
@@ -364,15 +366,29 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   };
 
   // TO-DO: call the backend to retrive the previous options
-  const [regoFields, setRegoFields] = useState<EditRego>({
-    codeforces: false,
-    nationalOlympiad: false,
-    internationalOlympiad: false,
-    regionalParticipation: false,
-  });
+  const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  const handleRegoEditSubmit = (regoFields: EditRego) => {
+  useEffect(() => {
+    if (isFirstLoad) {
+      // ensures that on first load it doesn't request the data since it will be re-requested once
+      // the universityOption is set
+      setIsFirstLoad(false);
+      return;
+    }
+    const fetchRegoFields = async () => {
+      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
+        { compId, universityId: universityOption.value });
+      const { regoFields: receivedRegoFields } = response.data;
+      setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
+    }
+    fetchRegoFields();
+  }, [universityOption]);
+
+  const handleRegoEditSubmit = async (regoFields: EditRego) => {
     // TO-DO: send the EditRego to backend for storage
+    await sendRequest.post('/competition/staff/update_rego_toggles',
+      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
     console.log(regoFields);
     console.log("submitted");
   };
