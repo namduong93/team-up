@@ -320,8 +320,8 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
             <EditCompRegoPopUp
               heading={
                 <Title2>
-                  Please select the fields you would like to {"\n"} to remove
-                  from the Competition Registration Form
+                  Please toggle the fields you would like to {"\n"} to show on
+                  the Competition Registration Form
                 </Title2>
               }
               onClose={() => setShowEditRego(false)}

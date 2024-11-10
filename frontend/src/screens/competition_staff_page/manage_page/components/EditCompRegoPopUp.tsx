@@ -3,6 +3,7 @@ import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 import { ToggleButton } from "./ToggleButton";
 import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
+import TextInputLight from "../../../../components/general_utility/TextInputLight";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -104,6 +105,30 @@ const RowContainer = styled.div`
   width: 85%;
 `;
 
+const RowContainer1 = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  width: 85%;
+`;
+
+const Input = styled.input`
+  padding: 10px 1.5%;
+  height: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.colours.notifDark};
+  border-radius: 10px;
+  margin-bottom: 5px;
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.fonts.colour};
+`;
+
 const Column = styled.div`
   display: flex;
   flex-direction: column;
@@ -148,6 +173,26 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
           <FaTimes />
         </CloseButton>
         <div>{heading}</div>
+
+        <div style={{ alginItems: "left" }}>
+          <Label>
+            Input the relevant course codes for your university programming
+            subjects{" "}
+          </Label>
+        </div>
+
+        <RowContainer1>
+          <Column>
+            <Label>
+              Introduction to Programming / Programming Fundamentals
+            </Label>
+          </Column>
+          
+          <Column>
+            <Input type="text" placeholder="COMP1234" value=/>
+          </Column>
+
+        </RowContainer1>
 
         <RowContainer>
           <Column>
