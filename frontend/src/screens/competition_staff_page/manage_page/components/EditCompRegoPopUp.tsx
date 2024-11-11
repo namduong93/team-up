@@ -338,67 +338,6 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
             </div>
           </RowContainer2>
         </div>
-        <RowContainer>
-          <Column>
-            <Label>Codeforces</Label>
-            <Text>Students enter their current Codeforces score</Text>
-          </Column>
-          <Column>
-            <ToggleButton
-              isOn={regoFields.enableCodeforcesField}
-              onToggle={() => handleToggle("enableCodeforcesField")}
-            />
-          </Column>
-        </RowContainer>
-
-        <RowContainer>
-          <Column>
-            <Label>ICPC Regional Participation</Label>
-            <Text>
-              Students specify if they have ever competed in a regional ICPC
-              round
-            </Text>
-          </Column>
-          <Column>
-            <ToggleButton
-              isOn={regoFields.enableRegionalParticipationField}
-              onToggle={() => handleToggle("enableRegionalParticipationField")}
-            />
-          </Column>
-        </RowContainer>
-
-        <RowContainer>
-          <Column>
-            <Label>National Olympiad Prizes</Label>
-            <Text>
-              Students specify if they have ever won any related National
-              Olympiad Prizes in Mathematics or Informatics
-            </Text>
-          </Column>
-          <Column>
-            <ToggleButton
-              isOn={regoFields.enableNationalPrizesField}
-              onToggle={() => handleToggle("enableNationalPrizesField")}
-            />
-          </Column>
-        </RowContainer>
-
-        <RowContainer>
-          <Column>
-            <Label>International Olympiad Prizes</Label>
-            <Text>
-              Students specify if they have ever won any related International
-              Olympiad Prizes in Mathematics or Informatics
-            </Text>
-          </Column>
-          <Column>
-            <ToggleButton
-              isOn={regoFields.enableInternationalPrizesField}
-              onToggle={() => handleToggle("enableInternationalPrizesField")}
-            />
-          </Column>
-        </RowContainer>
-
         <Button onClick={handleSubmit}>Save Changes</Button>
       </Modal>
     </ModalOverlay>
