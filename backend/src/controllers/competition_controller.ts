@@ -221,6 +221,7 @@ export class CompetitionController {
       startDate: req.body.startDate,
       siteLocations: req.body.siteLocations,
       region: req.body.region,
+      information: req.body.information,
     };
 
     const competitionId = await this.competitionService.competitionSystemAdminUpdate(Number(userId), newCompetitionDetails);
@@ -232,8 +233,16 @@ export class CompetitionController {
 
   competitionGetDetails = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const competitionId = req.query.compId;
-    const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
+    let compId : number;
 
+    if (Number.isNaN(Number(competitionId))) {
+      compId = await this.competitionService.competitionIdFromCode(String(competitionId));
+    } else {
+      compId = Number(competitionId);
+    }
+    
+    const competitionDetails = await this.competitionService.competitionGetDetails(compId);
+    
     res.json({competition: competitionDetails});
 
     return;

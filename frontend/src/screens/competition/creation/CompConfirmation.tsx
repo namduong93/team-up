@@ -215,7 +215,7 @@ export const CompetitionConfirmation: FC = () => {
       const compId = response.data.competitionId;
       navigate(`/competition/page/${compId}`, { state: { isSuccessPopUpOpen: true } }); 
     } catch (error) {
-        console.error("Error creating competition:", error);
+      console.error("Error creating competition:", error);
     }
 };
 

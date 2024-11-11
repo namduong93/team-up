@@ -44,6 +44,7 @@ export interface CompetitionDetails {
   otherSiteLocations?: OtherSiteLocation[];
   code?: string;
   region: string;
+  information?: string;
 }
 
 export const fetchTeams = async (
@@ -116,6 +117,7 @@ export const CompetitionPage: FC = () => {
     otherSiteLocations: [],
     code: "",
     region: "Unknown",
+    information: "",
   });
   ////
   const [siteOptions, setSiteOptions] = useState([{ value: '', label: '' }]);

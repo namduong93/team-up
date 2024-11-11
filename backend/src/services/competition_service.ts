@@ -593,6 +593,10 @@ export class CompetitionService {
     return teamsParticipating;
   }
 
+  competitionIdFromCode = async (code: string): Promise<number> => {
+    return await this.competitionRepository.competitionIdFromCode(code);
+  }
+
   // Check to make sure every competition name is unique
   // checkUniqueSiteNames = (competition: Competition): boolean => {
   //   const allLocations = [];

@@ -762,8 +762,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     // Update competition details
     const competitionUpdateQuery = `
       UPDATE competitions
-      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5, code = $6, start_date = $7, region = $8
-      WHERE id = $9;
+      SET name = $1, team_size = $2, created_date = $3, early_reg_deadline = $4, general_reg_deadline = $5, code = $6, start_date = $7, region = $8, information = $9
+      WHERE id = $10;
     `;
 
     const competitionUpdateValues = [
@@ -775,6 +775,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       competition.code,
       new Date(competition.startDate),
       competition.region,
+      competition.information,
       competition.id
     ];
 
@@ -790,7 +791,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   competitionGetDetails = async(competitionId: number): Promise<Competition> => {
     const competitionQuery = `
-      SELECT id, name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region
+      SELECT id, name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region, information
       FROM competitions
       WHERE id = $1
     `;
@@ -830,6 +831,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       code: competitionData.code,
       region: competitionData.region,
       siteLocations: siteLocations,
+      information: competitionData.information,
     };
   
     return competitionDetails;

@@ -89,7 +89,9 @@ CREATE TABLE competitions (
   start_date TIMESTAMPTZ NOT NULL,
   code VARCHAR(8) NOT NULL,
 
-  region TEXT NOT NULL
+  region TEXT NOT NULL,
+
+  information TEXT
 );
 
 CREATE TABLE competition_registration_toggles (
@@ -808,11 +810,37 @@ VALUES
   'z000009'); --- password is pleasechange
 
 -- Competitions
-INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region)
+INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region, information)
 VALUES 
-('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024', '2025-09-30 00:00:00', 'Australia'),
-('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024', '2025-09-30 00:00:00', 'Australia'),
-('ICPC World Final', 3, '2024-10-10 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025', '2025-09-30 00:00:00', 'Earth');
+('South Pacific Preliminary Contest 2024', 3, '2024-06-30 00:00:00', '2024-08-29 00:00:00', '2024-08-31 00:00:00', 'SPPR2024', '2025-09-30 00:00:00', 'Australia',
+  'This form is for registering to participate in the 2024 South Pacific ICPC Preliminary Contest.
+  The Preliminary Contest will be held on 31st August 2024, and the top qualifying teams will progress to the Regional Finals,
+  to be held in Sydney on 19th and 20th October 2024. The full qualification rules can be found at: [sppcontests.org/regional-qualification-rules](https://sppcontests.org/regional-qualification-rules/).
+  A team is official if all three team members meet the ICPC eligibility rules.
+  The full eligibility rules can be found at: [icpc.global/regionals/rules](https://icpc.global/regionals/rules/),
+  but the most notable criteria are:
+  - enrolled in a degree program at the team''s institution (in particular, high school teams are unofficial)
+  - taking at least 1/2 load, or co-op, exchange or intern student
+  - have not competed in two ICPC World Finals
+  - have not competed in ICPC regional contests in five different years
+  - commenced post-secondary studies in 2020 or later OR born in 2001 or later
+  Official teams will be charged a registration fee of $100, typically paid by the institution.
+  Each team member will receive a T-shirt if the team is registered in this form and on [icpc.global](https://icpc.global) by 31st July 2024.
+  Unofficial (including high school) teams are not charged any registration fee,
+  will not receive T-shirts, and do not need to be registered on icpc.global.
+  To help check eligibility, every official competitor must use the email address
+  associated with their institution of study, and must also provide the email address that is linked to their icpc.global account.
+  Additionally, all teams must choose whether to compete in Level A or Level B.
+  - The Level A problem set will be significantly more challenging than the
+    Level B problem set and is designed to differentiate between the best teams in the region.
+  - The Level B problem set is aimed towards less experienced teams.
+  - There will be awards for the top teams in each Level. Only teams competing
+    in Level A will be considered for qualification to Regional Finals.
+  If you have not previously competed in Regional Finals nor had a top 10 result in the 2024 SPAR contests,
+  we strongly advise you to register for Level B.'
+),
+('South Pacific Regional Contest 2024', 3, '2024-08-31 00:00:00', '2024-10-20 00:00:00', '2024-10-20 00:00:00', 'SPRG2024', '2025-09-30 00:00:00', 'Australia', ''),
+('ICPC World Final', 3, '2024-10-10 00:00:00', '2025-09-10 00:00:00', '2025-09-11 00:00:00', 'WF2025', '2025-09-30 00:00:00', 'Earth', '');
 
 -- Competition Sites
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
