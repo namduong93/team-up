@@ -17,6 +17,9 @@ import {
 import { CourseCategory } from "../../../../../shared_types/University/Course";
 import { sendRequest } from "../../../../utility/request";
 import { useParams } from "react-router-dom";
+import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
+import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
+
 type ActionType =
   | "code"
   | "competition"
@@ -304,6 +307,35 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     console.log(regoFields);
   };
 
+  // TO-DO: obtain the competition information from the
+  const [competitionInfo, setCompetitionInfo] =
+    useState<CompetitionInformation>({
+      information: "",
+      name: "",
+      region: "",
+      timeZone: "",
+      startDate: "",
+      startTime: "",
+      start: "",
+      earlyBird: null,
+      earlyBirdDate: "",
+      earlyBirdTime: "",
+      early: "",
+      generalDate: "",
+      generalTime: "",
+      general: "",
+      code: "",
+      siteLocations: [],
+      otherSiteLocations: [],
+    });
+
+  const handleCompEditSubmit = async (
+    competitionInfo: CompetitionInformation
+  ) => {
+    // TO-DO: send the edited course details to backend
+    console.log(competitionInfo);
+  };
+
   return (
     <StandardContainerDiv>
       {showManageSite ? (
@@ -368,13 +400,11 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           )}
 
           {showEditComp && (
-            <EditCompRegoPopUp
-              onClose={() => setShowEditRego(false)}
-              regoFields={regoFields}
-              setRegoFields={setRegoFields}
-              onSubmit={handleRegoEditSubmit}
-              editCourses={editCourse}
-              setCourses={handleEditCourseChange}
+            <EditCompDetailsPopUp
+              onClose={() => setShowEditComp(false)}
+              competitionInfo={competitionInfo}
+              setCompetitionInfo={setCompetitionInfo}
+              onSubmit={handleCompEditSubmit}
             />
           )}
         </>
