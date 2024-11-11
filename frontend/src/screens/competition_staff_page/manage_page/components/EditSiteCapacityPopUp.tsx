@@ -169,10 +169,12 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Call onSubmit with the site and capacity
     // onSubmit({label: selectedSite.label, value: parseInt(selectedSite.value)}, capacity);
     onClose();
+    
+    await sendRequest.put<{}>('/competition/site/capacity/update', { compId, siteId: parseInt(selectedSite.value), capacity });
   };
 
   return (
