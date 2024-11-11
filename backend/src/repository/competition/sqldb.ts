@@ -630,6 +630,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         allergies, 
         "dietaryReqs", 
         "accessibilityReqs", 
+        "userAccess",
         bio, 
         roles, 
         access
@@ -654,6 +655,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       allergies: result.allergies,
       dietaryReqs: result.dietaryReqs,
       accessibilityReqs: result.accessibilityReqs,
+      userAccess: result.userAccess,
       bio: result.bio,
       roles: result.roles,
       access: result.access

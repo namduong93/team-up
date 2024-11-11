@@ -421,6 +421,7 @@ RETURNS TABLE(
   "allergies" TEXT,
   "dietaryReqs" TEXT,
   "accessibilityReqs" TEXT,
+  "userAccess" TEXT,
   "bio" TEXT,
   "roles" JSONB,
   "access" competition_access_enum
@@ -438,6 +439,7 @@ AS $$
     u.allergies AS "allergies",
     u.dietary_reqs AS "dietaryReqs",
     u.accessibility_reqs AS "accessibilityReqs",
+    u.user_access AS "userAccess",
     cu.bio AS "bio",
     TO_JSONB(cu.competition_roles) AS "roles",
     cu.access_level AS "access"
