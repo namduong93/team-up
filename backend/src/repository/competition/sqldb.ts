@@ -857,15 +857,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   competitionSystemAdminUpdate = async(userId: number, competition: Competition): Promise<{}> => {
     // Verify if userId is an admin of this competition
-    const adminCheckQuery = `
-      SELECT 1
-      FROM competition_admins
-      WHERE staff_id = $1 AND competition_id = $2
-    `;
+    const roles = await this.competitionRoles(userId, competition.id);
 
-    const adminCheckResult = await this.pool.query(adminCheckQuery, [userId, competition.id]);
-
-    if (adminCheckResult.rowCount === 0) {
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
       throw new DbError(DbError.Query, "User is not an admin for this competition.");
     }
 
