@@ -1,3 +1,4 @@
+
 import React, { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -10,13 +11,18 @@ import {
 import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
-import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
+import {
+  EditRego,
+  EditCourse,
+} from "../../../../../shared_types/Competition/staff/Edit";
+import { CourseCategory } from "../../../../../shared_types/University/Course";
 import { EditSiteCapacityPopUp } from "./EditSiteCapacityPopUp";
 import { sendRequest } from "../../../../utility/request";
 import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
 import { useParams } from "react-router-dom";
 import { Announcement } from "../../../../../shared_types/Competition/staff/Announcement";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+
 import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
 
 type ActionType =
@@ -181,12 +187,23 @@ In 2021, more than 50,000 of the finest students in computing disciplines from o
 The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
 `;
 
+const defaultAnnouncement = `
+The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.
+
+3 students, 5 hours  
+1 computer, 12 problems* (typical, but varies per contest)
+
+In 2021, more than 50,000 of the finest students in computing disciplines from over 3,000 universities competed worldwide in the regional phases of this contest. We conduct ICPC contests for the South Pacific region, with top teams qualifying to the World Finals.
+
+The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
+`;
+
 export const DEFAULT_REGO_FIELDS = {
   enableCodeforcesField: true,
   enableNationalPrizesField: true,
   enableInternationalPrizesField: true,
   enableRegionalParticipationField: true,
-}
+};
 
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
@@ -202,6 +219,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
+
   const { universityOption  } = useCompetitionOutletContext("manage", showManageSite);
 
   const actions = [
@@ -276,6 +294,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         if (universityOption.value) {
           const universityId = universityOption.value;
           response = await sendRequest.get<{ staffDetails: StaffInfo }>(
+
             '/competition/staff/details',
             { compId, universityId }
           );
@@ -291,7 +310,8 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         console.log("Error fetching staff info", err);
       }
     };
-  
+
+
     const fetchAnnouncementMessage = async () => {
       try {
         let response;
@@ -312,14 +332,14 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           setAnnouncementMessage(defaultAnnouncement);
           return;
         }
-  
+
         setAnnouncementMessage(response.data.announcement.message);
         console.log(response.data.announcement);
       } catch (err) {
         console.log("Error fetching announcement", err);
       }
     };
-  
+
     // Call the async functions
     fetchStaffInfo();
     fetchAnnouncementMessage();
@@ -376,6 +396,23 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   // const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
+  // currently it's persisting the entries, so I don't know if you want
+  // it to do that or not, feel free to call something from backend or something
+  const [editCourse, setEditCourse] = useState<EditCourse>({
+    [CourseCategory.Introduction]: "",
+    [CourseCategory.DataStructures]: "",
+    [CourseCategory.AlgorithmDesign]: "",
+    [CourseCategory.ProgrammingChallenges]: "",
+  });
+
+  // updates the editCourse object with the user's input
+  const handleEditCourseChange = (category: CourseCategory, value: string) => {
+    setEditCourse((prevEditCourse) => ({
+      ...prevEditCourse,
+      [category]: value,
+    }));
+  };
+
   useEffect(() => {
     if (isFirstLoad) {
       // ensures that on first load it doesn't request the data since it will be re-requested once
@@ -383,22 +420,26 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       setIsFirstLoad(false);
       return;
     }
-    // const fetchRegoFields = async () => {
-    //   const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
-    //     { compId, universityId: universityOption.value });
-    //   const { regoFields: receivedRegoFields } = response.data;
-    //   setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
-    // }
-    // fetchRegoFields();
+    const fetchRegoFields = async () => {
+      const response = await sendRequest.get<{ regoFields: EditRego }>(
+        "/competition/staff/rego_toggles",
+        { compId, universityId: universityOption.value }
+      );
+      const { regoFields: receivedRegoFields } = response.data;
+      setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
+    };
+    fetchRegoFields();
   }, [universityOption]);
 
-  // const handleRegoEditSubmit = async (regoFields: EditRego) => {
-  //   // TO-DO: send the EditRego to backend for storage
-  //   await sendRequest.post('/competition/staff/update_rego_toggles',
-  //     { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
-  //   console.log(regoFields);
-  //   console.log("submitted");
-  // };
+  const handleRegoEditSubmit = async (regoFields: EditRego) => {
+    await sendRequest.post("/competition/staff/update_rego_toggles", {
+      compId: parseInt(compId as string),
+      regoFields,
+      universityId: parseInt(universityOption.value),
+    });
+    // TO-DO: send the edited courses to backend and store for competition
+    console.log(editCourse);
+    console.log(regoFields);
 
   const handleSiteCapacityChange = (site: { label: string, value: number }, capacity: number) => {
     // TODO: backend PUT (update) the site capacity for a given site Id and new capacity
@@ -473,22 +514,20 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
               bioValue={currentBio}
               announcementValue={announcementMessage}
               onBioChange={(e) => setCurrentBio(e.target.value)}
-              onAnnouncementChange={(value: SetStateAction<string>) => setAnnouncementMessage(value)}
+              onAnnouncementChange={(value: SetStateAction<string>) =>
+                setAnnouncementMessage(value)
+              }
             />
           )}
 
           {/* {showEditRego && (
             <EditCompRegoPopUp
-              heading={
-                <Title2>
-                  Please select the fields you would like to {"\n"} to remove
-                  from the Competition Registration Form
-                </Title2>
-              }
               onClose={() => setShowEditRego(false)}
               regoFields={regoFields}
               setRegoFields={setRegoFields}
               onSubmit={handleRegoEditSubmit}
+              editCourses={editCourse}
+              setCourses={handleEditCourseChange}
             />
           )} */}
 

@@ -220,10 +220,7 @@ const ATTENDEES_DISPLAY_FILTER_OPTIONS = {
 
 export const AttendeesDisplay: FC = () => {
   const { compId } = useParams();
-  const { filters, sortOption, searchTerm, removeFilter, setFilters,
-    universityOption: siteOption,
-    siteOptionsState: [siteOptions, setSiteOptions],
-    dropdownOptionsState: [dropdownOptions, setDropdownOptions],
+  const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
     setFilterOptions, setSortOptions,
     attendeesListState: [attendeesList, setAttendeesList],
   } = useCompetitionOutletContext('attendees');
@@ -234,12 +231,6 @@ export const AttendeesDisplay: FC = () => {
   }, []);
 
   const filteredAttendees = attendeesList.filter((attendeesDetails) => {
-    if (siteOption.value) {
-      if (parseInt(siteOption.value) === attendeesDetails.siteId) {
-        return true;
-      }
-      return false;
-    } 
     return true;
   });
 

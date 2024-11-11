@@ -279,6 +279,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
   const [teamSeatAssignments, setTeamSeatAssignments] = useState<SeatAssignment[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const { teamListState: [teamList, setTeamList], universityOption: siteOption } = useCompetitionOutletContext("attendees");
 
   // Filter by uni
