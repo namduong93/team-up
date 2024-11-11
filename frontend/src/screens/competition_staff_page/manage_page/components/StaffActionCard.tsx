@@ -187,7 +187,14 @@ The ICPC is the premier global programming competition conducted by and for the 
 
 In 2021, more than 50,000 of the finest students in computing disciplines from over 3,000 universities competed worldwide in the regional phases of this contest. We conduct ICPC contests for the South Pacific region, with top teams qualifying to the World Finals.
 
-The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
+The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)`
+
+const Title2 = styled.h2`
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  white-space: pre-wrap;
+  word-break: break-word;
 `;
 
 export const DEFAULT_REGO_FIELDS = {
@@ -195,7 +202,7 @@ export const DEFAULT_REGO_FIELDS = {
   enableNationalPrizesField: true,
   enableInternationalPrizesField: true,
   enableRegionalParticipationField: true,
-};
+}
 
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
@@ -392,8 +399,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  // currently it's persisting the entries, so I don't know if you want
-  // it to do that or not, feel free to call something from backend or something
   const [editCourse, setEditCourse] = useState<EditCourse>({
     [CourseCategory.Introduction]: "",
     [CourseCategory.DataStructures]: "",
@@ -401,7 +406,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     [CourseCategory.ProgrammingChallenges]: "",
   });
 
-  // updates the editCourse object with the user's input
   const handleEditCourseChange = (category: CourseCategory, value: string) => {
     setEditCourse((prevEditCourse) => ({
       ...prevEditCourse,
@@ -417,13 +421,11 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       return;
     }
     const fetchRegoFields = async () => {
-      const response = await sendRequest.get<{ regoFields: EditRego }>(
-        "/competition/staff/rego_toggles",
-        { compId, universityId: universityOption.value }
-      );
+      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
+        { compId, universityId: universityOption.value });
       const { regoFields: receivedRegoFields } = response.data;
       setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
-    };
+    }
     fetchRegoFields();
   }, [universityOption]);
 
@@ -544,6 +546,11 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       console.error("Error updating competition details", err);
     }
     console.log(competitionInfo);
+    // TO-DO: send the EditRego to backend for storage
+    await sendRequest.post('/competition/staff/update_rego_toggles',
+      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
+    console.log(regoFields);
+    console.log("submitted");
   };
 
   return (
@@ -601,6 +608,12 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
           {showEditRego && (
             <EditCompRegoPopUp
+              heading={
+                <Title2>
+                  Please select the fields you would like to {"\n"} to remove
+                  from the Competition Registration Form
+                </Title2>
+              }
               onClose={() => setShowEditRego(false)}
               regoFields={regoFields}
               setRegoFields={setRegoFields}

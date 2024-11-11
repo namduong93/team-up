@@ -122,7 +122,7 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   onSubmit,
 }) => {
   const { compId } = useParams();
-  const { roles, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext("attendees");
+  const { roles, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext("manage");
   const [selectedSite, setSelectedSite] = useState<{ value: string; label: string }>({label: "", value: "0"});
   const [capacity, setCapacity] = useState<number>(0);
   const [currentCapacity, setCurrentCapacity] = useState<number>(0);

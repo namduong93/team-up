@@ -8,7 +8,7 @@ import {
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
 import styled from "styled-components";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
-import { TeamHeader } from "./TeamHeader";
+import { TeamHeader } from "./components/TeamHeader";
 import { sendRequest } from "../../utility/request";
 
 import { WithdrawPopUpChain } from "./components/WithdrawPopUpChain";

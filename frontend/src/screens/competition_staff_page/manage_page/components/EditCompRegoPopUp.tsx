@@ -2,10 +2,7 @@ import React from "react";
 import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 import { ToggleButton } from "./ToggleButton";
-import {
-  EditRego,
-  EditCourse,
-} from "../../../../../shared_types/Competition/staff/Edit";
+import { EditCourse, EditRego } from "../../../../../shared_types/Competition/staff/Edit";
 import { CourseCategory } from "../../../../../shared_types/University/Course";
 
 const ModalOverlay = styled.div`
@@ -101,7 +98,7 @@ const Text = styled.span`
 
 const RowContainer = styled.div`
   display: grid;
-  grid-template-columns: 85% 15%;
+  grid-template-columns: 75% 25%;
   align-items: center;
   justify-content: center;
   gap: 10px;
@@ -164,6 +161,7 @@ const FirstDiv = styled.div`
 `;
 
 interface EditCompRegoPopUpProps {
+  heading: React.ReactNode;
   onClose: () => void;
   regoFields: EditRego;
   setRegoFields: React.Dispatch<React.SetStateAction<EditRego>>;
@@ -173,6 +171,7 @@ interface EditCompRegoPopUpProps {
 }
 
 export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
+  heading,
   onClose,
   regoFields,
   setRegoFields,
@@ -187,16 +186,16 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
     }));
   };
 
+  const handleSubmit = () => {
+    onSubmit(regoFields);
+    onClose();
+  };
+
   const handleInputChange = (
     category: CourseCategory,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setCourses(category, event.target.value); // Pass the value of the input field
-  };
-
-  const handleSubmit = () => {
-    onSubmit(regoFields);
-    onClose();
   };
 
   return (
@@ -205,6 +204,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
         <CloseButton onClick={onClose}>
           <FaTimes />
         </CloseButton>
+        <div>{heading}</div>
 
         <div
           style={{
@@ -338,6 +338,66 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
             </div>
           </RowContainer2>
         </div>
+        <RowContainer>
+          <Column>
+            <Label>Codeforces</Label>
+            <Text>Students enter their current Codeforces score</Text>
+          </Column>
+          <Column>
+            <ToggleButton
+              isOn={regoFields.enableCodeforcesField}
+              onToggle={() => handleToggle("enableCodeforcesField")}
+            />
+          </Column>
+        </RowContainer>
+
+        <RowContainer>
+          <Column>
+            <Label>ICPC Regional Participation</Label>
+            <Text>
+              Students specify if they have ever competed in a regional ICPC
+              round
+            </Text>
+          </Column>
+          <Column>
+            <ToggleButton
+              isOn={regoFields.enableRegionalParticipationField}
+              onToggle={() => handleToggle("enableRegionalParticipationField")}
+            />
+          </Column>
+        </RowContainer>
+
+        <RowContainer>
+          <Column>
+            <Label>National Olympiad Prizes</Label>
+            <Text>
+              Students specify if they have ever won any related National
+              Olympiad Prizes in Mathematics or Informatics
+            </Text>
+          </Column>
+          <Column>
+            <ToggleButton
+              isOn={regoFields.enableNationalPrizesField}
+              onToggle={() => handleToggle("enableNationalPrizesField")}
+            />
+          </Column>
+        </RowContainer>
+
+        <RowContainer>
+          <Column>
+            <Label>International Olympiad Prizes</Label>
+            <Text>
+              Students specify if they have ever won any related International
+              Olympiad Prizes in Mathematics or Informatics
+            </Text>
+          </Column>
+          <Column>
+            <ToggleButton
+              isOn={regoFields.enableInternationalPrizesField}
+              onToggle={() => handleToggle("enableInternationalPrizesField")}
+            />
+          </Column>
+        </RowContainer>
 
         <Button onClick={handleSubmit}>Save Changes</Button>
       </Modal>
