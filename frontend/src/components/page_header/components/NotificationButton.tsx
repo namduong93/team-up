@@ -4,8 +4,7 @@ import { sendRequest } from '../../../utility/request';
 import { 
   FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, 
   FaUserEdit, FaThumbsUp, FaUserPlus, FaClipboardList, 
-  FaTrophy, FaHandshake, 
-  FaBell, FaAddressCard,
+  FaTrophy, FaHandshake, FaBell, FaAddressCard, FaIdBadge,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { AlertButton } from '../../../screens/dashboard/Dashboard';
@@ -130,6 +129,8 @@ const getNotificationIcon = (type: Notification['type']) => {
       return <FaTrophy />;
     case 'update':
       return <FaAddressCard />;
+    case 'staffAccount':
+      return <FaIdBadge />;
     default:
       return <FaClipboardList />;
   }
@@ -138,6 +139,7 @@ const getNotificationIcon = (type: Notification['type']) => {
 export const NotificationButton: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isStaff, setIsStaff] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -146,6 +148,7 @@ export const NotificationButton: FC = () => {
       try {
         const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
         setIsStaff(typeResponse.data.type !== 'student');
+        setIsAdmin(typeResponse.data.type === "system_admin");
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           navigate('/');
@@ -199,6 +202,8 @@ export const NotificationButton: FC = () => {
         navigate(`/coach/page/teams/`);
       } else if (type === 'welcomeAccount') {
         navigate('/dashboard');
+      } else if (isAdmin && type === 'staffAccount') {
+        navigate('/staffAccounts');
       }
     } else {
       if (type === 'update') {

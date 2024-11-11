@@ -15,6 +15,16 @@ export class CompetitionController {
     this.competitionService = competitionService;
   }
 
+  competitionSiteCapacityUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query as { userId: string };
+    const { compId, siteId, capacity } = req.body as { compId: number, siteId: number, capacity: number };
+    
+    await this.competitionService.competitionSiteCapacityUpdate(
+      parseInt(userId), compId, capacity, siteId);
+
+    res.json({});
+  });
+
   competitionStudentsRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, code } = req.query;
     const regoFields = await this.competitionService.competitionStudentsRegoToggles(
@@ -22,11 +32,11 @@ export class CompetitionController {
 
     res.json({ regoFields });
   });
-  
+
   competitionStaffUpdateRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const { compId, regoFields, universityId } = req.body as {
-      compId: number, regoFields: EditRego, universityId?: number 
+      compId: number, regoFields: EditRego, universityId?: number
     };
 
     await this.competitionService.competitionStaffUpdateRegoToggles(
@@ -40,7 +50,7 @@ export class CompetitionController {
 
     const regoFields = await this.competitionService.competitionStaffRegoToggles(
       parseInt(userId as string), parseInt(compId as string), parseInt(universityId as string));
-    
+
     res.json({ regoFields });
   });
 
@@ -51,7 +61,7 @@ export class CompetitionController {
     const { userId } = req.query;
     const staffList = req.body.staffList as Array<StaffInfo>;
     const compId = req.body.compId as number;
-    
+
     await this.competitionService.competitionStaffUpdate(parseInt(userId as string), staffList, compId);
 
     res.json({});
@@ -136,7 +146,7 @@ export class CompetitionController {
 
     const inviteCode = await this.competitionService.competitionTeamInviteCode(
       parseInt(userId as string), parseInt(compId as string));
-    
+
     res.json({ code: inviteCode });
   });
 
@@ -161,9 +171,35 @@ export class CompetitionController {
     const studentDetails = await this.competitionService.competitionStudentDetails(
       parseInt(userId as string), parseInt(compId as string));
 
-    res.json({studentDetails});
+    res.json({ studentDetails });
   });
-  
+
+  competitionStudentDetailsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const { compId } = req.body;
+    const studentDetails = req.body.studentDetails as StudentInfo;
+    await this.competitionService.competitionStudentDetailsUpdate(
+      parseInt(userId as string), parseInt(compId as string), studentDetails);
+  });
+
+  competitionStaffDetails = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+
+    const staffDetails = await this.competitionService.competitionStaffDetails(
+      parseInt(userId as string), parseInt(compId as string));
+
+    res.json({ staffDetails });
+  });
+
+  competitionStaffDetailsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const { compId } = req.body;
+    const staffDetails = req.body.staffInfo as StaffInfo;
+    await this.competitionService.competitionStaffDetailsUpdate(
+      parseInt(userId as string), parseInt(compId as string), staffDetails);
+    res.json({});
+  });
+
   /**
    * Handles the request to get competition staff by user ID and competition ID.
    */
@@ -171,7 +207,7 @@ export class CompetitionController {
     const { userId, compId } = req.query;
     const staff = await this.competitionService.competitionStaff(
       parseInt(userId as string), parseInt(compId as string));
-    
+
     res.json({ staff });
   });
 
@@ -193,10 +229,10 @@ export class CompetitionController {
     const { userId, compId } = req.query;
     const roles = await this.competitionService.competitionRoles(
       parseInt(userId as string), parseInt(compId as string));
-    
+
     res.json({ roles });
   });
-  
+
   /**
    * Handles the request to get the list of teams in a competition.
    */
@@ -266,7 +302,7 @@ export class CompetitionController {
     const competitionId = req.query.compId;
     const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
 
-    res.json({competition: competitionDetails});
+    res.json({ competition: competitionDetails });
 
     return;
   });
@@ -279,7 +315,7 @@ export class CompetitionController {
 
     const competitions = await this.competitionService.competitionsList(Number(userId));
 
-    res.json({competitions: competitions});
+    res.json({ competitions: competitions });
     return;
   });
 
@@ -299,7 +335,7 @@ export class CompetitionController {
   competitionUserDefaultSite = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId, code } = req.query;
     const defaultSite = await this.competitionService.competitionUserDefaultSite(Number(userId), String(code));
-    res.json({ site : defaultSite });
+    res.json({ site: defaultSite });
     return;
   });
 
@@ -335,7 +371,7 @@ export class CompetitionController {
     res.json(result);
     return;
   });
-  
+
   /**
    * Approves team assignments for a competition.
    */
@@ -394,7 +430,7 @@ export class CompetitionController {
    */
   competitionTeamSeatAssignments = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const { compId, seatAssignments} = req.body;
+    const { compId, seatAssignments } = req.body;
     const result = await this.competitionService.competitionTeamSeatAssignments(Number(userId), Number(compId), seatAssignments);
     res.json(result);
   });
@@ -415,7 +451,7 @@ export class CompetitionController {
   competitionStaffJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const code = req.body.code;
-    let competitionStaffInfo : CompetitionStaff = {
+    let competitionStaffInfo: CompetitionStaff = {
       userId: Number(userId),
       competitionRoles: req.body.staffRegistrationData.roles,
       accessLevel: CompetitionAccessLevel.PENDING,
@@ -428,10 +464,29 @@ export class CompetitionController {
     return;
   })
 
+  competitionAnnouncement = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId, compId, universityId } = req.query;
+    const announcement = await this.competitionService.competitionAnnouncement(
+      parseInt(userId as string), parseInt(compId as string), parseInt(universityId as string));
+
+    res.json(announcement);
+    return;
+  });
+
+  competitionAnnouncementUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { userId } = req.query;
+    const { compId, universityId } = req.body;
+    const announcementMessage = req.body.announcementMessage;
+    await this.competitionService.competitionAnnouncementUpdate(
+      parseInt(userId as string), parseInt(compId as string), announcementMessage, parseInt(universityId as string));
+    res.json({});
+    return;
+  });
+
   competitionStaffJoinSiteCoordinator = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({});
     return;
-  })
+  });
 
   competitionStaffJoinAdmin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({});
@@ -451,4 +506,15 @@ export class CompetitionController {
     return;
   });
 
+  competitionSiteCapacity = httpErrorHandler(async (req: Request, res: Response) => {
+    const compId = req.query.compId;
+    const userId = req.query.userId as string;
+    const ids = req.query.ids;
+    const siteIds = typeof ids === 'string' ? ids.split(',').map(Number) : [];
+
+    const site = await this.competitionService.competitionSiteCapacity(
+      parseInt(userId), parseInt(compId as string), siteIds.includes(0) ? [] : siteIds);
+
+    res.json({ site });
+  });
 }

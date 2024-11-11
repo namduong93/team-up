@@ -75,7 +75,7 @@ CREATE TABLE sessions (
   user_id INT NOT NULL REFERENCES users (id),
 
   -- The time the session was created
-  created_at TIMESTAMP NOT NULL
+  created_date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE competitions (
@@ -149,6 +149,7 @@ CREATE TABLE competition_users (
   codeforces_rating INT,
   university_courses TEXT[],
   past_regional BOOLEAN,
+  access_level competition_access_enum,
   
   competition_coach_id INT REFERENCES competition_users (id),
   
@@ -158,9 +159,6 @@ CREATE TABLE competition_users (
 
   -- site-coordinator info
   site_id INT REFERENCES competition_sites (id),
-
-  -- staff info
-  access_level competition_access_enum,
 
   CONSTRAINT unique_competition_user UNIQUE (user_id, competition_id, competition_roles)
 );
@@ -189,6 +187,16 @@ CREATE TABLE competition_teams (
   competition_id INT NOT NULL REFERENCES competitions (id)
 );
 
+CREATE TABLE competition_announcements (
+  id SERIAL PRIMARY KEY,
+  
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  user_id INT NOT NULL REFERENCES users (id),
+  university_id INT NOT NULL REFERENCES universities (id),
+  message TEXT NOT NULL,
+  created_date TIMESTAMP NOT NULL
+);
+
 CREATE TYPE notification_type_enum AS ENUM (
   'welcomeAccount',
   'welcomeCompetition',
@@ -210,7 +218,7 @@ CREATE TABLE notifications (
   competition_id INT REFERENCES competitions (id),
   type notification_type_enum NOT NULL,
   message TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL,
+  created_date TIMESTAMP NOT NULL,
   
   team_name TEXT,
   student_name TEXT,
@@ -541,12 +549,28 @@ SELECT
   u.preferred_name AS "preferredName",
   u.email AS "email",
   u.gender AS "sex",
+  u.pronouns AS "pronouns",
   u.tshirt_size AS "tshirtSize",
   u.dietary_reqs AS "dietaryNeeds",
   u.accessibility_reqs AS "accessibilityNeeds",
   u.allergies AS "allergies",
+  u.student_id AS "studentId",
   cu.competition_roles AS "roles",
-
+  cu.bio AS "bio",
+  cu.icpc_eligible AS "ICPCEligible",
+  cu.boersen_eligible AS "boersenEligible",
+  cu.competition_level AS "level",
+  cu.degree_year AS "degreeYear",
+  cu.degree AS "degree",
+  cu.is_remote AS "isRemote",
+  cu.is_official AS "isOfficial",
+  cu.preferred_contact AS "preferredContact",
+  cu.national_prizes AS "nationalPrizes",
+  cu.international_prizes AS "internationalPrizes",
+  cu.codeforces_rating AS "codeforcesRating",
+  cu.university_courses AS "universityCourses",
+  cu.past_regional AS "pastRegional",
+  cu.access_level AS "status",
   ct.site_attending_id AS "siteId",
   ct.pending_site_attending_id AS "pendingSiteId",
   cs.name AS "siteName",
@@ -815,7 +839,7 @@ VALUES
 -- Competition Site Coordinator(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
 VALUES
-(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 2, 'Accepted');
+(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 1, 'Accepted');
 
 
 -- Competition Participants
@@ -869,7 +893,7 @@ VALUES
 
 -- Notifications
 INSERT INTO notifications (
-  user_id, team_id, competition_id, type, message, created_at,
+  user_id, team_id, competition_id, type, message, created_date,
   team_name, student_name, competition_name, new_team_name, site_location
 )
 VALUES 
@@ -923,7 +947,7 @@ VALUES
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
 (1, 4, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
-(3, 4, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio');
+(3, 4, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'Hi Im Raveen');
 
 INSERT INTO users (
   name,

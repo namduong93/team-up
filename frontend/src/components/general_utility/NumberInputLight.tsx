@@ -1,27 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-interface TextInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
+interface NumberInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   name?: string;
   placeholder?: string;
   type?: string;
   required?: boolean;
-  value: string;
+  value: number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   width?: string;
+  currentCapacity?: number;
 }
 
-export const TextInputLight: React.FC<TextInputLightProps> = ({
+export const NumberInputLight: React.FC<NumberInputLightProps> = ({
   label,
   placeholder,
-  type = 'text',
+  type = 'number',
   required = false,
   value,
   onChange,
   width = '300px',
-  style
+  style,
+  currentCapacity,
 }) => {
+  const [displayValue, setDisplayValue] = useState<number | string>(value);
+
+  // Set initial value to currentCapacity if provided
+  useEffect(() => {
+    if (currentCapacity !== undefined) {
+      setDisplayValue(currentCapacity);
+    }
+  }, [currentCapacity]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    // Allow empty input, or ensure the new value is a valid number and not below 0
+    if (newValue === '' || (!isNaN(Number(newValue)) && Number(newValue) >= 0)) {
+      onChange(e);
+      setDisplayValue(newValue);
+    }
+  };
+
   return (
     <Container $width={width} style={style}>
       <Label>
@@ -30,9 +50,9 @@ export const TextInputLight: React.FC<TextInputLightProps> = ({
       </Label>
       <Input
         type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
+        placeholder={placeholder || '0'}
+        value={displayValue === 0 ? '' : displayValue}
+        onChange={handleChange}
         required={required}
       />
     </Container>
@@ -44,7 +64,7 @@ const Container = styled.div<{ $width: string }>`
   flex-direction: column;
   margin-bottom: 1rem;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
-  width: ${({ $width: width }) => width};
+  width: ${({ $width }) => $width};
 `;
 
 export const Label = styled.label`
@@ -65,12 +85,10 @@ export const Input = styled.input`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
+  border: 1px solid ${({ theme }) => theme.colours.notifDark};
   border-radius: 10px;
   margin-bottom: 5px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
 `;
-
-export default TextInputLight;

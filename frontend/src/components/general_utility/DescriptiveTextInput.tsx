@@ -15,7 +15,7 @@ interface DescriptiveTextInputProps {
 const Container = styled.div<{ width: string }>`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
+  margin-bottom: 0px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   width: ${({ width }) => width};
 `;
@@ -52,6 +52,7 @@ const StyledTextarea = styled.textarea<{ $height: string }>`
   height: ${({ $height }) => $height};
   width: 100%;
   padding: 10px;
+  border-color: ${({ theme }) => theme.colours.sidebarLine};
 `;
 
 const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({

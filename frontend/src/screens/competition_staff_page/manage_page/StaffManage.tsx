@@ -14,7 +14,7 @@ const ManageContainer = styled.div`
 export const StaffManage: FC = () => {
   const { compId } = useParams();
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
-  const { compDetails, universityOption  } = useCompetitionOutletContext('manage'); 
+  const { compDetails, universityOption, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext('manage'); 
 
   const compCode = compDetails.code ?? "COMP1234";
 
@@ -30,8 +30,12 @@ export const StaffManage: FC = () => {
 
   return (
     <ManageContainer>
-      <StaffActionCard universityOption={universityOption} staffRoles={roles} compCode={compCode}/>
-
+      <StaffActionCard
+        siteOptionsState={[siteOptions, setSiteOptions]}
+        universityOption={universityOption}
+        staffRoles={roles}
+        compCode={compCode}
+      />
     </ManageContainer>
   );
 };
