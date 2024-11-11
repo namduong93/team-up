@@ -1,14 +1,14 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { StaffAccess } from "../../../shared_types/Competition/staff/StaffInfo";
+import { UserAccess } from "../../../shared_types/User/User";
 
 interface AccessDropdownProps {
-  staffId: number;
-  currentAccess: StaffAccess;
-  onChange: (newAccess: StaffAccess) => void;
+  staffId: number | undefined;
+  currentAccess: UserAccess;
+  onChange: (newAccess: UserAccess) => void;
 }
 
-const StyledDropdown = styled.select<{ $access: StaffAccess }>`
+const StyledDropdown = styled.select<{ $access: UserAccess }>`
   width: 80%;
   height: 50%;
   min-height: 25px;
@@ -19,23 +19,23 @@ const StyledDropdown = styled.select<{ $access: StaffAccess }>`
   justify-content: center;
   box-sizing: border-box;
   background-color: ${({ theme, $access }) =>
-    $access === StaffAccess.Accepted
+    $access === UserAccess.Accepted
       ? theme.access.acceptedBackground
-      : $access === StaffAccess.Pending
+      : $access === UserAccess.Pending
       ? theme.access.pendingBackground
       : theme.access.rejectedBackground};
 
   border: 1px solid ${({ theme, $access }) =>
-    $access === StaffAccess.Accepted
+    $access === UserAccess.Accepted
       ? theme.access.acceptedText
-      : $access === StaffAccess.Pending
+      : $access === UserAccess.Pending
       ? theme.access.pendingText
       : theme.access.rejectedText};
 
   color: ${({ theme, $access }) =>
-    $access === StaffAccess.Accepted
+    $access === UserAccess.Accepted
       ? theme.access.acceptedText
-      : $access === StaffAccess.Pending
+      : $access === UserAccess.Pending
       ? theme.access.pendingText
       : theme.access.rejectedText};
 
@@ -49,20 +49,20 @@ const StyledDropdown = styled.select<{ $access: StaffAccess }>`
   }
 `;
 
-const Option = styled.option<{ $access: StaffAccess }>`
+const Option = styled.option<{ $access: UserAccess }>`
   color: ${({ theme, $access }) =>
-    $access === StaffAccess.Accepted
+    $access === UserAccess.Accepted
       ? theme.access.acceptedText
-      : $access === StaffAccess.Pending
+      : $access === UserAccess.Pending
       ? theme.access.pendingText
       : theme.access.rejectedText};
 `;
 
 export const AccessDropdown: FC<AccessDropdownProps> = ({ staffId, currentAccess, onChange }) => {
-  const [selectedAccess, setSelectedAccess] = useState<StaffAccess>(currentAccess);
+  const [selectedAccess, setSelectedAccess] = useState<UserAccess>(currentAccess);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newAccess = event.target.value as StaffAccess;
+    const newAccess = event.target.value as UserAccess;
     setSelectedAccess(newAccess);
     onChange(newAccess);
 
@@ -72,13 +72,13 @@ export const AccessDropdown: FC<AccessDropdownProps> = ({ staffId, currentAccess
 
   return (
     <StyledDropdown $access={selectedAccess} value={selectedAccess} onChange={handleChange}>
-      <Option $access={StaffAccess.Accepted} value={StaffAccess.Accepted}>
+      <Option $access={UserAccess.Accepted} value={UserAccess.Accepted}>
         Accepted
       </Option>
-      <Option $access={StaffAccess.Pending} value={StaffAccess.Pending}>
+      <Option $access={UserAccess.Pending} value={UserAccess.Pending}>
         Pending
       </Option>
-      <Option $access={StaffAccess.Rejected} value={StaffAccess.Rejected}>
+      <Option $access={UserAccess.Rejected} value={UserAccess.Rejected}>
         Rejected
       </Option>
     </StyledDropdown>

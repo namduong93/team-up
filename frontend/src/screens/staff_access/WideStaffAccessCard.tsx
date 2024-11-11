@@ -5,7 +5,7 @@ import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInf
 import { StandardSpan } from "../competition_staff_page/staff_page/components/WideStaffCard";
 import { useTheme } from "styled-components";
 import { AccessDropdown } from "./AccessDropdown";
-import { StaffAccess } from "../../../shared_types/Competition/staff/StaffInfo";
+import { UserAccess } from "../../../shared_types/User/User";
 
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
@@ -42,7 +42,7 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,
   ...props  }) => {
 
-  const handleAccessChange = async (newAccess: StaffAccess) => {
+  const handleAccessChange = async (newAccess: UserAccess) => {
     console.log(newAccess);
 
     // TODO: Backend hook to update user's access
@@ -69,7 +69,7 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
       <StandardContainerDiv>
         <AccessDropdown
           staffId={staffDetails.userId}
-          currentAccess={staffDetails.access}
+          currentAccess={staffDetails.userAccess}
           onChange={(newAccess) => handleAccessChange(newAccess)}
         />
       </StandardContainerDiv>

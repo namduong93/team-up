@@ -3,14 +3,14 @@ import { Field, StudentInfoContainerDiv } from "../competition_staff_page/studen
 import { StaffAccessCardProps } from "./StaffAccounts";
 import { NarrowStatusDiv } from "../competition_staff_page/staff_page/StaffDisplay";
 import { AccessDropdown } from "./AccessDropdown";
-import { StaffAccess } from "../../../shared_types/Competition/staff/StaffInfo";
+import { UserAccess } from "../../../shared_types/User/User";
 
 export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,
   ...props
 }) => {
 
-  const handleAccessChange = async (newAccess: StaffAccess) => {
+  const handleAccessChange = async (newAccess: UserAccess) => {
     console.log(newAccess);
     
     // TODO: Backend hook to update user's staff access
@@ -26,7 +26,7 @@ export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
           <NarrowStatusDiv>
             <AccessDropdown
               staffId={staffDetails.userId}
-              currentAccess={staffDetails.access}
+              currentAccess={staffDetails.userAccess}
               onChange={(newAccess) => handleAccessChange(newAccess)}
             />
           </NarrowStatusDiv>

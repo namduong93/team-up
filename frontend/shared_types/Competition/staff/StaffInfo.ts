@@ -1,3 +1,4 @@
+import { UserAccess } from "../../User/User.js";
 import { CompetitionRole } from "../CompetitionRole.js";
 
 export const enum StaffAccess {
@@ -18,17 +19,14 @@ export interface StaffInfo {
   allergies: string;
   dietaryReqs: string;
   accessibilityReqs: string;
+  userAccess: UserAccess;
 
   bio?: string;
   roles?: CompetitionRole[];
   access?: StaffAccess;
 }
 
-export interface StaffAccessInfo {
+export interface StaffRequests {
   userId: number;
-  universityId: number;
-  universityName: string;
-  name: string;
-  email: string;
   access: StaffAccess;
 }

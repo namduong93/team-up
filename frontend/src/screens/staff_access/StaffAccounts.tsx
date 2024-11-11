@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import Fuse from "fuse.js";
 import { FlexBackground } from "../../components/general_utility/Background";
-import { StaffAccess, StaffAccessInfo, StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo";
+import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo";
 import {  NarrowDisplayDiv, WideDisplayDiv } from "../competition_staff_page/students_page/StudentDisplay";
 // import { StaffAccessLevel, NarrowStatusDiv } from "../competition_staff_page/staff_page/StaffDisplay";
 
@@ -14,33 +14,7 @@ import { FilterTagButton, RemoveFilterIcon } from "../dashboard/Dashboard";
 import { NarrowStaffAccessCard } from "./NarrowStaffAccessCard";
 import { StaffAccessButtons } from "./StaffAccessButtons";
 import { sendRequest } from "../../utility/request";
-
-const mockStaffData: StaffAccessInfo[] = [
-  {
-    userId: 1,
-    universityId: 102,
-    universityName: "Institute of Learning",
-    name: "Bob Smith",
-    email: "bob.smith@learning.edu",
-    access: StaffAccess.Pending,
-  },
-  {
-    userId: 2,
-    universityId: 101,
-    universityName: "University of Example",
-    name: "Alice Johnson",
-    email: "alice.johnson@example.edu",
-    access: StaffAccess.Accepted,
-  },
-  {
-    userId: 3,
-    universityId: 103,
-    universityName: "Global Tech University",
-    name: "Charlie Brown",
-    email: "charlie.brown@globaltech.edu",
-    access: StaffAccess.Rejected,
-  },
-];
+import { UserAccess } from "../../../shared_types/User/User";
 
 export interface StaffAccessCardProps extends React.HTMLAttributes<HTMLDivElement> {
   staffDetails: StaffInfo;
@@ -52,7 +26,7 @@ const STAFF_DISPLAY_SORT_OPTIONS = [
 ];
 
 const STAFF_DISPLAY_FILTER_OPTIONS: Record<string, Array<string>> = {
-  Access: [StaffAccess.Accepted, StaffAccess.Pending, StaffAccess.Rejected].map(String),
+  Access: [UserAccess.Accepted, UserAccess.Pending, UserAccess.Rejected].map(String),
 };
 
 const PageBackground = styled(Background)`
@@ -89,19 +63,16 @@ export const StaffAccounts: FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Check if filters contain only "Pending"
-  const isPendingOnly = filters["Access"]?.length === 1 && filters["Access"].includes(StaffAccess.Pending);
+  const isPendingOnly = filters["Access"]?.length === 1 && filters["Access"].includes(UserAccess.Pending);
 
   useEffect(() => {
     setSortOption(STAFF_DISPLAY_SORT_OPTIONS[0].value);
     setFilterOptions(STAFF_DISPLAY_FILTER_OPTIONS);
-    
-    // TODO: Backend, get the staffList from backend
     const fetchStaffRequests= async () => {
       try {
         const response = await sendRequest.get<{staffRequests: Array<StaffInfo>}>("/user/staff_requests");
         const staffList = response.data.staffRequests;
         setStaffList(staffList);
-        console.log("Staff requests list fetched: ", staffList);
       }
       catch (error) {
         console.error("Error fetching staff requests list: ", error);
@@ -150,7 +121,7 @@ export const StaffAccounts: FC = () => {
 
   const handleApproveAll = async (): Promise<boolean> => {
     // Filter by pending
-    const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.access === StaffAccess.Pending).map((staffDetails) => staffDetails.userId);
+    const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.userId);
   
     // Perform backend hook to update status to 'approved'
     console.log("all pending staff accounts approved: ", pendingStaffListIds);
@@ -166,7 +137,7 @@ export const StaffAccounts: FC = () => {
 
   const handleRejectAll = async (): Promise<boolean> => {
     // Filter by pending
-    const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.access === StaffAccess.Pending).map((staffDetails) => staffDetails.userId);
+    const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.userId);
   
     // Perform backend hook to update status to 'rejected'
     console.log("all pending staff accounts rejected: ", pendingStaffListIds);

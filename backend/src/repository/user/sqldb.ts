@@ -326,10 +326,10 @@ export class SqlDbUserRepository implements UserRepository {
         tshirt_size,
         allergies,
         dietary_reqs,
-        accessibility_reqs
+        accessibility_reqs,
+        user_access
       FROM users 
       WHERE user_type = 'staff'::user_type_enum
-      AND user_access = 'Pending'::user_access_enum
     `);
     const returnArray: Array<StaffInfo> = [];
     for (const row of dbResult.rows) {
@@ -343,7 +343,8 @@ export class SqlDbUserRepository implements UserRepository {
         tshirtSize: row.tshirt_size,
         allergies: row.allergies,
         dietaryReqs: row.dietary_reqs,
-        accessibilityReqs: row.accessibility_reqs
+        accessibilityReqs: row.accessibility_reqs,
+        userAccess: row.user_access
       };
       returnArray.push(staffInfo);
     }
