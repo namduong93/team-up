@@ -26,7 +26,7 @@ const STAFF_DISPLAY_SORT_OPTIONS = [
 ];
 
 const STAFF_DISPLAY_FILTER_OPTIONS: Record<string, Array<string>> = {
-  Access: [UserAccess.Accepted, UserAccess.Pending, UserAccess.Rejected].map(String),
+  Access: [UserAccess.Accepted, UserAccess.Pending, UserAccess.Rejected],
 };
 
 const PageBackground = styled(Background)`
@@ -79,11 +79,11 @@ export const StaffAccounts: FC = () => {
       }
     };
     fetchStaffRequests();
+    console.log(staffList);
   }, []);
 
   const filteredStaff = staffList.filter((staffDetails) => {
-
-    if (filters["Access"] && filters["Access"].length > 0 && !filters["Access"].includes(String(staffDetails.access))) {
+    if (filters["Access"] && filters["Access"].length > 0 && !filters["Access"].includes(staffDetails.userAccess)) {
       return false;
     }
     return true;
@@ -106,6 +106,7 @@ export const StaffAccounts: FC = () => {
     searchedStaff = fuse.search(searchTerm);
   } else {
     searchedStaff = sortedStaff.map((staff) => { return { item: staff } });
+    console.log(searchedStaff);
   }
 
   const removeFilter = (field: string, value: string) => {
