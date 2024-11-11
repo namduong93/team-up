@@ -9,7 +9,7 @@ import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetai
 import { DEFAULT_TEAM_SIZE, SeatAssignment, TeamStatus } from "../../models/team/team.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
-import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite.js";
+import { CompetitionSite, CompetitionSiteCapacity } from "../../../shared_types/Competition/CompetitionSite.js";
 import pokemon from 'pokemon';
 import { ParticipantTeamDetails, TeamDetails } from "../../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo.js";
@@ -2088,4 +2088,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const id = parseInt(text) - this.SALTED_TEAM_CODE;
     return id;
   };
+
+  competitionSiteCapacity = async (compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity> | undefined> => {
+    const siteList = await this.pool.query('SELECT id, capacity FROM competition_sites WHERE competition_id = $1 AND id = ANY($2::int[]);', [compId, siteId])
+    return siteList.rows
+  }
 }
