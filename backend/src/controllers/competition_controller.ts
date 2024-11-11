@@ -167,7 +167,7 @@ export class CompetitionController {
   competitionStudentDetailsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const { compId } = req.body;
-    const studentDetails = req.body.studentInfo as StudentInfo;
+    const studentDetails = req.body.studentDetails as StudentInfo;
     await this.competitionService.competitionStudentDetailsUpdate(
       parseInt(userId as string), parseInt(compId as string), studentDetails);
   });

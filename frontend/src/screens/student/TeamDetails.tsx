@@ -75,7 +75,7 @@ export const TeamDetails: FC = () => {
       students: StudentInfo[];
     }>();
   const { compId } = useParams();
-  const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
+  const [studentInfo, setStudentInfo] = useState<StudentInfo>({} as StudentInfo);
   const [isEditing, setIsEditing] = useState<boolean>(false); 
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export const TeamDetails: FC = () => {
       try {
         const response = await sendRequest.get<{ studentDetails: StudentInfo }>(
           '/competition/student/details',
-          { compId, }
+          { compId }
         );
         setStudentInfo(response.data.studentDetails);
         console.log("Student info fetched", response.data);
@@ -94,21 +94,18 @@ export const TeamDetails: FC = () => {
     fetchStudentInfo();
   }, []);
 
-  const handleSave = async (studentInfo: StudentInfo): Promise<boolean> => {
-    // alert(`Saved details for: ${updatedStudent.name}`);
-    // TODO: hook backend to update student's competition preferences
+  const handleSave = async (studentDetails: StudentInfo): Promise<boolean> => {
     try {
-      await sendRequest.put<{ studentDetails: StudentInfo }>(
+      setStudentInfo(studentDetails);
+      await sendRequest.put(
         '/competition/student/details',
-        { compId, studentInfo }
+        { compId, studentDetails }
       );
+      return true;
     } catch (err) {
-      console.log("Error updating student info", err);
+      console.error("Error updating student info:", err);
       return false;
     }
-    console.log("updated for: ", studentInfo);
-    setStudentInfo(studentInfo);
-    return true;
   };
 
 
