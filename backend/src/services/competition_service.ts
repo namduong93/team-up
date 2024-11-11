@@ -62,11 +62,28 @@ export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
   private notificationRepository: NotificationRepository;
-
+  
   constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository, notificationRepository: NotificationRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+
+  competitionSiteCapacityUpdate = async (userId: number, compId: number, capacity: number, siteId?: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+        throw new ServiceError(ServiceError.Auth, 'User is not an Admin or a Site Coordinator');
+      }
+
+      // (site Id can't be 0 btw cos it's a postgres SERIAL)
+      !siteId && (siteId = await this.competitionRepository.competitionGetCoordinatingSiteId(userId, siteId));
+      console.log(siteId);
+    }
+
+    await this.competitionRepository.competitionSiteCapacityUpdate(siteId, capacity);
+    return;
   }
 
   competitionStudentsRegoToggles = async (userId: number, code: string) => {
@@ -833,8 +850,13 @@ export class CompetitionService {
     return teamsParticipating;
   }
 
-  competitionSiteCapacity = async (compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity>> => {
-    return await this.competitionRepository.competitionSiteCapacity(compId, siteId)
+  competitionSiteCapacity = async (userId: number, compId: number, siteIds?: number[]): Promise<Array<CompetitionSiteCapacity>> => {
+
+    if (!siteIds.length) {
+      siteIds = [await this.competitionRepository.competitionGetCoordinatingSiteId(userId, compId)];
+    }
+
+    return await this.competitionRepository.competitionSiteCapacity(compId, siteIds)
   }
 
   // Check to make sure every competition name is unique

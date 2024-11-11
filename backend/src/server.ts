@@ -333,6 +333,8 @@ app.get('/competition/students/rego_toggles', competitionController.competitionS
 
 app.get('/competition/site/capacity', competitionController.competitionSiteCapacity);
 
+app.put('/competition/site/capacity/update', competitionController.competitionSiteCapacityUpdate);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

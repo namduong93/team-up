@@ -10,10 +10,20 @@ import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
-
+  
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionSiteCapacityUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query as { userId: string };
+    const { compId, siteId, capacity } = req.body as { compId: number, siteId: number, capacity: number };
+    
+    await this.competitionService.competitionSiteCapacityUpdate(
+      parseInt(userId), compId, capacity, siteId);
+
+    res.json({});
+  });
 
   competitionStudentsRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, code } = req.query;
@@ -498,10 +508,12 @@ export class CompetitionController {
 
   competitionSiteCapacity = httpErrorHandler(async (req: Request, res: Response) => {
     const compId = req.query.compId;
+    const userId = req.query.userId as string;
     const ids = req.query.ids;
     const siteIds = typeof ids === 'string' ? ids.split(',').map(Number) : [];
 
-    const site = await this.competitionService.competitionSiteCapacity(parseInt(compId as string), siteIds);
+    const site = await this.competitionService.competitionSiteCapacity(
+      parseInt(userId), parseInt(compId as string), siteIds.includes(0) ? [] : siteIds);
 
     res.json({ site });
   });
