@@ -12,7 +12,7 @@ import { ResponsiveActionButton } from "../../../components/responsive_fields/ac
 
 interface EditCompPreferencesProps {
   student: StudentInfo;
-  onSave: (updatedStudent: StudentInfo) => void;
+  onSubmit: (updatedStudent: StudentInfo) => void;
   onClose: () => void;
 }
 
@@ -128,13 +128,13 @@ const ButtonContainer = styled.div`
 
 export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   student,
-  onSave,
+  onSubmit,
   onClose,
 }) => {
   const [formData, setFormData] = useState<StudentInfo>(student);
 
   const handleSubmit = async () => {
-    onSave(formData);
+    onSubmit(formData);
     onClose();
     return true;
   };

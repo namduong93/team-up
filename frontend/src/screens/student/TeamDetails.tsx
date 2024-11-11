@@ -75,39 +75,41 @@ export const TeamDetails: FC = () => {
       students: StudentInfo[];
     }>();
   const { compId } = useParams();
-  const [participantInfo, setParticipantInfo] = useState<StudentInfo | null>(null);
+  const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false); 
 
   useEffect(() => {
-    const fetchParticipantInfo = async () => {
+    const fetchStudentInfo = async () => {
       try {
-        const response = await sendRequest.get<{ studentInfo: StudentInfo }>(
+        const response = await sendRequest.get<{ studentDetails: StudentInfo }>(
           '/competition/student/details',
           { compId, }
         );
-        setParticipantInfo(response.data.studentInfo);
+        setStudentInfo(response.data.studentDetails);
+        console.log("Student info fetched", response.data);
       } catch (err) {
         console.log("Error fetching student info", err);
       }
     };
-    fetchParticipantInfo();
+    fetchStudentInfo();
   }, []);
-  
-  const updateParticipantInfo = async (studentInfo: StudentInfo) => {
-    try {
-      const response = await sendRequest.put<{ studentInfo: StudentInfo }>(
-        '/competition/student/details',
-        { compId, studentInfo }
-      );
-      setParticipantInfo(response.data.studentInfo);
-    } catch (err) {
-      console.log("Error updating student info", err);
-    }
-  };
 
   const handleSave = (studentInfo: StudentInfo) => {
     // alert(`Saved details for: ${updatedStudent.name}`);
     // TODO: hook backend to update student's competition preferences
-    updateParticipantInfo(studentInfo);
+    const updateStudentInfo = async (studentInfo: StudentInfo) => {
+      try {
+        const response = await sendRequest.put<{ studentDetails: StudentInfo }>(
+          '/competition/student/details',
+          { compId, studentInfo }
+        );
+        setStudentInfo(response.data.studentDetails);
+      } catch (err) {
+        console.log("Error updating student info", err);
+      }
+    };
+
+    updateStudentInfo(studentInfo);
   };
 
 
@@ -146,16 +148,16 @@ export const TeamDetails: FC = () => {
             preferredContact={student.preferredContact}
             isFirst={index === 0}
             onEdit={() =>
-              setParticipantInfo(student)
+              setIsEditing(true)
             }
           />
         ))}
       </StudentsContainer>
-      {participantInfo && (
+      {isEditing && (
         <EditCompPreferences
-          student={participantInfo}
-          onSave={handleSave}
-          onClose={() => setParticipantInfo(null)}
+          student={studentInfo}
+          onSubmit={handleSave}
+          onClose={() => setIsEditing(false)}
         />
       )}
     </DetailsContainer>
