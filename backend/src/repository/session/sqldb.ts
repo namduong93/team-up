@@ -26,7 +26,7 @@ export class SqlDbSessionRepository implements SessionRepository {
           return null;
       }
       const session = sessionResult.rows[0];
-      return { sessionId: session.session_id, userId: session.user_id, createdAt: session.created_at };
+      return { sessionId: session.session_id, userId: session.user_id, createdAt: session.created_date };
     }
 
     /**
@@ -37,7 +37,7 @@ export class SqlDbSessionRepository implements SessionRepository {
      */
     async create(session: Session): Promise<{} | null> {
       const sessionQuery = `
-          INSERT INTO sessions (session_id, user_id, created_at)
+          INSERT INTO sessions (session_id, user_id, created_date)
           VALUES ($1, $2, to_timestamp($3))
           RETURNING *;
       `;
