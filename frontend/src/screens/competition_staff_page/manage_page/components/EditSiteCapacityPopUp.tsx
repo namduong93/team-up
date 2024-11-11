@@ -177,7 +177,7 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
     // onSubmit({label: selectedSite.label, value: parseInt(selectedSite.value)}, capacity);
     onClose();
     
-    await sendRequest.put<{}>('/competition/site/capacity/update', { compId, siteId: parseInt(selectedSite.value), capacity });
+    await sendRequest.put('/competition/site/capacity/update', { compId, siteId: parseInt(selectedSite.value), capacity });
   };
 
   return (

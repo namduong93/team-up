@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { DownloadButtons } from "../../components/DownloadButtons"
 import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
 import { tShirtOptions, dietaryOptions } from "../../../authentication/registration/SiteInformation";
@@ -35,7 +35,7 @@ interface AccessibilityRequirement {
 };
 
 export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
-  { attendeesListState: [attendeesList, setAttendeesList], universityOption: siteOption, siteOptionsState: [siteOptions, setSiteOptions] }) => {
+  { attendeesListState: [attendeesList, setAttendeesList], universityOption: siteOption }) => {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   // Helper function to escape CSV fields that might contain commas
@@ -49,8 +49,6 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
   const downloadCSV = async () => {
     let attendees = attendeesList;
     if (siteOption.value) attendees = attendeesList.filter((attendee) => attendee.siteId === parseInt(siteOption.value));
-
-    console.log(attendees);
 
     // TODO: Filter by site option for admin
     let csvContent = "Site Attendee Data Report: CSV format\n\n";
