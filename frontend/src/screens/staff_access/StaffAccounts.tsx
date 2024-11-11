@@ -13,6 +13,7 @@ import { styled } from "styled-components";
 import { FilterTagButton, RemoveFilterIcon } from "../dashboard/Dashboard";
 import { NarrowStaffAccessCard } from "./NarrowStaffAccessCard";
 import { StaffAccessButtons } from "./StaffAccessButtons";
+import { sendRequest } from "../../utility/request";
 
 const mockStaffData: StaffAccessInfo[] = [
   {
@@ -95,8 +96,15 @@ export const StaffAccounts: FC = () => {
     setFilterOptions(STAFF_DISPLAY_FILTER_OPTIONS);
     
     // TODO: Backend, get the staffList from backend
-    setStaffList(mockStaffData);
+    const fetchStaffRequestsList = async () => {
+      const staffRequestsResponse = await sendRequest.get<{
+        staff: Array<StaffInfo>;
+      }>("/user/staff_list", {});
+      const { staff } = staffResponse.data;
+      setStaffList(staff);
+    };
 
+    setStaffList(mockStaffData);
   }, []);
 
   const filteredStaff = staffList.filter((staffDetails) => {

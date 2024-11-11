@@ -1,4 +1,4 @@
-import { FC, SetStateAction, useEffect, useState } from "react";
+import React, { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaFileSignature,
@@ -11,11 +11,13 @@ import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
 import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
+import { EditSiteCapacityPopUp } from "./EditSiteCapacityPopUp";
 import { sendRequest } from "../../../../utility/request";
 import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
 import { useParams } from "react-router-dom";
 import { Announcement } from "../../../../../shared_types/Competition/staff/Announcement";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
 
 type ActionType =
   | "code"
@@ -29,6 +31,7 @@ interface StaffActionCardProps {
   staffRoles: string[];
   compCode: string;
   universityOption: { value: string; label: string };
+  siteOptionsState: [{ value: string, label: string }[], React.Dispatch<React.SetStateAction<{ value: string, label: string }[]>>];
 }
 
 interface ActionCardProps {
@@ -151,7 +154,6 @@ export const Heading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
-  margin-bottom: 10%;
   white-space: pre-wrap;
   word-break: break-word;
 `;
@@ -160,13 +162,13 @@ const CodeCardText = styled(CardText)`
   font-size: 1.25rem;
 `;
 
-const Title2 = styled.h2`
-  margin-top: 40px;
-  margin-bottom: 20px;
-  font-size: 22px;
-  white-space: pre-wrap;
-  word-break: break-word;
-`;
+// const Title2 = styled.h2`
+//   margin-top: 40px;
+//   margin-bottom: 20px;
+//   font-size: 22px;
+//   white-space: pre-wrap;
+//   word-break: break-word;
+// `;
 
 const defaultAnnouncement = `
 The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.
@@ -189,15 +191,18 @@ export const DEFAULT_REGO_FIELDS = {
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
+  siteOptionsState: [siteOptions, setSiteOptions],
 }) => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
+  // const [showEditRego, setShowEditRego] = useState(false);
+  const [showEditCapacity, setShowEditCapacity] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
-  const { universityOption  } = useCompetitionOutletContext("teams");
+  const { universityOption  } = useCompetitionOutletContext("manage", showManageSite);
 
   const actions = [
     {
@@ -249,7 +254,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     } else if (actionType === "contact") {
       setShowContactBio(true);
     } else if (actionType === "registration") {
-      setShowEditRego(true);
+      // setShowEditRego(true);
+    } else if (actionType === "capacity") {
+      setShowEditCapacity(true);
     }
   };
 
@@ -366,7 +373,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   };
 
   // TO-DO: call the backend to retrive the previous options
-  const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
+  // const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   useEffect(() => {
@@ -376,21 +383,47 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       setIsFirstLoad(false);
       return;
     }
-    const fetchRegoFields = async () => {
-      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
-        { compId, universityId: universityOption.value });
-      const { regoFields: receivedRegoFields } = response.data;
-      setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
-    }
-    fetchRegoFields();
+    // const fetchRegoFields = async () => {
+    //   const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
+    //     { compId, universityId: universityOption.value });
+    //   const { regoFields: receivedRegoFields } = response.data;
+    //   setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
+    // }
+    // fetchRegoFields();
   }, [universityOption]);
 
-  const handleRegoEditSubmit = async (regoFields: EditRego) => {
-    // TO-DO: send the EditRego to backend for storage
-    await sendRequest.post('/competition/staff/update_rego_toggles',
-      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
-    console.log(regoFields);
-    console.log("submitted");
+  // const handleRegoEditSubmit = async (regoFields: EditRego) => {
+  //   // TO-DO: send the EditRego to backend for storage
+  //   await sendRequest.post('/competition/staff/update_rego_toggles',
+  //     { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
+  //   console.log(regoFields);
+  //   console.log("submitted");
+  // };
+
+  const handleSiteCapacityChange = (site: { label: string, value: number }, capacity: number) => {
+    // TODO: backend PUT (update) the site capacity for a given site Id and new capacity
+    console.log(`updating site ${site.label} with id ${site.value} with capacity: ${capacity}`);
+
+    setShowEditCapacity(false);
+  };
+
+  const [siteList, setSiteList] = useState<CompetitionSiteCapacity[] | undefined>();
+
+  useEffect(() => {
+    const fetchSiteCapacities = async () => {
+      const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>('/competition/site/capacity', { compId, ids: siteOptions.map((siteOption) => siteOption.value) });
+      const { site: siteCapacities } = response.data;
+      setSiteList(siteCapacities);
+    }
+
+    fetchSiteCapacities();
+  }, []);
+
+  const getSiteCapacity = (): number => {
+    const foundSite = siteList?.find((site) => site.id === parseInt(universityOption.value));
+
+    if (foundSite) return foundSite?.capacity;
+    return 0;
   };
 
   return (
@@ -400,7 +433,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           <BackButton onClick={() => setShowManageSite(false)}>
             <FaChevronLeft /> Back
           </BackButton>
-          <AssignSeats siteName="CSE Building K17" siteCapacity={50} />
+          <AssignSeats siteName={universityOption.label} siteCapacity={getSiteCapacity()} />
         </AssignSeatsPage>
       ) : (
         <>
@@ -444,7 +477,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
             />
           )}
 
-          {showEditRego && (
+          {/* {showEditRego && (
             <EditCompRegoPopUp
               heading={
                 <Title2>
@@ -456,6 +489,14 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
               regoFields={regoFields}
               setRegoFields={setRegoFields}
               onSubmit={handleRegoEditSubmit}
+            />
+          )} */}
+
+          {showEditCapacity && (
+            <EditSiteCapacityPopUp 
+              heading={"Update Site Capacities"} 
+              onClose={() => setShowEditCapacity(false)} 
+              onSubmit={handleSiteCapacityChange}            
             />
           )}
         </>
