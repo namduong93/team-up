@@ -43,17 +43,19 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return;
   }
 
-  competitionSiteCoordinatorCheck = async (userId: number, siteId: number): Promise<void> => {
+  competitionGetCoordinatingSiteId = async (userId: number): Promise<number> => {
     const dbResult = await this.pool.query(
-      `SELECT 1
+      `SELECT site_id
       FROM competition_users AS cu
-      WHERE cu.user_id = ${userId} AND cu.site_id = ${siteId}
+      WHERE cu.user_id = ${userId}
       `
     )
 
     if (!dbResult.rowCount) {
       throw new DbError(DbError.Auth, 'Site Coordinator is not coordinating this site');
     }
+
+    return dbResult.rows[0].site_id;
   }
 
   competitionStudentsRegoToggles = async (userId: number, code: string) => {

@@ -20,7 +20,7 @@ export class CompetitionController {
     const { compId, siteId, capacity } = req.body as { compId: number, siteId: number, capacity: number };
     
     await this.competitionService.competitionSiteCapacityUpdate(
-      parseInt(userId), compId, siteId, capacity);
+      parseInt(userId), compId, capacity, siteId);
 
     res.json({});
   });
@@ -500,10 +500,12 @@ export class CompetitionController {
 
   competitionSiteCapacity = httpErrorHandler(async (req: Request, res: Response) => {
     const compId = req.query.compId;
+    const userId = req.query.userId as string;
     const ids = req.query.ids;
     const siteIds = typeof ids === 'string' ? ids.split(',').map(Number) : [];
 
-    const site = await this.competitionService.competitionSiteCapacity(parseInt(compId as string), siteIds);
+    const site = await this.competitionService.competitionSiteCapacity(
+      parseInt(userId), parseInt(compId as string), siteIds.includes(0) ? [] : siteIds);
 
     res.json({ site });
   });

@@ -16,8 +16,8 @@ import { Announcement } from "../../shared_types/Competition/staff/Announcement.
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionGetCoordinatingSiteId(userId: number, siteId: number): Promise<number>;
   competitionSiteCapacityUpdate(siteId: number, capacity: number): Promise<void>;
-  competitionSiteCoordinatorCheck(userId: number, siteId: number): Promise<void>;
   competitionStudentsRegoToggles(userId: number, code: string): Promise<EditRego>;
   competitionStaffUpdateRegoToggles(userId: number, compId: number, regoFields: EditRego, universityId?: number): Promise<void>;
   competitionStaffRegoToggles(userId: number, compId: number, universityId?: number): Promise<EditRego>;

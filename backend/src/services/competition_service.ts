@@ -69,7 +69,7 @@ export class CompetitionService {
     this.notificationRepository = notificationRepository;
   }
 
-  competitionSiteCapacityUpdate = async (userId: number, compId: number, siteId: number, capacity: number) => {
+  competitionSiteCapacityUpdate = async (userId: number, compId: number, capacity: number, siteId?: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 
     if (!roles.includes(CompetitionUserRole.ADMIN)) {
@@ -77,7 +77,9 @@ export class CompetitionService {
         throw new ServiceError(ServiceError.Auth, 'User is not an Admin or a Site Coordinator');
       }
 
-      await this.competitionRepository.competitionSiteCoordinatorCheck(userId, siteId);
+      // (site Id can't be 0 btw cos it's a postgres SERIAL)
+      !siteId && (siteId = await this.competitionRepository.competitionGetCoordinatingSiteId(userId, siteId));
+      console.log(siteId);
     }
 
     await this.competitionRepository.competitionSiteCapacityUpdate(siteId, capacity);
@@ -839,8 +841,13 @@ export class CompetitionService {
     return teamsParticipating;
   }
 
-  competitionSiteCapacity = async (compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity>> => {
-    return await this.competitionRepository.competitionSiteCapacity(compId, siteId)
+  competitionSiteCapacity = async (userId: number, compId: number, siteIds?: number[]): Promise<Array<CompetitionSiteCapacity>> => {
+
+    if (!siteIds.length) {
+      siteIds = [await this.competitionRepository.competitionGetCoordinatingSiteId(userId, compId)];
+    }
+
+    return await this.competitionRepository.competitionSiteCapacity(compId, siteIds)
   }
 
   // Check to make sure every competition name is unique
