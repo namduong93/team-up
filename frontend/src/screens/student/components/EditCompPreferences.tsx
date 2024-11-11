@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
 import styled from "styled-components";
 import { FormLabel, Descriptor, yearOptions, Text, DoubleInputContainer, Colon } from "../../competition/register/CompIndividual";
@@ -12,9 +12,9 @@ import { ResponsiveActionButton } from "../../../components/responsive_fields/ac
 
 interface EditCompPreferencesProps {
   student: StudentInfo;
-  onSave: (updatedStudent: StudentInfo) => void;
+  onSubmit: (updatedStudent: StudentInfo) => Promise<boolean>;
   onClose: () => void;
-}
+};
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -128,16 +128,20 @@ const ButtonContainer = styled.div`
 
 export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   student,
-  onSave,
+  onSubmit,
   onClose,
 }) => {
   const [formData, setFormData] = useState<StudentInfo>(student);
 
   const handleSubmit = async () => {
-    onSave(formData);
+    onSubmit(formData);
     onClose();
     return true;
   };
+
+  useEffect(() => {
+    console.log(student);
+  },[])
 
   return (
     <ModalOverlay>

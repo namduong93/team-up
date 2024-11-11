@@ -4,7 +4,7 @@ import { University } from "../models/university/university.js";
 import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 import './competition/sqldb'
-import { CompetitionSite } from '../../shared_types/Competition/CompetitionSite.js';
+import { CompetitionSite, CompetitionSiteCapacity } from '../../shared_types/Competition/CompetitionSite.js';
 import { SeatAssignment } from "../models/team/team.js";
 import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
@@ -16,6 +16,8 @@ import { Announcement } from "../../shared_types/Competition/staff/Announcement.
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionGetCoordinatingSiteId(userId: number, siteId: number): Promise<number>;
+  competitionSiteCapacityUpdate(siteId: number, capacity: number): Promise<void>;
   competitionStudentsRegoToggles(userId: number, code: string): Promise<EditRego>;
   competitionStaffUpdateRegoToggles(userId: number, compId: number, regoFields: EditRego, universityId?: number): Promise<void>;
   competitionStaffRegoToggles(userId: number, compId: number, universityId?: number): Promise<EditRego>;
@@ -37,7 +39,8 @@ export interface CompetitionRepository {
   competitionTeamDetails(userId: number, compId: number): Promise<ParticipantTeamDetails>;
   competitionTeamInviteCode(userId: number, compId: number): Promise<string>;
   competitionTeamJoin(userId: number, compId: number, teamCode: string, university: University): Promise<CompetitionTeamNameObject>;
-  competitionStudentDetails(userId: number, compId: number): Promise<CompetitionStudentDetails>;
+  competitionStudentDetails(userId: number, compId: number): Promise<StudentInfo>;
+  competitionStudentDetailsUpdate(userId: number, compId: number, studentInfo: StudentInfo): Promise<{}>;
   competitionStaffDetails(userId: number, compId: number): Promise<StaffInfo>;
   competitionStaffDetailsUpdate(userId: number, compId: number, staffInfo: StaffInfo): Promise<{}>;
 
@@ -65,4 +68,6 @@ export interface CompetitionRepository {
   competitionIdFromCode(code: string): Promise<number>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject>>;
   competitionAlgorithm(compId: number, userId: number): Promise<{} | undefined>;
+
+  competitionSiteCapacity(compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity> | undefined>;
 }

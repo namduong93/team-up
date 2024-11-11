@@ -1,4 +1,5 @@
-import { FC, SetStateAction, useEffect, useState } from "react";
+
+import React, { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaFileSignature,
@@ -15,6 +16,7 @@ import {
   EditCourse,
 } from "../../../../../shared_types/Competition/staff/Edit";
 import { CourseCategory } from "../../../../../shared_types/University/Course";
+import { EditSiteCapacityPopUp } from "./EditSiteCapacityPopUp";
 import { sendRequest } from "../../../../utility/request";
 import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
 import { useParams } from "react-router-dom";
@@ -23,6 +25,7 @@ import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletCon
 
 import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
 import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
+import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
 
 type ActionType =
   | "code"
@@ -36,6 +39,7 @@ interface StaffActionCardProps {
   staffRoles: string[];
   compCode: string;
   universityOption: { value: string; label: string };
+  siteOptionsState: [{ value: string, label: string }[], React.Dispatch<React.SetStateAction<{ value: string, label: string }[]>>];
 }
 
 interface ActionCardProps {
@@ -158,7 +162,6 @@ export const Heading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
-  margin-bottom: 10%;
   white-space: pre-wrap;
   word-break: break-word;
 `;
@@ -196,16 +199,20 @@ export const DEFAULT_REGO_FIELDS = {
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
+  siteOptionsState: [siteOptions, setSiteOptions],
 }) => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
+  // const [showEditRego, setShowEditRego] = useState(false);
+  const [showEditCapacity, setShowEditCapacity] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
   const [showEditComp, setShowEditComp] = useState(false);
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
-  const { universityOption  } = useCompetitionOutletContext("teams");
+
+  const { universityOption  } = useCompetitionOutletContext("manage", showManageSite);
 
   const actions = [
     {
@@ -260,6 +267,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       setShowEditRego(true);
     } else if (actionType === "competition") {
       setShowEditComp(true);
+      // setShowEditRego(true);
+    } else if (actionType === "capacity") {
+      setShowEditCapacity(true);
     }
   };
 
@@ -279,6 +289,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         if (universityOption.value) {
           const universityId = universityOption.value;
           response = await sendRequest.get<{ staffDetails: StaffInfo }>(
+
             '/competition/staff/details',
             { compId, universityId }
           );
@@ -294,7 +305,8 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         console.log("Error fetching staff info", err);
       }
     };
-  
+
+
     const fetchAnnouncementMessage = async () => {
       try {
         let response;
@@ -315,14 +327,14 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           setAnnouncementMessage(defaultAnnouncement);
           return;
         }
-  
+
         setAnnouncementMessage(response.data.announcement.message);
         console.log(response.data.announcement);
       } catch (err) {
         console.log("Error fetching announcement", err);
       }
     };
-  
+
     // Call the async functions
     fetchStaffInfo();
     fetchAnnouncementMessage();
@@ -423,6 +435,32 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     // TO-DO: send the edited courses to backend and store for competition
     console.log(editCourse);
     console.log(regoFields);
+  }
+
+  const handleSiteCapacityChange = (site: { label: string, value: number }, capacity: number) => {
+    // TODO: backend PUT (update) the site capacity for a given site Id and new capacity
+    console.log(`updating site ${site.label} with id ${site.value} with capacity: ${capacity}`);
+
+    setShowEditCapacity(false);
+  };
+
+  const [siteList, setSiteList] = useState<CompetitionSiteCapacity[] | undefined>();
+
+  useEffect(() => {
+    const fetchSiteCapacities = async () => {
+      const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>('/competition/site/capacity', { compId, ids: siteOptions.map((siteOption) => siteOption.value) });
+      const { site: siteCapacities } = response.data;
+      setSiteList(siteCapacities);
+    }
+
+    fetchSiteCapacities();
+  }, []);
+
+  const getSiteCapacity = (): number => {
+    const foundSite = siteList?.find((site) => site.id === parseInt(universityOption.value));
+
+    if (foundSite) return foundSite?.capacity;
+    return 0;
   };
 
   // TO-DO: obtain the competition information from the
@@ -461,7 +499,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           <BackButton onClick={() => setShowManageSite(false)}>
             <FaChevronLeft /> Back
           </BackButton>
-          <AssignSeats siteName="CSE Building K17" siteCapacity={50} />
+          <AssignSeats siteName={universityOption.label} siteCapacity={getSiteCapacity()} />
         </AssignSeatsPage>
       ) : (
         <>
@@ -501,11 +539,13 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
               bioValue={currentBio}
               announcementValue={announcementMessage}
               onBioChange={(e) => setCurrentBio(e.target.value)}
-              onAnnouncementChange={(value: SetStateAction<string>) => setAnnouncementMessage(value)}
+              onAnnouncementChange={(value: SetStateAction<string>) =>
+                setAnnouncementMessage(value)
+              }
             />
           )}
 
-          {showEditRego && (
+          {/* {showEditRego && (
             <EditCompRegoPopUp
               onClose={() => setShowEditRego(false)}
               regoFields={regoFields}
@@ -513,6 +553,14 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
               onSubmit={handleRegoEditSubmit}
               editCourses={editCourse}
               setCourses={handleEditCourseChange}
+            />
+          )} */}
+
+          {showEditCapacity && (
+            <EditSiteCapacityPopUp 
+              heading={"Update Site Capacities"} 
+              onClose={() => setShowEditCapacity(false)} 
+              onSubmit={handleSiteCapacityChange}            
             />
           )}
 

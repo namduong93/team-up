@@ -226,10 +226,8 @@ export const AttendeesDisplay: FC = () => {
   } = useCompetitionOutletContext('attendees');
 
   useEffect(() => {
-
     setSortOptions(ATTENDEES_DISPLAY_SORT_OPTIONS);
     setFilterOptions(ATTENDEES_DISPLAY_FILTER_OPTIONS);
-    
   }, []);
 
   const filteredAttendees = attendeesList.filter((attendeesDetails) => {

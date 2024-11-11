@@ -283,16 +283,20 @@ app.get('/competition/attendees', competitionController.competitionAttendees);
 
 // PARAMS: { compId }
 // RESPONSE: 
-// { studentDetails: {...} }
+// { studentDetails: StudentInfo }
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
+
+// PARAMS: { compId, studentInfo: StudentInfo }
+// RESPONSE: { }
+app.put('/competition/student/details', competitionController.competitionStudentDetailsUpdate);
 
 
 // PARAMS: { compId }
 // RESPONSE: { staffDetails: StaffInfo }
 app.get('/competition/staff/details', competitionController.competitionStaffDetails);
 
-// PARAMS: { compId }
+// PARAMS: { compId, staffInfo: StaffInfo }
 // RESPONSE: { }
 app.put('/competition/staff/details', competitionController.competitionStaffDetailsUpdate);
 
@@ -326,6 +330,10 @@ app.get('/competition/staff/rego_toggles', competitionController.competitionStaf
 app.post('/competition/staff/update_rego_toggles', competitionController.competitionStaffUpdateRegoToggles);
 
 app.get('/competition/students/rego_toggles', competitionController.competitionStudentsRegoToggles);
+
+app.get('/competition/site/capacity', competitionController.competitionSiteCapacity);
+
+app.put('/competition/site/capacity/update', competitionController.competitionSiteCapacityUpdate);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

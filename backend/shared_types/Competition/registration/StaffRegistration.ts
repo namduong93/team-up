@@ -3,7 +3,19 @@ import { CompetitionRole } from "../CompetitionRole";
 export interface StaffRegistration {
   roles: CompetitionRole[];
   capacity?: number;
-  site?: string;
-  institution?: string;
+  site?: {
+    id: number;
+    name: string;
+    capacity?: number;
+  };
+  institution?: {
+    id: number;
+    name: string;
+  };
   competitionBio?: string;
+}
+
+export interface University {
+  id: string;
+  name: string;
 }

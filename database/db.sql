@@ -867,7 +867,7 @@ VALUES
 -- Competition Site Coordinator(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
 VALUES
-(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 2, 'Accepted');
+(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 1, 'Accepted');
 
 
 -- Competition Participants

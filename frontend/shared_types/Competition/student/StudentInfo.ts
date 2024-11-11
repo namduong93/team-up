@@ -2,7 +2,7 @@ import { CompetitionLevel } from "../CompetitionLevel";
 import { CompetitionRole } from "../CompetitionRole";
 
 export interface StudentInfo {
-  userId: number;
+  userId?: number;
   universityId: number;
   universityName: string;
   name: string;
@@ -35,7 +35,7 @@ export interface StudentInfo {
   status: string;
 
   // team info
-  teamName: string;
-  siteName: string;
-  siteId: number;
+  teamName?: string;
+  siteName?: string;
+  siteId?: number;
 };
