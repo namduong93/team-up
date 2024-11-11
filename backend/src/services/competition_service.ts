@@ -12,7 +12,10 @@ import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js"
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { CompetitionRole } from "../../shared_types/Competition/CompetitionRole.js";
+import { Announcement } from "../../shared_types/Competition/staff/Announcement.js";
+import { University } from "../models/university/university.js";
 import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { CompetitionSiteCapacity } from "../../shared_types/Competition/CompetitionSite.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -59,7 +62,7 @@ export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
   private notificationRepository: NotificationRepository;
-  
+
   constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository, notificationRepository: NotificationRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
@@ -114,7 +117,7 @@ export class CompetitionService {
       return await this.competitionRepository.competitionStaffRegoToggles(userId, compId, universityId as number);
     }
 
-    return await this.competitionRepository.competitionStaffRegoToggles(userId, compId); 
+    return await this.competitionRepository.competitionStaffRegoToggles(userId, compId);
   }
 
   /**
@@ -185,7 +188,7 @@ export class CompetitionService {
     await this.competitionRepository.competitionTeamsUpdate(teamList, compId);
     return;
   }
-  
+
   competitionSitesCodes = async (code: string) => {
     const compId = await this.competitionRepository.competitionIdFromCode(code);
 
@@ -201,7 +204,7 @@ export class CompetitionService {
   competitionSites = async (compId: number) => {
     return await this.competitionRepository.competitionSites(compId);
   }
-  
+
   /**
    * Retrieves the attendees of a competition for a given user.
    * 
@@ -265,7 +268,7 @@ export class CompetitionService {
    * @throws {ServiceError} If the user is not a participant in the competition.
    * @throws {ServiceError} If the user is not part of a university.
    */
-  competitionTeamJoin = async (userId: number, compId: number, teamCode: string) => { 
+  competitionTeamJoin = async (userId: number, compId: number, teamCode: string) => {
     const roles = await this.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
       throw new ServiceError(ServiceError.Auth,
@@ -295,13 +298,23 @@ export class CompetitionService {
     return await this.competitionRepository.competitionStudentDetails(userId, compId);
   }
 
-  /**
-   * Retrieves the staff information for a specific competition.
-   *
-   * @param userId The ID of the user requesting the staff information.
-   * @param compId The ID of the competition for which the staff information is requested.
-   * @returns A promise that resolves to an array of StaffInfo objects.
-   */
+  competitionStaffDetails = async (userId: number, compId: number) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.ADMIN) && !roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a staff for this competition.");
+    }
+
+    return await this.competitionRepository.competitionStaffDetails(userId, compId);
+  }
+
+  competitionStaffDetailsUpdate = async (userId: number, compId: number, staffInfo: StaffInfo) => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.ADMIN) && !roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      throw new ServiceError(ServiceError.Auth, "User is not a staff for this competition.");
+    }
+    await this.competitionRepository.competitionStaffDetailsUpdate(userId, compId, staffInfo);
+  }
+
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
     return await this.competitionRepository.competitionStaff(userId, compId);
   }
@@ -327,7 +340,7 @@ export class CompetitionService {
   competitionRoles = async (userId: number, compId: number) => {
     return await this.competitionRepository.competitionRoles(userId, compId);
   }
-  
+
   /**
    * Retrieves the teams participating in a competition for a given user (staff).
    *
@@ -350,11 +363,11 @@ export class CompetitionService {
   competitionSystemAdminCreate = async (userId: number, competition: Competition): Promise<CompetitionIdObject> => {
     // Verify system admin
     const userTypeObject = await this.userRepository.userType(userId);
-    
+
     if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
       throw new ServiceError(ServiceError.Auth, 'User is not a system admin.');
     }
-    
+
     const competitionId = await this.competitionRepository.competitionSystemAdminCreate(userId, competition);
 
     return competitionId;
@@ -371,13 +384,13 @@ export class CompetitionService {
   competitionSystemAdminUpdate = async (userId: number, competition: Competition): Promise<{} | undefined> => {
     // Verify system admin
     const userTypeObject = await this.userRepository.userType(userId);
-    
+
     if (userTypeObject.type !== UserType.SYSTEM_ADMIN) {
       throw new ServiceError(ServiceError.Auth, 'User is not a system admin.');
     }
 
     const competitionId = await this.competitionRepository.competitionSystemAdminUpdate(userId, competition);
-    
+
     return competitionId;
   }
 
@@ -392,9 +405,9 @@ export class CompetitionService {
     if (!competitionId) {
       throw new ServiceError(ServiceError.NotFound, 'Competition not found');
     }
-    
+
     const competitionDetails = await this.competitionRepository.competitionGetDetails(competitionId);
-    
+
     return competitionDetails;
   }
 
@@ -409,7 +422,7 @@ export class CompetitionService {
     const userTypeObject = await this.userRepository.userType(userId);
 
     const competitions = await this.competitionRepository.competitionsList(userId, userTypeObject.type);
-    
+
     return competitions;
   }
 
@@ -449,7 +462,7 @@ export class CompetitionService {
    * @returns A promise that resolves to the default competition site object for the user's university, or undefined if not found.
    * @throws {ServiceError} If the competition is not found or the user is not associated with a university.
    */
-  competitionUserDefaultSite = async (userId: number, code: string): Promise< CompetitionSiteObject | undefined> => {
+  competitionUserDefaultSite = async (userId: number, code: string): Promise<CompetitionSiteObject | undefined> => {
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {
       throw new ServiceError(ServiceError.NotFound, 'Competition not found');
@@ -495,11 +508,11 @@ export class CompetitionService {
     competitionUserInfo.competitionRoles = [CompetitionUserRole.PARTICIPANT];
 
     const university = await this.userRepository.userUniversity(competitionUserInfo.userId);
-    if(!university) {
+    if (!university) {
       throw new ServiceError(ServiceError.NotFound, 'University not found');
     }
 
-    if(!competitionUserInfo.siteLocation || !competitionUserInfo.siteLocation.id) {
+    if (!competitionUserInfo.siteLocation || !competitionUserInfo.siteLocation.id) {
       throw new ServiceError(ServiceError.NotFound, 'Site location not provided');
     }
 
@@ -513,7 +526,7 @@ export class CompetitionService {
   }
 
   competitionStudentJoin2 = async (sessionToken: string, code: string, teamInfo: TeamDetails,
-    teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject | undefined> => {
+    teamMate1: TeamMateData, teamMate2: TeamMateData): Promise<TeamIdObject | undefined> => {
 
     return { teamId: 1 };
   }
@@ -537,7 +550,7 @@ export class CompetitionService {
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
       throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
     }
-    
+
     // Remove student from competition
     const result = await this.competitionRepository.competitionStudentWithdraw(userId, compId);
 
@@ -631,18 +644,18 @@ export class CompetitionService {
     if (userTypeObject.type !== UserType.STUDENT) {
       throw new ServiceError(ServiceError.Auth, "User is not a student.");
     }
-  
+
     const roles = await this.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
       throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
     }
-  
+
     // Request site ID change
     const teamId = await this.competitionRepository.competitionRequestSiteChange(userId, compId, newSiteId);
-  
+
     // Notify coach
     await this.notificationRepository.notificationRequestSiteChange(teamId, compId);
-  
+
     return {};
   }
 
@@ -658,10 +671,10 @@ export class CompetitionService {
   competitionApproveSiteChange = async (userId: number, compId: number, approveIds: Array<number>, rejectIds: Array<number>): Promise<{} | undefined> => {
     // Approve or reject site ID change
     await this.competitionRepository.competitionApproveSiteChange(userId, compId, approveIds, rejectIds);
-  
+
     // Notify team members
     await this.notificationRepository.notificationApproveSiteChange(compId, approveIds, rejectIds);
-  
+
     return {};
   }
 
@@ -679,7 +692,7 @@ export class CompetitionService {
 
     // Notifications to teams
     await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);
-  
+
     return {};
   }
 
@@ -708,19 +721,19 @@ export class CompetitionService {
    * @throws {ServiceError} If the user is not associated with a university.
    * @throws {ServiceError} If the site location, name, or capacity is not provided for a site coordinator role.
    */
-  competitionStaffJoin = async (code: string, competitionStaffInfo: CompetitionStaff ): Promise<{} | undefined> => {
+  competitionStaffJoin = async (code: string, competitionStaffInfo: CompetitionStaff): Promise<{} | undefined> => {
     const competitionId = await this.competitionRepository.competitionIdFromCode(code);
     if (!competitionId) {
       throw new ServiceError(ServiceError.NotFound, 'Competition not found');
     }
 
     let userType = await this.userRepository.userType(competitionStaffInfo.userId);
-    if(userType.type === UserType.STUDENT) {
+    if (userType.type === UserType.STUDENT) {
       throw new ServiceError(ServiceError.NotFound, 'User not staff');
     }
 
-    if(competitionStaffInfo.competitionRoles.includes(CompetitionUserRole.COACH)) {
-      if(!competitionStaffInfo.competitionBio) {
+    if (competitionStaffInfo.competitionRoles.includes(CompetitionUserRole.COACH)) {
+      if (!competitionStaffInfo.competitionBio) {
         throw new ServiceError(ServiceError.NotFound, 'Competition bio not provided');
       }
 
@@ -732,23 +745,65 @@ export class CompetitionService {
       competitionStaffInfo.university = university;
     }
 
-    if(competitionStaffInfo.competitionRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
-      if(!competitionStaffInfo.siteLocation || !competitionStaffInfo.siteLocation.id) {
+    if (competitionStaffInfo.competitionRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+      if (!competitionStaffInfo.siteLocation || !competitionStaffInfo.siteLocation.id) {
         throw new ServiceError(ServiceError.NotFound, 'Site location not provided');
       }
 
-      if(!competitionStaffInfo.siteLocation.name) {
+      if (!competitionStaffInfo.siteLocation.name) {
         throw new ServiceError(ServiceError.NotFound, 'Site name not provided');
       }
 
-      if(!competitionStaffInfo.siteLocation.capacity) {
+      if (!competitionStaffInfo.siteLocation.capacity) {
         throw new ServiceError(ServiceError.NotFound, 'Site capacity not provided');
       }
     }
 
     await this.competitionRepository.competitionStaffJoin(competitionId, competitionStaffInfo);
-    
+
     return {};
+  }
+
+  competitionAnnouncement = async (userId: number, compId: number, universityId: number | undefined): Promise<{} | undefined> => {
+    let university: University = { id: 0, name: '' };
+    if (!universityId) {
+      university = await this.userRepository.userUniversity(userId);
+      if (!university) {
+        throw new ServiceError(ServiceError.NotFound, 'User not belong to any university');
+      }
+    }
+    else {
+      university.id = universityId;
+    }
+    let announcement = await this.competitionRepository.competitionAnnouncement(compId, university);
+    return { announcement };
+  }
+
+  competitionAnnouncementUpdate = async (userId: number, compId: number, announcementMessage: string, universityId: number | undefined): Promise<void> => {
+    const roles = await this.competitionRoles(userId, compId);
+    if (!roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.ADMIN)) {
+      throw new ServiceError(ServiceError.Auth, 'User is not a coach for this competition.');
+    }
+    let university: University = { id: 0, name: '' };
+    if (!universityId) {
+      university = await this.userRepository.userUniversity(userId);
+      if (!university) {
+        throw new ServiceError(ServiceError.NotFound, 'User not belong to any university');
+      }
+    }
+    else {
+      university.id = universityId;
+    }
+
+    let announcement = {
+      competitionId: compId,
+      userId: userId,
+      message: announcementMessage,
+      universityId: university.id,
+      createdAt: Date.now()
+    };
+
+    await this.competitionRepository.competitionAnnouncementUpdate(compId, university, announcement);
   }
 
   competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {
@@ -769,17 +824,21 @@ export class CompetitionService {
     return teamsParticipating;
   }
 
+  competitionSiteCapacity = async (compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity>> => {
+    return await this.competitionRepository.competitionSiteCapacity(compId, siteId)
+  }
+
   // Check to make sure every competition name is unique
   // checkUniqueSiteNames = (competition: Competition): boolean => {
   //   const allLocations = [];
-  
+
   //   if (competition.siteLocations) {
   //     allLocations.push(...competition.siteLocations.map(site => site.name));
   //   }
   //     if (competition.otherSiteLocations) {
   //     allLocations.push(...competition.otherSiteLocations.map(site => site.name));
   //   }
-  
+
   //   // Use a Set to ensure unique names
   //   const nameSet = new Set();
   //   for (const name of allLocations) {
@@ -790,5 +849,5 @@ export class CompetitionService {
   //   }
   //   return true; 
   // }
-  
+
 }

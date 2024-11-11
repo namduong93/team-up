@@ -4,13 +4,14 @@ import { University } from "../models/university/university.js";
 import { UserType } from "../models/user/user.js";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from "../services/competition_service.js";
 import './competition/sqldb'
-import { CompetitionSite } from '../../shared_types/Competition/CompetitionSite.js';
+import { CompetitionSite, CompetitionSiteCapacity } from '../../shared_types/Competition/CompetitionSite.js';
 import { SeatAssignment } from "../models/team/team.js";
 import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../shared_types/Competition/staff/AttendeesDetails.js";
 import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { Announcement } from "../../shared_types/Competition/staff/Announcement.js";
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
@@ -37,6 +38,8 @@ export interface CompetitionRepository {
   competitionTeamInviteCode(userId: number, compId: number): Promise<string>;
   competitionTeamJoin(userId: number, compId: number, teamCode: string, university: University): Promise<CompetitionTeamNameObject>;
   competitionStudentDetails(userId: number, compId: number): Promise<CompetitionStudentDetails>;
+  competitionStaffDetails(userId: number, compId: number): Promise<StaffInfo>;
+  competitionStaffDetailsUpdate(userId: number, compId: number, staffInfo: StaffInfo): Promise<{}>;
 
   competitionUniversityDefaultSite(competitionId: number, university: University): Promise<CompetitionSiteObject>;
   competitionStudentJoin(competitionUserInfo: CompetitionUser, university: University): Promise<{}>;
@@ -55,9 +58,13 @@ export interface CompetitionRepository {
   competitionRegisterTeams(userId: number, compId: number, teamIds: Array<number>): Promise<{}>;
 
   competitionStaffJoin(compId: number, competitionStaffInfo: CompetitionStaff): Promise<{}>;
+  competitionAnnouncement(compId: number, university: University): Promise< Announcement | undefined>;
+  competitionAnnouncementUpdate(compId: number, university: University, announcement: Announcement): Promise<void>;
   competitionUniversitiesList(compId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
 
   competitionIdFromCode(code: string): Promise<number>;
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject>>;
   competitionAlgorithm(compId: number, userId: number): Promise<{} | undefined>;
+
+  competitionSiteCapacity(compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity> | undefined>;
 }

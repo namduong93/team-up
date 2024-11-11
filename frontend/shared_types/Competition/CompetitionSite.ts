@@ -14,3 +14,7 @@ interface LevelGroup {
   teams: TeamDetails[];
 }
 
+export interface CompetitionSiteCapacity {
+  id: number;
+  capacity: number;
+}
