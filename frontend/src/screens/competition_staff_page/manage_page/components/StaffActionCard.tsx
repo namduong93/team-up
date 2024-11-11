@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaFileSignature,
@@ -16,7 +16,11 @@ import {
 } from "../../../../../shared_types/Competition/staff/Edit";
 import { CourseCategory } from "../../../../../shared_types/University/Course";
 import { sendRequest } from "../../../../utility/request";
+import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
 import { useParams } from "react-router-dom";
+import { Announcement } from "../../../../../shared_types/Competition/staff/Announcement";
+import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+
 import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
 import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
 
@@ -150,7 +154,7 @@ const CopyCard = styled.div`
   box-sizing: border-box;
   padding: 5px;
 `;
-const Heading = styled.h2`
+export const Heading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
@@ -163,6 +167,25 @@ const CodeCardText = styled(CardText)`
   font-size: 1.25rem;
 `;
 
+// const Title2 = styled.h2`
+//   margin-top: 40px;
+//   margin-bottom: 20px;
+//   font-size: 22px;
+//   white-space: pre-wrap;
+//   word-break: break-word;
+// `;
+
+const defaultAnnouncement = `
+The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.
+
+3 students, 5 hours  
+1 computer, 12 problems* (typical, but varies per contest)
+
+In 2021, more than 50,000 of the finest students in computing disciplines from over 3,000 universities competed worldwide in the regional phases of this contest. We conduct ICPC contests for the South Pacific region, with top teams qualifying to the World Finals.
+
+The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
+`;
+
 export const DEFAULT_REGO_FIELDS = {
   enableCodeforcesField: true,
   enableNationalPrizesField: true,
@@ -173,13 +196,16 @@ export const DEFAULT_REGO_FIELDS = {
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
-  universityOption,
 }) => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
   const [showEditComp, setShowEditComp] = useState(false);
+  const [currentBio, setCurrentBio] = useState("Default Bio");
+  const [staffInfo, setStaffInfo] = useState<StaffInfo>();
+  const [announcementMessage, setAnnouncementMessage] = useState("");
+  const { universityOption  } = useCompetitionOutletContext("teams");
 
   const actions = [
     {
@@ -209,7 +235,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     {
       type: "contact" as ActionType,
       icon: FaChair,
-      text: "Update Your Contact Bio",
+      text: "Update Your Bio and Annoucements",
       roles: ["Admin", "Coach"],
     },
     {
@@ -240,24 +266,116 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const handleCopyCode = async () => {
     try {
       await navigator.clipboard.writeText(compCode);
-      alert("Competition code copied to clipboard!");
     } catch (err) {
       alert(err);
     }
   };
 
-  // TO-DO: get the currentBio from the database
-  const [currentBio, setCurrentBio] = useState(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
-  );
+  useEffect(() => {
+    // If admin is requesting, check the particular uni they are updating bio and announcement for
+    const fetchStaffInfo = async () => {
+      try {
+        let response;
+        if (universityOption.value) {
+          const universityId = universityOption.value;
+          response = await sendRequest.get<{ staffDetails: StaffInfo }>(
+            '/competition/staff/details',
+            { compId, universityId }
+          );
+        } else {
+          response = await sendRequest.get<{ staffDetails: StaffInfo }>(
+            '/competition/staff/details',
+            { compId }
+          );
+        }
+        setCurrentBio(response.data.staffDetails.bio);
+        setStaffInfo(response.data.staffDetails);
+      } catch (err) {
+        console.log("Error fetching staff info", err);
+      }
+    };
+  
+    const fetchAnnouncementMessage = async () => {
+      try {
+        let response;
+        if (universityOption.value) {
+          const universityId = universityOption.value;
+          response = await sendRequest.get<{ announcement: Announcement }>(
+            '/competition/announcement',
+            { compId, universityId }
+          );
+        } else {
+          response = await sendRequest.get<{ announcement: Announcement }>(
+            '/competition/announcement',
+            { compId }
+          );
+        }
+  
+        if (response.data.announcement === undefined) {
+          setAnnouncementMessage(defaultAnnouncement);
+          return;
+        }
+  
+        setAnnouncementMessage(response.data.announcement.message);
+        console.log(response.data.announcement);
+      } catch (err) {
+        console.log("Error fetching announcement", err);
+      }
+    };
+  
+    // Call the async functions
+    fetchStaffInfo();
+    fetchAnnouncementMessage();
+  
+  }, [universityOption]);
+  
 
-  const handleBioChange = () => {
-    console.log(currentBio);
-    // TO-DO: submit the edited Contact Biography (string) to be changed in the
-    // database
-    setShowContactBio(false);
+  const handleChange = async () => {
+    if (staffInfo) {
+      const updatedStaffInfo = {
+        ...staffInfo,
+        bio: currentBio
+      };
+      try {
+        if (universityOption.value) {
+          const universityId = universityOption.value;
+          await sendRequest.put('/competition/staff/details', {
+            staffInfo: updatedStaffInfo,
+            compId,
+            universityId
+          });
+        } else {
+          await sendRequest.put('/competition/staff/details', {
+            staffInfo: updatedStaffInfo,
+            compId
+          });
+        }
+        setShowContactBio(false);
+      } catch (err) {
+        console.log("Error updating staff info", err);
+      }
+    }
+
+    try {
+      if (universityOption.value) {
+        const universityId = universityOption.value;
+        await sendRequest.put('/competition/announcement', {
+          announcementMessage,
+          compId,
+          universityId
+        });
+      } else {
+        await sendRequest.put('/competition/announcement', {
+          announcementMessage,
+          compId
+        });
+      }
+    } catch (err) {
+      console.log("Error updating announcement info", err);
+    }
   };
 
+  // TO-DO: call the backend to retrive the previous options
   const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
@@ -378,13 +496,12 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
           {showContactBio && (
             <BioChangePopUp
-              heading={
-                <Heading>Edit your {"\n Competition Biography"}</Heading>
-              }
               onClose={() => setShowContactBio(false)}
-              onNext={handleBioChange}
-              inputValue={currentBio}
-              onChange={(e) => setCurrentBio(e.target.value)}
+              onNext={handleChange}
+              bioValue={currentBio}
+              announcementValue={announcementMessage}
+              onBioChange={(e) => setCurrentBio(e.target.value)}
+              onAnnouncementChange={(value: SetStateAction<string>) => setAnnouncementMessage(value)}
             />
           )}
 
