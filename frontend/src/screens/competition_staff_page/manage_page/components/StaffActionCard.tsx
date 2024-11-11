@@ -285,7 +285,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
             { compId }
           );
         }
-        setCurrentBio(response.data.staffDetails.bio);
+        setCurrentBio(response.data.staffDetails.bio ?? "Default Bio");
         setStaffInfo(response.data.staffDetails);
       } catch (err) {
         console.log("Error fetching staff info", err);
