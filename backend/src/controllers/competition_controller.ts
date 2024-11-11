@@ -220,6 +220,7 @@ export class CompetitionController {
       generalRegDeadline: req.body.generalRegDeadline,
       startDate: req.body.startDate,
       siteLocations: req.body.siteLocations,
+      code: req.body.code,
       region: req.body.region,
       information: req.body.information,
     };

@@ -23,6 +23,7 @@ import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletCon
 
 import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
 import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
+import { CompetitionDetails } from "../../../competition/register/CompInformation";
 
 type ActionType =
   | "code"
@@ -446,11 +447,64 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       siteLocations: [],
       otherSiteLocations: [],
     });
+  
+  useEffect(() => {
+    const fetchCompetitionInfo = async () => {
+      try {
+        const response = await sendRequest.get<{competition: CompetitionDetails}>("/competition/details", { compId });
+        const competitionData = response.data.competition;
+
+        const competitionDetails: CompetitionInformation = {
+          name: competitionData.name,
+          early: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString() : "",
+          earlyBirdDate: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[0] : "",
+          earlyBirdTime: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[1].split('.')[0] : "",
+          earlyBird: competitionData.earlyRegDeadline ? false : true,
+          general: new Date(competitionData.generalRegDeadline).toISOString(),
+          generalDate: new Date(competitionData.generalRegDeadline).toISOString().split('T')[0],
+          generalTime: new Date(competitionData.generalRegDeadline).toISOString().split('T')[1].split('.')[0],
+          start: new Date(competitionData.startDate).toISOString(),
+          startDate: new Date(competitionData.startDate).toISOString().split('T')[0],
+          startTime: new Date(competitionData.startDate).toISOString().split('T')[1].split('.')[0],
+          code: competitionData.code ? competitionData.code : "",
+          region: competitionData.region,
+          siteLocations: competitionData.siteLocations ? competitionData.siteLocations : [],
+          otherSiteLocations: competitionData.otherSiteLocations ? competitionData.otherSiteLocations : [],
+          information: competitionData.information,
+          timeZone: "Australia/Sydney", // hardcoded timezone
+        };
+
+        setCompetitionInfo(competitionDetails);
+      } catch (err: unknown) {
+        console.error(err);
+      }
+    };
+    fetchCompetitionInfo();
+    console.log(1);
+    console.log(competitionInfo);
+  }, []);
 
   const handleCompEditSubmit = async (
     competitionInfo: CompetitionInformation
   ) => {
-    // TO-DO: send the edited course details to backend
+    const newCompetitionDetails = {
+      id: compId,
+      name: competitionInfo.name,
+      teamSize: 3, // harcoded data because current type in here dont have team size
+      earlyRegDeadline: new Date(competitionInfo.early).getTime(),
+      generalRegDeadline: new Date(competitionInfo.general).getTime(),
+      startDate: new Date(competitionInfo.start).getTime(),
+      siteLocations: competitionInfo.siteLocations,
+      code: competitionInfo.code,
+      region: competitionInfo.region,
+      information: competitionInfo.information,
+    };
+
+    try {
+      await sendRequest.put('/competition/system_admin/update', newCompetitionDetails);
+    } catch (err) {
+      console.error("Error updating competition details", err);
+    }
     console.log(competitionInfo);
   };
 
