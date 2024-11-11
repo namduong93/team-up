@@ -489,8 +489,11 @@ export class CompetitionController {
   });
 
   competitionSiteCapacity = httpErrorHandler(async (req: Request, res: Response) => {
-    const { compId, siteId } = req.body;
-    const site = await this.competitionService.competitionSiteCapacity(parseInt(compId as string), siteId);
+    const compId = req.query.compId;
+    const ids = req.query.ids;
+    const siteIds = typeof ids === 'string' ? ids.split(',').map(Number) : [];
+
+    const site = await this.competitionService.competitionSiteCapacity(parseInt(compId as string), siteIds);
 
     res.json({ site });
   });
