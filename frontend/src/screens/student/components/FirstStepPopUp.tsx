@@ -99,9 +99,9 @@ export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({
         </CloseButton>
         <div>{heading}</div>
         <span style={{ marginBottom: "20px" }}>
-          Your Coach will review <br /> your change, where you will
+          Your Coach will review <br /> your change, and your team
           <br />
-          receive a notification <br /> with the results of the review
+          will receive a notification <br /> of the results
         </span>
         <TextInputLight
           label=""

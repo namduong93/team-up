@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 // import { CompetitionDetails, CompetitionRole } from "../CompetitionPage";
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
@@ -71,7 +71,7 @@ export interface CompetitionPageContext {
   ];
 }
 
-export const useCompetitionOutletContext = (page: string) => {
+export const useCompetitionOutletContext = (page: string, reRender?: boolean) => {
   const context = useOutletContext<CompetitionPageContext>();
   const {
     filters,
@@ -156,7 +156,7 @@ export const useCompetitionOutletContext = (page: string) => {
       enableAttendeesButtons: false,
     }));
     return;
-  }, [roles]);
+  }, [roles, reRender]);
 
   return context;
 };

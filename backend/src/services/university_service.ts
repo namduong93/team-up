@@ -11,13 +11,23 @@ export class UniversityService {
     this.universityRepository = userRepository;
   }
 
+  /**
+   * Retrieves the university courses associated with a given user.
+   *
+   * @param userId The ID of the user whose university courses are to be retrieved.
+   * @returns A promise that resolves to the list of university courses for the specified user.
+   */
   universityCourses = async (userId: number) => {
     return await this.universityRepository.universityCourses(userId);
   }
 
+  /**
+   * Retrieves a list of universities from the university repository.
+   *
+   * @returns {Promise<UniversityListObject>} A promise that resolves to an object containing the list of universities.
+   */
   universitiesList = async (): Promise<UniversityListObject> => {
     let universitiesList = await this.universityRepository.universitiesList();
     return universitiesList;
   };
-
 }

@@ -203,6 +203,11 @@ app.put('/competition/coach/site_approve', competitionController.competitionAppr
 // RESPONSE: {}
 app.put('/competition/staff/seat_assignments', competitionController.competitionTeamSeatAssignments);
 
+// Coach registers teams for competition
+// PARAMS: { compId: number, teamIds: Array<number> }
+// RESPONSE: {}
+app.put('/competition/staff/register_teams', competitionController.competitionRegisterTeams);
+
 // PARAMS: { competitionId }
 // RESPONSE: { universities: Array<{ id: number, name: string }> }
 app.get('/competition/universities/list', competitionController.competitionUniversitiesList)
@@ -244,6 +249,8 @@ app.get('/competition/roles', competitionController.competitionRoles);
 // all the above are strings
 app.get('/competition/students', competitionController.competitionStudents);
 
+// PARAMS: { compId: number }
+// RESPONSE: { staffs: Array<StaffInfo> }
 app.get('/competition/staff', competitionController.competitionStaff);
 
 // PARAMS: {}
@@ -273,11 +280,25 @@ app.post('/competition/team/join', competitionController.competitionTeamJoin);
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
 
 app.get('/competition/attendees', competitionController.competitionAttendees);
+
 // PARAMS: { compId }
 // RESPONSE: 
-// { studentDetails: {...} }
+// { studentDetails: StudentInfo }
 // Get all the details of a student in a competition
 app.get('/competition/student/details', competitionController.competitionStudentDetails);
+
+// PARAMS: { compId, studentInfo: StudentInfo }
+// RESPONSE: { }
+app.put('/competition/student/details', competitionController.competitionStudentDetailsUpdate);
+
+
+// PARAMS: { compId }
+// RESPONSE: { staffDetails: StaffInfo }
+app.get('/competition/staff/details', competitionController.competitionStaffDetails);
+
+// PARAMS: { compId, staffInfo: StaffInfo }
+// RESPONSE: { }
+app.put('/competition/staff/details', competitionController.competitionStaffDetailsUpdate);
 
 // PARAMS: { compId }
 // RESPONSE: { sites: Array<CompetitionSite> }
@@ -287,6 +308,15 @@ app.get('/competition/sites', competitionController.competitionSites);
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
+// PARAMS: { compId }
+// RESPONSE: { announcement: Announcement }
+app.get('/competition/announcement', competitionController.competitionAnnouncement);
+
+// PARAMS: { compId, announcementMessage: string }
+// RESPONSE: {}
+app.put('/competition/announcement', competitionController.competitionAnnouncementUpdate);
+
+
 app.get('/university/courses', universityController.universityCourses);
 
 app.post('/competition/teams/update', competitionController.competitionTeamsUpdate);
@@ -294,6 +324,16 @@ app.post('/competition/teams/update', competitionController.competitionTeamsUpda
 app.post('/competition/students/update', competitionController.competitionStudentsUpdate);
 
 app.post('/competition/staff/update', competitionController.competitionStaffUpdate);
+
+app.get('/competition/staff/rego_toggles', competitionController.competitionStaffRegoToggles);
+
+app.post('/competition/staff/update_rego_toggles', competitionController.competitionStaffUpdateRegoToggles);
+
+app.get('/competition/students/rego_toggles', competitionController.competitionStudentsRegoToggles);
+
+app.get('/competition/site/capacity', competitionController.competitionSiteCapacity);
+
+app.put('/competition/site/capacity/update', competitionController.competitionSiteCapacityUpdate);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

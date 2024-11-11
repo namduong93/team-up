@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 interface TextInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
-  placeholder: string;
+  name?: string;
+  placeholder?: string;
   type?: string;
   required?: boolean;
   value: string;
@@ -11,7 +12,7 @@ interface TextInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: string;
 }
 
-const TextInputLight: React.FC<TextInputLightProps> = ({
+export const TextInputLight: React.FC<TextInputLightProps> = ({
   label,
   placeholder,
   type = 'text',
@@ -64,7 +65,7 @@ export const Input = styled.input`
   height: 100%;
   box-sizing: border-box;
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.colours.notifDark};
+  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
   border-radius: 10px;
   margin-bottom: 5px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};

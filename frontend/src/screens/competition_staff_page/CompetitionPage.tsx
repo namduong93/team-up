@@ -257,6 +257,10 @@ export const CompetitionPage: FC = () => {
 
 
 
+  useEffect(() => {
+    setUniversityOption(options[0]);
+  }, []);
+
   return (
     <OverflowFlexBackground>
       <MainPageDiv>
@@ -289,6 +293,8 @@ export const CompetitionPage: FC = () => {
           {buttonConfiguration.enableAttendeesButtons && (
             <AttendeesPageButtons
               attendeesListState={[attendeesList, setAttendeesList]}
+              universityOption={universityOption}
+              siteOptionsState={[siteOptions, setSiteOptions]}
             />
           )}
 

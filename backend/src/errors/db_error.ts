@@ -4,6 +4,7 @@ enum DbErrorType {
   Auth = 'Auth',
   Query = 'Query',
   Insert = 'Insert',
+  Update = 'Update',
 }
 
 export class DbError extends Error implements ErrorInterface {
@@ -20,6 +21,7 @@ export class DbError extends Error implements ErrorInterface {
   public static Auth = DbErrorType.Auth;
   public static Query = DbErrorType.Query;
   public static Insert = DbErrorType.Insert;
+  public static Update = DbErrorType.Update;
   
 
   public getErrorType() {

@@ -49,7 +49,7 @@ const RelativeSelectGrid = styled.div`
 
 const RelativeSelectElement = styled.select`
   appearance: none;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
   font-family: Arial, Helvetica, sans-serif;
   height: 100%;
   width: 100%;

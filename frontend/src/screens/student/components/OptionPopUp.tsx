@@ -33,7 +33,6 @@ const CloseButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  font-size: 20px;
   color: #d9534f;
   transition: color 0.2s;
   font-size: 26px;

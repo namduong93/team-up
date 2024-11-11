@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { ProfileCard } from "./components/ProfileCard";
 import { EditCompPreferences } from "./components/EditCompPreferences";
-import { StudentDetails } from "./components/EditCompPreferences";
 import { backendURL } from "../../../config/backendURLConfig";
+import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
+import { sendRequest } from "../../utility/request";
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -64,15 +65,6 @@ const StudentsContainer = styled.div`
   flex-direction: column;
 `;
 
-export interface Student {
-  id: string;
-  name: string;
-  email: string;
-  bio: string;
-  image?: string;
-  preferredContact?: string;
-}
-
 export const TeamDetails: FC = () => {
   const { teamName, teamSite, teamSeat, teamLevel, students } =
     useOutletContext<{
@@ -80,42 +72,42 @@ export const TeamDetails: FC = () => {
       teamSite: string;
       teamSeat: string;
       teamLevel: "";
-      students: Student[];
+      students: StudentInfo[];
     }>();
+  const { compId } = useParams();
+  const [studentInfo, setStudentInfo] = useState<StudentInfo>({} as StudentInfo);
+  const [isEditing, setIsEditing] = useState<boolean>(false); 
 
   useEffect(() => {
-    console.log(teamLevel.includes("A"));
+    const fetchStudentInfo = async () => {
+      try {
+        const response = await sendRequest.get<{ studentDetails: StudentInfo }>(
+          '/competition/student/details',
+          { compId }
+        );
+        setStudentInfo(response.data.studentDetails);
+        console.log("Student info fetched", response.data);
+      } catch (err) {
+        console.log("Error fetching student info", err);
+      }
+    };
+    fetchStudentInfo();
   }, []);
 
-  const [editingPreferences, setEditingPreferences] =
-    useState<StudentDetails | null>(null);
-
-  const handleSave = (updatedStudent: StudentDetails) => {
-    alert(`Saved details for: ${updatedStudent.name}`);
+  const handleSave = async (studentDetails: StudentInfo): Promise<boolean> => {
+    try {
+      setStudentInfo(studentDetails);
+      await sendRequest.put(
+        '/competition/student/details',
+        { compId, studentDetails }
+      );
+      return true;
+    } catch (err) {
+      console.error("Error updating student info:", err);
+      return false;
+    }
   };
 
-  // TODO: waiting for backend route to get 1 paritcipant comp details
-  const fetchStudentDetails = (id: string): StudentDetails => {
-    return {
-      name: "John Doe",
-      email: "john.doe@example.com",
-      bio: "Passionate coder and team player.",
-      image: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
-      id,
-      preferredContact: "Discord:john_doe",
-      degreeYear: 3,
-      degree: "Computer Science",
-      ICPCEligibility: true,
-      isRemote: false,
-      competitionLevel: "A",
-      boersenEligible: true,
-      courses: ["COMP1511", "COMP3121"],
-      codeforce: 1652,
-      regional: false,
-      nationalPrizes: "",
-      internationalPrizes: "",
-    };
-  };
 
   return (
     <DetailsContainer>
@@ -142,27 +134,26 @@ export const TeamDetails: FC = () => {
       <StudentsContainer>
         {students.map((student, index) => (
           <ProfileCard
-            key={student.id}
-            name={student.name}
+            key={`student-${index}`}
+            name={student.preferredName}
             email={student.email}
             bio={student.bio}
             image={
-              student.image ||
               `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
             }
             preferredContact={student.preferredContact}
             isFirst={index === 0}
             onEdit={() =>
-              setEditingPreferences(fetchStudentDetails(student.id))
+              setIsEditing(true)
             }
           />
         ))}
       </StudentsContainer>
-      {editingPreferences && (
+      {isEditing && (
         <EditCompPreferences
-          student={editingPreferences}
-          onSave={handleSave}
-          onCancel={() => setEditingPreferences(null)}
+          student={studentInfo}
+          onSubmit={handleSave}
+          onClose={() => setIsEditing(false)}
         />
       )}
     </DetailsContainer>

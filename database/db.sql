@@ -75,7 +75,7 @@ CREATE TABLE sessions (
   user_id INT NOT NULL REFERENCES users (id),
 
   -- The time the session was created
-  created_at TIMESTAMP NOT NULL
+  created_date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE competitions (
@@ -90,6 +90,20 @@ CREATE TABLE competitions (
   code VARCHAR(8) NOT NULL,
 
   region TEXT NOT NULL
+);
+
+CREATE TABLE competition_registration_toggles (
+  id SERIAL PRIMARY KEY,
+
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  university_id INT NOT NULL REFERENCES universities (id),
+
+  enable_codeforces_field BOOLEAN DEFAULT TRUE,
+  enable_national_prizes_field BOOLEAN DEFAULT TRUE,
+  enable_international_prizes_field BOOLEAN DEFAULT TRUE,
+  enable_regional_participation_field BOOLEAN DEFAULT TRUE,
+
+  CONSTRAINT unique_competition_uni_toggle UNIQUE (competition_id, university_id)
 );
 
 CREATE TABLE competition_sites (
@@ -135,6 +149,7 @@ CREATE TABLE competition_users (
   codeforces_rating INT,
   university_courses TEXT[],
   past_regional BOOLEAN,
+  access_level competition_access_enum,
   
   competition_coach_id INT REFERENCES competition_users (id),
   
@@ -144,9 +159,6 @@ CREATE TABLE competition_users (
 
   -- site-coordinator info
   site_id INT REFERENCES competition_sites (id),
-
-  -- staff info
-  access_level competition_access_enum,
 
   CONSTRAINT unique_competition_user UNIQUE (user_id, competition_id, competition_roles)
 );
@@ -175,6 +187,16 @@ CREATE TABLE competition_teams (
   competition_id INT NOT NULL REFERENCES competitions (id)
 );
 
+CREATE TABLE competition_announcements (
+  id SERIAL PRIMARY KEY,
+  
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  user_id INT NOT NULL REFERENCES users (id),
+  university_id INT NOT NULL REFERENCES universities (id),
+  message TEXT NOT NULL,
+  created_date TIMESTAMP NOT NULL
+);
+
 CREATE TYPE notification_type_enum AS ENUM (
   'welcomeAccount',
   'welcomeCompetition',
@@ -196,7 +218,7 @@ CREATE TABLE notifications (
   competition_id INT REFERENCES competitions (id),
   type notification_type_enum NOT NULL,
   message TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL,
+  created_date TIMESTAMP NOT NULL,
   
   team_name TEXT,
   student_name TEXT,
@@ -436,6 +458,8 @@ SELECT cu_source.user_id AS src_user_id,
     JSON_BUILD_OBJECT(
       'userId', u1.id,
       'name', u1.name,
+      'preferredName', u1.preferred_name,
+      'sex', u1.gender,
       'email', u1.email,
       'bio', cu1.bio,
       'preferredContact', cu1.preferred_contact,
@@ -452,6 +476,8 @@ SELECT cu_source.user_id AS src_user_id,
     JSON_BUILD_OBJECT(
       'userId', u2.id,
       'name', u2.name,
+      'preferredName', u2.preferred_name,
+      'sex', u2.gender,
       'email', u2.email,
       'bio', cu2.bio,
       'preferredContact', cu2.preferred_contact,
@@ -468,6 +494,8 @@ SELECT cu_source.user_id AS src_user_id,
     JSON_BUILD_OBJECT(
       'userId', u3.id,
       'name', u3.name,
+      'preferredName', u3.preferred_name,
+      'sex', u3.gender,
       'email', u3.email,
       'bio', cu3.bio,
       'preferredContact', cu3.preferred_contact,
@@ -521,12 +549,28 @@ SELECT
   u.preferred_name AS "preferredName",
   u.email AS "email",
   u.gender AS "sex",
+  u.pronouns AS "pronouns",
   u.tshirt_size AS "tshirtSize",
   u.dietary_reqs AS "dietaryNeeds",
   u.accessibility_reqs AS "accessibilityNeeds",
   u.allergies AS "allergies",
+  u.student_id AS "studentId",
   cu.competition_roles AS "roles",
-
+  cu.bio AS "bio",
+  cu.icpc_eligible AS "ICPCEligible",
+  cu.boersen_eligible AS "boersenEligible",
+  cu.competition_level AS "level",
+  cu.degree_year AS "degreeYear",
+  cu.degree AS "degree",
+  cu.is_remote AS "isRemote",
+  cu.is_official AS "isOfficial",
+  cu.preferred_contact AS "preferredContact",
+  cu.national_prizes AS "nationalPrizes",
+  cu.international_prizes AS "internationalPrizes",
+  cu.codeforces_rating AS "codeforcesRating",
+  cu.university_courses AS "universityCourses",
+  cu.past_regional AS "pastRegional",
+  cu.access_level AS "status",
   ct.site_attending_id AS "siteId",
   ct.pending_site_attending_id AS "pendingSiteId",
   cs.name AS "siteName",
@@ -573,7 +617,7 @@ VALUES
   '$2a$10$xeAb1BWjYheI6OIcv07RJOmFRvQtV0cTnbrmt2thWO.RWL7OwEbhO',
   'M',
   'he/him',
-  'L',
+  'ML',
   'Peanuts',
   '{}',
   'None',
@@ -587,7 +631,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'XL',
+  'MXL',
   'None',
   '{}',
   'Stairs Access',
@@ -601,7 +645,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'XL',
+  'MXL',
   'None',
   '{}',
   'Stairs Access',
@@ -615,7 +659,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'XL',
+  'MXL',
   'None',
   '{}',
   'Stairs Access',
@@ -629,7 +673,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'S',
+  'MS',
   'None',
   '{}',
   'Wheelchair Access',
@@ -643,7 +687,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'S',
+  'MS',
   'None',
   '{}',
   'Wheelchair Access',
@@ -657,7 +701,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'S',
+  'MS',
   'None',
   '{}',
   'Wheelchair Access',
@@ -671,7 +715,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'S',
+  'MS',
   'None',
   '{}',
   'Wheelchair Access',
@@ -685,7 +729,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'S',
+  'MS',
   'None',
   '{}',
   'Wheelchair Access',
@@ -699,7 +743,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'S',
+  'MS',
   'None',
   '{}',
   'Wheelchair Access',
@@ -713,7 +757,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'XL',
+  'MXL',
   'None',
   '{}',
   'Stairs Access',
@@ -727,7 +771,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'S',
+  'MS',
   'None',
   '{}',
   'Wheelchair Access',
@@ -741,7 +785,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'S',
+  'MS',
   NULL,
   '{}',
   'Wheelchair Access',
@@ -755,7 +799,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'They/them',
-  'XL',
+  'MXL',
   'None',
   '{}',
   NULL,
@@ -788,14 +832,14 @@ VALUES
 -- Competition Coach(es)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
-(2, 1, ARRAY['Coach']::competition_role_enum[], 'Pending', 'epic bio'),
+(2, 1, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio'),
 (2, 2, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio'),
 (2, 3, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio');
 
 -- Competition Site Coordinator(s)
 INSERT INTO competition_users (user_id, competition_id, competition_roles, site_id, access_level)
 VALUES
-(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 2, 'Accepted');
+(4, 1, ARRAY['Site-Coordinator']::competition_role_enum[], 1, 'Accepted');
 
 
 -- Competition Participants
@@ -842,14 +886,14 @@ INSERT INTO competition_teams (
   team_size, participants, university_id, competition_id, team_seat, site_attending_id, pending_site_attending_id
 )
 VALUES
-(4, 'Bulbasaur', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 2, NULL),
-(4, 'Ivysaur', 'Pending'::competition_team_status, 'Charmander', 3, ARRAY[5, 7], 2, 1, 'Tabla01', 2, NULL),
-(4, 'Venusaur', 'Pending'::competition_team_status, 'Charmeleon', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 2, 4),
-(4, 'Super Team', 'Pending'::competition_team_status, 'No', 3, ARRAY[6], 2, 1, 'Tabla02', 2, NULL);
+(4, 'Bulbasaur', 'Registered'::competition_team_status, NULL, 3, ARRAY[8, 9, 10], 2, 1, 'Bongo11', 1, NULL),
+(4, 'Ivysaur', 'Pending'::competition_team_status, 'Charmander', 3, ARRAY[5, 7], 2, 1, 'Tabla01', 1, NULL),
+(4, 'Venusaur', 'Unregistered'::competition_team_status, 'Charmeleon', 3, ARRAY[12, 13, 14], 2, 1, 'Organ20', 1, 4),
+(4, 'Super Team', 'Pending'::competition_team_status, 'No', 3, ARRAY[6], 2, 1, 'Tabla02', 1, NULL);
 
 -- Notifications
 INSERT INTO notifications (
-  user_id, team_id, competition_id, type, message, created_at,
+  user_id, team_id, competition_id, type, message, created_date,
   team_name, student_name, competition_name, new_team_name, site_location
 )
 VALUES 
@@ -903,7 +947,7 @@ VALUES
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
 (1, 4, ARRAY['Admin']::competition_role_enum[], 'Accepted', 'epic bio'),
-(3, 4, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'epic bio');
+(3, 4, ARRAY['Coach']::competition_role_enum[], 'Accepted', 'Hi Im Raveen');
 
 INSERT INTO users (
   name,
@@ -928,7 +972,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -945,7 +989,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -962,7 +1006,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -979,7 +1023,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -996,7 +1040,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1013,7 +1057,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1030,7 +1074,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1047,7 +1091,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1064,7 +1108,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1081,7 +1125,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1098,7 +1142,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1115,7 +1159,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1132,7 +1176,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1149,7 +1193,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1166,7 +1210,7 @@ VALUES
   '$2a$10$VHQb71WIpNdtvAEdp9RJvuEPEBs/ws3XjcTLMkMwt7ACszLTGJMC.',
   'M',
   'he/him',
-  'L',
+  'ML',
   'None',
   '{}',
   'None',
@@ -1272,6 +1316,13 @@ INSERT INTO competition_teams (
 VALUES
 (4, 'Charizard', 'Unregistered'::competition_team_status, NULL, 3, ARRAY[15, 16, 17], 5, 1, 'Bongo11', 2, NULL),
 (4, 'Wimpod', 'Unregistered'::competition_team_status, 'Snorlax', 3, ARRAY[18, 19, 20], 5, 1, 'Organ20', 2, 4);
+
+INSERT INTO competition_registration_toggles (
+  competition_id, university_id,
+  enable_codeforces_field, enable_national_prizes_field,
+  enable_international_prizes_field, enable_regional_participation_field
+)
+VALUES (4, 5, TRUE, TRUE, FALSE, TRUE);
 
 INSERT INTO courses (name, category, university_id)
 VALUES

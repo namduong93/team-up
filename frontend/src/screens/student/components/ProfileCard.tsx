@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { CopyButton } from "../../../components/general_utility/CopyButton";
 import { FaEdit, FaUserTie } from "react-icons/fa";
 import { backendURL } from "../../../../config/backendURLConfig";
-import { InfoLink } from "../TeamManage";
+import { InfoButton } from "../TeamManage";
 
 interface ProfileCardProps {
   name: string;
@@ -185,13 +185,11 @@ export const ProfileCard: FC<ProfileCardProps> = ({
               <StudentContact>
                 <StudentName>{name}</StudentName>
                 <StudentEmail>
-                  <InfoLink
-                    href={email}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {email}
-                  </InfoLink>
+                <InfoButton
+                  onClick={() => navigator.clipboard.writeText(email)}
+                >
+                  {email}
+                </InfoButton>
                   <CopyButton textToCopy={email} />
                 </StudentEmail>
                 {!isCoach && preferredContact && contactParts.length === 2 ? (

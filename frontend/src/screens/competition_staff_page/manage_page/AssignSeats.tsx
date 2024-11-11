@@ -9,370 +9,18 @@ import DescriptiveTextInput from "../../../components/general_utility/Descriptiv
 import TextInput from "../../../components/general_utility/TextInput";
 import { FaBell, FaChair, FaDownload, FaTimes } from "react-icons/fa";
 import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
-import { TeamDetails } from "../teams_page/components/TeamCard";
+import { TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
+import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
+import { sendRequest } from "../../../utility/request";
+import { useParams } from "react-router-dom";
 
 interface AssignSeatsProps {
   siteName: string;
   siteCapacity: number;
 };
 
-const mockSeatString: string = "Bongo00,Bongo01,Bongo02,Bongo03,Bongo04,Bongo05,Bongo06,Bongo07,Bongo08,Bongo09,Brass00,Brass01,Brass02,Brass03,Brass04,Brass05,Brass06,Brass07,Brass08,Brass09";
-const mockRooms: Room[] = [
-  {
-    roomName: "Bongo",
-    level: "A",
-    seatCodes: ["Bongo00", "Bongo01", "Bongo02", "Bongo03", "Bongo04"],
-    numSeats: 10,
-  },
-  {
-    roomName: "Bongo",
-    level: "B",
-    seatCodes: ["Bongo05", "Bongo06", "Bongo07", "Bongo08", "Bongo09"],
-    numSeats: 10,
-  },
-  {
-    roomName: "Brass",
-    level: "A",
-    seatCodes: ["Brass00", "Brass01", "Brass02", "Brass03", "Brass04"],
-    numSeats: 10,
-  },
-  {
-    roomName: "Brass",
-    level: "B",
-    seatCodes: ["Brass05", "Brass06", "Brass07", "Brass08", "Brass09"],
-    numSeats: 10,
-  },
-];
-
-const mockTeams: TeamDetails[] = [
-  {
-    teamId: 1,
-    universityId: 101,
-    teamName: "Code Warriors",
-    students: [
-      {
-        userId: 12345,
-        name: "Alice Johnson",
-        email: "alice.johnson@example.com",
-        bio: "Computer Science student passionate about AI.",
-        preferredContact: "email:alice.johnson@example.com",
-        siteId: 1,
-        ICPCEligible: true,
-        level: "A",
-        boersenEligible: false,
-        isRemote: false,
-      },
-      {
-        userId: 12346,
-        name: "Bob Smith",
-        email: "bob.smith@example.com",
-        bio: "Software engineering major with a focus on backend.",
-        preferredContact: "slack:bobsmith",
-        siteId: 1,
-        ICPCEligible: true,
-        level: "A",
-        boersenEligible: true,
-        isRemote: false,
-      },
-      {
-        userId: 12347,
-        name: "Charlie Brown",
-        email: "charlie.brown@example.com",
-        bio: "Interested in cloud computing and distributed systems.",
-        preferredContact: "email:charlie.brown@example.com",
-        siteId: 1,
-        ICPCEligible: false,
-        level: "A",
-        boersenEligible: false,
-        isRemote: true,
-      }
-    ],
-    status: "Registered",
-    teamNameApproved: true,
-    compName: "",
-    teamSite: "",
-    teamLevel: "A",
-    startDate: new Date(),
-    coach: {
-      name: "",
-      email: "",
-      bio: ""
-    }
-  },
-  {
-    teamId: 2,
-    universityId: 102,
-    teamName: "Byte Size",
-    status: "Registered",
-    teamNameApproved: true,
-    compName: "",
-    teamSite: "",
-    teamLevel: "B",
-    startDate: new Date(),
-    students: [
-      {
-        userId: 22345,
-        name: "David Lee",
-        email: "david.lee@example.com",
-        bio: "Loves problem-solving and enjoys competitive programming.",
-        preferredContact: "email:david.lee@example.com",
-        siteId: 102,
-        ICPCEligible: true,
-        level: "B",
-        boersenEligible: true,
-        isRemote: false,
-      },
-      {
-        userId: 22346,
-        name: "Eva Green",
-        email: "eva.green@example.com",
-        bio: "Passionate about algorithms and optimization.",
-        preferredContact: "slack:evagreen",
-        siteId: 102,
-        ICPCEligible: false,
-        level: "B",
-        boersenEligible: false,
-        isRemote: false,
-      },
-      {
-        userId: 22347,
-        name: "Frank Wright",
-        email: "frank.wright@example.com",
-        bio: "Backend developer with experience in cloud technologies.",
-        preferredContact: "email:frank.wright@example.com",
-        siteId: 102,
-        ICPCEligible: true,
-        level: "B",
-        boersenEligible: true,
-        isRemote: true,
-      },
-    ],
-    coach: {
-      name: "",
-      email: "",
-      bio: "",
-    },
-  },
-  {
-    teamId: 3,
-    universityId: 103,
-    teamName: "Algorithm Avengers",
-    status: "Registered",
-    teamNameApproved: true,
-    compName: "",
-    teamSite: "",
-    teamLevel: "A",
-    startDate: new Date(),
-    students: [
-      {
-        userId: 32345,
-        name: "Grace Taylor",
-        email: "grace.taylor@example.com",
-        bio: "Enjoys tackling hard algorithmic challenges.",
-        preferredContact: "email:grace.taylor@example.com",
-        siteId: 103,
-        ICPCEligible: true,
-        level: "A",
-        boersenEligible: false,
-        isRemote: false,
-      },
-      {
-        userId: 32346,
-        name: "Hank Cooper",
-        email: "hank.cooper@example.com",
-        bio: "Specializes in system design and data structures.",
-        preferredContact: "slack:hankcooper",
-        siteId: 103,
-        ICPCEligible: true,
-        level: "A",
-        boersenEligible: false,
-        isRemote: true,
-      },
-      {
-        userId: 32347,
-        name: "Isabella Rodriguez",
-        email: "isabella.rodriguez@example.com",
-        bio: "Frontend developer with a passion for design.",
-        preferredContact: "email:isabella.rodriguez@example.com",
-        siteId: 103,
-        ICPCEligible: false,
-        level: "A",
-        boersenEligible: true,
-        isRemote: false,
-      },
-    ],
-    coach: {
-      name: "",
-      email: "",
-      bio: "",
-    },
-  },
-  {
-    teamId: 4,
-    universityId: 104,
-    teamName: "Debugging Ninjas",
-    status: "Registered",
-    teamNameApproved: true,
-    compName: "",
-    teamSite: "",
-    teamLevel: "B",
-    startDate: new Date(),
-    students: [
-      {
-        userId: 42345,
-        name: "Jack Thompson",
-        email: "jack.thompson@example.com",
-        bio: "Specializes in debugging complex codebases.",
-        preferredContact: "slack:jackthompson",
-        siteId: 104,
-        ICPCEligible: true,
-        level: "B",
-        boersenEligible: false,
-        isRemote: true,
-      },
-      {
-        userId: 42346,
-        name: "Kimberly Yang",
-        email: "kimberly.yang@example.com",
-        bio: "Interested in cybersecurity and network protocols.",
-        preferredContact: "email:kimberly.yang@example.com",
-        siteId: 104,
-        ICPCEligible: true,
-        level: "B",
-        boersenEligible: false,
-        isRemote: false,
-      },
-      {
-        userId: 42347,
-        name: "Leo Kim",
-        email: "leo.kim@example.com",
-        bio: "Aspires to become a data scientist.",
-        preferredContact: "email:leo.kim@example.com",
-        siteId: 104,
-        ICPCEligible: false,
-        level: "B",
-        boersenEligible: false,
-        isRemote: false,
-      },
-    ],
-    coach: {
-      name: "",
-      email: "",
-      bio: "",
-    },
-  },
-  {
-    teamId: 5,
-    universityId: 105,
-    teamName: "Code Breakers",
-    status: "Registered",
-    teamNameApproved: true,
-    compName: "",
-    teamSite: "",
-    teamLevel: "A",
-    startDate: new Date(),
-    students: [
-      {
-        userId: 52345,
-        name: "Mia Chen",
-        email: "mia.chen@example.com",
-        bio: "Enjoys working with AI and machine learning.",
-        preferredContact: "slack:miachen",
-        siteId: 105,
-        ICPCEligible: true,
-        level: "A",
-        boersenEligible: true,
-        isRemote: false,
-      },
-      {
-        userId: 52346,
-        name: "Nathan Patel",
-        email: "nathan.patel@example.com",
-        bio: "Passionate about blockchain technologies.",
-        preferredContact: "email:nathan.patel@example.com",
-        siteId: 105,
-        ICPCEligible: true,
-        level: "A",
-        boersenEligible: true,
-        isRemote: true,
-      },
-      {
-        userId: 52347,
-        name: "Olivia Kim",
-        email: "olivia.kim@example.com",
-        bio: "Aspires to build impactful mobile apps.",
-        preferredContact: "email:olivia.kim@example.com",
-        siteId: 105,
-        ICPCEligible: false,
-        level: "A",
-        boersenEligible: false,
-        isRemote: false,
-      },
-    ],
-    coach: {
-      name: "",
-      email: "",
-      bio: "",
-    },
-  },
-  {
-    teamId: 6,
-    universityId: 106,
-    teamName: "Code Crunchers",
-    status: "Registered",
-    teamNameApproved: true,
-    compName: "",
-    teamSite: "",
-    teamLevel: "B",
-    startDate: new Date(),
-    students: [
-      {
-        userId: 52345,
-        name: "Ava Thompson",
-        email: "ava.thompson@example.com",
-        bio: "Interested in web development and UX design.",
-        preferredContact: "slack:avathompson",
-        siteId: 106,
-        ICPCEligible: true,
-        level: "B",
-        boersenEligible: true,
-        isRemote: false,
-      },
-      {
-        userId: 52346,
-        name: "Leo Martinez",
-        email: "leo.martinez@example.com",
-        bio: "Backend developer focused on scalability.",
-        preferredContact: "email:leo.martinez@example.com",
-        siteId: 106,
-        ICPCEligible: true,
-        level: "B",
-        boersenEligible: true,
-        isRemote: true,
-      },
-      {
-        userId: 52347,
-        name: "Mia Patel",
-        email: "mia.patel@example.com",
-        bio: "Loves working with databases and data analytics.",
-        preferredContact: "email:mia.patel@example.com",
-        siteId: 106,
-        ICPCEligible: false,
-        level: "B",
-        boersenEligible: false,
-        isRemote: false,
-      },
-    ],
-    coach: {
-      name: "",
-      email: "",
-      bio: "",
-    },
-  },
-];
-
 interface SeatAssignment {
-  siteId: string; // ID of the site
+  siteId: number; // ID of the site
   teamSite: string; // e.g. "CSE Building K17"
   teamSeat: string; // e.g. "Bongo01"
   teamId: string; // ID of team who have been assigned that seat
@@ -392,8 +40,6 @@ interface Room {
   seatCodes: string[]; // text string input of available seat codes for this room
   numSeats: number; // length of the seat codes array
 };
-
-// TODO route: send the new seat string for a team given the teamID
 
 const ManageContainer = styled.div`
   display: flex;
@@ -613,6 +259,7 @@ const AssignPopupText = styled.h2`
 `;
 
 export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) => {
+  const { compId } = useParams();
   const [seatInputType, setSeatInputType] = useState<string>("Text"); // either string or inputs
   const [seatAB, setSeatAB] = useState<string>("Together"); // seat level a and b either together or separately
   const [isSeatedTogether, setIsSeatedTogether] = useState<boolean>(true); // by default, don't split level a and b
@@ -630,6 +277,16 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
   const [generatedSeats, setGeneratedSeats] = useState<string[]>([]);
   const [existingSeats, setExistingSeats] = useState<string[]>([]);
   const [teamSeatAssignments, setTeamSeatAssignments] = useState<SeatAssignment[]>([]);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  const { teamListState: [teamList, setTeamList], universityOption: siteOption } = useCompetitionOutletContext("attendees");
+
+  // Filter by uni
+  let teamListToAssign = teamList;
+  if (siteOption.value) {
+    teamListToAssign = teamList.filter((team: TeamDetails) => team.siteId === parseInt(siteOption.value));
+  };
 
   // Update seat count whenever the seat string changes
   useEffect(() => {
@@ -745,7 +402,6 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
     setSeatCodeInputB(e.target.value);
   };
 
-  // TODO: for the seat string input, need to sort by team levels a and b
   const generateSeats = () => {
     const newSeats: string[] = [];
     
@@ -787,11 +443,11 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
     return isFormAInvalid && isFormBInvalid;
   };
 
-  const distributeSeats = () => {
+  const distributeSeats = async () => {
     
     // Assign one seat per team, skipping two each time
     const seatAssignments: SeatAssignment[] = [];
-    const teamsToAssign = mockTeams; // Use mock teams
+    const teamsToAssign = teamListToAssign;
 
     const levelATeams = [];
     const levelBTeams = [];
@@ -808,7 +464,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
     
     // if text input provided, use this method (only need to check the seatString and distribute)
     if (isTextInput) {
-      const availableSeats = mockSeatString.split(",");
+      const availableSeats = seatString.split(",");
       // Group teams by level
       if (!isSeatedTogether) {
         // Combine level A and level B teams
@@ -822,8 +478,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
         const seat = availableSeats[i * 3]; // Assign a seat, skipping 2 each time
         if (seat) {
           seatAssignments.push({
-            siteId: "mockSiteID", // Set this to your site ID
-            teamSite: "CSE Building K17", // Set this to the correct site name
+            siteId: team.siteId,
+            teamSite: team.teamSite,
             teamSeat: seat,
             teamId: team.teamId.toString(),
             teamName: team.teamName,
@@ -833,7 +489,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
       }
     } else {
       // if specific room level input given, need to split based on provided room seat assignments
-      const availableRooms = mockRooms; // use mock room data
+      const availableRooms = rooms;
       const assignedTeamIds = new Set<number>(); // To track assigned teams
 
       for (const room of availableRooms) {
@@ -854,8 +510,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
           
           if (seat) {
             seatAssignments.push({
-              siteId: "mockSiteID", // mock site id
-              teamSite: room.roomName, // mock site name
+              siteId: team.siteId,
+              teamSite: room.roomName,
               teamSeat: seat,
               teamId: team.teamId.toString(),
               teamName: team.teamName,
@@ -866,18 +522,14 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
         }
       }
     }
-    // TODO: route to update team seats based on seat assignments
-    // UPDATE: route is available. However, might need to consult the interface seatAssignment and how to get team details initially
-    console.log("Assigned Seats:", seatAssignments);
 
-    // try {
-    //   // Send a request to the backend to update team seats.
-    //   const seatAssignmentsResponse = await sendRequest.put<s{}>('/competition/staff/seat_assignments', { compId, seatAssignments });
-    // } catch (error) {
-    //   console.error("Error withdrawing from the team:", error);
-    // }
+    try {
+      // Send a request to the backend to update team seats.
+      await sendRequest.put('/competition/staff/seat_assignments', { compId: compId, seatAssignments: seatAssignments });
+    } catch (error) {
+      console.error("Error withdrawing from the team:", error);
+    }
 
-    console.log("Seats assigned!");
     setTeamSeatAssignments(seatAssignments);
     setSeatModalState(true);
   };
@@ -916,7 +568,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
     // Tigger the download
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", "seat_assignments.csv");
+    link.setAttribute("download", `seat_assignments_${siteOption.label}.csv`);
     document.body.appendChild(link);
     link.click(); // Trigger download
     document.body.removeChild(link);
@@ -930,16 +582,18 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
   return (
     <ManageContainer>
       <Header>
-        <Title>Manage Seats for CSE Building K17</Title>
+        <Title>Manage Seats for {siteOption.label}</Title>
         <DistributeSeats>
           <SeatCount>Team Seats Available: {seatCount}</SeatCount>
-          <AssignSeatsButton 
-            actionType="secondary" 
-            onClick={distributeSeats} 
-            label="Assign Seats" 
-            isOpen={false} 
-            icon={<FaChair />}
-          />
+          {(seatString.length > 0 || rooms.length > 0) && teamListToAssign.length > 0 &&
+            <AssignSeatsButton 
+              actionType="secondary" 
+              onClick={distributeSeats} 
+              label="Assign Seats" 
+              isOpen={false} 
+              icon={<FaChair />}
+            />
+          }
         </DistributeSeats>
       </Header>
 
@@ -1058,7 +712,10 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
         <ModalOverlay>
           <ModalContainer>
             <CloseButtonContainer>
-              <CloseButton onClick={() => setSeatModalState(false)}>
+              <CloseButton onClick={() => {
+                setSeatModalState(false);
+                setSeatString("");
+              }}>
                 <FaTimes />
               </CloseButton>
             </CloseButtonContainer>

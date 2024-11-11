@@ -4,7 +4,9 @@ import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
 import { ProfileCard } from "./components/ProfileCard";
 import { useOutletContext } from "react-router-dom";
-import { Student } from "./TeamDetails";
+
+import { Student } from "../../../shared_types/Competition/team/TeamDetails";
+import { MarkdownDisplay } from "./MarkdownDisplay";
 
 const ManageContainer = styled.div`
   display: flex;
@@ -25,7 +27,7 @@ const InfoContainer = styled.div`
 const InfoCard = styled.div`
   display: flex;
   align-items: center;
-  border: 2px solid ${({ theme }) => theme.colours.sidebarBackground};
+  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 12px;
   padding: 15px;
   background-color: ${({ theme }) => theme.background};
@@ -43,6 +45,23 @@ const InfoLabel = styled.h3`
   margin: 0;
   color: ${({ theme }) => theme.colours.primaryDark};
   margin-bottom: 5%;
+`;
+
+export const InfoButton = styled.button`
+  font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
+  background-color: ${({ theme }) => theme.background};
+  border: none;
+  color: ${({ theme }) => theme.colours.primaryDark};
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin: none;
+  padding-left: 0px;
+  box-sizing: border-box;
+
+  &:hover {
+    color: ${({ theme }) => theme.colours.primaryLight};
+  }
 `;
 
 export const InfoLink = styled.a`
@@ -99,13 +118,14 @@ const CloseButton = styled.button`
 `;
 
 export const TeamManage: React.FC = () => {
-  const { students, coach } = useOutletContext<{
+  const { students, coach, announcements } = useOutletContext<{
     students: Student[];
     coach: {
       name: "";
       email: "";
       bio: "";
     };
+    announcements: ""; // for coach to set specific comp details/announcements
   }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -132,7 +152,7 @@ export const TeamManage: React.FC = () => {
 
         <InfoCard>
           <InfoContent>
-            <InfoLabel>Competition Information:</InfoLabel>
+            <InfoLabel>Competition Details and Announcements:</InfoLabel>
             <InfoLink onClick={handleOpenModal}>
               see competition details →
             </InfoLink>
@@ -146,34 +166,7 @@ export const TeamManage: React.FC = () => {
             <CloseButton onClick={handleCloseModal}>
               <FaTimes />
             </CloseButton>
-            <p>
-              The ICPC is the premier global programming competition conducted
-              by and for the world’s universities. It fosters creativity,
-              teamwork, and innovation in building new software programs, and
-              enables students to test their ability to perform well under
-              pressure.
-            </p>
-            <p>
-              3 students, 5 hours
-              <br />1 computer, 12 problems* (typical, but varies per contest)
-            </p>
-            <p>
-              In 2021, more than 50,000 of the finest students in computing
-              disciplines from over 3,000 universities competed worldwide in the
-              regional phases of this contest. We conduct ICPC contests for the
-              South Pacific region, with top teams qualifying to the World
-              Finals.
-            </p>
-            <p>
-              The detail can be seen at:{" "}
-              <InfoLink
-                href="https://sppcontests.org/south-pacific-icpc/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                sppcontests.org/south-pacific-icpc
-              </InfoLink>
-            </p>
+            <MarkdownDisplay content={announcements} />
           </ModalContent>
         </ModalOverlay>
       )}
