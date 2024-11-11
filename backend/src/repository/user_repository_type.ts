@@ -23,6 +23,6 @@ export interface UserRepository {
   userUniversity(userId: number): Promise<University>;
 
   staffList(): Promise<Array<StaffInfo>>;
-  staffApprove(acceptedIds: number): Promise<void>;
-  staffRejects(rejectIds: number): Promise<void>;
+  staffApprove(acceptedIds: number[]): Promise<void>;
+  staffRejects(rejectIds: number[]): Promise<void>;
 };

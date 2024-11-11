@@ -319,11 +319,11 @@ export class SqlDbUserRepository implements UserRepository {
     return dbResult.rows;
   }
 
-  staffApprove = async (acceptedId: number): Promise<void> => {
-    await this.pool.query('UPDATE users SET user_access = $1 WHERE id = $1;', ['Accepted', acceptedId])
+  staffApprove = async (acceptedId: number[]): Promise<void> => {
+    await this.pool.query('UPDATE users SET user_access = $1 WHERE id = ANY($2::int[]);', ['Accepted', acceptedId])
   }
 
-  staffRejects = async (rejectIds: number): Promise<void> => {
-    await this.pool.query('DELETE FROM users WHERE user_access = $1 AND id = $2;', ['Rejected', rejectIds])
+  staffRejects = async (rejectIds: number[]): Promise<void> => {
+    await this.pool.query('DELETE FROM users WHERE user_access = $1 AND id = ANY($2::int[]);', ['Rejected', rejectIds])
   }
 }

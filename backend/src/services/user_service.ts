@@ -195,7 +195,7 @@ export class UserService {
     return this.userRepository.staffList();
   }
 
-  staffApprove = async (userId: number, acceptedIds: number): Promise<void> => {
+  staffApprove = async (userId: number, acceptedIds: number[]): Promise<void> => {
     const userCheckAdmin: UserTypeObject = await this.userType(userId)
     if (userCheckAdmin.type !== 'system_admin') {
       throw createHttpError(400, 'User does not have the power to accept staff');
@@ -204,7 +204,7 @@ export class UserService {
     await this.userRepository.staffApprove(acceptedIds);
   }
 
-  staffReject = async (userId: number, rejectIds: number): Promise<void> => {
+  staffReject = async (userId: number, rejectIds: number[]): Promise<void> => {
     const userCheckAdmin: UserTypeObject = await this.userType(userId)
     if (userCheckAdmin.type !== 'system_admin') {
       throw createHttpError(400, 'User does not have the power to reject staff');
