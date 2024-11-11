@@ -79,7 +79,7 @@ export interface CompetitionPageContext {
   ];
 }
 
-export const useCompetitionOutletContext = (page: string) => {
+export const useCompetitionOutletContext = (page: string, reRender?: boolean) => {
   const context = useOutletContext<CompetitionPageContext>();
   const {
     filters,
@@ -173,7 +173,7 @@ export const useCompetitionOutletContext = (page: string) => {
       enableAttendeesButtons: false,
     }));
     return;
-  }, [roles]);
+  }, [roles, reRender]);
 
   return context;
 };

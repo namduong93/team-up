@@ -305,20 +305,21 @@ teamsPerSite.forEach((site: SiteDetails) => {
 
   const updateTeamStatus = async () => {
     // Filter only 'Unregistered' teams
-    let unregisteredTeamIds = teamList.filter((team: TeamDetails) => team.status === 'Unregistered').map(team => team.teamId);
+    let unregisteredTeamIds;
     if (universityOption.value) {
-      unregisteredTeamIds = teamList.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value)).map(team => team.teamId);
-    };
+      unregisteredTeamIds = teamList.filter((team) => team.status === TeamStatus.Unregistered).filter((team) => team.universityId === parseInt(universityOption.value)).map((team) => team.teamId);
+    } else {
+      unregisteredTeamIds = teamList.filter((team) => team.status === TeamStatus.Unregistered).map((team) => team.teamId);
+    }
 
     try {
       await sendRequest.put('/competition/staff/register_teams', { compId, teamIds: unregisteredTeamIds });
+      await fetchTeams(compId, setTeamList);
     } catch (error: unknown) {
       console.log("Error updating teams' status to registerd: ", error);
     }
-
     setFilters({});
     setIsDownloading(false);
-    await fetchTeams(compId, setTeamList);
     return true;
   }
 
