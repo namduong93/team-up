@@ -122,7 +122,14 @@ export const CompetitionPage: FC = () => {
   ////
   const [siteOptions, setSiteOptions] = useState([{ value: '', label: '' }]);
   const [universityOptions, setUniversityOptions] = useState([{ value: '', label: '' }]);
-
+  const [options, setOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([{ value: "", label: "" }]);
+  const [universityOption, setUniversityOption] = useState<{
+    value: string;
+    label: string;
+  }>({ value: "", label: "" });
+  
   useEffect(() => {
     const fetchCompetitionDetails = async () => {
       try {
@@ -184,15 +191,14 @@ export const CompetitionPage: FC = () => {
         universities: Array<{ id: number; name: string }>;
       }>("/universities/list");
       const { universities } = response.data;
-
       const uniOptions = [
         ...universities.map(({ id, name }) => ({
           value: String(id),
           label: name,
         })),
       ];
-      setUniversityOptions(uniOptions);
       setOptions(uniOptions);
+      setUniversityOptions(uniOptions);
 
 
       // TODO: Change the default to the users' own university
@@ -241,6 +247,10 @@ export const CompetitionPage: FC = () => {
     fetchInfo();
   }, []);
 
+  useEffect(() => {
+    setUniversityOption(options[0]);
+  }, [options]);
+
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
@@ -252,13 +262,6 @@ export const CompetitionPage: FC = () => {
     });
   };
 
-  const [options, setOptions] = useState<
-    Array<{ value: string; label: string }>
-  >([{ value: "", label: "" }]);
-  const [universityOption, setUniversityOption] = useState<{
-    value: string;
-    label: string;
-  }>({ value: "", label: "" });
 
 
   useEffect(() => {
@@ -420,7 +423,7 @@ export const CompetitionPage: FC = () => {
             staffListState: [staffList, setStaffList],
             compDetails,
             siteOptionsState: [siteOptions, setSiteOptions],
-            dropdownOptionsState: [options, setOptions]
+            dropdownOptionsState: [options, setOptions],
           }}
         />
       </MainPageDiv>

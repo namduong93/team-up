@@ -1,4 +1,3 @@
-
 import React, { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
@@ -40,7 +39,10 @@ interface StaffActionCardProps {
   staffRoles: string[];
   compCode: string;
   universityOption: { value: string; label: string };
-  siteOptionsState: [{ value: string, label: string }[], React.Dispatch<React.SetStateAction<{ value: string, label: string }[]>>];
+  siteOptionsState: [
+    { value: string; label: string }[],
+    React.Dispatch<React.SetStateAction<{ value: string; label: string }[]>>
+  ];
 }
 
 interface ActionCardProps {
@@ -212,7 +214,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
-  // const [showEditRego, setShowEditRego] = useState(false);
   const [showEditCapacity, setShowEditCapacity] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
   const [showEditComp, setShowEditComp] = useState(false);
@@ -220,7 +221,10 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
 
-  const { universityOption  } = useCompetitionOutletContext("manage", showManageSite);
+  const { universityOption } = useCompetitionOutletContext(
+    "manage",
+    showManageSite
+  );
 
   const actions = [
     {
@@ -297,13 +301,12 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         if (universityOption.value) {
           const universityId = universityOption.value;
           response = await sendRequest.get<{ staffDetails: StaffInfo }>(
-
-            '/competition/staff/details',
+            "/competition/staff/details",
             { compId, universityId }
           );
         } else {
           response = await sendRequest.get<{ staffDetails: StaffInfo }>(
-            '/competition/staff/details',
+            "/competition/staff/details",
             { compId }
           );
         }
@@ -314,23 +317,22 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       }
     };
 
-
     const fetchAnnouncementMessage = async () => {
       try {
         let response;
         if (universityOption.value) {
           const universityId = universityOption.value;
           response = await sendRequest.get<{ announcement: Announcement }>(
-            '/competition/announcement',
+            "/competition/announcement",
             { compId, universityId }
           );
         } else {
           response = await sendRequest.get<{ announcement: Announcement }>(
-            '/competition/announcement',
+            "/competition/announcement",
             { compId }
           );
         }
-  
+
         if (response.data.announcement === undefined) {
           setAnnouncementMessage(defaultAnnouncement);
           return;
@@ -346,28 +348,26 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     // Call the async functions
     fetchStaffInfo();
     fetchAnnouncementMessage();
-  
   }, [universityOption]);
-  
 
   const handleChange = async () => {
     if (staffInfo) {
       const updatedStaffInfo = {
         ...staffInfo,
-        bio: currentBio
+        bio: currentBio,
       };
       try {
         if (universityOption.value) {
           const universityId = universityOption.value;
-          await sendRequest.put('/competition/staff/details', {
+          await sendRequest.put("/competition/staff/details", {
             staffInfo: updatedStaffInfo,
             compId,
-            universityId
+            universityId,
           });
         } else {
-          await sendRequest.put('/competition/staff/details', {
+          await sendRequest.put("/competition/staff/details", {
             staffInfo: updatedStaffInfo,
-            compId
+            compId,
           });
         }
         setShowContactBio(false);
@@ -379,15 +379,15 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     try {
       if (universityOption.value) {
         const universityId = universityOption.value;
-        await sendRequest.put('/competition/announcement', {
+        await sendRequest.put("/competition/announcement", {
           announcementMessage,
           compId,
-          universityId
+          universityId,
         });
       } else {
-        await sendRequest.put('/competition/announcement', {
+        await sendRequest.put("/competition/announcement", {
           announcementMessage,
-          compId
+          compId,
         });
       }
     } catch (err) {
@@ -438,29 +438,43 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     // TO-DO: send the edited courses to backend and store for competition
     console.log(editCourse);
     console.log(regoFields);
-  }
+  };
 
-  const handleSiteCapacityChange = (site: { label: string, value: number }, capacity: number) => {
+  const handleSiteCapacityChange = (
+    site: { label: string; value: number },
+    capacity: number
+  ) => {
     // TODO: backend PUT (update) the site capacity for a given site Id and new capacity
-    console.log(`updating site ${site.label} with id ${site.value} with capacity: ${capacity}`);
+    console.log(
+      `updating site ${site.label} with id ${site.value} with capacity: ${capacity}`
+    );
 
     setShowEditCapacity(false);
   };
 
-  const [siteList, setSiteList] = useState<CompetitionSiteCapacity[] | undefined>();
+  const [siteList, setSiteList] = useState<
+    CompetitionSiteCapacity[] | undefined
+  >();
 
   useEffect(() => {
     const fetchSiteCapacities = async () => {
-      const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>('/competition/site/capacity', { compId, ids: siteOptions.map((siteOption) => siteOption.value) });
+      const response = await sendRequest.get<{
+        site: CompetitionSiteCapacity[];
+      }>("/competition/site/capacity", {
+        compId,
+        ids: siteOptions.map((siteOption) => siteOption.value),
+      });
       const { site: siteCapacities } = response.data;
       setSiteList(siteCapacities);
-    }
+    };
 
     fetchSiteCapacities();
   }, []);
 
   const getSiteCapacity = (): number => {
-    const foundSite = siteList?.find((site) => site.id === parseInt(universityOption.value));
+    const foundSite = siteList?.find(
+      (site) => site.id === parseInt(universityOption.value)
+    );
 
     if (foundSite) return foundSite?.capacity;
     return 0;
@@ -560,7 +574,10 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           <BackButton onClick={() => setShowManageSite(false)}>
             <FaChevronLeft /> Back
           </BackButton>
-          <AssignSeats siteName={universityOption.label} siteCapacity={getSiteCapacity()} />
+          <AssignSeats
+            siteName={universityOption.label}
+            siteCapacity={getSiteCapacity()}
+          />
         </AssignSeatsPage>
       ) : (
         <>
@@ -624,10 +641,10 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           )}
 
           {showEditCapacity && (
-            <EditSiteCapacityPopUp 
-              heading={"Update Site Capacities"} 
-              onClose={() => setShowEditCapacity(false)} 
-              onSubmit={handleSiteCapacityChange}            
+            <EditSiteCapacityPopUp
+              heading={"Update Site Capacities"}
+              onClose={() => setShowEditCapacity(false)}
+              onSubmit={handleSiteCapacityChange}
             />
           )}
 

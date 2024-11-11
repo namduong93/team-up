@@ -173,7 +173,7 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean) =>
       enableAttendeesButtons: false,
     }));
     return;
-  }, [roles, universityOptions, siteOptions, reRender]);
+  }, [roles, siteOptions, universityOptions, reRender]);
 
   return context;
 };

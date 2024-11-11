@@ -195,7 +195,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
     category: CourseCategory,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setCourses(category, event.target.value); // Pass the value of the input field
+    setCourses(category, event.target.value);
   };
 
   return (
