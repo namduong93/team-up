@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { UserAccess } from "../../../shared_types/User/User";
+import { sendRequest } from "../../utility/request";
 
 interface AccessDropdownProps {
   staffId: number | undefined;
@@ -61,13 +62,16 @@ const Option = styled.option<{ $access: UserAccess }>`
 export const AccessDropdown: FC<AccessDropdownProps> = ({ staffId, currentAccess, onChange }) => {
   const [selectedAccess, setSelectedAccess] = useState<UserAccess>(currentAccess);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = async(event: React.ChangeEvent<HTMLSelectElement>) => {
     const newAccess = event.target.value as UserAccess;
     setSelectedAccess(newAccess);
     onChange(newAccess);
-
-    // TODO: Backend hook to update the individual staff access level
-    console.log("updating access level for staff: ", staffId);
+    try {
+      await sendRequest.post("/user/staff_requests", { staffRequests: [{ userId: staffId, access: newAccess }] });
+    }
+    catch (error) {
+      console.error("Error updating staff access: ", error);
+    }
   };
 
   return (

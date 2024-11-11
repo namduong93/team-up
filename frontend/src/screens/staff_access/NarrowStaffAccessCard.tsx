@@ -4,16 +4,22 @@ import { StaffAccessCardProps } from "./StaffAccounts";
 import { NarrowStatusDiv } from "../competition_staff_page/staff_page/StaffDisplay";
 import { AccessDropdown } from "./AccessDropdown";
 import { UserAccess } from "../../../shared_types/User/User";
+import { sendRequest } from "../../utility/request";
 
 export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,
   ...props
 }) => {
 
-  const handleAccessChange = async (newAccess: UserAccess) => {
-    console.log(newAccess);
-    
-    // TODO: Backend hook to update user's staff access
+  const handleAccessChange = async (userId: number | undefined, newAccess: UserAccess) => {
+    if(userId) {
+      try {
+        await sendRequest.post("/user/staff_requests", { staffRequests: [{ userId, access: newAccess }] });
+      }
+      catch (error) {
+        console.error("Error updating staff access: ", error);
+      }
+    }
   };
 
   return (
@@ -27,7 +33,7 @@ export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
             <AccessDropdown
               staffId={staffDetails.userId}
               currentAccess={staffDetails.userAccess}
-              onChange={(newAccess) => handleAccessChange(newAccess)}
+              onChange={(newAccess) => handleAccessChange(staffDetails.userId, newAccess)}
             />
           </NarrowStatusDiv>
         }

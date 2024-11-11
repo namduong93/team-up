@@ -28,5 +28,5 @@ export interface StaffInfo {
 
 export interface StaffRequests {
   userId: number;
-  access: StaffAccess;
+  access: UserAccess;
 }

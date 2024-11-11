@@ -6,6 +6,8 @@ import { StandardSpan } from "../competition_staff_page/staff_page/components/Wi
 import { useTheme } from "styled-components";
 import { AccessDropdown } from "./AccessDropdown";
 import { UserAccess } from "../../../shared_types/User/User";
+import { sendRequest } from "../../utility/request";
+import { StaffRequests } from "../../../shared_types/Competition/staff/StaffInfo";
 
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
@@ -42,10 +44,17 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,
   ...props  }) => {
 
-  const handleAccessChange = async (newAccess: UserAccess) => {
-    console.log(newAccess);
-
-    // TODO: Backend hook to update user's access
+  const handleAccessChange = async (userId: number | undefined, newAccess: UserAccess) => {
+    const staffRequests : Array<StaffRequests> = [];
+    if(userId) {
+      staffRequests.push({ userId: userId, access: newAccess });
+      try {
+        await sendRequest.post("/user/staff_requests", { staffRequests });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   return (
@@ -70,7 +79,7 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
         <AccessDropdown
           staffId={staffDetails.userId}
           currentAccess={staffDetails.userAccess}
-          onChange={(newAccess) => handleAccessChange(newAccess)}
+          onChange={(newAccess) => handleAccessChange(staffDetails.userId, newAccess)}
         />
       </StandardContainerDiv>
 

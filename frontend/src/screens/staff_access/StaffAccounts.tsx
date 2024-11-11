@@ -79,7 +79,6 @@ export const StaffAccounts: FC = () => {
       }
     };
     fetchStaffRequests();
-    console.log(staffList);
   }, []);
 
   const filteredStaff = staffList.filter((staffDetails) => {
@@ -124,8 +123,12 @@ export const StaffAccounts: FC = () => {
     // Filter by pending
     const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.userId);
   
-    // Perform backend hook to update status to 'approved'
-    console.log("all pending staff accounts approved: ", pendingStaffListIds);
+    try {
+      await sendRequest.post("/user/staff_requests", { staffRequests: pendingStaffListIds.map((userId) => ({ userId, access: UserAccess.Accepted })) });
+    }
+    catch (error) {
+      console.error("Error updating staff access: ", error);
+    }
   
     // replace with the put hook
     return new Promise((resolve) => {
@@ -140,8 +143,12 @@ export const StaffAccounts: FC = () => {
     // Filter by pending
     const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.userId);
   
-    // Perform backend hook to update status to 'rejected'
-    console.log("all pending staff accounts rejected: ", pendingStaffListIds);
+    try {
+      await sendRequest.post("/user/staff_requests", { staffRequests: pendingStaffListIds.map((userId) => ({ userId, access: UserAccess.Rejected })) });
+    }
+    catch (error) {
+      console.error("Error updating staff access: ", error);
+    }
   
     // replace with the put hook
     return new Promise((resolve) => {

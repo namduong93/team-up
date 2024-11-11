@@ -9,6 +9,7 @@ import { UserDashInfo } from "../../models/user/user_dash_info.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
 import { StaffInfo, StaffRequests } from "../../../shared_types/Competition/staff/StaffInfo.js";
+import { UserAccess } from "../../../shared_types/User/User.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -40,7 +41,7 @@ export class SqlDbUserRepository implements UserRepository {
 
     // Check if user with email already exists
     const checkUserQuery = `
-      SELECT id FROM users WHERE email = $1;
+      SELECT id FROM users WHERE email = $1 AND user_access = 'Accepted' LIMIT 1;
     `;
     const checkUserResult = await this.pool.query(checkUserQuery, [email]);
     if (checkUserResult.rowCount > 0) {
@@ -68,7 +69,7 @@ export class SqlDbUserRepository implements UserRepository {
       UserType.STUDENT,
       student.universityId,
       student.studentId,
-      'Accepted'
+      UserAccess.Accepted
     ];
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id;
@@ -121,10 +122,10 @@ export class SqlDbUserRepository implements UserRepository {
       allergies,
       dietaryReqs,
       accessibilityReqs,
-      'staff',
+      UserType.STAFF,
       staff.universityId,
       null,
-      'Pending'
+      UserAccess.Pending
     ];
     const userResult = await this.pool.query(userQuery, userValues);
     const newUserId = userResult.rows[0].id;
@@ -141,7 +142,7 @@ export class SqlDbUserRepository implements UserRepository {
    * @throws {DbError} If the user does not exist or the password is incorrect.
    */
   userLogin = async (email: string, password: string): Promise<UserIdObject> => {
-    const userQuery = `SELECT id, hashed_password FROM users WHERE email = $1;`;
+    const userQuery = `SELECT id, hashed_password FROM users WHERE email = $1 AND user_access = 'Accepted' LIMIT 1`;
     const userResult = await this.pool.query(userQuery, [email]);
 
     if (userResult.rowCount === 0) {
@@ -185,7 +186,7 @@ export class SqlDbUserRepository implements UserRepository {
    */
   userDashInfo = async (userId: number): Promise<UserDashInfo> => {
     const dbResult = await this.pool.query(
-      `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = ${userId}`
+      `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = ${userId} LIMIT 1`
     );
 
     if (dbResult.rowCount === 0) {
@@ -243,7 +244,7 @@ export class SqlDbUserRepository implements UserRepository {
    * @throws {DbError} If the user is not found, the current password is incorrect, or the new password is the same as the old password.
    */
   userUpdatePassword = async (userId: number, oldPassword: string, newPassword: string): Promise<void> => {
-    const userQuery = `SELECT hashed_password FROM users WHERE id = $1;`;
+    const userQuery = `SELECT hashed_password FROM users WHERE id = $1 AND user_access = 'Accepted' LIMIT 1`;
     const userResult = await this.pool.query(userQuery, [userId]);
 
     if (userResult.rowCount === 0) {
@@ -281,7 +282,7 @@ export class SqlDbUserRepository implements UserRepository {
   userType = async (userId: number): Promise<UserTypeObject> => {
 
     const dbResult = await this.pool.query(
-      `SELECT user_type AS "userType" FROM users WHERE id = ${userId}`
+      `SELECT user_type AS "userType" FROM users WHERE id = ${userId} LIMIT 1`
     );
 
     if (dbResult.rowCount === 0) {
@@ -330,6 +331,7 @@ export class SqlDbUserRepository implements UserRepository {
         user_access
       FROM users 
       WHERE user_type = 'staff'::user_type_enum
+      ORDER BY user_access, name ASC
     `);
     const returnArray: Array<StaffInfo> = [];
     for (const row of dbResult.rows) {
@@ -352,7 +354,22 @@ export class SqlDbUserRepository implements UserRepository {
   }
 
   staffRequestsUpdate = async (staffRequests: Array<StaffRequests>): Promise<void> => {
-    // await this.pool.query('UPDATE users SET user_access = $1 WHERE id = ANY($2::int[]);', ['Accepted', acceptedId])
+    const userIds = staffRequests.map(request => request.userId);
+    const accessValues = staffRequests.map(request => request.access);
+
+    console.log(userIds);
+    console.log(accessValues);
+
+    await this.pool.query(
+      `UPDATE users 
+      SET user_access = updated_values.access::user_access_enum
+      FROM (
+        SELECT unnest($1::int[]) as user_id, 
+                unnest($2::text[]) as access
+      ) as updated_values
+      WHERE users.id = updated_values.user_id`,
+      [userIds, accessValues]
+    );
   }
 
 }
