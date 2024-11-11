@@ -27,6 +27,34 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   constructor(pool: Pool) {
     this.pool = pool;
   }
+  
+  competitionSiteCapacityUpdate = async (siteId: number, capacity: number) => {
+    try {
+      await this.pool.query(
+        `UPDATE competition_sites
+        SET
+          capacity = ${capacity}
+        WHERE id = ${siteId}
+        `
+      );
+    } catch (error: unknown) {
+      throw new DbError(DbError.Query, 'Error with database Update competition site');
+    }
+    return;
+  }
+
+  competitionSiteCoordinatorCheck = async (userId: number, siteId: number): Promise<void> => {
+    const dbResult = await this.pool.query(
+      `SELECT 1
+      FROM competition_users AS cu
+      WHERE cu.user_id = ${userId} AND cu.site_id = ${siteId}
+      `
+    )
+
+    if (!dbResult.rowCount) {
+      throw new DbError(DbError.Auth, 'Site Coordinator is not coordinating this site');
+    }
+  }
 
   competitionStudentsRegoToggles = async (userId: number, code: string) => {
     const dbResult = await this.pool.query(

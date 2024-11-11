@@ -62,11 +62,26 @@ export class CompetitionService {
   private competitionRepository: CompetitionRepository;
   private userRepository: UserRepository;
   private notificationRepository: NotificationRepository;
-
+  
   constructor(competitionRepository: CompetitionRepository, userRepository: UserRepository, notificationRepository: NotificationRepository) {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+
+  competitionSiteCapacityUpdate = async (userId: number, compId: number, siteId: number, capacity: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      if (!roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
+        throw new ServiceError(ServiceError.Auth, 'User is not an Admin or a Site Coordinator');
+      }
+
+      await this.competitionRepository.competitionSiteCoordinatorCheck(userId, siteId);
+    }
+
+    await this.competitionRepository.competitionSiteCapacityUpdate(siteId, capacity);
+    return;
   }
 
   competitionStudentsRegoToggles = async (userId: number, code: string) => {

@@ -10,10 +10,20 @@ import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
-
+  
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionSiteCapacityUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query as { userId: string };
+    const { compId, siteId, capacity } = req.body as { compId: number, siteId: number, capacity: number };
+    
+    await this.competitionService.competitionSiteCapacityUpdate(
+      parseInt(userId), compId, siteId, capacity);
+
+    res.json({});
+  });
 
   competitionStudentsRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, code } = req.query;
