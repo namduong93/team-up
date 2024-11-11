@@ -423,7 +423,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
           "siteName",
           "pendingSiteName",
           "siteCapacity",
-          "pendingSiteCapacity"
+          "pendingSiteCapacity",
+          "teamSeat"
         FROM competition_attendees AS ca
         WHERE ca.competition_id = $1 AND ca."siteId" = (SELECT site_id FROM competition_users WHERE user_id = $2 AND competition_id = $1 LIMIT 1);`, [compId, userId]
       );

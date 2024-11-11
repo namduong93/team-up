@@ -575,6 +575,7 @@ SELECT
   cu.access_level AS "status",
   ct.site_attending_id AS "siteId",
   ct.pending_site_attending_id AS "pendingSiteId",
+  ct.team_seat AS "teamSeat",
   cs.name AS "siteName",
   cs_pending.name AS "pendingSiteName",
   cs.capacity AS "siteCapacity",
