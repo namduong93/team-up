@@ -1,4 +1,4 @@
-import { FC, SetStateAction, useEffect, useState } from "react";
+import React, { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaFileSignature,
@@ -17,6 +17,7 @@ import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffIn
 import { useParams } from "react-router-dom";
 import { Announcement } from "../../../../../shared_types/Competition/staff/Announcement";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
 
 type ActionType =
   | "code"
@@ -30,6 +31,7 @@ interface StaffActionCardProps {
   staffRoles: string[];
   compCode: string;
   universityOption: { value: string; label: string };
+  siteOptionsState: [{ value: string, label: string }[], React.Dispatch<React.SetStateAction<{ value: string, label: string }[]>>];
 }
 
 interface ActionCardProps {
@@ -190,6 +192,7 @@ export const DEFAULT_REGO_FIELDS = {
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
   compCode,
+  siteOptionsState: [siteOptions, setSiteOptions],
 }) => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
@@ -404,6 +407,18 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
     setShowEditCapacity(false);
   };
+
+  const [siteList, setSiteList] = useState<CompetitionSite[] | undefined>();
+
+  useEffect(() => {
+    const fetchSiteCapacities = async () => {
+      const response = await sendRequest.get<{ site: CompetitionSite[] }>('/competition/site/capacity', { compId, ids: siteOptions.map((siteOption) => siteOption.value) });
+      const { site: sites } = response.data;
+      setSiteList(sites);
+    }
+
+    fetchSiteCapacities();
+  }, []);
 
   return (
     <StandardContainerDiv>

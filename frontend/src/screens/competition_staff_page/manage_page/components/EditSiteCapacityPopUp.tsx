@@ -5,6 +5,10 @@ import DropdownInputLight from "../../../../components/general_utility/DropDownL
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 import { NumberInputLight } from "../../../../components/general_utility/NumberInputLight";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
+import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
+import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { sendRequest } from "../../../../utility/request";
+import { useParams } from "react-router-dom";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -93,44 +97,46 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const { compId } = useParams();
   const { roles, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext("attendees");
   const [selectedSite, setSelectedSite] = useState<{ value: string; label: string }>({label: "", value: "0"});
   const [capacity, setCapacity] = useState<number>(0);
   const [currentCapacity, setCurrentCapacity] = useState<number>(0);
 
-  let siteOptionsAllowed = siteOptions;
-  
+  const [siteCapacities, setSiteCapacities] = useState<CompetitionSiteCapacity[] | undefined>()
+
   useEffect(() => {
-    console.log(roles);
 
-    if (!roles.includes(CompetitionRole.Admin)) {
-      // TODO: Backend  hook to get the site for the particular site-coord
-      siteOptionsAllowed = [siteOptions[0]]
-
-      // TODO: Backend get the current site capacity of the selected site
-
-      setCurrentCapacity(12);
-      setSelectedSite(siteOptions[0])
-    } else {
-      setSelectedSite(siteOptions[0])
-
-      // TODO: Backend get the current site capacity of the first site
-
-      setCurrentCapacity(12);
+    const fetchSiteCapacities = async () => {
+      const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>(
+        '/competition/site/capacity',
+        { compId, ids: siteOptions.map((site) => site.value) });
+      
+      const { site: siteCapacities } = response.data;
+      setSiteCapacities(siteCapacities);
     }
-  }, [])
+    fetchSiteCapacities();
+  }, []);
 
-  const handleSiteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = siteOptions.find((site) => site.value === e.target.value);
-    if (selected) {
-      setSelectedSite(selected); // Update selectedSite state
-      const fetchedCapacity = parseInt(selected.value); // Dummy fetched capacity
-      setCurrentCapacity(fetchedCapacity);
-      setCapacity(fetchedCapacity);
-    }
+  useEffect(() => {
+    const newCapacity = siteCapacities?.find((site) => site.id === parseInt(selectedSite.value));
+    console.log(newCapacity);
+    setCurrentCapacity(newCapacity?.capacity || 0);
+  }, [selectedSite, siteCapacities]);
 
-    console.log(selected?.label);
-  };
+  useEffect(() => {
+    setSelectedSite(siteOptions[0]);
+  }, [siteOptions]);
+
+
+  // const handleSiteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selected = siteOptions.find((site) => site.value === e.target.value);
+  //   if (selected) {
+  //     setSelectedSite(selected); // Update selectedSite state
+  //   }
+
+  //   console.log(selected?.label);
+  // };
 
   const handleCapacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCapacity = Number(e.target.value);
@@ -139,9 +145,12 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
     }
   };
 
+  
+
+
   const handleSubmit = () => {
     // Call onSubmit with the site and capacity
-    onSubmit({label: selectedSite.label, value: parseInt(selectedSite.value)}, capacity);
+    // onSubmit({label: selectedSite.label, value: parseInt(selectedSite.value)}, capacity);
     onClose();
   };
 
@@ -153,16 +162,21 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
         </CloseButton>
         <div>{heading}</div>
 
-        <DropdownInputLight
-          label="Select a Site"
-          options={siteOptionsAllowed}
-          value={selectedSite.label}
-          onChange={handleSiteChange}
-          required
-        />
+        {roles.includes(CompetitionRole.Admin) && 
+        <div style={{ width: '300px' }}>
+          <AdvancedDropdown
+            setCurrentSelected={setSelectedSite}
+            optionsState={[siteOptions, setSiteOptions]}
+            style={{ width: "100%" }}
+            isExtendable={false}
+            defaultSearchTerm={selectedSite.label}
+          />
+        </div>
+        
+        }
         <NumberInputLight
           label="Provide a capacity"
-          value={capacity}
+          value={currentCapacity}
           onChange={handleCapacityChange}
           currentCapacity={currentCapacity}
         />
