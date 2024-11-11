@@ -7,7 +7,7 @@ export const enum StaffAccess {
 }
 
 export interface StaffInfo {
-  userId: number;
+  userId?: number;
   universityId: number;
   universityName: string;
   name: string;
@@ -19,7 +19,7 @@ export interface StaffInfo {
   dietaryReqs: string;
   accessibilityReqs: string;
 
-  bio: string;
-  roles: CompetitionRole[];
-  access: StaffAccess;
+  bio?: string;
+  roles?: CompetitionRole[];
+  access?: StaffAccess;
 }

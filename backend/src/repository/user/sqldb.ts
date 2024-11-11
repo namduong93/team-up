@@ -4,7 +4,7 @@ import { Student } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
 import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 import { Staff } from "../../models/user/staff/staff.js";
-import { UserTypeObject } from "../../models/user/user.js";
+import { UserType, UserTypeObject } from "../../models/user/user.js";
 import { UserDashInfo } from "../../models/user/user_dash_info.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
@@ -65,7 +65,7 @@ export class SqlDbUserRepository implements UserRepository {
       allergies,
       dietaryReqs,
       accessibilityReqs,
-      'student',
+      UserType.STUDENT,
       student.universityId,
       student.studentId,
       'Accepted'
@@ -314,9 +314,26 @@ export class SqlDbUserRepository implements UserRepository {
     return { id: universityId, name: universityName };
   }
 
-  staffList = async (): Promise<Array<StaffInfo>> => {
-    const dbResult = await this.pool.query('SELECT * FROM users WHERE user_access IN ($1, $2) AND user_type != $3', ['Pending', 'Accepted', 'student'])
-    return dbResult.rows;
+  staffRequests = async (): Promise<Array<StaffInfo>> => {
+    const dbResult = await this.pool.query(`
+      SELECT 
+        u.id as user_id,
+        u.university_id,
+        uni.name as university_name,
+        u.name,
+        u.email,
+        u.gender as sex,
+        u.pronouns,
+        u.tshirt_size,
+        u.allergies,
+        u.dietary_reqs,
+        u.accessibility_reqs,
+      FROM users u
+      JOIN universities uni ON u.university_id = uni.id
+      WHERE u.user_type = 'staff'
+      AND u.user_access = 'Pending'::user_access_enum
+    `);
+    return 
   }
 
   staffApprove = async (acceptedId: number[]): Promise<void> => {

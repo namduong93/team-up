@@ -167,9 +167,9 @@ export class UserController {
     return;
   })
 
-  staffList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+  staffRequests = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-    const staffList = await this.userService.staffList(Number(userId));
+    const staffList = await this.userService.staffRequests(Number(userId));
     res.json(staffList);
     return;
   })

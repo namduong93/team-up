@@ -9,9 +9,10 @@ import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import createHttpError from "http-errors";
 import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
-import { convertGenderToP, UserTypeObject } from "../models/user/user.js";
+import { convertGenderToP, UserType, UserTypeObject } from "../models/user/user.js";
 import { UserDashInfo } from "../models/user/user_dash_info.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
+import { ServiceError } from "../errors/service_error.js";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -186,29 +187,29 @@ export class UserService {
    * @param userId The ID of the user who asked to retrieve the information.
    * @returns {Promise<UserTypeObject | undefined>} A promise that resolves to a UserTypeObject if found, otherwise undefined.
    */
-  staffList = async (userId: number): Promise<Array<StaffInfo> | undefined> => {
-    const userCheckAdmin:UserTypeObject = await this.userType(userId)
-    if (userCheckAdmin.type !== 'system_admin') {
-      throw createHttpError(400, 'User does not have access to this list');
+  staffRequests = async (userId: number): Promise<Array<StaffInfo> | undefined> => {
+    const userCheckAdmin:UserTypeObject = await this.userRepository.userType(userId);
+    if (userCheckAdmin.type !== UserType.SYSTEM_ADMIN) {
+      throw new ServiceError(ServiceError.Auth, 'User does not have access to this list');
     }
     
-    return this.userRepository.staffList();
+    return this.userRepository.staffRequests();
   }
 
   staffApprove = async (userId: number, acceptedIds: number[]): Promise<void> => {
     const userCheckAdmin: UserTypeObject = await this.userType(userId)
-    if (userCheckAdmin.type !== 'system_admin') {
-      throw createHttpError(400, 'User does not have the power to accept staff');
-    }
+    // if (userCheckAdmin.type !== 'system_admin') {
+    //   throw createHttpError(400, 'User does not have the power to accept staff');
+    // }
 
     await this.userRepository.staffApprove(acceptedIds);
   }
 
   staffReject = async (userId: number, rejectIds: number[]): Promise<void> => {
     const userCheckAdmin: UserTypeObject = await this.userType(userId)
-    if (userCheckAdmin.type !== 'system_admin') {
-      throw createHttpError(400, 'User does not have the power to reject staff');
-    }
+    // if (userCheckAdmin.type !== 'system_admin') {
+    //   throw createHttpError(400, 'User does not have the power to reject staff');
+    // }
 
     await this.userRepository.staffRejects(rejectIds);
   }
