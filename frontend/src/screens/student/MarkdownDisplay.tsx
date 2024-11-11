@@ -1,6 +1,7 @@
 import { FC } from "react";
 import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
+import rehypeRaw from "rehype-raw";
 
 interface MarkdownDisplayProps {
   content: string;
@@ -10,6 +11,7 @@ const Markdown = styled(ReactMarkdown)`
   font-size: 1rem;
   line-height: 1.5;
   color: ${({ theme }) => theme.fonts.colour};
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
 
   a {
     color: ${({ theme }) => theme.colours.primaryDark};
@@ -21,5 +23,5 @@ const Markdown = styled(ReactMarkdown)`
 `;
 
 export const MarkdownDisplay: FC<MarkdownDisplayProps> = ({ content }) => {
-  return <Markdown>{content}</Markdown>;
+  return <Markdown children={content} rehypePlugins={[rehypeRaw]} />;
 };

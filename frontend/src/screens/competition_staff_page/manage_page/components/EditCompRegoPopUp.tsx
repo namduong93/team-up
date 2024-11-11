@@ -26,7 +26,7 @@ const Modal = styled.div`
   top: 50%;
   left: 50%;
   min-width: 290px;
-  max-width: 2000px;
+  max-width: 1100px;
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 12px;
