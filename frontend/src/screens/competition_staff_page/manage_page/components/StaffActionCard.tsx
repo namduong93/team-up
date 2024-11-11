@@ -545,7 +545,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
             />
           )}
 
-          {/* {showEditRego && (
+          {showEditRego && (
             <EditCompRegoPopUp
               onClose={() => setShowEditRego(false)}
               regoFields={regoFields}
@@ -554,7 +554,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
               editCourses={editCourse}
               setCourses={handleEditCourseChange}
             />
-          )} */}
+          )}
 
           {showEditCapacity && (
             <EditSiteCapacityPopUp 
