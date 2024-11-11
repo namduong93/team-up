@@ -203,7 +203,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
-  const { universityOption  } = useCompetitionOutletContext("teams");
+  const { universityOption  } = useCompetitionOutletContext("manage", showManageSite);
 
   const actions = [
     {
