@@ -12,9 +12,9 @@ import { ResponsiveActionButton } from "../../../components/responsive_fields/ac
 
 interface EditCompPreferencesProps {
   student: StudentInfo;
-  onSubmit: (updatedStudent: StudentInfo) => void;
+  onSubmit: (updatedStudent: StudentInfo) => Promise<boolean>;
   onClose: () => void;
-}
+};
 
 const ModalOverlay = styled.div`
   position: fixed;

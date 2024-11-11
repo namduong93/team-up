@@ -94,22 +94,21 @@ export const TeamDetails: FC = () => {
     fetchStudentInfo();
   }, []);
 
-  const handleSave = (studentInfo: StudentInfo) => {
+  const handleSave = async (newInfo: StudentInfo): Promise<boolean> => {
     // alert(`Saved details for: ${updatedStudent.name}`);
     // TODO: hook backend to update student's competition preferences
-    const updateStudentInfo = async (studentInfo: StudentInfo) => {
-      try {
-        const response = await sendRequest.put<{ studentDetails: StudentInfo }>(
-          '/competition/student/details',
-          { compId, studentInfo }
-        );
-        setStudentInfo(response.data.studentDetails);
-      } catch (err) {
-        console.log("Error updating student info", err);
-      }
-    };
-
-    updateStudentInfo(studentInfo);
+    try {
+      await sendRequest.put<{ studentDetails: StudentInfo }>(
+        '/competition/student/details',
+        { compId, newInfo }
+      );
+    } catch (err) {
+      console.log("Error updating student info", err);
+      return false;
+    }
+    console.log("updated for: ", newInfo);
+    setStudentInfo(newInfo);
+    return true;
   };
 
 
