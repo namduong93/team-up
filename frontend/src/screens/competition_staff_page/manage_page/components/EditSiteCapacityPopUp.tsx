@@ -132,9 +132,12 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   useEffect(() => {
 
     const fetchSiteCapacities = async () => {
+
+      const ids = (roles.includes(CompetitionRole.Admin) ? siteOptions.map((site) => site.value) : []);
+
       const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>(
         '/competition/site/capacity',
-        { compId, ids: siteOptions.map((site) => site.value) });
+        { compId, ids });
       
       const { site: siteCapacities } = response.data;
       setSiteCapacities(siteCapacities);
