@@ -1,5 +1,5 @@
 /* eslint-disable no-irregular-whitespace */
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../../components/progress_bar/ProgressBar";
@@ -59,15 +59,9 @@ export const CompetitionInformation: FC = () => {
   const navigate = useNavigate();
   const { code } = useParams<{ code?: string }>();
 
-  const handleBack = () => {
-    navigate("/dashboard");
-  };
-
-  const handleNext = () => {
-    navigate(`/competition/individual/${code}`);
-  };
-
-  const DefaultCompInfoBlurb = `
+  // TO-DO: use competition/information to retrieve the
+  // information from the competitionInformation object
+  const [compInformation, setCompInformation] = useState(`
 This form is for registering to participate in the 2024 South Pacific ICPC Preliminary Contest. 
 The Preliminary Contest will be held on 31st August 2024, and the top qualifying teams will progress to the Regional Finals, 
 to be held in Sydney on 19th and 20th October 2024. The full qualification rules can be found at: [sppcontests.org/regional-qualification-rules](https://sppcontests.org/regional-qualification-rules/).
@@ -101,8 +95,16 @@ Additionally, all teams must choose whether to compete in Level A or Level B.
 
 If you have not previously competed in Regional Finals nor had a top 10 result in the 2024 SPAR contests, 
 we strongly advise you to register for Level B.
-  `;
-  
+      `);
+
+  const handleBack = () => {
+    navigate("/dashboard");
+  };
+
+  const handleNext = () => {
+    navigate(`/competition/individual/${code}`);
+  };
+
   return (
     <FlexBackground
       style={{
@@ -116,7 +118,7 @@ we strongly advise you to register for Level B.
       <Container>
         <ContentContainer>
           <Title>Competition Information</Title>
-          <MarkdownDisplay content={DefaultCompInfoBlurb} />
+          <MarkdownDisplay content={compInformation} />
           <ButtonContainer>
             <Button onClick={handleBack}>Back</Button>
             <Button onClick={handleNext}>Next</Button>
