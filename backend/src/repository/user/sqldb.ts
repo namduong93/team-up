@@ -8,7 +8,7 @@ import { UserType, UserTypeObject } from "../../models/user/user.js";
 import { UserDashInfo } from "../../models/user/user_dash_info.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
-import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js";
+import { StaffInfo, StaffRequests } from "../../../shared_types/Competition/staff/StaffInfo.js";
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -351,11 +351,8 @@ export class SqlDbUserRepository implements UserRepository {
     return returnArray;
   }
 
-  staffApprove = async (acceptedId: number[]): Promise<void> => {
-    await this.pool.query('UPDATE users SET user_access = $1 WHERE id = ANY($2::int[]);', ['Accepted', acceptedId])
+  staffRequestsUpdate = async (staffRequests: Array<StaffRequests>): Promise<void> => {
+    // await this.pool.query('UPDATE users SET user_access = $1 WHERE id = ANY($2::int[]);', ['Accepted', acceptedId])
   }
 
-  staffRejects = async (rejectIds: number[]): Promise<void> => {
-    await this.pool.query('DELETE FROM users WHERE user_access = $1 AND id = ANY($2::int[]);', ['Rejected', rejectIds])
-  }
 }

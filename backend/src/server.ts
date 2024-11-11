@@ -127,7 +127,7 @@ app.get('/user/staff_requests', userController.staffRequests);
 // Approve every staff in the list
 // PARAMS: { Array<StaffRequests> }
 // RESPONSE: {}
-app.post('/user/staff_requests', userController.staffApprove);
+app.post('/user/staff_requests', userController.staffRequestsUpdate);
 
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
