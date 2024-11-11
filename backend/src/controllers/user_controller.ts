@@ -170,7 +170,7 @@ export class UserController {
   staffRequests = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const staffList = await this.userService.staffRequests(Number(userId));
-    res.json(staffList);
+    res.json({staffRequests: staffList});
     return;
   })
 

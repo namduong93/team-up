@@ -317,23 +317,37 @@ export class SqlDbUserRepository implements UserRepository {
   staffRequests = async (): Promise<Array<StaffInfo>> => {
     const dbResult = await this.pool.query(`
       SELECT 
-        u.id as user_id,
-        u.university_id,
-        uni.name as university_name,
-        u.name,
-        u.email,
-        u.gender as sex,
-        u.pronouns,
-        u.tshirt_size,
-        u.allergies,
-        u.dietary_reqs,
-        u.accessibility_reqs,
-      FROM users u
-      JOIN universities uni ON u.university_id = uni.id
-      WHERE u.user_type = 'staff'
-      AND u.user_access = 'Pending'::user_access_enum
+        id,
+        university_id,
+        name,
+        email,
+        gender,
+        pronouns,
+        tshirt_size,
+        allergies,
+        dietary_reqs,
+        accessibility_reqs
+      FROM users 
+      WHERE user_type = 'staff'::user_type_enum
+      AND user_access = 'Pending'::user_access_enum
     `);
-    return 
+    const returnArray: Array<StaffInfo> = [];
+    for (const row of dbResult.rows) {
+      let staffInfo: StaffInfo = {
+        userId: row.id,
+        universityId: row.university_id,
+        name: row.name,
+        email: row.email,
+        sex: row.gender,
+        pronouns: row.pronouns,
+        tshirtSize: row.tshirt_size,
+        allergies: row.allergies,
+        dietaryReqs: row.dietary_reqs,
+        accessibilityReqs: row.accessibility_reqs
+      };
+      returnArray.push(staffInfo);
+    }
+    return returnArray;
   }
 
   staffApprove = async (acceptedId: number[]): Promise<void> => {

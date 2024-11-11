@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import Fuse from "fuse.js";
 import { FlexBackground } from "../../components/general_utility/Background";
-import { StaffAccess, StaffAccessInfo } from "../../../shared_types/Competition/staff/StaffInfo";
+import { StaffAccess, StaffAccessInfo, StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo";
 import {  NarrowDisplayDiv, WideDisplayDiv } from "../competition_staff_page/students_page/StudentDisplay";
 // import { StaffAccessLevel, NarrowStatusDiv } from "../competition_staff_page/staff_page/StaffDisplay";
 
@@ -43,7 +43,7 @@ const mockStaffData: StaffAccessInfo[] = [
 ];
 
 export interface StaffAccessCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  staffDetails: StaffAccessInfo;
+  staffDetails: StaffInfo;
 }
 
 const STAFF_DISPLAY_SORT_OPTIONS = [
@@ -80,7 +80,7 @@ const FilterTagContainer = styled.div`
 `;
 
 export const StaffAccounts: FC = () => {
-  const [staffList, setStaffList] = useState<Array<StaffAccessInfo>>([]);
+  const [staffList, setStaffList] = useState<Array<StaffInfo>>([]);
   const [sortOption, setSortOption] = useState<string | null>(null);
   const [filters, setFilters] = useState<Record<string, Array<string>>>({});
   const [filterOptions, setFilterOptions] = useState<
@@ -96,15 +96,18 @@ export const StaffAccounts: FC = () => {
     setFilterOptions(STAFF_DISPLAY_FILTER_OPTIONS);
     
     // TODO: Backend, get the staffList from backend
-    const fetchStaffRequestsList = async () => {
-      const staffRequestsResponse = await sendRequest.get<{
-        staff: Array<StaffInfo>;
-      }>("/user/staff_list", {});
-      const { staff } = staffResponse.data;
-      setStaffList(staff);
+    const fetchStaffRequests= async () => {
+      try {
+        const response = await sendRequest.get<{staffRequests: Array<StaffInfo>}>("/user/staff_requests");
+        const staffList = response.data.staffRequests;
+        setStaffList(staffList);
+        console.log("Staff requests list fetched: ", staffList);
+      }
+      catch (error) {
+        console.error("Error fetching staff requests list: ", error);
+      }
     };
-
-    setStaffList(mockStaffData);
+    fetchStaffRequests();
   }, []);
 
   const filteredStaff = staffList.filter((staffDetails) => {
@@ -211,21 +214,27 @@ export const StaffAccounts: FC = () => {
       <StaffContainer>
         <NarrowDisplayDiv>
           <StaffRecords>
-              {searchedStaff.length > 0 ? (
-                searchedStaff.map(({ item: staffDetails }) => (
-                    <NarrowStaffAccessCard staffDetails={staffDetails} />
-                ))
-              ) : (
-                <p>No staff members found.</p>
-              )}
-            </StaffRecords>
+            {searchedStaff.length > 0 ? (
+              searchedStaff.map(({ item: staffDetails }, index) => (
+                <NarrowStaffAccessCard 
+                  key={`staff-narrow-${index}`}  
+                  staffDetails={staffDetails} 
+                />
+              ))
+            ) : (
+              <p>No staff members found.</p>
+            )}
+          </StaffRecords>
         </NarrowDisplayDiv>
         <WideDisplayDiv>
           <WideStaffAccessHeader />
           <StaffRecords>
             {searchedStaff.length > 0 ? (
-              searchedStaff.map(({ item: staffDetails }) => (
-                  <WideStaffAccessCard staffDetails={staffDetails} />
+              searchedStaff.map(({ item: staffDetails }, index) => (
+                <WideStaffAccessCard 
+                  key={`staff-wide-${index}`}  
+                  staffDetails={staffDetails} 
+                />
               ))
             ) : (
               <p>No staff members found.</p>

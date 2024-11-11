@@ -9,7 +9,7 @@ export const enum StaffAccess {
 export interface StaffInfo {
   userId?: number;
   universityId: number;
-  universityName: string;
+  universityName?: string;
   name: string;
   email: string;
   sex: string;
