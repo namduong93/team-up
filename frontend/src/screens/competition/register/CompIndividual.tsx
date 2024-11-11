@@ -62,7 +62,7 @@ export const Button = styled.button<{ $disabled?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-const Label = styled.label`
+export const FormLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -87,20 +87,20 @@ export const Text = styled.label`
   width: 100%;
 `;
 
-const DoubleInputContainer = styled.div`
+export const DoubleInputContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 0.8%;
 `;
 
-const Colon = styled.span`
+export const Colon = styled.span`
   align-self: center;
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
 `;
 
-const Descriptor = styled.div`
+export const Descriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colours.filterText};
@@ -122,6 +122,20 @@ interface User {
   accessibilityReqs: string;
 }
 
+export const yearOptions = [
+  { value: "", label: "Please Select" },
+  { value: "1", label: "1st" },
+  { value: "2", label: "2nd" },
+  { value: "3", label: "3rd" },
+  { value: "4", label: "4th" },
+  { value: "5", label: "5th" },
+  { value: "6", label: "6th" },
+  { value: "7", label: "7th" },
+  { value: "8", label: "8th" },
+  { value: "9", label: "9th" },
+  { value: "10", label: "10th" },
+];
+
 export const CompetitionIndividual: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepCompRegoForm();
@@ -134,20 +148,6 @@ export const CompetitionIndividual: FC = () => {
   const handleNext = () => {
     navigate(`/competition/experience/${code}`);
   };
-
-  const yearOptions = [
-    { value: "", label: "Please Select" },
-    { value: "1", label: "1st" },
-    { value: "2", label: "2nd" },
-    { value: "3", label: "3rd" },
-    { value: "4", label: "4th" },
-    { value: "5", label: "5th" },
-    { value: "6", label: "6th" },
-    { value: "7", label: "7th" },
-    { value: "8", label: "8th" },
-    { value: "9", label: "9th" },
-    { value: "10", label: "10th" },
-  ];
 
   function isButtonDisabled(): boolean | undefined {
     const {
@@ -214,7 +214,7 @@ export const CompetitionIndividual: FC = () => {
         <ContentContainer>
           <Title>Individual Information</Title>
 
-          <Label>Degree</Label>
+          <FormLabel>Degree</FormLabel>
 
           <div
             style={{ display: "flex", alignItems: "flex-start", width: "100%" }}
@@ -277,9 +277,9 @@ export const CompetitionIndividual: FC = () => {
             width="100%"
           />
 
-          <Label>
+          <FormLabel>
             Site Attendance<Asterisk>*</Asterisk>
-          </Label>
+          </FormLabel>
 
           <div style={{ display: "flex", alignContent: "center" }}>
             <Text>
@@ -318,7 +318,7 @@ export const CompetitionIndividual: FC = () => {
             width="100%"
           />
 
-          <Label>Preferred Contact Method</Label>
+          <FormLabel>Preferred Contact Method</FormLabel>
           <Descriptor>
             Please specify your preferred contact method if you have another
             preference

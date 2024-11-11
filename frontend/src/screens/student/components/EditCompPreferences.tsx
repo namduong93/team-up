@@ -1,29 +1,20 @@
-import { FC, useState, ChangeEvent, FormEvent } from "react";
-import { Student } from "../TeamDetails";
+import { FC, useEffect, useState } from "react";
+import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
 import styled from "styled-components";
-
-export interface StudentDetails extends Student {
-  name: string;
-  email: string;
-  degreeYear: number;
-  degree: string;
-  ICPCEligibility?: boolean;
-  isRemote?: boolean;
-  competitionLevel: string;
-  boersenEligible?: boolean;
-  courses: string[];
-  codeforce?: number;
-  regional?: boolean;
-  nationalPrizes?: string;
-  internationalPrizes?: string;
-  bio: string; // Ensure bio is included in the StudentDetails type
-}
+import { FormLabel, Descriptor, yearOptions, Text, DoubleInputContainer, Colon } from "../../competition/register/CompIndividual";
+import TextInputLight from "../../../components/general_utility/TextInputLight";
+import RadioButton from "../../../components/general_utility/RadioButton";
+import { CompetitionLevel } from "../../../../shared_types/Competition/CompetitionLevel";
+import DescriptiveTextInput from "../../../components/general_utility/DescriptiveTextInput";
+import { FaTimes } from "react-icons/fa";
+import DropdownInputLight from "../../../components/general_utility/DropDownLight";
+import { ResponsiveActionButton } from "../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 
 interface EditCompPreferencesProps {
-  student: StudentDetails;
-  onSave: (updatedStudent: StudentDetails) => void;
-  onCancel: () => void;
-}
+  student: StudentInfo;
+  onSubmit: (updatedStudent: StudentInfo) => Promise<boolean>;
+  onClose: () => void;
+};
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -31,50 +22,68 @@ const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  background: rgba(0, 0, 0, 0.5);
 `;
 
 const ModalContent = styled.div`
   background-color: ${({ theme }) => theme.background};
-  padding: 20px;
-  border-radius: 12px; // Rounded edges
+  border-radius: 12px;
   width: 90%;
-  max-width: 800px; // Wider for 2-column layout
+  min-width: 290px;
+  max-width: 800px;
+  height: 90%;
+  max-height: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  overflow-y: scroll;
+`;
+
+const CloseContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  z-index: 1;
+`;
+
+const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #d9534f;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #c9302c;
+  }
 `;
 
 const Title = styled.h2`
-  margin-bottom: 20px; // Space below the title
-  text-align: center; // Center the title
+  text-align: center;
+  margin: 10px;
 `;
 
 const Form = styled.form`
-  display: grid; // Use grid layout for two columns
-  grid-template-columns: 1fr 1fr; // Two equal columns
-  gap: 20px; // Gap between fields
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  min-width: 290px;
+  gap: 5px;
+  flex-wrap: wrap;
+  width: 100%;
+  height: auto;
 `;
 
 const Field = styled.div`
-  margin-bottom: 10px;
-`;
-
-const Label = styled.label`
-  display: block;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  margin-bottom: 5px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-`;
-
-const Checkbox = styled.input`
-  margin-right: 5px;
+  max-width: 350px;
 `;
 
 export const TextArea = styled.textarea`
@@ -82,186 +91,213 @@ export const TextArea = styled.textarea`
   padding: 8px;
   border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  resize: none; // Prevent resizing
+  resize: none;
 `;
 
-const Button = styled.button`
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background-color: ${({ theme }) => theme.colours.primaryDark};
-  color: white;
+const ContentContainer = styled.div`
+  max-width: 760px;
+  max-height: 780px;
+  width: 95%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`;
 
-  &:hover {
-    background-color: ${({ theme }) => theme.colours.secondaryDark};
-  }
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const TitleContainer = styled.div`
+  flex: 20;
+
+  display: flex;
+  justify-content: center;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+  width: 100%;
 `;
 
 export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   student,
-  onSave,
-  onCancel,
+  onSubmit,
+  onClose,
 }) => {
-  // Initialize form data with default values
-  const [formData, setFormData] = useState<StudentDetails>({
-    ...student,
-    ICPCEligibility: student.ICPCEligibility ?? false, // Default to false
-    isRemote: student.isRemote ?? false, // Default to false
-    codeforce: student.codeforce ?? undefined, // Ensure it's undefined if not provided
-    regional: student.regional ?? false, // Default to false
-    nationalPrizes: student.nationalPrizes ?? "", // Default to empty string
-    internationalPrizes: student.internationalPrizes ?? "", // Default to empty string
-    bio: student.bio ?? "", // Default to empty string
-    courses: student.courses || [], // Default to an empty array
-  });
+  const [formData, setFormData] = useState<StudentInfo>(student);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target;
-
-    if (target instanceof HTMLInputElement && target.type === "checkbox") {
-      setFormData((prev) => ({
-        ...prev,
-        [target.name]: target.checked,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [target.name]: target.value,
-      }));
-    }
+  const handleSubmit = async () => {
+    onSubmit(formData);
+    onClose();
+    return true;
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-    onCancel(); // Call onCancel after saving
-  };
+  useEffect(() => {
+    console.log(student);
+  },[])
 
   return (
     <ModalOverlay>
       <ModalContent>
-        <Title>Edit Competition Details</Title>
-        <Form onSubmit={handleSubmit}>
-          <Field>
-            <Label>Degree Year</Label>
-            <Input
-              type="number"
-              name="degreeYear"
-              value={formData.degreeYear}
-              onChange={handleChange}
+        <ContentContainer>
+          <HeaderContainer>
+            <TitleContainer>
+              <Title>Edit Competition Details</Title>
+            </TitleContainer>
+            <CloseContainer>
+              <CloseButton onClick={onClose}>
+                <FaTimes />
+              </CloseButton>
+            </CloseContainer>
+          </HeaderContainer>
+          <Form onSubmit={handleSubmit}>
+            <Field>
+              <FormLabel>Degree</FormLabel>
+              <DropdownInputLight
+                label="Current Year of Study"
+                options={yearOptions}
+                value={formData.degreeYear?.toString()}
+                required={true}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    degreeYear: parseInt(e.target.value),
+                  })
+                }
+                width="45%"
+              />
+              <TextInputLight
+                label="Degree"
+                placeholder="Please enter"
+                type="text"
+                required={true}
+                value={formData.degree}
+                onChange={(e) =>
+                  setFormData({ ...formData, degree: e.target.value })
+                }
+                width="100%"
+              />
+              <RadioButton
+                label="ICPC Eligibility"
+                options={["Yes", "No"]}
+                selectedOption={
+                  formData.ICPCEligible === undefined
+                    ? ""
+                    : formData.ICPCEligible
+                    ? "Yes"
+                    : "No"
+                }
+                onOptionChange={(e) => {
+                  const isICPCEligible = e.target.value === "Yes";
+                  setFormData({ ...formData, ICPCEligible: isICPCEligible });
+                }}
+                required={true}
+                descriptor="Are you ICPC eligible?"
+                width="100%"
+              />
+            </Field>
+            <Field>
+              <RadioButton
+                label="Competition Level"
+                options={["Level A", "Level B", "No Preference"]}
+                selectedOption={formData.level}
+                onOptionChange={(e) => {
+                  setFormData({ ...formData, level: e.target.value as CompetitionLevel });
+                }}
+                required={true}
+                width="100%"
+              />
+              <FormLabel>Site Attendance</FormLabel>
+              <div style={{ display: "flex", alignContent: "center" }}>
+                <Text>
+                  <em>{formData.siteName}</em>
+                </Text>
+              </div>
+              <RadioButton
+                options={["Attending On Site", "Attending Remotely"]}
+                selectedOption={
+                  formData.isRemote === undefined
+                    ? ""
+                    : formData.isRemote
+                    ? "Attending Remotely"
+                    : "Attending On Site"
+                }
+                onOptionChange={(e) => {
+                  const isRemote = e.target.value === "Attending Remotely";
+                  setFormData({ ...formData, isRemote });
+                }}
+                required={true}
+                descriptor={["Will you be attending on site or remotely?"]}
+                width="100%"
+              />
+            </Field>
+            <Field>
+              <DescriptiveTextInput
+                label="Competition Biography"
+                descriptor="Please write a short description about yourself that would help others get to know you"
+                placeholder="Enter a description"
+                required={true}
+                value={formData.bio}
+                onChange={(e) =>
+                  setFormData({ ...formData, bio: e.target.value })
+                }
+                width="100%"
+              />
+            </Field>
+            <Field>
+              <FormLabel>Preferred Contact Method</FormLabel>
+              <Descriptor>
+                Please specify your preferred contact method if you have another preference
+              </Descriptor>
+              <DoubleInputContainer>
+              <TextInputLight
+                label="Platform"
+                placeholder="Please enter"
+                type="text"
+                required={false}
+                value={formData.preferredContact.split(":")[0] || ""}
+                onChange={(e) => {
+                  const newPlatform = e.target.value;
+                  const currentHandle = formData.preferredContact.split(":")[1] || "";
+                  setFormData({ ...formData, preferredContact: `${newPlatform}:${currentHandle}` });
+                }}
+                width="45%"
+              />
+
+              <Colon>:</Colon>
+
+              <TextInputLight
+                label="Handle"
+                placeholder="Please enter"
+                type="text"
+                required={false}
+                value={formData.preferredContact.split(":")[1] || ""}
+                onChange={(e) => {
+                  const newHandle = e.target.value;
+                  const currentPlatform = formData.preferredContact.split(":")[0] || "";
+                  setFormData({ ...formData, preferredContact: `${currentPlatform}:${newHandle}` });
+                }}
+                width="45%"
+              />
+              </DoubleInputContainer>
+            </Field>
+          </Form>
+          <ButtonContainer>
+            <ResponsiveActionButton 
+              actionType="primary" 
+              label="Save Changes" 
+              question="Are you sure you want to change your competition preferences?" 
+              handleSubmit={handleSubmit} 
             />
-          </Field>
-          <Field>
-            <Label>Degree</Label>
-            <Input
-              type="text"
-              name="degree"
-              value={formData.degree}
-              onChange={handleChange}
-            />
-          </Field>
-          <Field>
-            <Label>ICPC Eligibility</Label>
-            <Checkbox
-              type="checkbox"
-              name="ICPCEligibility"
-              checked={formData.ICPCEligibility}
-              onChange={handleChange}
-            />
-          </Field>
-          <Field>
-            <Label>Is Remote</Label>
-            <Checkbox
-              type="checkbox"
-              name="isRemote"
-              checked={formData.isRemote}
-              onChange={handleChange}
-            />
-          </Field>
-          <Field>
-            <Label>Courses</Label>
-            <TextArea
-              name="courses"
-              value={formData.courses.join(", ")}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  courses: e.target.value
-                    .split(",")
-                    .map((course) => course.trim()),
-                })
-              }
-              rows={3} // Set rows for better height control
-            />
-          </Field>
-          <Field>
-            <Label>Codeforces Rating</Label>
-            <Input
-              type="number"
-              name="codeforce"
-              value={formData.codeforce || ""} // Handle undefined case
-              onChange={handleChange}
-            />
-          </Field>
-          <Field>
-            <Label>Regional Participant</Label>
-            <Checkbox
-              type="checkbox"
-              name="regional"
-              checked={formData.regional}
-              onChange={handleChange}
-            />
-          </Field>
-          <Field>
-            <Label>National Prizes</Label>
-            <Input
-              type="text"
-              name="nationalPrizes"
-              value={formData.nationalPrizes}
-              onChange={handleChange}
-            />
-          </Field>
-          <Field>
-            <Label>International Prizes</Label>
-            <Input
-              type="text"
-              name="internationalPrizes"
-              value={formData.internationalPrizes}
-              onChange={handleChange}
-            />
-          </Field>
-          {/* New Bio Field */}
-          <Field>
-            <Label>Bio</Label>
-            <TextArea
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
-              rows={3} // Adjust row count as needed
-            />
-          </Field>
-          {/* Displaying but not editing competition level and boersen eligibility */}
-          <Field>
-            <Label>Competition Level</Label>
-            <Input type="text" value={formData.competitionLevel} readOnly />
-          </Field>
-          <Field>
-            <Label>Boersen Eligible</Label>
-            <Input
-              type="text"
-              value={formData.boersenEligible ? "Yes" : "No"}
-              readOnly
-            />
-          </Field>
-          <Button type="submit">Save</Button>
-          <Button type="button" onClick={onCancel}>
-            Cancel
-          </Button>
-        </Form>
+          </ButtonContainer>
+        </ContentContainer>
       </ModalContent>
     </ModalOverlay>
   );

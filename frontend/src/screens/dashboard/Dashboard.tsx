@@ -211,19 +211,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     ).sort((a, b) => parseInt(a) - parseInt(b)),
   };
 
-  // // click outside filter to close popup
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-  //       setIsFilterOpen(false);
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
-
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
@@ -275,19 +262,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
       })
     );
   });
-
-  // click outside sort to close popup
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (sortRef.current && !sortRef.current.contains(event.target as Node)) {
-  //       setIsSortOpen(false);
-  //     }
-  //   };
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, [sortRef]);
 
   const sortedCompetitions = [...filteredCompetitions].sort((a, b) => {
     const defaultIndices = filteredCompetitions.map((comp) => comp.compId);
