@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { DownloadButtons } from "../../components/DownloadButtons"
 import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
 import { tShirtOptions, dietaryOptions } from "../../../authentication/registration/SiteInformation";
@@ -6,7 +6,9 @@ import jsPDF from "jspdf";
 
 interface AttendeesButtonsProps {
   attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
-}
+  universityOption: { value: string; label: string };
+  siteOptionsState: [Array<{ value: string; label: string }>, React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>];
+};
 
 interface TShirtCounts {
   [key: string]: {
@@ -29,11 +31,11 @@ interface AccessibilityRequirement {
   studentName: string;
   studentEmail: string;
   university: string;
+  seat: string;
 };
 
 export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
-  { attendeesListState: [attendeesList, setAttendeesList] }) => {
-  
+  { attendeesListState: [attendeesList, setAttendeesList], universityOption: siteOption, siteOptionsState: [siteOptions, setSiteOptions] }) => {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   // Helper function to escape CSV fields that might contain commas
@@ -45,14 +47,16 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
   };
 
   const downloadCSV = async () => {
-    // TODO: Update with site option choice
-    const siteName = attendeesList[0].siteName;
+    let attendees = attendeesList;
+    if (siteOption.value) attendees = attendeesList.filter((attendee) => attendee.siteId === parseInt(siteOption.value));
+
+    console.log(attendees);
 
     // TODO: Filter by site option for admin
     let csvContent = "Site Attendee Data Report: CSV format\n\n";
-    csvContent += `Site Name: ${attendeesList[0].siteName}`;
-    csvContent += `Site Capacity: ${attendeesList[0].siteCapacity}`;
-    csvContent += `Number of Attendees: ${attendeesList.length}`;
+    csvContent += `Site Name: ${attendees[0].siteName}`;
+    csvContent += `Site Capacity (Attendees): ${attendees[0].siteCapacity}`;
+    csvContent += `Number of Attendees: ${attendees.length}`;
 
     const uniqueSizes = [...new Set(tShirtOptions
       .filter(option => option.value !== "")
@@ -63,8 +67,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
     const tshirtCounts: TShirtCounts = {};
     uniqueSizes.forEach(size => tshirtCounts[size] = { male: 0, female: 0 });
     
-    attendeesList.forEach((attendee: AttendeesDetails) => {
-      console.log(attendee.tshirtSize);
+    attendees.forEach((attendee: AttendeesDetails) => {
       if (attendee.tshirtSize && attendee.tshirtSize !== "") {
         const size = attendee.tshirtSize.slice(1); // Remove M/L prefix
         const type = attendee.tshirtSize.startsWith('M') ? 'male' : 'female';
@@ -78,8 +81,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
     csvContent += `Ladies,${uniqueSizes.map(size => tshirtCounts[size].female).join(',')}\n\n`;
 
     // Process dietary requirements
-    const dietaryRequirements: DietaryRequirement[] = attendeesList
-    .filter((attendee: AttendeesDetails) => {
+    const dietaryRequirements: DietaryRequirement[] = attendees.filter((attendee: AttendeesDetails) => {
       // Skip if dietary needs is "None" and no allergies
       if (attendee.dietaryNeeds === "None" && !attendee.allergies) return false;
       // Skip if allergies is "None" and no dietary needs
@@ -87,7 +89,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
       // Only include if there are actual dietary needs or allergies
       return attendee.dietaryNeeds || attendee.allergies;
     })
-    .map(attendee => {
+    .map((attendee) => {
       const dietaryLabel = dietaryOptions.find(
         option => option.value === attendee.dietaryNeeds
       )?.label || attendee.dietaryNeeds;
@@ -102,7 +104,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
         university: attendee.universityName
       };
     })
-    .filter(req => {
+    .filter((req) => {
       // Filter out empty details or "None" values
       if (!req.details || req.details === "None") return false;
       // Filter out cases where it's just empty with "None" allergies
@@ -120,24 +122,24 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
       csvContent += '\n';
     }
     // Process accessibility requirements
-    const accessibilityRequirements: AccessibilityRequirement[] = attendeesList
-    .filter(attendee => 
+    const accessibilityRequirements: AccessibilityRequirement[] = attendees.filter((attendee) => 
       attendee.accessibilityNeeds && 
       attendee.accessibilityNeeds !== "None"  // Exclude "None" values
     )
-    .map(attendee => ({
+    .map((attendee) => ({
       requirement: 'Accessibility',
       details: attendee.accessibilityNeeds || '',
       studentName: attendee.name,
       studentEmail: attendee.email,
-      university: attendee.universityName
+      university: attendee.universityName,
+      seat: "DUMMY SEAT"
     }));
 
     if (accessibilityRequirements.length > 0) {
       csvContent += 'Accessibility Requirements:\n';
-      csvContent += 'Requirement:,Details:,Student Name:,Student Email:,University:\n';
+      csvContent += 'Requirement:,Details:,Student Name:,Student Email:,University:,Seat:\n';
       accessibilityRequirements.forEach(req => {
-        csvContent += `${escapeCsvField(req.requirement)},${escapeCsvField(req.details)},${escapeCsvField(req.studentName)},${escapeCsvField(req.studentEmail)},${escapeCsvField(req.university)}\n`;
+        csvContent += `${escapeCsvField(req.requirement)},${escapeCsvField(req.details)},${escapeCsvField(req.studentName)},${escapeCsvField(req.studentEmail)},${escapeCsvField(req.university)},SEAT\n`;
       });
     }
 
@@ -147,7 +149,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
     const url = URL.createObjectURL(blob);
     
     link.setAttribute('href', url);
-    link.setAttribute('download', `site_attendee_data_${siteName}.csv`);
+    link.setAttribute('download', `site_attendee_data_${attendees[0].siteName}.csv`);
     link.style.visibility = 'hidden';
     
     document.body.appendChild(link);
@@ -158,6 +160,9 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
   };
 
   const downloadPDF = async () => {
+    let attendees = attendeesList;
+    if (siteOption.value) attendees = attendeesList.filter((attendee) => attendee.siteId === parseInt(siteOption.value));
+
     // Initialize PDF document
     const doc = new jsPDF();
     let yPos = 20;
@@ -168,13 +173,13 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
     yPos += 15;
   
     doc.setFontSize(12);
-    doc.text(`Site Name: ${attendeesList[0].siteName}`, 10, yPos);
+    doc.text(`Site Name: ${attendees[0].siteName}`, 10, yPos);
     yPos += 10;
   
-    doc.text(`Site capacity: ${attendeesList[0].siteCapacity}`, 10, yPos);
+    doc.text(`Site capacity (Attendees): ${attendees[0].siteCapacity}`, 10, yPos);
     yPos += 15;
 
-    doc.text(`Number of Attendees: ${attendeesList.length}`, 10, yPos);
+    doc.text(`Number of Attendees: ${attendees.length}`, 10, yPos);
     yPos += 15;
   
     // T-shirt quantities
@@ -190,7 +195,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
     const tshirtCounts: TShirtCounts = {};
     uniqueSizes.forEach(size => tshirtCounts[size] = { male: 0, female: 0 });
     
-    attendeesList.forEach((attendee: AttendeesDetails) => {
+    attendees.forEach((attendee: AttendeesDetails) => {
       if (attendee.tshirtSize && attendee.tshirtSize !== "") {
         const size = attendee.tshirtSize.slice(1);
         const type = attendee.tshirtSize.startsWith('M') ? 'male' : 'female';
@@ -214,20 +219,19 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
       ],
       theme: 'grid',
       styles: { fontSize: 10, cellPadding: 2 },
-      headStyles: { fillColor: [200, 220, 255] }
+      headStyles: { fillColor: [102, 136, 210] }
     });
   
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     yPos = (doc as any).lastAutoTable.finalY + 15;
   
     // Process dietary requirements
-    const dietaryRequirements = attendeesList
-      .filter((attendee: AttendeesDetails) => {
+    const dietaryRequirements = attendees.filter((attendee: AttendeesDetails) => {
         if (attendee.dietaryNeeds === "None" && !attendee.allergies) return false;
         if ((!attendee.dietaryNeeds || attendee.dietaryNeeds === "None") && attendee.allergies === "None") return false;
         return attendee.dietaryNeeds || attendee.allergies;
       })
-      .map(attendee => {
+      .map((attendee) => {
         const dietaryLabel = dietaryOptions.find(
           option => option.value === attendee.dietaryNeeds
         )?.label || attendee.dietaryNeeds;
@@ -242,7 +246,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
           university: attendee.universityName
         };
       })
-      .filter(req => {
+      .filter((req) => {
         if (!req.details || req.details === "None") return false;
         if (req.details.includes("{}") && req.details.includes("(Allergies: None)")) return false;
         if (req.details === "{}") return false;
@@ -285,7 +289,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
         body: dietaryTableData,
         theme: 'grid',
         styles: { fontSize: 10, cellPadding: 2 },
-        headStyles: { fillColor: [200, 220, 255] }
+        headStyles: { fillColor: [102, 136, 210] }
       });
   
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -293,61 +297,63 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
     }
   
     // Process accessibility requirements
-    const accessibilityRequirements = attendeesList
-      .filter(attendee => 
-        attendee.accessibilityNeeds && 
-        attendee.accessibilityNeeds !== "None"
-      )
-      .map(attendee => ({
-        requirement: 'Accessibility',
-        details: attendee.accessibilityNeeds || '',
-        studentName: attendee.name,
-        studentEmail: attendee.email,
-        university: attendee.universityName
-      }));
-  
+    const accessibilityRequirements = attendees.filter((attendee) => 
+      attendee.accessibilityNeeds && 
+      attendee.accessibilityNeeds !== "None"
+    )
+    .map((attendee) => ({
+      requirement: attendee.accessibilityNeeds || 'Accessibility', // Use the actual need as the requirement type
+      details: attendee.accessibilityNeeds || '',
+      studentName: attendee.name,
+      studentEmail: attendee.email,
+      university: attendee.universityName,
+      seat: "DUMMY SEAT",
+    }));
+
     if (accessibilityRequirements.length > 0) {
-      doc.text("Accessibility Requirements:", 10, yPos);
-      yPos += 5;
-  
-      // Group accessibility requirements
-      const groupedAccessibility = accessibilityRequirements.reduce((acc, curr) => {
-        const key = curr.details;
-        if (!acc[key]) acc[key] = { details: curr.details, students: [], count: 0 };
-        acc[key].students.push({
-          name: curr.studentName,
-          email: curr.studentEmail,
-          university: curr.university
-        });
-        acc[key].count++;
-        return acc;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }, {} as Record<string, { details: string, students: any[], count: number }>);
-  
-      const accessibilityTableData = Object.values(groupedAccessibility).flatMap(group => {
-        return group.students.map((student, index) => [
-          index === 0 ? 'Wheelchair access' : '',
-          index === 0 ? group.count : '',
-          group.details,
-          student.name,
-          student.email,
-          student.university
-        ]);
+    doc.text("Accessibility Requirements:", 10, yPos);
+    yPos += 5;
+
+    // Group accessibility requirements by type of need
+    const groupedAccessibility = accessibilityRequirements.reduce((acc, curr) => {
+      const key = curr.details;
+      if (!acc[key]) acc[key] = { details: curr.details, students: [], count: 0 };
+      acc[key].students.push({
+        name: curr.studentName,
+        email: curr.studentEmail,
+        university: curr.university,
+        seat: curr.seat,
       });
-  
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (doc as any).autoTable({
-        startY: yPos,
-        head: [['Requirement', 'Quantity', 'Details', 'Student', 'Email', 'University']],
-        body: accessibilityTableData,
-        theme: 'grid',
-        styles: { fontSize: 10, cellPadding: 2 },
-        headStyles: { fillColor: [200, 220, 255] }
-      });
+      acc[key].count++;
+      return acc;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }, {} as Record<string, { details: string, students: any[], count: number }>);
+
+    const accessibilityTableData = Object.values(groupedAccessibility).flatMap(group => {
+      return group.students.map((student, index) => [
+        index === 0 ? group.details : '', // Display the type of requirement only once per group
+        index === 0 ? group.count : '',   // Display the count only once per group
+        student.name,
+        student.email,
+        student.university,
+        student.seat,
+      ]);
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (doc as any).autoTable({
+      startY: yPos,
+      head: [['Requirement', 'Quantity', 'Student', 'Email', 'University', 'Seat']],
+      body: accessibilityTableData,
+      theme: 'grid',
+      styles: { fontSize: 10, cellPadding: 2 },
+      headStyles: { fillColor: [102, 136, 210] }
+    });
     }
+
   
     // Save the PDF
-    doc.save(`site_attendee_data_${attendeesList[0].siteName}.pdf`);
+    doc.save(`site_attendee_data_${attendees[0].siteName}.pdf`);
     return true;
   };
   
@@ -358,7 +364,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
       downloadPDF={downloadPDF}
       downloadQuestion="Are you sure you want to see the attendees' details for this site?"
       isSiteDownload={true}
-      hasAttendeesToDownload={attendeesList.length > 0}
+      hasAttendeesToDownload={siteOption.value ? attendeesList.filter((attendee) => attendee.siteId === parseInt(siteOption.value)).length > 0 : attendeesList.length > 0}
     />
   )
 }

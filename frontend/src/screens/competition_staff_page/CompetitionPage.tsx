@@ -299,6 +299,8 @@ export const CompetitionPage: FC = () => {
           {buttonConfiguration.enableAttendeesButtons && (
             <AttendeesPageButtons
               attendeesListState={[attendeesList, setAttendeesList]}
+              universityOption={universityOption}
+              siteOptionsState={[siteOptions, setSiteOptions]}
             />
           )}
 

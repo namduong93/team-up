@@ -19,34 +19,6 @@ interface AssignSeatsProps {
   siteCapacity: number;
 };
 
-// const mockSeatString: string = "Bongo00,Bongo01,Bongo02,Bongo03,Bongo04,Bongo05,Bongo06,Bongo07,Bongo08,Bongo09,Brass00,Brass01,Brass02,Brass03,Brass04,Brass05,Brass06,Brass07,Brass08,Brass09";
-// const mockRooms: Room[] = [
-//   {
-//     roomName: "Bongo",
-//     level: "A",
-//     seatCodes: ["Bongo00", "Bongo01", "Bongo02", "Bongo03", "Bongo04"],
-//     numSeats: 10,
-//   },
-//   {
-//     roomName: "Bongo",
-//     level: "B",
-//     seatCodes: ["Bongo05", "Bongo06", "Bongo07", "Bongo08", "Bongo09"],
-//     numSeats: 10,
-//   },
-//   {
-//     roomName: "Brass",
-//     level: "A",
-//     seatCodes: ["Brass00", "Brass01", "Brass02", "Brass03", "Brass04"],
-//     numSeats: 10,
-//   },
-//   {
-//     roomName: "Brass",
-//     level: "B",
-//     seatCodes: ["Brass05", "Brass06", "Brass07", "Brass08", "Brass09"],
-//     numSeats: 10,
-//   },
-// ];
-
 interface SeatAssignment {
   siteId: number; // ID of the site
   teamSite: string; // e.g. "CSE Building K17"
