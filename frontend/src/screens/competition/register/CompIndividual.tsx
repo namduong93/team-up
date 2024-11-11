@@ -76,7 +76,8 @@ const Asterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
   margin-left: 5px; // Add space between label and asterisk
 `;
-const Text = styled.label`
+
+export const Text = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 20px;

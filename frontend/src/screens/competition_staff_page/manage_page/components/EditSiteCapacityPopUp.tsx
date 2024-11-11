@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import styled from "styled-components";
-import DropdownInputLight from "../../../../components/general_utility/DropDownLight";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 import { NumberInputLight } from "../../../../components/general_utility/NumberInputLight";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
-import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
+import { CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { sendRequest } from "../../../../utility/request";
 import { useParams } from "react-router-dom";
+import { Heading } from "./StaffActionCard";
+import { Text } from "../../../competition/register/CompIndividual";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -27,18 +28,30 @@ const Modal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  min-width: 290px;
-  max-width: 800px;
+  min-width: 200px;
+  max-width: 500px;
+  max-height: 400px;
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 12px;
   padding: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 100%;
+  width: 80%;
   text-align: center;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const View = styled.div`
+  width: 100%;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  justify-content: center;
   align-items: center;
 `;
 
@@ -86,6 +99,17 @@ const Button = styled.button`
   }
 `;
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 200px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+`;
+
 interface EditSiteCapacityPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
@@ -98,7 +122,7 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   onSubmit,
 }) => {
   const { compId } = useParams();
-  const { roles, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext("manage");
+  const { roles, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext("attendees");
   const [selectedSite, setSelectedSite] = useState<{ value: string; label: string }>({label: "", value: "0"});
   const [capacity, setCapacity] = useState<number>(0);
   const [currentCapacity, setCurrentCapacity] = useState<number>(0);
@@ -145,9 +169,6 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
     }
   };
 
-  
-
-
   const handleSubmit = () => {
     // Call onSubmit with the site and capacity
     // onSubmit({label: selectedSite.label, value: parseInt(selectedSite.value)}, capacity);
@@ -157,31 +178,40 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   return (
     <ModalOverlay>
       <Modal>
-        <CloseButton onClick={onClose}>
-          <FaTimes />
-        </CloseButton>
-        <div>{heading}</div>
+        <View>
+          <CloseButton onClick={onClose}>
+            <FaTimes />
+          </CloseButton>
+          <Container>
+            <Heading>{heading}</Heading>
+            <div style={{ display: "flex", alignContent: "center" }}>
+              <Text>
+                <em>Capacity is the number of participants your site can host.</em>
+              </Text>
+            </div>
 
-        {roles.includes(CompetitionRole.Admin) && 
-        <div style={{ width: '300px' }}>
-          <AdvancedDropdown
-            setCurrentSelected={setSelectedSite}
-            optionsState={[siteOptions, setSiteOptions]}
-            style={{ width: "100%" }}
-            isExtendable={false}
-            defaultSearchTerm={selectedSite.label}
-          />
-        </div>
-        
-        }
-        <NumberInputLight
-          label="Provide a capacity"
-          value={currentCapacity}
-          onChange={handleCapacityChange}
-          currentCapacity={currentCapacity}
-        />
+            {roles.includes(CompetitionRole.Admin) && 
+            <div style={{ width: '300px' }}>
+              <AdvancedDropdown
+                setCurrentSelected={setSelectedSite}
+                optionsState={[siteOptions, setSiteOptions]}
+                style={{ width: "100%" }}
+                isExtendable={false}
+                defaultSearchTerm={selectedSite.label}
+              />
+            </div>
+            
+            }
+            <NumberInputLight
+              label="Provide a capacity"
+              value={currentCapacity}
+              onChange={handleCapacityChange}
+              currentCapacity={currentCapacity}
+            />
 
-        <Button onClick={handleSubmit} disabled={capacity <= 0} >Save Changes</Button>
+            <Button onClick={handleSubmit} disabled={capacity <= 0} >Save Changes</Button>
+          </Container>
+        </View>
       </Modal>
     </ModalOverlay>
   );

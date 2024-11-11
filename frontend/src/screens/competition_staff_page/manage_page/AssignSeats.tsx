@@ -567,7 +567,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
     // Tigger the download
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", "seat_assignments.csv");
+    link.setAttribute("download", `seat_assignments_${siteOption.label}.csv`);
     document.body.appendChild(link);
     link.click(); // Trigger download
     document.body.removeChild(link);
@@ -581,10 +581,10 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
   return (
     <ManageContainer>
       <Header>
-        <Title>Manage Seats for CSE Building K17</Title>
+        <Title>Manage Seats for {siteOption.label}</Title>
         <DistributeSeats>
           <SeatCount>Team Seats Available: {seatCount}</SeatCount>
-          {(seatString.length > 0 || rooms.length > 0) &&
+          {(seatString.length > 0 || rooms.length > 0) && teamListToAssign.length > 0 &&
             <AssignSeatsButton 
               actionType="secondary" 
               onClick={distributeSeats} 

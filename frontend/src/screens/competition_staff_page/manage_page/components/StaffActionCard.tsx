@@ -154,7 +154,6 @@ export const Heading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
-  margin-bottom: 10%;
   white-space: pre-wrap;
   word-break: break-word;
 `;
@@ -408,17 +407,24 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     setShowEditCapacity(false);
   };
 
-  const [siteList, setSiteList] = useState<CompetitionSite[] | undefined>();
+  const [siteList, setSiteList] = useState<CompetitionSiteCapacity[] | undefined>();
 
   useEffect(() => {
     const fetchSiteCapacities = async () => {
-      const response = await sendRequest.get<{ site: CompetitionSite[] }>('/competition/site/capacity', { compId, ids: siteOptions.map((siteOption) => siteOption.value) });
-      const { site: sites } = response.data;
-      setSiteList(sites);
+      const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>('/competition/site/capacity', { compId, ids: siteOptions.map((siteOption) => siteOption.value) });
+      const { site: siteCapacities } = response.data;
+      setSiteList(siteCapacities);
     }
 
     fetchSiteCapacities();
   }, []);
+
+  const getSiteCapacity = (): number => {
+    const foundSite = siteList?.find((site) => site.id === parseInt(universityOption.value));
+
+    if (foundSite) return foundSite?.capacity;
+    return 0;
+  };
 
   return (
     <StandardContainerDiv>
@@ -427,7 +433,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
           <BackButton onClick={() => setShowManageSite(false)}>
             <FaChevronLeft /> Back
           </BackButton>
-          <AssignSeats siteName="CSE Building K17" siteCapacity={50} />
+          <AssignSeats siteName={universityOption.label} siteCapacity={getSiteCapacity()} />
         </AssignSeatsPage>
       ) : (
         <>
