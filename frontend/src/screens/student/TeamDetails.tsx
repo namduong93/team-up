@@ -6,7 +6,6 @@ import { EditCompPreferences } from "./components/EditCompPreferences";
 import { backendURL } from "../../../config/backendURLConfig";
 import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
 import { sendRequest } from "../../utility/request";
-import { set } from "date-fns";
 
 const DetailsContainer = styled.div`
   display: flex;
@@ -76,32 +75,30 @@ export const TeamDetails: FC = () => {
       students: StudentInfo[];
     }>();
   const { compId } = useParams();
+  const [participantInfo, setParticipantInfo] = useState<StudentInfo | null>(null);
 
   useEffect(() => {
-    const fetchStudentInfo = async () => {
+    const fetchParticipantInfo = async () => {
       try {
-        const response = await sendRequest.get<{ studentDetails: StudentInfo }>(
+        const response = await sendRequest.get<{ studentInfo: StudentInfo }>(
           '/competition/student/details',
           { compId, }
         );
-        setStudenInfo(response.data.studentDetails);
+        setParticipantInfo(response.data.studentInfo);
       } catch (err) {
         console.log("Error fetching student info", err);
       }
     };
-    fetchStudentInfo();
+    fetchParticipantInfo();
   }, []);
-
-  const [studentInfo, setStudenInfo] =
-    useState<StudentInfo | null>(null);
   
-  const updateStudentInfo = async (studentInfo: StudentInfo) => {
+  const updateParticipantInfo = async (studentInfo: StudentInfo) => {
     try {
-      const response = await sendRequest.put<{ studentDetails: StudentInfo }>(
+      const response = await sendRequest.put<{ studentInfo: StudentInfo }>(
         '/competition/student/details',
         { compId, studentInfo }
       );
-      setStudenInfo(response.data.studentDetails);
+      setParticipantInfo(response.data.studentInfo);
     } catch (err) {
       console.log("Error updating student info", err);
     }
@@ -110,7 +107,7 @@ export const TeamDetails: FC = () => {
   const handleSave = (studentInfo: StudentInfo) => {
     // alert(`Saved details for: ${updatedStudent.name}`);
     // TODO: hook backend to update student's competition preferences
-    updateStudentInfo(studentInfo);
+    updateParticipantInfo(studentInfo);
   };
 
 
@@ -149,16 +146,16 @@ export const TeamDetails: FC = () => {
             preferredContact={student.preferredContact}
             isFirst={index === 0}
             onEdit={() =>
-              setStudenInfo(student)
+              setParticipantInfo(student)
             }
           />
         ))}
       </StudentsContainer>
-      {studentInfo && (
+      {participantInfo && (
         <EditCompPreferences
-          student={studentInfo}
+          student={participantInfo}
           onSave={handleSave}
-          onClose={() => setStudenInfo(null)}
+          onClose={() => setParticipantInfo(null)}
         />
       )}
     </DetailsContainer>

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
 import styled from "styled-components";
 import { FormLabel, Descriptor, yearOptions, Text, DoubleInputContainer, Colon } from "../../competition/register/CompIndividual";
@@ -138,6 +138,10 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
     onClose();
     return true;
   };
+
+  useEffect(() => {
+    console.log(student);
+  },[])
 
   return (
     <ModalOverlay>
