@@ -119,7 +119,7 @@ export const CompetitionPage: FC = () => {
   });
   ////
   const [siteOptions, setSiteOptions] = useState([{ value: '', label: '' }]);
-  const [universityOptions, setUniversityOptions] = useState([{ value: '', label: '' }]);
+
 
   useEffect(() => {
     const fetchCompetitionDetails = async () => {
@@ -182,15 +182,12 @@ export const CompetitionPage: FC = () => {
         universities: Array<{ id: number; name: string }>;
       }>("/universities/list");
       const { universities } = response.data;
-
-      const uniOptions = [
+      setOptions([
         ...universities.map(({ id, name }) => ({
           value: String(id),
           label: name,
         })),
-      ];
-      setUniversityOptions(uniOptions);
-      setOptions(uniOptions);
+      ]);
 
 
       // TODO: Change the default to the users' own university
@@ -259,9 +256,6 @@ export const CompetitionPage: FC = () => {
   }>({ value: "", label: "" });
 
 
-  useEffect(() => {
-    setUniversityOption(options[0]);
-  }, [options]);
 
   return (
     <OverflowFlexBackground>
@@ -399,7 +393,6 @@ export const CompetitionPage: FC = () => {
             registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
             teamListState: [teamList, setTeamList],
             universityOption,
-            universityOptionsState: [universityOptions, setUniversityOptions],
 
             setFilterOptions,
             setSortOptions,
@@ -412,7 +405,6 @@ export const CompetitionPage: FC = () => {
             staffListState: [staffList, setStaffList],
             compDetails,
             siteOptionsState: [siteOptions, setSiteOptions],
-            dropdownOptionsState: [options, setOptions]
           }}
         />
       </MainPageDiv>
