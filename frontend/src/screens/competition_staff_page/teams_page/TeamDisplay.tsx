@@ -6,6 +6,7 @@ import Fuse from "fuse.js";
 import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { DRAG_ANIMATION_DURATION, TeamCard } from "./components/TeamCard";
 import { ThirdStepPopUp } from "../../student/components/ThirdStepPopUp";
+
 import { LayoutGroup, motion, PanInfo } from "framer-motion";
 import { ResponsiveActionButton } from "../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { FaSave } from "react-icons/fa";

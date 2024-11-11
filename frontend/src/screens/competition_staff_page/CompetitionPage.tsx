@@ -44,6 +44,7 @@ export interface CompetitionDetails {
   otherSiteLocations?: OtherSiteLocation[];
   code?: string;
   region: string;
+  information?: string;
 }
 
 export const fetchTeams = async (
@@ -116,6 +117,7 @@ export const CompetitionPage: FC = () => {
     otherSiteLocations: [],
     code: "",
     region: "Unknown",
+    information: "",
   });
   ////
   const [siteOptions, setSiteOptions] = useState([{ value: '', label: '' }]);
@@ -262,6 +264,9 @@ export const CompetitionPage: FC = () => {
 
 
 
+  useEffect(() => {
+    setUniversityOption(options[0]);
+  }, [options]);
 
   useEffect(() => {
     setUniversityOption(options[0]);
@@ -405,6 +410,7 @@ export const CompetitionPage: FC = () => {
             registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
             teamListState: [teamList, setTeamList],
             universityOption,
+            universityOptionsState: [universityOptions, setUniversityOptions],
 
             setFilterOptions,
             setSortOptions,
@@ -418,7 +424,6 @@ export const CompetitionPage: FC = () => {
             compDetails,
             siteOptionsState: [siteOptions, setSiteOptions],
             dropdownOptionsState: [options, setOptions],
-            universityOptionsState: [universityOptions, setUniversityOptions],
           }}
         />
       </MainPageDiv>

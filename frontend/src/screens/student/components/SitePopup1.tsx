@@ -106,9 +106,9 @@ export const SitePopup1: React.FC<FirstStepPopUpProps> = ({
         </CloseButton>
         <div>{heading}</div>
         <span style={{ marginBottom: "20px" }}>
-          Your Coach will review <br /> your change, and your team
+          Your Coach will review <br /> your change, where you will
           <br />
-          will receive a notification <br /> of the results
+          receive a notification <br /> with the results of the review
         </span>
         <AdvancedDropdown
           setCurrentSelected={setInputOption}

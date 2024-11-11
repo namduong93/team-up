@@ -99,10 +99,10 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean) =>
     buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
     studentsState: [students, setStudents],
     attendeesListState: [attendeesList, setAttendeesList],
-    compDetails,
     universityOptionsState: [universityOptions, setUniversityOptions],
     siteOptionsState: [siteOptions, setSiteOptions],
     dropdownOptionsState: [dropdownOptions, setDropdownOptions],
+    compDetails,
   } = context;
 
   useEffect(() => {

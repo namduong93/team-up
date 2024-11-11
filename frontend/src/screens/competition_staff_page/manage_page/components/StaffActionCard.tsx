@@ -22,10 +22,10 @@ import { useParams } from "react-router-dom";
 import { Announcement } from "../../../../../shared_types/Competition/staff/Announcement";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 
-import {
-  CompetitionSite,
-  CompetitionSiteCapacity,
-} from "../../../../../shared_types/Competition/CompetitionSite";
+import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
+import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
+import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
+import { CompetitionDetails } from "../../../competition/register/CompInformation";
 
 type ActionType =
   | "code"
@@ -189,7 +189,14 @@ The ICPC is the premier global programming competition conducted by and for the 
 
 In 2021, more than 50,000 of the finest students in computing disciplines from over 3,000 universities competed worldwide in the regional phases of this contest. We conduct ICPC contests for the South Pacific region, with top teams qualifying to the World Finals.
 
-The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
+The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)`
+
+const Title2 = styled.h2`
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  white-space: pre-wrap;
+  word-break: break-word;
 `;
 
 export const DEFAULT_REGO_FIELDS = {
@@ -197,7 +204,7 @@ export const DEFAULT_REGO_FIELDS = {
   enableNationalPrizesField: true,
   enableInternationalPrizesField: true,
   enableRegionalParticipationField: true,
-};
+}
 
 export const StaffActionCard: FC<StaffActionCardProps> = ({
   staffRoles,
@@ -209,6 +216,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [showContactBio, setShowContactBio] = useState(false);
   const [showEditCapacity, setShowEditCapacity] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
+  const [showEditComp, setShowEditComp] = useState(false);
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
@@ -269,6 +277,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       setShowContactBio(true);
     } else if (actionType === "registration") {
       setShowEditRego(true);
+    } else if (actionType === "competition") {
+      setShowEditComp(true);
+      // setShowEditRego(true);
     } else if (actionType === "capacity") {
       setShowEditCapacity(true);
     }
@@ -388,8 +399,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  // currently it's persisting the entries, so I don't know if you want
-  // it to do that or not, feel free to call something from backend or something
   const [editCourse, setEditCourse] = useState<EditCourse>({
     [CourseCategory.Introduction]: "",
     [CourseCategory.DataStructures]: "",
@@ -397,7 +406,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     [CourseCategory.ProgrammingChallenges]: "",
   });
 
-  // updates the editCourse object with the user's input
   const handleEditCourseChange = (category: CourseCategory, value: string) => {
     setEditCourse((prevEditCourse) => ({
       ...prevEditCourse,
@@ -413,13 +421,11 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       return;
     }
     const fetchRegoFields = async () => {
-      const response = await sendRequest.get<{ regoFields: EditRego }>(
-        "/competition/staff/rego_toggles",
-        { compId, universityId: universityOption.value }
-      );
+      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
+        { compId, universityId: universityOption.value });
       const { regoFields: receivedRegoFields } = response.data;
       setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
-    };
+    }
     fetchRegoFields();
   }, [universityOption]);
 
@@ -472,6 +478,93 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
     if (foundSite) return foundSite?.capacity;
     return 0;
+  };
+
+  // TO-DO: obtain the competition information from the
+  const [competitionInfo, setCompetitionInfo] =
+    useState<CompetitionInformation>({
+      information: "",
+      name: "",
+      region: "",
+      timeZone: "",
+      startDate: "",
+      startTime: "",
+      start: "",
+      earlyBird: null,
+      earlyBirdDate: "",
+      earlyBirdTime: "",
+      early: "",
+      generalDate: "",
+      generalTime: "",
+      general: "",
+      code: "",
+      siteLocations: [],
+      otherSiteLocations: [],
+    });
+  
+  useEffect(() => {
+    const fetchCompetitionInfo = async () => {
+      try {
+        const response = await sendRequest.get<{competition: CompetitionDetails}>("/competition/details", { compId });
+        const competitionData = response.data.competition;
+
+        const competitionDetails: CompetitionInformation = {
+          name: competitionData.name,
+          early: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString() : "",
+          earlyBirdDate: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[0] : "",
+          earlyBirdTime: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[1].split('.')[0] : "",
+          earlyBird: competitionData.earlyRegDeadline ? false : true,
+          general: new Date(competitionData.generalRegDeadline).toISOString(),
+          generalDate: new Date(competitionData.generalRegDeadline).toISOString().split('T')[0],
+          generalTime: new Date(competitionData.generalRegDeadline).toISOString().split('T')[1].split('.')[0],
+          start: new Date(competitionData.startDate).toISOString(),
+          startDate: new Date(competitionData.startDate).toISOString().split('T')[0],
+          startTime: new Date(competitionData.startDate).toISOString().split('T')[1].split('.')[0],
+          code: competitionData.code ? competitionData.code : "",
+          region: competitionData.region,
+          siteLocations: competitionData.siteLocations ? competitionData.siteLocations : [],
+          otherSiteLocations: competitionData.otherSiteLocations ? competitionData.otherSiteLocations : [],
+          information: competitionData.information,
+          timeZone: "Australia/Sydney", // hardcoded timezone
+        };
+
+        setCompetitionInfo(competitionDetails);
+      } catch (err: unknown) {
+        console.error(err);
+      }
+    };
+    fetchCompetitionInfo();
+    console.log(1);
+    console.log(competitionInfo);
+  }, []);
+
+  const handleCompEditSubmit = async (
+    competitionInfo: CompetitionInformation
+  ) => {
+    const newCompetitionDetails = {
+      id: compId,
+      name: competitionInfo.name,
+      teamSize: 3, // harcoded data because current type in here dont have team size
+      earlyRegDeadline: new Date(competitionInfo.early).getTime(),
+      generalRegDeadline: new Date(competitionInfo.general).getTime(),
+      startDate: new Date(competitionInfo.start).getTime(),
+      siteLocations: competitionInfo.siteLocations,
+      code: competitionInfo.code,
+      region: competitionInfo.region,
+      information: competitionInfo.information,
+    };
+
+    try {
+      await sendRequest.put('/competition/system_admin/update', newCompetitionDetails);
+    } catch (err) {
+      console.error("Error updating competition details", err);
+    }
+    console.log(competitionInfo);
+    // TO-DO: send the EditRego to backend for storage
+    await sendRequest.post('/competition/staff/update_rego_toggles',
+      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
+    console.log(regoFields);
+    console.log("submitted");
   };
 
   return (
@@ -532,6 +625,12 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
 
           {showEditRego && (
             <EditCompRegoPopUp
+              heading={
+                <Title2>
+                  Please select the fields you would like to {"\n"} to remove
+                  from the Competition Registration Form
+                </Title2>
+              }
               onClose={() => setShowEditRego(false)}
               regoFields={regoFields}
               setRegoFields={setRegoFields}
@@ -546,6 +645,15 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
               heading={"Update Site Capacities"}
               onClose={() => setShowEditCapacity(false)}
               onSubmit={handleSiteCapacityChange}
+            />
+          )}
+
+          {showEditComp && (
+            <EditCompDetailsPopUp
+              onClose={() => setShowEditComp(false)}
+              competitionInfo={competitionInfo}
+              setCompetitionInfo={setCompetitionInfo}
+              onSubmit={handleCompEditSubmit}
             />
           )}
         </>
