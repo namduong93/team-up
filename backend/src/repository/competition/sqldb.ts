@@ -505,8 +505,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     `;
     const currentTeamResult = await this.pool.query(currentTeamQuery, [userId, compId, university.id]);
 
-    const teamQuery = `
-      SELECT name, participants, competition_coach_id FROM competition_teams
+    const teamQuery = `SELECT 
+      (CASE WHEN pending_name IS NULL THEN name ELSE pending_name END) AS "teamName",
+      participants, competition_coach_id FROM competition_teams
       WHERE id = $1 AND competition_id = $2 AND university_id = $3
     `;
     const teamResult = await this.pool.query(teamQuery, [teamId, compId, university.id]);
@@ -565,7 +566,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         throw new DbError(DbError.Query, 'Could not leave team.');
       }
     }
-    return { teamName: teamResult.rows[0].name };
+    return { teamName: teamResult.rows[0].teamName };
   }
 
   /**
