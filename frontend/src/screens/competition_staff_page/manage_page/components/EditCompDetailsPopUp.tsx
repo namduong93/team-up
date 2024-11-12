@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { DoubleInputContainer } from "../../../competition/register/CompIndividual";
-import { FaTimes } from "react-icons/fa";
+import { FaSave, FaTimes } from "react-icons/fa";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import TextInput from "../../../../components/general_utility/TextInput";
 import DropdownInput from "../../../../components/general_utility/DropDownInput";
@@ -18,6 +18,7 @@ import ReactMarkdownEditorLite from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
 import { dateToUTC, formatDate } from "../../../competition/creation/util/formatDate";
+import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -394,7 +395,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     }
   };
 
- 
+  const theme = useTheme();
 
   return (
     <ModalOverlay>
@@ -563,11 +564,13 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
         </RowContainer2>
 
         <ButtonContainer>
-          <ResponsiveActionButton
+          <TransparentResponsiveButton
+            style={{ height: '33px', backgroundColor: theme.colours.primaryLight, maxWidth: '160px' }}
+            icon={<FaSave />}
             actionType="primary"
             label="Save Changes"
-            question="Are you sure you want to change your competition details?"
-            handleSubmit={handleSubmit}
+            // question="Are you sure you want to change your competition details?"
+            onClick={handleSubmit}
           />
         </ButtonContainer>
       </Modal>

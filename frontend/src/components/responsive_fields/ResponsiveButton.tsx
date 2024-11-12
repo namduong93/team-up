@@ -29,7 +29,7 @@ export const SortButton = styled.button<{ $isSortOpen: boolean }>`
 
 
 interface ResponsiveButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
-  isOpen: boolean;
+  isOpen?: boolean;
   icon: ReactNode;
   label: string;
 }

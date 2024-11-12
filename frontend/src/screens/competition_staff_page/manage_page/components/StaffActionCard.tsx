@@ -555,6 +555,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
   const handleCompEditSubmit = async (
     competitionInfo: CompetitionInformation
   ) => {
+    try {
     const newCompetitionDetails = {
       id: compId,
       name: competitionInfo.name,
@@ -568,15 +569,14 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
       information: competitionInfo.information,
     };
 
-    try {
       await sendRequest.put('/competition/system_admin/update', newCompetitionDetails);
     } catch (err) {
       console.error("Error updating competition details", err);
     }
     console.log(competitionInfo);
     // TO-DO: send the EditRego to backend for storage
-    await sendRequest.post('/competition/staff/update_rego_toggles',
-      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
+    // await sendRequest.post('/competition/staff/update_rego_toggles',
+    //   { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
   };
 
   return (
