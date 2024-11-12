@@ -15,9 +15,11 @@ import { NarrowStaffAccessCard } from "./NarrowStaffAccessCard";
 import { StaffAccessButtons } from "./StaffAccessButtons";
 import { sendRequest } from "../../utility/request";
 import { UserAccess } from "../../../shared_types/User/User";
+import { fetchStaffRequests } from "./util/fetchStaffRequests";
 
 export interface StaffAccessCardProps extends React.HTMLAttributes<HTMLDivElement> {
   staffDetails: StaffInfo;
+  staffListState: [StaffInfo[], React.Dispatch<React.SetStateAction<StaffInfo[]>>];
 }
 
 const STAFF_DISPLAY_SORT_OPTIONS = [
@@ -68,17 +70,7 @@ export const StaffAccounts: FC = () => {
   useEffect(() => {
     setSortOption(STAFF_DISPLAY_SORT_OPTIONS[0].value);
     setFilterOptions(STAFF_DISPLAY_FILTER_OPTIONS);
-    const fetchStaffRequests= async () => {
-      try {
-        const response = await sendRequest.get<{staffRequests: Array<StaffInfo>}>("/user/staff_requests");
-        const staffList = response.data.staffRequests;
-        setStaffList(staffList);
-      }
-      catch (error) {
-        console.error("Error fetching staff requests list: ", error);
-      }
-    };
-    fetchStaffRequests();
+    fetchStaffRequests(setStaffList);
   }, []);
 
   const filteredStaff = staffList.filter((staffDetails) => {
@@ -196,8 +188,9 @@ export const StaffAccounts: FC = () => {
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }, index) => (
                 <NarrowStaffAccessCard 
-                  key={`staff-narrow-${index}`}  
+                  key={`staff-wide-${staffDetails.userId}`}  
                   staffDetails={staffDetails} 
+                  staffListState={[staffList, setStaffList]}
                 />
               ))
             ) : (
@@ -211,8 +204,9 @@ export const StaffAccounts: FC = () => {
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }, index) => (
                 <WideStaffAccessCard 
-                  key={`staff-wide-${index}`}  
+                  key={`staff-wide-${staffDetails.userId}`}  
                   staffDetails={staffDetails} 
+                  staffListState={[staffList, setStaffList]}
                 />
               ))
             ) : (

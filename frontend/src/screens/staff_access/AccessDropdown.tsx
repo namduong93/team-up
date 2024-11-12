@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserAccess } from "../../../shared_types/User/User";
 import { sendRequest } from "../../utility/request";
@@ -73,6 +73,10 @@ export const AccessDropdown: FC<AccessDropdownProps> = ({ staffId, currentAccess
       console.error("Error updating staff access: ", error);
     }
   };
+
+  useEffect(() => {
+    setSelectedAccess(currentAccess);
+  }, [currentAccess]);
 
   return (
     <StyledDropdown $access={selectedAccess} value={selectedAccess} onChange={handleChange}>

@@ -8,6 +8,7 @@ import { sendRequest } from "../../utility/request";
 
 export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,
+  staffListState: [staffList, setStaffList],
   ...props
 }) => {
 
@@ -15,6 +16,12 @@ export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
     if(userId) {
       try {
         await sendRequest.post("/user/staff_requests", { staffRequests: [{ userId, access: newAccess }] });
+        const userIndex = staffList.findIndex((staff) => staff.userId === userId);
+        setStaffList([
+          ...staffList.slice(0, userIndex),
+          { ...staffList[userIndex], userAccess: newAccess },
+          ...staffList.slice(userIndex + 1)
+        ]);
       }
       catch (error) {
         console.error("Error updating staff access: ", error);
