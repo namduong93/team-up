@@ -62,6 +62,8 @@ declare module 'styled-components' {
           pending: string;
           unregistered: string;
           registered: string;
+          levelA: string;
+          levelB: string;
       };
       roles: {
           participantBackground: string;
