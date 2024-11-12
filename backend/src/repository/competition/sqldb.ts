@@ -19,7 +19,7 @@ import { CourseCategory } from "../../../shared_types/University/Course.js";
 import { error } from "console";
 import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole.js";
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
-import { EditRego } from "../../../shared_types/Competition/staff/Edit.js";
+import { EditCourse, EditRego } from "../../../shared_types/Competition/staff/Edit.js";
 import { CompetitionInformation } from "../../../shared_types/Competition/CompetitionDetails.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
@@ -27,6 +27,43 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
   constructor(pool: Pool) {
     this.pool = pool;
+  }
+
+  competitionStaffUpdateCourses = async (compId: number, editCourse: EditCourse, universityId: number) => {
+    for (const [courseCategory, courseName] of Object.entries(editCourse)) {
+      try {
+        await this.pool.query(
+          `INSERT INTO courses (
+              competition_id,
+              university_id,
+              name,
+              category
+            )
+            VALUES (${compId}, ${universityId},
+              '${courseName}', '${courseCategory}'
+            )
+            ON CONFLICT (competition_id, university_id, category)
+            DO UPDATE
+            SET
+              name = '${courseName}'
+            `
+        );
+      } catch (error: unknown) {
+        throw new DbError(DbError.Insert, 'Error inserting / updating course');
+      }
+    }
+
+    return;
+  }
+
+  getUserUniversityId = async (userId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT university_id as "universityId"
+      FROM users AS u
+      WHERE u.id = ${userId}`
+    );
+
+    return dbResult.rows[0].universityId;
   }
   
   competitionInformation = async (compId: number) => {

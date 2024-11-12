@@ -14,8 +14,8 @@ export class UniversityController {
    * Handles the request to retrieve university courses for a specific user.
    */
   universityCourses = httpErrorHandler(async (req: Request, res: Response) => {
-    const { userId } = req.query;
-    const courses = await this.universityService.universityCourses(parseInt(userId as string));
+    const { userId, code } = req.query as { userId: string, code: string };
+    const courses = await this.universityService.universityCourses(parseInt(userId), code);
 
     res.json({ courses });
     return;

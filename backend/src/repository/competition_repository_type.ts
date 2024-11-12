@@ -10,13 +10,15 @@ import { ParticipantTeamDetails, TeamDetails } from "../../shared_types/Competit
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { AttendeesDetails } from "../../shared_types/Competition/staff/AttendeesDetails.js";
-import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
 import { Announcement } from "../../shared_types/Competition/staff/Announcement.js";
 import { CompetitionInformation } from "../../shared_types/Competition/CompetitionDetails.js";
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';
 
 export interface CompetitionRepository {
+  competitionStaffUpdateCourses(compId: number, editCourse: EditCourse, universityId: number): Promise<void>;
+  getUserUniversityId(userId: number): Promise<number>;
   competitionInformation(compId: number): Promise<CompetitionInformation>;
   competitionGetCoordinatingSiteId(userId: number, siteId: number): Promise<number>;
   competitionSiteCapacityUpdate(siteId: number, capacity: number): Promise<void>;

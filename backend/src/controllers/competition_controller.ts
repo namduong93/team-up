@@ -6,7 +6,7 @@ import { CompetitionAccessLevel, CompetitionStaff } from "../models/competition/
 import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
-import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
@@ -14,6 +14,17 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionStaffUpdateCourses = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query as { userId: string };
+    const { compId, editCourse, universityId } = req.body as {
+      compId: number, editCourse: EditCourse, universityId?: number
+    };
+
+    await this.competitionService.competitionStaffUpdateCourses(
+      parseInt(userId), compId, editCourse, universityId);
+
+  });
 
   competitionInformation = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query as { userId: string, compId: string };

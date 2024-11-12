@@ -17,8 +17,8 @@ export class UniversityService {
    * @param userId The ID of the user whose university courses are to be retrieved.
    * @returns A promise that resolves to the list of university courses for the specified user.
    */
-  universityCourses = async (userId: number) => {
-    return await this.universityRepository.universityCourses(userId);
+  universityCourses = async (userId: number, code: string) => {
+    return await this.universityRepository.universityCourses(userId, code);
   }
 
   /**

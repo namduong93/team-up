@@ -14,7 +14,7 @@ import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { CompetitionRole } from "../../shared_types/Competition/CompetitionRole.js";
 import { Announcement } from "../../shared_types/Competition/staff/Announcement.js";
 import { University } from "../models/university/university.js";
-import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
 import { CompetitionSiteCapacity } from "../../shared_types/Competition/CompetitionSite.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
@@ -67,6 +67,21 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+
+  competitionStaffUpdateCourses = async (userId: number, compId: number, editCourse: EditCourse, universityId?: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      if (!roles.includes(CompetitionUserRole.COACH)) {
+        throw new ServiceError(ServiceError.Auth, 'User is not an Admin or Coach');
+      }
+
+      universityId = await this.competitionRepository.getUserUniversityId(userId);
+    }
+
+    await this.competitionRepository.competitionStaffUpdateCourses(compId, editCourse, universityId);
+    return;
   }
 
   competitionInformation = async (userId: number, compId: number) => {
