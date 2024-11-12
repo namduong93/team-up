@@ -1,6 +1,5 @@
 import React from "react";
-import { TeamDetails } from "../components/TeamCard";
-import { Student } from "../../../student/TeamProfile";
+import { Student, TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 
 export const addStudentToTeam = (
   student: Student,
@@ -13,21 +12,31 @@ export const addStudentToTeam = (
     return false;
   }
   const currentTeam = teamList[currentTeamIndex];
+  const newTeamLevel = (newTeam.students.length > 1
+                      && newTeam.students.every((std) => std.level === 'Level A')
+                      && student.level === 'Level A'
+  ) ? 'Level A' : 'Level B';
+
+  const currentTeamLevel = (
+    currentTeam.students.length >= 4
+    && currentTeam.students.every((std) => std.level === 'Level A' || std.userId === student.userId)
+
+  ) ? 'Level A' : 'Level B';
 
   if (newTeamIndex < currentTeamIndex) {
     setTeamList([
       ...teamList.slice(0, newTeamIndex),
-      { ...newTeam, students: [...newTeam.students, student] },
+      { ...newTeam, teamLevel: newTeamLevel, students: [...newTeam.students, student] },
       ...teamList.slice(newTeamIndex + 1, currentTeamIndex),
-      { ...currentTeam, students: currentTeam.students.filter((currentStudent) => currentStudent.userId !== student.userId) },
+      { ...currentTeam, teamLevel: currentTeamLevel, students: currentTeam.students.filter((currentStudent) => currentStudent.userId !== student.userId) },
       ...teamList.slice(currentTeamIndex + 1)
     ]);
   } else if (currentTeamIndex < newTeamIndex) {
     setTeamList([
       ...teamList.slice(0, currentTeamIndex),
-      { ...currentTeam, students: currentTeam.students.filter((currentStudent) => currentStudent.userId !== student.userId) },
+      { ...currentTeam, teamLevel: currentTeamLevel, students: currentTeam.students.filter((currentStudent) => currentStudent.userId !== student.userId) },
       ...teamList.slice(currentTeamIndex + 1, newTeamIndex),
-      { ...newTeam, students: [...newTeam.students, student] },
+      { ...newTeam, teamLevel: newTeamLevel, students: [...newTeam.students, student] },
       ...teamList.slice(newTeamIndex + 1)
     ])
   } else {

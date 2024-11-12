@@ -152,7 +152,11 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
       return;
     }
     setIsEdited(true);
-  }, [teamData])
+  }, [teamData]);
+
+  useEffect(() => {
+    setTeamData(teamDetails);
+  }, [teamDetails])
 
 
   const handleSaveEdit = async () => {
@@ -205,13 +209,8 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
       </VerticalInfoBarField>
 
       <VerticalInfoBarField>
-        <TeamDetailsLabelSpan $isEditing={isEditing}>Level:</TeamDetailsLabelSpan>
-        {isEditing ?
-        <Select onChange={(e) => setTeamData((p) => ({ ...p, teamLevel: e.target.value }))}>
-          <option selected={teamData.teamLevel === 'Level A'} value={'Level A'}>Level A</option>
-          <option selected={!(teamData.teamLevel === 'Level A')} value={'Level B'}>Level B</option>
-        </Select> :
-        <span>{teamData.teamLevel}</span>}
+        <TeamDetailsLabelSpan>Level:</TeamDetailsLabelSpan>
+        <span>{teamData.teamLevel}</span>
       </VerticalInfoBarField>
       
       <VerticalInfoBarField>

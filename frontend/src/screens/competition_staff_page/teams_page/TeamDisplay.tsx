@@ -40,6 +40,7 @@ const TEAM_DISPLAY_SORT_OPTIONS = [
 const TEAM_DISPLAY_FILTER_OPTIONS = {
   Status: ["Pending", "Unregistered", "Registered"],
   "Team Name Approval": ["Approved", "Unapproved"],
+  "Team Level": ["Level A", "Level B"],
 };
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
@@ -108,6 +109,15 @@ export const TeamDisplay: FC = () => {
             (approvalString === "Approved") === team.teamNameApproved
         )
       ) {
+        return false;
+      }
+    }
+
+    if (filters["Team Level"]) {
+      if (!filters["Team Level"].some(
+        (filterLevel) =>
+          filterLevel === team.teamLevel
+      )) {
         return false;
       }
     }

@@ -46,7 +46,7 @@ const TeamMemberContainerDiv = styled.div`
   height: 100%;
   display: grid;
   grid-template-rows: 100%;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 20% 70% 10%;
   user-select: none;
 `
 
@@ -58,19 +58,43 @@ const StyledUserIcon = styled(FaRegUser)`
   user-select: none;
 `
 
-const CenterTextDiv = styled.div`
+const CenterTextDiv = styled.div<{ $levelChar?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  color: ${({ theme, $levelChar }) => $levelChar &&
+  ($levelChar === 'A' ? theme.access.acceptedText : theme.colours.primaryDark)};
+
+  font-weight: ${({ $levelChar }) => $levelChar && 'bold' };
 `
 
-export const TeamCardMember = ({ memberName }: { memberName: string }) => {
+const TeamLevelDiv = styled.div<{ $levelChar?: string }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: ${({ theme, $levelChar }) => $levelChar === 'A' ? theme.access.acceptedBackground : theme.colours.primaryLight};
+  align-items: center;
+  color: ${({ theme }) => theme.background};
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+`;
+
+export const TeamCardMember = ({ memberName, level }: { memberName: string, level: string }) => {
+
+  const levelChar = level.slice(-1);
 
   return (
   <TeamMemberContainerDiv draggable='false'>
     <StyledUserIcon />
     <CenterTextDiv>
       {memberName}
+    </CenterTextDiv>
+    <CenterTextDiv $levelChar={levelChar} >
+      {levelChar}
     </CenterTextDiv>
   </TeamMemberContainerDiv>
   );
@@ -118,6 +142,7 @@ const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   display: flex;
   align-items: center;
   gap: 2.5%;
+  position: relative;
 `;
 
 const TitleSpan = styled.span`
@@ -375,6 +400,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
   const [infoBarOpen, setInfoBarOpen] = useState(false);
 
   const isEditable = !(roles.includes(CompetitionRole.SiteCoordinator) && !roles.includes(CompetitionRole.Coach) && !roles.includes(CompetitionRole.Admin));
+  const levelChar = teamDetails.teamLevel.slice(-1);
   return (
     <>
     <TeamInfoBar
@@ -399,6 +425,9 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
         <CardHeaderDiv $statusColor={colorMap[status]}>
           <TitleSpan>{teamDetails.teamName}</TitleSpan>
           {!teamDetails.teamNameApproved && <RedTeamNameAlert />}
+          <TeamLevelDiv $levelChar={levelChar} >
+            <span>{levelChar}</span>
+          </TeamLevelDiv>
         </CardHeaderDiv>
     
           <TeamMatesContainerDiv>
@@ -423,7 +452,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
                 onDragTransitionEnd={() => setIsDragging(false)}
                 onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
               >
-                <TeamCardMember memberName={member.name} />
+                <TeamCardMember memberName={member.name} level={member.level} />
               </TeamMemberMotionDiv>
             ))}
           
