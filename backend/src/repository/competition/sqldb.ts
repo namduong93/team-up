@@ -20,12 +20,48 @@ import { error } from "console";
 import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole.js";
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
 import { EditRego } from "../../../shared_types/Competition/staff/Edit.js";
+import { CompetitionInformation } from "../../../shared_types/Competition/CompetitionDetails.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
 
   constructor(pool: Pool) {
     this.pool = pool;
+  }
+  
+  competitionInformation = async (compId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT 
+        c.information AS "information",
+        c.name AS "name",
+        c.region AS "region",
+        c.start_date AS "startDate",
+        c.early_reg_deadline AS "earlyRegDeadline",
+        c.general_reg_deadline AS "generalRegDeadline",
+        c.code AS "code",
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'universityId', cs.university_id,
+            'universityName', uni.name,
+            'siteId', cs.id,
+            'defaultSite', cs.name
+          )
+        ) AS "siteLocations"
+
+      FROM competitions AS c
+      JOIN competition_sites AS cs ON cs.competition_id = c.id
+      JOIN universities AS uni ON uni.id = cs.university_id
+      WHERE c.id = ${compId}
+      GROUP BY c.information, c.name,
+        c.region, c.start_date, c.early_reg_deadline,
+        c.general_reg_deadline, c.code
+      `
+    );
+
+    console.log(dbResult.rows[0]);
+
+    return dbResult.rows[0];
+
   }
   
   competitionSiteCapacityUpdate = async (siteId: number, capacity: number) => {

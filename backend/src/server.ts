@@ -345,6 +345,8 @@ app.get('/competition/site/capacity', competitionController.competitionSiteCapac
 
 app.put('/competition/site/capacity/update', competitionController.competitionSiteCapacityUpdate);
 
+app.get('/competition/information', competitionController.competitionInformation);
+
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })
