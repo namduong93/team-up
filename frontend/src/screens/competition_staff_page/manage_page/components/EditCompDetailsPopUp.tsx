@@ -17,7 +17,7 @@ import {
 import ReactMarkdownEditorLite from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
-import { formatDate } from "../../../competition/creation/util/formatDate";
+import { dateToUTC, formatDate } from "../../../competition/creation/util/formatDate";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -214,13 +214,9 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     if (!startDateInput) {
       return;
     }
-    const utcDate = Date.UTC(startDateInput.getUTCFullYear(), startDateInput.getUTCMonth(),
-                startDateInput.getUTCDate(), startDateInput.getUTCHours(),
-                startDateInput.getUTCMinutes(), startDateInput.getUTCSeconds());
-
     setCompetitionInfo((p) => ({
       ...p,
-      startDate: new Date(utcDate)
+      startDate: dateToUTC(startDateInput)
     }));
   }, [startDateInput]);
 
@@ -228,13 +224,9 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     if (!earlyRegInput) {
       return;
     }
-    const utcDate = Date.UTC(earlyRegInput.getUTCFullYear(), earlyRegInput.getUTCMonth(),
-                earlyRegInput.getUTCDate(), earlyRegInput.getUTCHours(),
-                earlyRegInput.getUTCMinutes(), earlyRegInput.getUTCSeconds());
-
     setCompetitionInfo((p) => ({
       ...p,
-      earlyRegDeadline: new Date(utcDate)
+      earlyRegDeadline: dateToUTC(earlyRegInput)
     }));
   }, [earlyRegInput]);
 
@@ -242,13 +234,9 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     if (!generalRegInput) {
       return;
     }
-    const utcDate = Date.UTC(generalRegInput.getUTCFullYear(), generalRegInput.getUTCMonth(),
-                generalRegInput.getUTCDate(), generalRegInput.getUTCHours(),
-                generalRegInput.getUTCMinutes(), generalRegInput.getUTCSeconds());
-
     setCompetitionInfo((p) => ({
       ...p,
-      generalRegDeadline: new Date(utcDate)
+      generalRegDeadline: dateToUTC(generalRegInput)
     }));
   }, [generalRegInput]);
 

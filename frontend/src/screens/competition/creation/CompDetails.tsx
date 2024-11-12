@@ -9,7 +9,7 @@ import SiteLocationForm from "./components/SiteLocationForm";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import moment from "moment-timezone";
 import DropdownInput from "../../../components/general_utility/DropDownInput";
-import { formatDate } from "./util/formatDate";
+import { dateToUTC, formatDate } from "./util/formatDate";
 import { CompetitionInformation } from "../../../../shared_types/Competition/CompetitionDetails";
 
 const Container = styled.div`
@@ -316,13 +316,9 @@ export const CompetitionDetails: FC = () => {
     if (!startDateInput) {
       return;
     }
-    const utcDate = Date.UTC(startDateInput.getUTCFullYear(), startDateInput.getUTCMonth(),
-                startDateInput.getUTCDate(), startDateInput.getUTCHours(),
-                startDateInput.getUTCMinutes(), startDateInput.getUTCSeconds());
-
     setCompetitionInfo((p) => ({
       ...p,
-      startDate: new Date(utcDate)
+      startDate: dateToUTC(startDateInput)
     }));
   }, [startDateInput]);
 
@@ -330,13 +326,9 @@ export const CompetitionDetails: FC = () => {
     if (!earlyRegInput) {
       return;
     }
-    const utcDate = Date.UTC(earlyRegInput.getUTCFullYear(), earlyRegInput.getUTCMonth(),
-                earlyRegInput.getUTCDate(), earlyRegInput.getUTCHours(),
-                earlyRegInput.getUTCMinutes(), earlyRegInput.getUTCSeconds());
-
     setCompetitionInfo((p) => ({
       ...p,
-      earlyRegDeadline: new Date(utcDate)
+      earlyRegDeadline: dateToUTC(earlyRegInput)
     }));
   }, [earlyRegInput]);
 
@@ -344,15 +336,12 @@ export const CompetitionDetails: FC = () => {
     if (!generalRegInput) {
       return;
     }
-    const utcDate = Date.UTC(generalRegInput.getUTCFullYear(), generalRegInput.getUTCMonth(),
-                generalRegInput.getUTCDate(), generalRegInput.getUTCHours(),
-                generalRegInput.getUTCMinutes(), generalRegInput.getUTCSeconds());
-
     setCompetitionInfo((p) => ({
       ...p,
-      generalRegDeadline: new Date(utcDate)
+      generalRegDeadline: dateToUTC(generalRegInput)
     }));
   }, [generalRegInput]);
+
 
 
   const [isEarlyReg, setIsEarlyReg] = useState(false);
