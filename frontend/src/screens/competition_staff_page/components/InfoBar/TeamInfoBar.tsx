@@ -152,7 +152,11 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
       return;
     }
     setIsEdited(true);
-  }, [teamData])
+  }, [teamData]);
+
+  useEffect(() => {
+    setTeamData(teamDetails);
+  }, [teamDetails])
 
 
   const handleSaveEdit = async () => {
