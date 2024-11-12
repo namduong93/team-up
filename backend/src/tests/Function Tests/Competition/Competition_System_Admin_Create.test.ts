@@ -64,6 +64,7 @@ describe('System Admin Create Function', () => {
       generalRegDeadline: new Date(generalDate),
       startDate: new Date(startDate),
       code: 'TC1',
+      information: null,
       region: 'Australia',
       siteLocations: [{
         universityId: 1,

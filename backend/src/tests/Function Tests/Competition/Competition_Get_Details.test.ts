@@ -70,6 +70,7 @@ describe('Competition Get Details Function', () => {
       generalRegDeadline: new Date(generalDate),
       startDate: new Date(startDate),
       code: 'TC2',
+      information: null,
       region: 'Australia',
       siteLocations: [{
         universityId: 1,

@@ -149,6 +149,8 @@ describe('Competition Team Detail Function', () => {
           level: 'No Preference',
           boersenEligible: true,
           isRemote: true,
+          preferredName: "X",
+          sex: "Male",
           universityCourses: ["4511", "9911", "911"],
           nationalPrizes: 'none',
           internationalPrizes: 'none',
@@ -157,6 +159,8 @@ describe('Competition Team Detail Function', () => {
         },
         {
           userId: null,
+          preferredName: null,
+          sex: null,
           name: null,
           email: null,
           bio: null,
@@ -173,6 +177,8 @@ describe('Competition Team Detail Function', () => {
         },
         {
           userId: null,
+          preferredName: null,
+          sex: null,
           name: null,
           email: null,
           bio: null,
