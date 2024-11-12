@@ -455,7 +455,13 @@ SELECT cu_source.user_id AS src_user_id,
   (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName",
   (ct.pending_site_attending_id IS NULL) AS "siteApproved",
   cs.name AS "teamSite", ct.team_seat AS "teamSeat",
-  cu_source.competition_level AS "teamLevel", c.start_date AS "startDate",
+  (CASE WHEN
+    cu1.competition_level = 'Level A'
+    AND cu2.competition_level = 'Level A'
+    AND cu3.competition_level = 'Level A'
+  THEN 'Level A'
+  ELSE 'Level B' END 
+  ) AS "teamLevel", c.start_date AS "startDate",
   JSON_BUILD_ARRAY(
     JSON_BUILD_OBJECT(
       'userId', u1.id,
