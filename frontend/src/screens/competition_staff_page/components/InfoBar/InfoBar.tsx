@@ -10,18 +10,19 @@ const InfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
   border-radius: 10px;
   overflow: auto;
   right: 0;
-  bottom: 0;
+  bottom: 2.5%;
   z-index: 50;
   /* TODO: add min-height */
   transition: width 0.25s ease, min-width 0.25s ease, background-color 0.25s ease !important;
-  width: ${({ $isOpen }) => $isOpen ? '30%' : '0'};
-  height: 99%;
+  width: ${({ $isOpen }) => $isOpen ? '40%' : '0'};
+  height: 95%;
   max-width: 380px;
   min-width: ${({ $isOpen }) => $isOpen ? '320px' : '0'};
-  background-color: ${({ theme }) => theme.background};
+  background-color: ${({ theme }) => theme.colours.cardBackground};
   color: ${({ theme }) => theme.fonts.colour};
-  border: ${({ $isOpen }) => $isOpen ? '1px' : '0'} solid ${({ theme }) => theme.colours.sidebarLine};
-  
+  border: ${({ $isOpen }) => $isOpen ? '1px' : '0'} solid ${({ theme }) => theme.colours.sidebarBackground};
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.25);
+
   &:focus {
     outline: none;
   }
@@ -44,6 +45,7 @@ const InfoContainer = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  height: 100%;
 `;
 
 export const InfoBar: FC<InfoBarProps> = ({ isOpenState: [isOpen, setIsOpen], children, ...props }) => {

@@ -80,6 +80,7 @@ const RoleLabelDiv = styled.div<{ $role: CompetitionRole }>`
 
   box-sizing: border-box;
   padding-left: 2px;
+  margin-bottom: 5px;
 
   background-color: ${({ theme, $role }) => (
     $role === CompetitionRole.Admin ?
@@ -111,6 +112,7 @@ const AccessLabelDiv = styled.div<{ $access: StaffAccess }>`
 
   box-sizing: border-box;
   padding-left: 2px;
+  margin-bottom: 5px;
 
   background-color: ${({ theme, $access }) => (
     $access === StaffAccess.Accepted ?

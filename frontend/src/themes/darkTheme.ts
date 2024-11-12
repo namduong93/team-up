@@ -29,7 +29,7 @@ export const darkTheme: DefaultTheme = {
     progressEnd: "#283e6c",
     progressStart: "#6688D2",
     progressBackground: "#EBEBEB",
-    cardBackground: "rgb(51, 51, 51, 60%)",
+    cardBackground: "#262626",
   },
   themes: {
     light: "#EBEBEB",
