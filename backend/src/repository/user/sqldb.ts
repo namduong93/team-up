@@ -52,7 +52,7 @@ export class SqlDbUserRepository implements UserRepository {
     const userQuery =
       `INSERT INTO users (name, preferred_name, email, hashed_password, gender, pronouns, tshirt_size, allergies, dietary_reqs, accessibility_reqs,
       user_type, university_id, student_id, user_access)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, &14)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       RETURNING id;
     `;
     const userValues = [
