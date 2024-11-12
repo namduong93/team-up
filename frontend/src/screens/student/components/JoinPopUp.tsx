@@ -83,7 +83,6 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({
 }) => {
   const navigate = useNavigate();
   const [teamCode, setTeamCode] = useState("");
-  const [teamName, setTeamName] = useState("");
   const compId = useParams().compId;
 
   const isButtonDisabled = () => {
@@ -93,21 +92,16 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({
   const handleJoin = () => {
     try {
       const joinTeam = async () => {
-        const response = await sendRequest.post<{ team: string }>(
+        const response = await sendRequest.post<{ teamName: string }>(
           "/competition/team/join",
           { compId, teamCode }
         );
-        const { teamId, teamName } = response.data.team;
-        console.log(team);
-        setTeamName(team);
+        navigate("/dashboard", { state: { joined: true, teamName: response.data.teamName } });
       };
-
       joinTeam();
     } catch (error) {
       console.log(error);
     }
-    console.log("sending: ", teamName);
-    navigate("/dashboard", { state: { joined: true, teamName: teamName } });
   };
 
   return (

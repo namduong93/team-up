@@ -159,7 +159,7 @@ export class CompetitionController {
 
     const teamId = await this.competitionService.competitionTeamJoin(Number(userId), Number(compId), String(teamCode));
 
-    res.json({ teamName: 'teamName' });
+    res.json({ teamName: teamId.teamName });
   });
 
   /**
