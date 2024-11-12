@@ -50,7 +50,7 @@ export const StudentStatus: FC<StudentStatusProps> = ({ children, isMatched = fa
   )
 }
 
-export const WideInfoContainerDiv = styled.div`
+export const WideInfoContainerDiv = styled.div<{ $isHeader?: boolean }>`
   width: 100%;
   box-sizing: border-box;
   border-bottom: 1px solid #D9D9D9;
@@ -58,6 +58,14 @@ export const WideInfoContainerDiv = styled.div`
   font-size: 13px;
   gap: 0.5%;
   min-height: 54px;
+
+  ${({ theme, $isHeader }) => !$isHeader && `&:hover {
+    background-color: ${theme.colours.sidebarBackground};
+  }
+
+  &:hover span {
+    background-color: ${theme.colours.sidebarBackground};
+  }`}
 `;
 
 export const UserNameContainerDiv = styled.div`
@@ -184,7 +192,9 @@ export const StudentInfoDiv: FC<StudentCardProps> = (
       studentInfo={studentInfo}
       isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
     />}
-    <WideInfoContainerDiv onDoubleClick={() => studentInfo && setIsInfoBarOpen((p) => !p)} style={style} {...props}>
+    <WideInfoContainerDiv
+      $isHeader={!studentInfo}
+      onDoubleClick={() => studentInfo && setIsInfoBarOpen((p) => !p)} style={style} {...props}>
        <UserNameContainerDiv>
        {!studentInfo ? <UsernameTextSpan>{name}</UsernameTextSpan> :
       <UserNameGrid >
@@ -255,7 +265,8 @@ const STUDENT_DISPLAY_FILTER_OPTIONS = {
 };
 
 export const StudentDisplay = () => {
-  const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
+  const { filters, sortOption, searchTerm, removeFilter, setFilters,
+    universityOptionState: [universityOption, setUniversityOption],
     setFilterOptions, setSortOptions, studentsState: [students, setStudents] } = useCompetitionOutletContext('students');
   
   const { compId } = useParams();

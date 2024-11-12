@@ -6,7 +6,7 @@ import jsPDF from "jspdf";
 
 interface AttendeesButtonsProps {
   attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
-  universityOption: { value: string; label: string };
+  siteOption: { value: string; label: string };
   siteOptionsState: [Array<{ value: string; label: string }>, React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>];
 };
 
@@ -35,7 +35,7 @@ interface AccessibilityRequirement {
 };
 
 export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
-  { attendeesListState: [attendeesList, setAttendeesList], universityOption: siteOption }) => {
+  { attendeesListState: [attendeesList, setAttendeesList], siteOption: siteOption }) => {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   // Helper function to escape CSV fields that might contain commas

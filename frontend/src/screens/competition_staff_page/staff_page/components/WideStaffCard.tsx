@@ -12,7 +12,7 @@ export const StandardSpan = styled.span``;
 export const WideStaffHeader: FC = () => {
   const theme = useTheme();
   return (
-    <WideInfoContainerDiv style={{
+    <WideInfoContainerDiv $isHeader style={{
       backgroundColor: theme.colours.userInfoCardHeader,
       fontWeight: 'bold'
     }}>

@@ -106,7 +106,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
 export const WideAttendeesHeader: FC = () => {
   const theme = useTheme();
   return (
-    <WideInfoContainerDiv style={{
+    <WideInfoContainerDiv $isHeader style={{
       backgroundColor: theme.colours.userInfoCardHeader,
       fontWeight: 'bold'
     }}>
@@ -221,12 +221,12 @@ const ATTENDEES_DISPLAY_FILTER_OPTIONS = {
 export const AttendeesDisplay: FC = () => {
   const { compId } = useParams();
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
-    universityOption: siteOption,
+    siteOptionState: [siteOption, setSiteOption],
     siteOptionsState: [siteOptions, setSiteOptions],
     dropdownOptionsState: [dropdownOptions, setDropdownOptions],
     setFilterOptions, setSortOptions,
     attendeesListState: [attendeesList, setAttendeesList],
-  } = useCompetitionOutletContext('attendees');
+  } = useCompetitionOutletContext('attendees', undefined, 'site');
 
   useEffect(() => {
     setSortOptions(ATTENDEES_DISPLAY_SORT_OPTIONS);

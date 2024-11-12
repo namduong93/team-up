@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import { LabelSpan } from "../TeamInfoBar";
 import { CopyButton } from "../../../../../components/general_utility/CopyButton";
 import { BooleanStatus } from "../../../attendees_page/AttendeesPage";
@@ -90,6 +90,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
 }) => {
   const theme = useTheme();
   const { compId } = useParams();
+  const cardRef = useRef(null);
   
   const [teamOptions, setTeamOptions] 
   = useState(teamList.map((team) => ({ value: String(team.teamId), label: team.teamName })));
@@ -147,12 +148,23 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
     setIsEdited(false);
   }
 
+  const handleClickEdit = () => {
+    setIsEditingCard((p) => !p);
+  }
+
+  useEffect(() => {
+    cardRef.current 
+    && isEditingCard 
+    && (cardRef.current as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+  }, [isEditingCard, isEdited]);
+
   return (
-    <MemberListItem key={student.userId}>
+    <MemberListItem ref={cardRef} key={student.userId}>
 
       {isEditable && <EditIconButton
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => { setIsEditingCard((p) => !p) }}
+        onClick={handleClickEdit}
         style={{ position: 'absolute', right: 0, top: 0 }}
         >
         <EditIcon />
