@@ -63,8 +63,8 @@ export const WideInfoContainerDiv = styled.div<{ $isHeader?: boolean }>`
     background-color: ${theme.colours.sidebarBackground};
   }
 
-  &:hover span {
-    background-color: ${theme.colours.sidebarBackground};
+  & span {
+    background-color: transparent;
   }`}
 `;
 
@@ -160,6 +160,11 @@ const EmailSpan = styled.span<{ $isHeader: boolean }>`
   display: flex;
   align-items: center;
   position: absolute;
+  transition: background-color 0s;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colours.sidebarBackground};
+  }
 `;
 
 export const StudentInfoDiv: FC<StudentCardProps> = (
