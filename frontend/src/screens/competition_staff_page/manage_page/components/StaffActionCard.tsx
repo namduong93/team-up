@@ -451,7 +451,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
       regoFields,
       universityId: parseInt(universityOption.value),
     });
-    // TO-DO: send the edited courses to backend and store for competition
+    
+    await sendRequest.put('/competition/staff/update_courses',
+      { compId, editCourse, universityId: universityOption.value ? parseInt(universityOption.value) : undefined });
     console.log(editCourse);
     console.log(regoFields);
   };
@@ -575,8 +577,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
     // TO-DO: send the EditRego to backend for storage
     await sendRequest.post('/competition/staff/update_rego_toggles',
       { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
-    console.log(regoFields);
-    console.log("submitted");
   };
 
   return (
