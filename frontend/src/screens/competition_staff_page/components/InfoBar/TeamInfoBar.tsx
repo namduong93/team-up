@@ -128,7 +128,7 @@ const MemberSpan = styled(LabelSpan)`
 const MemberContainer = styled.div`
   width: 100%;
   overflow-y: auto;
-  z-index: 1;
+  /* z-index: 0; */
 `;
 
 const TeamContainer = styled.div`
