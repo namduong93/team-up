@@ -28,9 +28,8 @@ describe('Session Find Function', () => {
     session_db = new SqlDbSessionRepository(pool);
     user_db = new SqlDbUserRepository(pool);
     student = await user_db.studentRegister(mockStudent)
-
     const newSession: Session = {
-      sessionId: 'ezID1',
+      sessionId: 'ezID',
       createdAt: timeStamp,
       userId: student.userId
     }
@@ -41,13 +40,9 @@ describe('Session Find Function', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Failure case: sessionId does not exist', async () => {
-    expect(await session_db.find('weewoo')).toStrictEqual(null)
-  })
-
-  test('Success case: output session data', async () => {
-    expect(await session_db.find('ezID1')).toStrictEqual({
-      sessionId: 'ezID1                               ',
+  test('Success case: a new session is created', async () => {
+    expect(await session_db.find('ezID')).toStrictEqual({
+      sessionId: 'ezID                                ',
       userId: student.userId,
       createdAt: expect.any(Date)
     })

@@ -4,7 +4,7 @@ import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 
-describe('User Update Password Function', () => {
+describe('User University Function', () => {
   let user_db;
 
   const mockUser: Student = {

@@ -140,7 +140,7 @@ describe('Competition Student Details Function', () => {
         bio: "I good, promise",
         isOfficial: null,
         level: "No Preference",
-        competitionLevel: 'Pigeon Carrier',
+        preferredContact: 'Pigeon Carrier',
         dietaryReqs: "{}",
         ICPCEligible: true,
         boersenEligible: true,
