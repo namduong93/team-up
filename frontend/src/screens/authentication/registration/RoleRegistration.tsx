@@ -96,8 +96,8 @@ const StudentButton = styled.button<{ isSelected: boolean }>`
   font-size: 25px;
   cursor: pointer;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
-  background-color: ${({ theme }) => theme.colours.confirm};
-  color: ${({ theme }) => theme.colours.confirmDark};
+  background-color: ${({ theme }) => theme.roles.participantBackground};
+  color: ${({ theme }) => theme.roles.participantText};
 `;
 
 const StaffButton = styled.button<{ isSelected: boolean }>`
@@ -111,6 +111,6 @@ const StaffButton = styled.button<{ isSelected: boolean }>`
   font-size: 25px;
   cursor: pointer;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
-  background-color: ${({ theme }) => theme.colours.staffOption};
-  color: ${({ theme }) => theme.colours.cancelDark};
+  background-color: ${({ theme }) => theme.roles.adminBackground};
+  color: ${({ theme }) => theme.roles.adminText};
 `
