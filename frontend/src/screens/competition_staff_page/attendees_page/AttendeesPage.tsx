@@ -106,7 +106,7 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
 export const WideAttendeesHeader: FC = () => {
   const theme = useTheme();
   return (
-    <WideInfoContainerDiv style={{
+    <WideInfoContainerDiv $isHeader style={{
       backgroundColor: theme.colours.userInfoCardHeader,
       fontWeight: 'bold'
     }}>
