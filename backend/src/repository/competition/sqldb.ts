@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
-import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject, CompetitionTeamNameObject } from "../../models/competition/competition.js";
+import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject, CompetitionTeamNameObject, CompetitionInput } from "../../models/competition/competition.js";
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
@@ -95,7 +95,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       `
     );
 
-    console.log(dbResult.rows[0]);
 
     return dbResult.rows[0];
 
@@ -1017,7 +1016,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     );
 
     // for the normal siteLocations that have university Ids:
-    competition.siteLocations.forEach(async ({ universityId, name }) => {
+    competition.siteLocations.forEach(async ({ universityId, defaultSite: name }) => {
       await this.pool.query(
         `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
         VALUES (${competitionId}, ${universityId}, '${name}', 0)`
@@ -1025,7 +1024,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     });
 
     // handle otherSiteLocations with universityName
-    competition.otherSiteLocations?.forEach(async ({ universityName, name }) => {
+    competition.otherSiteLocations?.forEach(async ({ universityName, defaultSite: name }) => {
       // Insert new university and get the universityId
       const insertUniversityResult = await this.pool.query(`
         INSERT INTO universities (name)
@@ -1097,6 +1096,44 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     await this.pool.query(competitionUpdateQuery, competitionUpdateValues);
 
+    competition.siteLocations.forEach(async ({ universityId, defaultSite: name }) => {
+      try {
+        await this.pool.query(
+          `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
+          VALUES (${competition.id}, ${universityId}, '${name}', 0)
+          ON CONFLICT (competition_id, university_id)
+            DO UPDATE
+            SET name = '${name}'
+          `
+
+        );
+      } catch (error: unknown) {
+        
+      }
+    });
+
+    // handle otherSiteLocations with universityName
+    competition.otherSiteLocations?.forEach(async ({ universityName, defaultSite: name }) => {
+      // Insert new university and get the universityId
+      const insertUniversityResult = await this.pool.query(`
+        INSERT INTO universities (name)
+        VALUES ($1)
+        RETURNING id
+      `, [universityName]);
+
+      const universityId = insertUniversityResult.rows[0].id;
+
+      // Insert the new site location with the new universityId
+      await this.pool.query(
+        `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
+        VALUES ($1, $2, $3, 0)
+        ON CONFLICT (competition_id, university_id)
+          DO UPDATE
+          SET name = $3
+              
+      `, [competition.id, universityId, name]);
+    });
+
     // Skip updating site details if siteLocations is not provided
     if (!competition.siteLocations) {
       return {};
@@ -1112,7 +1149,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
    * @returns A promise that resolves to a `Competition` object containing the competition details.
    * @throws {DbError} If the competition does not exist.
    */
-  competitionGetDetails = async(competitionId: number): Promise<Competition> => {
+  competitionGetDetails = async(competitionId: number): Promise<CompetitionInput> => {
     const competitionQuery = `
       SELECT id, name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region, information
       FROM competitions
@@ -1143,7 +1180,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }));
 
     // Constructing the competition object
-    const competitionDetails: Competition = {
+    const competitionDetails: CompetitionInput = {
       id: competitionData.id,
       name: competitionData.name,
       teamSize: competitionData.team_size,

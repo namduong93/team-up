@@ -1,4 +1,4 @@
-import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject, CompetitionTeamNameObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionInput, CompetitionShortDetailsObject, CompetitionSiteObject, CompetitionTeamNameObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
 import { CompetitionStaff, CompetitionStudentDetails, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { University } from "../models/university/university.js";
 import { UserType } from "../models/user/user.js";
@@ -39,7 +39,7 @@ export interface CompetitionRepository {
   competitionTeams(userId: number, compId: number): unknown;
   competitionSystemAdminCreate(userId: number, competition: Competition): Promise<CompetitionIdObject>;
   competitionSystemAdminUpdate(userId: number, competition: Competition): Promise<{}>;
-  competitionGetDetails(competitionId: number): Promise<Competition>;
+  competitionGetDetails(competitionId: number): Promise<CompetitionInput>;
   competitionTeamDetails(userId: number, compId: number): Promise<ParticipantTeamDetails>;
   competitionTeamInviteCode(userId: number, compId: number): Promise<string>;
   competitionTeamJoin(userId: number, compId: number, teamCode: string, university: University): Promise<CompetitionTeamNameObject>;

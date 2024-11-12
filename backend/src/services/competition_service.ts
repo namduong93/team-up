@@ -1,7 +1,7 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_NOT_FOUND, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
 import { ServiceError, ServiceErrorType } from "../errors/service_error.js";
 import { DbError } from "../errors/db_error.js";
-import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionInput, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
 import { CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
@@ -476,7 +476,7 @@ export class CompetitionService {
    * @returns A promise that resolves to the details of the competition.
    * @throws {ServiceError} If the competition ID is not provided or the competition is not found.
    */
-  competitionGetDetails = async (competitionId: number): Promise<Competition> => {
+  competitionGetDetails = async (competitionId: number): Promise<CompetitionInput> => {
     if (!competitionId) {
       throw new ServiceError(ServiceError.NotFound, 'Competition not found');
     }

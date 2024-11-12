@@ -1,3 +1,4 @@
+import { OtherSiteLocation, SiteLocation } from "../../../shared_types/Competition/CompetitionDetails";
 import { CompetitionUserRole } from "./competitionUser";
 
 /**
@@ -11,8 +12,23 @@ export interface Competition {
   earlyRegDeadline: EpochTimeStamp,
   startDate: EpochTimeStamp;
   generalRegDeadline: EpochTimeStamp,
+  siteLocations?: SiteLocation[],
+  otherSiteLocations?: OtherSiteLocation[],
+  code?: string,
+  region: string,
+  information?: string,
+}
+
+export interface CompetitionInput {
+  id?: number,
+  name: string,
+  teamSize?: number,
+  createdDate: EpochTimeStamp,
+  earlyRegDeadline: EpochTimeStamp,
+  startDate: EpochTimeStamp;
+  generalRegDeadline: EpochTimeStamp,
   siteLocations?: CompetitionSiteObject[],
-  otherSiteLocations?: CompetitionOtherSiteObject[],
+  otherSiteLocations?: CompetitionSiteObject[],
   code?: string,
   region: string,
   information?: string,
