@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
-import styled from "styled-components";
+import styled, { ThemeConsumer, useTheme } from "styled-components";
 import { FilterTagButton, RemoveFilterIcon } from "../../dashboard/Dashboard";
 import { useParams } from "react-router-dom";
 import Fuse from "fuse.js";
@@ -107,6 +107,7 @@ const EmailContainerDiv = styled.div<{ $isHeader: boolean }>`
   overflow: hidden;
   position: relative;
   box-sizing: border-box;
+  color: ${({ theme }) => theme.fonts.colour};
   ${({ $isHeader: isHeader }) => !isHeader &&
   `&:hover {
     overflow: visible;
@@ -156,7 +157,7 @@ const UniversityContainerDiv = styled.div`
 
 const EmailSpan = styled.span<{ $isHeader: boolean }>`
   height: 100%;
-  background-color: ${({ $isHeader: isHeader }) => isHeader ? 'transparent' : 'white'};
+  background-color: ${({ $isHeader: isHeader, theme }) => isHeader ? 'transparent' : theme.background};
   display: flex;
   align-items: center;
   position: absolute;
@@ -270,7 +271,7 @@ export const StudentDisplay = () => {
     setFilterOptions, setSortOptions, studentsState: [students, setStudents] } = useCompetitionOutletContext('students');
   
   const { compId } = useParams();
-
+  const theme = useTheme();
 
   useEffect(() => {
     setSortOptions(STUDENT_DISPLAY_SORT_OPTIONS);
@@ -363,7 +364,7 @@ export const StudentDisplay = () => {
 
     <WideDisplayDiv>
       <StudentInfoDiv studentsState={[students, setStudents]} style={{
-        backgroundColor: '#D6D6D6',
+        backgroundColor: theme.colours.sidebarBackground,
         fontWeight: 'bold'
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 

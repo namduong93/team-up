@@ -133,7 +133,7 @@ const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-const Title2 = styled.h2`
+export const Title2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;
   font-size: 22px;
@@ -308,8 +308,9 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
 
   useEffect(() => {
     if (location.state?.joined) {
-      setIsJoinPopUpOpen(true);
+      console.log(location.state.teamName)
       setTeamName(location.state.teamName);
+      setIsJoinPopUpOpen(true);
     }
   }, [location.state]);
 
@@ -432,16 +433,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
               <RegisterPopUp
                 isOpen={isRegoSucessPopUpOpen}
                 onClose={() => setRegoSuccessPopUp(false)}
-                message={
-                  <Title2>
-                    You have successfully registered for the Competition!{" "}
-                    {"\n\n"}
-                    <span style={{ fontWeight: "normal" }}>
-                      Please navigate to the Team Profile Page to join a team or
-                      invite team members
-                    </span>
-                  </Title2>
-                }
+                isRego={true}
               />
             )}
 
@@ -449,14 +441,8 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
               <RegisterPopUp
                 isOpen={isJoinPopUpOpen}
                 onClose={() => setIsJoinPopUpOpen(false)}
-                message={
-                  <Title2>
-                    You have successfully {"\n"} joined the Team: {"\n\n"}{" "}
-                    <span style={{ fontWeight: "normal", fontStyle: "italic" }}>
-                      {teamName}
-                    </span>
-                  </Title2>
-                }
+                teamName={location.state ? location.state.teamName : teamName}
+                isTeamJoin={true}
               />
             )}
 
@@ -464,12 +450,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
               <RegisterPopUp
                 isOpen={isStaffRegoPopUpOpen}
                 onClose={() => setStaffRegoPopUpOpen(false)}
-                message={
-                  <Title2>
-                    Your Request has been {"\n"} sent {"\n\n"} Please wait for{" "}
-                    {"\n"} Administrator approval
-                  </Title2>
-                }
+                isStaffRego={true}
               />
             )}
           </ContentArea>

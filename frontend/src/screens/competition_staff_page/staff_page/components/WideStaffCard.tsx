@@ -4,6 +4,8 @@ import styled, { useTheme } from "styled-components";
 import { StaffAccessLevel, StaffCardProps } from "../StaffDisplay";
 import { StaffRoles, StandardContainerDiv } from "./StaffRole";
 import { StaffInfoBar } from "../../components/InfoBar/StaffInfoBar";
+import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
+import { StaffAccess } from "../../../../../shared_types/Competition/staff/StaffInfo";
 
 
 export const StandardSpan = styled.span``;
@@ -67,7 +69,7 @@ export const WideStaffCard: FC<StaffCardProps> = ({
 
       <StandardContainerDiv style={{ overflow: 'visible' }}>
         <StandardContainerDiv style={{ maxWidth: '90%', overflow: 'visible' }}>
-          <StaffRoles roles={staffDetails.roles} />
+          <StaffRoles roles={staffDetails.roles as CompetitionRole[]} />
         </StandardContainerDiv>
       </StandardContainerDiv>
 
@@ -78,7 +80,7 @@ export const WideStaffCard: FC<StaffCardProps> = ({
       </StandardContainerDiv>
 
       <StandardContainerDiv>
-        <StaffAccessLevel $access={staffDetails.access}>
+        <StaffAccessLevel $access={staffDetails.access as StaffAccess}>
           {staffDetails.access}
         </StaffAccessLevel>
       </StandardContainerDiv>

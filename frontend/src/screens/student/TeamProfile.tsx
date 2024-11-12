@@ -87,7 +87,6 @@ export const TeamProfile: FC = () => {
 
     fetchTeamDetails();
 
-    // TODO: Hook the backend get comp annocunements
     const fetchCompAnnouncements = async () => {
       const response = await sendRequest.get<{announcement: Announcement}>("/competition/announcement", { compId });
       if(response.data.announcement === undefined) {

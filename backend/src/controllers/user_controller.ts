@@ -166,4 +166,19 @@ export class UserController {
     res.json({});
     return;
   })
+
+  staffRequests = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const staffList = await this.userService.staffRequests(Number(userId));
+    res.json({staffRequests: staffList});
+    return;
+  })
+
+  staffRequestsUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const userId = req.query.userId;
+    const { staffRequests } = req.body;
+    const result = await this.userService.staffRequestsUpdate(Number(userId), staffRequests);
+    res.json(result);
+    return;
+  });
 }

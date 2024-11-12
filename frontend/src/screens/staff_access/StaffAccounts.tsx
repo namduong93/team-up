@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
 import Fuse from "fuse.js";
 import { FlexBackground } from "../../components/general_utility/Background";
-import { StaffAccess, StaffAccessInfo } from "../../../shared_types/Competition/staff/StaffInfo";
-import {  WideDisplayDiv } from "../competition_staff_page/students_page/StudentDisplay";
+import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo";
+import {  NarrowDisplayDiv, WideDisplayDiv } from "../competition_staff_page/students_page/StudentDisplay";
 // import { StaffAccessLevel, NarrowStatusDiv } from "../competition_staff_page/staff_page/StaffDisplay";
 
 import { WideStaffAccessCard, WideStaffAccessHeader } from "./WideStaffAccessCard";
@@ -11,36 +11,15 @@ import { Background } from "../account/Account";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { styled } from "styled-components";
 import { FilterTagButton, RemoveFilterIcon } from "../dashboard/Dashboard";
-
-const mockStaffData: StaffAccessInfo[] = [
-  {
-    userId: 1,
-    universityId: 102,
-    universityName: "Institute of Learning",
-    name: "Bob Smith",
-    email: "bob.smith@learning.edu",
-    access: StaffAccess.Pending,
-  },
-  {
-    userId: 2,
-    universityId: 101,
-    universityName: "University of Example",
-    name: "Alice Johnson",
-    email: "alice.johnson@example.edu",
-    access: StaffAccess.Accepted,
-  },
-  {
-    userId: 3,
-    universityId: 103,
-    universityName: "Global Tech University",
-    name: "Charlie Brown",
-    email: "charlie.brown@globaltech.edu",
-    access: StaffAccess.Rejected,
-  },
-];
+import { NarrowStaffAccessCard } from "./NarrowStaffAccessCard";
+import { StaffAccessButtons } from "./StaffAccessButtons";
+import { sendRequest } from "../../utility/request";
+import { UserAccess } from "../../../shared_types/User/User";
+import { fetchStaffRequests } from "./util/fetchStaffRequests";
 
 export interface StaffAccessCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  staffDetails: StaffAccessInfo;
+  staffDetails: StaffInfo;
+  staffListState: [StaffInfo[], React.Dispatch<React.SetStateAction<StaffInfo[]>>];
 }
 
 const STAFF_DISPLAY_SORT_OPTIONS = [
@@ -49,7 +28,7 @@ const STAFF_DISPLAY_SORT_OPTIONS = [
 ];
 
 const STAFF_DISPLAY_FILTER_OPTIONS: Record<string, Array<string>> = {
-  Access: [StaffAccess.Accepted, StaffAccess.Pending, StaffAccess.Rejected].map(String),
+  Access: [UserAccess.Accepted, UserAccess.Pending, UserAccess.Rejected],
 };
 
 const PageBackground = styled(Background)`
@@ -77,7 +56,7 @@ const FilterTagContainer = styled.div`
 `;
 
 export const StaffAccounts: FC = () => {
-  const [staffList, setStaffList] = useState<Array<StaffAccessInfo>>([]);
+  const [staffList, setStaffList] = useState<Array<StaffInfo>>([]);
   const [sortOption, setSortOption] = useState<string | null>(null);
   const [filters, setFilters] = useState<Record<string, Array<string>>>({});
   const [filterOptions, setFilterOptions] = useState<
@@ -85,15 +64,17 @@ export const StaffAccounts: FC = () => {
   >({});
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Check if filters contain only "Pending"
+  const isPendingOnly = filters["Access"]?.length === 1 && filters["Access"].includes(UserAccess.Pending);
+
   useEffect(() => {
     setSortOption(STAFF_DISPLAY_SORT_OPTIONS[0].value);
-    setStaffList(mockStaffData);
     setFilterOptions(STAFF_DISPLAY_FILTER_OPTIONS);
+    fetchStaffRequests(setStaffList);
   }, []);
 
   const filteredStaff = staffList.filter((staffDetails) => {
-
-    if (filters["Access"] && filters["Access"].length > 0 && !filters["Access"].includes(String(staffDetails.access))) {
+    if (filters["Access"] && filters["Access"].length > 0 && !filters["Access"].includes(staffDetails.userAccess)) {
       return false;
     }
     return true;
@@ -129,6 +110,34 @@ export const StaffAccounts: FC = () => {
     });
   };
 
+  const handleApproveAll = async (): Promise<boolean> => {
+    // Filter by pending
+    const pendingStaffListIds = searchedStaff.filter((staffDetails) => staffDetails.item.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.item.userId);
+  
+    try {
+      await sendRequest.post("/user/staff_requests", { staffRequests: pendingStaffListIds.map((userId) => ({ userId, access: UserAccess.Accepted })) });
+    }
+    catch (error) {
+      console.error("Error updating staff access: ", error);
+      return false;
+    }
+    return true;
+  };
+
+  const handleRejectAll = async (): Promise<boolean> => {
+    // Filter by pending
+    const pendingStaffListIds = searchedStaff.filter((staffDetails) => staffDetails.item.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.item.userId);
+  
+    try {
+      await sendRequest.post("/user/staff_requests", { staffRequests: pendingStaffListIds.map((userId) => ({ userId, access: UserAccess.Rejected })) });
+    }
+    catch (error) {
+      console.error("Error updating staff access: ", error);
+      return false;
+    }
+    return true;
+  };
+
   return (
     <PageBackground>
       <PageHeader
@@ -139,7 +148,10 @@ export const StaffAccounts: FC = () => {
         filterOptions={filterOptions}
         filtersState={{ filters, setFilters }}
         searchTermState={{ searchTerm, setSearchTerm }}
-      />
+      >
+        <StaffAccessButtons onApproveAll={handleApproveAll} onRejectAll={handleRejectAll} editingForAll={isPendingOnly}/>
+      </PageHeader>
+
 
       <FilterTagContainer>
         {Object.entries(filters).map(([field, values]) =>
@@ -158,18 +170,37 @@ export const StaffAccounts: FC = () => {
       </FilterTagContainer>
 
       <StaffContainer>
-        <WideStaffAccessHeader />
-        <StaffRecords>
-          {searchedStaff.length > 0 ? (
-            searchedStaff.map(({ item: staffDetails }) => (
-              <WideDisplayDiv key={`${staffDetails.userId}`}>
-                <WideStaffAccessCard staffDetails={staffDetails} />
-              </WideDisplayDiv>
-            ))
-          ) : (
-            <p>No staff members found.</p>
-          )}
-        </StaffRecords>
+        <NarrowDisplayDiv>
+          <StaffRecords>
+            {searchedStaff.length > 0 ? (
+              searchedStaff.map(({ item: staffDetails }) => (
+                <NarrowStaffAccessCard 
+                  key={`staff-wide-${staffDetails.userId}`}  
+                  staffDetails={staffDetails} 
+                  staffListState={[staffList, setStaffList]}
+                />
+              ))
+            ) : (
+              <p>No staff members found.</p>
+            )}
+          </StaffRecords>
+        </NarrowDisplayDiv>
+        <WideDisplayDiv>
+          <WideStaffAccessHeader />
+          <StaffRecords>
+            {searchedStaff.length > 0 ? (
+              searchedStaff.map(({ item: staffDetails }) => (
+                <WideStaffAccessCard 
+                  key={`staff-wide-${staffDetails.userId}`}  
+                  staffDetails={staffDetails} 
+                  staffListState={[staffList, setStaffList]}
+                />
+              ))
+            ) : (
+              <p>No staff members found.</p>
+            )}
+          </StaffRecords>
+        </WideDisplayDiv>
       </StaffContainer>
     </PageBackground>
   );

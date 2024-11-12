@@ -98,7 +98,7 @@ export const StaffDisplay: FC = () => {
     }
 
     if (filters.Roles) {
-      if (!filters.Roles.some((role) => staffDetails.roles.includes(role as CompetitionRole))) {
+      if (!staffDetails.roles || !filters.Roles.some((role) => staffDetails.roles!.includes(role as CompetitionRole))) {
         return false;
       }
     }
