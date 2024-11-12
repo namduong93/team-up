@@ -97,7 +97,8 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({
           "/competition/team/join",
           { compId, teamCode }
         );
-        const { team } = response.data;
+        const { teamId, teamName } = response.data.team;
+        console.log(team);
         setTeamName(team);
       };
 
@@ -105,6 +106,7 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({
     } catch (error) {
       console.log(error);
     }
+    console.log("sending: ", teamName);
     navigate("/dashboard", { state: { joined: true, teamName: teamName } });
   };
 
