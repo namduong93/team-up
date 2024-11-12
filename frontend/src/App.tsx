@@ -44,10 +44,10 @@ import { SiteInformation } from "./screens/authentication/registration/SiteInfor
 import { InstitutionInformation } from "./screens/authentication/registration/InstitutionInformation";
 import { TeamDisplay } from "./screens/competition_staff_page/teams_page/TeamDisplay";
 import { StudentDisplay } from "./screens/competition_staff_page/students_page/StudentDisplay";
-import { StaffManage } from "./screens/competition_staff_page/manage_page/StaffManage";
 import { AttendeesDisplay } from "./screens/competition_staff_page/attendees_page/AttendeesPage";
 import { StaffRoleRegistration } from "./screens/competition/register/StaffRoleRegistration";
 import { StaffAccounts } from "./screens/staff_access/StaffAccounts";
+import { StaffActionCard } from "./screens/competition_staff_page/manage_page/components/StaffActionCard";
 
 const themeMap = {
   default: defaultTheme,
@@ -157,7 +157,7 @@ function App() {
               <Route path="students/:compId" element={<StudentDisplay />} />
               <Route path="staff/:compId" element={<StaffDisplay />} />
               <Route path="site/:compId" element={<AttendeesDisplay />} />
-              <Route path="manage/:compId" element={<StaffManage />} />
+              <Route path="manage/:compId" element={<StaffActionCard />} />
             </Route>
 
             <Route

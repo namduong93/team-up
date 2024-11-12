@@ -41,7 +41,6 @@ export interface CompetitionPageContext {
     Array<number>,
     React.Dispatch<React.SetStateAction<Array<number>>>
   ];
-  universityOption: { value: string; label: string };
   roles: Array<CompetitionRole>;
   teamListState: [
     Array<TeamDetails>,
@@ -60,7 +59,7 @@ export interface CompetitionPageContext {
     React.Dispatch<React.SetStateAction<Array<StaffInfo>>>
   ];
   compDetails: CompetitionDetails;
-
+  
   buttonConfigurationState: [
     ButtonConfiguration,
     React.Dispatch<React.SetStateAction<ButtonConfiguration>>
@@ -69,9 +68,21 @@ export interface CompetitionPageContext {
     Array<{ value: string; label: string }>,
     React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
   ];
+  universityOptionsState: [
+    Array<{ value: string; label: string }>,
+    React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
+  ];
+  dropdownOptionsState: [
+    Array<{ value: string; label: string }>,
+    React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
+  ];
+
+  siteOptionState: [{ value: string; label: string }, React.Dispatch<React.SetStateAction<{ value: string, label: string }>>];
+  universityOptionState: [{ value: string, label: string }, React.Dispatch<React.SetStateAction<{ value: string, label: string }>>];
+  dropdownOptionState: [{ value: string, label: string }, React.Dispatch<React.SetStateAction<{ value: string, label: string }>>];
 }
 
-export const useCompetitionOutletContext = (page: string, reRender?: boolean) => {
+export const useCompetitionOutletContext = (page: string, reRender?: boolean, dropdown?: string) => {
   const context = useOutletContext<CompetitionPageContext>();
   const {
     filters,
@@ -81,7 +92,7 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean) =>
     setFilters,
     editingStatusState: [isEditingStatus, setIsEditingStatus],
     teamIdsState: [approveTeamIds, setApproveTeamIds],
-    universityOption,
+    siteOptionState: [siteOption, setSiteOption],
     roles,
     teamListState: [teamList, setTeamList],
     editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
@@ -91,7 +102,12 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean) =>
     buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
     studentsState: [students, setStudents],
     attendeesListState: [attendeesList, setAttendeesList],
+    universityOptionsState: [universityOptions, setUniversityOptions],
+    siteOptionsState: [siteOptions, setSiteOptions],
+    dropdownOptionsState: [dropdownOptions, setDropdownOptions],
     compDetails,
+    dropdownOptionState: [dropdownOption, setDropdownOption],
+    universityOptionState: [universityOption, setUniversityOption],
   } = context;
 
   useEffect(() => {
@@ -100,6 +116,14 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean) =>
     setFilters({});
     setIsEditingNameStatus(false);
     setRejectedTeamIds([]);
+
+    if (dropdown === 'site') {
+      setDropdownOptions(siteOptions);
+      setDropdownOption(siteOption);
+    } else {
+      setDropdownOptions(universityOptions);
+      setDropdownOption(universityOption);
+    }
 
     // enable the team buttons on the team page and not on the non-team page
     if (page === 'teams') {
@@ -156,7 +180,15 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean) =>
       enableAttendeesButtons: false,
     }));
     return;
-  }, [roles, reRender]);
+  }, [roles, siteOptions, universityOptions, reRender]);
+
+  useEffect(() => {
+    if (dropdown === 'site') {
+      setSiteOption(dropdownOption);
+    } else {
+      setUniversityOption(dropdownOption);
+    }
+  }, [dropdownOption]);
 
   return context;
 };

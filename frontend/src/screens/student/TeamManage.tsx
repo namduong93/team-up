@@ -4,7 +4,6 @@ import { FaTimes } from "react-icons/fa";
 import { TeamActionCard } from "../../components/general_utility/TeamActionCard";
 import { ProfileCard } from "./components/ProfileCard";
 import { useOutletContext } from "react-router-dom";
-
 import { Student } from "../../../shared_types/Competition/team/TeamDetails";
 import { MarkdownDisplay } from "./MarkdownDisplay";
 

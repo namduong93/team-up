@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { InfoBar, InfoBarProps } from "./InfoBar";
 import { StudentStatus } from "../../students_page/StudentDisplay";
 import { EditIcon, EditIconButton, ProfilePic } from "../../../account/Account";
@@ -44,8 +44,8 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
   const { compId } = useParams();
   
   const theme = useTheme();
+  const cardRef = useRef(null);
 
-  
   const [studentData, setStudentData] = useState(studentInfo);
   
   const [isEditing, setIsEditing] = useState(false);
@@ -59,6 +59,12 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
     }
     setIsEdited(true);
   }, [studentData]);
+
+  useEffect(() => {
+    cardRef.current 
+    && isEditing
+    && (cardRef.current as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, [isEditing, isEdited]);
 
   const handleSaveEdit = async () => {
     
@@ -157,7 +163,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
 
       {/* Competition user info */}
 
-      <CompetitionInfoContainerDiv>
+      <CompetitionInfoContainerDiv ref={cardRef}>
 
         <InfoBarField>
           <LabelSpan>Roles:</LabelSpan>

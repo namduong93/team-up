@@ -14,7 +14,8 @@ export interface Competition {
   siteLocations?: CompetitionSiteObject[],
   otherSiteLocations?: CompetitionOtherSiteObject[],
   code?: string,
-  region: string
+  region: string,
+  information?: string,
 }
 
 /**

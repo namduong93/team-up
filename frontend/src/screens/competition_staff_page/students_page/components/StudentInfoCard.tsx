@@ -17,6 +17,10 @@ export const StudentInfoContainerDiv = styled.div`
   /* border-radius: 10px; */
   box-sizing: border-box;
   font-size: 13px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colours.sidebarBackground};
+  }
 `;
 
 const ContainerDiv = styled.div`

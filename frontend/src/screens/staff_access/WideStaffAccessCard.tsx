@@ -9,7 +9,7 @@ import { useTheme } from "styled-components";
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
   return (
-    <WideInfoContainerDiv style={{
+    <WideInfoContainerDiv $isHeader={true} style={{
       backgroundColor: theme.colours.userInfoCardHeader,
       fontWeight: 'bold'
     }}>

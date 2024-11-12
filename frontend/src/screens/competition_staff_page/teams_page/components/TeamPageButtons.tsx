@@ -12,6 +12,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { DownloadButtons } from "../../components/DownloadButtons";
 import { SiteDetails } from "../../../../../shared_types/Competition/CompetitionSite";
+import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];
@@ -100,9 +101,9 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   const mapToTitle = (sex: string): string => {
     switch (sex) {
       case "M":
-        return "Mr";
+        return "Mr.";
       case "F":
-        return "Ms";
+        return "Ms.";
       case "NB":
         return "None";
       default:
@@ -112,9 +113,9 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
   const downloadCSV = async () => {
     // Filter only 'Unregistered' teams
-    let unregisteredTeams = teamList.filter((team: TeamDetails) => team.status === 'Unregistered');
+    let unregisteredTeams = teamList.filter((team: TeamDetails) => team.status === TeamStatus.Unregistered);
     if (universityOption.value) {
-      unregisteredTeams = teamList.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value));
+      unregisteredTeams = unregisteredTeams.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value));
     };
 
     // Group teams by site location and level
@@ -173,9 +174,9 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
 
   const downloadPDF = async () => {
     // Filter only 'Unregistered' teams
-    let unregisteredTeams = teamList.filter((team: TeamDetails) => team.status === 'Unregistered');
+    let unregisteredTeams = teamList.filter((team: TeamDetails) => team.status === TeamStatus.Unregistered);
     if (universityOption.value) {
-      unregisteredTeams = teamList.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value));
+      unregisteredTeams = unregisteredTeams.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value));
     };
 
 
