@@ -155,7 +155,7 @@ export const StaffRoles: FC<StaffRolesProps> = ({ roles, children, ...props }) =
           $isMulti={isMulti}
           $role={roles[0]}
         >
-          <span style={{ pointerEvents: 'none' }}>{roles[0]}</span>
+          <div style={{ pointerEvents: 'none' }}>{roles[0]}</div>
         </StaffRoleDisplay>
 
         {isOpen &&

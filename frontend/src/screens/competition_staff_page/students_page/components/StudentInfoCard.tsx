@@ -16,6 +16,10 @@ export const StudentInfoContainerDiv = styled.div`
   box-sizing: border-box;
   font-size: 13px;
   color: ${({ theme }) => theme.fonts.colour};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colours.sidebarBackground};
+  }
 `;
 
 const ContainerDiv = styled.div`

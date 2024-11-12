@@ -17,6 +17,8 @@ import { useParams } from "react-router-dom";
 interface AssignSeatsProps {
   siteName: string;
   siteCapacity: number;
+  teamListState: any;
+  siteOptionState: any;
 };
 
 interface SeatAssignment {
@@ -258,7 +260,7 @@ const AssignPopupText = styled.h2`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) => {
+export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, teamListState: [teamList, setTeamList], siteOptionState: [siteOption, setSiteOption] }) => {
   const { compId } = useParams();
   const [seatInputType, setSeatInputType] = useState<string>("Text"); // either string or inputs
   const [seatAB, setSeatAB] = useState<string>("Together"); // seat level a and b either together or separately
@@ -279,7 +281,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity }) =>
   const [teamSeatAssignments, setTeamSeatAssignments] = useState<SeatAssignment[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { teamListState: [teamList, setTeamList], universityOption: siteOption } = useCompetitionOutletContext("attendees");
+
+  // const { teamListState: [teamList, setTeamList], siteOptionState: [siteOption, setSiteOption] } = useCompetitionOutletContext("attendees", undefined, 'site');
 
   // Filter by uni
   let teamListToAssign = teamList;

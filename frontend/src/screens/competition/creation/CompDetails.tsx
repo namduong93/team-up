@@ -250,15 +250,6 @@ export const CompetitionDetails: FC = () => {
       return;
     }
 
-    // const isDuplicateSite = competitionInfo.siteLocations.some((site) => site.defaultSite === defaultSite)
-    //   || competitionInfo.otherSiteLocations.some((otherSite) => otherSite.defaultSite === defaultSite);
-
-    // if (isDuplicateSite) {
-    //   setLocationError(<p>This site location name already exists in either default sites or other sites.<br />
-    //   Please provide a unique site location name.</p>);
-    //   return;
-    // }
-
     setLocationError("");
 
     // if currentOptions value is empty which will be the case when it's a custom option.

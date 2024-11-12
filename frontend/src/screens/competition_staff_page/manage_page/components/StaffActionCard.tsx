@@ -10,14 +10,23 @@ import {
 import { AssignSeats } from "../AssignSeats";
 import { BioChangePopUp } from "./BioChangePopUp";
 import { EditCompRegoPopUp } from "./EditCompRegoPopUp";
-import { EditRego } from "../../../../../shared_types/Competition/staff/Edit";
+import {
+  EditRego,
+  EditCourse,
+} from "../../../../../shared_types/Competition/staff/Edit";
+import { CourseCategory } from "../../../../../shared_types/University/Course";
 import { EditSiteCapacityPopUp } from "./EditSiteCapacityPopUp";
 import { sendRequest } from "../../../../utility/request";
 import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
 import { useParams } from "react-router-dom";
 import { Announcement } from "../../../../../shared_types/Competition/staff/Announcement";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+
+import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
+import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
 import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
+import { CompetitionDetails } from "../../../competition/register/CompInformation";
+import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 
 type ActionType =
   | "code"
@@ -28,10 +37,6 @@ type ActionType =
   | "capacity";
 
 interface StaffActionCardProps {
-  staffRoles: string[];
-  compCode: string;
-  universityOption: { value: string; label: string };
-  siteOptionsState: [{ value: string, label: string }[], React.Dispatch<React.SetStateAction<{ value: string, label: string }[]>>];
 }
 
 interface ActionCardProps {
@@ -122,6 +127,11 @@ const AssignSeatsPage = styled.div`
   overflow: hidden;
 `;
 
+const ManageContainer = styled.div`
+  width: 100%;
+  height: 70%;
+`;
+
 const Code = styled.div`
   font-size: 1rem;
   font-style: ${({ theme }) => theme.fonts.style};
@@ -178,7 +188,14 @@ The ICPC is the premier global programming competition conducted by and for the 
 
 In 2021, more than 50,000 of the finest students in computing disciplines from over 3,000 universities competed worldwide in the regional phases of this contest. We conduct ICPC contests for the South Pacific region, with top teams qualifying to the World Finals.
 
-The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
+The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)`
+
+const Title2 = styled.h2`
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  white-space: pre-wrap;
+  word-break: break-word;
 `;
 
 export const DEFAULT_REGO_FIELDS = {
@@ -188,58 +205,79 @@ export const DEFAULT_REGO_FIELDS = {
   enableRegionalParticipationField: true,
 }
 
-export const StaffActionCard: FC<StaffActionCardProps> = ({
-  staffRoles,
-  compCode,
-  siteOptionsState: [siteOptions, setSiteOptions],
-}) => {
+export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
-  // const [showEditRego, setShowEditRego] = useState(false);
   const [showEditCapacity, setShowEditCapacity] = useState(false);
   const [showEditRego, setShowEditRego] = useState(false);
+  const [showEditComp, setShowEditComp] = useState(false);
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
-  const { universityOption  } = useCompetitionOutletContext("manage", showManageSite);
+
+  const [staffRoles, setRoles] = useState<Array<CompetitionRole>>([]);
+
+
+  // Fetch the user type and set the state accordingly
+  useEffect(() => {
+    const fetchRoles = async () => {
+      const roleResponse = await sendRequest.get<{ roles: Array<CompetitionRole> }>('/competition/roles', { compId });
+      const { roles } = roleResponse.data;
+      setRoles(roles);
+    }
+    fetchRoles();
+  }, [])
+
+  const { 
+    universityOptionState: [universityOption, setUniversityOption],
+    siteOptionState: [siteOption, setSiteOption], teamListState,
+    siteOptionsState: [siteOptions, setSiteOptions],
+    compDetails
+  } = useCompetitionOutletContext(
+    "manage",
+    showManageSite,
+    showManageSite ? 'site' : ''
+  );
+
+  const compCode = compDetails.code ?? "COMP1234";
 
   const actions = [
     {
       type: "code" as ActionType,
       icon: FaCopy,
       text: `Copy Competition Code`,
-      roles: ["Admin", "Coach", "Site-Coordinator"],
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
     },
     {
       type: "competition" as ActionType,
       icon: FaEdit,
       text: "Edit Competition Details",
-      roles: ["Admin"],
+      roles: [CompetitionRole.Admin],
     },
     {
       type: "registration" as ActionType,
       icon: FaFileSignature,
       text: "Update Registration Form",
-      roles: ["Admin", "Coach"],
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach],
     },
     {
       type: "seat" as ActionType,
       icon: FaChair,
       text: "Assign Seats to Teams",
-      roles: ["Admin", "Site-Coordinator"],
+      roles: [CompetitionRole.Admin, CompetitionRole.SiteCoordinator],
     },
     {
       type: "contact" as ActionType,
       icon: FaChair,
       text: "Update Your Bio and Annoucements",
-      roles: ["Admin", "Coach"],
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach],
     },
     {
       type: "capacity" as ActionType,
       icon: FaChair,
       text: "Update Your Site Capacity",
-      roles: ["Admin", "Site-Coordinator"],
+      roles: [CompetitionRole.Admin, CompetitionRole.SiteCoordinator],
     },
   ];
 
@@ -254,6 +292,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     } else if (actionType === "contact") {
       setShowContactBio(true);
     } else if (actionType === "registration") {
+      setShowEditRego(true);
+    } else if (actionType === "competition") {
+      setShowEditComp(true);
       // setShowEditRego(true);
     } else if (actionType === "capacity") {
       setShowEditCapacity(true);
@@ -276,12 +317,12 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         if (universityOption.value) {
           const universityId = universityOption.value;
           response = await sendRequest.get<{ staffDetails: StaffInfo }>(
-            '/competition/staff/details',
+            "/competition/staff/details",
             { compId, universityId }
           );
         } else {
           response = await sendRequest.get<{ staffDetails: StaffInfo }>(
-            '/competition/staff/details',
+            "/competition/staff/details",
             { compId }
           );
         }
@@ -291,60 +332,58 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
         console.log("Error fetching staff info", err);
       }
     };
-  
+
     const fetchAnnouncementMessage = async () => {
       try {
         let response;
         if (universityOption.value) {
           const universityId = universityOption.value;
           response = await sendRequest.get<{ announcement: Announcement }>(
-            '/competition/announcement',
+            "/competition/announcement",
             { compId, universityId }
           );
         } else {
           response = await sendRequest.get<{ announcement: Announcement }>(
-            '/competition/announcement',
+            "/competition/announcement",
             { compId }
           );
         }
-  
+
         if (response.data.announcement === undefined) {
           setAnnouncementMessage(defaultAnnouncement);
           return;
         }
-  
+
         setAnnouncementMessage(response.data.announcement.message);
         console.log(response.data.announcement);
       } catch (err) {
         console.log("Error fetching announcement", err);
       }
     };
-  
+
     // Call the async functions
     fetchStaffInfo();
     fetchAnnouncementMessage();
-  
   }, [universityOption]);
-  
 
   const handleChange = async () => {
     if (staffInfo) {
       const updatedStaffInfo = {
         ...staffInfo,
-        bio: currentBio
+        bio: currentBio,
       };
       try {
         if (universityOption.value) {
           const universityId = universityOption.value;
-          await sendRequest.put('/competition/staff/details', {
+          await sendRequest.put("/competition/staff/details", {
             staffInfo: updatedStaffInfo,
             compId,
-            universityId
+            universityId,
           });
         } else {
-          await sendRequest.put('/competition/staff/details', {
+          await sendRequest.put("/competition/staff/details", {
             staffInfo: updatedStaffInfo,
-            compId
+            compId,
           });
         }
         setShowContactBio(false);
@@ -356,15 +395,15 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
     try {
       if (universityOption.value) {
         const universityId = universityOption.value;
-        await sendRequest.put('/competition/announcement', {
+        await sendRequest.put("/competition/announcement", {
           announcementMessage,
           compId,
-          universityId
+          universityId,
         });
       } else {
-        await sendRequest.put('/competition/announcement', {
+        await sendRequest.put("/competition/announcement", {
           announcementMessage,
-          compId
+          compId,
         });
       }
     } catch (err) {
@@ -373,8 +412,22 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   };
 
   // TO-DO: call the backend to retrive the previous options
-  // const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
+  const [regoFields, setRegoFields] = useState<EditRego>(DEFAULT_REGO_FIELDS);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+
+  const [editCourse, setEditCourse] = useState<EditCourse>({
+    [CourseCategory.Introduction]: "",
+    [CourseCategory.DataStructures]: "",
+    [CourseCategory.AlgorithmDesign]: "",
+    [CourseCategory.ProgrammingChallenges]: "",
+  });
+
+  const handleEditCourseChange = (category: CourseCategory, value: string) => {
+    setEditCourse((prevEditCourse) => ({
+      ...prevEditCourse,
+      [category]: value,
+    }));
+  };
 
   useEffect(() => {
     if (isFirstLoad) {
@@ -383,124 +436,248 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
       setIsFirstLoad(false);
       return;
     }
-    // const fetchRegoFields = async () => {
-    //   const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
-    //     { compId, universityId: universityOption.value });
-    //   const { regoFields: receivedRegoFields } = response.data;
-    //   setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
-    // }
-    // fetchRegoFields();
+    const fetchRegoFields = async () => {
+      const response = await sendRequest.get<{ regoFields: EditRego }>('/competition/staff/rego_toggles',
+        { compId, universityId: universityOption.value });
+      const { regoFields: receivedRegoFields } = response.data;
+      setRegoFields(receivedRegoFields || DEFAULT_REGO_FIELDS);
+    }
+    fetchRegoFields();
   }, [universityOption]);
 
-  // const handleRegoEditSubmit = async (regoFields: EditRego) => {
-  //   // TO-DO: send the EditRego to backend for storage
-  //   await sendRequest.post('/competition/staff/update_rego_toggles',
-  //     { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
-  //   console.log(regoFields);
-  //   console.log("submitted");
-  // };
+  const handleRegoEditSubmit = async (regoFields: EditRego) => {
+    await sendRequest.post("/competition/staff/update_rego_toggles", {
+      compId: parseInt(compId as string),
+      regoFields,
+      universityId: parseInt(universityOption.value),
+    });
+    // TO-DO: send the edited courses to backend and store for competition
+    console.log(editCourse);
+    console.log(regoFields);
+  };
 
-  const handleSiteCapacityChange = (site: { label: string, value: number }, capacity: number) => {
+  const handleSiteCapacityChange = (
+    site: { label: string; value: number },
+    capacity: number
+  ) => {
     // TODO: backend PUT (update) the site capacity for a given site Id and new capacity
-    console.log(`updating site ${site.label} with id ${site.value} with capacity: ${capacity}`);
+    console.log(
+      `updating site ${site.label} with id ${site.value} with capacity: ${capacity}`
+    );
 
     setShowEditCapacity(false);
   };
 
-  const [siteList, setSiteList] = useState<CompetitionSiteCapacity[] | undefined>();
+  const [siteList, setSiteList] = useState<
+    CompetitionSiteCapacity[] | undefined
+  >();
 
   useEffect(() => {
     const fetchSiteCapacities = async () => {
-      const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>('/competition/site/capacity', { compId, ids: siteOptions.map((siteOption) => siteOption.value) });
+      const response = await sendRequest.get<{
+        site: CompetitionSiteCapacity[];
+      }>("/competition/site/capacity", {
+        compId,
+        ids: siteOptions.map((siteOption) => siteOption.value),
+      });
       const { site: siteCapacities } = response.data;
       setSiteList(siteCapacities);
-    }
+    };
 
     fetchSiteCapacities();
   }, []);
 
   const getSiteCapacity = (): number => {
-    const foundSite = siteList?.find((site) => site.id === parseInt(universityOption.value));
+    const foundSite = siteList?.find(
+      (site) => site.id === parseInt(universityOption.value)
+    );
 
     if (foundSite) return foundSite?.capacity;
     return 0;
   };
 
+  // TO-DO: obtain the competition information from the
+  const [competitionInfo, setCompetitionInfo] =
+    useState<CompetitionInformation>({
+      information: "",
+      name: "",
+      region: "",
+      timeZone: "",
+      startDate: "",
+      startTime: "",
+      start: "",
+      earlyBird: null,
+      earlyBirdDate: "",
+      earlyBirdTime: "",
+      early: "",
+      generalDate: "",
+      generalTime: "",
+      general: "",
+      code: "",
+      siteLocations: [],
+      otherSiteLocations: [],
+    });
+  
+  useEffect(() => {
+    const fetchCompetitionInfo = async () => {
+      try {
+        const response = await sendRequest.get<{competition: CompetitionDetails}>("/competition/details", { compId });
+        const competitionData = response.data.competition;
+
+        const competitionDetails: CompetitionInformation = {
+          name: competitionData.name,
+          early: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString() : "",
+          earlyBirdDate: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[0] : "",
+          earlyBirdTime: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[1].split('.')[0] : "",
+          earlyBird: competitionData.earlyRegDeadline ? false : true,
+          general: new Date(competitionData.generalRegDeadline).toISOString(),
+          generalDate: new Date(competitionData.generalRegDeadline).toISOString().split('T')[0],
+          generalTime: new Date(competitionData.generalRegDeadline).toISOString().split('T')[1].split('.')[0],
+          start: new Date(competitionData.startDate).toISOString(),
+          startDate: new Date(competitionData.startDate).toISOString().split('T')[0],
+          startTime: new Date(competitionData.startDate).toISOString().split('T')[1].split('.')[0],
+          code: competitionData.code ? competitionData.code : "",
+          region: competitionData.region,
+          siteLocations: competitionData.siteLocations ? competitionData.siteLocations : [],
+          otherSiteLocations: competitionData.otherSiteLocations ? competitionData.otherSiteLocations : [],
+          information: competitionData.information,
+          timeZone: "Australia/Sydney", // hardcoded timezone
+        };
+
+        setCompetitionInfo(competitionDetails);
+      } catch (err: unknown) {
+        console.error(err);
+      }
+    };
+    fetchCompetitionInfo();
+    console.log(1);
+    console.log(competitionInfo);
+  }, []);
+
+  const handleCompEditSubmit = async (
+    competitionInfo: CompetitionInformation
+  ) => {
+    const newCompetitionDetails = {
+      id: compId,
+      name: competitionInfo.name,
+      teamSize: 3, // harcoded data because current type in here dont have team size
+      earlyRegDeadline: new Date(competitionInfo.early).getTime(),
+      generalRegDeadline: new Date(competitionInfo.general).getTime(),
+      startDate: new Date(competitionInfo.start).getTime(),
+      siteLocations: competitionInfo.siteLocations,
+      code: competitionInfo.code,
+      region: competitionInfo.region,
+      information: competitionInfo.information,
+    };
+
+    try {
+      await sendRequest.put('/competition/system_admin/update', newCompetitionDetails);
+    } catch (err) {
+      console.error("Error updating competition details", err);
+    }
+    console.log(competitionInfo);
+    // TO-DO: send the EditRego to backend for storage
+    await sendRequest.post('/competition/staff/update_rego_toggles',
+      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
+    console.log(regoFields);
+    console.log("submitted");
+  };
+
   return (
-    <StandardContainerDiv>
-      {showManageSite ? (
-        <AssignSeatsPage>
-          <BackButton onClick={() => setShowManageSite(false)}>
-            <FaChevronLeft /> Back
-          </BackButton>
-          <AssignSeats siteName={universityOption.label} siteCapacity={getSiteCapacity()} />
-        </AssignSeatsPage>
-      ) : (
-        <>
-          <ActionsContainer>
-            {filteredActions.map((action, index) => (
-              <ActionCard
-                key={index}
-                onClick={() =>
-                  action.type === "code"
-                    ? handleCopyCode()
-                    : handleActionClick(action.type)
+    <ManageContainer>
+      <StandardContainerDiv>
+        {showManageSite ? (
+          <AssignSeatsPage>
+            <BackButton onClick={() => setShowManageSite(false)}>
+              <FaChevronLeft /> Back
+            </BackButton>
+            <AssignSeats
+              siteName={universityOption.label}
+              siteCapacity={getSiteCapacity()}
+              teamListState={teamListState}
+              siteOptionState={[siteOption,setSiteOption]}
+            />
+          </AssignSeatsPage>
+        ) : (
+          <>
+            <ActionsContainer>
+              {filteredActions.map((action, index) => (
+                <ActionCard
+                  key={index}
+                  onClick={() =>
+                    action.type === "code"
+                      ? handleCopyCode()
+                      : handleActionClick(action.type)
+                  }
+                  $actionType={action.type}
+                >
+                  {action.type === "code" ? (
+                    <CopyCard>
+                      <CardIcon as={action.icon} />
+                      <CodeCardText>{action.text}</CodeCardText>
+                      <Code>
+                        <p>{compCode}</p>
+                      </Code>
+                    </CopyCard>
+                  ) : (
+                    <>
+                      <CardIcon as={action.icon} />
+                      <CardText>{action.text}</CardText>
+                    </>
+                  )}
+                </ActionCard>
+              ))}
+            </ActionsContainer>
+
+            {showContactBio && (
+              <BioChangePopUp
+                onClose={() => setShowContactBio(false)}
+                onNext={handleChange}
+                bioValue={currentBio}
+                announcementValue={announcementMessage}
+                onBioChange={(e) => setCurrentBio(e.target.value)}
+                onAnnouncementChange={(value: SetStateAction<string>) =>
+                  setAnnouncementMessage(value)
                 }
-                $actionType={action.type}
-              >
-                {action.type === "code" ? (
-                  <CopyCard>
-                    <CardIcon as={action.icon} />
-                    <CodeCardText>{action.text}</CodeCardText>
-                    <Code>
-                      <p>{compCode}</p>
-                    </Code>
-                  </CopyCard>
-                ) : (
-                  <>
-                    <CardIcon as={action.icon} />
-                    <CardText>{action.text}</CardText>
-                  </>
-                )}
-              </ActionCard>
-            ))}
-          </ActionsContainer>
+              />
+            )}
 
-          {showContactBio && (
-            <BioChangePopUp
-              onClose={() => setShowContactBio(false)}
-              onNext={handleChange}
-              bioValue={currentBio}
-              announcementValue={announcementMessage}
-              onBioChange={(e) => setCurrentBio(e.target.value)}
-              onAnnouncementChange={(value: SetStateAction<string>) => setAnnouncementMessage(value)}
-            />
-          )}
+            {showEditRego && (
+              <EditCompRegoPopUp
+                heading={
+                  <Title2>
+                    Please select the fields you would like to {"\n"} to remove
+                    from the Competition Registration Form
+                  </Title2>
+                }
+                onClose={() => setShowEditRego(false)}
+                regoFields={regoFields}
+                setRegoFields={setRegoFields}
+                onSubmit={handleRegoEditSubmit}
+                editCourses={editCourse}
+                setCourses={handleEditCourseChange}
+              />
+            )}
 
-          {/* {showEditRego && (
-            <EditCompRegoPopUp
-              heading={
-                <Title2>
-                  Please select the fields you would like to {"\n"} to remove
-                  from the Competition Registration Form
-                </Title2>
-              }
-              onClose={() => setShowEditRego(false)}
-              regoFields={regoFields}
-              setRegoFields={setRegoFields}
-              onSubmit={handleRegoEditSubmit}
-            />
-          )} */}
+            {showEditCapacity && (
+              <EditSiteCapacityPopUp
+                heading={"Update Site Capacities"}
+                onClose={() => setShowEditCapacity(false)}
+                onSubmit={handleSiteCapacityChange}
+              />
+            )}
 
-          {showEditCapacity && (
-            <EditSiteCapacityPopUp 
-              heading={"Update Site Capacities"} 
-              onClose={() => setShowEditCapacity(false)} 
-              onSubmit={handleSiteCapacityChange}            
-            />
-          )}
-        </>
-      )}
-    </StandardContainerDiv>
+            {showEditComp && (
+              <EditCompDetailsPopUp
+                onClose={() => setShowEditComp(false)}
+                competitionInfo={competitionInfo}
+                setCompetitionInfo={setCompetitionInfo}
+                onSubmit={handleCompEditSubmit}
+              />
+            )}
+          </>
+        )}
+      </StandardContainerDiv>
+    </ManageContainer>
   );
 };

@@ -174,6 +174,14 @@ export class CompetitionController {
     res.json({ studentDetails });
   });
 
+  competitionStudentDetailsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    const { compId } = req.body;
+    const studentDetails = req.body.studentDetails as StudentInfo;
+    await this.competitionService.competitionStudentDetailsUpdate(
+      parseInt(userId as string), parseInt(compId as string), studentDetails);
+  });
+
   competitionStaffDetails = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
 
@@ -224,7 +232,6 @@ export class CompetitionController {
 
     res.json({ roles });
   });
-
   /**
    * Handles the request to get the list of teams in a competition.
    */
@@ -277,7 +284,9 @@ export class CompetitionController {
       generalRegDeadline: req.body.generalRegDeadline,
       startDate: req.body.startDate,
       siteLocations: req.body.siteLocations,
+      code: req.body.code,
       region: req.body.region,
+      information: req.body.information,
     };
 
     const competitionId = await this.competitionService.competitionSystemAdminUpdate(Number(userId), newCompetitionDetails);
@@ -292,9 +301,17 @@ export class CompetitionController {
    */
   competitionGetDetails = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const competitionId = req.query.compId;
-    const competitionDetails = await this.competitionService.competitionGetDetails(Number(competitionId));
+    let compId : number;
 
-    res.json({ competition: competitionDetails });
+    if (Number.isNaN(Number(competitionId))) {
+      compId = await this.competitionService.competitionIdFromCode(String(competitionId));
+    } else {
+      compId = Number(competitionId);
+    }
+    
+    const competitionDetails = await this.competitionService.competitionGetDetails(compId);
+    
+    res.json({competition: competitionDetails});
 
     return;
   });
@@ -363,7 +380,6 @@ export class CompetitionController {
     res.json(result);
     return;
   });
-
   /**
    * Approves team assignments for a competition.
    */

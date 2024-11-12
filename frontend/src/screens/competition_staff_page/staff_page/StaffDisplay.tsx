@@ -75,7 +75,8 @@ const STAFF_DISPLAY_FILTER_OPTIONS = {
 
 export const StaffDisplay: FC = () => {
   const { compId } = useParams();
-  const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
+  const { filters, sortOption, searchTerm, removeFilter, setFilters,
+    universityOptionState: [universityOption, setUniversityOption],
     setFilterOptions, setSortOptions,
     staffListState: [staffList, setStaffList],
   } = useCompetitionOutletContext('staff');

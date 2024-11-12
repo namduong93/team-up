@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { TimeoutButton } from "../../general_utility/TimeoutButton";
 
-
 interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   actionName: string;
   question: string;
@@ -12,7 +11,9 @@ interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   handleClick?: () => void; // Optional function prop for a custom click handler
 }
 
-const Button = styled.button<{ $actionType: "primary" | "secondary" | "error" }>`
+const Button = styled.button<{
+  $actionType: "primary" | "secondary" | "error";
+}>`
   border-radius: 10px;
   padding: 10px;
   border: none;
@@ -84,8 +85,6 @@ export const PopUpContent = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 `;
 
-
-
 export const Question = styled.div`
   padding: 20px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
@@ -142,7 +141,13 @@ export const CancelButton = styled.button`
   }
 `;
 
-export const ActionButton: FC<ActionButtonProps> = ({ actionName, question, redirectPath, actionType, handleClick }) => {
+export const ActionButton: FC<ActionButtonProps> = ({
+  actionName,
+  question,
+  redirectPath,
+  actionType,
+  handleClick,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 

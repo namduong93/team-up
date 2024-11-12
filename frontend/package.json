@@ -28,6 +28,7 @@
     "react-simplemde-editor": "^5.2.0",
     "remark-gfm": "^4.0.0",
     "simplemde": "^1.11.2",
+    "rehype-raw": "^7.0.0",
     "styled-components": "^6.1.13"
   },
   "devDependencies": {

@@ -44,6 +44,7 @@ export interface CompetitionDetails {
   otherSiteLocations?: OtherSiteLocation[];
   code?: string;
   region: string;
+  information?: string;
 }
 
 export const fetchTeams = async (
@@ -116,11 +117,20 @@ export const CompetitionPage: FC = () => {
     otherSiteLocations: [],
     code: "",
     region: "Unknown",
+    information: "",
   });
   ////
   const [siteOptions, setSiteOptions] = useState([{ value: '', label: '' }]);
+  const [siteOption, setSiteOption] = useState({ value: '', label: '' });
   const [universityOptions, setUniversityOptions] = useState([{ value: '', label: '' }]);
+  const [universityOption, setUniversityOption] = useState({ value: '', label: '' });
+  
+  const [dropdownOptions, setDropdownOptions] = useState<
+  Array<{ value: string; label: string }>
+  >([{ value: "", label: "" }]);
+  const [dropdownOption, setDropdownOption] = useState({ value: "", label: "" });
 
+  
   useEffect(() => {
     const fetchCompetitionDetails = async () => {
       try {
@@ -172,6 +182,7 @@ export const CompetitionPage: FC = () => {
         setSiteOptions(
           sites.map((site) => ({ value: String(site.id), label: site.name }))
         );
+        setSiteOption({value: String(sites[0].id), label: sites[0].name });
       } catch (error: unknown) {
         console.error("Error fetching sites:", error);
       }
@@ -182,16 +193,14 @@ export const CompetitionPage: FC = () => {
         universities: Array<{ id: number; name: string }>;
       }>("/universities/list");
       const { universities } = response.data;
-
       const uniOptions = [
         ...universities.map(({ id, name }) => ({
           value: String(id),
           label: name,
         })),
       ];
+      setDropdownOptions(uniOptions);
       setUniversityOptions(uniOptions);
-      setOptions(uniOptions);
-
 
       // TODO: Change the default to the users' own university
       setUniversityOption({ value: String(universities[0].id), label: universities[0].name });
@@ -250,23 +259,6 @@ export const CompetitionPage: FC = () => {
     });
   };
 
-  const [options, setOptions] = useState<
-    Array<{ value: string; label: string }>
-  >([{ value: "", label: "" }]);
-  const [universityOption, setUniversityOption] = useState<{
-    value: string;
-    label: string;
-  }>({ value: "", label: "" });
-
-
-  useEffect(() => {
-    setUniversityOption(options[0]);
-  }, [options]);
-
-  useEffect(() => {
-    setUniversityOption(options[0]);
-  }, []);
-
   return (
     <OverflowFlexBackground>
       <MainPageDiv>
@@ -299,7 +291,7 @@ export const CompetitionPage: FC = () => {
           {buttonConfiguration.enableAttendeesButtons && (
             <AttendeesPageButtons
               attendeesListState={[attendeesList, setAttendeesList]}
-              universityOption={universityOption}
+              siteOption={siteOption}
               siteOptionsState={[siteOptions, setSiteOptions]}
             />
           )}
@@ -307,9 +299,9 @@ export const CompetitionPage: FC = () => {
           {roles.includes(CompetitionRole.Admin) && (
             <AdvancedDropdown
               style={{ minWidth: "0", maxWidth: "342px", width: "100%" }}
-              optionsState={[options, setOptions]}
-              defaultSearchTerm={options[0].label}
-              setCurrentSelected={setUniversityOption}
+              optionsState={[dropdownOptions, setDropdownOptions]}
+              defaultSearchTerm={dropdownOption.label}
+              setCurrentSelected={setDropdownOption}
               isExtendable={false}
             />
           )}
@@ -404,9 +396,7 @@ export const CompetitionPage: FC = () => {
             rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
             registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
             teamListState: [teamList, setTeamList],
-            universityOption,
-            universityOptionsState: [universityOptions, setUniversityOptions],
-
+            
             setFilterOptions,
             setSortOptions,
             buttonConfigurationState: [
@@ -418,7 +408,12 @@ export const CompetitionPage: FC = () => {
             staffListState: [staffList, setStaffList],
             compDetails,
             siteOptionsState: [siteOptions, setSiteOptions],
-            dropdownOptionsState: [options, setOptions]
+            dropdownOptionsState: [dropdownOptions, setDropdownOptions],
+            universityOptionsState: [universityOptions, setUniversityOptions],
+            
+            siteOptionState: [siteOption, setSiteOption],
+            universityOptionState: [universityOption, setUniversityOption],
+            dropdownOptionState: [dropdownOption, setDropdownOption],
           }}
         />
       </MainPageDiv>

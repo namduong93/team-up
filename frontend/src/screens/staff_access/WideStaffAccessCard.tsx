@@ -12,9 +12,8 @@ import { StaffRequests } from "../../../shared_types/Competition/staff/StaffInfo
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
   return (
-    <WideInfoContainerDiv style={{
-      backgroundColor: theme.colours.sidebarBackground,
-      color: theme.fonts.colour,
+    <WideInfoContainerDiv $isHeader={true} style={{
+      backgroundColor: theme.colours.userInfoCardHeader,
       fontWeight: 'bold'
     }}>
       <UserNameContainerDiv>
