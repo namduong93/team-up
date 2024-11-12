@@ -26,6 +26,7 @@ import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
 import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
 import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
 import { CompetitionDetails } from "../../../competition/register/CompInformation";
+import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 
 type ActionType =
   | "code"
@@ -36,13 +37,6 @@ type ActionType =
   | "capacity";
 
 interface StaffActionCardProps {
-  staffRoles: string[];
-  compCode: string;
-  universityOption: { value: string; label: string };
-  siteOptionsState: [
-    { value: string; label: string }[],
-    React.Dispatch<React.SetStateAction<{ value: string; label: string }[]>>
-  ];
 }
 
 interface ActionCardProps {
@@ -133,6 +127,11 @@ const AssignSeatsPage = styled.div`
   overflow: hidden;
 `;
 
+const ManageContainer = styled.div`
+  width: 100%;
+  height: 70%;
+`;
+
 const Code = styled.div`
   font-size: 1rem;
   font-style: ${({ theme }) => theme.fonts.style};
@@ -206,11 +205,7 @@ export const DEFAULT_REGO_FIELDS = {
   enableRegionalParticipationField: true,
 }
 
-export const StaffActionCard: FC<StaffActionCardProps> = ({
-  staffRoles,
-  compCode,
-  siteOptionsState: [siteOptions, setSiteOptions],
-}) => {
+export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
@@ -221,47 +216,68 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
 
-  const { universityOption } = useCompetitionOutletContext(
+  const [staffRoles, setRoles] = useState<Array<CompetitionRole>>([]);
+
+
+  // Fetch the user type and set the state accordingly
+  useEffect(() => {
+    const fetchRoles = async () => {
+      const roleResponse = await sendRequest.get<{ roles: Array<CompetitionRole> }>('/competition/roles', { compId });
+      const { roles } = roleResponse.data;
+      setRoles(roles);
+    }
+    fetchRoles();
+  }, [])
+
+  const { 
+    universityOptionState: [universityOption, setUniversityOption],
+    siteOptionState: [siteOption, setSiteOption], teamListState,
+    siteOptionsState: [siteOptions, setSiteOptions],
+    compDetails
+  } = useCompetitionOutletContext(
     "manage",
-    showManageSite
+    showManageSite,
+    showManageSite ? 'site' : ''
   );
+
+  const compCode = compDetails.code ?? "COMP1234";
 
   const actions = [
     {
       type: "code" as ActionType,
       icon: FaCopy,
       text: `Copy Competition Code`,
-      roles: ["Admin", "Coach", "Site-Coordinator"],
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
     },
     {
       type: "competition" as ActionType,
       icon: FaEdit,
       text: "Edit Competition Details",
-      roles: ["Admin"],
+      roles: [CompetitionRole.Admin],
     },
     {
       type: "registration" as ActionType,
       icon: FaFileSignature,
       text: "Update Registration Form",
-      roles: ["Admin", "Coach"],
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach],
     },
     {
       type: "seat" as ActionType,
       icon: FaChair,
       text: "Assign Seats to Teams",
-      roles: ["Admin", "Site-Coordinator"],
+      roles: [CompetitionRole.Admin, CompetitionRole.SiteCoordinator],
     },
     {
       type: "contact" as ActionType,
       icon: FaChair,
       text: "Update Your Bio and Annoucements",
-      roles: ["Admin", "Coach"],
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach],
     },
     {
       type: "capacity" as ActionType,
       icon: FaChair,
       text: "Update Your Site Capacity",
-      roles: ["Admin", "Site-Coordinator"],
+      roles: [CompetitionRole.Admin, CompetitionRole.SiteCoordinator],
     },
   ];
 
@@ -568,96 +584,100 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({
   };
 
   return (
-    <StandardContainerDiv>
-      {showManageSite ? (
-        <AssignSeatsPage>
-          <BackButton onClick={() => setShowManageSite(false)}>
-            <FaChevronLeft /> Back
-          </BackButton>
-          <AssignSeats
-            siteName={universityOption.label}
-            siteCapacity={getSiteCapacity()}
-          />
-        </AssignSeatsPage>
-      ) : (
-        <>
-          <ActionsContainer>
-            {filteredActions.map((action, index) => (
-              <ActionCard
-                key={index}
-                onClick={() =>
-                  action.type === "code"
-                    ? handleCopyCode()
-                    : handleActionClick(action.type)
+    <ManageContainer>
+      <StandardContainerDiv>
+        {showManageSite ? (
+          <AssignSeatsPage>
+            <BackButton onClick={() => setShowManageSite(false)}>
+              <FaChevronLeft /> Back
+            </BackButton>
+            <AssignSeats
+              siteName={universityOption.label}
+              siteCapacity={getSiteCapacity()}
+              teamListState={teamListState}
+              siteOptionState={[siteOption,setSiteOption]}
+            />
+          </AssignSeatsPage>
+        ) : (
+          <>
+            <ActionsContainer>
+              {filteredActions.map((action, index) => (
+                <ActionCard
+                  key={index}
+                  onClick={() =>
+                    action.type === "code"
+                      ? handleCopyCode()
+                      : handleActionClick(action.type)
+                  }
+                  $actionType={action.type}
+                >
+                  {action.type === "code" ? (
+                    <CopyCard>
+                      <CardIcon as={action.icon} />
+                      <CodeCardText>{action.text}</CodeCardText>
+                      <Code>
+                        <p>{compCode}</p>
+                      </Code>
+                    </CopyCard>
+                  ) : (
+                    <>
+                      <CardIcon as={action.icon} />
+                      <CardText>{action.text}</CardText>
+                    </>
+                  )}
+                </ActionCard>
+              ))}
+            </ActionsContainer>
+
+            {showContactBio && (
+              <BioChangePopUp
+                onClose={() => setShowContactBio(false)}
+                onNext={handleChange}
+                bioValue={currentBio}
+                announcementValue={announcementMessage}
+                onBioChange={(e) => setCurrentBio(e.target.value)}
+                onAnnouncementChange={(value: SetStateAction<string>) =>
+                  setAnnouncementMessage(value)
                 }
-                $actionType={action.type}
-              >
-                {action.type === "code" ? (
-                  <CopyCard>
-                    <CardIcon as={action.icon} />
-                    <CodeCardText>{action.text}</CodeCardText>
-                    <Code>
-                      <p>{compCode}</p>
-                    </Code>
-                  </CopyCard>
-                ) : (
-                  <>
-                    <CardIcon as={action.icon} />
-                    <CardText>{action.text}</CardText>
-                  </>
-                )}
-              </ActionCard>
-            ))}
-          </ActionsContainer>
+              />
+            )}
 
-          {showContactBio && (
-            <BioChangePopUp
-              onClose={() => setShowContactBio(false)}
-              onNext={handleChange}
-              bioValue={currentBio}
-              announcementValue={announcementMessage}
-              onBioChange={(e) => setCurrentBio(e.target.value)}
-              onAnnouncementChange={(value: SetStateAction<string>) =>
-                setAnnouncementMessage(value)
-              }
-            />
-          )}
+            {showEditRego && (
+              <EditCompRegoPopUp
+                heading={
+                  <Title2>
+                    Please select the fields you would like to {"\n"} to remove
+                    from the Competition Registration Form
+                  </Title2>
+                }
+                onClose={() => setShowEditRego(false)}
+                regoFields={regoFields}
+                setRegoFields={setRegoFields}
+                onSubmit={handleRegoEditSubmit}
+                editCourses={editCourse}
+                setCourses={handleEditCourseChange}
+              />
+            )}
 
-          {showEditRego && (
-            <EditCompRegoPopUp
-              heading={
-                <Title2>
-                  Please select the fields you would like to {"\n"} to remove
-                  from the Competition Registration Form
-                </Title2>
-              }
-              onClose={() => setShowEditRego(false)}
-              regoFields={regoFields}
-              setRegoFields={setRegoFields}
-              onSubmit={handleRegoEditSubmit}
-              editCourses={editCourse}
-              setCourses={handleEditCourseChange}
-            />
-          )}
+            {showEditCapacity && (
+              <EditSiteCapacityPopUp
+                heading={"Update Site Capacities"}
+                onClose={() => setShowEditCapacity(false)}
+                onSubmit={handleSiteCapacityChange}
+              />
+            )}
 
-          {showEditCapacity && (
-            <EditSiteCapacityPopUp
-              heading={"Update Site Capacities"}
-              onClose={() => setShowEditCapacity(false)}
-              onSubmit={handleSiteCapacityChange}
-            />
-          )}
-
-          {showEditComp && (
-            <EditCompDetailsPopUp
-              onClose={() => setShowEditComp(false)}
-              competitionInfo={competitionInfo}
-              setCompetitionInfo={setCompetitionInfo}
-              onSubmit={handleCompEditSubmit}
-            />
-          )}
-        </>
-      )}
-    </StandardContainerDiv>
+            {showEditComp && (
+              <EditCompDetailsPopUp
+                onClose={() => setShowEditComp(false)}
+                competitionInfo={competitionInfo}
+                setCompetitionInfo={setCompetitionInfo}
+                onSubmit={handleCompEditSubmit}
+              />
+            )}
+          </>
+        )}
+      </StandardContainerDiv>
+    </ManageContainer>
   );
 };

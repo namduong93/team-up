@@ -75,7 +75,7 @@ export const TeamDisplay: FC = () => {
     rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
 
     teamListState: [teamList, setTeamList],
-    universityOption,
+    universityOptionState: [universityOption, setUniversityOption],
     roles,
     editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
     buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],

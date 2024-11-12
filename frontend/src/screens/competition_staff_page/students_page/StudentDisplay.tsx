@@ -265,7 +265,8 @@ const STUDENT_DISPLAY_FILTER_OPTIONS = {
 };
 
 export const StudentDisplay = () => {
-  const { filters, sortOption, searchTerm, removeFilter, setFilters, universityOption,
+  const { filters, sortOption, searchTerm, removeFilter, setFilters,
+    universityOptionState: [universityOption, setUniversityOption],
     setFilterOptions, setSortOptions, studentsState: [students, setStudents] } = useCompetitionOutletContext('students');
   
   const { compId } = useParams();
