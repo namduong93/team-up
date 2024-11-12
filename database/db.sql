@@ -18,16 +18,6 @@ CREATE TYPE course_category_enum AS ENUM (
   'Programming Challenges'
 );
 
-CREATE TABLE courses (
-  id SERIAL PRIMARY KEY,
-  
-  name TEXT NOT NULL, -- Full Name of course including any course codes
-
-  category course_category_enum,
-  
-  university_id INT NOT NULL REFERENCES universities (id)
-);
-
 CREATE TYPE user_type_enum AS ENUM ('student', 'staff', 'system_admin');
 CREATE TYPE user_access_enum AS ENUM ('Accepted', 'Pending', 'Rejected');
 
@@ -231,6 +221,20 @@ CREATE TABLE notifications (
   new_team_name TEXT,
   site_location TEXT
 );
+
+CREATE TABLE courses (
+  id SERIAL PRIMARY KEY,
+  
+  name TEXT NOT NULL, -- Full Name of course including any course codes
+
+  category course_category_enum,
+  
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  university_id INT NOT NULL REFERENCES universities (id),
+
+  CONSTRAINT unique_course UNIQUE (competition_id, university_id, category)
+);
+
 
 CREATE OR REPLACE FUNCTION competition_list(u_id INT)
 RETURNS TABLE(id INT, name TEXT, created_date TIMESTAMP, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
@@ -1395,9 +1399,9 @@ INSERT INTO competition_registration_toggles (
 )
 VALUES (4, 5, TRUE, TRUE, FALSE, TRUE);
 
-INSERT INTO courses (name, category, university_id)
+INSERT INTO courses (name, category, university_id, competition_id)
 VALUES
-('COMP1511 Programming Fundamentals', 'Introduction' :: course_category_enum, 5),
-('COMP2521 Data Structures and Algorithms', 'Data Structures' :: course_category_enum, 5),
-('COMP3121 Algorithm Design or COMP 3821 Extended Algorithm Design', 'Algorithm Design' :: course_category_enum, 5),
-('COMP4128 Programming Challenges', 'Programming Challenges' :: course_category_enum, 5);
+('COMP1511 Programming Fundamentals', 'Introduction' :: course_category_enum, 5, 1),
+('COMP2521 Data Structures and Algorithms', 'Data Structures' :: course_category_enum, 5, 1),
+('COMP3121 Algorithm Design or COMP 3821 Extended Algorithm Design', 'Algorithm Design' :: course_category_enum, 5, 1),
+('COMP4128 Programming Challenges', 'Programming Challenges' :: course_category_enum, 5, 1);
