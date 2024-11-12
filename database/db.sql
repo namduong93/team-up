@@ -990,13 +990,13 @@ VALUES
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
 VALUES 
 (4, 5, 'J17 K17 Building UNSW', 100),
-(1, 1, 'Ainsworth Building', 100),
-(1, 1, 'Krusty Krab', 100),
-(1, 1, 'Spooky Manor', 100),
-(1, 1, 'Mickey Mouse Clubhouse', 100),
-(1, 1, 'afternoon chance some', 100),
-(1, 1, 'charge back finish', 100),
-(1, 1, 'chemical captured choose', 100),
+(1, 2, 'Ainsworth Building', 100),
+(1, 3, 'Krusty Krab', 100),
+(1, 4, 'Spooky Manor', 100),
+(1, 5, 'Mickey Mouse Clubhouse', 100),
+(4, 2, 'afternoon chance some', 100),
+(4, 2, 'charge back finish', 100),
+(4, 2, 'chemical captured choose', 100),
 (4, 2, 'J17 K17 Building UNSW', 100);
 
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
