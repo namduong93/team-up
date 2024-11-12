@@ -1200,7 +1200,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     if (competitionExistResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'Competition does not exist.');
     }
-    const competitionCode = competitionExistResult.rows[0].code;
+    const teamCode = await this.competitionTeamInviteCode(userId, compId);
     const competitionName = competitionExistResult.rows[0].name;
 
     const teamQuery = `
@@ -1235,7 +1235,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         AND competition_id = $2
       `;
       await this.pool.query(competitionRemoveParticipantQuery, [userId, compId]);
-      return { competitionCode, competitionName, teamId: teamResult.rows[0].id, teamName: teamResult.rows[0].name };
+      return { competitionCode: teamCode, competitionName, teamId: teamResult.rows[0].id, teamName: teamResult.rows[0].name };
     }
     else {
       // Leave the team
@@ -1265,7 +1265,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         teamResult.rows[0].site_attending_id
       ];
       const newTeamJoinResult = await this.pool.query(newTeamJoinQuery, newTeamJoinValues);
-      return { competitionCode, competitionName, teamId: newTeamJoinResult.rows[0].id, teamName: newTeamJoinResult.rows[0].name };
+      return { competitionCode: teamCode, competitionName, teamId: newTeamJoinResult.rows[0].id, teamName: newTeamJoinResult.rows[0].name };
     }
   }
 
