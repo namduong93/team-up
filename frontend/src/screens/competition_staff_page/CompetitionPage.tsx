@@ -182,6 +182,7 @@ export const CompetitionPage: FC = () => {
         setSiteOptions(
           sites.map((site) => ({ value: String(site.id), label: site.name }))
         );
+        setSiteOption({value: String(sites[0].id), label: sites[0].name });
       } catch (error: unknown) {
         console.error("Error fetching sites:", error);
       }
@@ -201,9 +202,8 @@ export const CompetitionPage: FC = () => {
       setDropdownOptions(uniOptions);
       setUniversityOptions(uniOptions);
 
-
       // TODO: Change the default to the users' own university
-      setDropdownOption({ value: String(universities[0].id), label: universities[0].name });
+      setUniversityOption({ value: String(universities[0].id), label: universities[0].name });
     };
 
     const fetchInfo = async () => {
@@ -248,10 +248,6 @@ export const CompetitionPage: FC = () => {
     fetchInfo();
   }, []);
 
-  // useEffect(() => {
-  //   setDropdownOption(dropdownOptions[0]);
-  // }, [dropdownOptions]);
-
   const removeFilter = (field: string, value: string) => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
@@ -262,16 +258,6 @@ export const CompetitionPage: FC = () => {
       return updatedFilters; // trigger render to update filter dropdown
     });
   };
-
-
-
-  // useEffect(() => {
-  //   setDropdownOption(dropdownOptions[0]);
-  // }, [dropdownOptions]);
-
-  // useEffect(() => {
-  //   setDropdownOption(dropdownOptions[0]);
-  // }, []);
 
   return (
     <OverflowFlexBackground>
