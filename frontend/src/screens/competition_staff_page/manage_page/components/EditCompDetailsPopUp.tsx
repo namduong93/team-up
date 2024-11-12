@@ -17,6 +17,7 @@ import {
 import ReactMarkdownEditorLite from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
+import { formatDate } from "../../../competition/creation/util/formatDate";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -174,11 +175,6 @@ const EditorContainer = styled.div`
   align-self: stretch;
 `;
 
-const formatDate = (date: Date) => {
-  
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-}
-
 interface EditCompDetailsProps {
   onClose: () => void;
   competitionInfo: CompetitionInformation;
@@ -203,6 +199,60 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
 
   const otherSiteLocations = competitionInfo.otherSiteLocations || [];
 
+  const [startDateInput, setStartDateInput] = useState<Date | undefined>();
+  const [earlyRegInput, setEarlyRegInput] = useState<Date | undefined>();
+  const [generalRegInput, setGeneralRegInput] = useState<Date | undefined>();
+
+  useEffect(() => {
+    const { startDate, earlyRegDeadline, generalRegDeadline } = competitionInfo;
+    setStartDateInput(startDate);
+    setEarlyRegInput(earlyRegDeadline);
+    setGeneralRegInput(generalRegDeadline);
+  }, []);
+
+  useEffect(() => {
+    if (!startDateInput) {
+      return;
+    }
+    const utcDate = Date.UTC(startDateInput.getUTCFullYear(), startDateInput.getUTCMonth(),
+                startDateInput.getUTCDate(), startDateInput.getUTCHours(),
+                startDateInput.getUTCMinutes(), startDateInput.getUTCSeconds());
+
+    setCompetitionInfo((p) => ({
+      ...p,
+      startDate: new Date(utcDate)
+    }));
+  }, [startDateInput]);
+
+  useEffect(() => {
+    if (!earlyRegInput) {
+      return;
+    }
+    const utcDate = Date.UTC(earlyRegInput.getUTCFullYear(), earlyRegInput.getUTCMonth(),
+                earlyRegInput.getUTCDate(), earlyRegInput.getUTCHours(),
+                earlyRegInput.getUTCMinutes(), earlyRegInput.getUTCSeconds());
+
+    setCompetitionInfo((p) => ({
+      ...p,
+      earlyRegDeadline: new Date(utcDate)
+    }));
+  }, [earlyRegInput]);
+
+  useEffect(() => {
+    if (!generalRegInput) {
+      return;
+    }
+    const utcDate = Date.UTC(generalRegInput.getUTCFullYear(), generalRegInput.getUTCMonth(),
+                generalRegInput.getUTCDate(), generalRegInput.getUTCHours(),
+                generalRegInput.getUTCMinutes(), generalRegInput.getUTCSeconds());
+
+    setCompetitionInfo((p) => ({
+      ...p,
+      generalRegDeadline: new Date(utcDate)
+    }));
+  }, [generalRegInput]);
+
+
   useEffect(() => {
     const initialDisplayList = [
       ...competitionInfo.siteLocations.map((site) => ({
@@ -218,7 +268,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     ];
 
     setOptionDisplayList(initialDisplayList);
-  }, [competitionInfo.siteLocations, otherSiteLocations]);
+  }, [competitionInfo.siteLocations, competitionInfo.otherSiteLocations]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -356,26 +406,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     }
   };
 
-  const handleChangeGeneralDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCompetitionInfo((p) => ({
-      ...p,
-      generalRegDeadline: new Date(`${e.target.value}Z`)
-    }));
-  }
-
-  const handleChangeEarlyDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCompetitionInfo((p) => ({
-      ...p,
-      earlyRegDeadline: new Date(`${e.target.value}Z`)
-    }));
-  }
-
-  const handleChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCompetitionInfo((p) => ({
-      ...p,
-      startDate: new Date(`${e.target.value}Z`)
-    }));
-  }
+ 
 
   return (
     <ModalOverlay>
@@ -458,8 +489,8 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 placeholder="dd/mm/yyyy"
                 type="datetime-local"
                 required={false}
-                value={formatDate(competitionInfo.startDate)}
-                onChange={handleChangeStartDate}
+                value={formatDate(startDateInput)}
+                onChange={(e) => setStartDateInput(new Date(e.target.value))}
                 width="45%"
               />
 
@@ -478,8 +509,8 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                     placeholder="dd/mm/yyyy"
                     type="datetime-local"
                     required={false}
-                    value={formatDate(competitionInfo.earlyRegDeadline)}
-                    onChange={handleChangeEarlyDate}
+                    value={formatDate(earlyRegInput)}
+                    onChange={(e) => setEarlyRegInput(new Date(e.target.value))}
                     width="45%"
                   />
                 </DoubleInputContainer>
@@ -497,8 +528,8 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 placeholder="dd/mm/yyyy"
                 type="datetime-local"
                 required={false}
-                value={formatDate(competitionInfo.generalRegDeadline)}
-                onChange={handleChangeGeneralDate}
+                value={formatDate(generalRegInput)}
+                onChange={(e) => setGeneralRegInput(new Date(e.target.value))}
                 width="45%"
               />
 
@@ -528,7 +559,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
             <LocationList>
               {optionDisplayList.map((displayObject, index) => {
                 return (
-                  <LocationItem key={index}>
+                  <LocationItem key={`${displayObject.value}${index}${displayObject.defaultSite}`}>
                     <div>{displayObject.label}</div>
                     <div>{displayObject.defaultSite}</div>
                     <DeleteIcon

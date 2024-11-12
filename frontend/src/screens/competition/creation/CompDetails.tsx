@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { FlexBackground } from "../../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompCreationProgressBar } from "../../../components/progress_bar/ProgressBar";
@@ -9,6 +9,8 @@ import SiteLocationForm from "./components/SiteLocationForm";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import moment from "moment-timezone";
 import DropdownInput from "../../../components/general_utility/DropDownInput";
+import { formatDate } from "./util/formatDate";
+import { CompetitionInformation } from "../../../../shared_types/Competition/CompetitionDetails";
 
 const Container = styled.div`
   flex: 1;
@@ -120,25 +122,6 @@ export interface OtherSiteLocation {
   defaultSite: string;
 }
 
-interface CompetitionInformation {
-  name: string;
-  region: string;
-  timeZone: string;
-  startDate: string;
-  startTime: string;
-  start: string;
-  earlyBird: boolean | null;
-  earlyBirdDate?: string;
-  earlyBirdTime?: string;
-  early: string;
-  generalDate: string;
-  generalTime: string;
-  general: string;
-  code: string;
-  siteLocations: SiteLocation[];
-  otherSiteLocations: OtherSiteLocation[];
-}
-
 const createTimezoneOptions = () => {
   const timezones = moment.tz.names().map((tz) => ({
     value: tz,
@@ -163,16 +146,10 @@ export const CompetitionDetails: FC = () => {
         name: "",
         region: "",
         timeZone: "",
-        startDate: "",
-        startTime: "",
+        startDate: undefined,
         start: "",
-        earlyBird: null,
-        earlyBirdDate: "",
-        earlyBirdTime: "",
-        early: "",
-        generalDate: "",
-        generalTime: "",
-        general: "",
+        earlyRegDeadline: undefined,
+        generalRegDeadline: undefined,
         code: "",
         siteLocations: [],
         otherSiteLocations: [],
@@ -194,7 +171,7 @@ export const CompetitionDetails: FC = () => {
       ...prev,
       siteLocations: [
         ...prev.siteLocations,
-        { universityId: parseInt(option.value), defaultSite },
+        { universityId: parseInt(option.value), defaultSite, universityName: option.label },
       ],
       // convert universityId to number before we send to backend;
     }));
@@ -212,7 +189,7 @@ export const CompetitionDetails: FC = () => {
     setCompetitionInfo((prev) => ({
       ...prev,
       otherSiteLocations: [
-        ...prev.otherSiteLocations,
+        ...(prev.otherSiteLocations || []),
         { universityName: option.label, defaultSite },
       ],
     }));
@@ -236,7 +213,7 @@ export const CompetitionDetails: FC = () => {
       competitionInfo.siteLocations.some(
         (site) => String(site.universityId) === currentOption.value
       ) ||
-      competitionInfo.otherSiteLocations.some(
+      (competitionInfo.otherSiteLocations || []).some(
         (otherSite) => otherSite.universityName === currentOption.label
       )
     ) {
@@ -280,7 +257,7 @@ export const CompetitionDetails: FC = () => {
     if (!deleteObject.value) {
       setCompetitionInfo((prev) => ({
         ...prev,
-        otherSiteLocations: prev.otherSiteLocations.filter(
+        otherSiteLocations: (prev.otherSiteLocations || []).filter(
           (elem) => elem.universityName !== deleteObject.label
         ),
       }));
@@ -299,87 +276,86 @@ export const CompetitionDetails: FC = () => {
   const isButtonDisabled = () => {
     const {
       name,
-      earlyBirdDate,
-      earlyBirdTime,
-      generalDate,
-      generalTime,
+      earlyRegDeadline,
       code,
       siteLocations,
       otherSiteLocations,
-      earlyBird,
       region,
       startDate,
-      startTime,
-      timeZone,
+      generalRegDeadline
     } = competitionInfo;
     return (
       name === "" ||
       region === "" ||
-      timeZone === "" ||
-      startDate === "" ||
-      startTime === "" ||
-      (earlyBird && !earlyBirdDate && !earlyBirdTime) ||
-      generalDate === "" ||
-      generalTime === "" ||
+      !generalRegDeadline ||
       code === "" ||
-      (siteLocations.length === 0 && otherSiteLocations.length === 0)
+      (siteLocations.length === 0 && (!otherSiteLocations || otherSiteLocations.length === 0))
     );
   };
-
-  const handleTimeZoneChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCompetitionInfo({ ...competitionInfo, timeZone: e.target.value });
-  };
-
-  const convertToTimezone = (date: string, time: string, timezone: string) => {
-    if (!date || !time || !timezone) return "";
-
-    const dateTimeString = `${date} ${time}`;
-    return moment.tz(dateTimeString, timezone).format();
-  };
-
-  const timezoneOptions = createTimezoneOptions();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const {
-      startDate,
-      startTime,
-      earlyBirdDate,
-      earlyBirdTime,
-      generalDate,
-      generalTime,
-    } = competitionInfo;
-
-    const start = convertToTimezone(
-      startDate,
-      startTime,
-      competitionInfo.timeZone
-    );
-    const early =
-      earlyBirdDate && earlyBirdTime
-        ? convertToTimezone(
-            earlyBirdDate,
-            earlyBirdTime,
-            competitionInfo.timeZone
-          )
-        : "";
-    const general = convertToTimezone(
-      generalDate,
-      generalTime,
-      competitionInfo.timeZone
-    );
-
-    const updatedCompetitionInfo = {
-      ...competitionInfo,
-      start,
-      early,
-      general,
-    };
 
     navigate("/competition/confirmation", {
-      state: { competitionInfo: updatedCompetitionInfo, optionDisplayList },
+      state: { competitionInfo, optionDisplayList },
     });
   };
+
+  const [startDateInput, setStartDateInput] = useState<Date | undefined>();
+  const [earlyRegInput, setEarlyRegInput] = useState<Date | undefined>();
+  const [generalRegInput, setGeneralRegInput] = useState<Date | undefined>();
+
+  useEffect(() => {
+    const { startDate, earlyRegDeadline, generalRegDeadline } = competitionInfo;
+    setStartDateInput(startDate);
+    setEarlyRegInput(earlyRegDeadline);
+    setGeneralRegInput(generalRegDeadline);
+  }, []);
+
+  useEffect(() => {
+    if (!startDateInput) {
+      return;
+    }
+    const utcDate = Date.UTC(startDateInput.getUTCFullYear(), startDateInput.getUTCMonth(),
+                startDateInput.getUTCDate(), startDateInput.getUTCHours(),
+                startDateInput.getUTCMinutes(), startDateInput.getUTCSeconds());
+
+    setCompetitionInfo((p) => ({
+      ...p,
+      startDate: new Date(utcDate)
+    }));
+  }, [startDateInput]);
+
+  useEffect(() => {
+    if (!earlyRegInput) {
+      return;
+    }
+    const utcDate = Date.UTC(earlyRegInput.getUTCFullYear(), earlyRegInput.getUTCMonth(),
+                earlyRegInput.getUTCDate(), earlyRegInput.getUTCHours(),
+                earlyRegInput.getUTCMinutes(), earlyRegInput.getUTCSeconds());
+
+    setCompetitionInfo((p) => ({
+      ...p,
+      earlyRegDeadline: new Date(utcDate)
+    }));
+  }, [earlyRegInput]);
+
+  useEffect(() => {
+    if (!generalRegInput) {
+      return;
+    }
+    const utcDate = Date.UTC(generalRegInput.getUTCFullYear(), generalRegInput.getUTCMonth(),
+                generalRegInput.getUTCDate(), generalRegInput.getUTCHours(),
+                generalRegInput.getUTCMinutes(), generalRegInput.getUTCSeconds());
+
+    setCompetitionInfo((p) => ({
+      ...p,
+      generalRegDeadline: new Date(utcDate)
+    }));
+  }, [generalRegInput]);
+
+
+  const [isEarlyReg, setIsEarlyReg] = useState(false);
 
   return (
     <FlexBackground
@@ -416,40 +392,21 @@ export const CompetitionDetails: FC = () => {
             descriptor="Please specify the region your Competition will be held in"
           />
 
-          <DropdownInput
-            label="Competition Timezone"
-            options={timezoneOptions}
-            required={true}
-            value={competitionInfo.timeZone}
-            onChange={handleTimeZoneChange}
-            width="100%"
-            descriptor="Please select the timezone for the Competition"
-          />
-
           <Label>
             Competition Start<Asterisk>*</Asterisk>
           </Label>
 
           <DoubleInputContainer>
-            <TextInputLight
-              label="Date"
-              placeholder="dd/mm/yyyy"
-              type="date"
-              required={true}
-              value={competitionInfo.startDate}
-              onChange={(e) => handleChange(e, "startDate")}
-              width="45%"
-            />
+              <TextInputLight
+                label="Date and Time (UTC Timezone)"
+                placeholder="dd/mm/yyyy"
+                type="datetime-local"
+                required={false}
+                value={formatDate(startDateInput)}
+                onChange={(e) => setStartDateInput(new Date(e.target.value))}
+                width="45%"
+              />
 
-            <TextInputLight
-              label="Time"
-              placeholder="hh:mm"
-              type="time"
-              required={true}
-              value={competitionInfo.startTime}
-              onChange={(e) => handleChange(e, "startTime")}
-              width="45%"
-            />
           </DoubleInputContainer>
 
           <Label>Early Bird Registration Deadline</Label>
@@ -458,52 +415,37 @@ export const CompetitionDetails: FC = () => {
             label=""
             options={["Yes", "No"]}
             selectedOption={
-              competitionInfo.earlyBird === null
+              isEarlyReg === null
                 ? ""
-                : competitionInfo.earlyBird
+                : isEarlyReg
                 ? "Yes"
                 : "No"
             }
             onOptionChange={(e) => {
-              const isEarlyBird = e.target.value === "Yes";
-              setCompetitionInfo((prev) => ({
-                ...prev,
-                earlyBird: isEarlyBird,
-                earlyBirdDate: isEarlyBird ? prev.earlyBirdDate : "",
-                earlyBirdTime: isEarlyBird ? prev.earlyBirdTime : "",
-              }));
+              setIsEarlyReg(e.target.value === 'Yes');
             }}
             required={true}
             descriptor="Will your Competition have an Early Bird Registration Deadline?"
             width="100%"
           />
 
-          {competitionInfo.earlyBird && (
+          {isEarlyReg && (
             <>
               <Descriptor>
                 Please set the Date and Time of your Early Bird Registration
                 Deadline
               </Descriptor>
               <DoubleInputContainer>
-                <TextInputLight
-                  label="Date"
-                  placeholder="dd/mm/yyyy"
-                  type="date"
-                  required={true}
-                  value={competitionInfo.earlyBirdDate || ""}
-                  onChange={(e) => handleChange(e, "earlyBirdDate")}
-                  width="45%"
-                />
+                  <TextInputLight
+                    label="Date and Time (UTC Timezone)"
+                    placeholder="dd/mm/yyyy"
+                    type="datetime-local"
+                    required={false}
+                    value={formatDate(earlyRegInput)}
+                    onChange={(e) => setEarlyRegInput(new Date(e.target.value))}
+                    width="45%"
+                  />
 
-                <TextInputLight
-                  label="Time"
-                  placeholder="hh:mm"
-                  type="time"
-                  required={true}
-                  value={competitionInfo.earlyBirdTime || ""}
-                  onChange={(e) => handleChange(e, "earlyBirdTime")}
-                  width="45%"
-                />
               </DoubleInputContainer>
             </>
           )}
@@ -517,24 +459,15 @@ export const CompetitionDetails: FC = () => {
 
           <DoubleInputContainer>
             <TextInputLight
-              label="Date"
+              label="Date and Time (UTC Timezone)"
               placeholder="dd/mm/yyyy"
-              type="date"
-              required={true}
-              value={competitionInfo.generalDate}
-              onChange={(e) => handleChange(e, "generalDate")}
+              type="datetime-local"
+              required={false}
+              value={formatDate(generalRegInput)}
+              onChange={(e) => setGeneralRegInput(new Date(e.target.value))}
               width="45%"
             />
 
-            <TextInputLight
-              label="Time"
-              placeholder="hh:mm"
-              type="time"
-              required={true}
-              value={competitionInfo.generalTime}
-              onChange={(e) => handleChange(e, "generalTime")}
-              width="45%"
-            />
           </DoubleInputContainer>
 
           <TextInput
