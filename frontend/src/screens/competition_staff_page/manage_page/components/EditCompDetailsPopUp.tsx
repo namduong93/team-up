@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
 import { DoubleInputContainer } from "../../../competition/register/CompIndividual";
 import { FaTimes } from "react-icons/fa";
@@ -174,14 +174,10 @@ const EditorContainer = styled.div`
   align-self: stretch;
 `;
 
-const createTimezoneOptions = () => {
-  const timezones = moment.tz.names().map((tz) => ({
-    value: tz,
-    label: tz.replace(/_/g, " ").replace(/\/(.+)/, " - $1"), // Format label for better readability
-  }));
-
-  return [{ value: "", label: "Please Select" }, ...timezones];
-};
+const formatDate = (date: Date) => {
+  
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+}
 
 interface EditCompDetailsProps {
   onClose: () => void;
@@ -205,14 +201,16 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     Array<{ value: string; label: string; defaultSite: string }>
   >([]);
 
+  const otherSiteLocations = competitionInfo.otherSiteLocations || [];
+
   useEffect(() => {
     const initialDisplayList = [
       ...competitionInfo.siteLocations.map((site) => ({
         value: String(site.universityId),
-        label: String(site.universityId),
+        label: String(site.universityName),
         defaultSite: site.defaultSite,
       })),
-      ...competitionInfo.otherSiteLocations.map((otherSite) => ({
+      ...otherSiteLocations.map((otherSite) => ({
         value: "", // Use empty value for custom sites
         label: otherSite.universityName,
         defaultSite: otherSite.defaultSite,
@@ -220,7 +218,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     ];
 
     setOptionDisplayList(initialDisplayList);
-  }, [competitionInfo.siteLocations, competitionInfo.otherSiteLocations]);
+  }, [competitionInfo.siteLocations, otherSiteLocations]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -237,7 +235,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
       ...prev,
       siteLocations: [
         ...prev.siteLocations,
-        { universityId: parseInt(option.value), defaultSite },
+        { universityId: parseInt(option.value), defaultSite, universityName: option.label },
       ],
     }));
 
@@ -254,7 +252,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     setCompetitionInfo((prev) => ({
       ...prev,
       otherSiteLocations: [
-        ...prev.otherSiteLocations,
+        ...prev.otherSiteLocations || [],
         { universityName: option.label, defaultSite },
       ],
     }));
@@ -278,7 +276,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
       competitionInfo.siteLocations.some(
         (site) => String(site.universityId) === currentOption.value
       ) ||
-      competitionInfo.otherSiteLocations.some(
+      otherSiteLocations.some(
         (otherSite) => otherSite.universityName === currentOption.label
       )
     ) {
@@ -322,7 +320,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     if (!deleteObject.value) {
       setCompetitionInfo((prev) => ({
         ...prev,
-        otherSiteLocations: prev.otherSiteLocations.filter(
+        otherSiteLocations: (prev.otherSiteLocations || []).filter(
           (elem) => elem.universityName !== deleteObject.label
         ),
       }));
@@ -338,17 +336,6 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     }));
   };
 
-  const handleTimeZoneChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCompetitionInfo({ ...competitionInfo, timeZone: e.target.value });
-  };
-
-  const convertToTimezone = (date: string, time: string, timezone: string) => {
-    if (!date || !time || !timezone) return "";
-
-    const dateTimeString = `${date} ${time}`;
-    return moment.tz(dateTimeString, timezone).format();
-  };
-
   const handleMarkdownChange = (text: string) => {
     setCompetitionInfo((prev) => ({
       ...prev,
@@ -358,43 +345,8 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
 
   const handleSubmit = async (): Promise<boolean> => {
     try {
-      const {
-        startDate,
-        startTime,
-        earlyBirdDate,
-        earlyBirdTime,
-        generalDate,
-        generalTime,
-      } = competitionInfo;
-
-      const start = convertToTimezone(
-        startDate,
-        startTime,
-        competitionInfo.timeZone
-      );
-      const early =
-        earlyBirdDate && earlyBirdTime
-          ? convertToTimezone(
-              earlyBirdDate,
-              earlyBirdTime,
-              competitionInfo.timeZone
-            )
-          : "";
-
-      const general = convertToTimezone(
-        generalDate,
-        generalTime,
-        competitionInfo.timeZone
-      );
-
-      const updatedCompetitionInfo = {
-        ...competitionInfo,
-        start,
-        early,
-        general,
-      };
-
-      onSubmit(updatedCompetitionInfo);
+      
+      onSubmit(competitionInfo);
       onClose();
 
       return true;
@@ -404,7 +356,26 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     }
   };
 
-  const timezoneOptions = createTimezoneOptions();
+  const handleChangeGeneralDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCompetitionInfo((p) => ({
+      ...p,
+      generalRegDeadline: new Date(`${e.target.value}Z`)
+    }));
+  }
+
+  const handleChangeEarlyDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCompetitionInfo((p) => ({
+      ...p,
+      earlyRegDeadline: new Date(`${e.target.value}Z`)
+    }));
+  }
+
+  const handleChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCompetitionInfo((p) => ({
+      ...p,
+      startDate: new Date(`${e.target.value}Z`)
+    }));
+  }
 
   return (
     <ModalOverlay>
@@ -479,40 +450,22 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
               descriptor="Please specify the region your Competition will be held in"
             />
 
-            <DropdownInput
-              label="Competition Timezone"
-              options={timezoneOptions}
-              required={false}
-              value={competitionInfo.timeZone}
-              onChange={handleTimeZoneChange}
-              width="100%"
-              descriptor="Please select the timezone for the Competition"
-            />
             <Label>Competition Start</Label>
 
             <DoubleInputContainer>
               <TextInputLight
-                label="Date"
+                label="Date and Time (UTC Timezone)"
                 placeholder="dd/mm/yyyy"
-                type="date"
+                type="datetime-local"
                 required={false}
-                value={competitionInfo.startDate}
-                onChange={(e) => handleChange(e, "startDate")}
+                value={formatDate(competitionInfo.startDate)}
+                onChange={handleChangeStartDate}
                 width="45%"
               />
 
-              <TextInputLight
-                label="Time"
-                placeholder="hh:mm"
-                type="time"
-                required={false}
-                value={competitionInfo.startTime}
-                onChange={(e) => handleChange(e, "startTime")}
-                width="45%"
-              />
             </DoubleInputContainer>
 
-            {competitionInfo.earlyBird && (
+            {competitionInfo.earlyRegDeadline && (
               <>
                 <Label>Early Bird Registration Deadline</Label>
                 <Descriptor>
@@ -521,22 +474,12 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 </Descriptor>
                 <DoubleInputContainer>
                   <TextInputLight
-                    label="Date"
+                    label="Date and Time (UTC Timezone)"
                     placeholder="dd/mm/yyyy"
-                    type="date"
+                    type="datetime-local"
                     required={false}
-                    value={competitionInfo.earlyBirdDate || ""}
-                    onChange={(e) => handleChange(e, "earlyBirdDate")}
-                    width="45%"
-                  />
-
-                  <TextInputLight
-                    label="Time"
-                    placeholder="hh:mm"
-                    type="time"
-                    required={false}
-                    value={competitionInfo.earlyBirdTime || ""}
-                    onChange={(e) => handleChange(e, "earlyBirdTime")}
+                    value={formatDate(competitionInfo.earlyRegDeadline)}
+                    onChange={handleChangeEarlyDate}
                     width="45%"
                   />
                 </DoubleInputContainer>
@@ -550,24 +493,15 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
 
             <DoubleInputContainer>
               <TextInputLight
-                label="Date"
+                label="Date and Time (UTC Timezone)"
                 placeholder="dd/mm/yyyy"
-                type="date"
+                type="datetime-local"
                 required={false}
-                value={competitionInfo.generalDate}
-                onChange={(e) => handleChange(e, "generalDate")}
+                value={formatDate(competitionInfo.generalRegDeadline)}
+                onChange={handleChangeGeneralDate}
                 width="45%"
               />
 
-              <TextInputLight
-                label="Time"
-                placeholder="hh:mm"
-                type="time"
-                required={false}
-                value={competitionInfo.generalTime}
-                onChange={(e) => handleChange(e, "generalTime")}
-                width="45%"
-              />
             </DoubleInputContainer>
 
             <TextInput

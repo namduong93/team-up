@@ -502,17 +502,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
       information: "",
       name: "",
       region: "",
-      timeZone: "",
-      startDate: "",
-      startTime: "",
-      start: "",
-      earlyBird: null,
-      earlyBirdDate: "",
-      earlyBirdTime: "",
-      early: "",
-      generalDate: "",
-      generalTime: "",
-      general: "",
+      startDate: new Date(),
+      earlyRegDeadline: new Date(),
+      generalRegDeadline: new Date(),
       code: "",
       siteLocations: [],
       otherSiteLocations: [],
@@ -521,30 +513,34 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
   useEffect(() => {
     const fetchCompetitionInfo = async () => {
       try {
-        const response = await sendRequest.get<{competition: CompetitionDetails}>("/competition/details", { compId });
-        const competitionData = response.data.competition;
+        const response = await sendRequest.get<{ compInfo: CompetitionInformation }>("/competition/information", { compId });
+        const competitionData = response.data.compInfo;
 
-        const competitionDetails: CompetitionInformation = {
-          name: competitionData.name,
-          early: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString() : "",
-          earlyBirdDate: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[0] : "",
-          earlyBirdTime: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[1].split('.')[0] : "",
-          earlyBird: competitionData.earlyRegDeadline ? false : true,
-          general: new Date(competitionData.generalRegDeadline).toISOString(),
-          generalDate: new Date(competitionData.generalRegDeadline).toISOString().split('T')[0],
-          generalTime: new Date(competitionData.generalRegDeadline).toISOString().split('T')[1].split('.')[0],
-          start: new Date(competitionData.startDate).toISOString(),
-          startDate: new Date(competitionData.startDate).toISOString().split('T')[0],
-          startTime: new Date(competitionData.startDate).toISOString().split('T')[1].split('.')[0],
-          code: competitionData.code ? competitionData.code : "",
-          region: competitionData.region,
-          siteLocations: competitionData.siteLocations ? competitionData.siteLocations : [],
-          otherSiteLocations: competitionData.otherSiteLocations ? competitionData.otherSiteLocations : [],
-          information: competitionData.information,
-          timeZone: "Australia/Sydney", // hardcoded timezone
-        };
-
-        setCompetitionInfo(competitionDetails);
+        // const competitionDetails: CompetitionInformation = {
+        //   name: competitionData.name,
+        //   early: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString() : "",
+        //   earlyBirdDate: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[0] : "",
+        //   earlyBirdTime: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[1].split('.')[0] : "",
+        //   earlyBird: competitionData.earlyRegDeadline ? false : true,
+        //   general: new Date(competitionData.generalRegDeadline).toISOString(),
+        //   generalDate: new Date(competitionData.generalRegDeadline).toISOString().split('T')[0],
+        //   generalTime: new Date(competitionData.generalRegDeadline).toISOString().split('T')[1].split('.')[0],
+        //   start: new Date(competitionData.startDate).toISOString(),
+        //   startDate: new Date(competitionData.startDate).toISOString().split('T')[0],
+        //   startTime: new Date(competitionData.startDate).toISOString().split('T')[1].split('.')[0],
+        //   code: competitionData.code ? competitionData.code : "",
+        //   region: competitionData.region,
+        //   siteLocations: competitionData.siteLocations ? competitionData.siteLocations : [],
+        //   otherSiteLocations: competitionData.otherSiteLocations ? competitionData.otherSiteLocations : [],
+        //   information: competitionData.information,
+        //   timeZone: "Australia/Sydney", // hardcoded timezone
+        // };
+        setCompetitionInfo({
+          ...competitionData,
+          startDate: new Date(competitionData.startDate),
+          generalRegDeadline: new Date(competitionData.generalRegDeadline),
+          earlyRegDeadline: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline) : undefined
+        });
       } catch (err: unknown) {
         console.error(err);
       }
@@ -561,9 +557,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
       id: compId,
       name: competitionInfo.name,
       teamSize: 3, // harcoded data because current type in here dont have team size
-      earlyRegDeadline: new Date(competitionInfo.early).getTime(),
-      generalRegDeadline: new Date(competitionInfo.general).getTime(),
-      startDate: new Date(competitionInfo.start).getTime(),
+      earlyRegDeadline: competitionInfo.earlyRegDeadline,
+      generalRegDeadline: competitionInfo.generalRegDeadline,
+      startDate: competitionInfo.startDate,
       siteLocations: competitionInfo.siteLocations,
       code: competitionInfo.code,
       region: competitionInfo.region,
