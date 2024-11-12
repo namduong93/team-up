@@ -97,7 +97,6 @@ export const StaffAccounts: FC = () => {
     searchedStaff = fuse.search(searchTerm);
   } else {
     searchedStaff = sortedStaff.map((staff) => { return { item: staff } });
-    console.log(searchedStaff);
   }
 
   const removeFilter = (field: string, value: string) => {
@@ -113,42 +112,30 @@ export const StaffAccounts: FC = () => {
 
   const handleApproveAll = async (): Promise<boolean> => {
     // Filter by pending
-    const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.userId);
+    const pendingStaffListIds = searchedStaff.filter((staffDetails) => staffDetails.item.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.item.userId);
   
     try {
       await sendRequest.post("/user/staff_requests", { staffRequests: pendingStaffListIds.map((userId) => ({ userId, access: UserAccess.Accepted })) });
     }
     catch (error) {
       console.error("Error updating staff access: ", error);
+      return false;
     }
-  
-    // replace with the put hook
-    return new Promise((resolve) => {
-      setFilters({});
-      // await fetch updated staff list here
-
-      resolve(true);
-    });
+    return true;
   };
 
   const handleRejectAll = async (): Promise<boolean> => {
     // Filter by pending
-    const pendingStaffListIds = staffList.filter((staffDetails) => staffDetails.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.userId);
+    const pendingStaffListIds = searchedStaff.filter((staffDetails) => staffDetails.item.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.item.userId);
   
     try {
       await sendRequest.post("/user/staff_requests", { staffRequests: pendingStaffListIds.map((userId) => ({ userId, access: UserAccess.Rejected })) });
     }
     catch (error) {
       console.error("Error updating staff access: ", error);
+      return false;
     }
-  
-    // replace with the put hook
-    return new Promise((resolve) => {
-      setFilters({});
-      // await fetch updated staff list here
-
-      resolve(true);
-    });
+    return true;
   };
 
   return (
@@ -186,7 +173,7 @@ export const StaffAccounts: FC = () => {
         <NarrowDisplayDiv>
           <StaffRecords>
             {searchedStaff.length > 0 ? (
-              searchedStaff.map(({ item: staffDetails }, index) => (
+              searchedStaff.map(({ item: staffDetails }) => (
                 <NarrowStaffAccessCard 
                   key={`staff-wide-${staffDetails.userId}`}  
                   staffDetails={staffDetails} 
@@ -202,7 +189,7 @@ export const StaffAccounts: FC = () => {
           <WideStaffAccessHeader />
           <StaffRecords>
             {searchedStaff.length > 0 ? (
-              searchedStaff.map(({ item: staffDetails }, index) => (
+              searchedStaff.map(({ item: staffDetails }) => (
                 <WideStaffAccessCard 
                   key={`staff-wide-${staffDetails.userId}`}  
                   staffDetails={staffDetails} 
