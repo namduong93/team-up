@@ -165,6 +165,7 @@ export const CompetitionExperience: FC = () => {
       const response = await sendRequest.get<{ courses: Array<Course> }>('/university/courses', { code });
       const { courses } = response.data;
 
+      courses.length &&
       setCourseOptions(courses.map((course) => ({ value: course.category, label: course.courseName })));
     }
 
