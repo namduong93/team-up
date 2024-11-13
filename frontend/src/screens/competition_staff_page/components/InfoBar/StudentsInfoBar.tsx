@@ -100,7 +100,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
         </InfoBarField>
 
         <ProfilePic
-          style={{ marginBottom: '15px' }}
+          style={{ margin: 'auto', marginBottom: '15px' }}
           $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
         />
 

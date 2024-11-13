@@ -214,15 +214,15 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
           <EditIcon />
         </EditIconButton>}
 
-        {isEditing ?
-        <EditableInput
-          value={teamData.teamName}
-          onChange={(e) => setTeamData((p) => ({ ...p, teamName: e.target.value }))}
-          style={{ width: '50%', height: '47px', fontSize: theme.fonts.fontSizes.title }}
-        /> :
         <TitleDiv $isOpen={isOpen || isPopupOpen}>
-          {teamData.teamName}
-        </TitleDiv>}
+          {isEditing ?
+          <EditableInput
+            value={teamData.teamName}
+            onChange={(e) => setTeamData((p) => ({ ...p, teamName: e.target.value }))}
+            style={{ width: '50%', height: '47px', fontSize: theme.fonts.fontSizes.title }}
+          /> : <>{teamData.teamName}</>
+          }
+        </TitleDiv>
 
         <VerticalInfoBarField>
           <TeamDetailsLabelSpan>Coach:</TeamDetailsLabelSpan>
