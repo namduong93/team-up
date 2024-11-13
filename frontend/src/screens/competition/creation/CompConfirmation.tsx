@@ -182,11 +182,11 @@ export const CompetitionConfirmation: FC = () => {
       code,
       siteLocations: siteLocations.map(location => ({
         universityId: location.universityId, 
-        name: location.defaultSite, 
+        defaultSite: location.defaultSite, 
       })),
       otherSiteLocations: (otherSiteLocations || []).map(location => ({
         universityName: location.universityName, 
-        name: location.defaultSite, 
+        defaultSite: location.defaultSite, 
       })),
     };
     console.log(payload)

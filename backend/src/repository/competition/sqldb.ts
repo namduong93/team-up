@@ -1015,14 +1015,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       VALUES (${userId}, ${competitionId}, ARRAY['Admin']::competition_role_enum[], 'Accepted'::competition_access_enum)`
     );
 
+
     // for the normal siteLocations that have university Ids:
     competition.siteLocations.forEach(async ({ universityId, defaultSite: name }) => {
+      console.log(competitionId, universityId, name);
       await this.pool.query(
         `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
         VALUES (${competitionId}, ${universityId}, '${name}', 0)`
       );
     });
 
+    console.log(competition.otherSiteLocations);
     // handle otherSiteLocations with universityName
     competition.otherSiteLocations?.forEach(async ({ universityName, defaultSite: name }) => {
       // Insert new university and get the universityId
