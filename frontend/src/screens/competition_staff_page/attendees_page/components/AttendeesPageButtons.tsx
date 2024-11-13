@@ -31,7 +31,7 @@ interface AccessibilityRequirement {
   studentName: string;
   studentEmail: string;
   university: string;
-  seat: string;
+  teamSeat: string;
 };
 
 export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
@@ -130,7 +130,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
       studentName: attendee.name,
       studentEmail: attendee.email,
       university: attendee.universityName,
-      seat: "DUMMY SEAT"
+      teamSeat: attendee.teamSeat
     }));
 
     if (accessibilityRequirements.length > 0) {
@@ -305,7 +305,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
       studentName: attendee.name,
       studentEmail: attendee.email,
       university: attendee.universityName,
-      seat: "DUMMY SEAT",
+      teamSeat: attendee.teamSeat,
     }));
 
     if (accessibilityRequirements.length > 0) {
@@ -320,7 +320,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
         name: curr.studentName,
         email: curr.studentEmail,
         university: curr.university,
-        seat: curr.seat,
+        teamSeat: curr.teamSeat,
       });
       acc[key].count++;
       return acc;
@@ -334,7 +334,7 @@ export const AttendeesPageButtons: FC<AttendeesButtonsProps> = (
         student.name,
         student.email,
         student.university,
-        student.seat,
+        student.teamSeat,
       ]);
     });
 
