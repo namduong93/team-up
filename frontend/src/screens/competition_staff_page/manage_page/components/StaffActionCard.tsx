@@ -1,4 +1,4 @@
-import React, { FC, SetStateAction, useEffect, useState } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaFileSignature,
@@ -24,7 +24,7 @@ import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletCon
 
 import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
 import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
-import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
+import { CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
 import { CompetitionDetails } from "../../../competition/register/CompInformation";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 
@@ -231,7 +231,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
 
   const { 
     universityOptionState: [universityOption, setUniversityOption],
-    siteOptionState: [siteOption, setSiteOption], teamListState,
+    siteOptionState: [siteOption, setSiteOption], teamListState: [teamList, setTeamList],
     siteOptionsState: [siteOptions, setSiteOptions],
     compDetails
   } = useCompetitionOutletContext(
@@ -451,7 +451,6 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
       regoFields,
       universityId: parseInt(universityOption.value),
     });
-    // TO-DO: send the edited courses to backend and store for competition
     console.log(editCourse);
     console.log(regoFields);
   };
@@ -460,11 +459,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
     site: { label: string; value: number },
     capacity: number
   ) => {
-    // TODO: backend PUT (update) the site capacity for a given site Id and new capacity
     console.log(
       `updating site ${site.label} with id ${site.value} with capacity: ${capacity}`
     );
-
     setShowEditCapacity(false);
   };
 
@@ -487,9 +484,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
     fetchSiteCapacities();
   }, []);
 
-  const getSiteCapacity = (): number => {
+  const getSiteCapacity = (siteId: number): number => {
     const foundSite = siteList?.find(
-      (site) => site.id === parseInt(universityOption.value)
+      (site) => site.id === siteId
     );
 
     if (foundSite) return foundSite?.capacity;
@@ -592,9 +589,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
               <FaChevronLeft /> Back
             </BackButton>
             <AssignSeats
-              siteName={universityOption.label}
-              siteCapacity={getSiteCapacity()}
-              teamListState={teamListState}
+              siteName={universityOption.value ? universityOption.label : teamList[0].teamSite}
+              siteCapacity={universityOption.value ? getSiteCapacity(parseInt(universityOption.value)) : getSiteCapacity(teamList[0].siteId)}
+              teamListState={[teamList, setTeamList]}
               siteOptionState={[siteOption,setSiteOption]}
             />
           </AssignSeatsPage>

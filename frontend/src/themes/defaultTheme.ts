@@ -61,6 +61,8 @@ export const defaultTheme: DefaultTheme = {
     pending: "#F68486",
     unregistered: "#FDD386",
     registered: "#8BDFA5",
+    levelA: "#D268D1",
+    levelB: "#6688D2",
   },
   roles: {
     participantBackground: '#4fdeee2b',
