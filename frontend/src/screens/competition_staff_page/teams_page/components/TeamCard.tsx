@@ -48,6 +48,8 @@ const TeamMemberContainerDiv = styled.div`
   grid-template-rows: 100%;
   grid-template-columns: 20% 70% 10%;
   user-select: none;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
 `
 
 const StyledUserIcon = styled(FaRegUser)`
@@ -63,7 +65,7 @@ const CenterTextDiv = styled.div<{ $levelChar?: string }>`
   flex-direction: column;
   justify-content: center;
   color: ${({ theme, $levelChar }) => $levelChar &&
-  ($levelChar === 'A' ? theme.access.acceptedText : theme.colours.primaryDark)};
+  ($levelChar === 'A' ? theme.teamView.levelA : theme.teamView.levelB)};
 
   font-weight: ${({ $levelChar }) => $levelChar && 'bold' };
 `
@@ -72,9 +74,10 @@ const TeamLevelDiv = styled.div<{ $levelChar?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: ${({ theme, $levelChar }) => $levelChar === 'A' ? theme.access.acceptedBackground : theme.colours.primaryLight};
+  background-color: rgba(255, 255, 255, 0.7);
   align-items: center;
-  color: ${({ theme }) => theme.background};
+  color: ${({ theme, $levelChar: levelChar }) => levelChar === "A" ? theme.teamView.levelA : theme.teamView.levelB};
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   width: 25px;
   height: 25px;
   border-radius: 50%;

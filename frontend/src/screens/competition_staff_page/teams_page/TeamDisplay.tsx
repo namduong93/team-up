@@ -122,12 +122,8 @@ export const TeamDisplay: FC = () => {
       }
     }
 
-    if (
-      !(universityOption.value === "") &&
-      !(team.universityId === parseInt(universityOption.value))
-    ) {
-      return false;
-    }
+    // if admin, check filter by chosen uni
+    if (universityOption.value && !(team.universityId === parseInt(universityOption.value))) return false;
 
     return true;
   });
