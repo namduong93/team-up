@@ -141,7 +141,7 @@ export const TeamDisplay: FC = () => {
   });
 
   const fuse = new Fuse(sortedTeamList, {
-    keys: ["teamName", "memberName1", "memberName2", "memberName3"],
+    keys: ["teamName", "memberName1", "memberName2", "memberName3", "teamLevel"],
     threshold: 0.5,
   });
 

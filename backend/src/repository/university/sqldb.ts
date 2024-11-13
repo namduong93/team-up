@@ -17,7 +17,7 @@ export class SqlDbUniversityRepository implements UniversityRepository {
    * @param userId The ID of the user whose university courses are to be retrieved.
    * @returns {Promise<Array<Course>>} A promise that resolves to an array of Course objects, each containing the course ID, course name, and category.
    */
-  universityCourses = async (userId: number): Promise<Array<Course>> => {
+  universityCourses = async (userId: number, code: string): Promise<Array<Course>> => {
     
     const dbResult = await this.pool.query(
       `SELECT 
@@ -25,9 +25,10 @@ export class SqlDbUniversityRepository implements UniversityRepository {
         c.name AS "courseName",
         category
       FROM courses AS c
+      JOIN competitions AS comp ON comp.id = c.competition_id
       JOIN universities AS uni ON uni.id = c.university_id
       JOIN users AS u ON u.university_id = uni.id
-      WHERE u.id = ${userId};`
+      WHERE u.id = ${userId} AND comp.code = '${code}';`
     );
 
     return dbResult.rows;

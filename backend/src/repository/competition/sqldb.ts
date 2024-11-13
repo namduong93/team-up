@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from "../../services/competition_service.js";
 import { CompetitionRepository } from "../competition_repository_type.js";
-import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject, CompetitionTeamNameObject } from "../../models/competition/competition.js";
+import { Competition, CompetitionShortDetailsObject, CompetitionIdObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionWithdrawalReturnObject, CompetitionTeamNameObject, CompetitionInput } from "../../models/competition/competition.js";
 
 import { UserType } from "../../models/user/user.js";
 import { parse } from "postgres-array";
@@ -19,13 +19,85 @@ import { CourseCategory } from "../../../shared_types/University/Course.js";
 import { error } from "console";
 import { CompetitionRole } from "../../../shared_types/Competition/CompetitionRole.js";
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
-import { EditRego } from "../../../shared_types/Competition/staff/Edit.js";
+import { EditCourse, EditRego } from "../../../shared_types/Competition/staff/Edit.js";
+import { CompetitionInformation } from "../../../shared_types/Competition/CompetitionDetails.js";
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
   private readonly pool: Pool;
 
   constructor(pool: Pool) {
     this.pool = pool;
+  }
+
+  competitionStaffUpdateCourses = async (compId: number, editCourse: EditCourse, universityId: number) => {
+    for (const [courseCategory, courseName] of Object.entries(editCourse)) {
+      try {
+        await this.pool.query(
+          `INSERT INTO courses (
+              competition_id,
+              university_id,
+              name,
+              category
+            )
+            VALUES (${compId}, ${universityId},
+              '${courseName}', '${courseCategory}'
+            )
+            ON CONFLICT (competition_id, university_id, category)
+            DO UPDATE
+            SET
+              name = '${courseName}'
+            `
+        );
+      } catch (error: unknown) {
+        throw new DbError(DbError.Insert, 'Error inserting / updating course');
+      }
+    }
+
+    return;
+  }
+
+  getUserUniversityId = async (userId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT university_id as "universityId"
+      FROM users AS u
+      WHERE u.id = ${userId}`
+    );
+
+    return dbResult.rows[0].universityId;
+  }
+  
+  competitionInformation = async (compId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT 
+        c.information AS "information",
+        c.name AS "name",
+        c.region AS "region",
+        c.start_date AS "startDate",
+        c.early_reg_deadline AS "earlyRegDeadline",
+        c.general_reg_deadline AS "generalRegDeadline",
+        c.code AS "code",
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'universityId', cs.university_id,
+            'universityName', uni.name,
+            'siteId', cs.id,
+            'defaultSite', cs.name
+          )
+        ) AS "siteLocations"
+
+      FROM competitions AS c
+      JOIN competition_sites AS cs ON cs.competition_id = c.id
+      JOIN universities AS uni ON uni.id = cs.university_id
+      WHERE c.id = ${compId}
+      GROUP BY c.information, c.name,
+        c.region, c.start_date, c.early_reg_deadline,
+        c.general_reg_deadline, c.code
+      `
+    );
+
+
+    return dbResult.rows[0];
+
   }
   
   competitionSiteCapacityUpdate = async (siteId: number, capacity: number) => {
@@ -928,7 +1000,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       competition.name,
       teamSize,
       new Date(competition.createdDate),
-      new Date(competition.earlyRegDeadline),
+      competition.earlyRegDeadline ? new Date(competition.earlyRegDeadline) : new Date(competition.generalRegDeadline),
       new Date(competition.generalRegDeadline),
       competition.code,
       new Date(competition.startDate),
@@ -943,16 +1015,19 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       VALUES (${userId}, ${competitionId}, ARRAY['Admin']::competition_role_enum[], 'Accepted'::competition_access_enum)`
     );
 
+
     // for the normal siteLocations that have university Ids:
-    competition.siteLocations.forEach(async ({ universityId, name }) => {
+    competition.siteLocations.forEach(async ({ universityId, defaultSite: name }) => {
+      console.log(competitionId, universityId, name);
       await this.pool.query(
         `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
         VALUES (${competitionId}, ${universityId}, '${name}', 0)`
       );
     });
 
+    console.log(competition.otherSiteLocations);
     // handle otherSiteLocations with universityName
-    competition.otherSiteLocations?.forEach(async ({ universityName, name }) => {
+    competition.otherSiteLocations?.forEach(async ({ universityName, defaultSite: name }) => {
       // Insert new university and get the universityId
       const insertUniversityResult = await this.pool.query(`
         INSERT INTO universities (name)
@@ -1013,7 +1088,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       competition.name,
       competition.teamSize,
       new Date(competition.createdDate),
-      new Date(competition.earlyRegDeadline),
+      competition.earlyRegDeadline ? new Date(competition.earlyRegDeadline) : new Date(competition.generalRegDeadline),
       new Date(competition.generalRegDeadline),
       competition.code,
       new Date(competition.startDate),
@@ -1023,6 +1098,44 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     ];
 
     await this.pool.query(competitionUpdateQuery, competitionUpdateValues);
+
+    competition.siteLocations.forEach(async ({ universityId, defaultSite: name }) => {
+      try {
+        await this.pool.query(
+          `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
+          VALUES (${competition.id}, ${universityId}, '${name}', 0)
+          ON CONFLICT (competition_id, university_id)
+            DO UPDATE
+            SET name = '${name}'
+          `
+
+        );
+      } catch (error: unknown) {
+        
+      }
+    });
+
+    // handle otherSiteLocations with universityName
+    competition.otherSiteLocations?.forEach(async ({ universityName, defaultSite: name }) => {
+      // Insert new university and get the universityId
+      const insertUniversityResult = await this.pool.query(`
+        INSERT INTO universities (name)
+        VALUES ($1)
+        RETURNING id
+      `, [universityName]);
+
+      const universityId = insertUniversityResult.rows[0].id;
+
+      // Insert the new site location with the new universityId
+      await this.pool.query(
+        `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
+        VALUES ($1, $2, $3, 0)
+        ON CONFLICT (competition_id, university_id)
+          DO UPDATE
+          SET name = $3
+              
+      `, [competition.id, universityId, name]);
+    });
 
     // Skip updating site details if siteLocations is not provided
     if (!competition.siteLocations) {
@@ -1039,7 +1152,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
    * @returns A promise that resolves to a `Competition` object containing the competition details.
    * @throws {DbError} If the competition does not exist.
    */
-  competitionGetDetails = async(competitionId: number): Promise<Competition> => {
+  competitionGetDetails = async(competitionId: number): Promise<CompetitionInput> => {
     const competitionQuery = `
       SELECT id, name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region, information
       FROM competitions
@@ -1070,7 +1183,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }));
 
     // Constructing the competition object
-    const competitionDetails: Competition = {
+    const competitionDetails: CompetitionInput = {
       id: competitionData.id,
       name: competitionData.name,
       teamSize: competitionData.team_size,

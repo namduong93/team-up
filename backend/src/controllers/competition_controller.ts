@@ -6,7 +6,8 @@ import { CompetitionAccessLevel, CompetitionStaff } from "../models/competition/
 import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
-import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { CompetitionInformation } from "../../shared_types/Competition/CompetitionDetails.js";
 
 export class CompetitionController {
   private competitionService: CompetitionService;
@@ -14,6 +15,27 @@ export class CompetitionController {
   constructor(competitionService: CompetitionService) {
     this.competitionService = competitionService;
   }
+
+  competitionStaffUpdateCourses = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId } = req.query as { userId: string };
+    const { compId, editCourse, universityId } = req.body as {
+      compId: number, editCourse: EditCourse, universityId?: number
+    };
+
+    await this.competitionService.competitionStaffUpdateCourses(
+      parseInt(userId), compId, editCourse, universityId);
+
+  });
+
+  competitionInformation = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query as { userId: string, compId: string };
+
+    const compInfo = await this.competitionService.competitionInformation(
+      parseInt(userId), parseInt(compId));
+
+    res.json({ compInfo });
+
+  });
 
   competitionSiteCapacityUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query as { userId: string };
@@ -253,7 +275,7 @@ export class CompetitionController {
     const newCompetition: Competition = {
       name: req.body.name,
       createdDate: Date.now(),
-      earlyRegDeadline: req.body.earlyRegDeadline,
+      earlyRegDeadline: req.body.earlyRegDeadline !== 'Invalid Date' ? req.body.earlyRegDeadline : undefined,
       generalRegDeadline: req.body.generalRegDeadline,
       startDate: req.body.startDate,
       code: req.body.code,
@@ -274,16 +296,17 @@ export class CompetitionController {
    */
   competitionSystemAdminUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
-
+    const compId = req.query.compId as string;
     const newCompetitionDetails: Competition = {
       id: req.body.id,
       name: req.body.name,
       teamSize: req.body.teamSize,
       createdDate: Date.now(),
-      earlyRegDeadline: req.body.earlyRegDeadline,
+      earlyRegDeadline: req.body.earlyRegDeadline !== 'Invalid Date' ? req.body.earlyRegDeadline : undefined,
       generalRegDeadline: req.body.generalRegDeadline,
       startDate: req.body.startDate,
       siteLocations: req.body.siteLocations,
+      otherSiteLocations: req.body.otherSiteLocations,
       code: req.body.code,
       region: req.body.region,
       information: req.body.information,
@@ -466,7 +489,6 @@ export class CompetitionController {
       siteLocation: req.body.staffRegistrationData.site,
       competitionBio: req.body.staffRegistrationData.competitionBio
     }
-    console.log(competitionStaffInfo);
     await this.competitionService.competitionStaffJoin(String(code), competitionStaffInfo);
     res.json({});
     return;

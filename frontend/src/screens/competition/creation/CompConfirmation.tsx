@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 import { CompCreationProgressBar } from "../../../components/progress_bar/ProgressBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendRequest } from "../../../utility/request";
+import { CompetitionInformation } from "../../../../shared_types/Competition/CompetitionDetails";
 
 const Container = styled.div`
   flex: 1;
@@ -131,25 +132,6 @@ interface OtherSiteLocation {
   defaultSite: string;
 }
 
-interface CompetitionInformation {
-  name: string;
-  region: string;
-  timeZone: string;
-  startDate: string;
-  startTime: string;
-  start: string;
-  earlyBird: boolean | null;
-  earlyBirdDate?: string;
-  earlyBirdTime?: string;
-  early: string;
-  generalDate: string;
-  generalTime: string;
-  general: string;
-  code: string;
-  siteLocations: SiteLocation[];
-  otherSiteLocations: OtherSiteLocation[];
-}
-
 interface LocationState {
   competitionInfo: CompetitionInformation;
   optionDisplayList: Array<{ value: string, label: string, defaultSite: string }>;
@@ -190,21 +172,21 @@ export const CompetitionConfirmation: FC = () => {
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const { name, early, general, start, region, code, siteLocations, otherSiteLocations } = competitionInfo;
+    const { name, earlyRegDeadline, generalRegDeadline, startDate, region, code, siteLocations, otherSiteLocations } = competitionInfo;
     const payload = {
       name,
-      earlyRegDeadline: early ? early : null,
-      generalRegDeadline: general,
-      startDate: start,
+      earlyRegDeadline,
+      generalRegDeadline,
+      startDate,
       region: region,
       code,
       siteLocations: siteLocations.map(location => ({
         universityId: location.universityId, 
-        name: location.defaultSite, 
+        defaultSite: location.defaultSite, 
       })),
-      otherSiteLocations: otherSiteLocations.map(location => ({
+      otherSiteLocations: (otherSiteLocations || []).map(location => ({
         universityName: location.universityName, 
-        name: location.defaultSite, 
+        defaultSite: location.defaultSite, 
       })),
     };
     console.log(payload)
@@ -246,25 +228,22 @@ export const CompetitionConfirmation: FC = () => {
           </DoubleInputContainer>
 
           <DoubleInputContainer margin={true}>
-            <HalfText><em>{competitionInfo?.startDate}</em></HalfText>
-            <HalfText><em>{competitionInfo?.startTime}</em></HalfText>
+            <HalfText><em>{competitionInfo.startDate.toDateString()}</em></HalfText>
+            <HalfText><em>{competitionInfo.startDate.toLocaleTimeString()}</em></HalfText>
           </DoubleInputContainer>
 
-          <Label>Competition Timezone</Label>
-          <Text><em>{competitionInfo?.timeZone}</em></Text>
-
-          {competitionInfo?.earlyBird && (
+          {competitionInfo?.earlyRegDeadline && (
             <>
             <Label>Early Bird Registration Deadline</Label>
 
             <DoubleInputContainer>
-              <HalfText>Date</HalfText>
-              <HalfText>Time</HalfText>
+            <HalfText>Date</HalfText>
+            <HalfText>Time</HalfText>
             </DoubleInputContainer>
 
             <DoubleInputContainer margin={true}>
-              <HalfText><em>{competitionInfo?.earlyBirdDate}</em></HalfText>
-              <HalfText><em>{competitionInfo?.earlyBirdTime}</em></HalfText>
+              <HalfText><em>{`${competitionInfo.earlyRegDeadline.toDateString()}`}</em></HalfText>
+              <HalfText><em>{`${competitionInfo.earlyRegDeadline.toLocaleTimeString()}`}</em></HalfText>
             </DoubleInputContainer>
             </>
           )}
@@ -274,11 +253,11 @@ export const CompetitionConfirmation: FC = () => {
           <DoubleInputContainer>
             <HalfText>Date</HalfText>
             <HalfText>Time</HalfText>
-          </DoubleInputContainer>
+            </DoubleInputContainer>
 
           <DoubleInputContainer margin={true}>
-            <HalfText><em>{competitionInfo?.generalDate}</em></HalfText>
-            <HalfText><em>{competitionInfo?.generalTime}</em></HalfText>
+            <HalfText><em>{`${competitionInfo?.generalRegDeadline.toDateString()}`}</em></HalfText>
+            <HalfText><em>{`${competitionInfo?.generalRegDeadline.toLocaleTimeString()}`}</em></HalfText>
           </DoubleInputContainer>
 
           <Label>Competition Code</Label>
