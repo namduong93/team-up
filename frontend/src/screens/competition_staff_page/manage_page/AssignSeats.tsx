@@ -10,7 +10,6 @@ import TextInput from "../../../components/general_utility/TextInput";
 import { FaBell, FaChair, FaDownload, FaTimes } from "react-icons/fa";
 import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
 import { TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
-import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { sendRequest } from "../../../utility/request";
 import { useParams } from "react-router-dom";
 
@@ -38,7 +37,7 @@ interface exportSeatAssignment {
 
 interface Room {
   roomName: string;
-  level: "A" | "B";
+  level: "Level A" | "Level B";
   seatCodes: string[]; // text string input of available seat codes for this room
   numSeats: number; // length of the seat codes array
 };
@@ -282,9 +281,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  // const { teamListState: [teamList, setTeamList], siteOptionState: [siteOption, setSiteOption] } = useCompetitionOutletContext("attendees", undefined, 'site');
-
-  // Filter by uni
+  // Filter by site
   let teamListToAssign = teamList;
   if (siteOption.value) {
     teamListToAssign = teamList.filter((team: TeamDetails) => team.siteId === parseInt(siteOption.value));
@@ -327,7 +324,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
   
     // Determine which form is filled and assign appropriate values
     const isFormA = roomNameA && seatCodeInputA;
-    const level = isFormA ? "A" : "B";
+    const level = isFormA ? "Level A" : "Level B";
     const roomName = (isFormA) ? roomNameA : roomNameB;
     const seatCodes = (isFormA) ? seatCodeInputA.split(',') : seatCodeInputB.split(',');
     const numSeats = seatCodes.length;
@@ -336,7 +333,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     const { valid, error } = validateRoomAndSeatCodes(roomName, level, seatCodes);
     if (!valid) {
       setError(<p>{error}</p>);
-      if (level === "A") {
+      if (level === "Level A") {
         setRoomNameA("");
         setSeatCodeInputA("");
       } else {
@@ -357,7 +354,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     setRooms((prev) => [...prev, newRoom]);
   
     // Clear the form inputs and reset error
-    if (level === "A") {
+    if (level === "Level A") {
       setRoomNameA("");
       setSeatCodeInputA("");
     } else {
@@ -431,11 +428,6 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     setSeatString(updatedSeats.join(", "));
   };
 
-  useEffect(() =>  {
-    console.log(seatString);
-  }, [seatString])
-
-
   // If not all fields are filled, disable add room button
   const cannotAddRoom = () => {
     const isFormAInvalid = !roomNameA || !seatCodeInputA;
@@ -450,19 +442,17 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     // Assign one seat per team, skipping two each time
     const seatAssignments: SeatAssignment[] = [];
     const teamsToAssign = teamListToAssign;
-
     const levelATeams = [];
     const levelBTeams = [];
 
     for (const team of teamsToAssign) {
-      const teamLevel = team.teamLevel; // level assumed by first student's level
-      if (teamLevel === 'A') {
+      const teamLevel = team.teamLevel;
+      if (teamLevel === 'Level A') {
         levelATeams.push(team);
-      } else if (teamLevel === 'B') {
+      } else if (teamLevel === 'Level B') {
         levelBTeams.push(team);
       }
     }
-    
     
     // if text input provided, use this method (only need to check the seatString and distribute)
     if (isTextInput) {
@@ -498,9 +488,9 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
         // Determine the appropriate teams to assign to the room
         let teamsToAssign: TeamDetails[] = [];
         
-        if (room.level === "A") {
+        if (room.level === "Level A") {
           teamsToAssign = levelATeams.filter(team => !assignedTeamIds.has(team.teamId));
-        } else if (room.level === "B") {
+        } else if (room.level === "Level B") {
           teamsToAssign = levelBTeams.filter(team => !assignedTeamIds.has(team.teamId));
         }
 
@@ -508,7 +498,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
         for (let i = 0; i < teamsToAssign.length; i++) {
           const team = teamsToAssign[i];
           const seatIndex = i * 3; // Calculate the seat index to skip 2 seats
-          const seat = room.seatCodes[seatIndex]; // Get the seat from the room's available seats
+          const seat = room.roomName + room.seatCodes[seatIndex]; // Get the seat from the room's available seats
           
           if (seat) {
             seatAssignments.push({
@@ -533,11 +523,12 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     }
 
     setTeamSeatAssignments(seatAssignments);
+    setSeatString("");
+    setRooms([]);
     setSeatModalState(true);
   };
 
   const handleDownload = () => {
-
     // Group seat assignments by site
     const formattedData: exportSeatAssignment = {
       siteName,
@@ -552,8 +543,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     // Add data rows
     formattedData.teams.forEach(assignment => {
       const row = [
-        formattedData.siteName,
-        formattedData.siteCapacity,
+        siteName,
+        siteCapacity,
         assignment.teamLevel,
         assignment.teamId,
         assignment.teamName,
