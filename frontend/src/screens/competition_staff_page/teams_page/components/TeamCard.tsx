@@ -81,7 +81,11 @@ const TeamLevelDiv = styled.div<{ $levelChar?: string }>`
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  position: absolute;
+  /* position: absolute; */
+  margin-left: auto;
+  margin-right: 5px;
+  margin-bottom: auto;
+  margin-top: 5px;
   top: 5px;
   right: 5px;
 `;
@@ -145,7 +149,7 @@ const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   display: flex;
   align-items: center;
   gap: 2.5%;
-  position: relative;
+  /* position: relative; */
 `;
 
 const TitleSpan = styled.span`
@@ -447,7 +451,6 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
                 className="team-member-cell"
                 drag={isEditable}
                 $isDraggable={isEditable}
-
 
                 dragElastic={1}
                 dragConstraints={{left: 0, top: 0, right: 0, bottom: 0}}
