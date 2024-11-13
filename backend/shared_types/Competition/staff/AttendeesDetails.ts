@@ -12,6 +12,7 @@ export interface AttendeesDetails {
   dietaryNeeds: string | null;
   accessibilityNeeds: string | null;
   allergies: string | null;
+  teamSeat: string;
 
   roles: Array<CompetitionRole>;
 

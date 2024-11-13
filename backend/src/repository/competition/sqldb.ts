@@ -468,11 +468,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
           "siteName",
           "pendingSiteName",
           "siteCapacity",
-          "pendingSiteCapacity"
+          "pendingSiteCapacity",
+          "teamSeat"
           FROM competition_attendees AS ca
         WHERE ca.competition_id = $1;`, [compId]
       );
-
+      console.log(dbResult.rows[0]);
       return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
     }
 
