@@ -17,6 +17,7 @@ import {
 import ReactMarkdownEditorLite from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
+import { defaultCompInformation } from "../../../competition/register/CompInformation";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -425,7 +426,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
             <Label>Competition Information</Label>
             <EditorContainer>
               <ReactMarkdownEditorLite
-                value={competitionInfo.information}
+                value={competitionInfo.information !== null ? competitionInfo.information : defaultCompInformation}
                 onChange={({ text }) => handleMarkdownChange(text)}
                 style={{ height: "800px" }}
                 renderHTML={(text: string) => MarkdownIt().render(text)}
