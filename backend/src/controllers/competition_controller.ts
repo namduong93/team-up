@@ -275,7 +275,7 @@ export class CompetitionController {
     const newCompetition: Competition = {
       name: req.body.name,
       createdDate: Date.now(),
-      earlyRegDeadline: req.body.earlyRegDeadline,
+      earlyRegDeadline: req.body.earlyRegDeadline !== 'Invalid Date' ? req.body.earlyRegDeadline : undefined,
       generalRegDeadline: req.body.generalRegDeadline,
       startDate: req.body.startDate,
       code: req.body.code,
@@ -302,7 +302,7 @@ export class CompetitionController {
       name: req.body.name,
       teamSize: req.body.teamSize,
       createdDate: Date.now(),
-      earlyRegDeadline: req.body.earlyRegDeadline,
+      earlyRegDeadline: req.body.earlyRegDeadline !== 'Invalid Date' ? req.body.earlyRegDeadline : undefined,
       generalRegDeadline: req.body.generalRegDeadline,
       startDate: req.body.startDate,
       siteLocations: req.body.siteLocations,
