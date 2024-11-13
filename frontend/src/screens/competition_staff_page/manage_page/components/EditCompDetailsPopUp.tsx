@@ -19,6 +19,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
 import { dateToUTC, formatDate } from "../../../competition/creation/util/formatDate";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
+import { defaultCompInformation } from "../../../competition/register/CompInformation";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -416,7 +417,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
             <Label>Competition Information</Label>
             <EditorContainer>
               <ReactMarkdownEditorLite
-                value={competitionInfo.information}
+                value={competitionInfo.information !== null ? competitionInfo.information : defaultCompInformation}
                 onChange={({ text }) => handleMarkdownChange(text)}
                 style={{ height: "800px" }}
                 renderHTML={(text: string) => MarkdownIt().render(text)}

@@ -587,7 +587,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
               <FaChevronLeft /> Back
             </BackButton>
             <AssignSeats
-              siteName={universityOption.value ? universityOption.label : teamList[0].teamSite}
+              siteName={siteOption.value ? siteOption.label : teamList[0].teamSite}
               siteCapacity={universityOption.value ? getSiteCapacity(parseInt(universityOption.value)) : getSiteCapacity(teamList[0].siteId)}
               teamListState={[teamList, setTeamList]}
               siteOptionState={[siteOption,setSiteOption]}
