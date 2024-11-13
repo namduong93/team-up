@@ -107,6 +107,7 @@ const MemberUl = styled.ul`
   gap: 10px;
   width: 100%;
   padding-left: 0;
+  
 `;
 
 export const Select = styled.select`
@@ -114,6 +115,30 @@ export const Select = styled.select`
   border-radius: 5px;
   min-height: 30px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
+`;
+
+const MemberSpan = styled(LabelSpan)`
+  font-size: ${({ theme }) => theme.fonts.fontSizes.subheading};
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.regular};
+  color: ${({ theme }) => theme.teamView.levelA};
+  background-color: ${({ theme }) => theme.background};
+  width: 100%;
+`;
+
+const MemberContainer = styled.div`
+  width: 100%;
+  overflow-y: auto;
+  /* z-index: 0; */
+`;
+
+const TeamContainer = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  box-shadow: 0 2px 0px 0px rgba(0, 0, 0, 0.05);
+  margin: 0;
+  padding: 0;
 `;
 
 export const TeamInfoBar: FC<TeamInfoBarProps> = ({
@@ -175,104 +200,106 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
 
   return (
     <InfoBar isOpenState={[isOpen || isPopupOpen, setIsOpen]} {...props}>
-      <InfoBarField>
-        <TeamDetailsLabelSpan>Team Id:</TeamDetailsLabelSpan>
-        <span>{teamDetails.teamId}</span>
-      </InfoBarField>
+      <TeamContainer>
+        <InfoBarField>
+          <TeamDetailsLabelSpan>Team Id:</TeamDetailsLabelSpan>
+          <span>{teamDetails.teamId}</span>
+        </InfoBarField>
 
-      {isEditable && <EditIconButton
-        onMouseDown={(e) => e.preventDefault()}
-        onClick={() => { setIsEditing((p) => !p) }}
-        style={{ position: 'absolute', right: 0, top: 0 }}
-      >
-        <EditIcon />
-      </EditIconButton>}
+        {isEditable && <EditIconButton
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => { setIsEditing((p) => !p) }}
+          style={{ position: 'absolute', right: 0, top: 0 }}
+        >
+          <EditIcon />
+        </EditIconButton>}
 
-      {isEditing ?
-      <EditableInput
-        value={teamData.teamName}
-        onChange={(e) => setTeamData((p) => ({ ...p, teamName: e.target.value }))}
-        style={{ width: '50%', height: '47px', fontSize: theme.fonts.fontSizes.title }}
-      /> :
-      <TitleDiv $isOpen={isOpen || isPopupOpen}>
-        {teamData.teamName}
-      </TitleDiv>}
-
-      <VerticalInfoBarField>
-        <TeamDetailsLabelSpan>Coach:</TeamDetailsLabelSpan>
-        <span>{teamDetails.coach.name}</span>
-      </VerticalInfoBarField>
-      
-      <VerticalInfoBarField>
-        <TeamDetailsLabelSpan>Status:</TeamDetailsLabelSpan>
-        <TeamStatusDiv $status={teamDetails.status}>{teamDetails.status}</TeamStatusDiv>
-      </VerticalInfoBarField>
-
-      <VerticalInfoBarField>
-        <TeamDetailsLabelSpan>Level:</TeamDetailsLabelSpan>
-        <span>{teamData.teamLevel}</span>
-      </VerticalInfoBarField>
-      
-      <VerticalInfoBarField>
-        <TeamDetailsLabelSpan $isEditing={isEditing}>Site:</TeamDetailsLabelSpan>
-        {isEditing ? 
-        <div style={{ width: '100%' }}>
-        <AdvancedDropdown
-          isExtendable={false}
-          style={{ height: '30px', borderRadius: '5px', width: '100%', marginBottom: '2px' }}
-          defaultSearchTerm={teamData.teamSite}
-          setCurrentSelected={setCurrentSiteOption}
-          optionsState={[siteOptions, setSiteOptions]}
-        /></div> :
-        <span>{teamData.teamSite}</span>}
-      </VerticalInfoBarField>
-
-      <VerticalInfoBarField>
-        <TeamDetailsLabelSpan $isEditing={isEditing}>Seat:</TeamDetailsLabelSpan>
         {isEditing ?
         <EditableInput
-          value={teamData.teamSeat}
-          onChange={(e) => setTeamData((p) => ({ ...p, teamSeat: e.target.value }))}
+          value={teamData.teamName}
+          onChange={(e) => setTeamData((p) => ({ ...p, teamName: e.target.value }))}
+          style={{ width: '50%', height: '47px', fontSize: theme.fonts.fontSizes.title }}
         /> :
-        <span>{teamData.teamSeat}</span>}
-      </VerticalInfoBarField>
-      <br/>
+        <TitleDiv $isOpen={isOpen || isPopupOpen}>
+          {teamData.teamName}
+        </TitleDiv>}
 
-      {isEdited && <div style={{ width: '100%', height: '30px', display: 'flex', maxWidth: '300px' }}>
-        <TransparentResponsiveButton actionType="error" label="Reset" isOpen={false} onClick={() => setTeamData(teamDetails)}
-             icon={<RxReset />}
-             style={{
-               backgroundColor: theme.colours.cancel,
-             }} />
-       <TransparentResponsiveButton actionType="confirm" label="Save Changes" isOpen={false} onClick={handleSaveEdit}
-             icon={<FaSave />}
-             style={{
-               backgroundColor: theme.colours.confirm,
-             }} />
+        <VerticalInfoBarField>
+          <TeamDetailsLabelSpan>Coach:</TeamDetailsLabelSpan>
+          <span>{teamDetails.coach.name}</span>
+        </VerticalInfoBarField>
+        
+        <VerticalInfoBarField>
+          <TeamDetailsLabelSpan>Status:</TeamDetailsLabelSpan>
+          <TeamStatusDiv $status={teamDetails.status}>{teamDetails.status}</TeamStatusDiv>
+        </VerticalInfoBarField>
 
-      </div>}
+        <VerticalInfoBarField>
+          <TeamDetailsLabelSpan>Level:</TeamDetailsLabelSpan>
+          <span>{teamData.teamLevel}</span>
+        </VerticalInfoBarField>
+        
+        <VerticalInfoBarField>
+          <TeamDetailsLabelSpan $isEditing={isEditing}>Site:</TeamDetailsLabelSpan>
+          {isEditing ? 
+          <div style={{ width: '100%' }}>
+          <AdvancedDropdown
+            isExtendable={false}
+            style={{ height: '30px', borderRadius: '5px', width: '100%', marginBottom: '2px' }}
+            defaultSearchTerm={teamData.teamSite}
+            setCurrentSelected={setCurrentSiteOption}
+            optionsState={[siteOptions, setSiteOptions]}
+          /></div> :
+          <span>{teamData.teamSite}</span>}
+        </VerticalInfoBarField>
+
+        <VerticalInfoBarField>
+          <TeamDetailsLabelSpan $isEditing={isEditing}>Seat:</TeamDetailsLabelSpan>
+          {isEditing ?
+          <EditableInput
+            value={teamData.teamSeat}
+            onChange={(e) => setTeamData((p) => ({ ...p, teamSeat: e.target.value }))}
+          /> :
+          <span>{teamData.teamSeat}</span>}
+        </VerticalInfoBarField>
+        <br/>
+
+        {isEdited && <div style={{ width: '100%', height: '30px', display: 'flex', maxWidth: '300px' }}>
+          <TransparentResponsiveButton actionType="error" label="Reset" isOpen={false} onClick={() => setTeamData(teamDetails)}
+              icon={<RxReset />}
+              style={{
+                backgroundColor: theme.colours.cancel,
+              }} />
+        <TransparentResponsiveButton actionType="confirm" label="Save Changes" isOpen={false} onClick={handleSaveEdit}
+              icon={<FaSave />}
+              style={{
+                backgroundColor: theme.colours.confirm,
+              }} />
+
+        </div>}
+        <MemberSpan>Members</MemberSpan>
+      </TeamContainer>
       
-      <div style={{ width: '100%', marginBottom: '-20px' }}>
-        <LabelSpan>Members:</LabelSpan>
-      </div>
-      <InfoBarField>
-        <MemberUl>
-          {teamDetails.students.map((student) => {
-            return (
-              <TeamStudentInfoCard
-              key={`${student.userId}`}
-              student={student}
-              teamDetails={teamDetails}
-              buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
-              teamListState={[teamList, setTeamList]}
-              popupOpenState={[isPopupOpen, setPopupOpen]}
-              isEditable={isEditable}
-              />
-            )
-          })}
-        </MemberUl>
-      
-      </InfoBarField>
+      <MemberContainer>
+        <InfoBarField>
+          <MemberUl>
+            {teamDetails.students.map((student) => {
+              return (
+                <TeamStudentInfoCard
+                key={`${student.userId}`}
+                student={student}
+                teamDetails={teamDetails}
+                buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
+                teamListState={[teamList, setTeamList]}
+                popupOpenState={[isPopupOpen, setPopupOpen]}
+                isEditable={isEditable}
+                />
+              )
+            })}
+          </MemberUl>
+        
+        </InfoBarField>
+      </MemberContainer>
 
 
     </InfoBar>
