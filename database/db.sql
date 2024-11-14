@@ -18,17 +18,8 @@ CREATE TYPE course_category_enum AS ENUM (
   'Programming Challenges'
 );
 
-CREATE TABLE courses (
-  id SERIAL PRIMARY KEY,
-  
-  name TEXT NOT NULL, -- Full Name of course including any course codes
-
-  category course_category_enum,
-  
-  university_id INT NOT NULL REFERENCES universities (id)
-);
-
 CREATE TYPE user_type_enum AS ENUM ('student', 'staff', 'system_admin');
+CREATE TYPE user_access_enum AS ENUM ('Accepted', 'Pending', 'Rejected');
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -52,11 +43,13 @@ CREATE TABLE users (
   
 
   university_id INT REFERENCES universities (id),
+  user_access user_access_enum,
 
   -- student info
-  student_id TEXT, --- NULL iff not a student
+  student_id TEXT, --- NULL if not a student
 
   -- staff info
+  
 
   -- system admin info
 
@@ -118,7 +111,7 @@ CREATE TABLE competition_sites (
 
   capacity INT,
 
-  CONSTRAINT unique_site_competition UNIQUE (competition_id, name, university_id)
+  CONSTRAINT unique_site_competition UNIQUE (competition_id, university_id)
 );
 
 CREATE TYPE competition_role_enum AS ENUM ('Participant', 'Coach', 'Admin', 'Site-Coordinator');
@@ -228,6 +221,20 @@ CREATE TABLE notifications (
   new_team_name TEXT,
   site_location TEXT
 );
+
+CREATE TABLE courses (
+  id SERIAL PRIMARY KEY,
+  
+  name TEXT NOT NULL, -- Full Name of course including any course codes
+
+  category course_category_enum,
+  
+  competition_id INT NOT NULL REFERENCES competitions (id),
+  university_id INT NOT NULL REFERENCES universities (id),
+
+  CONSTRAINT unique_course UNIQUE (competition_id, university_id, category)
+);
+
 
 CREATE OR REPLACE FUNCTION competition_list(u_id INT)
 RETURNS TABLE(id INT, name TEXT, created_date TIMESTAMP, early_reg_deadline TIMESTAMP, general_reg_deadline TIMESTAMP)
@@ -420,6 +427,7 @@ RETURNS TABLE(
   "allergies" TEXT,
   "dietaryReqs" TEXT,
   "accessibilityReqs" TEXT,
+  "userAccess" TEXT,
   "bio" TEXT,
   "roles" JSONB,
   "access" competition_access_enum
@@ -437,6 +445,7 @@ AS $$
     u.allergies AS "allergies",
     u.dietary_reqs AS "dietaryReqs",
     u.accessibility_reqs AS "accessibilityReqs",
+    u.user_access AS "userAccess",
     cu.bio AS "bio",
     TO_JSONB(cu.competition_roles) AS "roles",
     cu.access_level AS "access"
@@ -455,7 +464,13 @@ SELECT cu_source.user_id AS src_user_id,
   (CASE WHEN ct.pending_name IS NULL THEN ct.name ELSE ct.pending_name END) AS "teamName",
   (ct.pending_site_attending_id IS NULL) AS "siteApproved",
   cs.name AS "teamSite", ct.team_seat AS "teamSeat",
-  cu_source.competition_level AS "teamLevel", c.start_date AS "startDate",
+  (CASE WHEN
+    cu1.competition_level = 'Level A'
+    AND cu2.competition_level = 'Level A'
+    AND cu3.competition_level = 'Level A'
+  THEN 'Level A'
+  ELSE 'Level B' END 
+  ) AS "teamLevel", c.start_date AS "startDate",
   JSON_BUILD_ARRAY(
     JSON_BUILD_OBJECT(
       'userId', u1.id,
@@ -611,7 +626,8 @@ INSERT INTO users (
   accessibility_reqs,
   user_type,
   university_id,
-  student_id)
+  student_id,
+  user_access)
 VALUES
 ( -- id: 1
   'System Admin',
@@ -626,7 +642,8 @@ VALUES
   'None',
   'system_admin',
   1,
-  NULL), -- password is 'admin'
+  NULL,
+  'Accepted'), -- password is 'admin'
 ( -- id: 2
   'Coach 1',
   'Coach One',
@@ -640,7 +657,8 @@ VALUES
   'Stairs Access',
   'staff',
   2,
-  NULL), -- password is 'pleasechange'
+  NULL,
+  'Accepted'), -- password is 'pleasechange'
 ( -- id: 3
   'Algorithm Coach',
   'Algorithm',
@@ -654,7 +672,8 @@ VALUES
   'Stairs Access',
   'staff',
   5,
-  NULL), -- password is 'pleasechange'
+  NULL,
+  'Accepted'), -- password is 'pleasechange'
 ( -- id: 4
   'Site Coordinator 1',
   'Site Coord One',
@@ -668,7 +687,8 @@ VALUES
   'Stairs Access',
   'staff',
   2,
-  NULL), -- password is 'pleasechange'
+  NULL,
+  'Pending'), -- password is 'pleasechange'
 ( -- id: 5
   'New User',
   'New User',
@@ -682,7 +702,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000001'),
+  'z000001',
+  'Accepted'),
 ( -- id: 6
   'Test Student Account 2',
   'Test Account',
@@ -696,7 +717,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000002'),
+  'z000002',
+  'Accepted'),
 ( -- id: 7
   'Test Student Account 3',
   'Test Account',
@@ -710,7 +732,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000003'),
+  'z000003',
+  'Accepted'),
 ( -- id: 8
   'Test Student Account 4',
   'Test Account',
@@ -724,7 +747,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000004'),
+  'z000004',
+  'Accepted'),
 ( -- id: 9
   'Test Student Account 5',
   'Test Account',
@@ -738,7 +762,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000005'),
+  'z000005',
+  'Accepted'),
 ( -- id: 10
   'Test Student Account 6',
   'Test Account',
@@ -752,8 +777,9 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000006'),
-  ( -- id: 11
+  'z000006',
+  'Accepted'),
+( -- id: 11
   'Coach 3',
   'Coach Three',
   'testcoach3@example.com',
@@ -766,8 +792,9 @@ VALUES
   'Stairs Access',
   'staff',
   3,
-  NULL), -- password is 'pleasechange'
-  ( -- id: 12
+  NULL,
+  'Accepted'), -- password is 'pleasechange'
+( -- id: 12
   'Test Student Account 7',
   'Test Account',
   'teststudent7@example.com',
@@ -780,7 +807,8 @@ VALUES
   'Wheelchair Access',
   'student',
   2,
-  'z000007'),
+  'z000007',
+  'Accepted'),
 ( -- id: 13
   'Test Student Account 8',
   'Test Account',
@@ -789,12 +817,13 @@ VALUES
   'M',
   'They/them',
   'MS',
-  NULL,
-  '{}',
+  'Nuts and Pumpkin',
+  '',
   'Wheelchair Access',
   'student',
   2,
-  'z000008'),
+  'z000008',
+  'Accepted'),
 ( -- id: 14
   'Test Student Account 9',
   'Test Account',
@@ -805,10 +834,11 @@ VALUES
   'MXL',
   'None',
   '{}',
-  NULL,
+  'Accepted',
   'student',
   2,
-  'z000009'); --- password is pleasechange
+  'z000009',
+  'Accepted'); --- password is pleasechange
 
 -- Competitions
 INSERT INTO competitions (name, team_size, created_date, early_reg_deadline, general_reg_deadline, code, start_date, region, information)
@@ -964,14 +994,14 @@ VALUES
 INSERT INTO competition_sites (competition_id, university_id, name, capacity)
 VALUES 
 (4, 5, 'J17 K17 Building UNSW', 100),
-(1, 1, 'Ainsworth Building', 100),
-(1, 1, 'Krusty Krab', 100),
-(1, 1, 'Spooky Manor', 100),
-(1, 1, 'Mickey Mouse Clubhouse', 100),
-(1, 1, 'afternoon chance some', 100),
-(1, 1, 'charge back finish', 100),
-(1, 1, 'chemical captured choose', 100),
-(4, 2, 'J17 K17 Building UNSW', 100);
+(1, 2, 'Ainsworth Building', 100),
+(1, 3, 'Krusty Krab', 100),
+(1, 4, 'Spooky Manor', 100),
+(1, 5, 'Mickey Mouse Clubhouse', 100);
+-- (4, 2, 'afternoon chance some', 100),
+-- (4, 2, 'charge back finish', 100),
+-- (4, 2, 'chemical captured choose', 100),
+-- (4, 2, 'J17 K17 Building UNSW', 100);
 
 INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level, bio)
 VALUES
@@ -991,7 +1021,8 @@ INSERT INTO users (
   accessibility_reqs,
   user_type,
   university_id,
-  student_id)
+  student_id,
+  user_access)
 VALUES
 -- Member from Team ID: 2
 ( 
@@ -1007,7 +1038,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000002'
+  'z000002',
+  'Accepted'
 ),
 
 -- Member from Team ID: 3, Member 1
@@ -1024,7 +1056,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000003'
+  'z000003',
+  'Accepted'
 ),
 
 -- Member from Team ID: 3, Member 2
@@ -1041,7 +1074,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000004'
+  'z000004',
+  'Accepted'
 ),
 
 -- Member from Team ID: 4
@@ -1058,7 +1092,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000005'
+  'z000005',
+  'Accepted'
 ),
 
 -- Member from Team ID: 5, Member 1
@@ -1075,7 +1110,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000006'
+  'z000006',
+  'Accepted'
 ),
 
 -- Member from Team ID: 5, Member 2
@@ -1092,7 +1128,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000007'
+  'z000007',
+  'Accepted'
 ),
 
 -- Member from Team ID: 6
@@ -1109,7 +1146,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000008'
+  'z000008',
+  'Accepted'
 ),
 
 -- Member from Team ID: 7
@@ -1126,7 +1164,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000009'
+  'z000009',
+  'Accepted'
 ),
 
 -- Member from Team ID: 8
@@ -1143,7 +1182,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000010'
+  'z000010',
+  'Accepted'
 ),
 
 -- Member from Team ID: 9
@@ -1160,7 +1200,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000011'
+  'z000011',
+  'Accepted'
 ),
 
 -- Member from Team ID: 10
@@ -1177,7 +1218,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000012'
+  'z000012',
+  'Accepted'
 ),
 
 -- Member from Team ID: 11
@@ -1194,7 +1236,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000013'
+  'z000013',
+  'Accepted'
 ),
 
 -- Member from Team ID: 12
@@ -1211,7 +1254,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000014'
+  'z000014',
+  'Accepted'
 ),
 
 -- Member from Team ID: 13
@@ -1228,7 +1272,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000015'
+  'z000015',
+  'Accepted'
 ),
 
 -- Member from Team ID: 14
@@ -1245,7 +1290,8 @@ VALUES
   'None',
   'student',
   5,
-  'z000016'
+  'z000016',
+  'Accepted'
 );
 
 INSERT INTO competition_users (
@@ -1353,9 +1399,9 @@ INSERT INTO competition_registration_toggles (
 )
 VALUES (4, 5, TRUE, TRUE, FALSE, TRUE);
 
-INSERT INTO courses (name, category, university_id)
+INSERT INTO courses (name, category, university_id, competition_id)
 VALUES
-('COMP1511 Programming Fundamentals', 'Introduction' :: course_category_enum, 5),
-('COMP2521 Data Structures and Algorithms', 'Data Structures' :: course_category_enum, 5),
-('COMP3121 Algorithm Design or COMP 3821 Extended Algorithm Design', 'Algorithm Design' :: course_category_enum, 5),
-('COMP4128 Programming Challenges', 'Programming Challenges' :: course_category_enum, 5);
+('COMP1511 Programming Fundamentals', 'Introduction' :: course_category_enum, 5, 1),
+('COMP2521 Data Structures and Algorithms', 'Data Structures' :: course_category_enum, 5, 1),
+('COMP3121 Algorithm Design or COMP 3821 Extended Algorithm Design', 'Algorithm Design' :: course_category_enum, 5, 1),
+('COMP4128 Programming Challenges', 'Programming Challenges' :: course_category_enum, 5, 1);

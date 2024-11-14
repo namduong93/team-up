@@ -8,7 +8,7 @@ import {
   Field,
   StudentInfoContainerDiv,
 } from "../../students_page/components/StudentInfoCard";
-import { StaffRoleDisplay, StaffRoles } from "./StaffRole";
+import { StaffRoles } from "./StaffRole";
 import { StaffInfoBar } from "../../components/InfoBar/StaffInfoBar";
 
 export const NarrowStaffCard: FC<StaffCardProps> = ({

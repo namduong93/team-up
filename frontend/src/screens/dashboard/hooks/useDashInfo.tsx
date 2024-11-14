@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { sendRequest } from "../../../utility/request";
-// import { DashboardSidebar } from "../../components/general_utility/DashboardSidebar";
-
-// interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-//   cropState: boolean;
-// }
 
 export interface DashInfo {
   preferredName: string;
   affiliation: string;
   profilePic: string;
-}
+};
 
 export const useDashInfo = (): [{ preferredName: string, affiliation: string, profilePic: string, }, React.Dispatch<React.SetStateAction<{ preferredName: string, affiliation: string, profilePic: string, }>>] => {
 

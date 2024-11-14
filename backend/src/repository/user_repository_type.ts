@@ -4,6 +4,7 @@ import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import { UserTypeObject } from "../models/user/user.js";
 import { UserDashInfo } from "../models/user/user_dash_info.js";
 import { University } from "../models/university/university.js";
+import { StaffInfo, StaffRequests } from "../../shared_types/Competition/staff/StaffInfo.js";
 
 export type UserIdObject = { userId: number };
 export interface UserRepository {
@@ -20,4 +21,7 @@ export interface UserRepository {
   userDashInfo(userId: number): Promise<UserDashInfo>;
 
   userUniversity(userId: number): Promise<University>;
+
+  staffRequests(): Promise<Array<StaffInfo>>;
+  staffRequestsUpdate(staffRequests: Array<StaffRequests>): Promise<void>;
 };

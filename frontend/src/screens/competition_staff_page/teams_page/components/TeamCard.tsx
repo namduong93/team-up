@@ -46,8 +46,10 @@ const TeamMemberContainerDiv = styled.div`
   height: 100%;
   display: grid;
   grid-template-rows: 100%;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 20% 70% 10%;
   user-select: none;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
 `
 
 const StyledUserIcon = styled(FaRegUser)`
@@ -58,19 +60,48 @@ const StyledUserIcon = styled(FaRegUser)`
   user-select: none;
 `
 
-const CenterTextDiv = styled.div`
+const CenterTextDiv = styled.div<{ $levelChar?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  color: ${({ theme, $levelChar }) => $levelChar &&
+  ($levelChar === 'A' ? theme.teamView.levelA : theme.teamView.levelB)};
+
+  font-weight: ${({ $levelChar }) => $levelChar && 'bold' };
 `
 
-export const TeamCardMember = ({ memberName }: { memberName: string }) => {
+const TeamLevelDiv = styled.div<{ $levelChar?: string }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  align-items: center;
+  color: ${({ theme, $levelChar: levelChar }) => levelChar === "A" ? theme.teamView.levelA : theme.teamView.levelB};
+  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  /* position: absolute; */
+  margin-left: auto;
+  margin-right: 5px;
+  margin-bottom: auto;
+  margin-top: 5px;
+  top: 5px;
+  right: 5px;
+`;
+
+export const TeamCardMember = ({ memberName, level }: { memberName: string, level: string }) => {
+
+  const levelChar = level.slice(-1);
 
   return (
   <TeamMemberContainerDiv draggable='false'>
     <StyledUserIcon />
     <CenterTextDiv>
       {memberName}
+    </CenterTextDiv>
+    <CenterTextDiv $levelChar={levelChar} >
+      {levelChar}
     </CenterTextDiv>
   </TeamMemberContainerDiv>
   );
@@ -118,6 +149,7 @@ const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   display: flex;
   align-items: center;
   gap: 2.5%;
+  /* position: relative; */
 `;
 
 const TitleSpan = styled.span`
@@ -375,6 +407,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
   const [infoBarOpen, setInfoBarOpen] = useState(false);
 
   const isEditable = !(roles.includes(CompetitionRole.SiteCoordinator) && !roles.includes(CompetitionRole.Coach) && !roles.includes(CompetitionRole.Admin));
+  const levelChar = teamDetails.teamLevel.slice(-1);
   return (
     <>
     <TeamInfoBar
@@ -399,6 +432,9 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
         <CardHeaderDiv $statusColor={colorMap[status]}>
           <TitleSpan>{teamDetails.teamName}</TitleSpan>
           {!teamDetails.teamNameApproved && <RedTeamNameAlert />}
+          <TeamLevelDiv $levelChar={levelChar} >
+            <span>{levelChar}</span>
+          </TeamLevelDiv>
         </CardHeaderDiv>
     
           <TeamMatesContainerDiv>
@@ -416,14 +452,13 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
                 drag={isEditable}
                 $isDraggable={isEditable}
 
-
                 dragElastic={1}
                 dragConstraints={{left: 0, top: 0, right: 0, bottom: 0}}
                 onDragStart={() => setIsDragging(true)}
                 onDragTransitionEnd={() => setIsDragging(false)}
                 onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
               >
-                <TeamCardMember memberName={member.name} />
+                <TeamCardMember memberName={member.name} level={member.level} />
               </TeamMemberMotionDiv>
             ))}
           

@@ -10,7 +10,6 @@ import TextInput from "../../../components/general_utility/TextInput";
 import { FaBell, FaChair, FaDownload, FaTimes } from "react-icons/fa";
 import { TransparentResponsiveButton } from "../../../components/responsive_fields/ResponsiveButton";
 import { TeamDetails } from "../../../../shared_types/Competition/team/TeamDetails";
-import { useCompetitionOutletContext } from "../hooks/useCompetitionOutletContext";
 import { sendRequest } from "../../../utility/request";
 import { useParams } from "react-router-dom";
 
@@ -38,7 +37,7 @@ interface exportSeatAssignment {
 
 interface Room {
   roomName: string;
-  level: "A" | "B";
+  level: "Level A" | "Level B";
   seatCodes: string[]; // text string input of available seat codes for this room
   numSeats: number; // length of the seat codes array
 };
@@ -79,6 +78,10 @@ const SeatCount = styled.span`
   align-self: center;
   justify-self: center;
   flex: 1;
+`;
+
+const TeamCount = styled(SeatCount)<{ $level: string }>`
+  color: ${({ theme, $level: level }) => level === "Level A" ? theme.teamView.levelA : theme.teamView.levelB};
 `;
 
 const RoomList = styled.div`
@@ -140,17 +143,26 @@ const SeatInputSelect = styled.div`
   margin-top: 10px;
 `;
 
-const AssignSeatsButton = styled(TransparentResponsiveButton)`
-  background-color: ${({ theme }) => theme.colours.secondaryLight};
+const AssignSeatsButton = styled(TransparentResponsiveButton)<{ $disabled: boolean }>`
+  background-color: ${({ theme, $disabled: disabled }) => disabled ? theme.colours.sidebarBackground : theme.colours.secondaryLight};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+  cursor: ${({ $disabled: disabled }) => disabled ? "not-allowed" : "pointer"}; 
   flex: 1;
+  height: 50px;
+
+  &:hover {
+    cursor: ${({ $disabled: disabled }) => disabled ? "not-allowed" : "pointer"}; 
+    /* background-color: ${({ theme, $disabled: disabled }) => disabled ? theme.colours.sidebarBackground : theme.colours.secondaryDark}; */
+    color: ${({ theme, $disabled: disabled }) => disabled ? theme.fonts.colour : theme.background};
+    background-color: blue;
+  }
 `;
 
 const DistributeSeats = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  height: 80px;
+  height: 110px;
 `;
 
 const ModalOverlay = styled.div`
@@ -260,6 +272,10 @@ const AssignPopupText = styled.h2`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
+const Alert = styled.div`
+  color: ${({ theme }) => theme.colours.error};
+`;
+
 export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, teamListState: [teamList, setTeamList], siteOptionState: [siteOption, setSiteOption] }) => {
   const { compId } = useParams();
   const [seatInputType, setSeatInputType] = useState<string>("Text"); // either string or inputs
@@ -279,16 +295,19 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
   const [generatedSeats, setGeneratedSeats] = useState<string[]>([]);
   const [existingSeats, setExistingSeats] = useState<string[]>([]);
   const [teamSeatAssignments, setTeamSeatAssignments] = useState<SeatAssignment[]>([]);
+  const [enoughSeats, setEnoughSeats] = useState<boolean>(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-  // const { teamListState: [teamList, setTeamList], siteOptionState: [siteOption, setSiteOption] } = useCompetitionOutletContext("attendees", undefined, 'site');
-
-  // Filter by uni
+  // Filter by site
   let teamListToAssign = teamList;
   if (siteOption.value) {
     teamListToAssign = teamList.filter((team: TeamDetails) => team.siteId === parseInt(siteOption.value));
   };
+
+  const numATeamsToAssign = teamListToAssign.filter((team: TeamDetails) => team.teamLevel === "Level A").length;
+  const numBTeamsToAssign = teamListToAssign.filter((team: TeamDetails) => team.teamLevel !== "Level A").length;
+
+  // Check if enough seats provided
+
 
   // Update seat count whenever the seat string changes
   useEffect(() => {
@@ -327,7 +346,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
   
     // Determine which form is filled and assign appropriate values
     const isFormA = roomNameA && seatCodeInputA;
-    const level = isFormA ? "A" : "B";
+    const level = isFormA ? "Level A" : "Level B";
     const roomName = (isFormA) ? roomNameA : roomNameB;
     const seatCodes = (isFormA) ? seatCodeInputA.split(',') : seatCodeInputB.split(',');
     const numSeats = seatCodes.length;
@@ -336,7 +355,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     const { valid, error } = validateRoomAndSeatCodes(roomName, level, seatCodes);
     if (!valid) {
       setError(<p>{error}</p>);
-      if (level === "A") {
+      if (level === "Level A") {
         setRoomNameA("");
         setSeatCodeInputA("");
       } else {
@@ -357,7 +376,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     setRooms((prev) => [...prev, newRoom]);
   
     // Clear the form inputs and reset error
-    if (level === "A") {
+    if (level === "Level A") {
       setRoomNameA("");
       setSeatCodeInputA("");
     } else {
@@ -431,11 +450,6 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     setSeatString(updatedSeats.join(", "));
   };
 
-  useEffect(() =>  {
-    console.log(seatString);
-  }, [seatString])
-
-
   // If not all fields are filled, disable add room button
   const cannotAddRoom = () => {
     const isFormAInvalid = !roomNameA || !seatCodeInputA;
@@ -446,98 +460,104 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
   };
 
   const distributeSeats = async () => {
-    
-    // Assign one seat per team, skipping two each time
     const seatAssignments: SeatAssignment[] = [];
     const teamsToAssign = teamListToAssign;
-
     const levelATeams = [];
     const levelBTeams = [];
-
+  
     for (const team of teamsToAssign) {
-      const teamLevel = team.teamLevel; // level assumed by first student's level
-      if (teamLevel === 'A') {
+      const teamLevel = team.teamLevel;
+      if (teamLevel === 'Level A') {
         levelATeams.push(team);
-      } else if (teamLevel === 'B') {
+      } else if (teamLevel === 'Level B') {
         levelBTeams.push(team);
       }
     }
-    
-    
-    // if text input provided, use this method (only need to check the seatString and distribute)
+  
     if (isTextInput) {
       const availableSeats = seatString.split(",");
-      // Group teams by level
       if (!isSeatedTogether) {
-        // Combine level A and level B teams
         teamsToAssign.length = 0;
-        // Append A level teams followed by B level teams
         teamsToAssign.push(...levelATeams, ...levelBTeams);
       }
-      
+  
       for (let i = 0; i < teamsToAssign.length; i++) {
-        const team = teamsToAssign[i];
         const seat = availableSeats[i * 3]; // Assign a seat, skipping 2 each time
-        if (seat) {
+        if (!seat) {
+          console.warn("Not enough seats available for all teams.");
+          break; // Stop assigning if there aren't enough seats
+        }
+  
+        const team = teamsToAssign[i];
+        seatAssignments.push({
+          siteId: team.siteId,
+          teamSite: team.teamSite,
+          teamSeat: seat,
+          teamId: team.teamId.toString(),
+          teamName: team.teamName,
+          teamLevel: team.teamLevel,
+        });
+      }
+    } else {
+      const availableRooms = rooms;
+      const assignedTeamIds = new Set<number>();
+  
+      for (const room of availableRooms) {
+        let teamsToAssign: TeamDetails[] = [];
+        
+        if (room.level === "Level A") {
+          teamsToAssign = levelATeams.filter(team => !assignedTeamIds.has(team.teamId));
+        } else if (room.level === "Level B") {
+          teamsToAssign = levelBTeams.filter(team => !assignedTeamIds.has(team.teamId));
+        }
+  
+        for (let i = 0; i < teamsToAssign.length; i++) {
+          const seatIndex = i * 3;
+          if (seatIndex >= room.seatCodes.length) {
+            // console.warn(`Not enough seats available in room ${room.roomName} for all teams.`);
+            console.log("not enough seats");
+            break; // Stop assigning if there aren't enough seats
+          }
+  
+          const team = teamsToAssign[i];
+          const seat = room.roomName + room.seatCodes[seatIndex];
+  
+          if (!seat) {
+            break; // Stop assigning if seat is undefined or no more seats left
+          }
+  
           seatAssignments.push({
             siteId: team.siteId,
-            teamSite: team.teamSite,
+            teamSite: room.roomName,
             teamSeat: seat,
             teamId: team.teamId.toString(),
             teamName: team.teamName,
             teamLevel: team.teamLevel,
           });
-        }
-      }
-    } else {
-      // if specific room level input given, need to split based on provided room seat assignments
-      const availableRooms = rooms;
-      const assignedTeamIds = new Set<number>(); // To track assigned teams
-
-      for (const room of availableRooms) {
-        // Determine the appropriate teams to assign to the room
-        let teamsToAssign: TeamDetails[] = [];
-        
-        if (room.level === "A") {
-          teamsToAssign = levelATeams.filter(team => !assignedTeamIds.has(team.teamId));
-        } else if (room.level === "B") {
-          teamsToAssign = levelBTeams.filter(team => !assignedTeamIds.has(team.teamId));
-        }
-
-        // Assign teams to available seats in the room
-        for (let i = 0; i < teamsToAssign.length; i++) {
-          const team = teamsToAssign[i];
-          const seatIndex = i * 3; // Calculate the seat index to skip 2 seats
-          const seat = room.seatCodes[seatIndex]; // Get the seat from the room's available seats
-          
-          if (seat) {
-            seatAssignments.push({
-              siteId: team.siteId,
-              teamSite: room.roomName,
-              teamSeat: seat,
-              teamId: team.teamId.toString(),
-              teamName: team.teamName,
-              teamLevel: team.teamLevel,
-            });
-            assignedTeamIds.add(team.teamId); // Mark this team as assigned
-          }
+          assignedTeamIds.add(team.teamId);
         }
       }
     }
-
-    try {
-      // Send a request to the backend to update team seats.
-      await sendRequest.put('/competition/staff/seat_assignments', { compId: compId, seatAssignments: seatAssignments });
-    } catch (error) {
-      console.error("Error withdrawing from the team:", error);
-    }
-
-    setTeamSeatAssignments(seatAssignments);
-    setSeatModalState(true);
+  
+    setEnoughSeats(true);
+      try {
+        await sendRequest.put('/competition/staff/seat_assignments', { compId: compId, seatAssignments: seatAssignments });
+      } catch (error) {
+        console.error("Error withdrawing from the team:", error);
+      }
+    
+      setTeamSeatAssignments(seatAssignments);
+      setSeatString("");
+      setRooms([]);
+      setSeatModalState(true);
   };
+  
+  useEffect(() => {
+    const seatToTeams = teamListToAssign.length;
+    setEnoughSeats(seatCount < seatToTeams);
+  }, [rooms, seatString, seatCount, teamListToAssign.length])
 
   const handleDownload = () => {
-
     // Group seat assignments by site
     const formattedData: exportSeatAssignment = {
       siteName,
@@ -552,8 +572,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     // Add data rows
     formattedData.teams.forEach(assignment => {
       const row = [
-        formattedData.siteName,
-        formattedData.siteCapacity,
+        siteName,
+        siteCapacity,
         assignment.teamLevel,
         assignment.teamId,
         assignment.teamName,
@@ -576,24 +596,35 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     document.body.removeChild(link);
   };
 
-  const handleNotifyTeams = () => {
-    // Logic for notifying teams (placeholder)
-    console.log("Teams notified");
+  const handleNotifyTeams = async() => {
+    try {
+      await sendRequest.post('/notification/team_seat_assignments', { compId: compId, seatAssignments: teamSeatAssignments });
+    } catch (error) {
+      console.error("Error notifying teams:", error);
+    }
   };
 
   return (
     <ManageContainer>
       <Header>
-        <Title>Manage Seats for {siteOption.label}</Title>
+        <div>
+          <Title>Manage Seats for {siteOption.label}</Title>
+          {enoughSeats && 
+            <Alert>Warning! You do not have enough seats for your teams!</Alert>
+          }
+        </div>
         <DistributeSeats>
+          <TeamCount $level="Level A">A Teams to Assign: {numATeamsToAssign}</TeamCount>
+          <TeamCount $level="Level B">B Teams to Assign: {numBTeamsToAssign}</TeamCount>
           <SeatCount>Team Seats Available: {seatCount}</SeatCount>
-          {(seatString.length > 0 || rooms.length > 0) && teamListToAssign.length > 0 &&
+          {(seatString.length > 0 || rooms.length > 0) && teamListToAssign.length > 0 && enoughSeats &&
             <AssignSeatsButton 
               actionType="secondary" 
               onClick={distributeSeats} 
               label="Assign Seats" 
               isOpen={false} 
               icon={<FaChair />}
+              $disabled={!enoughSeats}
             />
           }
         </DistributeSeats>

@@ -30,4 +30,14 @@ export class NotificationController {
     res.json(notifications);
     return;
   })
+
+  /**
+   * Handles the request to send notifications for team seat assignments.
+   */
+  notificationTeamSeatAssignments = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
+    const { compId, seatAssignments } = req.body;
+    await this.notificationService.notificationTeamSeatAssignments(Number(compId), seatAssignments);
+    res.json({});
+    return;
+  })
 }

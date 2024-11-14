@@ -1,4 +1,4 @@
-import React, { FC, SetStateAction, useEffect, useState } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   FaFileSignature,
@@ -24,7 +24,7 @@ import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletCon
 
 import { EditCompDetailsPopUp } from "./EditCompDetailsPopUp";
 import { CompetitionInformation } from "../../../../../shared_types/Competition/CompetitionDetails";
-import { CompetitionSite, CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
+import { CompetitionSiteCapacity } from "../../../../../shared_types/Competition/CompetitionSite";
 import { CompetitionDetails } from "../../../competition/register/CompInformation";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 
@@ -231,7 +231,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
 
   const { 
     universityOptionState: [universityOption, setUniversityOption],
-    siteOptionState: [siteOption, setSiteOption], teamListState,
+    siteOptionState: [siteOption, setSiteOption], teamListState: [teamList, setTeamList],
     siteOptionsState: [siteOptions, setSiteOptions],
     compDetails
   } = useCompetitionOutletContext(
@@ -326,7 +326,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
             { compId }
           );
         }
-        setCurrentBio(response.data.staffDetails.bio);
+        setCurrentBio(response.data.staffDetails.bio ?? "Default Bio");
         setStaffInfo(response.data.staffDetails);
       } catch (err) {
         console.log("Error fetching staff info", err);
@@ -451,7 +451,10 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
       regoFields,
       universityId: parseInt(universityOption.value),
     });
-    // TO-DO: send the edited courses to backend and store for competition
+    
+    await sendRequest.put('/competition/staff/update_courses',
+      { compId, editCourse, universityId: universityOption.value ? parseInt(universityOption.value) : undefined });
+
     console.log(editCourse);
     console.log(regoFields);
   };
@@ -460,11 +463,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
     site: { label: string; value: number },
     capacity: number
   ) => {
-    // TODO: backend PUT (update) the site capacity for a given site Id and new capacity
     console.log(
       `updating site ${site.label} with id ${site.value} with capacity: ${capacity}`
     );
-
     setShowEditCapacity(false);
   };
 
@@ -487,9 +488,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
     fetchSiteCapacities();
   }, []);
 
-  const getSiteCapacity = (): number => {
+  const getSiteCapacity = (siteId: number): number => {
     const foundSite = siteList?.find(
-      (site) => site.id === parseInt(universityOption.value)
+      (site) => site.id === siteId
     );
 
     if (foundSite) return foundSite?.capacity;
@@ -502,17 +503,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
       information: "",
       name: "",
       region: "",
-      timeZone: "",
-      startDate: "",
-      startTime: "",
-      start: "",
-      earlyBird: null,
-      earlyBirdDate: "",
-      earlyBirdTime: "",
-      early: "",
-      generalDate: "",
-      generalTime: "",
-      general: "",
+      startDate: new Date(),
+      earlyRegDeadline: new Date(),
+      generalRegDeadline: new Date(),
       code: "",
       siteLocations: [],
       otherSiteLocations: [],
@@ -521,30 +514,34 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
   useEffect(() => {
     const fetchCompetitionInfo = async () => {
       try {
-        const response = await sendRequest.get<{competition: CompetitionDetails}>("/competition/details", { compId });
-        const competitionData = response.data.competition;
+        const response = await sendRequest.get<{ compInfo: CompetitionInformation }>("/competition/information", { compId });
+        const competitionData = response.data.compInfo;
 
-        const competitionDetails: CompetitionInformation = {
-          name: competitionData.name,
-          early: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString() : "",
-          earlyBirdDate: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[0] : "",
-          earlyBirdTime: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[1].split('.')[0] : "",
-          earlyBird: competitionData.earlyRegDeadline ? false : true,
-          general: new Date(competitionData.generalRegDeadline).toISOString(),
-          generalDate: new Date(competitionData.generalRegDeadline).toISOString().split('T')[0],
-          generalTime: new Date(competitionData.generalRegDeadline).toISOString().split('T')[1].split('.')[0],
-          start: new Date(competitionData.startDate).toISOString(),
-          startDate: new Date(competitionData.startDate).toISOString().split('T')[0],
-          startTime: new Date(competitionData.startDate).toISOString().split('T')[1].split('.')[0],
-          code: competitionData.code ? competitionData.code : "",
-          region: competitionData.region,
-          siteLocations: competitionData.siteLocations ? competitionData.siteLocations : [],
-          otherSiteLocations: competitionData.otherSiteLocations ? competitionData.otherSiteLocations : [],
-          information: competitionData.information,
-          timeZone: "Australia/Sydney", // hardcoded timezone
-        };
-
-        setCompetitionInfo(competitionDetails);
+        // const competitionDetails: CompetitionInformation = {
+        //   name: competitionData.name,
+        //   early: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString() : "",
+        //   earlyBirdDate: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[0] : "",
+        //   earlyBirdTime: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline).toISOString().split('T')[1].split('.')[0] : "",
+        //   earlyBird: competitionData.earlyRegDeadline ? false : true,
+        //   general: new Date(competitionData.generalRegDeadline).toISOString(),
+        //   generalDate: new Date(competitionData.generalRegDeadline).toISOString().split('T')[0],
+        //   generalTime: new Date(competitionData.generalRegDeadline).toISOString().split('T')[1].split('.')[0],
+        //   start: new Date(competitionData.startDate).toISOString(),
+        //   startDate: new Date(competitionData.startDate).toISOString().split('T')[0],
+        //   startTime: new Date(competitionData.startDate).toISOString().split('T')[1].split('.')[0],
+        //   code: competitionData.code ? competitionData.code : "",
+        //   region: competitionData.region,
+        //   siteLocations: competitionData.siteLocations ? competitionData.siteLocations : [],
+        //   otherSiteLocations: competitionData.otherSiteLocations ? competitionData.otherSiteLocations : [],
+        //   information: competitionData.information,
+        //   timeZone: "Australia/Sydney", // hardcoded timezone
+        // };
+        setCompetitionInfo({
+          ...competitionData,
+          startDate: new Date(competitionData.startDate),
+          generalRegDeadline: new Date(competitionData.generalRegDeadline),
+          earlyRegDeadline: competitionData.earlyRegDeadline ? new Date(competitionData.earlyRegDeadline) : undefined
+        });
       } catch (err: unknown) {
         console.error(err);
       }
@@ -557,30 +554,28 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
   const handleCompEditSubmit = async (
     competitionInfo: CompetitionInformation
   ) => {
+    try {
     const newCompetitionDetails = {
       id: compId,
       name: competitionInfo.name,
       teamSize: 3, // harcoded data because current type in here dont have team size
-      earlyRegDeadline: new Date(competitionInfo.early).getTime(),
-      generalRegDeadline: new Date(competitionInfo.general).getTime(),
-      startDate: new Date(competitionInfo.start).getTime(),
+      earlyRegDeadline: competitionInfo.earlyRegDeadline,
+      generalRegDeadline: competitionInfo.generalRegDeadline,
+      startDate: competitionInfo.startDate,
       siteLocations: competitionInfo.siteLocations,
       code: competitionInfo.code,
       region: competitionInfo.region,
       information: competitionInfo.information,
     };
 
-    try {
       await sendRequest.put('/competition/system_admin/update', newCompetitionDetails);
     } catch (err) {
       console.error("Error updating competition details", err);
     }
     console.log(competitionInfo);
     // TO-DO: send the EditRego to backend for storage
-    await sendRequest.post('/competition/staff/update_rego_toggles',
-      { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
-    console.log(regoFields);
-    console.log("submitted");
+    // await sendRequest.post('/competition/staff/update_rego_toggles',
+    //   { compId: parseInt(compId as string), regoFields, universityId: parseInt(universityOption.value) });
   };
 
   return (
@@ -592,9 +587,9 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
               <FaChevronLeft /> Back
             </BackButton>
             <AssignSeats
-              siteName={universityOption.label}
-              siteCapacity={getSiteCapacity()}
-              teamListState={teamListState}
+              siteName={siteOption.value ? siteOption.label : teamList[0].teamSite}
+              siteCapacity={universityOption.value ? getSiteCapacity(parseInt(universityOption.value)) : getSiteCapacity(teamList[0].siteId)}
+              teamListState={[teamList, setTeamList]}
               siteOptionState={[siteOption,setSiteOption]}
             />
           </AssignSeatsPage>

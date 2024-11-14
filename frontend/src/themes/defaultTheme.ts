@@ -61,6 +61,8 @@ export const defaultTheme: DefaultTheme = {
     pending: "#F68486",
     unregistered: "#FDD386",
     registered: "#8BDFA5",
+    levelA: "#D268D1",
+    levelB: "#6688D2",
   },
   roles: {
     participantBackground: '#4fdeee2b',
@@ -75,12 +77,12 @@ export const defaultTheme: DefaultTheme = {
     studentBackground: "#E1FAFC",
   },
   access: {
-    acceptedBackground: 'rgba(139, 223, 165, 54%)',
-    acceptedText: '#63A577',
-    rejectedBackground: 'rgba(255, 29, 32, 28%)',
-    rejectedText: '#ED1E21',
-    pendingBackground: 'rgb(253, 211, 134, 31%)',
-    pendingText: '#EA9C0D',
+    acceptedBackground: 'rgba(143, 238, 153, 0.30)',
+    acceptedText: '#4CAF72  ',
+    rejectedBackground: 'rgba(253, 102, 106, 0.30)',
+    rejectedText: '#ED6A71 ',
+    pendingBackground: 'rgba(253, 211, 134, 0.30)',
+    pendingText: '#EA9C0D ',
   },
   fonts: {
     fontFamily: "Arial, Helvetica, sans-serif",

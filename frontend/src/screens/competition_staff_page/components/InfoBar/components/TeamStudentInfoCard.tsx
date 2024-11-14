@@ -43,10 +43,11 @@ const MemberListItem = styled.li`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
+  border: 1px solid #ccc;
   border-radius: 10px;
-  padding: 2px;
+  padding: 5px;
   position: relative;
+  box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
 `;
 
 export const EditableInput = styled.input`
@@ -272,39 +273,39 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
       </VerticalMemberFieldDiv>
 
 
-      <div style={{ display: 'flex' }}>
-      {!isEditingCard && isEditable && <ResponsiveActionButton style={{ height: '30px' }}
-        onMouseDown={(e) => e.preventDefault()}
-        handleClick={() => setPopupOpen(true)}
-        handleClose={() => setPopupOpen(false)}
-        handleSubmit={async () => handleSubmitTeamChange(student)}
-        icon={<FaArrowRight />}
-        label="Change Team"
-        question={`What team should ${student.name} be in?`}
-        actionType="primary"
-      >
-        <AdvancedDropdown
-          optionsState={[teamOptions, setTeamOptions]}
-          isExtendable={false}
-          setCurrentSelected={setCurrentTeamOption}
-        />
-      </ResponsiveActionButton>}
-     
-      {isEdited && isEditingCard && <div style={{ maxWidth: '150px', width: '100%', height: '30px' }}>
-        <TransparentResponsiveButton actionType="error" label="Reset" isOpen={false} onClick={() => setStudentData(student)}
-              icon={<RxReset />}
-              style={{
-                backgroundColor: theme.colours.cancel,
-              }} />
-       </div>}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '5px' }}>
+        {!isEditingCard && isEditable && <ResponsiveActionButton style={{ height: '30px' }}
+          onMouseDown={(e) => e.preventDefault()}
+          handleClick={() => setPopupOpen(true)}
+          handleClose={() => setPopupOpen(false)}
+          handleSubmit={async () => handleSubmitTeamChange(student)}
+          icon={<FaArrowRight />}
+          label="Change Team"
+          question={`What team should ${student.name} be in?`}
+          actionType="primary"
+        >
+          <AdvancedDropdown
+            optionsState={[teamOptions, setTeamOptions]}
+            isExtendable={false}
+            setCurrentSelected={setCurrentTeamOption}
+          />
+        </ResponsiveActionButton>}
       
-      {isEdited && <div style={{ maxWidth: '150px', width: '100%', height: '30px' }}>
-       <TransparentResponsiveButton actionType="confirm" label="Save Changes" isOpen={false} onClick={handleSaveEdit}
-             icon={<FaSave />}
-             style={{
-               backgroundColor: theme.colours.confirm,
-             }} />
-      </div>}
+        {isEdited && isEditingCard && <div style={{ maxWidth: '150px', width: '100%', height: '30px' }}>
+          <TransparentResponsiveButton actionType="error" label="Reset" isOpen={false} onClick={() => setStudentData(student)}
+                icon={<RxReset />}
+                style={{
+                  backgroundColor: theme.colours.cancel,
+                }} />
+        </div>}
+        
+        {isEdited && <div style={{ maxWidth: '150px', width: '100%', height: '30px' }}>
+        <TransparentResponsiveButton actionType="confirm" label="Save Changes" isOpen={false} onClick={handleSaveEdit}
+              icon={<FaSave />}
+              style={{
+                backgroundColor: theme.colours.confirm,
+              }} />
+        </div>}
       </div>
     </MemberListItem>
   )

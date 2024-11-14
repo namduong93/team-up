@@ -1,10 +1,14 @@
 import styled from "styled-components";
 import { FaTimes } from 'react-icons/fa';
+import { Title2 } from "../../screens/dashboard/Dashboard";
 
 interface RegisterPopUpProps {
   isOpen: boolean;
   onClose: () => void;
-  message: React.ReactNode;
+  teamName?: string;
+  isRego?: boolean;
+  isTeamJoin?: boolean;
+  isStaffRego?: boolean;
 }
 
 const Overlay = styled.div`
@@ -131,8 +135,10 @@ export const Input = styled.input`
 export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
   isOpen,
   onClose,
-  message,
-
+  teamName,
+  isRego,
+  isTeamJoin,
+  isStaffRego,
 }) => {
 
   // const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -147,7 +153,34 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
       <CloseButton onClick={onClose}>
         <FaTimes />
       </CloseButton>
-        <div>{message}</div>
+        <div>
+          {isRego &&
+            <Title2>
+              You have successfully registered for the Competition!{" "}
+              {"\n\n"}
+              <span style={{ fontWeight: "normal" }}>
+                Please navigate to the Team Profile Page to join a team or
+                invite team members
+              </span>
+            </Title2>
+          }
+
+          {isTeamJoin &&
+            <Title2>
+              You have successfully {"\n"} joined the Team: {"\n\n"}{" "}
+              <span style={{ fontWeight: "normal", fontStyle: "italic" }}>
+                {teamName}
+              </span>
+            </Title2>
+          }
+
+          {isStaffRego &&
+            <Title2>
+              Your Request has been {"\n"} sent {"\n\n"} Please wait for{" "}
+              {"\n"} Administrator approval
+            </Title2>
+          }
+        </div>
       </Modal>
       {/* </Container> */}
     </Overlay>

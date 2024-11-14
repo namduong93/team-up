@@ -1,7 +1,7 @@
 import { BAD_REQUEST, COMPETITION_ADMIN_REQUIRED, COMPETITION_NOT_FOUND, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/http_error_handler.js";
 import { ServiceError, ServiceErrorType } from "../errors/service_error.js";
 import { DbError } from "../errors/db_error.js";
-import { Competition, CompetitionIdObject, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
+import { Competition, CompetitionIdObject, CompetitionInput, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
 import { CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
 import { CompetitionRepository } from "../repository/competition_repository_type.js";
@@ -14,7 +14,7 @@ import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { CompetitionRole } from "../../shared_types/Competition/CompetitionRole.js";
 import { Announcement } from "../../shared_types/Competition/staff/Announcement.js";
 import { University } from "../models/university/university.js";
-import { EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
 import { CompetitionSiteCapacity } from "../../shared_types/Competition/CompetitionSite.js";
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
@@ -67,6 +67,31 @@ export class CompetitionService {
     this.competitionRepository = competitionRepository;
     this.userRepository = userRepository;
     this.notificationRepository = notificationRepository;
+  }
+
+  competitionStaffUpdateCourses = async (userId: number, compId: number, editCourse: EditCourse, universityId?: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      if (!roles.includes(CompetitionUserRole.COACH)) {
+        throw new ServiceError(ServiceError.Auth, 'User is not an Admin or Coach');
+      }
+
+      universityId = await this.competitionRepository.getUserUniversityId(userId);
+    }
+
+    await this.competitionRepository.competitionStaffUpdateCourses(compId, editCourse, universityId);
+    return;
+  }
+
+  competitionInformation = async (userId: number, compId: number) => {
+    const roles = await this.competitionRepository.competitionRoles(userId, compId);
+
+    if (!roles.includes(CompetitionUserRole.ADMIN)) {
+      throw new ServiceError(ServiceError.Auth, 'User is not an Admin of this competition');
+    }
+
+    return await this.competitionRepository.competitionInformation(compId);
   }
 
   competitionSiteCapacityUpdate = async (userId: number, compId: number, capacity: number, siteId?: number) => {
@@ -451,7 +476,7 @@ export class CompetitionService {
    * @returns A promise that resolves to the details of the competition.
    * @throws {ServiceError} If the competition ID is not provided or the competition is not found.
    */
-  competitionGetDetails = async (competitionId: number): Promise<Competition> => {
+  competitionGetDetails = async (competitionId: number): Promise<CompetitionInput> => {
     if (!competitionId) {
       throw new ServiceError(ServiceError.NotFound, 'Competition not found');
     }

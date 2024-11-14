@@ -9,8 +9,10 @@ import { UserProfileInfo } from "../models/user/user_profile_info.js";
 import createHttpError from "http-errors";
 import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
-import { convertGenderToP, UserTypeObject } from "../models/user/user.js";
+import { convertGenderToP, UserType, UserTypeObject } from "../models/user/user.js";
 import { UserDashInfo } from "../models/user/user_dash_info.js";
+import { StaffInfo, StaffRequests } from "../../shared_types/Competition/staff/StaffInfo.js";
+import { ServiceError } from "../errors/service_error.js";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -38,10 +40,10 @@ export class UserService {
     }
 
     const userIdObject = await this.userRepository.studentRegister(student);
-    let session : Session = { 
-      sessionId: uuidv4(), 
-      userId: userIdObject.userId, 
-      createdAt: Math.floor(Date.now() / 1000) 
+    let session: Session = {
+      sessionId: uuidv4(),
+      userId: userIdObject.userId,
+      createdAt: Math.floor(Date.now() / 1000)
     };
     await this.sessionRepository.create(session);
     return { sessionId: session.sessionId };
@@ -63,11 +65,11 @@ export class UserService {
       throw createHttpError(400, validated);
     }
 
-    let userIdObject = await this.userRepository.staffRegister(staff); 
-    let session : Session = { 
-      sessionId: uuidv4(), 
-      userId: userIdObject.userId, 
-      createdAt: Math.floor(Date.now() / 1000) 
+    let userIdObject = await this.userRepository.staffRegister(staff);
+    let session: Session = {
+      sessionId: uuidv4(),
+      userId: userIdObject.userId,
+      createdAt: Math.floor(Date.now() / 1000)
     };
     await this.sessionRepository.create(session);
 
@@ -91,13 +93,13 @@ export class UserService {
     }
 
     const userIdObject = await this.userRepository.userLogin(email, password);
-    let session : Session = { 
-     sessionId: uuidv4(), 
-     userId: userIdObject.userId, 
-     createdAt: Math.floor(Date.now() / 1000)
+    let session: Session = {
+      sessionId: uuidv4(),
+      userId: userIdObject.userId,
+      createdAt: Math.floor(Date.now() / 1000)
     };
     await this.sessionRepository.create(session);
-    
+
     return { sessionId: session.sessionId };
   }
 
@@ -163,7 +165,7 @@ export class UserService {
     if (!newPassword || newPassword.length === 0) {
       throw createHttpError(400, 'New password is required');
     }
-    
+
     await this.userRepository.userUpdatePassword(userId, oldPassword, newPassword);
     return;
   }
@@ -177,5 +179,29 @@ export class UserService {
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
     const userTypeObject = await this.userRepository.userType(userId);
     return userTypeObject;
+  }
+
+  /**
+   * retrieves all staff in user. (Requested staff are included)
+   *
+   * @param userId The ID of the user who asked to retrieve the information.
+   * @returns {Promise<UserTypeObject | undefined>} A promise that resolves to a UserTypeObject if found, otherwise undefined.
+   */
+  staffRequests = async (userId: number): Promise<Array<StaffInfo> | undefined> => {
+    const userCheckAdmin:UserTypeObject = await this.userRepository.userType(userId);
+    if (userCheckAdmin.type !== UserType.SYSTEM_ADMIN) {
+      throw new ServiceError(ServiceError.Auth, 'User does not have access to this list');
+    }
+    
+    return this.userRepository.staffRequests();
+  }
+
+  staffRequestsUpdate = async (userId: number, staffRequests: Array<StaffRequests>): Promise<void> => {
+    const userCheckAdmin:UserTypeObject = await this.userRepository.userType(userId);
+    if (userCheckAdmin.type !== UserType.SYSTEM_ADMIN) {
+      throw new ServiceError(ServiceError.Auth, 'User does not have access to this list');
+    }
+
+    await this.userRepository.staffRequestsUpdate(staffRequests);
   }
 }

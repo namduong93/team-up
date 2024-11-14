@@ -40,6 +40,7 @@ const TEAM_DISPLAY_SORT_OPTIONS = [
 const TEAM_DISPLAY_FILTER_OPTIONS = {
   Status: ["Pending", "Unregistered", "Registered"],
   "Team Name Approval": ["Approved", "Unapproved"],
+  "Team Level": ["Level A", "Level B"],
 };
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
@@ -112,12 +113,17 @@ export const TeamDisplay: FC = () => {
       }
     }
 
-    if (
-      !(universityOption.value === "") &&
-      !(team.universityId === parseInt(universityOption.value))
-    ) {
-      return false;
+    if (filters["Team Level"]) {
+      if (!filters["Team Level"].some(
+        (filterLevel) =>
+          filterLevel === team.teamLevel
+      )) {
+        return false;
+      }
     }
+
+    // if admin, check filter by chosen uni
+    if (universityOption.value && !(team.universityId === parseInt(universityOption.value))) return false;
 
     return true;
   });
@@ -135,7 +141,7 @@ export const TeamDisplay: FC = () => {
   });
 
   const fuse = new Fuse(sortedTeamList, {
-    keys: ["teamName", "memberName1", "memberName2", "memberName3"],
+    keys: ["teamName", "memberName1", "memberName2", "memberName3", "teamLevel"],
     threshold: 0.5,
   });
 

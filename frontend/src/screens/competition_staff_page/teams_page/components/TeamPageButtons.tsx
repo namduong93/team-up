@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
+import { FaCheck, FaCross, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { useParams } from "react-router-dom";
@@ -83,10 +83,36 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
         {compId, approveIds: approveTeamIds, rejectIds: rejectedTeamIds });
       await fetchTeams(compId, setTeamList);
     } catch (error: unknown) {
-
+      console.log(error);
     }
 
     disableEditNameStatus();
+  }
+
+  const approveAllNames = async () => {
+    // Filter by "Unapproved" team names
+    let approveTeamNames = teamList.filter((team: TeamDetails) => team.teamNameApproved === false)
+    
+    // Filter by uni for admins
+    if (universityOption.value) {
+      approveTeamNames = approveTeamNames.filter((team: TeamDetails) => team.universityId === parseInt(universityOption.value));
+    }
+
+    const approveTeamIds = approveTeamNames.map((team: TeamDetails) => team.teamId);
+
+    if (approveTeamIds.length === 0 && rejectedTeamIds.length === 0) {
+      return false;
+    }
+
+    try {
+      await sendRequest.put('/competition/coach/team_name_approve',
+        {compId, approveIds: approveTeamIds, rejectIds: [] });
+      await fetchTeams(compId, setTeamList);
+    } catch (error: unknown) {
+      console.log(error);
+    }
+    disableEditNameStatus();
+    return true;
   }
 
   const handleAlgorithmButton = async () => {
@@ -146,14 +172,14 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     });
 
     // Generate CSV
-    let csvContent = "Site Location,Team Level,Team Name,Member Name,Member Email,Title,Sex,Preferred Name\n";
+    let csvContent = "Site Location,Team Level,Team Name,Member Name,Member Email,Title,Sex,Preferred Name,Team Id\n";
 
     teamsPerSite.forEach((site: SiteDetails) => {
         site.levelGroups.forEach(({ level, teams }) => {
             teams.forEach((team) => {
                 const teamName = team.teamName.split(',')[0];
                 team.students.forEach((student) => {
-                    csvContent += `${site.name},${level},${teamName},${student.name},${student.email},${mapToTitle(student.sex)},${student.sex},${student.preferredName}\n`;
+                    csvContent += `${site.name},${level},${teamName},${student.name},${student.email},${mapToTitle(student.sex)},${student.sex},${student.preferredName},${team.teamId}\n`;
                 });
             });
         });
@@ -376,6 +402,15 @@ teamsPerSite.forEach((site: SiteDetails) => {
 
     {isEditingNameStatus && 
     <>
+    <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
+      <ResponsiveActionButton actionType="confirm" handleSubmit={approveAllNames} label="Approve All"
+        icon={<FaCheck />}
+        style={{
+          backgroundColor: theme.colours.confirm,
+        }}
+        question="Are you sure you want to approve all of these team names?"
+      />
+    </div>
     <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
       <TransparentResponsiveButton actionType="primary" onClick={confirmNames} label="Confirm Names" isOpen={false}
         icon={<FaSave />}

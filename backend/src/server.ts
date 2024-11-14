@@ -119,6 +119,16 @@ app.get('/user/dash_info', userController.userDashInfo);
 // RESPONSE: { type: string }
 app.get('/user/type', userController.userType);
 
+// Gets the list of all staff including staff that has requested in competition
+// PARAMS: { userid }
+// RESPONSE: { staff: Array<{id: number, name: string, email: string}>}
+app.get('/user/staff_requests', userController.staffRequests);
+
+// Approve every staff in the list
+// PARAMS: { Array<StaffRequests> }
+// RESPONSE: {}
+app.post('/user/staff_requests', userController.staffRequestsUpdate);
+
 // DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
 // that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
 // PARAMS: { name: string, earlyRegDeadline, generalRegDeadline, code, startDate, region,
@@ -261,6 +271,10 @@ app.get('/user/notifications', notificationController.userNotificationsList);
 // RESPONSE: {}
 app.delete('/notification', notificationController.notificationRemove);
 
+// PARAMS: { compId, seatAssignments: Array<SeatAssignment> }
+// RESPONSE: {}
+app.post('/notification/team_seat_assignments', notificationController.notificationTeamSeatAssignments);
+
 // PARAMS: { compId }
 // RESPONSE: 
 // Get all the details of a team in a competition
@@ -334,6 +348,10 @@ app.get('/competition/students/rego_toggles', competitionController.competitionS
 app.get('/competition/site/capacity', competitionController.competitionSiteCapacity);
 
 app.put('/competition/site/capacity/update', competitionController.competitionSiteCapacityUpdate);
+
+app.get('/competition/information', competitionController.competitionInformation);
+
+app.put('/competition/staff/update_courses', competitionController.competitionStaffUpdateCourses);
 
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);

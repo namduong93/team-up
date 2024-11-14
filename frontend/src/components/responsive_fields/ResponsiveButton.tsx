@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useState } from "react";
 import styled from "styled-components";
 
 
@@ -29,7 +29,7 @@ export const SortButton = styled.button<{ $isSortOpen: boolean }>`
 
 
 interface ResponsiveButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
-  isOpen: boolean;
+  isOpen?: boolean;
   icon: ReactNode;
   label: string;
 }
@@ -90,11 +90,13 @@ export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionTy
 
 interface ResponsiveActionButtonProps extends ResponsiveButtonProps {
   actionType: 'primary' | 'secondary' | 'confirm' | 'error';
+  question?: string;
 }
 
 export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
-  onClick, actionType, icon, label, style, isOpen = false, ...props }) => {
-  
+  onClick, actionType, icon, label, style, isOpen = false, question, ...props }) => {
+  const [showPopUp, setShowPopUp] = useState(false);
+
   return (
     <TransparentButton $actionType={actionType} onClick={onClick} style={{
       height: '100%',

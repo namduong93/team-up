@@ -162,9 +162,10 @@ export const CompetitionExperience: FC = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const response = await sendRequest.get<{ courses: Array<Course> }>('/university/courses');
+      const response = await sendRequest.get<{ courses: Array<Course> }>('/university/courses', { code });
       const { courses } = response.data;
 
+      courses.length &&
       setCourseOptions(courses.map((course) => ({ value: course.category, label: course.courseName })));
     }
 

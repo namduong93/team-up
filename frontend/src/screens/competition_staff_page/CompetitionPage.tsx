@@ -263,8 +263,8 @@ export const CompetitionPage: FC = () => {
     <OverflowFlexBackground>
       <MainPageDiv>
         <PageHeader
-          pageTitle="Admin Page"
-          pageDescription="Manage Teams and students for your competition"
+          pageTitle={`${roles[0]} Page`}
+          pageDescription="Manage teams and students for your competition"
           sortOptions={sortOptions}
           sortOptionState={{ sortOption, setSortOption }}
           filterOptions={filterOptions}
