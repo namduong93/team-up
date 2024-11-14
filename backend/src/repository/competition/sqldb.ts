@@ -372,6 +372,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
    */
   competitionTeamsUpdate = async (teamList: Array<TeamDetails>, compId: number) => {
 
+    if (teamList.some((team) => team.students.length > 3)) {
+      throw new DbError(DbError.Insert, 'Too many members in some teams');
+    }
+
     for (const team of teamList) {
 
       const participantIds = [];
