@@ -67,7 +67,7 @@ const parseFile = async (file: File) => {
       return [];
     }
 
-    const teamObject: Record<string, Member[]> = {};
+    const teamObject: Record<string, Team> = {};
 
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
@@ -77,19 +77,19 @@ const parseFile = async (file: File) => {
       const lines = (e.target.result as string).trim().split('\n');
       
       for (const line of lines.slice(1)) {
-        const [_, __, teamName, name, email, title, sex, ___] = line.split(',');
+        const [_, __, teamName, name, email, title, sex, ___, teamId] = line.split(',');
         
-        if (!teamObject[teamName]) {
-          teamObject[teamName] = [];
+        if (!teamObject[teamId]) {
+          teamObject[teamId] = { teamName, members: [] };
         }
       
-        teamObject[teamName].push({ 
+        teamObject[teamId].members.push({ 
           name, email, title, sex: sexMap[sex] 
         });
         
       }
 
-      resolve(Object.entries(teamObject).map(([teamName, members]) => ({ teamName, members })) as Team[]);
+      resolve(Object.values(teamObject).map(({ teamName, members }) => ({ teamName, members })) as Team[]);
     }
 
     fileReader.readAsText(file);

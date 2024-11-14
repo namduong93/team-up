@@ -172,14 +172,14 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     });
 
     // Generate CSV
-    let csvContent = "Site Location,Team Level,Team Name,Member Name,Member Email,Title,Sex,Preferred Name\n";
+    let csvContent = "Site Location,Team Level,Team Name,Member Name,Member Email,Title,Sex,Preferred Name,Team Id\n";
 
     teamsPerSite.forEach((site: SiteDetails) => {
         site.levelGroups.forEach(({ level, teams }) => {
             teams.forEach((team) => {
                 const teamName = team.teamName.split(',')[0];
                 team.students.forEach((student) => {
-                    csvContent += `${site.name},${level},${teamName},${student.name},${student.email},${mapToTitle(student.sex)},${student.sex},${student.preferredName}\n`;
+                    csvContent += `${site.name},${level},${teamName},${student.name},${student.email},${mapToTitle(student.sex)},${student.sex},${student.preferredName},${team.teamId}\n`;
                 });
             });
         });

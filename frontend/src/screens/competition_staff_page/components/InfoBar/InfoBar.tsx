@@ -42,7 +42,7 @@ const InfoContainer = styled.div`
   gap: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   position: relative;
 `;

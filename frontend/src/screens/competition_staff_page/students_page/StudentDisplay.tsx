@@ -164,7 +164,7 @@ const EmailSpan = styled.span<{ $isHeader: boolean }>`
   transition: background-color 0s;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colours.sidebarBackground};
+    background-color: ${({ theme, $isHeader }) => $isHeader ? 'transparent' : theme.colours.sidebarBackground};
   }
 `;
 
@@ -369,7 +369,7 @@ export const StudentDisplay = () => {
 
     <WideDisplayDiv>
       <StudentInfoDiv studentsState={[students, setStudents]} style={{
-        backgroundColor: theme.colours.sidebarBackground,
+        backgroundColor: theme.colours.userInfoCardHeader,
         fontWeight: 'bold'
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
