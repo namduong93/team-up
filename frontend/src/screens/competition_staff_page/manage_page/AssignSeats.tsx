@@ -596,9 +596,12 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     document.body.removeChild(link);
   };
 
-  const handleNotifyTeams = () => {
-    // Logic for notifying teams (placeholder)
-    console.log("Teams notified");
+  const handleNotifyTeams = async() => {
+    try {
+      await sendRequest.post('/notification/team_seat_assignments', { compId: compId, seatAssignments: teamSeatAssignments });
+    } catch (error) {
+      console.error("Error notifying teams:", error);
+    }
   };
 
   return (

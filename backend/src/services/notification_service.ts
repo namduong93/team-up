@@ -1,5 +1,6 @@
 import { BAD_REQUEST } from "../controllers/controller_util/http_error_handler.js";
 import { Notification } from "../models/notification/notification.js";
+import { SeatAssignment } from "../models/team/team.js";
 import { UserType } from "../models/user/user.js";
 import { NotificationRepository } from "../repository/notification_repository_type.js";
 import { UserRepository } from "../repository/user_repository_type.js";
@@ -41,5 +42,16 @@ export class NotificationService {
     const result = this.notificationRepository.userNotificationsList(userId);
 
     return result;
+  }
+
+  /**
+   * Sends notifications for team seat assignments.
+   *
+   * @param compId The ID of the competition.
+   * @param seatAssignments An array of seat assignments.
+   * @returns A promise that resolves to an empty object.
+   */
+  notificationTeamSeatAssignments = async (compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}> => {
+    return await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);
   }
 }

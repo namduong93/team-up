@@ -271,6 +271,10 @@ app.get('/user/notifications', notificationController.userNotificationsList);
 // RESPONSE: {}
 app.delete('/notification', notificationController.notificationRemove);
 
+// PARAMS: { compId, seatAssignments: Array<SeatAssignment> }
+// RESPONSE: {}
+app.post('/notification/team_seat_assignments', notificationController.notificationTeamSeatAssignments);
+
 // PARAMS: { compId }
 // RESPONSE: 
 // Get all the details of a team in a competition
