@@ -164,7 +164,7 @@ const EmailSpan = styled.span<{ $isHeader: boolean }>`
   transition: background-color 0s;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colours.sidebarBackground};
+    background-color: ${({ theme, $isHeader }) => $isHeader ? 'transparent' : theme.colours.sidebarBackground};
   }
 `;
 
