@@ -369,7 +369,7 @@ export const StudentDisplay = () => {
 
     <WideDisplayDiv>
       <StudentInfoDiv studentsState={[students, setStudents]} style={{
-        backgroundColor: theme.colours.sidebarBackground,
+        backgroundColor: theme.colours.userInfoCardHeader,
         fontWeight: 'bold'
       }}></StudentInfoDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
