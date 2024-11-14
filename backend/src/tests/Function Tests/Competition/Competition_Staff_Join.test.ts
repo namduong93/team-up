@@ -115,7 +115,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Admin'],
-        access: 'Accepted'
+        access: 'Accepted',
+        userAccess: 'Pending'
       },
       {
         userId: mockStaffId1.userId,
@@ -131,7 +132,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Admin'],
-        access: 'Pending'
+        access: 'Pending',
+        userAccess: 'Pending'
       }
     ])
   })
@@ -170,7 +172,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Admin'],
-        access: 'Accepted'
+        access: 'Accepted',
+        userAccess: 'Pending'
       },
       {
         userId: mockStaffId1.userId,
@@ -186,7 +189,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Admin'],
-        access: 'Pending'
+        access: 'Pending',
+        userAccess: 'Pending'
       },
       {
         userId: mockStaffId2.userId,
@@ -202,7 +206,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: 'i good, trust',
         roles: ['Coach'],
-        access: 'Pending'
+        access: 'Pending',
+        userAccess: 'Pending'
       }
     ])
   })
@@ -234,7 +239,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Admin'],
-        access: 'Accepted'
+        access: 'Accepted',
+        userAccess: 'Pending'
       },
       {
         userId: mockStaffId1.userId,
@@ -250,7 +256,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Admin'],
-        access: 'Pending'
+        access: 'Pending',
+        userAccess: 'Pending'
       },
       {
         userId: mockStaffId2.userId,
@@ -266,7 +273,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: 'i good, trust',
         roles: ['Coach'],
-        access: 'Pending'
+        access: 'Pending',
+        userAccess: 'Pending'
       },
       {
         userId: mockStaffId3.userId,
@@ -282,7 +290,8 @@ describe('Staff Join Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Site-Coordinator'],
-        access: 'Pending'
+        access: 'Pending',
+        userAccess: 'Pending'
       }
     ])
   })

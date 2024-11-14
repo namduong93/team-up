@@ -68,7 +68,7 @@ describe('System Admin Create Function', () => {
       region: 'Australia',
       siteLocations: [{
         universityId: 1,
-        name: 'TestRoom',
+        name: 'undefined',
         capacity: 0,
         id: expect.any(Number)
       }]

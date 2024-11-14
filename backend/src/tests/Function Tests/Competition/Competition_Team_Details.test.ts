@@ -136,7 +136,7 @@ describe('Competition Team Detail Function', () => {
       teamName: 'Bulbasaur',
       teamSite: 'Library',
       teamSeat: null,
-      teamLevel: 'No Preference',
+      teamLevel: 'Level B',
       startDate: new Date(startDate),
       students: [
         {

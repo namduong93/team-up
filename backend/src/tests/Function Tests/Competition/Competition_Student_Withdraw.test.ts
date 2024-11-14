@@ -136,9 +136,10 @@ describe('Student Withdraw Function', () => {
 
   test('Sucess case: returns the users team details', async () => {
     const teamInfo = await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId)
+    const teamCode = await comp_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId)
 
     expect(await comp_db.competitionStudentWithdraw(newStudent.userId, comp.competitionId)).toStrictEqual({
-      competitionCode: 'TC12',
+      competitionCode: teamCode,
       competitionName: 'TestComp',
       teamId: expect.any(Number),
       teamName: teamInfo.teamName

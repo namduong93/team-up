@@ -40,7 +40,7 @@ describe('Session Find Function', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Success case: a new session is created', async () => {
+  test('Success case: returns session details', async () => {
     expect(await session_db.find('ezID')).toStrictEqual({
       sessionId: 'ezID                                ',
       userId: student.userId,

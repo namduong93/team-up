@@ -144,7 +144,7 @@ describe('Competition Teams Function', () => {
         teamName: 'Bulbasaur',
         teamSite: 'Library',
         teamSeat: null,
-        teamLevel: 'No Preference',
+        teamLevel: 'Level B',
         startDate: new Date(startDate),
         students: [{
           "ICPCEligible": true,

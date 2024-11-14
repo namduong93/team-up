@@ -1,3 +1,4 @@
+import { UserAccess } from "../../../../shared_types/User/User";
 import { CompetitionIdObject } from "../../../models/competition/competition";
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUserRole } from "../../../models/competition/competitionUser";
 import { Staff } from "../../../models/user/staff/staff";
@@ -84,7 +85,8 @@ describe('Competition Staff Function', () => {
       accessibilityReqs: null,
       bio: '',
       roles: ['Admin'],
-      access: 'Accepted'
+      access: 'Accepted',
+      userAccess: 'Pending'
     }])
   })
 
@@ -112,7 +114,8 @@ describe('Competition Staff Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Admin'],
-        access: 'Accepted'
+        access: 'Accepted',
+        userAccess: 'Pending'
       },
       {
         userId: mockStaffId1.userId,
@@ -128,7 +131,8 @@ describe('Competition Staff Function', () => {
         accessibilityReqs: null,
         bio: '',
         roles: ['Admin'],
-        access: 'Pending'
+        access: 'Pending',
+        userAccess: 'Pending'
       }
     ])
   })
