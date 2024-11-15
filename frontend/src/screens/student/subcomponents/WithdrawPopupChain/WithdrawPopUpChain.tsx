@@ -11,7 +11,7 @@ interface WithdrawPopUpChainProps {
   handleClose: () => void;
 }
 
-const Heading = styled.h2`
+const StyledHeading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
@@ -61,7 +61,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
         return (
           <OptionPopUp
             heading={
-              <Heading>
+              <StyledHeading>
                 Withdrawing from the Team
                 {"\nwill make you ineligible"}
                 {"\n to compete in the Competition"}
@@ -69,7 +69,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
                 {"\ncannot be undone"}
                 {"\n\nDo you still wish"}
                 {"\nto proceed?"}
-              </Heading>
+              </StyledHeading>
             }
             onClose={handleCloseWithReset}
             onNext={handleNext}
@@ -80,7 +80,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
         return (
           <SecondStepPopUp
             heading={
-              <Heading>Are you sure you would {"\nlike to withdraw?"}</Heading>
+              <StyledHeading>Are you sure you would {"\nlike to withdraw?"}</StyledHeading>
             }
             onClose={handleCloseWithReset}
             onNext={handleSubmit}
@@ -90,7 +90,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
         return (
           <InvitePopUp
             heading={
-              <Heading>
+              <StyledHeading>
                 Copy and send your
                 {"\nTeam Code"}
                 {"\nto invite your Substitute"}
@@ -98,7 +98,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
                 {"\n\nAlternatively, you can wait"}
                 {"\nfor a Random Replacement"}
                 {"\nto be assigned"}
-              </Heading>
+              </StyledHeading>
             }
             text={compCode}
             onClose={handleCloseWithReset}

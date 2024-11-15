@@ -1,13 +1,13 @@
 import { styled } from "styled-components";
 
-export const Container = styled.div`
+export const StyledContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const ContentContainer = styled.div`
+export const StyledContentContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -17,12 +17,12 @@ export const ContentContainer = styled.div`
   min-width: 200px;
 `;
 
-export const Title = styled.h1`
+export const StyledTitle = styled.h1`
   margin-bottom: 20px;
   margin-top: 30px;
 `;
 
-export const ButtonContainer = styled.div`
+export const StyledButtonContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
@@ -30,7 +30,7 @@ export const ButtonContainer = styled.div`
   gap: 90px;
 `;
 
-export const Button = styled.button<{ $disabled?: boolean }>`
+export const StyledButton = styled.button<{ $disabled?: boolean }>`
   max-width: 150px;
   width: 25%;
   height: 35px;
@@ -49,7 +49,7 @@ export const Button = styled.button<{ $disabled?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const FormLabel = styled.label`
+export const StyledFormLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -60,12 +60,12 @@ export const FormLabel = styled.label`
   width: 100%;
 `;
 
-export const Asterisk = styled.span`
+export const StyledAsterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
   margin-left: 5px; // Add space between label and asterisk
 `;
 
-export const Text = styled.label`
+export const StyledText = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 20px;
@@ -75,20 +75,20 @@ export const Text = styled.label`
   width: 100%;
 `;
 
-export const DoubleInputContainer = styled.div`
+export const StyledDoubleInputContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 0.8%;
 `;
 
-export const Colon = styled.span`
+export const StyledColon = styled.span`
   align-self: center;
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
 `;
 
-export const Descriptor = styled.div`
+export const StyledDescriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colours.filterText};

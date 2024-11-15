@@ -1,35 +1,35 @@
 import { FC } from "react";
 import { useTheme } from "styled-components";
-import { UserNameContainerDiv, UsernameTextSpan, WideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
-import { StandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/StaffRole";
-import { StandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
+import { StyledUserNameContainerDiv, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import { StyledStandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/StaffRole";
+import { StyledStandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
 
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
   return (
-    <WideInfoContainerDiv $isHeader={true} style={{
+    <StyledWideInfoContainerDiv $isHeader={true} style={{
       backgroundColor: theme.colours.userInfoCardHeader,
       fontWeight: 'bold'
     }}>
-      <UserNameContainerDiv>
-        <UsernameTextSpan>
+      <StyledUserNameContainerDiv>
+        <StyledUsernameTextSpan>
           Full Name
-        </UsernameTextSpan>
-      </UserNameContainerDiv>
+        </StyledUsernameTextSpan>
+      </StyledUserNameContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>Affiliation</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Affiliation</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>Access</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Access</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>Email</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Email</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
 
-    </WideInfoContainerDiv>
+    </StyledWideInfoContainerDiv>
   )
 }

@@ -1,13 +1,13 @@
 import { styled } from "styled-components";
 
-export const Container = styled.div`
+export const StyledContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const ContentContainer = styled.div`
+export const StyledContentContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -17,12 +17,12 @@ export const ContentContainer = styled.div`
   min-width: 200px;
 `
 
-export const Title = styled.h1`
+export const StyledTitle = styled.h1`
   margin-bottom: 20px;
   margin-top: 30px;
 `;
 
-export const Label = styled.label`
+export const StyledLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -33,7 +33,7 @@ export const Label = styled.label`
   width: 100%;
 `;
 
-export const HalfText = styled.label`
+export const StyledHalfText = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -44,7 +44,7 @@ export const HalfText = styled.label`
   width: 45%;
 `
 
-export const DoubleInputContainer = styled.div<{ margin?: boolean }>`
+export const StyledDoubleInputContainer = styled.div<{ margin?: boolean }>`
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -52,7 +52,7 @@ export const DoubleInputContainer = styled.div<{ margin?: boolean }>`
   margin-bottom: ${({ margin }) => (margin ? "20px" : "0")};
 `
 
-export const Text = styled.label`
+export const StyledText = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 20px;
@@ -63,7 +63,7 @@ export const Text = styled.label`
 `
 
 
-export const LocationList = styled.div`
+export const StyledLocationList = styled.div`
   display: grid;
   width: 60%;
   grid-template-columns: repeat(2, 1fr);
@@ -71,7 +71,7 @@ export const LocationList = styled.div`
   gap: 10px;
 `;
 
-export const LocationItem = styled.div`
+export const StyledLocationItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center; 
@@ -81,7 +81,7 @@ export const LocationItem = styled.div`
 `;
 
 
-export const ButtonContainer = styled.div`
+export const StyledButtonContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
@@ -89,7 +89,7 @@ export const ButtonContainer = styled.div`
   gap: 90px;
 `;
 
-export const Button = styled.button<{ disabled?: boolean }>`
+export const StyledButton = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
   min-width: 80px;
   width: 25%;
@@ -106,6 +106,6 @@ export const Button = styled.button<{ disabled?: boolean }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const Asterisk = styled.span`
+export const StyledAsterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `;

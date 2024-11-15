@@ -1,14 +1,14 @@
 import { styled } from "styled-components";
 import { TeamStatus } from "../../../../../../../../shared_types/Competition/team/TeamStatus";
 
-export const InfoBarField = styled.div`
+export const StyledInfoBarField = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   column-gap: 4px;
 `;
 
-export const VerticalInfoBarField = styled.div`
+export const StyledVerticalInfoBarField = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -17,22 +17,22 @@ export const VerticalInfoBarField = styled.div`
   column-gap: 4px;
 `;
 
-export const LabelSpan = styled.span<{ $isEditing?: boolean }>`
+export const StyledLabelSpan = styled.span<{ $isEditing?: boolean }>`
   font-weight: bold;
   color: ${({ theme, $isEditing: isEditing }) => isEditing ? theme.colours.secondaryDark : theme.colours.primaryDark };
   /* min-width: 50%; */
   /* max-width: 160px; */
 `;
 
-export const NoWrapLabelSpan = styled(LabelSpan)`
+export const StyledNoWrapLabelSpan = styled(StyledLabelSpan)`
   white-space: nowrap;
 `;
 
-export const TeamDetailsLabelSpan = styled(LabelSpan)`
+export const StyledTeamDetailsLabelSpan = styled(StyledLabelSpan)`
   width: 65px;
 `;
 
-export const TitleDiv = styled.div<{ $isOpen: boolean }>`
+export const StyledTitleDiv = styled.div<{ $isOpen: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -40,7 +40,7 @@ export const TitleDiv = styled.div<{ $isOpen: boolean }>`
   font-size: ${({ theme, $isOpen }) => $isOpen ? theme.fonts.fontSizes.title : '0'};
 `;
 
-export const TeamStatusDiv = styled.div<{ $status: TeamStatus }>`
+export const StyledTeamStatusDiv = styled.div<{ $status: TeamStatus }>`
   position: relative;
   width: 100%;
   height: 100%;
@@ -78,7 +78,7 @@ export const TeamStatusDiv = styled.div<{ $status: TeamStatus }>`
   )};
 `;
 
-export const MemberUl = styled.ul`
+export const StyledMemberUl = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -87,14 +87,14 @@ export const MemberUl = styled.ul`
   
 `;
 
-export const Select = styled.select`
+export const StyledSelect = styled.select`
   width: 75%;
   border-radius: 5px;
   min-height: 30px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
 `;
 
-export const MemberSpan = styled(LabelSpan)`
+export const StyledMemberSpan = styled(StyledLabelSpan)`
   font-size: ${({ theme }) => theme.fonts.fontSizes.subheading};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.regular};
   color: ${({ theme }) => theme.teamView.levelA};
@@ -102,13 +102,13 @@ export const MemberSpan = styled(LabelSpan)`
   width: 100%;
 `;
 
-export const MemberContainer = styled.div`
+export const StyledMemberContainer = styled.div`
   width: 100%;
   overflow-y: auto;
   /* z-index: 0; */
 `;
 
-export const TeamContainer = styled.div`
+export const StyledTeamContainer = styled.div`
   position: sticky;
   top: 0;
   z-index: 2;

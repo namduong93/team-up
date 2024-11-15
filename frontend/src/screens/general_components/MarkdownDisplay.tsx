@@ -7,7 +7,7 @@ interface MarkdownDisplayProps {
   content: string;
 }
 
-const Markdown = styled(ReactMarkdown)`
+const StyledMarkdown = styled(ReactMarkdown)`
   font-size: 1rem;
   line-height: 1.5;
   color: ${({ theme }) => theme.fonts.colour};
@@ -23,5 +23,5 @@ const Markdown = styled(ReactMarkdown)`
 `;
 
 export const MarkdownDisplay: FC<MarkdownDisplayProps> = ({ content }) => {
-  return <Markdown children={content} rehypePlugins={[rehypeRaw]} />;
+  return <StyledMarkdown children={content} rehypePlugins={[rehypeRaw]} />;
 };

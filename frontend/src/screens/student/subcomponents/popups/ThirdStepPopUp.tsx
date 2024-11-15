@@ -2,7 +2,7 @@ import React from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { styled } from 'styled-components';
 
-const Modal = styled.div`
+const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -23,7 +23,7 @@ const Modal = styled.div`
 `
 
 
-const CloseButton = styled.button`
+const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -49,13 +49,13 @@ export const ThirdStepPopUp: React.FC<ThirdStepPopUpProps> = ({ heading, onClose
 
   return (
     <>
-      <Modal>
-        <CloseButton onClick={onClose}>
+      <StyledModal>
+        <StyledCloseButton onClick={onClose}>
           <FaTimes />
-        </CloseButton>
+        </StyledCloseButton>
         <div>{heading}</div>
 
-      </Modal>
+      </StyledModal>
     </>
   );
 };

@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { StudentCardProps } from "./StudentInfoCard";
-import { EmailContainerDiv, EmailSpan, SmallContainerDiv, StatusContainerDiv, StudentIdContainerDiv, TeamNameContainerDiv, UniversityContainerDiv, UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../StudentsPage.styles";
+import { StyledEmailContainerDiv, StyledEmailSpan, StyledSmallContainerDiv, StyledStatusContainerDiv, StyledStudentIdContainerDiv, StyledTeamNameContainerDiv, StyledUniversityContainerDiv, StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../StudentsPage.styles";
 import { StudentStatus } from "./StudentStatus";
 import { StudentsInfoBar } from "../../../components/InfoBar/StudentsInfoBar/StudentsInfoBar";
 
@@ -34,52 +34,52 @@ export const StudentInfoDiv: FC<StudentCardProps> = (
       studentInfo={studentInfo}
       isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
     />}
-    <WideInfoContainerDiv
+    <StyledWideInfoContainerDiv
       $isHeader={!studentInfo}
       onDoubleClick={() => studentInfo && setIsInfoBarOpen((p) => !p)} style={style} {...props}>
-       <UserNameContainerDiv>
-       {!studentInfo ? <UsernameTextSpan>{name}</UsernameTextSpan> :
-      <UserNameGrid >
-        <UserIcon />
-        <UsernameTextSpan>{name}</UsernameTextSpan>
-      </UserNameGrid>}
-      </UserNameContainerDiv>
+       <StyledUserNameContainerDiv>
+       {!studentInfo ? <StyledUsernameTextSpan>{name}</StyledUsernameTextSpan> :
+      <StyledUserNameGrid >
+        <StyledUserIcon />
+        <StyledUsernameTextSpan>{name}</StyledUsernameTextSpan>
+      </StyledUserNameGrid>}
+      </StyledUserNameContainerDiv>
         
-        <SmallContainerDiv style={{ width: '10%' }}>
+        <StyledSmallContainerDiv style={{ width: '10%' }}>
             {sex}
-        </SmallContainerDiv>
-        <EmailContainerDiv $isHeader={!studentInfo}>
-          <EmailSpan $isHeader={!studentInfo}>
+        </StyledSmallContainerDiv>
+        <StyledEmailContainerDiv $isHeader={!studentInfo}>
+          <StyledEmailSpan $isHeader={!studentInfo}>
           {email}
-          </EmailSpan>
-        </EmailContainerDiv>
+          </StyledEmailSpan>
+        </StyledEmailContainerDiv>
 
-        <StudentIdContainerDiv>
+        <StyledStudentIdContainerDiv>
           {studentId}
-        </StudentIdContainerDiv>
+        </StyledStudentIdContainerDiv>
 
-        <StatusContainerDiv>
+        <StyledStatusContainerDiv>
           {studentInfo ? <StudentStatus isMatched={status === 'Matched'} >{status}</StudentStatus>
           : status}
-        </StatusContainerDiv>
+        </StyledStatusContainerDiv>
 
-        <TeamNameContainerDiv>
+        <StyledTeamNameContainerDiv>
           {teamName}
-        </TeamNameContainerDiv>
+        </StyledTeamNameContainerDiv>
 
-        <SmallContainerDiv>{level}</SmallContainerDiv>
+        <StyledSmallContainerDiv>{level}</StyledSmallContainerDiv>
 
-        <SmallContainerDiv>
+        <StyledSmallContainerDiv>
           {tshirtSize}
-        </SmallContainerDiv>
+        </StyledSmallContainerDiv>
 
-        <UniversityContainerDiv>
+        <StyledUniversityContainerDiv>
           {siteName}
-        </UniversityContainerDiv>
+        </StyledUniversityContainerDiv>
 
-        <SmallContainerDiv></SmallContainerDiv>
+        <StyledSmallContainerDiv></StyledSmallContainerDiv>
 
-      </WideInfoContainerDiv>
+      </StyledWideInfoContainerDiv>
     </>
   )
 }

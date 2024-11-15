@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FormContainer } from "../../PasswordRecovery.styles";
+import { StyledFormContainer } from "../../PasswordRecovery.styles";
 import TextInput from "../../../../../components/general_utility/TextInput";
-import { CustomButton } from "../../../../general_styles/button_styles";
+import { StyledCustomButton } from "../../../../general_styles/button_styles";
 
 export const EmailRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ...props }) => {
   const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ export const EmailRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ st
   }
 
   return (
-    <FormContainer onSubmit={handleEmailSubmit} style={style} {...props}>
+    <StyledFormContainer onSubmit={handleEmailSubmit} style={style} {...props}>
       <h1>Recover Password</h1>
       <div style={{ width: '68%' }}>
         <TextInput
@@ -36,7 +36,7 @@ export const EmailRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ st
           width="100%"
         />
       </div>
-      <CustomButton style={{ minWidth: '134px' }}>Get Recovery Code</CustomButton>
-    </FormContainer>
+      <StyledCustomButton style={{ minWidth: '134px' }}>Get Recovery Code</StyledCustomButton>
+    </StyledFormContainer>
   )
 }

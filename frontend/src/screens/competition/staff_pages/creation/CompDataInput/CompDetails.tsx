@@ -2,9 +2,9 @@ import { FC, ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CompetitionInformation } from "../../../../../../shared_types/Competition/CompetitionDetails";
 import { dateToUTC, formatDate } from "../util/formatDate";
-import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { CompCreationProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { Asterisk, Button, ButtonContainer, Container, DeleteIcon, Descriptor, DoubleInputContainer, FormContainer, Label, LocationItem, LocationList, Title } from "./CompDataInput.styles";
+import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledContainer, StyledDeleteIcon, StyledDescriptor, StyledDoubleInputContainer, StyledFormContainer, StyledLabel, StyledLocationItem, StyledLocationList, StyledTitle } from "./CompDataInput.styles";
 import TextInput from "../../../../../components/general_utility/TextInput";
 import TextInputLight from "../../../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../../../components/general_utility/RadioButton";
@@ -246,7 +246,7 @@ export const CompetitionDetails: FC = () => {
   const [isEarlyReg, setIsEarlyReg] = useState(false);
 
   return (
-    <FlexBackground
+    <StyledFlexBackground
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -255,9 +255,9 @@ export const CompetitionDetails: FC = () => {
       }}
     >
       <CompCreationProgressBar progressNumber={0} />
-      <Container>
-        <FormContainer onSubmit={handleSubmit}>
-          <Title>Competition Details</Title>
+      <StyledContainer>
+        <StyledFormContainer onSubmit={handleSubmit}>
+          <StyledTitle>Competition Details</StyledTitle>
 
           <TextInput
             label="Competition Name"
@@ -280,11 +280,11 @@ export const CompetitionDetails: FC = () => {
             descriptor="Please specify the region your Competition will be held in"
           />
 
-          <Label>
-            Competition Start<Asterisk>*</Asterisk>
-          </Label>
+          <StyledLabel>
+            Competition Start<StyledAsterisk>*</StyledAsterisk>
+          </StyledLabel>
 
-          <DoubleInputContainer>
+          <StyledDoubleInputContainer>
               <TextInputLight
                 label="Date and Time (UTC Timezone)"
                 placeholder="dd/mm/yyyy"
@@ -295,9 +295,9 @@ export const CompetitionDetails: FC = () => {
                 width="45%"
               />
 
-          </DoubleInputContainer>
+          </StyledDoubleInputContainer>
 
-          <Label>Early Bird Registration Deadline</Label>
+          <StyledLabel>Early Bird Registration Deadline</StyledLabel>
 
           <RadioButton
             label=""
@@ -319,11 +319,11 @@ export const CompetitionDetails: FC = () => {
 
           {isEarlyReg && (
             <>
-              <Descriptor>
+              <StyledDescriptor>
                 Please set the Date and Time of your Early Bird Registration
                 Deadline
-              </Descriptor>
-              <DoubleInputContainer>
+              </StyledDescriptor>
+              <StyledDoubleInputContainer>
                   <TextInputLight
                     label="Date and Time (UTC Timezone)"
                     placeholder="dd/mm/yyyy"
@@ -334,18 +334,18 @@ export const CompetitionDetails: FC = () => {
                     width="45%"
                   />
 
-              </DoubleInputContainer>
+              </StyledDoubleInputContainer>
             </>
           )}
 
-          <Label>
-            General Registration Deadline<Asterisk>*</Asterisk>
-          </Label>
-          <Descriptor>
+          <StyledLabel>
+            General Registration Deadline<StyledAsterisk>*</StyledAsterisk>
+          </StyledLabel>
+          <StyledDescriptor>
             Please set the Date and Time of your General Registration Deadline
-          </Descriptor>
+          </StyledDescriptor>
 
-          <DoubleInputContainer>
+          <StyledDoubleInputContainer>
             <TextInputLight
               label="Date and Time (UTC Timezone)"
               placeholder="dd/mm/yyyy"
@@ -356,7 +356,7 @@ export const CompetitionDetails: FC = () => {
               width="45%"
             />
 
-          </DoubleInputContainer>
+          </StyledDoubleInputContainer>
 
           <TextInput
             label="Competition Code"
@@ -379,30 +379,30 @@ export const CompetitionDetails: FC = () => {
             </div>
           )}
 
-          <LocationList>
+          <StyledLocationList>
             {optionDisplayList.map((displayObject, index) => {
               return (
-                <LocationItem key={index}>
+                <StyledLocationItem key={index}>
                   <div>{displayObject.label}</div>
                   <div>{displayObject.defaultSite}</div>
-                  <DeleteIcon
+                  <StyledDeleteIcon
                     onClick={() => handleDeleteSiteLocation(displayObject)}
                   >
                     x
-                  </DeleteIcon>
-                </LocationItem>
+                  </StyledDeleteIcon>
+                </StyledLocationItem>
               );
             })}
-          </LocationList>
+          </StyledLocationList>
 
-          <ButtonContainer>
-            <Button onClick={() => navigate("/dashboard")}>Back</Button>
-            <Button type="submit" disabled={isButtonDisabled()}>
+          <StyledButtonContainer>
+            <StyledButton onClick={() => navigate("/dashboard")}>Back</StyledButton>
+            <StyledButton type="submit" disabled={isButtonDisabled()}>
               Next
-            </Button>
-          </ButtonContainer>
-        </FormContainer>
-      </Container>
-    </FlexBackground>
+            </StyledButton>
+          </StyledButtonContainer>
+        </StyledFormContainer>
+      </StyledContainer>
+    </StyledFlexBackground>
   );
 };

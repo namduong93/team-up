@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { CenteredFormBackground, FormContainer } from "./PasswordRecovery.styles";
+import { StyledCenteredFormBackground, StyledFormContainer } from "./PasswordRecovery.styles";
 import TextInput from "../../../components/general_utility/TextInput";
-import { ErrorMessage } from "../../general_styles/error_styles";
-import { CustomButton } from "../../general_styles/button_styles";
+import { StyledErrorMessage } from "../../general_styles/error_styles";
+import { StyledCustomButton } from "../../general_styles/button_styles";
 
 export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ...props }) => {
   const { code } = useParams();
@@ -37,7 +37,7 @@ export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> 
   };
 
   return (
-    <FormContainer onSubmit={handleCodeSubmit} style={style} {...props}>
+    <StyledFormContainer onSubmit={handleCodeSubmit} style={style} {...props}>
       <h1>Verification Code</h1>
 
       <div style={{ width: '68%' }}>
@@ -67,23 +67,23 @@ export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> 
           width="100%"
         />
       </div>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {error && <StyledErrorMessage>{error}</StyledErrorMessage>}
       <div style={{ width: '68%', display: 'flex', justifyContent: 'space-around' }}>
-        <CustomButton style={{ minWidth: '80px' }}>Change Password</CustomButton>
+        <StyledCustomButton style={{ minWidth: '80px' }}>Change Password</StyledCustomButton>
       </div>
-    </FormContainer>
+    </StyledFormContainer>
   )
 }
 
 
 export const PasswordRecovery: FC = () => {
   return (
-    <CenteredFormBackground>
+    <StyledCenteredFormBackground>
       <div style={{ width: '600px', flex: '0 1 auto' }}>
         <img style={{ width: '100%' }} src="https://sppcontests.org/wp-content/uploads/2024/02/RGB_SPCPA_Logo_24@4x-2.png" />
       </div>
 
       <Outlet/>
-    </CenteredFormBackground>
+    </StyledCenteredFormBackground>
   )
 }

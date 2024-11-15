@@ -1,50 +1,50 @@
 import { FC } from "react";
 import { useTheme } from "styled-components";
-import { UserNameContainerDiv, UsernameTextSpan, WideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
-import { StandardContainerDiv } from "../../StaffPage/subcomponents/StaffRole";
-import { StandardSpan } from "../../StaffPage/subcomponents/WideStaffCard";
+import { StyledUserNameContainerDiv, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
+import { StyledStandardContainerDiv } from "../../StaffPage/subcomponents/StaffRole";
+import { StyledStandardSpan } from "../../StaffPage/subcomponents/WideStaffCard";
 
 export const WideAttendeesHeader: FC = () => {
   const theme = useTheme();
   return (
-    <WideInfoContainerDiv $isHeader style={{
+    <StyledWideInfoContainerDiv $isHeader style={{
       backgroundColor: theme.colours.userInfoCardHeader,
       fontWeight: 'bold'
     }}>
-      <UserNameContainerDiv>
-        <UsernameTextSpan>
+      <StyledUserNameContainerDiv>
+        <StyledUsernameTextSpan>
           Full Name
-        </UsernameTextSpan>
-      </UserNameContainerDiv>
+        </StyledUsernameTextSpan>
+      </StyledUserNameContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>Gender</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Gender</StyledStandardSpan>
+      </StyledStandardContainerDiv>
       
-      <StandardContainerDiv>
-        <StandardSpan>Role</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Role</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>University</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>University</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>Shirt Size</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Shirt Size</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>Dietary Needs</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Dietary Needs</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>Allergies</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Allergies</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>Accessibility</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>Accessibility</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-    </WideInfoContainerDiv>
+    </StyledWideInfoContainerDiv>
   )
 }

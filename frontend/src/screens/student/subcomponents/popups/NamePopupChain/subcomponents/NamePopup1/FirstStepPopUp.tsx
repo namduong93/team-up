@@ -1,5 +1,5 @@
 import { FaTimes } from "react-icons/fa";
-import { Button, CloseButton, Modal } from "./NamePopup1.styles";
+import { StyledButton, StyledCloseButton, StyledModal } from "./NamePopup1.styles";
 import TextInputLight from "../../../../../../../components/general_utility/TextInputLight";
 
 
@@ -28,10 +28,10 @@ export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({
 
   return (
     <>
-      <Modal>
-        <CloseButton onClick={onClose}>
+      <StyledModal>
+        <StyledCloseButton onClick={onClose}>
           <FaTimes />
-        </CloseButton>
+        </StyledCloseButton>
         <div>{heading}</div>
         <span style={{ marginBottom: "20px" }}>
           Your Coach will review <br /> your change, where you will
@@ -47,10 +47,10 @@ export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({
           width="80%"
         />
 
-        <Button disabled={isButtonDisabled()} onClick={onNext}>
+        <StyledButton disabled={isButtonDisabled()} onClick={onNext}>
           Request
-        </Button>
-      </Modal>
+        </StyledButton>
+      </StyledModal>
     </>
   );
 };

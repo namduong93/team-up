@@ -10,7 +10,7 @@ interface NamePopUpChainProps {
   handleClose: () => void;
 }
 
-const Heading = styled.h2`
+const StyledHeading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
@@ -52,7 +52,7 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({
       case 1:
         return (
           <FirstStepPopUp
-            heading={<Heading>Change Team {"\n Name"}</Heading>}
+            heading={<StyledHeading>Change Team {"\n Name"}</StyledHeading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter new name"
@@ -64,10 +64,10 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({
         return (
           <SecondStepPopUp
             heading={
-              <Heading>
+              <StyledHeading>
                 Are you sure you would {"\nlike to change your Team's"}{" "}
                 {"\nname?"}
-              </Heading>
+              </StyledHeading>
             }
             onClose={handleCloseWithReset}
             onNext={handleSubmit}
@@ -77,10 +77,10 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({
         return (
           <ThirdStepPopUp
             heading={
-              <Heading>
+              <StyledHeading>
                 Your team's new name {"\nis now pending approval"}{" "}
                 {"\nfrom your coach"}
-              </Heading>
+              </StyledHeading>
             }
             onClose={handleCloseWithReset}
           />

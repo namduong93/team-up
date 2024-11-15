@@ -7,7 +7,7 @@ import { ProfileCard } from "../components/ProfileCard";
 import { FaTimes } from "react-icons/fa";
 import { MarkdownDisplay } from "../../general_components/MarkdownDisplay";
 
-const ManageContainer = styled.div`
+const StyledManageContainer = styled.div`
   display: flex;
   justify-content: space-around;
   max-width: 100%;
@@ -17,13 +17,13 @@ const ManageContainer = styled.div`
   align-items: center;
 `;
 
-const InfoContainer = styled.div`
+const StyledInfoContainer = styled.div`
   display: grid;
   width: 100%;
   max-width: 50%;
 `;
 
-const InfoCard = styled.div`
+const StyledInfoCard = styled.div`
   display: flex;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -34,19 +34,19 @@ const InfoCard = styled.div`
   box-sizing: border-box;
 `;
 
-const InfoContent = styled.div`
+const StyledInfoContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const InfoLabel = styled.h3`
+const StyledInfoLabel = styled.h3`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin: 0;
   color: ${({ theme }) => theme.colours.primaryDark};
   margin-bottom: 5%;
 `;
 
-export const InfoButton = styled.button`
+export const StyledInfoButton = styled.button`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   background-color: ${({ theme }) => theme.background};
   border: none;
@@ -63,7 +63,7 @@ export const InfoButton = styled.button`
   }
 `;
 
-export const InfoLink = styled.a`
+export const StyledInfoLink = styled.a`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.colours.primaryDark};
   text-decoration: underline;
@@ -75,7 +75,7 @@ export const InfoLink = styled.a`
   }
 `;
 
-const ModalOverlay = styled.div`
+const StyledModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -88,7 +88,7 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-const ModalContent = styled.div`
+const StyledModalContent = styled.div`
   position: relative;
   background: ${({ theme }) => theme.background};
   border-radius: 12px;
@@ -99,7 +99,7 @@ const ModalContent = styled.div`
   box-sizing: border-box;
 `;
 
-const CloseButton = styled.button`
+const StyledCloseButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
@@ -137,11 +137,11 @@ export const TeamManage: React.FC = () => {
   };
 
   return (
-    <ManageContainer>
+    <StyledManageContainer>
       <TeamActionCard
         numMembers={students.filter((s) => s.name !== null).length}
       />
-      <InfoContainer>
+      <StyledInfoContainer>
         <ProfileCard
           name={coach.name}
           email={coach.email}
@@ -149,26 +149,26 @@ export const TeamManage: React.FC = () => {
           isCoach={true}
         />
 
-        <InfoCard>
-          <InfoContent>
-            <InfoLabel>Competition Details and Announcements:</InfoLabel>
-            <InfoLink onClick={handleOpenModal}>
+        <StyledInfoCard>
+          <StyledInfoContent>
+            <StyledInfoLabel>Competition Details and Announcements:</StyledInfoLabel>
+            <StyledInfoLink onClick={handleOpenModal}>
               see competition details →
-            </InfoLink>
-          </InfoContent>
-        </InfoCard>
-      </InfoContainer>
+            </StyledInfoLink>
+          </StyledInfoContent>
+        </StyledInfoCard>
+      </StyledInfoContainer>
 
       {isModalOpen && (
-        <ModalOverlay>
-          <ModalContent>
-            <CloseButton onClick={handleCloseModal}>
+        <StyledModalOverlay>
+          <StyledModalContent>
+            <StyledCloseButton onClick={handleCloseModal}>
               <FaTimes />
-            </CloseButton>
+            </StyledCloseButton>
             <MarkdownDisplay content={announcements} />
-          </ModalContent>
-        </ModalOverlay>
+          </StyledModalContent>
+        </StyledModalOverlay>
       )}
-    </ManageContainer>
+    </StyledManageContainer>
   );
 };

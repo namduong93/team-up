@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
 import { sendRequest } from "../../../../../../../../utility/request";
 import { CompetitionSiteCapacity } from "../../../../../../../../../shared_types/Competition/CompetitionSite";
-import { Button, CloseButton, Container, Modal, ModalOverlay, View } from "./EditSiteCapacity.styles";
+import { StyledButton, StyledCloseButton, StyledContainer, StyledModal, StyledModalOverlay, StyledView } from "./EditSiteCapacity.styles";
 import { FaTimes } from "react-icons/fa";
-import { Heading } from "../../ManagePage.styles";
-import { Text } from "../EditCompRegistrationPopup/EditCompRegistrationPopup.styles";
+import { StyledHeading } from "../../ManagePage.styles";
+import { StyledText } from "../EditCompRegistrationPopup/EditCompRegistrationPopup.styles";
 import { AdvancedDropdown } from "../../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { NumberInputLight } from "../../../../../../../../components/general_utility/NumberInputLight";
 
@@ -82,18 +82,18 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   };
 
   return (
-    <ModalOverlay>
-      <Modal>
-        <View>
-          <CloseButton onClick={onClose}>
+    <StyledModalOverlay>
+      <StyledModal>
+        <StyledView>
+          <StyledCloseButton onClick={onClose}>
             <FaTimes />
-          </CloseButton>
-          <Container>
-            <Heading>{heading}</Heading>
+          </StyledCloseButton>
+          <StyledContainer>
+            <StyledHeading>{heading}</StyledHeading>
             <div style={{ display: "flex", alignContent: "center" }}>
-              <Text>
+              <StyledText>
                 <em>Capacity is the number of participants your site can host.</em>
-              </Text>
+              </StyledText>
             </div>
 
             {roles.includes(CompetitionRole.Admin) && 
@@ -115,10 +115,10 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
               currentCapacity={currentCapacity}
             />
 
-            <Button onClick={handleSubmit} disabled={capacity <= 0} >Save Changes</Button>
-          </Container>
-        </View>
-      </Modal>
-    </ModalOverlay>
+            <StyledButton onClick={handleSubmit} disabled={capacity <= 0} >Save Changes</StyledButton>
+          </StyledContainer>
+        </StyledView>
+      </StyledModal>
+    </StyledModalOverlay>
   );
 };

@@ -7,7 +7,7 @@ import { ProfileCard } from "../components/ProfileCard";
 import { backendURL } from "../../../../config/backendURLConfig";
 import { EditCompPreferences } from "../subcomponents/EditCompUserDetails/EditCompPreferences";
 
-const DetailsContainer = styled.div`
+const StyledDetailsContainer = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
@@ -16,7 +16,7 @@ const DetailsContainer = styled.div`
   gap: 5%;
 `;
 
-const TeamDetailsContainer = styled.div`
+const StyledTeamDetailsContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -32,7 +32,7 @@ const TeamDetailsContainer = styled.div`
   box-sizing: border-box;
 `;
 
-const TeamInfo = styled.div`
+const StyledTeamInfo = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -41,14 +41,14 @@ const TeamInfo = styled.div`
   cursor: default;
 `;
 
-const TeamLabel = styled.h2`
+const StyledTeamLabel = styled.h2`
   margin: 0;
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.regular};
   color: ${({ theme }) => theme.colours.primaryDark};
 `;
 
-const TeamField = styled.p`
+const StyledTeamField = styled.p`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.fonts.colour};
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -57,7 +57,7 @@ const TeamField = styled.p`
   box-sizing: border-box;
 `;
 
-const StudentsContainer = styled.div`
+const StyledStudentsContainer = styled.div`
   width: 100%;
   max-width: 90%;
   height: 100%;
@@ -110,28 +110,28 @@ export const TeamDetails: FC = () => {
 
 
   return (
-    <DetailsContainer>
-      <TeamDetailsContainer>
-        <TeamInfo>
+    <StyledDetailsContainer>
+      <StyledTeamDetailsContainer>
+        <StyledTeamInfo>
           <div>
-            <TeamLabel>Team Name:</TeamLabel>
-            <TeamField>{teamName}</TeamField>
+            <StyledTeamLabel>Team Name:</StyledTeamLabel>
+            <StyledTeamField>{teamName}</StyledTeamField>
           </div>
           <div>
-            <TeamLabel>Site Location:</TeamLabel>
-            <TeamField>{teamSite}</TeamField>
+            <StyledTeamLabel>Site Location:</StyledTeamLabel>
+            <StyledTeamField>{teamSite}</StyledTeamField>
           </div>
           <div>
-            <TeamLabel>Seat:</TeamLabel>
-            <TeamField>{teamSeat}</TeamField>
+            <StyledTeamLabel>Seat:</StyledTeamLabel>
+            <StyledTeamField>{teamSeat}</StyledTeamField>
           </div>
           <div>
-            <TeamLabel>Level:</TeamLabel>
-            <TeamField>{teamLevel}</TeamField>
+            <StyledTeamLabel>Level:</StyledTeamLabel>
+            <StyledTeamField>{teamLevel}</StyledTeamField>
           </div>
-        </TeamInfo>
-      </TeamDetailsContainer>
-      <StudentsContainer>
+        </StyledTeamInfo>
+      </StyledTeamDetailsContainer>
+      <StyledStudentsContainer>
         {students.map((student, index) => (
           <ProfileCard
             key={`student-${index}`}
@@ -148,7 +148,7 @@ export const TeamDetails: FC = () => {
             }
           />
         ))}
-      </StudentsContainer>
+      </StyledStudentsContainer>
       {isEditing && (
         <EditCompPreferences
           student={studentInfo}
@@ -156,6 +156,6 @@ export const TeamDetails: FC = () => {
           onClose={() => setIsEditing(false)}
         />
       )}
-    </DetailsContainer>
+    </StyledDetailsContainer>
   );
 };

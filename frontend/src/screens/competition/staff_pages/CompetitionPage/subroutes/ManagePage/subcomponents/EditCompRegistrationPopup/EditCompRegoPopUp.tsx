@@ -1,7 +1,7 @@
 import { FaTimes } from "react-icons/fa";
 import { EditCourse, EditRego } from "../../../../../../../../../shared_types/Competition/staff/Edit";
 import { CourseCategory } from "../../../../../../../../../shared_types/University/Course";
-import { Button, CloseButton, Column, FirstDiv, Input, Label, Modal, ModalOverlay, RowContainer, RowContainer2, Text, Title2 } from "./EditCompRegistrationPopup.styles";
+import { StyledButton, StyledCloseButton, StyledColumn, StyledFirstDiv, StyledInput, StyledLabel, StyledModal, StyledModalOverlay, StyledRowContainer, StyledRowContainer2, StyledText, StyledTitle2 } from "./EditCompRegistrationPopup.styles";
 import { ToggleButton } from "../ToggleButton";
 
 interface EditCompRegoPopUpProps {
@@ -43,11 +43,11 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
   };
 
   return (
-    <ModalOverlay>
-      <Modal>
-        <CloseButton onClick={onClose}>
+    <StyledModalOverlay>
+      <StyledModal>
+        <StyledCloseButton onClick={onClose}>
           <FaTimes />
-        </CloseButton>
+        </StyledCloseButton>
         <div>{heading}</div>
 
         <div
@@ -58,18 +58,18 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
             height: "auto",
           }}
         >
-          <RowContainer2>
-            <FirstDiv>
+          <StyledRowContainer2>
+            <StyledFirstDiv>
               <div style={{ width: "100%", textAlign: "center" }}>
-                <Title2>
+                <StyledTitle2>
                   Input the relevant course codes {"\n"}and names for your
                   university
                   {"\n"}programming subjects
-                </Title2>
+                </StyledTitle2>
               </div>
 
-              <Label>Introduction to Programming</Label>
-              <Input
+              <StyledLabel>Introduction to Programming</StyledLabel>
+              <StyledInput
                 type="text"
                 placeholder="COMP1234 Introduction to Programming"
                 value={editCourses[CourseCategory.Introduction]}
@@ -78,8 +78,8 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
                 }
               />
 
-              <Label>Data Structures and Algorithms</Label>
-              <Input
+              <StyledLabel>Data Structures and Algorithms</StyledLabel>
+              <StyledInput
                 type="text"
                 placeholder="COMP1234 Data Structures and Algorithms"
                 value={editCourses[CourseCategory.DataStructures]}
@@ -88,8 +88,8 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
                 }
               />
 
-              <Label>Algorithm Design and Analysis</Label>
-              <Input
+              <StyledLabel>Algorithm Design and Analysis</StyledLabel>
+              <StyledInput
                 type="text"
                 placeholder="COMP1234 Algorithm Design and Analysis"
                 value={editCourses[CourseCategory.AlgorithmDesign]}
@@ -98,8 +98,8 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
                 }
               />
 
-              <Label>Programming Challenges and Problems</Label>
-              <Input
+              <StyledLabel>Programming Challenges and Problems</StyledLabel>
+              <StyledInput
                 type="text"
                 placeholder="COMP1234 Programming Challenges and Problems"
                 value={editCourses[CourseCategory.ProgrammingChallenges]}
@@ -107,83 +107,83 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
                   handleInputChange(CourseCategory.ProgrammingChallenges, e)
                 }
               />
-            </FirstDiv>
+            </StyledFirstDiv>
 
             <div style={{ minWidth: "300px" }}>
-              <Title2>
+              <StyledTitle2>
                 Please toggle the fields you would {"\n"} like to show on the
                 Competition Registration Form
-              </Title2>
+              </StyledTitle2>
 
-              <RowContainer>
-                <Column>
-                  <Label>Codeforces</Label>
-                  <Text>Students enter their current Codeforces score</Text>
-                </Column>
-                <Column>
+              <StyledRowContainer>
+                <StyledColumn>
+                  <StyledLabel>Codeforces</StyledLabel>
+                  <StyledText>Students enter their current Codeforces score</StyledText>
+                </StyledColumn>
+                <StyledColumn>
                   <ToggleButton
                     isOn={regoFields.enableCodeforcesField}
                     onToggle={() => handleToggle("enableCodeforcesField")}
                   />
-                </Column>
-              </RowContainer>
+                </StyledColumn>
+              </StyledRowContainer>
 
-              <RowContainer>
-                <Column>
-                  <Label>ICPC Regional Participation</Label>
-                  <Text>
+              <StyledRowContainer>
+                <StyledColumn>
+                  <StyledLabel>ICPC Regional Participation</StyledLabel>
+                  <StyledText>
                     Students specify if they have ever competed in a regional
                     ICPC round
-                  </Text>
-                </Column>
-                <Column>
+                  </StyledText>
+                </StyledColumn>
+                <StyledColumn>
                   <ToggleButton
                     isOn={regoFields.enableRegionalParticipationField}
                     onToggle={() =>
                       handleToggle("enableRegionalParticipationField")
                     }
                   />
-                </Column>
-              </RowContainer>
+                </StyledColumn>
+              </StyledRowContainer>
 
-              <RowContainer>
-                <Column>
-                  <Label>National Olympiad Prizes</Label>
-                  <Text>
+              <StyledRowContainer>
+                <StyledColumn>
+                  <StyledLabel>National Olympiad Prizes</StyledLabel>
+                  <StyledText>
                     Students specify if they have ever won any related National
                     Olympiad Prizes in Mathematics or Informatics
-                  </Text>
-                </Column>
-                <Column>
+                  </StyledText>
+                </StyledColumn>
+                <StyledColumn>
                   <ToggleButton
                     isOn={regoFields.enableNationalPrizesField}
                     onToggle={() => handleToggle("enableNationalPrizesField")}
                   />
-                </Column>
-              </RowContainer>
+                </StyledColumn>
+              </StyledRowContainer>
 
-              <RowContainer>
-                <Column>
-                  <Label>International Olympiad Prizes</Label>
-                  <Text>
+              <StyledRowContainer>
+                <StyledColumn>
+                  <StyledLabel>International Olympiad Prizes</StyledLabel>
+                  <StyledText>
                     Students specify if they have ever won any related
                     International Olympiad Prizes in Mathematics or Informatics
-                  </Text>
-                </Column>
-                <Column>
+                  </StyledText>
+                </StyledColumn>
+                <StyledColumn>
                   <ToggleButton
                     isOn={regoFields.enableInternationalPrizesField}
                     onToggle={() =>
                       handleToggle("enableInternationalPrizesField")
                     }
                   />
-                </Column>
-              </RowContainer>
+                </StyledColumn>
+              </StyledRowContainer>
             </div>
-          </RowContainer2>
+          </StyledRowContainer2>
         </div>
-        <Button onClick={handleSubmit}>Save Changes</Button>
-      </Modal>
-    </ModalOverlay>
+        <StyledButton onClick={handleSubmit}>Save Changes</StyledButton>
+      </StyledModal>
+    </StyledModalOverlay>
   );
 };

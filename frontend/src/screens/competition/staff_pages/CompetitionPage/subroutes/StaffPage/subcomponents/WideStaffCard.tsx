@@ -1,14 +1,14 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { StaffCardProps } from "./StaffCardProps";
-import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
-import { StaffRoles, StandardContainerDiv } from "./StaffRole";
+import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
+import { StaffRoles, StyledStandardContainerDiv } from "./StaffRole";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
-import { StaffAccessLevel } from "../StaffPage.styles";
+import { StyledStaffAccessLevel } from "../StaffPage.styles";
 import { StaffInfoBar } from "../../../components/InfoBar/StaffInfoBar/StaffInfoBar";
 
-export const StandardSpan = styled.span``;
+export const StyledStandardSpan = styled.span``;
 
 export const WideStaffCard: FC<StaffCardProps> = ({
   staffDetails, staffListState: [staffList, setStaffList],
@@ -22,41 +22,41 @@ export const WideStaffCard: FC<StaffCardProps> = ({
       staffInfo={staffDetails}
       staffListState={[staffList, setStaffList]}
     />
-    <WideInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen(true)} {...props}>
-      <UserNameContainerDiv>
-        <UserNameGrid>
-          <UserIcon />
-          <UsernameTextSpan>
+    <StyledWideInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen(true)} {...props}>
+      <StyledUserNameContainerDiv>
+        <StyledUserNameGrid>
+          <StyledUserIcon />
+          <StyledUsernameTextSpan>
             {staffDetails.name}
-          </UsernameTextSpan>
-        </UserNameGrid>
-      </UserNameContainerDiv>
+          </StyledUsernameTextSpan>
+        </StyledUserNameGrid>
+      </StyledUserNameContainerDiv>
 
-      <StandardContainerDiv style={{ overflow: 'visible' }}>
-        <StandardContainerDiv style={{ maxWidth: '90%', overflow: 'visible' }}>
+      <StyledStandardContainerDiv style={{ overflow: 'visible' }}>
+        <StyledStandardContainerDiv style={{ maxWidth: '90%', overflow: 'visible' }}>
           <StaffRoles roles={staffDetails.roles as CompetitionRole[]} />
-        </StandardContainerDiv>
-      </StandardContainerDiv>
+        </StyledStandardContainerDiv>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>
           {staffDetails.universityName}
-        </StandardSpan>
-      </StandardContainerDiv>
+        </StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StaffAccessLevel $access={staffDetails.access as StaffAccess}>
+      <StyledStandardContainerDiv>
+        <StyledStaffAccessLevel $access={staffDetails.access as StaffAccess}>
           {staffDetails.access}
-        </StaffAccessLevel>
-      </StandardContainerDiv>
+        </StyledStaffAccessLevel>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>
           {staffDetails.email}
-        </StandardSpan>
-      </StandardContainerDiv>
+        </StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
 
-    </WideInfoContainerDiv>
+    </StyledWideInfoContainerDiv>
   </>);
 }

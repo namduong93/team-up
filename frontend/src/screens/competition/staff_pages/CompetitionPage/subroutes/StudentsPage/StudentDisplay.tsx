@@ -3,9 +3,9 @@ import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletCon
 import { useTheme } from "styled-components";
 import { useEffect } from "react";
 import Fuse from "fuse.js";
-import { FilterTagButton, RemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
-import { FlexBackground } from "../../../../../../components/general_utility/Background";
-import { NarrowDisplayDiv, WideDisplayDiv } from "./StudentsPage.styles";
+import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "./StudentsPage.styles";
 import { StudentInfo } from "../../../../../../../shared_types/Competition/student/StudentInfo";
 import { StudentInfoCard } from "./subcomponents/StudentInfoCard";
 import { StudentInfoDiv } from "./subcomponents/StudentInfoDiv";
@@ -96,29 +96,29 @@ export const StudentDisplay = () => {
   <div>
       {Object.entries(filters).map(([field, values]) =>
         values.map((value) => (
-        <FilterTagButton key={`${field}-${value}`}>
+        <StyledFilterTagButton key={`${field}-${value}`}>
           {value} 
-          <RemoveFilterIcon
+          <StyledRemoveFilterIcon
             onClick={(e) => {
             e.stopPropagation();
             removeFilter(field, value);
             }} 
           />
-        </FilterTagButton>
+        </StyledFilterTagButton>
         ))
       )}
     </div>
-  <FlexBackground>
-    <NarrowDisplayDiv>
+  <StyledFlexBackground>
+    <StyledNarrowDisplayDiv>
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoCard
           studentsState={[students, setStudents]}
           key={`${studentInfo.email}${index}`}
           studentInfo={studentInfo}
         />))}
-    </NarrowDisplayDiv>
+    </StyledNarrowDisplayDiv>
 
-    <WideDisplayDiv>
+    <StyledWideDisplayDiv>
       <StudentInfoDiv studentsState={[students, setStudents]} style={{
         backgroundColor: theme.colours.userInfoCardHeader,
         fontWeight: 'bold'
@@ -129,8 +129,8 @@ export const StudentDisplay = () => {
           key={`${studentInfo.email}${index + students.length}`}
           studentInfo={studentInfo}
         />))}
-    </WideDisplayDiv>
-  </FlexBackground>
+    </StyledWideDisplayDiv>
+  </StyledFlexBackground>
   </>
   );
 }

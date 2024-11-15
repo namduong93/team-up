@@ -4,10 +4,10 @@ import { UserAccess } from "../../../../shared_types/User/User";
 import { StaffRequests } from "../../../../shared_types/Competition/staff/StaffInfo";
 import { sendRequest } from "../../../utility/request";
 // import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
-import { StandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
+import { StyledStandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
 import { AccessDropdown } from "./AccessDropdown";
-import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
-import { StandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/StaffRole";
+import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import { StyledStandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/StaffRole";
 
 export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,
@@ -35,38 +35,38 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
 
   return (
   <>
-    <WideInfoContainerDiv {...props}>
-      <UserNameContainerDiv>
-        <UserNameGrid>
-          <UserIcon />
-          <UsernameTextSpan>
+    <StyledWideInfoContainerDiv {...props}>
+      <StyledUserNameContainerDiv>
+        <StyledUserNameGrid>
+          <StyledUserIcon />
+          <StyledUsernameTextSpan>
             {staffDetails.name}
-          </UsernameTextSpan>
-        </UserNameGrid>
-      </UserNameContainerDiv>
+          </StyledUsernameTextSpan>
+        </StyledUserNameGrid>
+      </StyledUserNameContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>
           {staffDetails.universityName}
-        </StandardSpan>
-      </StandardContainerDiv>
+        </StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
+      <StyledStandardContainerDiv>
         <AccessDropdown
           staffId={staffDetails.userId}
           currentAccess={staffDetails.userAccess}
           onChange={(newAccess) => handleAccessChange(staffDetails.userId, newAccess)}
         />
-      </StandardContainerDiv>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>
           {staffDetails.email}
-        </StandardSpan>
-      </StandardContainerDiv>
+        </StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
 
-    </WideInfoContainerDiv>
+    </StyledWideInfoContainerDiv>
   </>
   );
 }

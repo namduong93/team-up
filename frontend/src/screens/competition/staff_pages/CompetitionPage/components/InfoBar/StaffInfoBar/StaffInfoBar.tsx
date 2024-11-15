@@ -6,16 +6,16 @@ import { InfoBar, InfoBarProps } from "../InfoBar";
 import { StaffAccess, StaffInfo } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
 import { useTheme } from "styled-components";
 import { sendRequest } from "../../../../../../../utility/request";
-import { EditIcon, EditIconButton, ProfilePic } from "../../../../../../Account/Account.styles";
+import { StyledEditIcon, StyledEditIconButton, StyledProfilePic } from "../../../../../../Account/Account.styles";
 import { backendURL } from "../../../../../../../../config/backendURLConfig";
-import { EditableTextArea } from "../components/TeamStudentInfoCard";
-import { AccessLabelDiv, CustomCheckbox, CustomRadio, RoleLabelDiv } from "./StaffInfoBar.styles";
+import { StyledEditableTextArea } from "../components/TeamStudentInfoCard";
+import { StyledAccessLabelDiv, StyledCustomCheckbox, StyledCustomRadio, StyledRoleLabelDiv } from "./StaffInfoBar.styles";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffRoles } from "../../../subroutes/StaffPage/subcomponents/StaffRole";
 import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
-import { StaffAccessLevel } from "../../../subroutes/StaffPage/StaffPage.styles";
-import { InfoBarField, LabelSpan, NoWrapLabelSpan, VerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
-import { CompetitionInfoContainerDiv } from "../StudentsInfoBar/StudentsInfoBar";
+import { StyledStaffAccessLevel } from "../../../subroutes/StaffPage/StaffPage.styles";
+import { StyledInfoBarField, StyledLabelSpan, StyledNoWrapLabelSpan, StyledVerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
+import { StyledCompetitionInfoContainerDiv } from "../StudentsInfoBar/StudentsInfoBar";
 
 
 interface StaffInfoProps extends InfoBarProps {
@@ -82,152 +82,152 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
   return (
     <InfoBar isOpenState={[isOpen, setIsOpen]}>
 
-      <InfoBarField>
-        <LabelSpan>User Id:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>User Id:</StyledLabelSpan>
         <span>{staffData.userId}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
-      <ProfilePic
+      <StyledProfilePic
         style={{ marginBottom: '15px' }}
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
       />
 
-      <VerticalInfoBarField>
-        <LabelSpan>University Name:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>University Name:</StyledLabelSpan>
         <span>{staffData.universityName}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Name:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Name:</StyledLabelSpan>
         <span>{staffData.name}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Email:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Email:</StyledLabelSpan>
         <span>{staffData.email}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Gender:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>Gender:</StyledLabelSpan>
         <span>{staffData.sex}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Pronouns:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>Pronouns:</StyledLabelSpan>
         <span>{staffData.pronouns}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Shirt Size:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>Shirt Size:</StyledLabelSpan>
         <span>{staffData.tshirtSize}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Allergies:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Allergies:</StyledLabelSpan>
         <span>{staffData.allergies}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Dietary Requirements:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Dietary Requirements:</StyledLabelSpan>
         <span>{staffData.dietaryReqs}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <NoWrapLabelSpan>Accessibility Requirements:</NoWrapLabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledNoWrapLabelSpan>Accessibility Requirements:</StyledNoWrapLabelSpan>
         <span>{staffData.accessibilityReqs}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <CompetitionInfoContainerDiv>
-        <EditIconButton
+      <StyledCompetitionInfoContainerDiv>
+        <StyledEditIconButton
           style={{ position: 'absolute', right: 0, top: 0 }}
           onClick={() => setIsEditing((p) => !p)}
         >
-          <EditIcon />
-        </EditIconButton>
+          <StyledEditIcon />
+        </StyledEditIconButton>
 
 
-        <VerticalInfoBarField>
-          <LabelSpan>Bio:</LabelSpan>
-          {isEditing ? <EditableTextArea
+        <StyledVerticalInfoBarField>
+          <StyledLabelSpan>Bio:</StyledLabelSpan>
+          {isEditing ? <StyledEditableTextArea
             onChange={(e) => setStaffData((p) => ({ ...p, bio: e.target.value }))}
             value={staffData.bio}
           />
           : <span>{staffData.bio}</span>}
-        </VerticalInfoBarField>
+        </StyledVerticalInfoBarField>
 
-        <VerticalInfoBarField>
-          <LabelSpan>Roles:</LabelSpan>
+        <StyledVerticalInfoBarField>
+          <StyledLabelSpan>Roles:</StyledLabelSpan>
           {isEditing ? <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <InfoBarField>
-              <CustomCheckbox
+            <StyledInfoBarField>
+              <StyledCustomCheckbox
                 type='checkbox'
                 $role={CompetitionRole.Admin}
                 checked={staffData.roles.includes(CompetitionRole.Admin)}
                 onChange={() => handleToggleRole(CompetitionRole.Admin)}
               />
-              <RoleLabelDiv $role={CompetitionRole.Admin}>Admin</RoleLabelDiv>
-            </InfoBarField>
-            <InfoBarField>
-              <CustomCheckbox
+              <StyledRoleLabelDiv $role={CompetitionRole.Admin}>Admin</StyledRoleLabelDiv>
+            </StyledInfoBarField>
+            <StyledInfoBarField>
+              <StyledCustomCheckbox
                 type='checkbox'
                 $role={CompetitionRole.Coach}
                 checked={staffData.roles.includes(CompetitionRole.Coach)}
                 onChange={() => handleToggleRole(CompetitionRole.Coach)}
               />
-              <RoleLabelDiv $role={CompetitionRole.Coach}>Coach</RoleLabelDiv>
-            </InfoBarField>
-            <InfoBarField>
-              <CustomCheckbox
+              <StyledRoleLabelDiv $role={CompetitionRole.Coach}>Coach</StyledRoleLabelDiv>
+            </StyledInfoBarField>
+            <StyledInfoBarField>
+              <StyledCustomCheckbox
                 type='checkbox'
                 $role={CompetitionRole.SiteCoordinator}
                 checked={staffData.roles.includes(CompetitionRole.SiteCoordinator)}
                 onChange={() => handleToggleRole(CompetitionRole.SiteCoordinator)}
               />
-              <RoleLabelDiv $role={CompetitionRole.SiteCoordinator}>Site-Coordinator</RoleLabelDiv>
-            </InfoBarField>
+              <StyledRoleLabelDiv $role={CompetitionRole.SiteCoordinator}>Site-Coordinator</StyledRoleLabelDiv>
+            </StyledInfoBarField>
           </div> :
-          <InfoBarField style={{ maxWidth: '160px' }}>
+          <StyledInfoBarField style={{ maxWidth: '160px' }}>
             <StaffRoles roles={staffData.roles} />
-          </InfoBarField>}
-        </VerticalInfoBarField>
+          </StyledInfoBarField>}
+        </StyledVerticalInfoBarField>
 
 
-        <VerticalInfoBarField>
-          <LabelSpan>Access:</LabelSpan>
+        <StyledVerticalInfoBarField>
+          <StyledLabelSpan>Access:</StyledLabelSpan>
           {isEditing ? <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <InfoBarField>
-              <CustomRadio
+            <StyledInfoBarField>
+              <StyledCustomRadio
                 type='radio'
                 name='staff-access-edit-radio'
                 $access={staffData.access}
                 checked={staffData.access === StaffAccess.Accepted}
                 onChange={() => setStaffData((p) => ({ ...p, access: StaffAccess.Accepted }))}
               />
-              <AccessLabelDiv $access={StaffAccess.Accepted}>Accepted</AccessLabelDiv>
-            </InfoBarField>
-            <InfoBarField>
-              <CustomRadio
+              <StyledAccessLabelDiv $access={StaffAccess.Accepted}>Accepted</StyledAccessLabelDiv>
+            </StyledInfoBarField>
+            <StyledInfoBarField>
+              <StyledCustomRadio
                 type='radio'
                 name='staff-access-edit-radio'
                 $access={staffData.access}
                 checked={staffData.access === StaffAccess.Pending}
                 onChange={() => setStaffData((p) => ({ ...p, access: StaffAccess.Pending }))}
               />
-              <AccessLabelDiv $access={StaffAccess.Pending}>Pending</AccessLabelDiv>
-            </InfoBarField>
-            <InfoBarField>
-              <CustomRadio
+              <StyledAccessLabelDiv $access={StaffAccess.Pending}>Pending</StyledAccessLabelDiv>
+            </StyledInfoBarField>
+            <StyledInfoBarField>
+              <StyledCustomRadio
                 type='radio'
                 name='staff-access-edit-radio'
                 $access={staffData.access}
                 checked={staffData.access === StaffAccess.Rejected}
                 onChange={() => setStaffData((p) => ({ ...p, access: StaffAccess.Rejected }))}
               />
-              <AccessLabelDiv $access={StaffAccess.Rejected}>Rejected</AccessLabelDiv>
-            </InfoBarField>
+              <StyledAccessLabelDiv $access={StaffAccess.Rejected}>Rejected</StyledAccessLabelDiv>
+            </StyledInfoBarField>
           </div> :
-          <StaffAccessLevel $access={staffData.access}>{staffData.access}</StaffAccessLevel>}
-        </VerticalInfoBarField>
+          <StyledStaffAccessLevel $access={staffData.access}>{staffData.access}</StyledStaffAccessLevel>}
+        </StyledVerticalInfoBarField>
 
         {isEdited && 
       <div style={{ display: 'flex' }}>
@@ -257,7 +257,7 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
       </div>}
 
 
-      </CompetitionInfoContainerDiv>
+      </StyledCompetitionInfoContainerDiv>
 
 
     </InfoBar>

@@ -1,5 +1,5 @@
 import { FaTimes } from "react-icons/fa";
-import { Button, CloseButton, Modal } from "./SitePopup1.styles";
+import { StyledButton, StyledCloseButton, StyledModal } from "./SitePopup1.styles";
 import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 
 interface FirstStepPopUpProps {
@@ -34,10 +34,10 @@ export const SitePopup1: React.FC<FirstStepPopUpProps> = ({
 
   return (
     <>
-      <Modal>
-        <CloseButton onClick={onClose}>
+      <StyledModal>
+        <StyledCloseButton onClick={onClose}>
           <FaTimes />
-        </CloseButton>
+        </StyledCloseButton>
         <div>{heading}</div>
         <span style={{ marginBottom: "20px" }}>
           Your Coach will review <br /> your change, where you will
@@ -51,10 +51,10 @@ export const SitePopup1: React.FC<FirstStepPopUpProps> = ({
           isExtendable={false}
         />
 
-        <Button disabled={isButtonDisabled()} onClick={onNext}>
+        <StyledButton disabled={isButtonDisabled()} onClick={onNext}>
           Request
-        </Button>
-      </Modal>
+        </StyledButton>
+      </StyledModal>
     </>
   );
 };

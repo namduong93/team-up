@@ -12,7 +12,7 @@ interface CardProps {
   compCreationDate: string;
 }
 
-const CompCardContainer = styled.div`
+const StyledCompCardContainer = styled.div`
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -32,17 +32,17 @@ const CompCardContainer = styled.div`
   }
 `;
 
-const CardHeader = styled.div`
+const StyledCardHeader = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
-const CardTop = styled.div`
+const StyledCardTop = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
-const CompHeader = styled.div`
+const StyledCompHeader = styled.div`
   text-align: left;
 
   h2 {
@@ -52,32 +52,32 @@ const CompHeader = styled.div`
   }
 `;
 
-const CardMiddle = styled.div`
+const StyledCardMiddle = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const CardText = styled.div`
+const StyledCardText = styled.div`
   color: ${({ theme }) => theme.fonts.colour};
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
 `;
 
-const CardBottom = styled.div`
+const StyledCardBottom = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
 `;
 
-const RoleContainer = styled.div`
+const StyledRoleContainer = styled.div`
   display: flex;
   gap: 5px;
   flex-direction: column;
 `;
 
-const Role = styled.div`
+const StyledRole = styled.div`
   background-color: ${({ theme }) => theme.colours.primaryDark};
   color: ${({ theme }) => theme.background};
   border: none;
@@ -89,12 +89,12 @@ const Role = styled.div`
   font-size: ${({ theme }) => theme.fonts.fontSizes.small};
 `;
 
-const Countdown = styled.div`
+const StyledCountdown = styled.div`
   color: ${({ theme }) => theme.colours.primaryDark};
   font-size: ${({ theme }) => theme.fonts.fontSizes.small};
 `;
 
-const ProgressBar = styled.div`
+const StyledProgressBar = styled.div`
   background-color: ${({ theme }) => theme.colours.primaryLight};
   border-radius: 20px;
   height: 15px;
@@ -103,7 +103,7 @@ const ProgressBar = styled.div`
   box-sizing: border-box;
 `;
 
-const Progress = styled.div<{ $width: number }>`
+const StyledProgress = styled.div<{ $width: number }>`
   background-color: ${({ theme }) => theme.colours.primaryDark};
   height: 100%;
   width: ${({ $width: width }) => `${width}%`};
@@ -133,32 +133,32 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   // calculate the progress width
   const progressWidth = totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100; // set to 100% if no days left
   return (
-    <CompCardContainer onClick={() => navigate(roleUrl(roles[0]))}>
-      <CardHeader>
-        <CardTop>
-          <CompHeader>
+    <StyledCompCardContainer onClick={() => navigate(roleUrl(roles[0]))}>
+      <StyledCardHeader>
+        <StyledCardTop>
+          <StyledCompHeader>
             <h2>{compName}</h2>
-          </CompHeader>
-        </CardTop>
-      </CardHeader>
+          </StyledCompHeader>
+        </StyledCardTop>
+      </StyledCardHeader>
 
-      <CardMiddle>
-        <CardText>{location}</CardText>
-        <CardText>{compDateFormatted}</CardText>
-      </CardMiddle>
+      <StyledCardMiddle>
+        <StyledCardText>{location}</StyledCardText>
+        <StyledCardText>{compDateFormatted}</StyledCardText>
+      </StyledCardMiddle>
 
-      <CardBottom>
-        <RoleContainer>
+      <StyledCardBottom>
+        <StyledRoleContainer>
           {roles.map((role, index) => (
-            <Role key={index}>{role}</Role>
+            <StyledRole key={index}>{role}</StyledRole>
           ))}
-        </RoleContainer>
-        <Countdown>{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</Countdown>
-      </CardBottom>
+        </StyledRoleContainer>
+        <StyledCountdown>{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</StyledCountdown>
+      </StyledCardBottom>
 
-      <ProgressBar>
-        <Progress $width={progressWidth} />
-      </ProgressBar>
-    </CompCardContainer>
+      <StyledProgressBar>
+        <StyledProgress $width={progressWidth} />
+      </StyledProgressBar>
+    </StyledCompCardContainer>
   );
 };

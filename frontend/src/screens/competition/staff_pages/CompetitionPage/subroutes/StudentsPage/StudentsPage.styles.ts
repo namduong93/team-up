@@ -1,7 +1,7 @@
 import { FaRegUser } from "react-icons/fa";
 import { styled } from "styled-components";
 
-export const NarrowDisplayDiv = styled.div`
+export const StyledNarrowDisplayDiv = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -14,7 +14,7 @@ export const NarrowDisplayDiv = styled.div`
 `;
 
 
-export const WideDisplayDiv = styled.div`
+export const StyledWideDisplayDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@ export const WideDisplayDiv = styled.div`
   }
 `;
 
-export const WideInfoContainerDiv = styled.div<{ $isHeader?: boolean }>`
+export const StyledWideInfoContainerDiv = styled.div<{ $isHeader?: boolean }>`
   width: 100%;
   box-sizing: border-box;
   border-bottom: 1px solid #D9D9D9;
@@ -42,14 +42,14 @@ export const WideInfoContainerDiv = styled.div<{ $isHeader?: boolean }>`
   }`}
 `;
 
-export const UserNameContainerDiv = styled.div`
+export const StyledUserNameContainerDiv = styled.div`
   width: 15%;
   height: 100%;
   display: flex;
   align-items: center;
 `;
 
-export const UserNameGrid = styled.div`
+export const StyledUserNameGrid = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
@@ -57,15 +57,15 @@ export const UserNameGrid = styled.div`
   grid-template-columns: 20% 80%;
 `;
 
-export const UserIcon = styled(FaRegUser)`
+export const StyledUserIcon = styled(FaRegUser)`
   margin: auto 0 auto 25%;
 `;
 
-export const UsernameTextSpan = styled.span`
+export const StyledUsernameTextSpan = styled.span`
   margin: auto 0 auto 5%;
 `;
 
-export const SmallContainerDiv = styled.div`
+export const StyledSmallContainerDiv = styled.div`
   width: 5%;
   height: 100%;
   display: flex;
@@ -73,7 +73,7 @@ export const SmallContainerDiv = styled.div`
   white-space: normal;
 `;
 
-export const EmailContainerDiv = styled.div<{ $isHeader: boolean }>`
+export const StyledEmailContainerDiv = styled.div<{ $isHeader: boolean }>`
   width: 15%;
   height: 100%;
   display: flex;
@@ -95,7 +95,7 @@ export const EmailContainerDiv = styled.div<{ $isHeader: boolean }>`
   }
 `;
 
-export const StudentIdContainerDiv = styled.div`
+export const StyledStudentIdContainerDiv = styled.div`
   width: 10%;
   height: 100%;
   display: flex;
@@ -104,7 +104,7 @@ export const StudentIdContainerDiv = styled.div`
   overflow: hidden;
 `;
 
-export const StatusContainerDiv = styled.div`
+export const StyledStatusContainerDiv = styled.div`
   width: 15%;
   height: 100%;
   display: flex;
@@ -112,7 +112,7 @@ export const StatusContainerDiv = styled.div`
   overflow: hidden;
 `;
 
-export const TeamNameContainerDiv = styled.div`
+export const StyledTeamNameContainerDiv = styled.div`
   width: 15%;
   height: 100%;
   display: flex;
@@ -121,7 +121,7 @@ export const TeamNameContainerDiv = styled.div`
   white-space: normal;
 `;
 
-export const UniversityContainerDiv = styled.div`
+export const StyledUniversityContainerDiv = styled.div`
   width: 10%;
   height: 100%;
   display: flex;
@@ -129,7 +129,7 @@ export const UniversityContainerDiv = styled.div`
   white-space: normal;
 `;
 
-export const EmailSpan = styled.span<{ $isHeader: boolean }>`
+export const StyledEmailSpan = styled.span<{ $isHeader: boolean }>`
   height: 100%;
   background-color: ${({ $isHeader: isHeader, theme }) => isHeader ? 'transparent' : theme.background};
   display: flex;

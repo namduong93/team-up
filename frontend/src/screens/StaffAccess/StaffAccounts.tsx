@@ -4,11 +4,11 @@ import { UserAccess } from "../../../shared_types/User/User";
 import { fetchStaffRequests } from "./util/fetchStaffRequests";
 import Fuse from "fuse.js";
 import { sendRequest } from "../../utility/request";
-import { FilterTagContainer, PageBackground, StaffContainer, StaffRecords } from "./StaffAccess.styles";
+import { StyledFilterTagContainer, StyledPageBackground, StyledStaffContainer, StyledStaffRecords } from "./StaffAccess.styles";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { StaffAccessButtons } from "./subcomponents/StaffAccessButtons";
-import { FilterTagButton, RemoveFilterIcon } from "../dashboard/Dashboard.styles";
-import { NarrowDisplayDiv, WideDisplayDiv } from "../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../dashboard/Dashboard.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
 import { NarrowStaffAccessCard } from "./subcomponents/NarrowStaffAccessCard";
 import { WideStaffAccessHeader } from "./subcomponents/WideStaffAccessHeader";
 import { WideStaffAccessCard } from "./subcomponents/WideStaffAccessCard";
@@ -112,7 +112,7 @@ export const StaffAccounts: FC = () => {
   };
 
   return (
-    <PageBackground>
+    <StyledPageBackground>
       <PageHeader
         pageTitle="Staff Account Management"
         pageDescription="Review pending staff account requests"
@@ -126,25 +126,25 @@ export const StaffAccounts: FC = () => {
       </PageHeader>
 
 
-      <FilterTagContainer>
+      <StyledFilterTagContainer>
         {Object.entries(filters).map(([field, values]) =>
           values.map((value) => (
-          <FilterTagButton key={`${field}-${value}`}>
+          <StyledFilterTagButton key={`${field}-${value}`}>
             {value} 
-            <RemoveFilterIcon
+            <StyledRemoveFilterIcon
               onClick={(e) => {
               e.stopPropagation();
               removeFilter(field, value);
               }} 
             />
-          </FilterTagButton>
+          </StyledFilterTagButton>
           ))
         )}
-      </FilterTagContainer>
+      </StyledFilterTagContainer>
 
-      <StaffContainer>
-        <NarrowDisplayDiv>
-          <StaffRecords>
+      <StyledStaffContainer>
+        <StyledNarrowDisplayDiv>
+          <StyledStaffRecords>
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }) => (
                 <NarrowStaffAccessCard 
@@ -156,11 +156,11 @@ export const StaffAccounts: FC = () => {
             ) : (
               <p>No staff members found.</p>
             )}
-          </StaffRecords>
-        </NarrowDisplayDiv>
-        <WideDisplayDiv>
+          </StyledStaffRecords>
+        </StyledNarrowDisplayDiv>
+        <StyledWideDisplayDiv>
           <WideStaffAccessHeader />
-          <StaffRecords>
+          <StyledStaffRecords>
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }) => (
                 <WideStaffAccessCard 
@@ -172,9 +172,9 @@ export const StaffAccounts: FC = () => {
             ) : (
               <p>No staff members found.</p>
             )}
-          </StaffRecords>
-        </WideDisplayDiv>
-      </StaffContainer>
-    </PageBackground>
+          </StyledStaffRecords>
+        </StyledWideDisplayDiv>
+      </StyledStaffContainer>
+    </StyledPageBackground>
   );
 };

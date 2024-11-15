@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { StaffAccess } from "../../../../../../../shared_types/Competition/staff/StaffInfo";
 
-export const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
+export const StyledStaffAccessLevel = styled.div<{ $access: StaffAccess }>`
   width: 80%;
   height: 50%;
   min-height: 25px;
@@ -36,7 +36,7 @@ export const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
   )};
 `;
 
-export const NarrowStatusDiv = styled.div`
+export const StyledNarrowStatusDiv = styled.div`
   width: 100%;
   height: 100%;
   display: flex;

@@ -5,7 +5,7 @@ import studentFAQs from "./config/faq_student.json";
 import adminFAQs from "./config/faq_admin.json";
 import staffFAQs from "./config/faq_staff.json";
 import Fuse from "fuse.js";
-import { Background, DropdownContainer, DropdownContent, DropdownHeader, FAQSearchBar, SettingsContainer, ThemeButton, Title } from "./Settings.styles";
+import { StyledBackground, StyledDropdownContainer, StyledDropdownContent, StyledDropdownHeader, StyledFAQSearchBar, StyledSettingsContainer, StyledThemeButton, StyledTitle } from "./Settings.styles";
 import { FaChevronDown } from "react-icons/fa";
 import { UpdatePassword } from "./subcomponents/UpdatePassword";
 import { ProfileCard } from "../student/components/ProfileCard";
@@ -78,33 +78,33 @@ export const Settings: FC = () => {
 
   return (
     isLoaded && (
-      <Background>
-        <SettingsContainer>
-          <Title>Settings Page</Title>
+      <StyledBackground>
+        <StyledSettingsContainer>
+          <StyledTitle>Settings Page</StyledTitle>
 
-          <DropdownContainer>
-            <DropdownHeader
+          <StyledDropdownContainer>
+            <StyledDropdownHeader
               $isOpen={passwordOpen}
               onClick={() => setPasswordOpen(!passwordOpen)}
             >
               Update Password
               <FaChevronDown />
-            </DropdownHeader>
-            <DropdownContent $isOpen={passwordOpen}>
+            </StyledDropdownHeader>
+            <StyledDropdownContent $isOpen={passwordOpen}>
               <UpdatePassword isOpen={passwordOpen} />
-            </DropdownContent>
-          </DropdownContainer>
+            </StyledDropdownContent>
+          </StyledDropdownContainer>
 
-          <DropdownContainer>
-            <DropdownHeader
+          <StyledDropdownContainer>
+            <StyledDropdownHeader
               $isOpen={faqOpen}
               onClick={() => setFaqOpen(!faqOpen)}
             >
               FAQs
               <FaChevronDown />
-            </DropdownHeader>
-            <DropdownContent $isOpen={faqOpen}>
-              <FAQSearchBar
+            </StyledDropdownHeader>
+            <StyledDropdownContent $isOpen={faqOpen}>
+              <StyledFAQSearchBar
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -118,62 +118,62 @@ export const Settings: FC = () => {
               ) : (
                 <div>No results found.</div>
               )}
-            </DropdownContent>
-          </DropdownContainer>
+            </StyledDropdownContent>
+          </StyledDropdownContainer>
 
-          <DropdownContainer>
-            <DropdownHeader
+          <StyledDropdownContainer>
+            <StyledDropdownHeader
               $isOpen={appearancesOpen}
               onClick={() => setAppearancesOpen(!appearancesOpen)}
             >
               Appearances
               <FaChevronDown />
-            </DropdownHeader>
-            <DropdownContent $isOpen={appearancesOpen}>
-              <ThemeButton
+            </StyledDropdownHeader>
+            <StyledDropdownContent $isOpen={appearancesOpen}>
+              <StyledThemeButton
                 $isLight={true}
                 $newTheme={"light"}
                 $isSelected={theme === "light"}
                 onClick={() => changeTheme("light")}
               >
                 Light
-              </ThemeButton>
-              <ThemeButton
+              </StyledThemeButton>
+              <StyledThemeButton
                 $isLight={false}
                 $newTheme={"dark"}
                 $isSelected={theme === "dark"}
                 onClick={() => changeTheme("dark")}
               >
                 Dark
-              </ThemeButton>
-              <ThemeButton
+              </StyledThemeButton>
+              <StyledThemeButton
                 $isLight={false}
                 $newTheme={"christmas"}
                 $isSelected={theme === "christmas"}
                 onClick={() => changeTheme("christmas")}
               >
                 Christmas
-              </ThemeButton>
-              <ThemeButton
+              </StyledThemeButton>
+              <StyledThemeButton
                 $isLight={false}
                 $newTheme={"colourblind"}
                 $isSelected={theme === "colourblind"}
                 onClick={() => changeTheme("colourblind")}
               >
                 Colour Blind
-              </ThemeButton>
-            </DropdownContent>
-          </DropdownContainer>
+              </StyledThemeButton>
+            </StyledDropdownContent>
+          </StyledDropdownContainer>
 
-          <DropdownContainer>
-            <DropdownHeader
+          <StyledDropdownContainer>
+            <StyledDropdownHeader
               $isOpen={creditsOpen}
               onClick={() => setCreditsOpen(!creditsOpen)}
             >
               Credits
               <FaChevronDown />
-            </DropdownHeader>
-            <DropdownContent $isOpen={creditsOpen}>
+            </StyledDropdownHeader>
+            <StyledDropdownContent $isOpen={creditsOpen}>
               <p>
                 We are a team of computer science students from UNSW who created
                 TeamUP!
@@ -213,10 +213,10 @@ export const Settings: FC = () => {
                 email="x@gmail.com"
                 bio="Backend Dev"
               />
-            </DropdownContent>
-          </DropdownContainer>
-        </SettingsContainer>
-      </Background>
+            </StyledDropdownContent>
+          </StyledDropdownContainer>
+        </StyledSettingsContainer>
+      </StyledBackground>
     )
   );
 };

@@ -23,7 +23,7 @@ interface TeamActionCardProps {
   compId?: number;
 }
 
-const ActionsContainer = styled.div`
+const StyledActionsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 5%;
@@ -32,7 +32,7 @@ const ActionsContainer = styled.div`
   box-sizing: border-box;
 `;
 
-const ActionCard = styled.button<ActionCardProps>`
+const StyledActionCard = styled.button<ActionCardProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,7 +61,7 @@ const ActionCard = styled.button<ActionCardProps>`
   }
 `;
 
-const CardIcon = styled.div<{ $disabled: boolean }>`
+const StyledCardIcon = styled.div<{ $disabled: boolean }>`
   font-size: 32px;
   margin-bottom: 10px;
   box-sizing: border-box;
@@ -69,7 +69,7 @@ const CardIcon = styled.div<{ $disabled: boolean }>`
     $disabled ? theme.colours.notifDark : theme.fonts.colour};
 `;
 
-const CardText = styled.p<{ $disabled: boolean }>`
+const StyledCardText = styled.p<{ $disabled: boolean }>`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme, $disabled }) =>
     $disabled ? theme.colours.notifDark : theme.fonts.colour};
@@ -77,7 +77,7 @@ const CardText = styled.p<{ $disabled: boolean }>`
   box-sizing: border-box;
 `;
 
-const Overlay = styled.div<{ $isOpen: boolean }>`
+const StyledOverlay = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
   position: fixed;
   top: 0;
@@ -88,7 +88,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   z-index: 999;
 `;
 
-const Heading = styled.h2`
+const StyledHeading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
@@ -161,9 +161,9 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
 
   return (
     <>
-      <ActionsContainer>
+      <StyledActionsContainer>
         {actions.map((action, index) => (
-          <ActionCard
+          <StyledActionCard
             key={index}
             onClick={() =>
               !isDisabled(action.type) && setModalOpen(action.type)
@@ -171,15 +171,15 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
             $actionType={action.type}
             $disabled={isDisabled(action.type)}
           >
-            <CardIcon $disabled={isDisabled(action.type)} as={action.icon} />
-            <CardText $disabled={isDisabled(action.type)}>
+            <StyledCardIcon $disabled={isDisabled(action.type)} as={action.icon} />
+            <StyledCardText $disabled={isDisabled(action.type)}>
               {action.text}
-            </CardText>
-          </ActionCard>
+            </StyledCardText>
+          </StyledActionCard>
         ))}
-      </ActionsContainer>
+      </StyledActionsContainer>
 
-      <Overlay
+      <StyledOverlay
         $isOpen={modalOpen !== null}
         onClick={() => setModalOpen(null)}
       />
@@ -187,9 +187,9 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
       {modalOpen === "invite" && (
         <InvitePopUp
           heading={
-            <Heading>
+            <StyledHeading>
               Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}
-            </Heading>
+            </StyledHeading>
           }
           text={teamCode}
           onClose={() => setModalOpen(null)}
@@ -199,9 +199,9 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
       {modalOpen === "join" && (
         <JoinPopUp
           heading={
-            <Heading>
+            <StyledHeading>
               Enter the details of the {"\nTeam you would like to join"}
-            </Heading>
+            </StyledHeading>
           }
           onClose={() => setModalOpen(null)}
           currentTeamCode={teamCode}

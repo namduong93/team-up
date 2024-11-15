@@ -5,8 +5,8 @@ import { CompetitionRole } from "../../../../../shared_types/Competition/Competi
 import { StaffRegistration, University } from "../../../../../shared_types/Competition/registration/StaffRegistration";
 import { sendRequest } from "../../../../utility/request";
 import { CompetitionSite } from "../../../../../shared_types/Competition/CompetitionSite";
-import { FlexBackground } from "../../../../components/general_utility/Background";
-import { Asterisk, Button, ButtonContainer, FormContainer, Label, Title } from "./StaffRegisterForm.styles";
+import { StyledFlexBackground } from "../../../../components/general_utility/Background";
+import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledFormContainer, StyledLabel, StyledTitle } from "./StaffRegisterForm.styles";
 import MultiRadio from "../../../../components/general_utility/MultiRadio";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import TextInput from "../../../../components/general_utility/TextInput";
@@ -166,15 +166,15 @@ export const StaffRoleRegistration: FC = () => {
   };
 
   return (
-    <FlexBackground
+    <StyledFlexBackground
       style={{
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <FormContainer onSubmit={handleSubmit}>
-        <Title>Staff Registration</Title>
+      <StyledFormContainer onSubmit={handleSubmit}>
+        <StyledTitle>Staff Registration</StyledTitle>
 
         <MultiRadio
           options={staffOptions}
@@ -198,9 +198,9 @@ export const StaffRoleRegistration: FC = () => {
             });
           }}
           label={
-            <Label>
-              Role<Asterisk>*</Asterisk>
-            </Label>
+            <StyledLabel>
+              Role<StyledAsterisk>*</StyledAsterisk>
+            </StyledLabel>
           }
           showOther={false}
         />
@@ -216,9 +216,9 @@ export const StaffRoleRegistration: FC = () => {
                 width: "100%",
               }}
             >
-              <Label>
-                Site Overseeing<Asterisk>*</Asterisk>
-              </Label>
+              <StyledLabel>
+                Site Overseeing<StyledAsterisk>*</StyledAsterisk>
+              </StyledLabel>
               <AdvancedDropdown
                 isExtendable={true}
                 optionsState={[siteOptions, setSiteOptions]}
@@ -270,13 +270,13 @@ export const StaffRoleRegistration: FC = () => {
           </>
         )}
 
-        <ButtonContainer>
-          <Button onClick={() => navigate("/dashboard")}>Back</Button>
-          <Button type="submit" disabled={isButtonDisabled()}>
+        <StyledButtonContainer>
+          <StyledButton onClick={() => navigate("/dashboard")}>Back</StyledButton>
+          <StyledButton type="submit" disabled={isButtonDisabled()}>
             Register
-          </Button>
-        </ButtonContainer>
-      </FormContainer>
-    </FlexBackground>
+          </StyledButton>
+        </StyledButtonContainer>
+      </StyledFormContainer>
+    </StyledFlexBackground>
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { sendRequest } from "../../../../../../../utility/request";
-import { AddButton, AddButtonContainer, Container, DoubleInputContainer, Title } from "./SiteLocationDataInput.styles";
-import { Label } from "../../CompDataInput.styles";
+import { StyledAddButton, StyledAddButtonContainer, StyledContainer, StyledDoubleInputContainer, StyledTitle } from "./SiteLocationDataInput.styles";
+import { StyledLabel } from "../../CompDataInput.styles";
 import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 import TextInputLight from "../../../../../../../components/general_utility/TextInputLight";
 
@@ -54,21 +54,13 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
   }, []);
 
   return (
-    <Container>
-      <Title>Site Locations</Title>
-      <DoubleInputContainer>
-        {/* <DropDownInputLight
-          label="Institution"
-          options={institutionOptions}
-          value={university}
-          required={false}
-          onChange={(e) => setUniversity(e.target.value)}
-          width="45%"
-        /> */}
+    <StyledContainer>
+      <StyledTitle>Site Locations</StyledTitle>
+      <StyledDoubleInputContainer>
         <div style={{ display: 'flex', flexDirection: 'column', width: '45%' }}>
-          <Label>
+          <StyledLabel>
             Institution
-          </Label>
+          </StyledLabel>
           <AdvancedDropdown
             setCurrentSelected={setCurrentOption}
             optionsState={[institutionOptions, setInstitutionOptions]}
@@ -85,13 +77,13 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
           onChange={(e) => setDefaultSite(e.target.value)}
           width="45%"
         />
-      </DoubleInputContainer>
+      </StyledDoubleInputContainer>
 
-      <AddButtonContainer>
-        <AddButton onClick={handleAddLocation}>+</AddButton>
-      </AddButtonContainer>
+      <StyledAddButtonContainer>
+        <StyledAddButton onClick={handleAddLocation}>+</StyledAddButton>
+      </StyledAddButtonContainer>
 
-    </Container>
+    </StyledContainer>
   );
 };
 

@@ -16,17 +16,17 @@ interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   onWithdrawClick: () => void;
 }
 
-const TeamTitle = styled(PageTitle)`
+const StyledTeamTitle = styled(PageTitle)`
   color: ${({ theme }) => theme.colours.primaryDark};
   font-size: ${({ theme }) => theme.fonts.fontSizes.heading};
 `;
 
-const TeamDescription = styled(PageDescriptionSpan)`
+const StyledTeamDescription = styled(PageDescriptionSpan)`
   color: ${({ theme }) => theme.colours.secondaryDark};
   font-size: ${({ theme }) => theme.fonts.fontSizes.subheading};
 `;
 
-const ButtonContainer = styled.div`
+const StyledButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,7 +34,7 @@ const ButtonContainer = styled.div`
   max-width: 250px;
 `;
 
-const WithdrawButton = styled(ActionButton)`
+const StyledWithdrawButton = styled(ActionButton)`
   height: 100%;
   width: 100%;
   min-height: 20px;
@@ -43,7 +43,7 @@ const WithdrawButton = styled(ActionButton)`
   box-sizing: border-box;
 `;
 
-const HeaderContent = styled.div`
+const StyledHeaderContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -51,7 +51,7 @@ const HeaderContent = styled.div`
   justify-content: space-between;
 `;
 
-const HeaderRightSection = styled.div`
+const StyledHeaderRightSection = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -63,7 +63,7 @@ const HeaderRightSection = styled.div`
   max-width: 50%;
 `;
 
-const ResponsiveHeader = styled(PageHeaderContainerDiv)`
+const StyledResponsiveHeader = styled(PageHeaderContainerDiv)`
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -80,16 +80,16 @@ export const TeamHeader: FC<HeaderAttributes> = ({
   onWithdrawClick,
 }) => {
   return (
-    <ResponsiveHeader>
-      <HeaderContent>
-        <TeamTitle>{compName}</TeamTitle>
-        <TeamDescription>Team {teamName}</TeamDescription>
+    <StyledResponsiveHeader>
+      <StyledHeaderContent>
+        <StyledTeamTitle>{compName}</StyledTeamTitle>
+        <StyledTeamDescription>Team {teamName}</StyledTeamDescription>
         {/* <div>{compCountdown}</div> */}
-      </HeaderContent>
+      </StyledHeaderContent>
 
-      <HeaderRightSection>
-        <ButtonContainer>
-          <WithdrawButton
+      <StyledHeaderRightSection>
+        <StyledButtonContainer>
+          <StyledWithdrawButton
             actionName="Withdraw"
             question="Are you sure you want to withdraw from the competition?"
             redirectPath="/dashboard"
@@ -97,10 +97,10 @@ export const TeamHeader: FC<HeaderAttributes> = ({
             handleClick={onWithdrawClick}
           />
           <NotificationButton />
-        </ButtonContainer>
+        </StyledButtonContainer>
 
         <CompCountdownBar daysRemaining={compCountdown} progress={0.5} />
-      </HeaderRightSection>
-    </ResponsiveHeader>
+      </StyledHeaderRightSection>
+    </StyledResponsiveHeader>
   );
 };

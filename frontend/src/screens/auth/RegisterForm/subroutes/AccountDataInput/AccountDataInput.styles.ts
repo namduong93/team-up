@@ -1,13 +1,13 @@
 import { styled } from "styled-components"
 
-export const Container = styled.div`
+export const StyledContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
   color: ${({ theme }) => theme.fonts.colour};
 `
 
-export const ContentContainer = styled.div`
+export const StyledContentContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -17,14 +17,14 @@ export const ContentContainer = styled.div`
   min-width: 200px;
 `
 
-export const DoubleInputContainer = styled.div`
+export const StyledDoubleInputContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 0.8%;
 `
 
-export const ButtonContainer = styled.div`
+export const StyledButtonContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
@@ -32,7 +32,7 @@ export const ButtonContainer = styled.div`
   gap: 90px;
 `
 
-export const Button = styled.button<{ $disabled?: boolean, $bgColor?: string }>`
+export const StyledButton = styled.button<{ $disabled?: boolean, $bgColor?: string }>`
   max-width: 150px;
   width: 25%;
   height: 35px;
@@ -51,7 +51,7 @@ export const Button = styled.button<{ $disabled?: boolean, $bgColor?: string }>`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `
 
-export const Title = styled.h1`
+export const StyledTitle = styled.h1`
   margin-bottom: 20px;
   margin-top: 30px;
 `

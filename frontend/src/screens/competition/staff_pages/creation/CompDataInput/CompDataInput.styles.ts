@@ -1,13 +1,13 @@
 import { styled } from "styled-components";
 
-export const Container = styled.div`
+export const StyledContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const FormContainer = styled.form`
+export const StyledFormContainer = styled.form`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -17,19 +17,19 @@ export const FormContainer = styled.form`
   min-width: 200px;
 `;
 
-export const Title = styled.h1`
+export const StyledTitle = styled.h1`
   margin-bottom: 20px;
   margin-top: 30px;
 `;
 
-export const DoubleInputContainer = styled.div`
+export const StyledDoubleInputContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 0.8%;
 `;
 
-export const Label = styled.label`
+export const StyledLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -40,7 +40,7 @@ export const Label = styled.label`
   width: 100%;
 `;
 
-export const LocationList = styled.div`
+export const StyledLocationList = styled.div`
   display: grid;
   width: 65%;
   grid-template-columns: 1fr 1fr auto;
@@ -48,13 +48,13 @@ export const LocationList = styled.div`
   gap: 25px;
 `;
 
-export const LocationItem = styled.div`
+export const StyledLocationItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center;
 `;
 
-export const DeleteIcon = styled.span`
+export const StyledDeleteIcon = styled.span`
   cursor: pointer;
   font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
@@ -65,7 +65,7 @@ export const DeleteIcon = styled.span`
   }
 `;
 
-export const ButtonContainer = styled.div`
+export const StyledButtonContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
@@ -73,7 +73,7 @@ export const ButtonContainer = styled.div`
   gap: 90px;
 `;
 
-export const Button = styled.button<{ disabled?: boolean }>`
+export const StyledButton = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
   min-width: 70px;
   width: 25%;
@@ -90,12 +90,12 @@ export const Button = styled.button<{ disabled?: boolean }>`
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
-export const Descriptor = styled.div`
+export const StyledDescriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colours.filterText};
   width: 100%;
 `;
-export const Asterisk = styled.span`
+export const StyledAsterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `;

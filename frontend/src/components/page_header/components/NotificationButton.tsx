@@ -7,7 +7,7 @@ import {
   FaTrophy, FaHandshake, FaBell, FaAddressCard, FaIdBadge,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { AlertButton } from '../../../screens/dashboard/Dashboard.styles';
+import { StyledAlertButton } from '../../../screens/dashboard/Dashboard.styles';
 
 interface Notification {
   id: number;
@@ -34,7 +34,7 @@ interface Notification {
   siteLocation?: string;
 }
 
-const NotificationsContainer = styled.div`
+const StyledNotificationsContainer = styled.div`
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
@@ -50,7 +50,7 @@ const NotificationsContainer = styled.div`
   z-index: 1000;
 `;
 
-const NotificationItem = styled.div`
+const StyledNotificationItem = styled.div`
   padding: 10px 5%;
   border-bottom: 1px solid ${({ theme }) => theme.background};
   display: flex;
@@ -66,14 +66,14 @@ const NotificationItem = styled.div`
   }
 `;
 
-const NotificationMsg = styled.div`
+const StyledNotificationMsg = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 5%;
 `;
 
-const CloseButton = styled(FaTimes)`
+const StyledCloseButton = styled(FaTimes)`
   width: 1.5rem;
   height: 1.5rem;
   cursor: pointer;
@@ -85,7 +85,7 @@ const CloseButton = styled(FaTimes)`
   }
 `;
 
-const NotificationIcon = styled.div`
+const StyledNotificationIcon = styled.div`
   display: flex;
   align-items: center;
   font-size: 1.5rem;
@@ -95,12 +95,12 @@ const NotificationIcon = styled.div`
   }
 `;
 
-const NotificationDate = styled.small`
+const StyledNotificationDate = styled.small`
   color: ${({ theme }) => theme.colours.notifDate};
   font-size: 0.85rem;
 `;
 
-const NotificationButtonContainer = styled.div`
+const StyledNotificationButtonContainer = styled.div`
   position: relative;
   height: 33px;
   width: 33px;
@@ -234,33 +234,33 @@ export const NotificationButton: FC = () => {
   };
 
   return (
-  <NotificationButtonContainer>
-    <AlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}>
+  <StyledNotificationButtonContainer>
+    <StyledAlertButton onClick={() => setIsNotificationsVisible(prev => !prev)}>
         <FaBell size={15} />
-    </AlertButton>
-    {isNotificationsVisible && <NotificationsContainer>
+    </StyledAlertButton>
+    {isNotificationsVisible && <StyledNotificationsContainer>
       {notifications.map((notification) => (
-        <NotificationItem
+        <StyledNotificationItem
           key={notification.id}
           onClick={() => handleNavigate(notification)}
         >
-          <NotificationIcon>{getNotificationIcon(notification.type)}</NotificationIcon>
-          <NotificationMsg>
+          <StyledNotificationIcon>{getNotificationIcon(notification.type)}</StyledNotificationIcon>
+          <StyledNotificationMsg>
             <div>{notification.message}</div>
             {notification.type === 'withdrawal' && notification.decision && (
               <small>Decision: {notification.decision}</small>
             )}
-            <NotificationDate>{formatDate(notification.createdAt)}</NotificationDate>
-          </NotificationMsg>
-          <CloseButton
+            <StyledNotificationDate>{formatDate(notification.createdAt)}</StyledNotificationDate>
+          </StyledNotificationMsg>
+          <StyledCloseButton
             onClick={(e) => {
               e.stopPropagation();
               handleRemoveNotification(notification.id);
             }}
           />
-        </NotificationItem>
+        </StyledNotificationItem>
       ))}
-    </NotificationsContainer>}
-  </NotificationButtonContainer>
+    </StyledNotificationsContainer>}
+  </StyledNotificationButtonContainer>
   );
 };

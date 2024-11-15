@@ -5,7 +5,7 @@ interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   progressNumber: number;
 }
 
-const RegoProgressContainer = styled.div`
+const StyledRegoProgressContainer = styled.div`
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   color: ${({ theme }) => theme.fonts.colour};
   display: flex;
@@ -33,7 +33,7 @@ const RegoProgressContainer = styled.div`
 
 `;
 
-const ProgressItemsContainer = styled.div`
+const StyledProgressItemsContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 60%;
@@ -53,7 +53,7 @@ const ProgressItemsContainer = styled.div`
   }
 `;
 
-const ProgressBarOptionContainer = styled.div`
+const StyledProgressBarOptionContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10%;
@@ -61,7 +61,7 @@ const ProgressBarOptionContainer = styled.div`
 
 `;
 
-const ProgressCircle = styled.div<{ $isCurrentProgress: boolean }>`
+const StyledProgressCircle = styled.div<{ $isCurrentProgress: boolean }>`
   background-color: ${({ $isCurrentProgress, theme }) => 
     $isCurrentProgress ? theme.colours.primaryDark : theme.background};
   min-width: 42px;
@@ -129,17 +129,17 @@ export const CompRegistrationProgressBar: FC<ProgressBarProps> = ({ progressNumb
 export const ProgressBar: FC<ProgressBarProps> = ({ progressNumber = 0, children, style, ...props }) => {
 
   return (
-  <RegoProgressContainer style={{ position: 'relative', ...style }} {...props}>
-    <RegoProgressContainer style={{...style}} {...props} >
-      <ProgressItemsContainer>
+  <StyledRegoProgressContainer style={{ position: 'relative', ...style }} {...props}>
+    <StyledRegoProgressContainer style={{...style}} {...props} >
+      <StyledProgressItemsContainer>
         {React.Children.map(children, (child, index) => {
           return (
-          <ProgressBarOptionContainer key={index} >
-            <ProgressCircle $isCurrentProgress={index === progressNumber} />
+          <StyledProgressBarOptionContainer key={index} >
+            <StyledProgressCircle $isCurrentProgress={index === progressNumber} />
             {child}
-          </ProgressBarOptionContainer>);
+          </StyledProgressBarOptionContainer>);
         })}
-      </ProgressItemsContainer>
-    </RegoProgressContainer>
-  </RegoProgressContainer>)
+      </StyledProgressItemsContainer>
+    </StyledRegoProgressContainer>
+  </StyledRegoProgressContainer>)
 }

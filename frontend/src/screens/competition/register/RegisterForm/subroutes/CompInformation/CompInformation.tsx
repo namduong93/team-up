@@ -4,9 +4,9 @@ import { CompetitionInformation as CompetitionDetails } from "../../../../../../
 import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { sendRequest } from "../../../../../../utility/request";
-import { FlexBackground } from "../../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
 import { CompRegistrationProgressBar } from "../../../../../../components/progress_bar/ProgressBar";
-import { Button, ButtonContainer, Container, ContentContainer, Title } from "./CompInformation.styles";
+import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledTitle } from "./CompInformation.styles";
 import { MarkdownDisplay } from "../../../../../general_components/MarkdownDisplay";
 
 export const defaultCompInformation = 
@@ -70,7 +70,7 @@ export const CompetitionInformation: FC = () => {
   };
 
   return (
-    <FlexBackground
+    <StyledFlexBackground
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -79,16 +79,16 @@ export const CompetitionInformation: FC = () => {
       }}
     >
       <CompRegistrationProgressBar progressNumber={0} />
-      <Container>
-        <ContentContainer>
-          <Title>Competition Information</Title>
+      <StyledContainer>
+        <StyledContentContainer>
+          <StyledTitle>Competition Information</StyledTitle>
           <MarkdownDisplay content={compInformation !== null ? compInformation : defaultCompInformation} />
-          <ButtonContainer>
-            <Button onClick={handleBack}>Back</Button>
-            <Button onClick={handleNext}>Next</Button>
-          </ButtonContainer>
-        </ContentContainer>
-      </Container>
-    </FlexBackground>
+          <StyledButtonContainer>
+            <StyledButton onClick={handleBack}>Back</StyledButton>
+            <StyledButton onClick={handleNext}>Next</StyledButton>
+          </StyledButtonContainer>
+        </StyledContentContainer>
+      </StyledContainer>
+    </StyledFlexBackground>
   );
 };

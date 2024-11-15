@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { CopyButton } from "../../../components/general_utility/CopyButton";
 import { FaEdit, FaUserTie } from "react-icons/fa";
 import { backendURL } from "../../../../config/backendURLConfig";
-import { InfoButton } from "../subroutes/TeamManage";
+import { StyledInfoButton } from "../subroutes/TeamManage";
 
 interface ProfileCardProps {
   name: string;
@@ -16,7 +16,7 @@ interface ProfileCardProps {
   isCoach?: boolean;
 }
 
-const StudentCard = styled.div<{ $isFirst?: boolean }>`
+const StyledStudentCard = styled.div<{ $isFirst?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -34,13 +34,13 @@ const StudentCard = styled.div<{ $isFirst?: boolean }>`
   box-sizing: border-box;
 `;
 
-const ContactEdit = styled.div`
+const StyledContactEdit = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 10px;
 `;
 
-const StudentCardContent = styled.div`
+const StyledStudentCardContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -50,14 +50,14 @@ const StudentCardContent = styled.div`
   box-sizing: border-box;
 `;
 
-const ContentContainer = styled.div`
+const StyledContentContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 5%;
 `;
 
-const StudentInfo = styled.div`
+const StyledStudentInfo = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -67,14 +67,14 @@ const StudentInfo = styled.div`
   box-sizing: border-box;
 `;
 
-const StudentName = styled.p`
+const StyledStudentName = styled.p`
   margin: 0;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 1rem;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const StudentEmail = styled.div`
+const StyledStudentEmail = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -82,7 +82,7 @@ const StudentEmail = styled.div`
   color: ${({ theme }) => theme.colours.primaryDark};
 `;
 
-const StudentBio = styled.p`
+const StyledStudentBio = styled.p`
   font-size: 0.9rem;
   color: ${({ theme }) => theme.fonts.descriptor};
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -96,7 +96,7 @@ const StudentBio = styled.p`
   box-sizing: border-box;
 `;
 
-const StudentImage = styled.img`
+const StyledStudentImage = styled.img`
   width: 20%;
   aspect-ratio: 1;
   max-width: 70px;
@@ -106,7 +106,7 @@ const StudentImage = styled.img`
   box-sizing: border-box;
 `;
 
-const IconWrapper = styled.div`
+const StyledIconWrapper = styled.div`
   width: 20%;
   max-width: 50px;
   height: auto;
@@ -117,7 +117,7 @@ const IconWrapper = styled.div`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const PreferredContact = styled.div`
+const StyledPreferredContact = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -126,11 +126,11 @@ const PreferredContact = styled.div`
   margin-top: 5px;
 `;
 
-const PreferredContactHandle = styled.span`
+const StyledPreferredContactHandle = styled.span`
   color: ${({ theme }) => theme.colours.secondaryDark};
 `;
 
-const EditIcon = styled(FaEdit)`
+const StyledEditIcon = styled(FaEdit)`
   width: 1rem;
   height: 1rem;
   cursor: pointer;
@@ -141,13 +141,13 @@ const EditIcon = styled(FaEdit)`
   }
 `;
 
-const StudentContact = styled.div`
+const StyledStudentContact = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 `;
 
-const CoachContact = styled.div`
+const StyledCoachContact = styled.div`
   color: ${({ theme }) => theme.colours.sidebarLine};
 `;
 
@@ -164,15 +164,15 @@ export const ProfileCard: FC<ProfileCardProps> = ({
   const contactParts = preferredContact ? preferredContact.split(":") : [];
 
   return (
-    <StudentCard $isFirst={isFirst}>
-      <StudentCardContent>
-        <ContentContainer>
+    <StyledStudentCard $isFirst={isFirst}>
+      <StyledStudentCardContent>
+        <StyledContentContainer>
           {isCoach ? (
-            <IconWrapper>
+            <StyledIconWrapper>
               <FaUserTie />
-            </IconWrapper>
+            </StyledIconWrapper>
           ) : (
-            <StudentImage
+            <StyledStudentImage
               src={
                 image ||
                 `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
@@ -180,39 +180,39 @@ export const ProfileCard: FC<ProfileCardProps> = ({
               alt={`${name}'s profile`}
             />
           )}
-          <StudentInfo>
-            <ContactEdit>
-              <StudentContact>
-                <StudentName>{name}</StudentName>
-                <StudentEmail>
-                <InfoButton
+          <StyledStudentInfo>
+            <StyledContactEdit>
+              <StyledStudentContact>
+                <StyledStudentName>{name}</StyledStudentName>
+                <StyledStudentEmail>
+                <StyledInfoButton
                   onClick={() => navigator.clipboard.writeText(email)}
                 >
                   {email}
-                </InfoButton>
+                </StyledInfoButton>
                   <CopyButton textToCopy={email} />
-                </StudentEmail>
+                </StyledStudentEmail>
                 {!isCoach && preferredContact && contactParts.length === 2 ? (
-                  <PreferredContact>
+                  <StyledPreferredContact>
                     <span>{contactParts[0]}:</span>
-                    <PreferredContactHandle>
+                    <StyledPreferredContactHandle>
                       {contactParts[1]}
-                    </PreferredContactHandle>
+                    </StyledPreferredContactHandle>
                     <CopyButton textToCopy={contactParts[1]} />
-                  </PreferredContact>
+                  </StyledPreferredContact>
                 ) : (
                   // only students should have a preferred contact
                   isCoach && (
-                    <CoachContact>No preferred contact available.</CoachContact>
+                    <StyledCoachContact>No preferred contact available.</StyledCoachContact>
                   )
                 )}
-              </StudentContact>
-              {isFirst && onEdit && <EditIcon onClick={onEdit} />}
-            </ContactEdit>
-            <StudentBio>{bio}</StudentBio>
-          </StudentInfo>
-        </ContentContainer>
-      </StudentCardContent>
-    </StudentCard>
+              </StyledStudentContact>
+              {isFirst && onEdit && <StyledEditIcon onClick={onEdit} />}
+            </StyledContactEdit>
+            <StyledStudentBio>{bio}</StyledStudentBio>
+          </StyledStudentInfo>
+        </StyledContentContainer>
+      </StyledStudentCardContent>
+    </StyledStudentCard>
   );
 };

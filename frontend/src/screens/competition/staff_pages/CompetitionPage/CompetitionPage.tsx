@@ -4,7 +4,7 @@ import { CompetitionInformation as CompetitionDetails } from "../../../../../sha
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
-import { SortOption } from "../../../../components/page_header/components/SortSelect";
+import { StyledSortOption } from "../../../../components/page_header/components/SortSelect";
 import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
 import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
@@ -12,13 +12,13 @@ import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffIn
 import { sendRequest } from "../../../../utility/request";
 import { fetchTeams } from "./utils/fetchTeams";
 import { CompetitionSite } from "../../../../../shared_types/Competition/CompetitionSite";
-import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv } from "./subroutes/CommonSubStyles.styles";
+import { StyledMainPageDiv, StyledOverflowFlexBackground, StyledPageOptionsContainerDiv } from "./subroutes/CommonSubStyles.styles";
 import { PageHeader } from "../../../../components/page_header/PageHeader";
 import { TeamPageButtons } from "./subroutes/TeamPage/subcomponents/TeamPageButtons";
 import { AttendeesPageButtons } from "./subroutes/AttendeesPage/subcomponents/AttendeesPageButtons";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { CustomToggleSwitch } from "../../../../components/toggle_switch/ToggleSwitch";
-import { AdminToggleOptionDiv, ToggleOptionTextSpan } from "./CompetitionPage.styles";
+import { StyledAdminToggleOptionDiv, StyledToggleOptionTextSpan } from "./CompetitionPage.styles";
 
 // export interface CompetitionDetails {
 //   id?: number;
@@ -231,8 +231,8 @@ export const CompetitionPage: FC = () => {
   };
 
   return (
-    <OverflowFlexBackground>
-      <MainPageDiv>
+    <StyledOverflowFlexBackground>
+      <StyledMainPageDiv>
         <PageHeader
           pageTitle={`${roles[0]} Page`}
           pageDescription="Manage teams and students for your competition"
@@ -277,7 +277,7 @@ export const CompetitionPage: FC = () => {
             />
           )}
         </PageHeader>
-        <PageOptionsContainerDiv>
+        <StyledPageOptionsContainerDiv>
           <CustomToggleSwitch
             style={{ width: "100%", height: "100%" }}
             defaultBorderIndex={0}
@@ -285,69 +285,69 @@ export const CompetitionPage: FC = () => {
             {(roles.includes(CompetitionRole.Admin) ||
               roles.includes(CompetitionRole.Coach) ||
               roles.includes(CompetitionRole.SiteCoordinator)) && (
-              <AdminToggleOptionDiv
+              <StyledAdminToggleOptionDiv
                 onClick={() => {
                   navigate(`/competition/page/teams/${compId}`);
                 }}
               >
-                <ToggleOptionTextSpan>Teams</ToggleOptionTextSpan>
-              </AdminToggleOptionDiv>
+                <StyledToggleOptionTextSpan>Teams</StyledToggleOptionTextSpan>
+              </StyledAdminToggleOptionDiv>
             )}
 
             {(roles.includes(CompetitionRole.Admin) ||
               roles.includes(CompetitionRole.Coach)) && (
-              <AdminToggleOptionDiv
+              <StyledAdminToggleOptionDiv
                 onClick={() => {
                   navigate(`/competition/page/students/${compId}`);
                 }}
               >
-                <ToggleOptionTextSpan>Students</ToggleOptionTextSpan>
-              </AdminToggleOptionDiv>
+                <StyledToggleOptionTextSpan>Students</StyledToggleOptionTextSpan>
+              </StyledAdminToggleOptionDiv>
             )}
 
             {roles.includes(CompetitionRole.Admin) && (
-              <AdminToggleOptionDiv
+              <StyledAdminToggleOptionDiv
                 onClick={() => {
                   navigate(`/competition/page/staff/${compId}`);
                 }}
               >
-                <ToggleOptionTextSpan>Staff</ToggleOptionTextSpan>
-              </AdminToggleOptionDiv>
+                <StyledToggleOptionTextSpan>Staff</StyledToggleOptionTextSpan>
+              </StyledAdminToggleOptionDiv>
             )}
 
             {roles.includes(CompetitionRole.Admin) && (
-              <AdminToggleOptionDiv
+              <StyledAdminToggleOptionDiv
                 onClick={() => {
                   navigate(`/competition/page/site/${compId}`);
                 }}
               >
-                <ToggleOptionTextSpan>Site</ToggleOptionTextSpan>
-              </AdminToggleOptionDiv>
+                <StyledToggleOptionTextSpan>Site</StyledToggleOptionTextSpan>
+              </StyledAdminToggleOptionDiv>
             )}
 
             {roles.includes(CompetitionRole.SiteCoordinator) && (
-              <AdminToggleOptionDiv
+              <StyledAdminToggleOptionDiv
                 onClick={() => {
                   navigate(`/competition/page/site/${compId}`);
                 }}
               >
-                <ToggleOptionTextSpan>Attendees</ToggleOptionTextSpan>
-              </AdminToggleOptionDiv>
+                <StyledToggleOptionTextSpan>Attendees</StyledToggleOptionTextSpan>
+              </StyledAdminToggleOptionDiv>
             )}
 
             {(roles.includes(CompetitionRole.Admin) ||
               roles.includes(CompetitionRole.Coach) ||
               roles.includes(CompetitionRole.SiteCoordinator)) && (
-              <AdminToggleOptionDiv
+              <StyledAdminToggleOptionDiv
                 onClick={() => {
                   navigate(`/competition/page/manage/${compId}`);
                 }}
               >
-                <ToggleOptionTextSpan>Manage</ToggleOptionTextSpan>
-              </AdminToggleOptionDiv>
+                <StyledToggleOptionTextSpan>Manage</StyledToggleOptionTextSpan>
+              </StyledAdminToggleOptionDiv>
             )}
           </CustomToggleSwitch>
-        </PageOptionsContainerDiv>
+        </StyledPageOptionsContainerDiv>
 
         <Outlet
           context={{
@@ -387,7 +387,7 @@ export const CompetitionPage: FC = () => {
             dropdownOptionState: [dropdownOption, setDropdownOption],
           }}
         />
-      </MainPageDiv>
-    </OverflowFlexBackground>
+      </StyledMainPageDiv>
+    </StyledOverflowFlexBackground>
   );
 };

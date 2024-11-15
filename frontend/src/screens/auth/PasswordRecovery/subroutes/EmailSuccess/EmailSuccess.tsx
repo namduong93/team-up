@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FormContainer } from "../../PasswordRecovery.styles";
+import { StyledFormContainer } from "../../PasswordRecovery.styles";
 import { TimeoutButton } from "../../../../../components/general_utility/TimeoutButton";
 
 export const EmailSuccess: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ...props }) => {
@@ -10,11 +10,11 @@ export const EmailSuccess: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style,
     // handle resend email.
   }
   return (
-    <FormContainer style={{ justifyContent: 'center', ...style }} {...props}>
+    <StyledFormContainer style={{ justifyContent: 'center', ...style }} {...props}>
       <div style={{
         fontSize: '24px',
       }}>An email has been sent to your address with password recovery steps</div>
       <TimeoutButton onClick={handleResend} >Resend Email</TimeoutButton>
-    </FormContainer>
+    </StyledFormContainer>
   )
 }

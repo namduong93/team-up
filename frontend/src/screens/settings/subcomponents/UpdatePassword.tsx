@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { sendRequest } from "../../../utility/request";
 import TextInputLight from "../../../components/general_utility/TextInputLight";
 
-const Button = styled.button`
+const StyledButton = styled.button`
   border-radius: 10px;
   padding: 10px;
   border: none;
@@ -24,7 +24,7 @@ const Button = styled.button`
   }
 `;
 
-const WarningMessage = styled.p<{ $isSuccess: boolean }>`
+const StyledWarningMessage = styled.p<{ $isSuccess: boolean }>`
   color: ${({ $isSuccess: isSuccess, theme }) => isSuccess ? theme.colours.confirm : theme.colours.error };
   font-size: 14px;
   margin-top: 10px;
@@ -104,10 +104,10 @@ export const UpdatePassword: FC<UpdatePasswordProps> = ({ isOpen }) => {
               required={true}
             />
           </div>
-          <Button type="submit">Update Password</Button>
+          <StyledButton type="submit">Update Password</StyledButton>
         </form>
 
-        {warningMessage && <WarningMessage $isSuccess={isSuccess}>{warningMessage}</WarningMessage>}
+        {warningMessage && <StyledWarningMessage $isSuccess={isSuccess}>{warningMessage}</StyledWarningMessage>}
       </div>
     )
   );

@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
-import { ButtonContainer, CloseButton, CloseContainer, ContentContainer, Field, Form, HeaderContainer, ModalContent, ModalOverlay, Title, TitleContainer } from "./EditCompUserDetails.styles";
+import { StyledButtonContainer, StyledCloseButton, StyledCloseContainer, StyledContentContainer, StyledField, StyledForm, StyledHeaderContainer, StyledModalContent, StyledModalOverlay, StyledTitle, StyledTitleContainer } from "./EditCompUserDetails.styles";
 import { FaTimes } from "react-icons/fa";
-import { Colon, Descriptor, DoubleInputContainer, FormLabel, Text } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
+import { StyledColon, StyledDescriptor, StyledDoubleInputContainer, StyledFormLabel, StyledText } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
 import DropdownInputLight from "../../../../components/general_utility/DropDownLight";
 import { yearOptions } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividual";
 import TextInputLight from "../../../../components/general_utility/TextInputLight";
@@ -35,22 +35,22 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
   },[])
 
   return (
-    <ModalOverlay>
-      <ModalContent>
-        <ContentContainer>
-          <HeaderContainer>
-            <TitleContainer>
-              <Title>Edit Competition Details</Title>
-            </TitleContainer>
-            <CloseContainer>
-              <CloseButton onClick={onClose}>
+    <StyledModalOverlay>
+      <StyledModalContent>
+        <StyledContentContainer>
+          <StyledHeaderContainer>
+            <StyledTitleContainer>
+              <StyledTitle>Edit Competition Details</StyledTitle>
+            </StyledTitleContainer>
+            <StyledCloseContainer>
+              <StyledCloseButton onClick={onClose}>
                 <FaTimes />
-              </CloseButton>
-            </CloseContainer>
-          </HeaderContainer>
-          <Form onSubmit={handleSubmit}>
-            <Field>
-              <FormLabel>Degree</FormLabel>
+              </StyledCloseButton>
+            </StyledCloseContainer>
+          </StyledHeaderContainer>
+          <StyledForm onSubmit={handleSubmit}>
+            <StyledField>
+              <StyledFormLabel>Degree</StyledFormLabel>
               <DropdownInputLight
                 label="Current Year of Study"
                 options={yearOptions}
@@ -93,8 +93,8 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
                 descriptor="Are you ICPC eligible?"
                 width="100%"
               />
-            </Field>
-            <Field>
+            </StyledField>
+            <StyledField>
               <RadioButton
                 label="Competition Level"
                 options={["Level A", "Level B", "No Preference"]}
@@ -105,11 +105,11 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
                 required={true}
                 width="100%"
               />
-              <FormLabel>Site Attendance</FormLabel>
+              <StyledFormLabel>Site Attendance</StyledFormLabel>
               <div style={{ display: "flex", alignContent: "center" }}>
-                <Text>
+                <StyledText>
                   <em>{formData.siteName}</em>
-                </Text>
+                </StyledText>
               </div>
               <RadioButton
                 options={["Attending On Site", "Attending Remotely"]}
@@ -128,8 +128,8 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
                 descriptor={["Will you be attending on site or remotely?"]}
                 width="100%"
               />
-            </Field>
-            <Field>
+            </StyledField>
+            <StyledField>
               <DescriptiveTextInput
                 label="Competition Biography"
                 descriptor="Please write a short description about yourself that would help others get to know you"
@@ -141,13 +141,13 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
                 }
                 width="100%"
               />
-            </Field>
-            <Field>
-              <FormLabel>Preferred Contact Method</FormLabel>
-              <Descriptor>
+            </StyledField>
+            <StyledField>
+              <StyledFormLabel>Preferred Contact Method</StyledFormLabel>
+              <StyledDescriptor>
                 Please specify your preferred contact method if you have another preference
-              </Descriptor>
-              <DoubleInputContainer>
+              </StyledDescriptor>
+              <StyledDoubleInputContainer>
               <TextInputLight
                 label="Platform"
                 placeholder="Please enter"
@@ -162,7 +162,7 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
                 width="45%"
               />
 
-              <Colon>:</Colon>
+              <StyledColon>:</StyledColon>
 
               <TextInputLight
                 label="Handle"
@@ -177,19 +177,19 @@ export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
                 }}
                 width="45%"
               />
-              </DoubleInputContainer>
-            </Field>
-          </Form>
-          <ButtonContainer>
+              </StyledDoubleInputContainer>
+            </StyledField>
+          </StyledForm>
+          <StyledButtonContainer>
             <ResponsiveActionButton 
               actionType="primary" 
               label="Save Changes" 
               question="Are you sure you want to change your competition preferences?" 
               handleSubmit={handleSubmit} 
             />
-          </ButtonContainer>
-        </ContentContainer>
-      </ModalContent>
-    </ModalOverlay>
+          </StyledButtonContainer>
+        </StyledContentContainer>
+      </StyledModalContent>
+    </StyledModalOverlay>
   );
 };

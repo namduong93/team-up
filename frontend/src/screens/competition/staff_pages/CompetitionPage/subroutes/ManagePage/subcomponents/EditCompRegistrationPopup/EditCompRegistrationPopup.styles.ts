@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const ModalOverlay = styled.div`
+export const StyledModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-export const Modal = styled.div`
+export const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -34,7 +34,7 @@ export const Modal = styled.div`
   height: 70%; */
 `;
 
-export const CloseButton = styled.button`
+export const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -50,7 +50,7 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const Button = styled.button`
+export const StyledButton = styled.button`
   max-width: 150px;
   min-width: 100px;
   width: 50%;
@@ -78,20 +78,20 @@ export const Button = styled.button`
   }
 `;
 
-export const Label = styled.label`
+export const StyledLabel = styled.label`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const Text = styled.span`
+export const StyledText = styled.span`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 16px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const RowContainer = styled.div`
+export const StyledRowContainer = styled.div`
   display: grid;
   grid-template-columns: 75% 25%;
   align-items: center;
@@ -102,7 +102,7 @@ export const RowContainer = styled.div`
   width: 100%;
 `;
 
-export const RowContainer2 = styled.div`
+export const StyledRowContainer2 = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -112,7 +112,7 @@ export const RowContainer2 = styled.div`
   margin-bottom: 30px;
   width: 95%;
 `;
-export const Input = styled.input`
+export const StyledInput = styled.input`
   padding: 10px 1.5%;
   height: 100%;
   box-sizing: border-box;
@@ -125,7 +125,7 @@ export const Input = styled.input`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const Column = styled.div`
+export const StyledColumn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -135,7 +135,7 @@ export const Column = styled.div`
   padding: 5px;
 `;
 
-export const Title2 = styled.h2`
+export const StyledTitle2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;
   font-size: 22px;
@@ -144,7 +144,7 @@ export const Title2 = styled.h2`
   text-align: center; // Add this line to center the text
 `;
 
-export const FirstDiv = styled.div`
+export const StyledFirstDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;

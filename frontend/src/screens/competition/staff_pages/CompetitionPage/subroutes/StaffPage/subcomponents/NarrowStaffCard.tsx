@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { StaffCardProps } from "./StaffCardProps";
-import { Field, StudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
-import { NarrowStatusDiv, StaffAccessLevel } from "../StaffPage.styles";
+import { Field, StyledStudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
+import { StyledNarrowStatusDiv, StyledStaffAccessLevel } from "../StaffPage.styles";
 import { StaffRoles } from "./StaffRole";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
@@ -22,7 +22,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
         staffInfo={staffDetails}
         staffListState={[staffList, setStaffList]}
       />
-      <StudentInfoContainerDiv
+      <StyledStudentInfoContainerDiv
         onDoubleClick={() => setIsInfoBarOpen(true)}
         {...props}
       >
@@ -34,12 +34,12 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
         <Field
           label="Role"
           value={
-            <NarrowStatusDiv>
+            <StyledNarrowStatusDiv>
               <StaffRoles
                 style={{ width: "100%" }}
                 roles={staffDetails.roles as CompetitionRole[]}
               />
-            </NarrowStatusDiv>
+            </StyledNarrowStatusDiv>
           }
           style={{ width: "20%", minWidth: "125px" }}
         />
@@ -55,11 +55,11 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
         <Field
           label="Access"
           value={
-            <NarrowStatusDiv>
-              <StaffAccessLevel $access={staffDetails.access as StaffAccess}>
+            <StyledNarrowStatusDiv>
+              <StyledStaffAccessLevel $access={staffDetails.access as StaffAccess}>
                 {staffDetails.access}
-              </StaffAccessLevel>
-            </NarrowStatusDiv>
+              </StyledStaffAccessLevel>
+            </StyledNarrowStatusDiv>
           }
           style={{ width: "20%", minWidth: "125px" }}
         />
@@ -70,7 +70,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
         />
 
         <div style={{ display: "flex" }}></div>
-      </StudentInfoContainerDiv>
+      </StyledStudentInfoContainerDiv>
     </>
   );
 };

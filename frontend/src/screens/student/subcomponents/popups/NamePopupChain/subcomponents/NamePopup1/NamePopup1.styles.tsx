@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const Modal = styled.div`
+export const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -20,7 +20,7 @@ export const Modal = styled.div`
   align-items: center;
 `;
 
-export const CloseButton = styled.button`
+export const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -37,7 +37,7 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const Button = styled.button<{ disabled?: boolean }>`
+export const StyledButton = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
   min-width: 100px;
   width: 50%;

@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { DashboardSidebar, DashboardSidebarProps } from "../components/general_utility/DashboardSidebar";
 import styled from "styled-components";
 
-const SharedBackground = styled.div`
+const StyledSharedBackground = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -15,9 +15,9 @@ const SharedBackground = styled.div`
 
 export const SidebarLayout = ({ ...props }: DashboardSidebarProps) => {
   return (
-    <SharedBackground>
+    <StyledSharedBackground>
       <DashboardSidebar {...props} />
       <Outlet />
-    </SharedBackground>
+    </StyledSharedBackground>
   );
 }

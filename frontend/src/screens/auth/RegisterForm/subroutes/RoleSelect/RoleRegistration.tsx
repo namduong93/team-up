@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMultiStepRegoForm } from "../../hooks/useMultiStepRegoForm";
-import { FlexBackground } from "../../../../../components/general_utility/Background";
-import { Button, FormContainer, RoleContainer, StaffButton, StudentButton, Title } from "./RoleSelect.styles";
+import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
+import { StyledButton, StyledFormContainer, RoleContainer, StyledStaffButton, StyledStudentButton, StyledTitle } from "./RoleSelect.styles";
 
 export const RoleRegistration: FC = () => {
   const navigate = useNavigate();
@@ -22,30 +22,30 @@ export const RoleRegistration: FC = () => {
   };
 
   return (
-    <FlexBackground style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <FormContainer onSubmit={handleSubmit}>
-        <Title>What is your role?</Title>
+    <StyledFlexBackground style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+      <StyledFormContainer onSubmit={handleSubmit}>
+        <StyledTitle>What is your role?</StyledTitle>
 
         <RoleContainer>
-          <StudentButton
+          <StyledStudentButton
             type='button'
             isSelected={formData.role === 'Student'} // Pass isSelected prop
             onClick={() => handleRoleClick('Student')}
           >
             Student
-          </StudentButton>
+          </StyledStudentButton>
 
-          <StaffButton
+          <StyledStaffButton
             type='button'
             isSelected={formData.role === 'Staff'} // Pass isSelected prop
             onClick={() => handleRoleClick('Staff')}
           >
             Staff
-          </StaffButton>
+          </StyledStaffButton>
         </RoleContainer>
 
-        <Button disabled={!formData.role}>Next</Button>
-      </FormContainer>
-    </FlexBackground>
+        <StyledButton disabled={!formData.role}>Next</StyledButton>
+      </StyledFormContainer>
+    </StyledFlexBackground>
   );
 };

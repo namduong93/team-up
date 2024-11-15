@@ -9,9 +9,9 @@ import { addStudentToTeam } from "./utility/addStudentToTeam";
 import { fetchTeams } from "../../utils/fetchTeams";
 import { DRAG_ANIMATION_DURATION, TeamCard } from "./subcomponents/TeamCard/TeamCard";
 import { sendRequest } from "../../../../../../utility/request";
-import { Heading, Overlay, TeamCardGridDisplay } from "./TeamPage.styles";
+import { StyledHeading, StyledOverlay, StyledTeamCardGridDisplay } from "./TeamPage.styles";
 import { ThirdStepPopUp } from "../../../../../student/subcomponents/popups/ThirdStepPopUp";
-import { FilterTagButton, RemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
 import { ResponsiveActionButton } from "../../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { FaSave } from "react-icons/fa";
 import { TransparentResponsiveButton } from "../../../../../../components/responsive_fields/ResponsiveButton";
@@ -212,12 +212,12 @@ export const TeamDisplay: FC = () => {
     <>
       {isCreationSuccessPopUpOpen && (
         <>
-          <Overlay $isOpen={true} />
+          <StyledOverlay $isOpen={true} />
           <ThirdStepPopUp
             heading={
-              <Heading>
+              <StyledHeading>
                 The competition has successfully {"\nbeen created"}{" "}
-              </Heading>
+              </StyledHeading>
             }
             onClose={handleClosePopUp}
           />
@@ -226,15 +226,15 @@ export const TeamDisplay: FC = () => {
       <div>
         {Object.entries(filters).map(([field, values]) =>
           values.map((value) => (
-            <FilterTagButton key={`${field}-${value}`}>
+            <StyledFilterTagButton key={`${field}-${value}`}>
               {value}
-              <RemoveFilterIcon
+              <StyledRemoveFilterIcon
                 onClick={(e) => {
                   e.stopPropagation();
                   removeFilter(field, value);
                 }}
               />
-            </FilterTagButton>
+            </StyledFilterTagButton>
           ))
         )}
         {
@@ -271,7 +271,7 @@ export const TeamDisplay: FC = () => {
           </div>
         }
       </div>
-      <TeamCardGridDisplay>
+      <StyledTeamCardGridDisplay>
         {searchedCompetitions.map(({ item: teamDetails }, index) => {
           return (
             <TeamCard
@@ -295,7 +295,7 @@ export const TeamDisplay: FC = () => {
             />
           );
         })}
-      </TeamCardGridDisplay>
+      </StyledTeamCardGridDisplay>
     </>
   );
 };

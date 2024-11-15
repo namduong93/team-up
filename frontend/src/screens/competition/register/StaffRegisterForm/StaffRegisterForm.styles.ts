@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const Label = styled.label`
+export const StyledLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -11,11 +11,11 @@ export const Label = styled.label`
   width: 100%;
 `;
 
-export const Asterisk = styled.span`
+export const StyledAsterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `;
 
-export const FormContainer = styled.form`
+export const StyledFormContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,11 +24,11 @@ export const FormContainer = styled.form`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const Title = styled.h1`
+export const StyledTitle = styled.h1`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const Button = styled.button`
+export const StyledButton = styled.button`
   max-width: 150px;
   min-width: 100px;
   width: 25%;
@@ -46,7 +46,7 @@ export const Button = styled.button`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const ButtonContainer = styled.div`
+export const StyledButtonContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;

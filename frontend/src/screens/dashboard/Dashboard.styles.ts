@@ -1,7 +1,7 @@
 import { FaTimes } from "react-icons/fa";
 import { styled } from "styled-components";
 
-export const DashboardContent = styled.div`
+export const StyledDashboardContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -12,7 +12,7 @@ export const DashboardContent = styled.div`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const AlertButton = styled.button`
+export const StyledAlertButton = styled.button`
   border-radius: 10px;
   padding: 0px;
   background-color: ${({ theme }) => theme.colours.notifLight};
@@ -32,7 +32,7 @@ export const AlertButton = styled.button`
   }
 `;
 
-export const SortButton = styled.button<{ $isSortOpen: boolean }>`
+export const StyledSortButton = styled.button<{ $isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
   box-sizing: border-box;
@@ -57,7 +57,7 @@ export const SortButton = styled.button<{ $isSortOpen: boolean }>`
   }
 `;
 
-export const FilterTagButton = styled.button`
+export const StyledFilterTagButton = styled.button`
   display: inline-flex;
   align-items: center;
   background-color: ${({ theme }) => theme.colours.secondaryLight};
@@ -72,7 +72,7 @@ export const FilterTagButton = styled.button`
   box-sizing: border-box;
 `;
 
-export const RemoveFilterIcon = styled(FaTimes)`
+export const StyledRemoveFilterIcon = styled(FaTimes)`
   margin-left: 5px;
   color: ${({ theme }) => theme.fonts.colour};
   cursor: pointer;
@@ -81,7 +81,7 @@ export const RemoveFilterIcon = styled(FaTimes)`
   }
 `;
 
-export const ContentArea = styled.div`
+export const StyledContentArea = styled.div`
   margin-top: 32px;
   overflow-y: auto;
   overflow-x: auto;
@@ -89,7 +89,7 @@ export const ContentArea = styled.div`
   max-height: calc(100vh - 200px);
 `;
 
-export const CompetitionGrid = styled.div`
+export const StyledCompetitionGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(294px, 100%), 1fr));
   gap: 20px;
@@ -99,7 +99,7 @@ export const CompetitionGrid = styled.div`
   box-sizing: border-box;
 `;
 
-export const Title2 = styled.h2`
+export const StyledTitle2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;
   font-size: 22px;

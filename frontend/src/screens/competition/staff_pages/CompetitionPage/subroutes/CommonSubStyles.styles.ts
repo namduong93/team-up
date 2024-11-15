@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { FaSearch } from "react-icons/fa";
 
-export const OverflowFlexBackground = styled(FlexBackground)`
+export const StyledOverflowFlexBackground = styled(StyledFlexBackground)`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const MainPageDiv = styled.div`
+export const StyledMainPageDiv = styled.div`
   flex: 0 1 auto;
   display: flex;
   width: 97%;
@@ -15,7 +15,7 @@ export const MainPageDiv = styled.div`
   flex-direction: column;
 `;
 
-export const PageOptionsContainerDiv = styled.div`
+export const StyledPageOptionsContainerDiv = styled.div`
   min-height: 78px;
   width: 100%;
   display: flex;
@@ -24,7 +24,7 @@ export const PageOptionsContainerDiv = styled.div`
   z-index: 0;
 `;
 
-export const ToggleOptionDiv = styled.div`
+export const StyledToggleOptionDiv = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
@@ -32,7 +32,7 @@ export const ToggleOptionDiv = styled.div`
   align-items: center;
 `;
 
-export const MenuOptionsContainerDiv = styled.div`
+export const StyledMenuOptionsContainerDiv = styled.div`
   margin-right: min(20px, 2%);
   flex: 1;
   max-width: 360px;
@@ -42,14 +42,14 @@ export const MenuOptionsContainerDiv = styled.div`
   flex-direction: column-reverse;
 `;
 
-export const SortContainer = styled.div`
+export const StyledSortContainer = styled.div`
   width: 19%;
   height: 33px;
   position: relative;
   min-width: 29px;
 `;
 
-export const SortFilterSearchContainerDiv = styled.div`
+export const StyledSortFilterSearchContainerDiv = styled.div`
   width: 100%;
   /* min-width: 152px; */
   height: 66px;
@@ -59,7 +59,7 @@ export const SortFilterSearchContainerDiv = styled.div`
   min-width: 58px;
 `;
 
-const SearchInput = styled.input`
+export const StyledSearchInput = styled.input`
   height: 100%;
   width: 100%;
   min-width: 29px;
@@ -77,12 +77,12 @@ const SearchInput = styled.input`
   }
 `;
 
-const SearchIcon = styled(FaSearch)`
+export const StyledSearchIcon = styled(FaSearch)`
   min-width: 29px;
   pointer-events: none;
 `;
 
-const SearchContainer = styled.div`
+export const StyledSearchContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -92,7 +92,7 @@ const SearchContainer = styled.div`
   color: ${({ theme }) => theme.colours.filterText};
 `;
 
-const SearchCell = styled.div`
+export const StyledSearchCell = styled.div`
   min-width: 29px;
   height: 100%;
   display: flex;

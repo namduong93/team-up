@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useMultiStepRegoForm } from "../../hooks/useMultiStepRegoForm";
 import { University } from "../../../../../../shared_types/Competition/registration/StaffRegistration";
 import { sendRequest } from "../../../../../utility/request";
-import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { RegoProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { Button, ButtonContainer, Container, ContentContainer, CreateAccountButton, Title } from "./InstitutionDataInput.styles";
+import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledCreateAccountButton, StyledTitle } from "./InstitutionDataInput.styles";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
 import TextInput from "../../../../../components/general_utility/TextInput";
 
@@ -88,7 +88,7 @@ export const InstitutionInformation: FC = () => {
   };
 
   return (
-    <FlexBackground
+    <StyledFlexBackground
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -97,9 +97,9 @@ export const InstitutionInformation: FC = () => {
       }}
     >
       <RegoProgressBar progressNumber={3} />
-      <Container>
-        <ContentContainer>
-          <Title>Institution Information</Title>
+      <StyledContainer>
+        <StyledContentContainer>
+          <StyledTitle>Institution Information</StyledTitle>
 
           <DropdownInput
             label="Institution"
@@ -136,18 +136,18 @@ export const InstitutionInformation: FC = () => {
             />
           )}
 
-          <ButtonContainer>
-            <Button onClick={() => navigate("/siteinformation")}>Back</Button>
+          <StyledButtonContainer>
+            <StyledButton onClick={() => navigate("/siteinformation")}>Back</StyledButton>
 
-            <CreateAccountButton
+            <StyledCreateAccountButton
               disabled={isButtonDisabled()}
               onClick={handleSubmit}
             >
               Create Account
-            </CreateAccountButton>
-          </ButtonContainer>
-        </ContentContainer>
-      </Container>
-    </FlexBackground>
+            </StyledCreateAccountButton>
+          </StyledButtonContainer>
+        </StyledContentContainer>
+      </StyledContainer>
+    </StyledFlexBackground>
   );
 };

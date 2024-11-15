@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { FlexBackground } from "../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../components/general_utility/Background";
 
-export const FormContainer = styled.form`
+export const StyledFormContainer = styled.form`
   display: flex;
   flex-direction: column;
   height: 500px;
@@ -11,7 +11,7 @@ export const FormContainer = styled.form`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const CenteredFormBackground = styled(FlexBackground)`
+export const StyledCenteredFormBackground = styled(StyledFlexBackground)`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;

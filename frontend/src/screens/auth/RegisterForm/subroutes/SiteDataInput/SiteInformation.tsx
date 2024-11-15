@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMultiStepRegoForm } from "../../hooks/useMultiStepRegoForm";
-import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { RegoProgressBar } from "../../../../../components/progress_bar/ProgressBar";
 import { Button, ButtonContainer, Container, ContentContainer, NextButton, Title } from "./SiteDataInput.styles";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
@@ -18,7 +18,7 @@ export const SiteInformation: FC = () => {
   };
 
   return (
-    <FlexBackground
+    <StyledFlexBackground
       style={{
         justifyContent: "space-between",
         alignItems: "flex-start",
@@ -90,6 +90,6 @@ export const SiteInformation: FC = () => {
           </ButtonContainer>
         </ContentContainer>
       </Container>
-    </FlexBackground>
+    </StyledFlexBackground>
   );
 };

@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
 import { AttendeesCardProps } from "./AttendeesCardProps";
-import { Field, StudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
-import { NarrowStatusDiv } from "../../StaffPage/StaffPage.styles";
+import { Field, StyledStudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
+import { StyledNarrowStatusDiv } from "../../StaffPage/StaffPage.styles";
 import { StaffRoles } from "../../StaffPage/subcomponents/StaffRole";
-import { BooleanStatus } from "./BooleanStatus";
+import { StyledBooleanStatus } from "./BooleanStatus";
 import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar/AttendeesInfoBar";
 
 export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
@@ -20,14 +20,14 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
       attendeesState={[attendeesList, setAttendeesList]}
       isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
     />
-    <StudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} {...props}>
+    <StyledStudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} {...props}>
       <Field label="Full Name" value={attendeesDetails.name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Gender" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
       <Field label="Role" 
         value={
-          <NarrowStatusDiv>
+          <StyledNarrowStatusDiv>
             <StaffRoles roles={attendeesDetails.roles} />
-          </NarrowStatusDiv>
+          </StyledNarrowStatusDiv>
         }
         style={{ width: '20%', minWidth: '125px' }}
       />
@@ -36,37 +36,37 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
       <Field label="Shirt Size" value={attendeesDetails.tshirtSize} style={{ width: '20%', minWidth: '170px' }} />
       <Field label="Dietary Needs" style={{ width: '10%', minWidth: '90px' }}
         value={
-          <NarrowStatusDiv>
-            <BooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
+          <StyledNarrowStatusDiv>
+            <StyledBooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
               {/* {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'} */}
-            </BooleanStatus>
-          </NarrowStatusDiv>
+            </StyledBooleanStatus>
+          </StyledNarrowStatusDiv>
         }
       />
       
       <Field label="Allergies" style={{ width: '10%', minWidth: '90px' }}
         value={
-          <NarrowStatusDiv>
-            <BooleanStatus $toggled={!!attendeesDetails.allergies}>
+          <StyledNarrowStatusDiv>
+            <StyledBooleanStatus $toggled={!!attendeesDetails.allergies}>
               {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
-            </BooleanStatus>
-          </NarrowStatusDiv>
+            </StyledBooleanStatus>
+          </StyledNarrowStatusDiv>
         }
       />
 
       <Field label="Accessibility" style={{ width: '10%', minWidth: '90px' }}
         value={
-          <NarrowStatusDiv>
-            <BooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
+          <StyledNarrowStatusDiv>
+            <StyledBooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
               {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
-            </BooleanStatus>
-          </NarrowStatusDiv>
+            </StyledBooleanStatus>
+          </StyledNarrowStatusDiv>
         }
       />
       
       <div style={{ display: 'flex' }}>
         
       </div>
-    </StudentInfoContainerDiv>
+    </StyledStudentInfoContainerDiv>
   </>)
 }

@@ -1,16 +1,16 @@
 import styled from "styled-components";
-import { FlexBackground } from "../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../components/general_utility/Background";
 import { DashInfo } from "./hooks/useDashInfo";
 import { FC, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendRequest } from "../../utility/request";
-import { CompetitionGrid, ContentArea, DashboardContent, FilterTagButton, RemoveFilterIcon } from "./Dashboard.styles";
+import { StyledCompetitionGrid, StyledContentArea, StyledDashboardContent, StyledFilterTagButton, StyledRemoveFilterIcon } from "./Dashboard.styles";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { ResponsiveActionButton } from "../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { IoIosCreate } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
-import { Input } from "../Account/Account.styles";
-import { ErrorMessage } from "../general_styles/error_styles";
+import { StyledInput } from "../Account/Account.styles";
+import { StyledErrorMessage } from "../general_styles/error_styles";
 import { CompCard } from "./subcomponents/CompCard";
 import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 
@@ -27,7 +27,7 @@ interface DashboardsProps {
   dashInfo: DashInfo;
 }
 
-const OverflowFlexBackground = styled(FlexBackground)`
+const StyledOverflowFlexBackground = styled(StyledFlexBackground)`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   height: 100vh;
   background-color: ${({ theme }) => theme.background};
@@ -231,8 +231,8 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
 
   return (
     isLoaded && (
-      <OverflowFlexBackground>
-        <DashboardContent>
+      <StyledOverflowFlexBackground>
+        <StyledDashboardContent>
           {/* <CompCreatePopUp isOpen={isPopUpOpen} onClose={handleClosePopUp} message={message} code={code} /> */}
 
           <PageHeader
@@ -270,7 +270,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
               handleClose={() => setErrorMessage(null)}
             >
               <div>
-                <Input
+                <StyledInput
                   type="text"
                   placeholder="COMP1234"
                   onChange={(e) => {
@@ -281,9 +281,9 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
 
               <div>
                 {errorMessage && (
-                  <ErrorMessage style={{ marginTop: "10px" }}>
+                  <StyledErrorMessage style={{ marginTop: "10px" }}>
                     {errorMessage}
-                  </ErrorMessage>
+                  </StyledErrorMessage>
                 )}
               </div>
             </ResponsiveActionButton>
@@ -293,21 +293,21 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
           <div>
             {Object.entries(filters).map(([field, values]) =>
               values.map((value) => (
-                <FilterTagButton key={`${field}-${value}`}>
+                <StyledFilterTagButton key={`${field}-${value}`}>
                   {value}
-                  <RemoveFilterIcon
+                  <StyledRemoveFilterIcon
                     onClick={(e) => {
                       e.stopPropagation();
                       removeFilter(field, value);
                     }}
                   />
-                </FilterTagButton>
+                </StyledFilterTagButton>
               ))
             )}
           </div>
 
-          <ContentArea>
-            <CompetitionGrid>
+          <StyledContentArea>
+            <StyledCompetitionGrid>
               {sortedCompetitions.map((comp, index) => (
                 <CompCard
                   key={index}
@@ -319,7 +319,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                   compCreationDate={comp.compCreatedDate}
                 />
               ))}
-            </CompetitionGrid>
+            </StyledCompetitionGrid>
 
             {isRegoSucessPopUpOpen && (
               <RegisterPopUp
@@ -345,9 +345,9 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                 isStaffRego={true}
               />
             )}
-          </ContentArea>
-        </DashboardContent>
-      </OverflowFlexBackground>
+          </StyledContentArea>
+        </StyledDashboardContent>
+      </StyledOverflowFlexBackground>
     )
   );
 };

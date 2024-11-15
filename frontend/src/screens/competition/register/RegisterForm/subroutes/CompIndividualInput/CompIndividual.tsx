@@ -3,9 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMultiStepCompRegoForm } from "../../hooks/useMultiStepCompRegoForm";
 import { sendRequest } from "../../../../../../utility/request";
 import { SiteLocation } from "../../FormState";
-import { FlexBackground } from "../../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
 import { CompRegistrationProgressBar } from "../../../../../../components/progress_bar/ProgressBar";
-import { Asterisk, Button, ButtonContainer, Colon, Container, ContentContainer, Descriptor, DoubleInputContainer, FormLabel, Text, Title } from "./CompIndividualInput.styles";
+import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledColon, StyledContainer, StyledContentContainer, StyledDescriptor, StyledDoubleInputContainer, StyledFormLabel, StyledText, StyledTitle } from "./CompIndividualInput.styles";
 import DropdownInputLight from "../../../../../../components/general_utility/DropDownLight";
 import TextInputLight from "../../../../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../../../../components/general_utility/RadioButton";
@@ -105,7 +105,7 @@ export const CompetitionIndividual: FC = () => {
   }, []);
 
   return (
-    <FlexBackground
+    <StyledFlexBackground
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -114,11 +114,11 @@ export const CompetitionIndividual: FC = () => {
       }}
     >
       <CompRegistrationProgressBar progressNumber={1} />
-      <Container>
-        <ContentContainer>
-          <Title>Individual Information</Title>
+      <StyledContainer>
+        <StyledContentContainer>
+          <StyledTitle>Individual Information</StyledTitle>
 
-          <FormLabel>Degree</FormLabel>
+          <StyledFormLabel>Degree</StyledFormLabel>
 
           <div
             style={{ display: "flex", alignItems: "flex-start", width: "100%" }}
@@ -181,14 +181,14 @@ export const CompetitionIndividual: FC = () => {
             width="100%"
           />
 
-          <FormLabel>
-            Site Attendance<Asterisk>*</Asterisk>
-          </FormLabel>
+          <StyledFormLabel>
+            Site Attendance<StyledAsterisk>*</StyledAsterisk>
+          </StyledFormLabel>
 
           <div style={{ display: "flex", alignContent: "center" }}>
-            <Text>
+            <StyledText>
               <em>{formData.siteLocation.name}</em>
-            </Text>
+            </StyledText>
           </div>
 
           <RadioButton
@@ -222,12 +222,12 @@ export const CompetitionIndividual: FC = () => {
             width="100%"
           />
 
-          <FormLabel>Preferred Contact Method</FormLabel>
-          <Descriptor>
+          <StyledFormLabel>Preferred Contact Method</StyledFormLabel>
+          <StyledDescriptor>
             Please specify your preferred contact method if you have another
             preference
-          </Descriptor>
-          <DoubleInputContainer>
+          </StyledDescriptor>
+          <StyledDoubleInputContainer>
             <TextInputLight
               label="Platform"
               placeholder="Please enter"
@@ -240,7 +240,7 @@ export const CompetitionIndividual: FC = () => {
               width="45%"
             />
 
-            <Colon>:</Colon>
+            <StyledColon>:</StyledColon>
 
             <TextInputLight
               label="Handle"
@@ -253,16 +253,16 @@ export const CompetitionIndividual: FC = () => {
               }
               width="45%"
             />
-          </DoubleInputContainer>
+          </StyledDoubleInputContainer>
 
-          <ButtonContainer>
-            <Button onClick={handleBack}>Back</Button>
-            <Button $disabled={isButtonDisabled()} onClick={handleNext}>
+          <StyledButtonContainer>
+            <StyledButton onClick={handleBack}>Back</StyledButton>
+            <StyledButton $disabled={isButtonDisabled()} onClick={handleNext}>
               Next
-            </Button>
-          </ButtonContainer>
-        </ContentContainer>
-      </Container>
-    </FlexBackground>
+            </StyledButton>
+          </StyledButtonContainer>
+        </StyledContentContainer>
+      </StyledContainer>
+    </StyledFlexBackground>
   );
 };

@@ -1,18 +1,18 @@
-import { CenterTextDiv, StyledUserIcon, TeamMemberContainerDiv } from "../../TeamCard.styles";
+import { StyledCenterTextDiv, StyledStyledUserIcon, StyledTeamMemberContainerDiv } from "../../TeamCard.styles";
 
 export const TeamCardMember = ({ memberName, level }: { memberName: string, level: string }) => {
 
   const levelChar = level.slice(-1);
 
   return (
-  <TeamMemberContainerDiv draggable='false'>
-    <StyledUserIcon />
-    <CenterTextDiv>
+  <StyledTeamMemberContainerDiv draggable='false'>
+    <StyledStyledUserIcon />
+    <StyledCenterTextDiv>
       {memberName}
-    </CenterTextDiv>
-    <CenterTextDiv $levelChar={levelChar} >
+    </StyledCenterTextDiv>
+    <StyledCenterTextDiv $levelChar={levelChar} >
       {levelChar}
-    </CenterTextDiv>
-  </TeamMemberContainerDiv>
+    </StyledCenterTextDiv>
+  </StyledTeamMemberContainerDiv>
   );
 }

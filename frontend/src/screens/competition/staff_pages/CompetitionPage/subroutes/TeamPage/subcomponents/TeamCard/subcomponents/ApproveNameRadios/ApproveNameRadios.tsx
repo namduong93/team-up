@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import { RadioOption } from "../../TeamCard";
-import { ApprovalNameDiv, RadioCheckIcon, RadioCrossIcon, RadioIconDiv } from "../../TeamCard.styles";
+import { StyledApprovalNameDiv, StyledRadioCheckIcon, StyledRadioCrossIcon, StyledRadioIconDiv } from "../../TeamCard.styles";
 
 interface ApprovalNameRadiosProps extends React.HTMLAttributes<HTMLDivElement> {
   setTeamIds: React.Dispatch<React.SetStateAction<Array<number>>>;
@@ -70,29 +70,29 @@ export const ApproveNameRadios: FC<ApprovalNameRadiosProps> = ({ setTeamIds, set
   }, [selectedOption]);
 
   return (
-    <ApprovalNameDiv {...props}>
+    <StyledApprovalNameDiv {...props}>
       
-      <RadioIconDiv onClick={handleCheckClick} style={{
+      <StyledRadioIconDiv onClick={handleCheckClick} style={{
         border: `1px solid ${theme.colours.confirm}`,
         backgroundColor: selectedOption === RadioOption.Check ? theme.colours.confirm : theme.background
       }}>
-        <RadioCheckIcon style={{
+        <StyledRadioCheckIcon style={{
           color: selectedOption === RadioOption.Check ? theme.background : theme.colours.confirm
         }} />
-      </RadioIconDiv>
+      </StyledRadioIconDiv>
 
       <div style={{ flex: '0 2 20px' }} />
       
-      <RadioIconDiv onClick={handleCrossClick} style={{
+      <StyledRadioIconDiv onClick={handleCrossClick} style={{
         border: `1px solid ${theme.colours.cancel}`,
         backgroundColor: selectedOption === RadioOption.Cross ? theme.colours.cancel : theme.background,
         color: selectedOption === RadioOption.Cross ? theme.background : theme.colours.cancel
       }}>
-        <RadioCrossIcon style={{
+        <StyledRadioCrossIcon style={{
           color: selectedOption === RadioOption.Cross ? theme.background : theme.colours.cancel
         }} />
-      </RadioIconDiv>
+      </StyledRadioIconDiv>
     
-    </ApprovalNameDiv>
+    </StyledApprovalNameDiv>
   )
 }

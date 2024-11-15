@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { TransparentResponsiveButton } from "../../../../../../../../components/responsive_fields/ResponsiveButton";
 
-export const ManageContainer = styled.div`
+export const StyledManageContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -11,26 +11,26 @@ export const ManageContainer = styled.div`
   align-items: center;
 `;
 
-export const Title = styled.h1`
+export const StyledTitle = styled.h1`
   font-size: 1.75rem;
   color: ${({ theme }) => theme.colours.primaryDark};
 `
 
-export const Header = styled.div`
+export const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   height: 100%;
 `;
 
-export const InputSection = styled.div`
+export const StyledInputSection = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
 `;
 
-export const SeatCount = styled.span`
+export const StyledSeatCount = styled.span`
   font-size: 1em;
   font-weight: bold;
   color: ${({ theme }) => theme.colours.secondaryDark};
@@ -39,11 +39,11 @@ export const SeatCount = styled.span`
   flex: 1;
 `;
 
-export const TeamCount = styled(SeatCount)<{ $level: string }>`
+export const StyledTeamCount = styled(StyledSeatCount)<{ $level: string }>`
   color: ${({ theme, $level: level }) => level === "Level A" ? theme.teamView.levelA : theme.teamView.levelB};
 `;
 
-export const RoomList = styled.div`
+export const StyledRoomList = styled.div`
   display: grid;
   width: 80%;
   grid-template-columns: 2fr 1fr 1fr auto;
@@ -51,14 +51,14 @@ export const RoomList = styled.div`
   margin-top: 20px;
 `;
 
-export const RoomItem = styled.div`
+export const StyledRoomItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const Button = styled.button`
+export const StyledButton = styled.button`
   width: 120px;
   height: 35px;
   background-color: ${({ theme }) => theme.colours.confirm};
@@ -74,7 +74,7 @@ export const Button = styled.button`
   }
 `;
 
-export const DeleteIcon = styled.span`
+export const StyledDeleteIcon = styled.span`
   cursor: pointer;
   font-size: 1rem;
   color: ${({ theme }) => theme.colours.error};
@@ -84,13 +84,13 @@ export const DeleteIcon = styled.span`
   }
 `;
 
-export const InputContainer = styled.div`
+export const StyledInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
 `;
 
-export const SeatInputSelect = styled.div`
+export const StyledSeatInputSelect = styled.div`
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -102,7 +102,7 @@ export const SeatInputSelect = styled.div`
   margin-top: 10px;
 `;
 
-export const AssignSeatsButton = styled(TransparentResponsiveButton)<{ $disabled: boolean }>`
+export const StyledAssignSeatsButton = styled(TransparentResponsiveButton)<{ $disabled: boolean }>`
   background-color: ${({ theme, $disabled: disabled }) => disabled ? theme.colours.sidebarBackground : theme.colours.secondaryLight};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ $disabled: disabled }) => disabled ? "not-allowed" : "pointer"}; 
@@ -117,14 +117,14 @@ export const AssignSeatsButton = styled(TransparentResponsiveButton)<{ $disabled
   }
 `;
 
-export const DistributeSeats = styled.div`
+export const StyledDistributeSeats = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   height: 110px;
 `;
 
-export const ModalOverlay = styled.div`
+export const StyledModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -137,7 +137,7 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-export const ModalContainer = styled.div`
+export const StyledModalContainer = styled.div`
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   width: 100%;
   height: 30%;
@@ -148,17 +148,17 @@ export const ModalContainer = styled.div`
   box-sizing: border-box;
 `;
 
-export const DownloadButton = styled(TransparentResponsiveButton)`
+export const StyledDownloadButton = styled(TransparentResponsiveButton)`
   background-color: ${({ theme }) => theme.colours.primaryLight};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const NotifyButton = styled(TransparentResponsiveButton)`
+export const StyledNotifyButton = styled(TransparentResponsiveButton)`
   background-color: ${({ theme }) => theme.colours.secondaryLight};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const ButtonContainer = styled.div`
+export const StyledButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -171,7 +171,7 @@ export const ButtonContainer = styled.div`
   box-sizing: border-box;
 `;
 
-export const CloseButton = styled.button`
+export const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -185,14 +185,14 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const LevelContainer = styled.div`
+export const StyledLevelContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
 `;
 
-export const Levels = styled.div`
+export const StyledLevels = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
@@ -200,12 +200,12 @@ export const Levels = styled.div`
   gap: 5%;
 `;
 
-export const CloseButtonContainer = styled.div`
+export const StyledCloseButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
-export const InputTitleA = styled.div`
+export const StyledInputTitleA = styled.div`
   font-size: 1rem;
   background-color: ${({ theme }) => theme.staffActions.contactBorder};
   color: ${({ theme }) => theme.background};
@@ -216,7 +216,7 @@ export const InputTitleA = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
-export const InputTitleB = styled.div`
+export const StyledInputTitleB = styled.div`
   font-size: 1rem;
   background-color: ${({ theme }) => theme.staffActions.seatBorder};
   color: ${({ theme }) => theme.background};
@@ -227,10 +227,10 @@ export const InputTitleB = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
-export const AssignPopupText = styled.h2`
+export const StyledAssignPopupText = styled.h2`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const Alert = styled.div`
+export const StyledAlert = styled.div`
   color: ${({ theme }) => theme.colours.error};
 `;

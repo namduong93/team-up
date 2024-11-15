@@ -5,7 +5,7 @@ import TextInputLight from "../../../components/general_utility/TextInputLight";
 import { useNavigate, useParams } from "react-router-dom";
 import { sendRequest } from "../../../utility/request";
 
-const Modal = styled.div`
+const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -25,7 +25,7 @@ const Modal = styled.div`
   align-items: center;
 `;
 
-const CloseButton = styled.button`
+const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -42,7 +42,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const Button = styled.button<{ disabled?: boolean }>`
+const StyledButton = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
   min-width: 100px;
   width: 50%;
@@ -106,10 +106,10 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({
 
   return (
     <>
-      <Modal>
-        <CloseButton onClick={onClose}>
+      <StyledModal>
+        <StyledCloseButton onClick={onClose}>
           <FaTimes />
-        </CloseButton>
+        </StyledCloseButton>
         <div>{heading}</div>
         <div style={{ width: "80%" }}>
           <TextInputLight
@@ -122,10 +122,10 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({
           />
         </div>
 
-        <Button disabled={isButtonDisabled()} onClick={handleJoin}>
+        <StyledButton disabled={isButtonDisabled()} onClick={handleJoin}>
           Join
-        </Button>
-      </Modal>
+        </StyledButton>
+      </StyledModal>
     </>
   );
 };

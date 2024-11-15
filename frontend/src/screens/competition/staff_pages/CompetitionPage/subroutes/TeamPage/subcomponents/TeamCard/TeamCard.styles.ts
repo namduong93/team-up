@@ -5,7 +5,7 @@ import { styled } from "styled-components";
 import { CiCircleAlert } from "react-icons/ci";
 import { LiaTimesSolid } from "react-icons/lia";
 
-export const TeamMemberContainerDiv = styled.div`
+export const StyledTeamMemberContainerDiv = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
@@ -16,7 +16,7 @@ export const TeamMemberContainerDiv = styled.div`
   border-radius: 10px;
 `
 
-export const StyledUserIcon = styled(FaRegUser)`
+export const StyledStyledUserIcon = styled(FaRegUser)`
   width: 50%;
   min-width: 18px;
   margin: auto 0 auto 25%;
@@ -24,7 +24,7 @@ export const StyledUserIcon = styled(FaRegUser)`
   user-select: none;
 `
 
-export const CenterTextDiv = styled.div<{ $levelChar?: string }>`
+export const StyledCenterTextDiv = styled.div<{ $levelChar?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,7 +34,7 @@ export const CenterTextDiv = styled.div<{ $levelChar?: string }>`
   font-weight: ${({ $levelChar }) => $levelChar && 'bold' };
 `
 
-export const TeamLevelDiv = styled.div<{ $levelChar?: string }>`
+export const StyledTeamLevelDiv = styled.div<{ $levelChar?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -88,7 +88,7 @@ export const StyledHoverDiv = styled.div<{$isEditingStatus: boolean, $isEditingN
   }
 `;
 
-export const CardHeaderDiv = styled.div<{ $statusColor: string }>`
+export const StyledCardHeaderDiv = styled.div<{ $statusColor: string }>`
   background-color: ${(props) => props.$statusColor};
   height: 58px;
   width: 100%;
@@ -99,12 +99,12 @@ export const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   /* position: relative; */
 `;
 
-export const TitleSpan = styled.span`
+export const StyledTitleSpan = styled.span`
   font-size: 1.5rem;
   margin-left: 5%;
 `
 
-export const TeamMatesContainerDiv = styled.div`
+export const StyledTeamMatesContainerDiv = styled.div`
   background-color: ${({ theme }) => theme.colours.cardBackground};
   flex: 1 1 auto;
   border-radius: 0px 0px 20px 20px;
@@ -119,14 +119,14 @@ export const TeamMatesContainerDiv = styled.div`
 `
 
 
-export const RedTeamNameAlert = styled(CiCircleAlert)`
+export const StyledRedTeamNameAlert = styled(CiCircleAlert)`
   color: red;
   min-height: 32px;
   min-width: 32px;
   margin-right: 5%;
 `;
 
-export const ApproveDiv = styled.div`
+export const StyledApproveDiv = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -134,7 +134,7 @@ export const ApproveDiv = styled.div`
   color: ${({ theme }) => theme.colours.confirm};
 `;
 
-export const RadioCircleDiv = styled.div<{ $selected: boolean }>`
+export const StyledRadioCircleDiv = styled.div<{ $selected: boolean }>`
   transition: background-color 0.2s ease-in-out !important;
   width: 16px;
   height: 16px;
@@ -146,26 +146,26 @@ export const RadioCircleDiv = styled.div<{ $selected: boolean }>`
     )};
 `;
 
-export const ApprovalNameDiv = styled.div`
+export const StyledApprovalNameDiv = styled.div`
   width: 100%;
   height: 33px;
   display: flex;
   justify-content: center;
 `;
 
-export const RadioCheckIcon = styled(IoMdCheckmark)`
+export const StyledRadioCheckIcon = styled(IoMdCheckmark)`
   width: 23px;
   height: 23px;
   color: ${({ theme }) => theme.colours.confirm};
 `;
 
-export const RadioCrossIcon = styled(LiaTimesSolid)`
+export const StyledRadioCrossIcon = styled(LiaTimesSolid)`
   width: 23px;
   height: 23px;
   color: ${({ theme }) => theme.colours.cancel};
 `;
 
-export const RadioIconDiv = styled.div`
+export const StyledRadioIconDiv = styled.div`
   width: 33px;
   height: 33px;
   display: flex;
@@ -175,7 +175,7 @@ export const RadioIconDiv = styled.div`
   box-sizing: border-box;
 `;
 
-export const TeamNameApprovalDiv = styled.div`
+export const StyledTeamNameApprovalDiv = styled.div`
   width: 100%;
   height: 100%;
   /* background-color: green; */
@@ -185,7 +185,7 @@ export const TeamNameApprovalDiv = styled.div`
   flex-direction: column;
 `;
 
-export const TeamMemberMotionDiv = styled(motion.div)<{ $isDraggable: boolean }>`
+export const StyledTeamMemberMotionDiv = styled(motion.div)<{ $isDraggable: boolean }>`
   border-radius: 10px;
   border: 1px solid rgb(200, 200, 200);
   width: 85.37%;

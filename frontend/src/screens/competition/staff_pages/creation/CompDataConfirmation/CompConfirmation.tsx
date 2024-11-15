@@ -2,9 +2,9 @@ import { FC, useEffect, useState } from "react";
 import { CompetitionInformation } from "../../../../../../shared_types/Competition/CompetitionDetails";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendRequest } from "../../../../../utility/request";
-import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { CompCreationProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { Button, ButtonContainer, Container, ContentContainer, DoubleInputContainer, HalfText, Label, LocationItem, LocationList, Text, Title } from "./CompDataConfirmation.styles";
+import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledDoubleInputContainer, StyledHalfText, StyledLabel, StyledLocationItem, StyledLocationList, StyledText, StyledTitle } from "./CompDataConfirmation.styles";
 
 interface University {
   id: number;
@@ -81,7 +81,7 @@ export const CompetitionConfirmation: FC = () => {
 };
 
   return (
-    <FlexBackground
+    <StyledFlexBackground
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -90,79 +90,79 @@ export const CompetitionConfirmation: FC = () => {
       }}
     >
       <CompCreationProgressBar progressNumber={1} />
-      <Container>
-        <ContentContainer>
-          <Title>Competition Details Confirmation</Title>
+      <StyledContainer>
+        <StyledContentContainer>
+          <StyledTitle>Competition Details Confirmation</StyledTitle>
 
-          <Label>Competition Name</Label>
-          <Text><em>{competitionInfo?.name}</em></Text>
+          <StyledLabel>Competition Name</StyledLabel>
+          <StyledText><em>{competitionInfo?.name}</em></StyledText>
 
-          <Label>Competition Region</Label>
-          <Text><em>{competitionInfo?.region}</em></Text>
+          <StyledLabel>Competition Region</StyledLabel>
+          <StyledText><em>{competitionInfo?.region}</em></StyledText>
 
-          <Label>Competition Start</Label>
-          <DoubleInputContainer>
-            <HalfText>Date</HalfText>
-            <HalfText>Time</HalfText>
-          </DoubleInputContainer>
+          <StyledLabel>Competition Start</StyledLabel>
+          <StyledDoubleInputContainer>
+            <StyledHalfText>Date</StyledHalfText>
+            <StyledHalfText>Time</StyledHalfText>
+          </StyledDoubleInputContainer>
 
-          <DoubleInputContainer margin={true}>
-            <HalfText><em>{competitionInfo.startDate.toDateString()}</em></HalfText>
-            <HalfText><em>{competitionInfo.startDate.toLocaleTimeString()}</em></HalfText>
-          </DoubleInputContainer>
+          <StyledDoubleInputContainer margin={true}>
+            <StyledHalfText><em>{competitionInfo.startDate.toDateString()}</em></StyledHalfText>
+            <StyledHalfText><em>{competitionInfo.startDate.toLocaleTimeString()}</em></StyledHalfText>
+          </StyledDoubleInputContainer>
 
           {competitionInfo?.earlyRegDeadline && (
             <>
-            <Label>Early Bird Registration Deadline</Label>
+            <StyledLabel>Early Bird Registration Deadline</StyledLabel>
 
-            <DoubleInputContainer>
-            <HalfText>Date</HalfText>
-            <HalfText>Time</HalfText>
-            </DoubleInputContainer>
+            <StyledDoubleInputContainer>
+            <StyledHalfText>Date</StyledHalfText>
+            <StyledHalfText>Time</StyledHalfText>
+            </StyledDoubleInputContainer>
 
-            <DoubleInputContainer margin={true}>
-              <HalfText><em>{`${competitionInfo.earlyRegDeadline.toDateString()}`}</em></HalfText>
-              <HalfText><em>{`${competitionInfo.earlyRegDeadline.toLocaleTimeString()}`}</em></HalfText>
-            </DoubleInputContainer>
+            <StyledDoubleInputContainer margin={true}>
+              <StyledHalfText><em>{`${competitionInfo.earlyRegDeadline.toDateString()}`}</em></StyledHalfText>
+              <StyledHalfText><em>{`${competitionInfo.earlyRegDeadline.toLocaleTimeString()}`}</em></StyledHalfText>
+            </StyledDoubleInputContainer>
             </>
           )}
 
-          <Label>General Registration Deadline</Label>
+          <StyledLabel>General Registration Deadline</StyledLabel>
 
-          <DoubleInputContainer>
-            <HalfText>Date</HalfText>
-            <HalfText>Time</HalfText>
-            </DoubleInputContainer>
+          <StyledDoubleInputContainer>
+            <StyledHalfText>Date</StyledHalfText>
+            <StyledHalfText>Time</StyledHalfText>
+            </StyledDoubleInputContainer>
 
-          <DoubleInputContainer margin={true}>
-            <HalfText><em>{`${competitionInfo?.generalRegDeadline.toDateString()}`}</em></HalfText>
-            <HalfText><em>{`${competitionInfo?.generalRegDeadline.toLocaleTimeString()}`}</em></HalfText>
-          </DoubleInputContainer>
+          <StyledDoubleInputContainer margin={true}>
+            <StyledHalfText><em>{`${competitionInfo?.generalRegDeadline.toDateString()}`}</em></StyledHalfText>
+            <StyledHalfText><em>{`${competitionInfo?.generalRegDeadline.toLocaleTimeString()}`}</em></StyledHalfText>
+          </StyledDoubleInputContainer>
 
-          <Label>Competition Code</Label>
-          <Text><em>{competitionInfo?.code}</em></Text>
+          <StyledLabel>Competition Code</StyledLabel>
+          <StyledText><em>{competitionInfo?.code}</em></StyledText>
 
-          <Label>Site Locations</Label>
+          <StyledLabel>Site Locations</StyledLabel>
 
-          <LocationList>
+          <StyledLocationList>
             {optionDisplayList.map((displayObject, index) => {
               console.log(institutionOptions)
               return (
-                <LocationItem key={index}>
+                <StyledLocationItem key={index}>
                   <div>{displayObject.label}</div>
                   <div>{displayObject.defaultSite}</div>
-                </LocationItem>
+                </StyledLocationItem>
               );
             })}
-          </LocationList>
+          </StyledLocationList>
 
-          <ButtonContainer>
-            <Button onClick={handleBack}>Back</Button>
-            <Button onClick={handleConfirm}>Confirm</Button>
-          </ButtonContainer>
+          <StyledButtonContainer>
+            <StyledButton onClick={handleBack}>Back</StyledButton>
+            <StyledButton onClick={handleConfirm}>Confirm</StyledButton>
+          </StyledButtonContainer>
 
-        </ContentContainer>
-      </Container>
-    </FlexBackground>
+        </StyledContentContainer>
+      </StyledContainer>
+    </StyledFlexBackground>
   );
 };

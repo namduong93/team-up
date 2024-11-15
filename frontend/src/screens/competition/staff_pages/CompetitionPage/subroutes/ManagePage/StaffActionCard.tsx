@@ -11,7 +11,7 @@ import { EditCourse, EditRego } from "../../../../../../../shared_types/Competit
 import { CourseCategory } from "../../../../../../../shared_types/University/Course";
 import { CompetitionSiteCapacity } from "../../../../../../../shared_types/Competition/CompetitionSite";
 import { CompetitionInformation } from "../../../../../../../shared_types/Competition/CompetitionDetails";
-import { ActionCard, ActionsContainer, AssignSeatsPage, BackButton, CardIcon, CardText, Code, CodeCardText, CopyCard, ManageContainer, StandardContainerDiv, Title2 } from "./ManagePage.styles";
+import { StyledActionCard, StyledActionsContainer, StyledAssignSeatsPage, StyledBackButton, StyledCardIcon, StyledCardText, StyledCode, StyledCodeCardText, StyledCopyCard, StyledManageContainer, StyledStandardContainerDiv, StyledTitle2 } from "./ManagePage.styles";
 import { AssignSeats } from "./subcomponents/AssignSeats/AssignSeats";
 import { BioChangePopUp } from "./subcomponents/BioChangePopup/BioChangePopUp";
 import { EditCompRegoPopUp } from "./subcomponents/EditCompRegistrationPopup/EditCompRegoPopUp";
@@ -416,25 +416,25 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
   };
 
   return (
-    <ManageContainer>
-      <StandardContainerDiv>
+    <StyledManageContainer>
+      <StyledStandardContainerDiv>
         {showManageSite ? (
-          <AssignSeatsPage>
-            <BackButton onClick={() => setShowManageSite(false)}>
+          <StyledAssignSeatsPage>
+            <StyledBackButton onClick={() => setShowManageSite(false)}>
               <FaChevronLeft /> Back
-            </BackButton>
+            </StyledBackButton>
             <AssignSeats
               siteName={siteOption.value ? siteOption.label : teamList[0].teamSite}
               siteCapacity={universityOption.value ? getSiteCapacity(parseInt(universityOption.value)) : getSiteCapacity(teamList[0].siteId)}
               teamListState={[teamList, setTeamList]}
               siteOptionState={[siteOption,setSiteOption]}
             />
-          </AssignSeatsPage>
+          </StyledAssignSeatsPage>
         ) : (
           <>
-            <ActionsContainer>
+            <StyledActionsContainer>
               {filteredActions.map((action, index) => (
-                <ActionCard
+                <StyledActionCard
                   key={index}
                   onClick={() =>
                     action.type === "code"
@@ -444,22 +444,22 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
                   $actionType={action.type}
                 >
                   {action.type === "code" ? (
-                    <CopyCard>
-                      <CardIcon as={action.icon} />
-                      <CodeCardText>{action.text}</CodeCardText>
-                      <Code>
+                    <StyledCopyCard>
+                      <StyledCardIcon as={action.icon} />
+                      <StyledCodeCardText>{action.text}</StyledCodeCardText>
+                      <StyledCode>
                         <p>{compCode}</p>
-                      </Code>
-                    </CopyCard>
+                      </StyledCode>
+                    </StyledCopyCard>
                   ) : (
                     <>
-                      <CardIcon as={action.icon} />
-                      <CardText>{action.text}</CardText>
+                      <StyledCardIcon as={action.icon} />
+                      <StyledCardText>{action.text}</StyledCardText>
                     </>
                   )}
-                </ActionCard>
+                </StyledActionCard>
               ))}
-            </ActionsContainer>
+            </StyledActionsContainer>
 
             {showContactBio && (
               <BioChangePopUp
@@ -477,10 +477,10 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
             {showEditRego && (
               <EditCompRegoPopUp
                 heading={
-                  <Title2>
+                  <StyledTitle2>
                     Please select the fields you would like to {"\n"} to remove
                     from the Competition Registration Form
-                  </Title2>
+                  </StyledTitle2>
                 }
                 onClose={() => setShowEditRego(false)}
                 regoFields={regoFields}
@@ -509,7 +509,7 @@ export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
             )}
           </>
         )}
-      </StandardContainerDiv>
-    </ManageContainer>
+      </StyledStandardContainerDiv>
+    </StyledManageContainer>
   );
 };

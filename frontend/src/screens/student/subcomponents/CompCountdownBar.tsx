@@ -7,7 +7,7 @@ interface ProgressBarProps {
   progress: number; // %
 }
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -26,7 +26,7 @@ const Container = styled.div`
   }
 `;
 
-const Title = styled.div`
+const StyledTitle = styled.div`
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 12px;
@@ -36,14 +36,14 @@ const Title = styled.div`
   }
 `;
 
-const ProgressWrapper = styled.div`
+const StyledProgressWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
   gap: 5%;
 `;
 
-const ProgressBarContainer = styled.div`
+const StyledProgressBarContainer = styled.div`
   flex: 1;
   height: 12px;
   background-color: ${({ theme }) => theme.colours.progressBackground};
@@ -52,14 +52,14 @@ const ProgressBarContainer = styled.div`
   box-sizing: border-box;
 `;
 
-const Progress = styled.div<{ $progress: number }>`
+const StyledProgress = styled.div<{ $progress: number }>`
   height: 100%;
   width: ${({ $progress }) => $progress * 100}%;
   background: linear-gradient(90deg, ${({ theme }) => theme.colours.progressStart}, ${({ theme }) => theme.colours.progressEnd});
   transition: width 0.5s ease;
-`
+`;
 
-const MedalIcon = styled(FaMedal)`
+const StyledMedalIcon = styled(FaMedal)`
   font-size: 100%;
   color: ${({ theme }) => theme.colours.secondaryDark};
   background-color: ${({ theme }) => theme.background};
@@ -67,14 +67,14 @@ const MedalIcon = styled(FaMedal)`
 
 export const CompCountdownBar: React.FC<ProgressBarProps> = ({ daysRemaining, progress }) => {
   return (
-    <Container>
-      <Title>{daysRemaining} days to go!</Title>
-      <ProgressWrapper>
-        <ProgressBarContainer>
-          <Progress $progress={progress} />
-        </ProgressBarContainer>
-        <MedalIcon />
-      </ProgressWrapper>
-    </Container>
+    <StyledContainer>
+      <StyledTitle>{daysRemaining} days to go!</StyledTitle>
+      <StyledProgressWrapper>
+        <StyledProgressBarContainer>
+          <StyledProgress $progress={progress} />
+        </StyledProgressBarContainer>
+        <StyledMedalIcon />
+      </StyledProgressWrapper>
+    </StyledContainer>
   );
 };

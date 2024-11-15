@@ -1,7 +1,7 @@
 import React, { FC, SetStateAction, useState } from "react";
 import { FaSort } from "react-icons/fa";
 import styled from "styled-components";
-import { SortOption, SortSelect } from "./components/SortSelect";
+import { StyledSortOption, SortSelect, SortOption } from "./components/SortSelect";
 import { FilterIcon, FilterSelect } from "./components/FilterSelect";
 import { NotificationButton } from "./components/NotificationButton";
 import { ResponsiveButton } from "../responsive_fields/ResponsiveButton";

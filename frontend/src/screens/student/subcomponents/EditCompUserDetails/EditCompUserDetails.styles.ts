@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const ModalOverlay = styled.div`
+export const StyledModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@ export const ModalOverlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 
-export const ModalContent = styled.div`
+export const StyledModalContent = styled.div`
   background-color: ${({ theme }) => theme.background};
   border-radius: 12px;
   width: 90%;
@@ -27,7 +27,7 @@ export const ModalContent = styled.div`
   overflow-y: scroll;
 `;
 
-export const CloseContainer = styled.div`
+export const StyledCloseContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: flex-end;
@@ -38,7 +38,7 @@ export const CloseContainer = styled.div`
   z-index: 1;
 `;
 
-export const CloseButton = styled.button`
+export const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -51,12 +51,12 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const Title = styled.h2`
+export const StyledTitle = styled.h2`
   text-align: center;
   margin: 10px;
 `;
 
-export const Form = styled.form`
+export const StyledForm = styled.form`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   min-width: 290px;
@@ -66,11 +66,11 @@ export const Form = styled.form`
   height: auto;
 `;
 
-export const Field = styled.div`
+export const StyledField = styled.div`
   max-width: 350px;
 `;
 
-export const TextArea = styled.textarea`
+export const StyledTextArea = styled.textarea`
   width: 100%;
   padding: 8px;
   border-radius: 8px;
@@ -78,7 +78,7 @@ export const TextArea = styled.textarea`
   resize: none;
 `;
 
-export const ContentContainer = styled.div`
+export const StyledContentContainer = styled.div`
   max-width: 760px;
   max-height: 780px;
   width: 95%;
@@ -89,20 +89,20 @@ export const ContentContainer = styled.div`
   justify-content: space-between;
 `;
 
-export const HeaderContainer = styled.div`
+export const StyledHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
 `;
 
-export const TitleContainer = styled.div`
+export const StyledTitleContainer = styled.div`
   flex: 20;
 
   display: flex;
   justify-content: center;
 `;
 
-export const ButtonContainer = styled.div`
+export const StyledButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { ApproveDiv, RadioCircleDiv } from "../../TeamCard.styles";
+import { StyledApproveDiv, StyledRadioCircleDiv } from "../../TeamCard.styles";
 
 export const ApproveRadio: FC<React.HTMLAttributes<HTMLDivElement>> = ({ onClick = () => {}, children, ...props }) => {
   const [selected, setSelected] = useState<boolean>(false);
@@ -8,9 +8,9 @@ export const ApproveRadio: FC<React.HTMLAttributes<HTMLDivElement>> = ({ onClick
     onClick(e);
   }
   return (
-    <ApproveDiv onClick={handleClick} {...props}>
-      <RadioCircleDiv $selected={selected} />
+    <StyledApproveDiv onClick={handleClick} {...props}>
+      <StyledRadioCircleDiv $selected={selected} />
       {children}
-    </ApproveDiv>
+    </StyledApproveDiv>
   );
 }

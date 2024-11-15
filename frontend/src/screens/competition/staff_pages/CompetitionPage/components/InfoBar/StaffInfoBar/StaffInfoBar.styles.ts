@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
 
-export const CustomCheckbox = styled.input<{ $role: CompetitionRole }>`
+export const StyledCustomCheckbox = styled.input<{ $role: CompetitionRole }>`
   appearance: none;
   -webkit-appearance: none;
   outline: none;
@@ -25,7 +25,7 @@ export const CustomCheckbox = styled.input<{ $role: CompetitionRole }>`
   }
 `;
 
-export const CustomRadio = styled.input<{ $access?: StaffAccess }>`
+export const StyledCustomRadio = styled.input<{ $access?: StaffAccess }>`
   appearance: none;
   -webkit-appearance: none;
   outline: none;
@@ -47,7 +47,7 @@ export const CustomRadio = styled.input<{ $access?: StaffAccess }>`
   }
 `;
 
-export const RoleLabelDiv = styled.div<{ $role: CompetitionRole }>`
+export const StyledRoleLabelDiv = styled.div<{ $role: CompetitionRole }>`
   width: 60%;
   border: 1px solid ${({ theme, $role }) => (
     $role === CompetitionRole.Admin ?
@@ -79,7 +79,7 @@ export const RoleLabelDiv = styled.div<{ $role: CompetitionRole }>`
   )};
 `;
 
-export const AccessLabelDiv = styled.div<{ $access: StaffAccess }>`
+export const StyledAccessLabelDiv = styled.div<{ $access: StaffAccess }>`
   width: 60%;
   border: 1px solid ${({ theme, $access }) => (
     $access === StaffAccess.Accepted ?

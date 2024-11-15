@@ -4,14 +4,14 @@ import { FaHome, FaUser, FaCog, FaSignOutAlt,FaIdBadge } from "react-icons/fa";
 import styled from "styled-components"; 
 import { sendRequest } from "../../utility/request";
 import { backendURL } from "../../../config/backendURLConfig";
-import { ProfilePic } from "../../screens/Account/Account.styles";
+import { StyledProfilePic } from "../../screens/Account/Account.styles";
 
 export interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   cropState: boolean;
   sidebarInfo: { preferredName: string, affiliation: string, profile?: string };
 }
 
-const SidebarContainer = styled.div<{ $cropState: boolean }>`
+const StyledSidebarContainer = styled.div<{ $cropState: boolean }>`
   min-width: ${({ $cropState: cropState }) => (cropState ? "40px" : "200px")};
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   display: flex;
@@ -36,7 +36,7 @@ const SidebarContainer = styled.div<{ $cropState: boolean }>`
   }
 `;
 
-const SidebarContent = styled.div`
+const StyledSidebarContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,7 +51,7 @@ const SidebarContent = styled.div`
   max-width: 200px;
 `;
 
-const ProfileSection = styled.div`
+const StyledProfileSection = styled.div`
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -66,12 +66,12 @@ const ProfileSection = styled.div`
   }
 `;
 
-const Name = styled.div`
+const StyledName = styled.div`
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
 `;
 
-const NavLinks = styled.nav`
+const StyledNavLinks = styled.nav`
   margin-top: 20px;
   margin-bottom: 20px;
   flex-grow: 1;
@@ -82,7 +82,7 @@ const NavLinks = styled.nav`
   box-sizing: border-box;
 `;
 
-const NavButton = styled.button<{ $active: boolean }>`
+const StyledNavButton = styled.button<{ $active: boolean }>`
   background-color: ${({ theme, $active: active }) => (active ? theme.background : "transparent")};
   border: none;
   color: ${({ theme }) => theme.fonts.colour};
@@ -124,7 +124,7 @@ const NavButton = styled.button<{ $active: boolean }>`
   }
 `;
 
-const LogoutButton = styled.button`
+const StyledLogoutButton = styled.button`
   background-color: ${({ theme }) => theme.colours.cancel};
   color: ${({ theme }) => theme.fonts.colour};
   border: none;
@@ -200,50 +200,50 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, s
   }, []);
 
   return (
-    <SidebarContainer $cropState={cropState} style={style} {...props}>
-      <SidebarContent>
+    <StyledSidebarContainer $cropState={cropState} style={style} {...props}>
+      <StyledSidebarContent>
         {!cropState && (
-          <ProfileSection>
-            <ProfilePic $imageUrl={sidebarInfo.profile || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
+          <StyledProfileSection>
+            <StyledProfilePic $imageUrl={sidebarInfo.profile || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
             <div>Hello</div>
-            <Name>{sidebarInfo.preferredName}</Name>
+            <StyledName>{sidebarInfo.preferredName}</StyledName>
             <div>{sidebarInfo.affiliation}</div>
-          </ProfileSection>
+          </StyledProfileSection>
         )}
 
-        <NavLinks>
-          <NavButton 
+        <StyledNavLinks>
+          <StyledNavButton 
             $active={location.pathname === "/dashboard"}
             onClick={() => handleNavigation('/dashboard')}
           >
             <FaHome /> {!cropState && <span>Dashboard</span>}
-          </NavButton>
+          </StyledNavButton>
           {isSysAdmin && 
-            <NavButton 
+            <StyledNavButton 
               $active={location.pathname === "/staffAccounts"}
               onClick={() => handleNavigation('/staffAccounts')}
             >
               <FaIdBadge /> {!cropState && <span>Staff Accounts</span>}
-            </NavButton>
+            </StyledNavButton>
           }
-          <NavButton 
+          <StyledNavButton 
             $active={location.pathname === "/account"}
             onClick={() => handleNavigation('/account')}
           >
             <FaUser /> {!cropState && <span>Account</span>}
-          </NavButton>
-          <NavButton 
+          </StyledNavButton>
+          <StyledNavButton 
             $active={location.pathname === "/settings"}
             onClick={() => handleNavigation('/settings')}
           >
             <FaCog /> {!cropState && <span>Settings</span>}
-          </NavButton>
-        </NavLinks>
-      </SidebarContent>
+          </StyledNavButton>
+        </StyledNavLinks>
+      </StyledSidebarContent>
 
-      <LogoutButton onClick={handleLogout}>
+      <StyledLogoutButton onClick={handleLogout}>
         <FaSignOutAlt /> <span>Logout</span>
-      </LogoutButton>
-    </SidebarContainer>
+      </StyledLogoutButton>
+    </StyledSidebarContainer>
   );
 };

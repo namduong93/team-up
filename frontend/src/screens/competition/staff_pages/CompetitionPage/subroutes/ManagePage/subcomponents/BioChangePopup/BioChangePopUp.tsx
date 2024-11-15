@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Button, CloseButton, Container, ContentBio, ContentMarkdown, EditorContainer, Modal, ModalOverlay, StyledTextarea, View } from "./BioChangePopup.styles";
+import { StyledButton, StyledCloseButton, StyledContainer, StyledContentBio, StyledContentMarkdown, StyledEditorContainer, StyledModal, StyledModalOverlay, StyledTextarea, StyledView } from "./BioChangePopup.styles";
 import { FaTimes } from "react-icons/fa";
-import { Heading } from "../../ManagePage.styles";
+import { StyledHeading } from "../../ManagePage.styles";
 import ReactMarkdownEditorLite from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
@@ -26,16 +26,16 @@ export const BioChangePopUp: FC<BioChangePopUpProps> = ({
   const isButtonDisabled = () => bioValue === "" && announcementValue === "";
 
   return (
-    <ModalOverlay>
-      <Modal>
-        <View>
-          <CloseButton onClick={onClose}>
+    <StyledModalOverlay>
+      <StyledModal>
+        <StyledView>
+          <StyledCloseButton onClick={onClose}>
             <FaTimes />
-          </CloseButton>
+          </StyledCloseButton>
 
-          <Container>
-            <ContentBio>
-              <Heading>Update Your Contact Bio</Heading>
+          <StyledContainer>
+            <StyledContentBio>
+              <StyledHeading>Update Your Contact Bio</StyledHeading>
               <StyledTextarea
                 value={bioValue}
                 onChange={onBioChange}
@@ -43,11 +43,11 @@ export const BioChangePopUp: FC<BioChangePopUpProps> = ({
                 required={false}
                 placeholder={bioValue}
               />
-            </ContentBio>
+            </StyledContentBio>
             
-            <ContentMarkdown>
-              <Heading>Update Announcements to Your Teams</Heading>
-              <EditorContainer>
+            <StyledContentMarkdown>
+              <StyledHeading>Update Announcements to Your Teams</StyledHeading>
+              <StyledEditorContainer>
                 <ReactMarkdownEditorLite
                   value={announcementValue}
                   onChange={({ text }) => onAnnouncementChange(text)}
@@ -74,15 +74,15 @@ export const BioChangePopUp: FC<BioChangePopUpProps> = ({
                     ],
                   }}
                 />
-              </EditorContainer>
-            </ContentMarkdown>
-          </Container>
+              </StyledEditorContainer>
+            </StyledContentMarkdown>
+          </StyledContainer>
 
-          <Button disabled={isButtonDisabled()} onClick={onNext}>
+          <StyledButton disabled={isButtonDisabled()} onClick={onNext}>
             Save Changes
-          </Button>
-        </View>
-      </Modal>
-    </ModalOverlay>
+          </StyledButton>
+        </StyledView>
+      </StyledModal>
+    </StyledModalOverlay>
   );
 };

@@ -1,11 +1,11 @@
 import React, { FC, ReactNode, useState } from "react"
 import styled from "styled-components"
 import { StudentInfo } from "../../../../../../../../shared_types/Competition/student/StudentInfo";
-import { NarrowStatusDiv } from "../../StaffPage/StaffPage.styles";
+import { StyledNarrowStatusDiv } from "../../StaffPage/StaffPage.styles";
 import { StudentStatus } from "./StudentStatus";
 import { StudentsInfoBar } from "../../../components/InfoBar/StudentsInfoBar/StudentsInfoBar";
 
-export const StudentInfoContainerDiv = styled.div`
+export const StyledStudentInfoContainerDiv = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -22,7 +22,7 @@ export const StudentInfoContainerDiv = styled.div`
   }
 `;
 
-const ContainerDiv = styled.div`
+const StyledContainerDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,7 +37,7 @@ const ContainerDiv = styled.div`
   
 `
 
-const FieldTitle = styled.div`
+const StyledFieldTitle = styled.div`
   flex: 1;
   width: 100%;
   /* border-radius: 10px 10px 0 0; */
@@ -49,7 +49,7 @@ const FieldTitle = styled.div`
   box-sizing: border-box;
 `;
 
-const FieldValue = styled.div`
+const StyledFieldValue = styled.div`
   width: 100%;
   flex: 2 1 auto;
   flex-direction: column;
@@ -71,10 +71,10 @@ interface FieldContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Field: FC<FieldContainerProps> = ({ label, value, style, ...props }) => {
   return (
-    <ContainerDiv style={{ ...style }} {...props}>
-      <FieldTitle>{label}</FieldTitle>
-      <FieldValue>{value}</FieldValue>
-    </ContainerDiv>
+    <StyledContainerDiv style={{ ...style }} {...props}>
+      <StyledFieldTitle>{label}</StyledFieldTitle>
+      <StyledFieldValue>{value}</StyledFieldValue>
+    </StyledContainerDiv>
   )
 }
 
@@ -101,17 +101,17 @@ export const StudentInfoCard: FC<StudentCardProps> = (
       isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
       studentsState={[students, setStudents]}
     />}
-    <StudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} style={style} {...props}>
+    <StyledStudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} style={style} {...props}>
       <Field label="Full Name" value={name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Gender" value={sex} style={{ width: '10%', minWidth: '60px'}} />
       <Field label="Email" value={email} style={{ width: '25%', minWidth: '170px' }} />
       <Field label="Status" 
         value={
-          <NarrowStatusDiv>
+          <StyledNarrowStatusDiv>
             <StudentStatus style={{ minWidth: '78px' }} isMatched={status === 'Matched'}>
               {status}
             </StudentStatus>
-          </NarrowStatusDiv>
+          </StyledNarrowStatusDiv>
         }
         style={{ width: '20%', minWidth: '88px' }}
       />
@@ -125,6 +125,6 @@ export const StudentInfoCard: FC<StudentCardProps> = (
       <div style={{ display: 'flex' }}>
         
       </div>
-    </StudentInfoContainerDiv>
+    </StyledStudentInfoContainerDiv>
   </>)
 }

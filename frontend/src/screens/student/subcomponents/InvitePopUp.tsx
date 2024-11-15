@@ -4,7 +4,7 @@ import { FaTimes } from "react-icons/fa";
 import { CopyButton } from "../../../components/general_utility/CopyButton";
 
 // Modal styles
-const Modal = styled.div`
+const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -25,7 +25,7 @@ const Modal = styled.div`
 `;
 
 // Close button styles
-const CloseButton = styled.button`
+const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -42,7 +42,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const CopyContainer = styled.div`
+const StyledCopyContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,7 +50,7 @@ const CopyContainer = styled.div`
   margin-bottom: 30px;
 `;
 
-const CopyText = styled.p`
+const StyledCopyText = styled.p`
   font-size: 18px;
   font-style: italic;
   margin: 0;
@@ -60,7 +60,7 @@ const CopyText = styled.p`
   display: inline-block;
 `;
 
-const LargeCopyButtonWrapper = styled.div`
+const StyledLargeCopyButtonWrapper = styled.div`
   transform: scale(1.5);
   display: inline-flex;
   margin-left: 20px;
@@ -79,18 +79,18 @@ const InvitePopUp: React.FC<InvitePopUpProps> = ({
 }) => {
   return (
     <>
-      <Modal>
-        <CloseButton onClick={onClose}>
+      <StyledModal>
+        <StyledCloseButton onClick={onClose}>
           <FaTimes />
-        </CloseButton>
+        </StyledCloseButton>
         <div>{heading}</div>
-        <CopyContainer>
-          <CopyText>{text}</CopyText>
-          <LargeCopyButtonWrapper>
+        <StyledCopyContainer>
+          <StyledCopyText>{text}</StyledCopyText>
+          <StyledLargeCopyButtonWrapper>
             <CopyButton textToCopy={text} />
-          </LargeCopyButtonWrapper>
-        </CopyContainer>
-      </Modal>
+          </StyledLargeCopyButtonWrapper>
+        </StyledCopyContainer>
+      </StyledModal>
     </>
   );
 };

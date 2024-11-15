@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const ModalOverlay = styled.div`
+export const StyledModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-export const Modal = styled.div`
+export const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -34,7 +34,7 @@ export const Modal = styled.div`
   justify-content: center;
 `;
 
-export const View = styled.div`
+export const StyledView = styled.div`
   width: 100%;
   height: 400px;
   display: flex;
@@ -44,7 +44,7 @@ export const View = styled.div`
   align-items: center;
 `;
 
-export const CloseButton = styled.button`
+export const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -60,7 +60,7 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const Button = styled.button`
+export const StyledButton = styled.button`
   max-width: 150px;
   min-width: 100px;
   width: 50%;
@@ -88,7 +88,7 @@ export const Button = styled.button`
   }
 `;
 
-export const Container = styled.div`
+export const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;

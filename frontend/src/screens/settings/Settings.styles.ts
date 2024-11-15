@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { FlexBackground } from "../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../components/general_utility/Background";
 import { ThemeButtonProps } from "./Settings";
 import { SearchBar } from "../competition/staff_pages/CompetitionPage/components/PageUtils";
 
-export const Background = styled(FlexBackground)`
+export const StyledBackground = styled(StyledFlexBackground)`
   background-color: ${({ theme }) => theme.background};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   width: 100%;
@@ -11,7 +11,7 @@ export const Background = styled(FlexBackground)`
   align-items: center;
 `;
 
-export const ThemeButton = styled.button<
+export const StyledThemeButton = styled.button<
   ThemeButtonProps & { $isSelected: boolean; $isLight: boolean }
 >`
   background-color: ${({ theme, $newTheme: newTheme }) =>
@@ -32,11 +32,11 @@ export const ThemeButton = styled.button<
   }
 `;
 
-export const Title = styled.h2`
+export const StyledTitle = styled.h2`
   margin-bottom: 20px;
 `;
 
-export const SettingsContainer = styled.div`
+export const StyledSettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,13 +47,13 @@ export const SettingsContainer = styled.div`
   max-height: 95%;
 `;
 
-export const DropdownContainer = styled.div`
+export const StyledDropdownContainer = styled.div`
   width: 100%;
   max-width: 600px;
   margin-top: 20px;
 `;
 
-export const DropdownHeader = styled.div<{ $isOpen: boolean }>`
+export const StyledDropdownHeader = styled.div<{ $isOpen: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -71,7 +71,7 @@ export const DropdownHeader = styled.div<{ $isOpen: boolean }>`
   }
 `;
 
-export const DropdownContent = styled.div<{ $isOpen: boolean }>`
+export const StyledDropdownContent = styled.div<{ $isOpen: boolean }>`
   max-height: ${({ $isOpen }) => ($isOpen ? "100%" : "0")};
   overflow: hidden;
   transition: max-height 0.3s ease !important;
@@ -79,6 +79,6 @@ export const DropdownContent = styled.div<{ $isOpen: boolean }>`
   width: 100%;
 `;
 
-export const FAQSearchBar = styled(SearchBar)`
+export const StyledFAQSearchBar = styled(SearchBar)`
   height: 40px;
 `;

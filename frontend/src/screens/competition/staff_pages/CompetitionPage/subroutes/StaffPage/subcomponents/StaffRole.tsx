@@ -7,7 +7,7 @@ interface StaffRolesProps extends React.HTMLAttributes<HTMLDivElement> {
   roles: CompetitionRole[];
 }
 
-export const StandardContainerDiv = styled.div`
+export const StyledStandardContainerDiv = styled.div`
   width: 20%;
   height: 100%;
   flex: 1;
@@ -18,7 +18,7 @@ export const StandardContainerDiv = styled.div`
   box-sizing: border-box;
 `;
 
-export const StaffRoleDisplay = styled.div<{ $role: CompetitionRole, $isMulti?: boolean }>`
+export const StyledStaffRoleDisplay = styled.div<{ $role: CompetitionRole, $isMulti?: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
@@ -84,7 +84,7 @@ export const StaffRoleDisplay = styled.div<{ $role: CompetitionRole, $isMulti?: 
   }
 `;
 
-const StaffRolesContainerDiv = styled(StandardContainerDiv)`
+const StyledStaffRolesContainerDiv = styled(StyledStandardContainerDiv)`
   /* min-width: 20%; */
   overflow: visible;
   flex: 1;
@@ -95,7 +95,7 @@ const StaffRolesContainerDiv = styled(StandardContainerDiv)`
 `;
 
 
-const StaffRoleContainer = styled.div<{ $isOpen: boolean }>`
+const StyledStaffRoleContainer = styled.div<{ $isOpen: boolean }>`
   width: 100%;
   user-select: none;
   height: 50%;
@@ -113,14 +113,14 @@ const StaffRoleContainer = styled.div<{ $isOpen: boolean }>`
   `};
 `;
 
-const RoleDropdownIcon = styled(IoIosArrowDown)`
+const StyledRoleDropdownIcon = styled(IoIosArrowDown)`
   position: absolute;
   pointer-events: none;
   right: 2px;
   bottom: 2px;
 `;
 
-const AdditionalRolesContainer = styled.div<{ $numContents: number }>`
+const StyledAdditionalRolesContainer = styled.div<{ $numContents: number }>`
   position: absolute;
   height: ${({ $numContents }) => `${$numContents * 100}`}%;
   width: 100%;
@@ -145,10 +145,10 @@ export const StaffRoles: FC<StaffRolesProps> = ({ roles, children, ...props }) =
   const numContents = roles.length - 1;
 
   return (
-    <StaffRolesContainerDiv>
-      <StaffRoleContainer $isOpen={isOpen}>
+    <StyledStaffRolesContainerDiv>
+      <StyledStaffRoleContainer $isOpen={isOpen}>
 
-        <StaffRoleDisplay
+        <StyledStaffRoleDisplay
           tabIndex={0}
           onClick={handleClick}
           onBlur={() => setIsOpen(false)}
@@ -156,24 +156,24 @@ export const StaffRoles: FC<StaffRolesProps> = ({ roles, children, ...props }) =
           $role={roles[0]}
         >
           <div style={{ pointerEvents: 'none' }}>{roles[0]}</div>
-        </StaffRoleDisplay>
+        </StyledStaffRoleDisplay>
 
         {isOpen &&
-        <AdditionalRolesContainer
+        <StyledAdditionalRolesContainer
           onMouseDown={(e) => { e.preventDefault(); }}
           $numContents={numContents}
         >
           {roles.slice(1).map((role, index) => 
-          <StaffRoleDisplay style={{ height: `${100 / numContents}%` }} key={`${role}${index}`} $role={role}>
+          <StyledStaffRoleDisplay style={{ height: `${100 / numContents}%` }} key={`${role}${index}`} $role={role}>
             <span style={{ pointerEvents: 'none' }}>{role}</span>
-          </StaffRoleDisplay>
+          </StyledStaffRoleDisplay>
           )}
-        </AdditionalRolesContainer>}
+        </StyledAdditionalRolesContainer>}
 
         {isMulti &&
-        <RoleDropdownIcon />}
+        <StyledRoleDropdownIcon />}
 
-      </StaffRoleContainer>
-    </StaffRolesContainerDiv>
+      </StyledStaffRoleContainer>
+    </StyledStaffRolesContainerDiv>
   )
 }

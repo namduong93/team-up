@@ -6,7 +6,7 @@ interface CopyButtonProps {
   textToCopy: string;
 }
 
-const IconButton = styled(FaRegCopy)<{ $copied: boolean }>`
+const StyledIconButton = styled(FaRegCopy)<{ $copied: boolean }>`
   margin-left: 3%;
   width: auto;
   height: auto;
@@ -21,7 +21,7 @@ const IconButton = styled(FaRegCopy)<{ $copied: boolean }>`
   }
 `;
 
-const CheckIcon = styled(FaCheck)`
+const StyledCheckIcon = styled(FaCheck)`
   margin-left: 5%;
   width: 1rem;
   height: 1rem;
@@ -38,5 +38,5 @@ export const CopyButton: FC<CopyButtonProps> = ({ textToCopy }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  return copied ? <CheckIcon /> : <IconButton $copied={copied} onClick={copyToClipboard} />;
+  return copied ? <StyledCheckIcon /> : <StyledIconButton $copied={copied} onClick={copyToClipboard} />;
 };

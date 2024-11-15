@@ -5,7 +5,7 @@ export interface InfoBarProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpenState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 }
 
-const InfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
+const StyledInfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   border-radius: 10px;
   overflow: auto;
@@ -34,7 +34,7 @@ const InfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
   }
 `;
 
-const InfoContainer = styled.div`
+const StyledInfoContainer = styled.div`
   width: calc(100% - 20px);
   height: calc(100% - 20px);
   box-sizing: border-box;
@@ -76,16 +76,16 @@ export const InfoBar: FC<InfoBarProps> = ({ isOpenState: [isOpen, setIsOpen], ch
   }, []);
 
   return (
-    <InfoBarContainerDiv
+    <StyledInfoBarContainerDiv
       ref={containerRef}
       tabIndex={9999}
       $isOpen={isOpen} {...props}
       onClick={(e) => e.stopPropagation()}
     >
-      <InfoContainer>
+      <StyledInfoContainer>
         {children}
-      </InfoContainer>
+      </StyledInfoContainer>
 
-    </InfoBarContainerDiv>
+    </StyledInfoBarContainerDiv>
   )
 }

@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
 import { InfoBar, InfoBarProps } from "../InfoBar";
 import { AttendeesDetails } from "../../../../../../../../shared_types/Competition/staff/AttendeesDetails";
-import { InfoBarField, LabelSpan, VerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
-import { ProfilePic } from "../../../../../../Account/Account.styles";
+import { StyledInfoBarField, StyledLabelSpan, StyledVerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
+import { StyledProfilePic } from "../../../../../../Account/Account.styles";
 import { StaffRoles } from "../../../subroutes/StaffPage/subcomponents/StaffRole";
 import { backendURL } from "../../../../../../../../config/backendURLConfig";
 
@@ -22,82 +22,82 @@ export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
   return (
     <InfoBar isOpenState={[isOpen, setIsOpen]}>
 
-      <InfoBarField>
-        <LabelSpan>User Id:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>User Id:</StyledLabelSpan>
         <span>{attendeesData.userId}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
-      <ProfilePic
+      <StyledProfilePic
         style={{ marginBottom: '15px' }}
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
       />
 
-      <VerticalInfoBarField>
-        <LabelSpan>Name:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Name:</StyledLabelSpan>
         <span>{attendeesData.name}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Preferred Name:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Preferred Name:</StyledLabelSpan>
         <span>{attendeesData.preferredName}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Email:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Email:</StyledLabelSpan>
         <span>{attendeesData.email}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Gender:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>Gender:</StyledLabelSpan>
         <span>{attendeesData.sex}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Shirt Size:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>Shirt Size:</StyledLabelSpan>
         <span>{attendeesData.tshirtSize}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Dietary Requirements:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Dietary Requirements:</StyledLabelSpan>
         <span>{attendeesData.dietaryNeeds}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Allergies:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Allergies:</StyledLabelSpan>
         <span>{attendeesData.allergies}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Accessibility Needs:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Accessibility Needs:</StyledLabelSpan>
         <span>{attendeesData.accessibilityNeeds}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Roles:</LabelSpan>
-        <InfoBarField style={{ maxWidth: '130px' }}>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Roles:</StyledLabelSpan>
+        <StyledInfoBarField style={{ maxWidth: '130px' }}>
           <StaffRoles roles={attendeesData.roles} />
-        </InfoBarField>
-      </VerticalInfoBarField>
+        </StyledInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Site:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Site:</StyledLabelSpan>
         <span>{attendeesData.siteName}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Site Capacity:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>Site Capacity:</StyledLabelSpan>
         <span>{attendeesData.siteCapacity}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
-      <VerticalInfoBarField>
-        <LabelSpan>Pending Site:</LabelSpan>
+      <StyledVerticalInfoBarField>
+        <StyledLabelSpan>Pending Site:</StyledLabelSpan>
         <span>{attendeesData.pendingSiteName ? attendeesData.pendingSiteName : 'None'}</span>
-      </VerticalInfoBarField>
+      </StyledVerticalInfoBarField>
 
-      <InfoBarField>
-        <LabelSpan>Pending Site Capacity:</LabelSpan>
+      <StyledInfoBarField>
+        <StyledLabelSpan>Pending Site Capacity:</StyledLabelSpan>
         <span>{attendeesData.pendingSiteCapacity ? attendeesData.pendingSiteCapacity : 'N/A'}</span>
-      </InfoBarField>
+      </StyledInfoBarField>
 
     </InfoBar>
   )

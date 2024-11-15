@@ -5,9 +5,9 @@ import { sendRequest } from "../../../../../../utility/request";
 import { Course, CourseCategory } from "../../../../../../../shared_types/University/Course";
 import { EditRego } from "../../../../../../../shared_types/Competition/staff/Edit";
 import { DEFAULT_REGO_FIELDS } from "../../../../staff_pages/CompetitionPage/subroutes/ManagePage/StaffActionCard";
-import { FlexBackground } from "../../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
 import { CompRegistrationProgressBar } from "../../../../../../components/progress_bar/ProgressBar";
-import { Asterisk, Button, ButtonContainer, Container, ContentContainer, Title } from "./CompExperience.styles";
+import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledTitle } from "./CompExperience.styles";
 import MultiRadio from "../../../../../../components/general_utility/MultiRadio";
 import TextInput from "../../../../../../components/general_utility/TextInput";
 import RadioButton from "../../../../../../components/general_utility/RadioButton";
@@ -183,7 +183,7 @@ export const CompetitionExperience: FC = () => {
   }, []);
 
   return (
-    <FlexBackground
+    <StyledFlexBackground
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -192,9 +192,9 @@ export const CompetitionExperience: FC = () => {
       }}
     >
       <CompRegistrationProgressBar progressNumber={2} />
-      <Container>
-        <ContentContainer>
-          <Title>Competitive Experience</Title>
+      <StyledContainer>
+        <StyledContentContainer>
+          <StyledTitle>Competitive Experience</StyledTitle>
 
           <MultiRadio
             options={courseOptions}
@@ -205,7 +205,7 @@ export const CompetitionExperience: FC = () => {
             label={
               <>
                 University Courses Completed
-                <Asterisk>*</Asterisk>
+                <StyledAsterisk>*</StyledAsterisk>
               </>
             }
             descriptor="Please select the courses you have completed"
@@ -353,14 +353,14 @@ export const CompetitionExperience: FC = () => {
             />
           )}
 
-          <ButtonContainer>
-            <Button onClick={handleBack}>Back</Button>
-            <Button $disabled={isButtonDisabled()} onClick={handleRegister}>
+          <StyledButtonContainer>
+            <StyledButton onClick={handleBack}>Back</StyledButton>
+            <StyledButton $disabled={isButtonDisabled()} onClick={handleRegister}>
               Register
-            </Button>
-          </ButtonContainer>
-        </ContentContainer>
-      </Container>
-    </FlexBackground>
+            </StyledButton>
+          </StyledButtonContainer>
+        </StyledContentContainer>
+      </StyledContainer>
+    </StyledFlexBackground>
   );
 };

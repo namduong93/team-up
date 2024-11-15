@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
 import { AttendeesCardProps } from "./AttendeesCardProps";
-import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
-import { StaffRoles, StandardContainerDiv } from "../../StaffPage/subcomponents/StaffRole";
-import { StandardSpan } from "../../StaffPage/subcomponents/WideStaffCard";
-import { BooleanStatus } from "./BooleanStatus";
+import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
+import { StaffRoles, StyledStandardContainerDiv } from "../../StaffPage/subcomponents/StaffRole";
+import { StyledStandardSpan } from "../../StaffPage/subcomponents/WideStaffCard";
+import { StyledBooleanStatus } from "./BooleanStatus";
 import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar/AttendeesInfoBar";
 
 export const WideAttendeesCard: FC<AttendeesCardProps> = ({
@@ -20,49 +20,49 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({
       attendeesDetails={attendeesDetails}
       isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
     />
-    <WideInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} {...props}>
+    <StyledWideInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} {...props}>
 
-      <UserNameContainerDiv>
-        <UserNameGrid>
-          <UserIcon />
-          <UsernameTextSpan>
+      <StyledUserNameContainerDiv>
+        <StyledUserNameGrid>
+          <StyledUserIcon />
+          <StyledUsernameTextSpan>
             {attendeesDetails.name}
-          </UsernameTextSpan>
-        </UserNameGrid>
-      </UserNameContainerDiv>
+          </StyledUsernameTextSpan>
+        </StyledUserNameGrid>
+      </StyledUserNameContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>{attendeesDetails.sex}</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>{attendeesDetails.sex}</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
       <StaffRoles roles={attendeesDetails.roles} />
 
-      <StandardContainerDiv>
-        <StandardSpan>{attendeesDetails.universityName}</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>{attendeesDetails.universityName}</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <StandardSpan>{attendeesDetails.tshirtSize}</StandardSpan>
-      </StandardContainerDiv>
+      <StyledStandardContainerDiv>
+        <StyledStandardSpan>{attendeesDetails.tshirtSize}</StyledStandardSpan>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <BooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
+      <StyledStandardContainerDiv>
+        <StyledBooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
           {/* {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'} */}
-        </BooleanStatus>
-      </StandardContainerDiv>
+        </StyledBooleanStatus>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <BooleanStatus $toggled={!!attendeesDetails.allergies}>
+      <StyledStandardContainerDiv>
+        <StyledBooleanStatus $toggled={!!attendeesDetails.allergies}>
           {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
-        </BooleanStatus>
-      </StandardContainerDiv>
+        </StyledBooleanStatus>
+      </StyledStandardContainerDiv>
 
-      <StandardContainerDiv>
-        <BooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
+      <StyledStandardContainerDiv>
+        <StyledBooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
             {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
-        </BooleanStatus>
-      </StandardContainerDiv>
+        </StyledBooleanStatus>
+      </StyledStandardContainerDiv>
 
-    </WideInfoContainerDiv>
+    </StyledWideInfoContainerDiv>
   </>)
 }

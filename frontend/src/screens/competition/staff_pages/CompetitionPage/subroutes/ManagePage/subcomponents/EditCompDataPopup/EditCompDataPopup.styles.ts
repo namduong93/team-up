@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const ModalOverlay = styled.div`
+export const StyledModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@ export const ModalOverlay = styled.div`
   z-index: 5;
 `;
 
-export const Modal = styled.div`
+export const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -34,7 +34,7 @@ export const Modal = styled.div`
   height: 80%;
 `;
 
-export const CloseButton = styled.button`
+export const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -50,7 +50,7 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const ButtonContainer = styled.div`
+export const StyledButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,7 +58,7 @@ export const ButtonContainer = styled.div`
   width: 100%;
 `;
 
-export const Button = styled.button`
+export const StyledButton = styled.button`
   max-width: 150px;
   min-width: 100px;
   width: 50%;
@@ -86,14 +86,14 @@ export const Button = styled.button`
   }
 `;
 
-export const Label = styled.label`
+export const StyledLabel = styled.label`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const RowContainer2 = styled.div`
+export const StyledRowContainer2 = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: start;
@@ -104,7 +104,7 @@ export const RowContainer2 = styled.div`
   width: 95%;
 `;
 
-export const Title2 = styled.h2`
+export const StyledTitle2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;
   font-size: 22px;
@@ -113,14 +113,14 @@ export const Title2 = styled.h2`
   text-align: center;
 `;
 
-export const Descriptor = styled.div`
+export const StyledDescriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colours.filterText};
   width: 100%;
 `;
 
-export const LocationList = styled.div`
+export const StyledLocationList = styled.div`
   display: grid;
   width: 65%;
   grid-template-columns: 1fr 1fr auto;
@@ -128,13 +128,13 @@ export const LocationList = styled.div`
   gap: 25px;
 `;
 
-export const LocationItem = styled.div`
+export const StyledLocationItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center;
 `;
 
-export const DeleteIcon = styled.span`
+export const StyledDeleteIcon = styled.span`
   cursor: pointer;
   font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
@@ -145,7 +145,7 @@ export const DeleteIcon = styled.span`
   }
 `;
 
-export const EditorContainer = styled.div`
+export const StyledEditorContainer = styled.div`
   position: relative;
   width: 100%;
   max-height: 800px;

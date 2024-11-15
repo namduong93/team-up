@@ -3,14 +3,14 @@ import { CompetitionInformation } from "../../../../../../../../../shared_types/
 import { useLocation } from "react-router-dom";
 import { dateToUTC, formatDate } from "../../../../../creation/util/formatDate";
 import { useTheme } from "styled-components";
-import { ButtonContainer, CloseButton, DeleteIcon, Descriptor, EditorContainer, Label, LocationItem, LocationList, Modal, ModalOverlay, RowContainer2, Title2 } from "./EditCompDataPopup.styles";
+import { StyledButtonContainer, StyledCloseButton, StyledDeleteIcon, StyledDescriptor, StyledEditorContainer, StyledLabel, StyledLocationItem, StyledLocationList, StyledModal, StyledModalOverlay, StyledRowContainer2, StyledTitle2 } from "./EditCompDataPopup.styles";
 import { FaSave, FaTimes } from "react-icons/fa";
 import ReactMarkdownEditorLite from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 // import MarkdownIt from "markdown-it";
 import { defaultCompInformation } from "../../../../../../register/RegisterForm/subroutes/CompInformation/CompInformation";
 import TextInput from "../../../../../../../../components/general_utility/TextInput";
-import { DoubleInputContainer } from "../../../../../creation/CompDataInput/CompDataInput.styles";
+import { StyledDoubleInputContainer } from "../../../../../creation/CompDataInput/CompDataInput.styles";
 import TextInputLight from "../../../../../../../../components/general_utility/TextInputLight";
 import SiteLocationForm from "../../../../../creation/CompDataInput/subcomponents/SiteLocationDataInput/SiteLocationForm";
 import { TransparentResponsiveButton } from "../../../../../../../../components/responsive_fields/ResponsiveButton";
@@ -238,23 +238,23 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
   const theme = useTheme();
 
   return (
-    <ModalOverlay>
-      <Modal>
-        <CloseButton onClick={onClose}>
+    <StyledModalOverlay>
+      <StyledModal>
+        <StyledCloseButton onClick={onClose}>
           <FaTimes />
-        </CloseButton>
+        </StyledCloseButton>
 
-        <Title2>Edit Competition Details</Title2>
+        <StyledTitle2>Edit Competition Details</StyledTitle2>
 
         <div></div>
-        <RowContainer2>
+        <StyledRowContainer2>
           <div
             style={{
               textAlign: "left",
             }}
           >
-            <Label>Competition Information</Label>
-            <EditorContainer>
+            <StyledLabel>Competition Information</StyledLabel>
+            <StyledEditorContainer>
               <ReactMarkdownEditorLite
                 value={competitionInfo.information !== null ? competitionInfo.information : defaultCompInformation}
                 onChange={({ text }) => handleMarkdownChange(text)}
@@ -281,7 +281,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                   ],
                 }}
               />
-            </EditorContainer>
+            </StyledEditorContainer>
           </div>
 
           <div
@@ -310,9 +310,9 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
               descriptor="Please specify the region your Competition will be held in"
             />
 
-            <Label>Competition Start</Label>
+            <StyledLabel>Competition Start</StyledLabel>
 
-            <DoubleInputContainer>
+            <StyledDoubleInputContainer>
               <TextInputLight
                 label="Date and Time (UTC Timezone)"
                 placeholder="dd/mm/yyyy"
@@ -323,16 +323,16 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 width="45%"
               />
 
-            </DoubleInputContainer>
+            </StyledDoubleInputContainer>
 
             {competitionInfo.earlyRegDeadline && (
               <>
-                <Label>Early Bird Registration Deadline</Label>
-                <Descriptor>
+                <StyledLabel>Early Bird Registration Deadline</StyledLabel>
+                <StyledDescriptor>
                   Please set the Date and Time of your Early Bird Registration
                   Deadline
-                </Descriptor>
-                <DoubleInputContainer>
+                </StyledDescriptor>
+                <StyledDoubleInputContainer>
                   <TextInputLight
                     label="Date and Time (UTC Timezone)"
                     placeholder="dd/mm/yyyy"
@@ -342,16 +342,16 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                     onChange={(e) => setEarlyRegInput(new Date(e.target.value))}
                     width="45%"
                   />
-                </DoubleInputContainer>
+                </StyledDoubleInputContainer>
               </>
             )}
 
-            <Label>General Registration Deadline</Label>
-            <Descriptor>
+            <StyledLabel>General Registration Deadline</StyledLabel>
+            <StyledDescriptor>
               Please set the Date and Time of your General Registration Deadline
-            </Descriptor>
+            </StyledDescriptor>
 
-            <DoubleInputContainer>
+            <StyledDoubleInputContainer>
               <TextInputLight
                 label="Date and Time (UTC Timezone)"
                 placeholder="dd/mm/yyyy"
@@ -362,7 +362,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 width="45%"
               />
 
-            </DoubleInputContainer>
+            </StyledDoubleInputContainer>
 
             <TextInput
               label="Competition Code"
@@ -385,25 +385,25 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
               </div>
             )}
 
-            <LocationList>
+            <StyledLocationList>
               {optionDisplayList.map((displayObject, index) => {
                 return (
-                  <LocationItem key={`${displayObject.value}${index}${displayObject.defaultSite}`}>
+                  <StyledLocationItem key={`${displayObject.value}${index}${displayObject.defaultSite}`}>
                     <div>{displayObject.label}</div>
                     <div>{displayObject.defaultSite}</div>
-                    <DeleteIcon
+                    <StyledDeleteIcon
                       onClick={() => handleDeleteSiteLocation(displayObject)}
                     >
                       x
-                    </DeleteIcon>
-                  </LocationItem>
+                    </StyledDeleteIcon>
+                  </StyledLocationItem>
                 );
               })}
-            </LocationList>
+            </StyledLocationList>
           </div>
-        </RowContainer2>
+        </StyledRowContainer2>
 
-        <ButtonContainer>
+        <StyledButtonContainer>
           <TransparentResponsiveButton
             style={{ height: '33px', backgroundColor: theme.colours.primaryLight, maxWidth: '160px' }}
             icon={<FaSave />}
@@ -412,8 +412,8 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
             // question="Are you sure you want to change your competition details?"
             onClick={handleSubmit}
           />
-        </ButtonContainer>
-      </Modal>
-    </ModalOverlay>
+        </StyledButtonContainer>
+      </StyledModal>
+    </StyledModalOverlay>
   );
 };

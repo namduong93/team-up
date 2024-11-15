@@ -4,7 +4,7 @@ import { DragEndEvent } from "../../TeamDisplay";
 import { ButtonConfiguration } from "../../../../hooks/useCompetitionOutletContext";
 import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
 import { FC, useState } from "react";
-import { CardHeaderDiv, RedTeamNameAlert, StyledHoverDiv, TeamLevelDiv, TeamMatesContainerDiv, TeamMemberMotionDiv, TeamNameApprovalDiv, TitleSpan } from "./TeamCard.styles";
+import { StyledCardHeaderDiv, StyledRedTeamNameAlert, StyledHoverDiv, StyledTeamLevelDiv, StyledTeamMatesContainerDiv, StyledTeamMemberMotionDiv, StyledTeamNameApprovalDiv, StyledTitleSpan } from "./TeamCard.styles";
 import { TeamCardMember } from "./subcomponents/TeamCardMember/TeamCardMember";
 import { ApproveRadio } from "./subcomponents/ApproveRadio/ApproveRadio";
 import { ApproveNameRadios } from "./subcomponents/ApproveNameRadios/ApproveNameRadios";
@@ -108,17 +108,17 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
     >
       {!isEditNameThisCard &&
       <>
-        <CardHeaderDiv $statusColor={colorMap[status]}>
-          <TitleSpan>{teamDetails.teamName}</TitleSpan>
-          {!teamDetails.teamNameApproved && <RedTeamNameAlert />}
-          <TeamLevelDiv $levelChar={levelChar} >
+        <StyledCardHeaderDiv $statusColor={colorMap[status]}>
+          <StyledTitleSpan>{teamDetails.teamName}</StyledTitleSpan>
+          {!teamDetails.teamNameApproved && <StyledRedTeamNameAlert />}
+          <StyledTeamLevelDiv $levelChar={levelChar} >
             <span>{levelChar}</span>
-          </TeamLevelDiv>
-        </CardHeaderDiv>
+          </StyledTeamLevelDiv>
+        </StyledCardHeaderDiv>
     
-          <TeamMatesContainerDiv>
+          <StyledTeamMatesContainerDiv>
             {teamDetails.students.map((member, index) => (
-              <TeamMemberMotionDiv
+              <StyledTeamMemberMotionDiv
                 key={`${member.userId}`}
                 layoutId={`${member.userId}`}
                 layout
@@ -138,7 +138,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
                 onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
               >
                 <TeamCardMember memberName={member.name} level={member.level} />
-              </TeamMemberMotionDiv>
+              </StyledTeamMemberMotionDiv>
             ))}
           
             {isEditThisCard &&
@@ -147,18 +147,18 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
               </ApproveRadio>
             }
   
-        </TeamMatesContainerDiv>
+        </StyledTeamMatesContainerDiv>
     </>}
 
     {isEditNameThisCard &&
-      <TeamNameApprovalDiv>
-        <TitleSpan style={{ margin: '0', marginBottom: '20px' }}>{teamDetails.teamName}</TitleSpan>
+      <StyledTeamNameApprovalDiv>
+        <StyledTitleSpan style={{ margin: '0', marginBottom: '20px' }}>{teamDetails.teamName}</StyledTitleSpan>
         <ApproveNameRadios
           setTeamIds={setTeamIds}
           setRejectedTeamIds={setRejectedTeamIds}
           teamId={teamDetails.teamId}
         />
-      </TeamNameApprovalDiv>
+      </StyledTeamNameApprovalDiv>
     }
     </StyledHoverDiv>
     </>

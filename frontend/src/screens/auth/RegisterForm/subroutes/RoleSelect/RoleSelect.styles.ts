@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const FormContainer = styled.form`
+export const StyledFormContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9,11 +9,11 @@ export const FormContainer = styled.form`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const Title = styled.h1`
+export const StyledTitle = styled.h1`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-export const Button = styled.button`
+export const StyledButton = styled.button`
   max-width: 150px;
   width: 25%;
   height: 35px;
@@ -35,7 +35,7 @@ export const RoleContainer = styled.div`
   width: 100%;
 `;
 
-export const StudentButton = styled.button<{ isSelected: boolean }>`
+export const StyledStudentButton = styled.button<{ isSelected: boolean }>`
   border: ${({ theme, isSelected }) => (isSelected ? `2px solid ${theme.colours.confirmDark}` : 'none')}; // Border logic for Student
   border-radius: 10px;
   margin: 0 0 2.5% 2.5%;
@@ -50,7 +50,7 @@ export const StudentButton = styled.button<{ isSelected: boolean }>`
   color: ${({ theme }) => theme.roles.participantText};
 `;
 
-export const StaffButton = styled.button<{ isSelected: boolean }>`
+export const StyledStaffButton = styled.button<{ isSelected: boolean }>`
   border: ${({ theme, isSelected }) => (isSelected ? `1.5px solid ${theme.colours.cancelDark}` : 'none')}; // Border logic for Staff
   border-radius: 10px;
   margin: 0 0 2.5% 2.5%;

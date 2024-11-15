@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { ActionCardProps } from "./StaffActionCardTypes";
 
-export const StandardContainerDiv = styled.div`
+export const StyledStandardContainerDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   width: 100%;
@@ -11,7 +11,7 @@ export const StandardContainerDiv = styled.div`
   box-sizing: border-box;
 `;
 
-export const ActionsContainer = styled.div`
+export const StyledActionsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   width: 100%;
@@ -21,7 +21,7 @@ export const ActionsContainer = styled.div`
   justify-content: flex-start;
 `;
 
-export const ActionCard = styled.button<ActionCardProps>`
+export const StyledActionCard = styled.button<ActionCardProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,19 +47,19 @@ export const ActionCard = styled.button<ActionCardProps>`
   }
 `;
 
-export const CardIcon = styled.div`
+export const StyledCardIcon = styled.div`
   font-size: 1.5rem;
   margin-bottom: 10px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const CardText = styled.p`
+export const StyledCardText = styled.p`
   font-size: 1.5rem;
   color: ${({ theme }) => theme.fonts.colour};
   margin: 0;
 `;
 
-export const BackButton = styled.button`
+export const StyledBackButton = styled.button`
   color: ${({ theme }) => theme.colours.primaryDark};
   cursor: pointer;
   background: none;
@@ -76,7 +76,7 @@ export const BackButton = styled.button`
   }
 `;
 
-export const AssignSeatsPage = styled.div`
+export const StyledAssignSeatsPage = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,12 +85,12 @@ export const AssignSeatsPage = styled.div`
   overflow: hidden;
 `;
 
-export const ManageContainer = styled.div`
+export const StyledManageContainer = styled.div`
   width: 100%;
   height: 70%;
 `;
 
-export const Code = styled.div`
+export const StyledCode = styled.div`
   font-size: 1rem;
   font-style: ${({ theme }) => theme.fonts.style};
   color: ${({ theme }) => theme.fonts.descriptor};
@@ -107,7 +107,7 @@ export const Code = styled.div`
   align-items: center;
   margin-top: 10px;
 `;
-export const CopyCard = styled.div`
+export const StyledCopyCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -118,7 +118,7 @@ export const CopyCard = styled.div`
   box-sizing: border-box;
   padding: 5px;
 `;
-export const Heading = styled.h2`
+export const StyledHeading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};
@@ -126,7 +126,7 @@ export const Heading = styled.h2`
   word-break: break-word;
 `;
 
-export const CodeCardText = styled(CardText)`
+export const StyledCodeCardText = styled(StyledCardText)`
   font-size: 1.25rem;
 `;
 
@@ -138,7 +138,7 @@ export const CodeCardText = styled(CardText)`
 //   word-break: break-word;
 // `;
 
-export const Title2 = styled.h2`
+export const StyledTitle2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;
   font-size: 22px;

@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const ModalOverlay = styled.div`
+export const StyledModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-export const Modal = styled.div`
+export const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -32,7 +32,7 @@ export const Modal = styled.div`
   align-items: center;
 `;
 
-export const CloseButton = styled.button`
+export const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -48,7 +48,7 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const Button = styled.button<{ disabled?: boolean }>`
+export const StyledButton = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
   min-width: 100px;
   width: 50%;
@@ -90,7 +90,7 @@ export const StyledTextarea = styled.textarea<{ $height: string }>`
   box-sizing: border-box;
 `;
 
-export const Container = styled.div`
+export const StyledContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -100,28 +100,28 @@ export const Container = styled.div`
   box-sizing: border-box;
 `;
 
-export const ContentField = styled.div`
+export const StyledContentField = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
   width: 100%;
 `;
 
-export const ContentMarkdown = styled(ContentField)`
+export const StyledContentMarkdown = styled(StyledContentField)`
   flex: 2;
 `;
 
-export const ContentBio = styled(ContentField)`
+export const StyledContentBio = styled(StyledContentField)`
   flex: 1;
 `;
 
-export const View = styled.div`
+export const StyledView = styled.div`
   width: 100%;
   height: 625px;
   overflow: hidden;
 `;
 
-export const EditorContainer = styled.div`
+export const StyledEditorContainer = styled.div`
   position: relative;
   width: 100%;
   max-height: 400px;

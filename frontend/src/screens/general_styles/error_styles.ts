@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ErrorMessage = styled.p`
+export const StyledErrorMessage = styled.p`
   color: ${({ theme }) => theme.colours.error};
   font-size: 14px;
   font-family: ${({ theme }) => theme.fonts.colour};

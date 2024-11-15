@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const BooleanStatus = styled.div<{ $toggled: boolean }>`
+export const StyledBooleanStatus = styled.div<{ $toggled: boolean }>`
   width: 80%;
   height: 50%;
   min-height: 25px;

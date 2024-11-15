@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 import Fuse from "fuse.js";
 import { AttendeesDetails } from "../../../../../../../shared_types/Competition/staff/AttendeesDetails";
-import { FilterTagButton, RemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
-import { FlexBackground } from "../../../../../../components/general_utility/Background";
-import { NarrowDisplayDiv, WideDisplayDiv } from "../StudentsPage/StudentsPage.styles";
+import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../StudentsPage/StudentsPage.styles";
 import { NarrowAttendeesCard } from "./subcomponents/NarrowAttendeesCard";
 import { WideAttendeesHeader } from "./subcomponents/WideAttendeesHeader";
 import { WideAttendeesCard } from "./subcomponents/WideAttendeesCard";
@@ -70,20 +70,20 @@ export const AttendeesDisplay: FC = () => {
     <div>
       {Object.entries(filters).map(([field, values]) =>
         values.map((value) => (
-        <FilterTagButton key={`${field}-${value}`}>
+        <StyledFilterTagButton key={`${field}-${value}`}>
           {value} 
-          <RemoveFilterIcon
+          <StyledRemoveFilterIcon
             onClick={(e) => {
             e.stopPropagation();
             removeFilter(field, value);
             }} 
           />
-        </FilterTagButton>
+        </StyledFilterTagButton>
         ))
       )}
     </div>
-    <FlexBackground>
-      <NarrowDisplayDiv>
+    <StyledFlexBackground>
+      <StyledNarrowDisplayDiv>
         {searchedAttendees.map(({ item: attendeesDetails }, index) => {
           return (
             <NarrowAttendeesCard
@@ -93,9 +93,9 @@ export const AttendeesDisplay: FC = () => {
             />
           );
         })}
-      </NarrowDisplayDiv>
+      </StyledNarrowDisplayDiv>
 
-      <WideDisplayDiv>
+      <StyledWideDisplayDiv>
         <WideAttendeesHeader />
         {searchedAttendees.map(({ item: attendeesDetails }, index) => {
           return (
@@ -107,8 +107,8 @@ export const AttendeesDisplay: FC = () => {
           );
         })}
 
-      </WideDisplayDiv>
-    </FlexBackground>
+      </StyledWideDisplayDiv>
+    </StyledFlexBackground>
     </>
   )
 };

@@ -2,8 +2,8 @@ import { FC } from "react";
 import { StaffAccessCardProps } from "../StaffAccounts";
 import { UserAccess } from "../../../../shared_types/User/User";
 import { sendRequest } from "../../../utility/request";
-import { Field, StudentInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/subcomponents/StudentInfoCard";
-import { NarrowStatusDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/StaffPage.styles";
+import { Field, StyledStudentInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/subcomponents/StudentInfoCard";
+import { StyledNarrowStatusDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/StaffPage.styles";
 import { AccessDropdown } from "./AccessDropdown";
 
 export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
@@ -30,24 +30,24 @@ export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
   };
 
   return (
-    <StudentInfoContainerDiv {...props}>
+    <StyledStudentInfoContainerDiv {...props}>
       <Field label="Full Name" value={staffDetails.name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Affiliation" value={staffDetails.universityName} style={{ width: '20%', minWidth: '170px', whiteSpace: 'break-spaces' }} />
       <Field
         label="Access"
         value={
-          <NarrowStatusDiv>
+          <StyledNarrowStatusDiv>
             <AccessDropdown
               staffId={staffDetails.userId}
               currentAccess={staffDetails.userAccess}
               onChange={(newAccess) => handleAccessChange(staffDetails.userId, newAccess)}
             />
-          </NarrowStatusDiv>
+          </StyledNarrowStatusDiv>
         }
         style={{ width: '20%', minWidth: '125px' }}
       />
       <Field label="Email" value={staffDetails.email} style={{ width: '25%', minWidth: '170px' }} />
       <div style={{ display: 'flex' }}></div>
-    </StudentInfoContainerDiv>
+    </StyledStudentInfoContainerDiv>
   );
 };

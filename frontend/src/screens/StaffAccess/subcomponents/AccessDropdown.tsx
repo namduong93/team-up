@@ -50,7 +50,7 @@ const StyledDropdown = styled.select<{ $access: UserAccess }>`
   }
 `;
 
-const Option = styled.option<{ $access: UserAccess }>`
+const StyledOption = styled.option<{ $access: UserAccess }>`
   color: ${({ theme, $access }) =>
     $access === UserAccess.Accepted
       ? theme.access.acceptedText
@@ -80,15 +80,15 @@ export const AccessDropdown: FC<AccessDropdownProps> = ({ staffId, currentAccess
 
   return (
     <StyledDropdown $access={selectedAccess} value={selectedAccess} onChange={handleChange}>
-      <Option $access={UserAccess.Accepted} value={UserAccess.Accepted}>
+      <StyledOption $access={UserAccess.Accepted} value={UserAccess.Accepted}>
         Accepted
-      </Option>
-      <Option $access={UserAccess.Pending} value={UserAccess.Pending}>
+      </StyledOption>
+      <StyledOption $access={UserAccess.Pending} value={UserAccess.Pending}>
         Pending
-      </Option>
-      <Option $access={UserAccess.Rejected} value={UserAccess.Rejected}>
+      </StyledOption>
+      <StyledOption $access={UserAccess.Rejected} value={UserAccess.Rejected}>
         Rejected
-      </Option>
+      </StyledOption>
     </StyledDropdown>
   );
 };

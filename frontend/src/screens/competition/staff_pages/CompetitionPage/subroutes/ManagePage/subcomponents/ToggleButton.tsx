@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 // Styled component for the container
-const ToggleContainer = styled.div<{ $isOn: boolean }>`
+const StyledToggleContainer = styled.div<{ $isOn: boolean }>`
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -17,7 +17,7 @@ const ToggleContainer = styled.div<{ $isOn: boolean }>`
 `;
 
 // Styled component for the circle
-const ToggleCircle = styled.div<{ $isOn: boolean }>`
+const StyledToggleCircle = styled.div<{ $isOn: boolean }>`
   width: 20px;
   height: 20px;
   background-color: white;
@@ -36,8 +36,8 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
   onToggle,
 }) => {
   return (
-    <ToggleContainer $isOn={isOn} onClick={onToggle}>
-      <ToggleCircle $isOn={isOn} />
-    </ToggleContainer>
+    <StyledToggleContainer $isOn={isOn} onClick={onToggle}>
+      <StyledToggleCircle $isOn={isOn} />
+    </StyledToggleContainer>
   );
 };

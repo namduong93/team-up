@@ -1,8 +1,8 @@
 import { FaTimes } from "react-icons/fa";
 import { styled } from "styled-components";
-import { CancelButton, ConfirmButton } from "../../../../components/responsive_fields/action_buttons/ActionButton";
+import { StyledCancelButton, StyledConfirmButton } from "../../../../components/responsive_fields/action_buttons/ActionButton";
 
-const Modal = styled.div`
+const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   min-width: 290px;
@@ -22,7 +22,7 @@ const Modal = styled.div`
   align-items: center;
 `;
 
-const CloseButton = styled.button`
+const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -39,7 +39,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const ButtonContainer = styled.div`
+const StyledButtonContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-around;
@@ -60,17 +60,17 @@ export const SecondStepPopUp: React.FC<SecondStepPopUpProps> = ({
 }) => {
   return (
     <>
-      <Modal>
-        <CloseButton onClick={onClose}>
+      <StyledModal>
+        <StyledCloseButton onClick={onClose}>
           <FaTimes />
-        </CloseButton>
+        </StyledCloseButton>
         <div>{heading}</div>
 
-        <ButtonContainer>
-          <ConfirmButton onClick={onNext}>Yes</ConfirmButton>
-          <CancelButton onClick={onClose}>No</CancelButton>
-        </ButtonContainer>
-      </Modal>
+        <StyledButtonContainer>
+          <StyledConfirmButton onClick={onNext}>Yes</StyledConfirmButton>
+          <StyledCancelButton onClick={onClose}>No</StyledCancelButton>
+        </StyledButtonContainer>
+      </StyledModal>
     </>
   );
 };

@@ -4,9 +4,9 @@ import { StaffAccess } from "../../../../../../../shared_types/Competition/staff
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 import { FC, useEffect } from "react";
 import Fuse from "fuse.js";
-import { FilterTagButton, RemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
-import { FlexBackground } from "../../../../../../components/general_utility/Background";
-import { NarrowDisplayDiv, WideDisplayDiv } from "../StudentsPage/StudentsPage.styles";
+import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../StudentsPage/StudentsPage.styles";
 import { NarrowStaffCard } from "./subcomponents/NarrowStaffCard";
 import { WideStaffHeader } from "./subcomponents/WideStaffHeader";
 import { WideStaffCard } from "./subcomponents/WideStaffCard";
@@ -86,28 +86,28 @@ export const StaffDisplay: FC = () => {
     <div>
       {Object.entries(filters).map(([field, values]) =>
         values.map((value) => (
-        <FilterTagButton key={`${field}-${value}`}>
+        <StyledFilterTagButton key={`${field}-${value}`}>
           {value} 
-          <RemoveFilterIcon
+          <StyledRemoveFilterIcon
             onClick={(e) => {
             e.stopPropagation();
             removeFilter(field, value);
             }} 
           />
-        </FilterTagButton>
+        </StyledFilterTagButton>
         ))
       )}
     </div>
-    <FlexBackground>
-      <NarrowDisplayDiv>
+    <StyledFlexBackground>
+      <StyledNarrowDisplayDiv>
         {searchedStaff.map(({ item: staffDetails }, index) => {
           return (
             <NarrowStaffCard key={`${staffDetails.email}${index}`} staffDetails={staffDetails} staffListState={[staffList, setStaffList]} />
           );
         })}
-      </NarrowDisplayDiv>
+      </StyledNarrowDisplayDiv>
 
-      <WideDisplayDiv>
+      <StyledWideDisplayDiv>
         <WideStaffHeader />
         {searchedStaff.map(({ item: staffDetails }, index) => {
           return (
@@ -115,8 +115,8 @@ export const StaffDisplay: FC = () => {
           );
         })}
 
-      </WideDisplayDiv>
-    </FlexBackground>
+      </StyledWideDisplayDiv>
+    </StyledFlexBackground>
     </>
   )
 };

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { SortButton } from "../../../../../components/responsive_fields/ResponsiveButton";
+import { StyledSortButton } from "../../../../../components/responsive_fields/ResponsiveButton";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 
@@ -11,7 +11,7 @@ interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonEleme
 
 export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon, label, style, isOpen, ...props }) => {
   return (
-    <SortButton onClick={onClick} style={{
+    <StyledSortButton onClick={onClick} style={{
       height: '100%',
       width: '100%',
       overflow: 'hidden',
@@ -26,11 +26,11 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon,
         </div>
         <span>{label}</span>
       </div>
-    </SortButton>
+    </StyledSortButton>
   )
 }
 
-const SearchContainer = styled.div`
+const StyledSearchContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -40,7 +40,7 @@ const SearchContainer = styled.div`
   color: ${({ theme }) => theme.colours.filterText};
 `;
 
-const SearchInput = styled.input`
+const StyledSearchInput = styled.input`
   height: 100%;
   width: 100%;
   min-width: 29px;
@@ -58,12 +58,12 @@ const SearchInput = styled.input`
   }
 `;
 
-const SearchIcon = styled(FaSearch)`
+const StyledSearchIcon = styled(FaSearch)`
   min-width: 29px;
   pointer-events: none;
 `;
 
-const SearchCell = styled.div`
+const StyledSearchCell = styled.div`
   min-width: 29px;
   height: 100%;
   display: flex;
@@ -78,16 +78,16 @@ const SearchCell = styled.div`
 
 export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
   return (
-  <SearchContainer>
-    <SearchInput type="text" value={value} onChange={onChange} {...props} />
-    {!value && <SearchCell>
+  <StyledSearchContainer>
+    <StyledSearchInput type="text" value={value} onChange={onChange} {...props} />
+    {!value && <StyledSearchCell>
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
-          <SearchIcon />
+          <StyledSearchIcon />
         </div>
           <span>Search</span>
       </div>
-    </SearchCell>}
-  </SearchContainer>
+    </StyledSearchCell>}
+  </StyledSearchContainer>
   )
 }

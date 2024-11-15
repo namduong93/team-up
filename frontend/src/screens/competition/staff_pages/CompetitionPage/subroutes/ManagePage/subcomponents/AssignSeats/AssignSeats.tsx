@@ -6,7 +6,7 @@ import { ChangeEvent, FC, ReactNode, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TeamDetails } from "../../../../../../../../../shared_types/Competition/team/TeamDetails";
 import { sendRequest } from "../../../../../../../../utility/request";
-import { Alert, AssignPopupText, AssignSeatsButton, Button, ButtonContainer, CloseButton, CloseButtonContainer, DeleteIcon, DistributeSeats, DownloadButton, Header, InputContainer, InputSection, InputTitleA, InputTitleB, LevelContainer, Levels, ManageContainer, ModalContainer, ModalOverlay, NotifyButton, RoomItem, RoomList, SeatCount, SeatInputSelect, TeamCount, Title } from "./AssignSeats.styles";
+import { StyledAlert, StyledAssignPopupText, StyledAssignSeatsButton, StyledButton, StyledButtonContainer, StyledCloseButton, StyledCloseButtonContainer, StyledDeleteIcon, StyledDistributeSeats, StyledDownloadButton, StyledHeader, StyledInputContainer, StyledInputSection, StyledInputTitleA, StyledInputTitleB, StyledLevelContainer, StyledLevels, StyledManageContainer, StyledModalContainer, StyledModalOverlay, StyledNotifyButton, StyledRoomItem, StyledRoomList, StyledSeatCount, StyledSeatInputSelect, StyledTeamCount, StyledTitle } from "./AssignSeats.styles";
 import { FaBell, FaChair, FaDownload, FaTimes } from "react-icons/fa";
 import RadioButton from "../../../../../../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../../../../../../components/general_utility/DescriptiveTextInput";
@@ -371,20 +371,20 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
   };
 
   return (
-    <ManageContainer>
-      <Header>
+    <StyledManageContainer>
+      <StyledHeader>
         <div>
-          <Title>Manage Seats for {siteOption.label}</Title>
+          <StyledTitle>Manage Seats for {siteOption.label}</StyledTitle>
           {enoughSeats && 
-            <Alert>Warning! You do not have enough seats for your teams!</Alert>
+            <StyledAlert>Warning! You do not have enough seats for your teams!</StyledAlert>
           }
         </div>
-        <DistributeSeats>
-          <TeamCount $level="Level A">A Teams to Assign: {numATeamsToAssign}</TeamCount>
-          <TeamCount $level="Level B">B Teams to Assign: {numBTeamsToAssign}</TeamCount>
-          <SeatCount>Team Seats Available: {seatCount}</SeatCount>
+        <StyledDistributeSeats>
+          <StyledTeamCount $level="Level A">A Teams to Assign: {numATeamsToAssign}</StyledTeamCount>
+          <StyledTeamCount $level="Level B">B Teams to Assign: {numBTeamsToAssign}</StyledTeamCount>
+          <StyledSeatCount>Team Seats Available: {seatCount}</StyledSeatCount>
           {(seatString.length > 0 || rooms.length > 0) && teamListToAssign.length > 0 && enoughSeats &&
-            <AssignSeatsButton 
+            <StyledAssignSeatsButton 
               actionType="secondary" 
               onClick={distributeSeats} 
               label="Assign Seats" 
@@ -393,11 +393,11 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
               $disabled={!enoughSeats}
             />
           }
-        </DistributeSeats>
-      </Header>
+        </StyledDistributeSeats>
+      </StyledHeader>
 
       {/* Seat Input Type Selection */}
-      <SeatInputSelect>
+      <StyledSeatInputSelect>
         <RadioButton
           label="Select Seat Input Method"
           options={["Text", "Inputs"]}
@@ -425,9 +425,9 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
             required={true}
           />
         }
-      </SeatInputSelect>
+      </StyledSeatInputSelect>
 
-      <InputSection>
+      <StyledInputSection>
         {isTextInput && 
           <DescriptiveTextInput
             descriptor="Please enter all available seat names separated by commas"
@@ -440,10 +440,10 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
         }
 
         {!isTextInput && 
-          <InputContainer>
-            <Levels>
-              <LevelContainer>
-                <InputTitleA>Level A</InputTitleA>
+          <StyledInputContainer>
+            <StyledLevels>
+              <StyledLevelContainer>
+                <StyledInputTitleA>Level A</StyledInputTitleA>
                 <TextInput
                   label="Room Name"
                   placeholder="Bongo"
@@ -462,9 +462,9 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
                   onChange={handleSeatCodesA}
                   width="100%"
                 />
-              </LevelContainer>
-              <LevelContainer>
-                <InputTitleB>Level B</InputTitleB>
+              </StyledLevelContainer>
+              <StyledLevelContainer>
+                <StyledInputTitleB>Level B</StyledInputTitleB>
                 <TextInput
                   label="Room Name"
                   placeholder="Bongo"
@@ -483,61 +483,61 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
                   onChange={handleSeatCodesB}
                   width="100%"
                 />
-              </LevelContainer>
-            </Levels>
+              </StyledLevelContainer>
+            </StyledLevels>
 
-            <Button type="button" onClick={handleAddRoom} disabled={cannotAddRoom()}>
+            <StyledButton type="button" onClick={handleAddRoom} disabled={cannotAddRoom()}>
               Add Room
-            </Button>
+            </StyledButton>
             {error && <div style={{ color: "red" }}>{error}</div>}
 
-            <RoomList>
+            <StyledRoomList>
             {rooms.map((room, index) => (
-              <RoomItem key={index}>
+              <StyledRoomItem key={index}>
                 <span>Room {room.roomName}</span>
                 <span>Level {room.level}</span>
                 <span>{room.numSeats} seats</span>
-                <DeleteIcon onClick={() => handleDeleteRoom(room)}>
+                <StyledDeleteIcon onClick={() => handleDeleteRoom(room)}>
                   <FaTimes />
-                </DeleteIcon>
-              </RoomItem>
+                </StyledDeleteIcon>
+              </StyledRoomItem>
             ))}
-          </RoomList>
-          </InputContainer>
+          </StyledRoomList>
+          </StyledInputContainer>
         }
-      </InputSection>
+      </StyledInputSection>
 
       { seatModalState && (
-        <ModalOverlay>
-          <ModalContainer>
-            <CloseButtonContainer>
-              <CloseButton onClick={() => {
+        <StyledModalOverlay>
+          <StyledModalContainer>
+            <StyledCloseButtonContainer>
+              <StyledCloseButton onClick={() => {
                 setSeatModalState(false);
                 setSeatString("");
               }}>
                 <FaTimes />
-              </CloseButton>
-            </CloseButtonContainer>
-            <AssignPopupText>Seats Assigned Successfully!</AssignPopupText>
-            <ButtonContainer>
-              <DownloadButton 
+              </StyledCloseButton>
+            </StyledCloseButtonContainer>
+            <StyledAssignPopupText>Seats Assigned Successfully!</StyledAssignPopupText>
+            <StyledButtonContainer>
+              <StyledDownloadButton 
                 actionType="primary" 
                 onClick={handleDownload} 
                 label="Download" 
                 isOpen={false} 
                 icon={<FaDownload />}
               />
-              <NotifyButton
+              <StyledNotifyButton
                 actionType="secondary" 
                 onClick={handleNotifyTeams} 
                 label="Notify Teams" 
                 isOpen={false} 
                 icon={<FaBell />}
               />
-            </ButtonContainer>
-          </ModalContainer>
-        </ModalOverlay>
+            </StyledButtonContainer>
+          </StyledModalContainer>
+        </StyledModalOverlay>
       )}
-    </ManageContainer>
+    </StyledManageContainer>
   );
 };

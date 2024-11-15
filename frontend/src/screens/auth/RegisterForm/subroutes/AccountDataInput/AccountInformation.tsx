@@ -1,12 +1,12 @@
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMultiStepRegoForm } from "../../hooks/useMultiStepRegoForm";
-import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { RegoProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { Button, ButtonContainer, Container, ContentContainer, DoubleInputContainer, Title } from "./AccountDataInput.styles";
+import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledDoubleInputContainer, StyledTitle } from "./AccountDataInput.styles";
 import TextInput from "../../../../../components/general_utility/TextInput";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
-import { ErrorMessage } from "../../../../general_styles/error_styles";
+import { StyledErrorMessage } from "../../../../general_styles/error_styles";
 
 export const AccountInformation: FC = () => {
   const navigate = useNavigate();
@@ -69,13 +69,13 @@ export const AccountInformation: FC = () => {
   };
 
   return (
-    <FlexBackground style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+    <StyledFlexBackground style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
       <RegoProgressBar progressNumber={1} />
-      <Container>
-        <ContentContainer>
-          <Title>Account Information</Title>
+      <StyledContainer>
+        <StyledContentContainer>
+          <StyledTitle>Account Information</StyledTitle>
 
-          <DoubleInputContainer>
+          <StyledDoubleInputContainer>
             <TextInput
               label="First Name"
               placeholder="John"
@@ -95,7 +95,7 @@ export const AccountInformation: FC = () => {
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
               width="45%" 
             />
-          </DoubleInputContainer>
+          </StyledDoubleInputContainer>
 
           <TextInput
             label="Preferred Name"
@@ -107,7 +107,7 @@ export const AccountInformation: FC = () => {
             width="100%" 
           />
 
-          <DoubleInputContainer>
+          <StyledDoubleInputContainer>
             <DropdownInput
               label="Gender"
               options={genderOptions}
@@ -126,7 +126,7 @@ export const AccountInformation: FC = () => {
               width="100%" 
             />
             </div>
-          </DoubleInputContainer>
+          </StyledDoubleInputContainer>
 
           {showOtherGenderInput && (
             <TextInput
@@ -170,20 +170,20 @@ export const AccountInformation: FC = () => {
             width="100%" 
           />
 
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {error && <StyledErrorMessage>{error}</StyledErrorMessage>}
 
-          <ButtonContainer>
-            <Button onClick={() => navigate('/roleregistration')}>
+          <StyledButtonContainer>
+            <StyledButton onClick={() => navigate('/roleregistration')}>
               Back
-            </Button>
+            </StyledButton>
 
-            <Button $disabled={isButtonDisabled()} onClick={handleNext}>
+            <StyledButton $disabled={isButtonDisabled()} onClick={handleNext}>
               Next
-            </Button>
-          </ButtonContainer>
-        </ContentContainer>
-      </Container>
-    </FlexBackground>
+            </StyledButton>
+          </StyledButtonContainer>
+        </StyledContentContainer>
+      </StyledContainer>
+    </StyledFlexBackground>
   );
 };
 
