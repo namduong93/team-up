@@ -1,5 +1,7 @@
+import { FC, useState } from "react";
+import { ApproveDiv, RadioCircleDiv } from "../../TeamCard.styles";
 
-const ApproveRadio: FC<React.HTMLAttributes<HTMLDivElement>> = ({ onClick = () => {}, children, ...props }) => {
+export const ApproveRadio: FC<React.HTMLAttributes<HTMLDivElement>> = ({ onClick = () => {}, children, ...props }) => {
   const [selected, setSelected] = useState<boolean>(false);
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     setSelected((prev) => !prev);

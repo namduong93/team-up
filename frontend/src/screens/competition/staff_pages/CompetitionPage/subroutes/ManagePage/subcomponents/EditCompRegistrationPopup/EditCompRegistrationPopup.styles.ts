@@ -1,4 +1,6 @@
-const ModalOverlay = styled.div`
+import { styled } from "styled-components";
+
+export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +13,7 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-const Modal = styled.div`
+export const Modal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -32,7 +34,7 @@ const Modal = styled.div`
   height: 70%; */
 `;
 
-const CloseButton = styled.button`
+export const CloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -48,7 +50,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   max-width: 150px;
   min-width: 100px;
   width: 50%;
@@ -76,20 +78,20 @@ const Button = styled.button`
   }
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const Text = styled.span`
+export const Text = styled.span`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-size: 16px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const RowContainer = styled.div`
+export const RowContainer = styled.div`
   display: grid;
   grid-template-columns: 75% 25%;
   align-items: center;
@@ -100,7 +102,7 @@ const RowContainer = styled.div`
   width: 100%;
 `;
 
-const RowContainer2 = styled.div`
+export const RowContainer2 = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -110,7 +112,7 @@ const RowContainer2 = styled.div`
   margin-bottom: 30px;
   width: 95%;
 `;
-const Input = styled.input`
+export const Input = styled.input`
   padding: 10px 1.5%;
   height: 100%;
   box-sizing: border-box;
@@ -123,7 +125,7 @@ const Input = styled.input`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const Column = styled.div`
+export const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -133,7 +135,7 @@ const Column = styled.div`
   padding: 5px;
 `;
 
-const Title2 = styled.h2`
+export const Title2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;
   font-size: 22px;
@@ -142,7 +144,7 @@ const Title2 = styled.h2`
   text-align: center; // Add this line to center the text
 `;
 
-const FirstDiv = styled.div`
+export const FirstDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;

@@ -1,3 +1,4 @@
+import { Student, TeamDetails } from "../../../../../../../../shared_types/Competition/team/TeamDetails";
 
 export const addStudentToTeam = (
   student: Student,

@@ -1,3 +1,7 @@
+import styled from "styled-components";
+import { FlexBackground } from "../../components/general_utility/Background";
+import { backendURL } from "../../../config/backendURLConfig";
+import { FaEdit } from "react-icons/fa";
 
 export const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
@@ -6,7 +10,7 @@ export const Background = styled(FlexBackground)`
   align-items: center;
 `;
 
-const AccountContainer = styled.div`
+export const AccountContainer = styled.div`
   display: flex;
   margin: 10px;
   width: 100%;
@@ -14,14 +18,14 @@ const AccountContainer = styled.div`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-const CardContainer = styled.div`
+export const CardContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   max-height: 100%;
 `;
 
-const AccountCard = styled.div<{ $isEditing: boolean }>`
+export const AccountCard = styled.div<{ $isEditing: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border: 1.5px solid ${({ theme, $isEditing: isEditing }) => isEditing ? theme.colours.secondaryLight : theme.colours.sidebarBackground };
   border-radius: 20px;
@@ -38,13 +42,13 @@ const AccountCard = styled.div<{ $isEditing: boolean }>`
   box-sizing: border-box;
 `;
 
-const ProfileEditContainer = styled.div`
+export const ProfileEditContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
 `;
 
-const ProfileContainer = styled.div`
+export const ProfileContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,28 +65,28 @@ export const ProfilePic = styled.div<{ $imageUrl: string }>`
   background-position: center;
 `;
 
-const DetailsCard = styled.div`
+export const DetailsCard = styled.div`
   text-align: left;
   padding: 10px;
   box-sizing: border-box;
 `;
 
-const AccountItem = styled.div`
+export const AccountItem = styled.div`
   margin-top: 15px;
   margin-bottom: 15px;
 `;
 
-const Label = styled.label<{ $isEditing: boolean }>`
+export const Label = styled.label<{ $isEditing: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   color: ${({ theme, $isEditing: isEditing }) => isEditing ? theme.colours.secondaryDark : theme.colours.primaryDark };
 `;
 
-const DetailsText = styled.div`
+export const DetailsText = styled.div`
   font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   width: 95%;
   padding: 10px;
   margin-top: 10px;
@@ -95,7 +99,7 @@ const Input = styled.input`
   box-sizing: border-box;
 `;
 
-const Select = styled.select`
+export const Select = styled.select`
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -108,16 +112,16 @@ const Select = styled.select`
   box-sizing: border-box;
 `;
 
-const Option = styled.option``;
+export const Option = styled.option``;
 
-const ActionButtons = styled.div`
+export const ActionButtons = styled.div`
   margin-top: auto;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-const ButtonGroup = styled.div`
+export const ButtonGroup = styled.div`
   display: flex;
   gap: 20px;
 `;
@@ -140,7 +144,7 @@ export const EditIcon = styled(FaEdit)`
   };
 `;
 
-const Button = styled.button<{ type: "confirm" | "cancel" }>`
+export const Button = styled.button<{ type: "confirm" | "cancel" }>`
   padding: 12px 20px;
   border: none;
   box-sizing: border-box;

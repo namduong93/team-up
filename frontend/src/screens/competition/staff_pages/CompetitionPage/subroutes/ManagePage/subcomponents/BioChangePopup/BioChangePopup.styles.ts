@@ -1,4 +1,6 @@
-const ModalOverlay = styled.div`
+import { styled } from "styled-components";
+
+export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -11,7 +13,7 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-const Modal = styled.div`
+export const Modal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -30,7 +32,7 @@ const Modal = styled.div`
   align-items: center;
 `;
 
-const CloseButton = styled.button`
+export const CloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -46,7 +48,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const Button = styled.button<{ disabled?: boolean }>`
+export const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
   min-width: 100px;
   width: 50%;
@@ -74,7 +76,7 @@ const Button = styled.button<{ disabled?: boolean }>`
   }
 `;
 
-const StyledTextarea = styled.textarea<{ $height: string }>`
+export const StyledTextarea = styled.textarea<{ $height: string }>`
   border-radius: 10px;
   box-sizing: border-box;
   resize: vertical;
@@ -88,7 +90,7 @@ const StyledTextarea = styled.textarea<{ $height: string }>`
   box-sizing: border-box;
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -98,28 +100,28 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
-const ContentField = styled.div`
+export const ContentField = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
   width: 100%;
 `;
 
-const ContentMarkdown = styled(ContentField)`
+export const ContentMarkdown = styled(ContentField)`
   flex: 2;
 `;
 
-const ContentBio = styled(ContentField)`
+export const ContentBio = styled(ContentField)`
   flex: 1;
 `;
 
-const View = styled.div`
+export const View = styled.div`
   width: 100%;
   height: 625px;
   overflow: hidden;
 `;
 
-const EditorContainer = styled.div`
+export const EditorContainer = styled.div`
   position: relative;
   width: 100%;
   max-height: 400px;

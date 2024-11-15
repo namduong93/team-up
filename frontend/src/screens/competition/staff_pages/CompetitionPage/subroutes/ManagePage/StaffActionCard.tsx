@@ -1,18 +1,27 @@
+import { FC, SetStateAction, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { StaffInfo } from "../../../../../../../shared_types/Competition/staff/StaffInfo";
+import { CompetitionRole } from "../../../../../../../shared_types/Competition/CompetitionRole";
+import { sendRequest } from "../../../../../../utility/request";
+import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+import { ActionType } from "./StaffActionCardTypes";
+import { FaChair, FaChevronLeft, FaCopy, FaEdit, FaFileSignature } from "react-icons/fa";
+import { Announcement } from "../../../../../../../shared_types/Competition/staff/Announcement";
+import { EditCourse, EditRego } from "../../../../../../../shared_types/Competition/staff/Edit";
+import { CourseCategory } from "../../../../../../../shared_types/University/Course";
+import { CompetitionSiteCapacity } from "../../../../../../../shared_types/Competition/CompetitionSite";
+import { CompetitionInformation } from "../../../../../../../shared_types/Competition/CompetitionDetails";
+import { ActionCard, ActionsContainer, AssignSeatsPage, BackButton, CardIcon, CardText, Code, CodeCardText, CopyCard, ManageContainer, StandardContainerDiv, Title2 } from "./ManagePage.styles";
+import { AssignSeats } from "./subcomponents/AssignSeats/AssignSeats";
+import { BioChangePopUp } from "./subcomponents/BioChangePopup/BioChangePopUp";
+import { EditCompRegoPopUp } from "./subcomponents/EditCompRegistrationPopup/EditCompRegoPopUp";
+import { EditSiteCapacityPopUp } from "./subcomponents/EditSiteCapacityPopup/EditSiteCapacityPopUp";
+import { EditCompDetailsPopUp } from "./subcomponents/EditCompDataPopup/EditCompDetailsPopUp";
 
-type ActionType =
-  | "code"
-  | "competition"
-  | "registration"
-  | "seat"
-  | "contact"
-  | "capacity";
 
 interface StaffActionCardProps {
 }
 
-interface ActionCardProps {
-  $actionType: ActionType;
-}
 
 const defaultAnnouncement = `
 The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.

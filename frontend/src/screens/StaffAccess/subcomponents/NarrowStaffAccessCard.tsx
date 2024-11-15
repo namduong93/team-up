@@ -1,3 +1,10 @@
+import { FC } from "react";
+import { StaffAccessCardProps } from "../StaffAccounts";
+import { UserAccess } from "../../../../shared_types/User/User";
+import { sendRequest } from "../../../utility/request";
+import { Field, StudentInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/subcomponents/StudentInfoCard";
+import { NarrowStatusDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/StaffPage.styles";
+import { AccessDropdown } from "./AccessDropdown";
 
 export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,

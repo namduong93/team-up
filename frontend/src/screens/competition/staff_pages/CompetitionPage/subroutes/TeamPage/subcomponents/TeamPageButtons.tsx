@@ -1,18 +1,20 @@
 import { FC, useState } from "react";
 import { useTheme } from "styled-components";
-import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
-import { FaCheck, FaCross, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
+import { FaCheck, FaRegCheckCircle, FaRunning, FaSave, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
-import { ResponsiveActionButton } from "../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
-import { useParams } from "react-router-dom";
-import { sendRequest } from "../../../../utility/request";
-import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
-import { CompetitionDetails, fetchTeams } from "../../CompetitionPage";
+
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { DownloadButtons } from "../../components/DownloadButtons";
-import { SiteDetails } from "../../../../../shared_types/Competition/CompetitionSite";
-import { TeamStatus } from "../../../../../shared_types/Competition/team/TeamStatus";
+import { TeamDetails } from "../../../../../../../../shared_types/Competition/team/TeamDetails";
+import { CompetitionInformation as CompetitionDetails } from "../../../../../../../../shared_types/Competition/CompetitionDetails";
+import { useParams } from "react-router-dom";
+import { sendRequest } from "../../../../../../../utility/request";
+import { fetchTeams } from "../../../utils/fetchTeams";
+import { TeamStatus } from "../../../../../../../../shared_types/Competition/team/TeamStatus";
+import { SiteDetails } from "../../../../../../../../shared_types/Competition/CompetitionSite";
+import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
+import { ResponsiveActionButton } from "../../../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { DownloadButtons } from "../../../components/DownloadButtons";
 
 export interface PageButtonsProps {
   filtersState: [Record<string, Array<string>>, React.Dispatch<React.SetStateAction<Record<string, string[]>>>];

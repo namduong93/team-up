@@ -1,3 +1,9 @@
+import { useEffect, useState } from "react";
+import { sendRequest } from "../../../../../../../utility/request";
+import { AddButton, AddButtonContainer, Container, DoubleInputContainer, Title } from "./SiteLocationDataInput.styles";
+import { Label } from "../../CompDataInput.styles";
+import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
+import TextInputLight from "../../../../../../../components/general_utility/TextInputLight";
 
 
 // pass the a boolean too and receive on CompDetails

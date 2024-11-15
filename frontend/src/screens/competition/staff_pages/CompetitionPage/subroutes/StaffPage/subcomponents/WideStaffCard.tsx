@@ -1,3 +1,12 @@
+import { FC, useState } from "react";
+import styled from "styled-components";
+import { StaffCardProps } from "./StaffCardProps";
+import { StaffInfoBar } from "../../../components/InfoBar/StaffInfoBar";
+import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
+import { StaffRoles, StandardContainerDiv } from "./StaffRole";
+import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
+import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
+import { StaffAccessLevel } from "../StaffPage.styles";
 
 export const StandardSpan = styled.span``;
 

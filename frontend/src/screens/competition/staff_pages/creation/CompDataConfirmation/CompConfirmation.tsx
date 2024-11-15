@@ -1,3 +1,10 @@
+import { FC, useEffect, useState } from "react";
+import { CompetitionInformation } from "../../../../../../shared_types/Competition/CompetitionDetails";
+import { useLocation, useNavigate } from "react-router-dom";
+import { sendRequest } from "../../../../../utility/request";
+import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { CompCreationProgressBar } from "../../../../../components/progress_bar/ProgressBar";
+import { Button, ButtonContainer, Container, ContentContainer, DoubleInputContainer, HalfText, Label, LocationItem, LocationList, Text, Title } from "./CompDataConfirmation.styles";
 
 interface University {
   id: number;

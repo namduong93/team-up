@@ -1,3 +1,6 @@
+import { FaRegUser } from "react-icons/fa";
+import { styled } from "styled-components";
+
 export const NarrowDisplayDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,7 +65,7 @@ export const UsernameTextSpan = styled.span`
   margin: auto 0 auto 5%;
 `;
 
-const SmallContainerDiv = styled.div`
+export const SmallContainerDiv = styled.div`
   width: 5%;
   height: 100%;
   display: flex;
@@ -70,7 +73,7 @@ const SmallContainerDiv = styled.div`
   white-space: normal;
 `;
 
-const EmailContainerDiv = styled.div<{ $isHeader: boolean }>`
+export const EmailContainerDiv = styled.div<{ $isHeader: boolean }>`
   width: 15%;
   height: 100%;
   display: flex;
@@ -92,7 +95,7 @@ const EmailContainerDiv = styled.div<{ $isHeader: boolean }>`
   }
 `;
 
-const StudentIdContainerDiv = styled.div`
+export const StudentIdContainerDiv = styled.div`
   width: 10%;
   height: 100%;
   display: flex;
@@ -101,7 +104,7 @@ const StudentIdContainerDiv = styled.div`
   overflow: hidden;
 `;
 
-const StatusContainerDiv = styled.div`
+export const StatusContainerDiv = styled.div`
   width: 15%;
   height: 100%;
   display: flex;
@@ -109,7 +112,7 @@ const StatusContainerDiv = styled.div`
   overflow: hidden;
 `;
 
-const TeamNameContainerDiv = styled.div`
+export const TeamNameContainerDiv = styled.div`
   width: 15%;
   height: 100%;
   display: flex;
@@ -118,7 +121,7 @@ const TeamNameContainerDiv = styled.div`
   white-space: normal;
 `;
 
-const UniversityContainerDiv = styled.div`
+export const UniversityContainerDiv = styled.div`
   width: 10%;
   height: 100%;
   display: flex;
@@ -126,7 +129,7 @@ const UniversityContainerDiv = styled.div`
   white-space: normal;
 `;
 
-const EmailSpan = styled.span<{ $isHeader: boolean }>`
+export const EmailSpan = styled.span<{ $isHeader: boolean }>`
   height: 100%;
   background-color: ${({ $isHeader: isHeader, theme }) => isHeader ? 'transparent' : theme.background};
   display: flex;

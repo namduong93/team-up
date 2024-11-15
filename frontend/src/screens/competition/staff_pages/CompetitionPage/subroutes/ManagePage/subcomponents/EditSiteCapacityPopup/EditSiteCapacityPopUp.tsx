@@ -1,5 +1,15 @@
-
-
+import { useParams } from "react-router-dom";
+import { useCompetitionOutletContext } from "../../../../hooks/useCompetitionOutletContext";
+import { useEffect, useState } from "react";
+import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
+import { sendRequest } from "../../../../../../../../utility/request";
+import { CompetitionSiteCapacity } from "../../../../../../../../../shared_types/Competition/CompetitionSite";
+import { Button, CloseButton, Container, Modal, ModalOverlay, View } from "./EditSiteCapacity.styles";
+import { FaTimes } from "react-icons/fa";
+import { Heading } from "../../ManagePage.styles";
+import { Text } from "../EditCompRegistrationPopup/EditCompRegistrationPopup.styles";
+import { AdvancedDropdown } from "../../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { NumberInputLight } from "../../../../../../../../components/general_utility/NumberInputLight";
 
 interface EditSiteCapacityPopUpProps {
   heading: React.ReactNode;

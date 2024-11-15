@@ -1,3 +1,11 @@
+import { CompetitionRole } from "../../../../../../shared_types/Competition/CompetitionRole";
+import { TeamDetails } from "../../../../../../shared_types/Competition/team/TeamDetails";
+import { StudentInfo } from "../../../../../../shared_types/Competition/student/StudentInfo";
+import { AttendeesDetails } from "../../../../../../shared_types/Competition/staff/AttendeesDetails";
+import { StaffInfo } from "../../../../../../shared_types/Competition/staff/StaffInfo";
+import { CompetitionInformation as CompetitionDetails } from "../../../../../../shared_types/Competition/CompetitionDetails";
+import { useOutletContext } from "react-router-dom";
+import { useEffect } from "react";
 
 export interface ButtonConfiguration {
   enableTeamButtons: boolean;

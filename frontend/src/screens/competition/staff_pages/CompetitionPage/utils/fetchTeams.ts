@@ -1,3 +1,6 @@
+import { TeamDetails } from "../../../../../../shared_types/Competition/team/TeamDetails";
+import { sendRequest } from "../../../../../utility/request";
+
 export const fetchTeams = async (
   compId: string | undefined,
   setTeams: React.Dispatch<React.SetStateAction<Array<TeamDetails>>>

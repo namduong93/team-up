@@ -1,4 +1,7 @@
-const ManageContainer = styled.div`
+import { styled } from "styled-components";
+import { TransparentResponsiveButton } from "../../../../../../../../components/responsive_fields/ResponsiveButton";
+
+export const ManageContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -8,26 +11,26 @@ const ManageContainer = styled.div`
   align-items: center;
 `;
 
-const Title = styled.h1`
+export const Title = styled.h1`
   font-size: 1.75rem;
   color: ${({ theme }) => theme.colours.primaryDark};
 `
 
-const Header = styled.div`
+export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   height: 100%;
 `;
 
-const InputSection = styled.div`
+export const InputSection = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
 `;
 
-const SeatCount = styled.span`
+export const SeatCount = styled.span`
   font-size: 1em;
   font-weight: bold;
   color: ${({ theme }) => theme.colours.secondaryDark};
@@ -36,11 +39,11 @@ const SeatCount = styled.span`
   flex: 1;
 `;
 
-const TeamCount = styled(SeatCount)<{ $level: string }>`
+export const TeamCount = styled(SeatCount)<{ $level: string }>`
   color: ${({ theme, $level: level }) => level === "Level A" ? theme.teamView.levelA : theme.teamView.levelB};
 `;
 
-const RoomList = styled.div`
+export const RoomList = styled.div`
   display: grid;
   width: 80%;
   grid-template-columns: 2fr 1fr 1fr auto;
@@ -48,14 +51,14 @@ const RoomList = styled.div`
   margin-top: 20px;
 `;
 
-const RoomItem = styled.div`
+export const RoomItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   width: 120px;
   height: 35px;
   background-color: ${({ theme }) => theme.colours.confirm};
@@ -71,7 +74,7 @@ const Button = styled.button`
   }
 `;
 
-const DeleteIcon = styled.span`
+export const DeleteIcon = styled.span`
   cursor: pointer;
   font-size: 1rem;
   color: ${({ theme }) => theme.colours.error};
@@ -81,13 +84,13 @@ const DeleteIcon = styled.span`
   }
 `;
 
-const InputContainer = styled.div`
+export const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
 `;
 
-const SeatInputSelect = styled.div`
+export const SeatInputSelect = styled.div`
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
@@ -99,7 +102,7 @@ const SeatInputSelect = styled.div`
   margin-top: 10px;
 `;
 
-const AssignSeatsButton = styled(TransparentResponsiveButton)<{ $disabled: boolean }>`
+export const AssignSeatsButton = styled(TransparentResponsiveButton)<{ $disabled: boolean }>`
   background-color: ${({ theme, $disabled: disabled }) => disabled ? theme.colours.sidebarBackground : theme.colours.secondaryLight};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   cursor: ${({ $disabled: disabled }) => disabled ? "not-allowed" : "pointer"}; 
@@ -114,14 +117,14 @@ const AssignSeatsButton = styled(TransparentResponsiveButton)<{ $disabled: boole
   }
 `;
 
-const DistributeSeats = styled.div`
+export const DistributeSeats = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   height: 110px;
 `;
 
-const ModalOverlay = styled.div`
+export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -134,7 +137,7 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
-const ModalContainer = styled.div`
+export const ModalContainer = styled.div`
   background-color: ${({ theme }) => theme.colours.sidebarBackground};
   width: 100%;
   height: 30%;
@@ -145,17 +148,17 @@ const ModalContainer = styled.div`
   box-sizing: border-box;
 `;
 
-const DownloadButton = styled(TransparentResponsiveButton)`
+export const DownloadButton = styled(TransparentResponsiveButton)`
   background-color: ${({ theme }) => theme.colours.primaryLight};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const NotifyButton = styled(TransparentResponsiveButton)`
+export const NotifyButton = styled(TransparentResponsiveButton)`
   background-color: ${({ theme }) => theme.colours.secondaryLight};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -168,7 +171,7 @@ const ButtonContainer = styled.div`
   box-sizing: border-box;
 `;
 
-const CloseButton = styled.button`
+export const CloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -182,14 +185,14 @@ const CloseButton = styled.button`
   }
 `;
 
-const LevelContainer = styled.div`
+export const LevelContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
 `;
 
-const Levels = styled.div`
+export const Levels = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
@@ -197,12 +200,12 @@ const Levels = styled.div`
   gap: 5%;
 `;
 
-const CloseButtonContainer = styled.div`
+export const CloseButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
-const InputTitleA = styled.div`
+export const InputTitleA = styled.div`
   font-size: 1rem;
   background-color: ${({ theme }) => theme.staffActions.contactBorder};
   color: ${({ theme }) => theme.background};
@@ -213,7 +216,7 @@ const InputTitleA = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
-const InputTitleB = styled.div`
+export const InputTitleB = styled.div`
   font-size: 1rem;
   background-color: ${({ theme }) => theme.staffActions.seatBorder};
   color: ${({ theme }) => theme.background};
@@ -224,10 +227,10 @@ const InputTitleB = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
-const AssignPopupText = styled.h2`
+export const AssignPopupText = styled.h2`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const Alert = styled.div`
+export const Alert = styled.div`
   color: ${({ theme }) => theme.colours.error};
 `;

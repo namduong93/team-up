@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { FormState, initialState } from "./FormState";
+import { MultiStepCompRegoFormContext } from "./hooks/useMultiStepCompRegoForm";
 
 export const MultiStepCompRegoFormProvider: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({children}) => {
   const [formData, setFormData] = useState<FormState>(initialState);

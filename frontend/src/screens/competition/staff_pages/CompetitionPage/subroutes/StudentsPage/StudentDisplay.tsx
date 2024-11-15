@@ -1,3 +1,14 @@
+import { useParams } from "react-router-dom";
+import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+import { useTheme } from "styled-components";
+import { useEffect } from "react";
+import Fuse from "fuse.js";
+import { FilterTagButton, RemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import { FlexBackground } from "../../../../../../components/general_utility/Background";
+import { NarrowDisplayDiv, WideDisplayDiv } from "./StudentsPage.styles";
+import { StudentInfo } from "../../../../../../../shared_types/Competition/student/StudentInfo";
+import { StudentInfoCard } from "./subcomponents/StudentInfoCard";
+import { StudentInfoDiv } from "./subcomponents/StudentInfoDiv";
 
 
 const STUDENT_DISPLAY_SORT_OPTIONS = [

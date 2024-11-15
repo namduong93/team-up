@@ -1,3 +1,5 @@
+import { FC } from "react";
+
 interface StudentStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   isMatched: boolean;
 }

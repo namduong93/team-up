@@ -1,15 +1,12 @@
 import { FC, useState } from "react";
-import {
-  NarrowStatusDiv,
-  StaffAccessLevel,
-  StaffCardProps,
-} from "../StaffDisplay";
-import {
-  Field,
-  StudentInfoContainerDiv,
-} from "../../students_page/components/StudentInfoCard";
+import { StaffCardProps } from "./StaffCardProps";
+import { StaffInfoBar } from "../../../components/InfoBar/StaffInfoBar";
+import { Field, StudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
+import { NarrowStatusDiv, StaffAccessLevel } from "../StaffPage.styles";
 import { StaffRoles } from "./StaffRole";
-import { StaffInfoBar } from "../../components/InfoBar/StaffInfoBar";
+import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
+import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
+
 
 export const NarrowStaffCard: FC<StaffCardProps> = ({
   staffDetails,
@@ -40,7 +37,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
             <NarrowStatusDiv>
               <StaffRoles
                 style={{ width: "100%" }}
-                roles={staffDetails.roles}
+                roles={staffDetails.roles as CompetitionRole[]}
               />
             </NarrowStatusDiv>
           }
@@ -59,7 +56,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
           label="Access"
           value={
             <NarrowStatusDiv>
-              <StaffAccessLevel $access={staffDetails.access}>
+              <StaffAccessLevel $access={staffDetails.access as StaffAccess}>
                 {staffDetails.access}
               </StaffAccessLevel>
             </NarrowStatusDiv>

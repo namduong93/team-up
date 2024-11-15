@@ -1,3 +1,14 @@
+import { PanInfo } from "framer-motion";
+import { Student, TeamDetails } from "../../../../../../../../../shared_types/Competition/team/TeamDetails";
+import { DragEndEvent } from "../../TeamDisplay";
+import { ButtonConfiguration } from "../../../../hooks/useCompetitionOutletContext";
+import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
+import { FC, useState } from "react";
+import { TeamInfoBar } from "../../../../components/InfoBar/TeamInfoBar";
+import { CardHeaderDiv, RedTeamNameAlert, StyledHoverDiv, TeamLevelDiv, TeamMatesContainerDiv, TeamMemberMotionDiv, TeamNameApprovalDiv, TitleSpan } from "./TeamCard.styles";
+import { TeamCardMember } from "./subcomponents/TeamCardMember/TeamCardMember";
+import { ApproveRadio } from "./subcomponents/ApproveRadio/ApproveRadio";
+import { ApproveNameRadios } from "./subcomponents/ApproveNameRadios/ApproveNameRadios";
 
 export enum Member {
   name = 0,
@@ -8,7 +19,7 @@ export enum Member {
   isRemote = 5,
 }
 
-const enum RadioOption {
+export const enum RadioOption {
   Neither = 'Neither',
   Check = 'Check',
   Cross = 'Cross',

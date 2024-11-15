@@ -1,3 +1,9 @@
+import { FC } from "react";
+import { Button, CloseButton, Container, ContentBio, ContentMarkdown, EditorContainer, Modal, ModalOverlay, StyledTextarea, View } from "./BioChangePopup.styles";
+import { FaTimes } from "react-icons/fa";
+import { Heading } from "../../ManagePage.styles";
+import ReactMarkdownEditorLite from "react-markdown-editor-lite";
+import MarkdownIt from "markdown-it/index.js";
 
 interface BioChangePopUpProps {
   onClose: () => void;

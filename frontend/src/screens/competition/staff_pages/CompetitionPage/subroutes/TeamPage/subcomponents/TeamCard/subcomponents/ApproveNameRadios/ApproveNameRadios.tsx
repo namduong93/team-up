@@ -1,10 +1,15 @@
+import { FC, useEffect, useState } from "react";
+import { useTheme } from "styled-components";
+import { RadioOption } from "../../TeamCard";
+import { ApprovalNameDiv, RadioCheckIcon, RadioCrossIcon, RadioIconDiv } from "../../TeamCard.styles";
+
 interface ApprovalNameRadiosProps extends React.HTMLAttributes<HTMLDivElement> {
   setTeamIds: React.Dispatch<React.SetStateAction<Array<number>>>;
   setRejectedTeamIds: React.Dispatch<React.SetStateAction<Array<number>>>;
   teamId: number;
 }
 
-const ApproveNameRadios: FC<ApprovalNameRadiosProps> = ({ setTeamIds, setRejectedTeamIds, teamId, ...props }) => {
+export const ApproveNameRadios: FC<ApprovalNameRadiosProps> = ({ setTeamIds, setRejectedTeamIds, teamId, ...props }) => {
   const theme = useTheme();
   
   const [selectedOption, setSelectedOption] = useState<RadioOption>(RadioOption.Neither);

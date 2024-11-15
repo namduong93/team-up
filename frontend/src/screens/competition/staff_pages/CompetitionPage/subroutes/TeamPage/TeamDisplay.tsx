@@ -1,3 +1,21 @@
+import { FC, useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { useTheme } from "styled-components";
+import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+import { Student, TeamDetails } from "../../../../../../../shared_types/Competition/team/TeamDetails";
+import Fuse from "fuse.js";
+import { PanInfo } from "framer-motion";
+import { addStudentToTeam } from "./utility/addStudentToTeam";
+import { fetchTeams } from "../../utils/fetchTeams";
+import { DRAG_ANIMATION_DURATION, TeamCard } from "./subcomponents/TeamCard/TeamCard";
+import { sendRequest } from "../../../../../../utility/request";
+import { Heading, Overlay, TeamCardGridDisplay } from "./TeamPage.styles";
+import { ThirdStepPopUp } from "../../../../../student/subcomponents/popups/ThirdStepPopUp";
+import { FilterTagButton, RemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import { ResponsiveActionButton } from "../../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { FaSave } from "react-icons/fa";
+import { TransparentResponsiveButton } from "../../../../../../components/responsive_fields/ResponsiveButton";
+import { GiCancel } from "react-icons/gi";
 
 export type DragEndEvent = MouseEvent | TouchEvent | PointerEvent;
 

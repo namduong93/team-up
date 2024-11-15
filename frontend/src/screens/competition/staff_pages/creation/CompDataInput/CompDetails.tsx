@@ -1,3 +1,14 @@
+import { FC, ReactNode, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CompetitionInformation } from "../../../../../../shared_types/Competition/CompetitionDetails";
+import { dateToUTC, formatDate } from "../util/formatDate";
+import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { CompCreationProgressBar } from "../../../../../components/progress_bar/ProgressBar";
+import { Asterisk, Button, ButtonContainer, Container, DeleteIcon, Descriptor, DoubleInputContainer, FormContainer, Label, LocationItem, LocationList, Title } from "./CompDataInput.styles";
+import TextInput from "../../../../../components/general_utility/TextInput";
+import TextInputLight from "../../../../../components/general_utility/TextInputLight";
+import RadioButton from "../../../../../components/general_utility/RadioButton";
+import SiteLocationForm from "./subcomponents/SiteLocationDataInput/SiteLocationForm";
 
 
 export interface SiteLocation {
@@ -10,14 +21,14 @@ export interface OtherSiteLocation {
   defaultSite: string;
 }
 
-const createTimezoneOptions = () => {
-  const timezones = moment.tz.names().map((tz) => ({
-    value: tz,
-    label: tz.replace(/_/g, " ").replace(/\/(.+)/, " - $1"), // Format label for better readability
-  }));
+// const createTimezoneOptions = () => {
+//   const timezones = moment.tz.names().map((tz) => ({
+//     value: tz,
+//     label: tz.replace(/_/g, " ").replace(/\/(.+)/, " - $1"), // Format label for better readability
+//   }));
 
-  return [{ value: "", label: "Please Select" }, ...timezones];
-};
+//   return [{ value: "", label: "Please Select" }, ...timezones];
+// };
 
 export const CompetitionDetails: FC = () => {
   const navigate = useNavigate();

@@ -1,3 +1,6 @@
+import { styled } from "styled-components";
+import { StaffAccess } from "../../../../../../../shared_types/Competition/staff/StaffInfo";
+
 export const StaffAccessLevel = styled.div<{ $access: StaffAccess }>`
   width: 80%;
   height: 50%;

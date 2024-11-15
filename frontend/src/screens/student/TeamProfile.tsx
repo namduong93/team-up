@@ -1,20 +1,16 @@
 import { FC, useEffect, useState } from "react";
-import {
-  MainPageDiv,
-  OverflowFlexBackground,
-  PageOptionsContainerDiv,
-  ToggleOptionDiv,
-} from "../competition_staff_page/components/PageUtils";
+
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
 import styled from "styled-components";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
 import { TeamHeader } from "./components/TeamHeader";
 import { sendRequest } from "../../utility/request";
 
-import { WithdrawPopUpChain } from "./components/WithdrawPopUpChain";
 import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
 
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement";
+import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv, ToggleOptionDiv } from "../competition/staff_pages/CompetitionPage/subroutes/CommonSubStyles.styles";
+import { WithdrawPopUpChain } from "./subcomponents/WithdrawPopupChain/WithdrawPopUpChain";
 
 const TeamToggleOptionDiv = styled(ToggleOptionDiv)``;
 

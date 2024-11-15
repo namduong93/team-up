@@ -1,3 +1,8 @@
+import { FaTimes } from "react-icons/fa";
+import { EditCourse, EditRego } from "../../../../../../../../../shared_types/Competition/staff/Edit";
+import { CourseCategory } from "../../../../../../../../../shared_types/University/Course";
+import { Button, CloseButton, Column, FirstDiv, Input, Label, Modal, ModalOverlay, RowContainer, RowContainer2, Text, Title2 } from "./EditCompRegistrationPopup.styles";
+import { ToggleButton } from "../ToggleButton";
 
 interface EditCompRegoPopUpProps {
   heading: React.ReactNode;

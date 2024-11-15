@@ -1,5 +1,8 @@
-const ToggleOptionTextSpan = styled.span``;
+import { styled } from "styled-components";
+import { ToggleOptionDiv } from "./subroutes/CommonSubStyles.styles";
 
-const AdminToggleOptionDiv = styled(ToggleOptionDiv)`
+export const ToggleOptionTextSpan = styled.span``;
+
+export const AdminToggleOptionDiv = styled(ToggleOptionDiv)`
   box-sizing: border-box;
 `;

@@ -1,3 +1,18 @@
+import styled from "styled-components";
+import { FlexBackground } from "../../components/general_utility/Background";
+import { DashInfo } from "./hooks/useDashInfo";
+import { FC, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { sendRequest } from "../../utility/request";
+import { CompetitionGrid, ContentArea, DashboardContent, FilterTagButton, RemoveFilterIcon } from "./Dashboard.styles";
+import { PageHeader } from "../../components/page_header/PageHeader";
+import { ResponsiveActionButton } from "../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { IoIosCreate } from "react-icons/io";
+import { MdAssignmentAdd } from "react-icons/md";
+import { Input } from "../Account/Account.styles";
+import { ErrorMessage } from "../general_styles/error_styles";
+import { CompCard } from "./subcomponents/CompCard";
+import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 
 interface Competition {
   compName: string;

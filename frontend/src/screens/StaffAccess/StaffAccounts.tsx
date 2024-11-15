@@ -1,3 +1,17 @@
+import { FC, useEffect, useState } from "react";
+import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo";
+import { UserAccess } from "../../../shared_types/User/User";
+import { fetchStaffRequests } from "./util/fetchStaffRequests";
+import Fuse from "fuse.js";
+import { sendRequest } from "../../utility/request";
+import { FilterTagContainer, PageBackground, StaffContainer, StaffRecords } from "./StaffAccess.styles";
+import { PageHeader } from "../../components/page_header/PageHeader";
+import { StaffAccessButtons } from "./subcomponents/StaffAccessButtons";
+import { FilterTagButton, RemoveFilterIcon } from "../dashboard/Dashboard.styles";
+import { NarrowDisplayDiv, WideDisplayDiv } from "../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import { NarrowStaffAccessCard } from "./subcomponents/NarrowStaffAccessCard";
+import { WideStaffAccessHeader } from "./subcomponents/WideStaffAccessHeader";
+import { WideStaffAccessCard } from "./subcomponents/WideStaffAccessCard";
 
 export interface StaffAccessCardProps extends React.HTMLAttributes<HTMLDivElement> {
   staffDetails: StaffInfo;

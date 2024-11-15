@@ -1,18 +1,25 @@
 
-// interface User {
-//   role: "student" | "staff";
-//   profilePic: string;
-//   name: string;
-//   preferredName: string;
-//   email: string;
-//   affiliation: string;
-//   gender: "Male" | "Female" | "Other";
-//   pronouns: "She/Her" | "He/Him" | "They/Them" | "Other";
-//   tshirtSize: string;
-//   allergies: string;
-//   dietaryReqs: string;
-//   accessibilityReqs: string;
-// };
+interface User {
+  role: "student" | "staff";
+  profilePic: string;
+  name: string;
+  preferredName: string;
+  email: string;
+  affiliation: string;
+  gender: "Male" | "Female" | "Other";
+  pronouns: "She/Her" | "He/Him" | "They/Them" | "Other";
+  tshirtSize: string;
+  allergies: string;
+  dietaryReqs: string;
+  accessibilityReqs: string;
+};
+
+import { FC, useEffect, useState } from "react";
+import { DashInfo } from "../dashboard/hooks/useDashInfo";
+import { useNavigate } from "react-router-dom";
+import { backendURL } from "../../../config/backendURLConfig";
+import { sendRequest } from "../../utility/request";
+import { AccountCard, AccountContainer, AccountItem, ActionButtons, Background, Button, ButtonGroup, CardContainer, DetailsCard, DetailsText, EditIcon, EditIconButton, Input, Label, Option, ProfileContainer, ProfileEditContainer, ProfilePic, Select } from "./Account.styles";
 
 interface AccountProps {
   setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;

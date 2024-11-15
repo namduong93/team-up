@@ -1,3 +1,18 @@
+import { FC, ReactNode, useEffect, useState } from "react";
+import { CompetitionInformation } from "../../../../../../../../../shared_types/Competition/CompetitionDetails";
+import { useLocation } from "react-router-dom";
+import { dateToUTC, formatDate } from "../../../../../creation/util/formatDate";
+import { useTheme } from "styled-components";
+import { ButtonContainer, CloseButton, DeleteIcon, Descriptor, EditorContainer, Label, LocationItem, LocationList, Modal, ModalOverlay, RowContainer2, Title2 } from "./EditCompDataPopup.styles";
+import { FaSave, FaTimes } from "react-icons/fa";
+import ReactMarkdownEditorLite from "react-markdown-editor-lite";
+import MarkdownIt from "markdown-it/index.js";
+import { defaultCompInformation } from "../../../../../../register/RegisterForm/subroutes/CompInformation/CompInformation";
+import TextInput from "../../../../../../../../components/general_utility/TextInput";
+import { DoubleInputContainer } from "../../../../../creation/CompDataInput/CompDataInput.styles";
+import TextInputLight from "../../../../../../../../components/general_utility/TextInputLight";
+import SiteLocationForm from "../../../../../creation/CompDataInput/subcomponents/SiteLocationDataInput/SiteLocationForm";
+import { TransparentResponsiveButton } from "../../../../../../../../components/responsive_fields/ResponsiveButton";
 
 interface EditCompDetailsProps {
   onClose: () => void;

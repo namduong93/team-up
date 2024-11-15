@@ -1,23 +1,27 @@
-const PageBackground = styled(Background)`
+import styled from "styled-components";
+import { Background } from "../Account/Account.styles";
+import { FlexBackground } from "../../components/general_utility/Background";
+
+export const PageBackground = styled(Background)`
   display: flex;
   flex-direction: column;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
 
-const StaffContainer = styled(FlexBackground)`
+export const StaffContainer = styled(FlexBackground)`
   display: flex;
   flex-direction: column;
   margin-top: 20px;
   box-sizing: border-box;
 `;
 
-const StaffRecords = styled.div`
+export const StaffRecords = styled.div`
   display: flex;
   flex-direction: column;
 
 `;
 
-const FilterTagContainer = styled.div`
+export const FilterTagContainer = styled.div`
   width: 100%;
   height: 40px;
 `;

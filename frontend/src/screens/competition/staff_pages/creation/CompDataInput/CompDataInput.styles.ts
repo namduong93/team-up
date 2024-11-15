@@ -1,12 +1,13 @@
+import { styled } from "styled-components";
 
-const Container = styled.div`
+export const Container = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const FormContainer = styled.form`
+export const FormContainer = styled.form`
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -16,19 +17,19 @@ const FormContainer = styled.form`
   min-width: 200px;
 `;
 
-const Title = styled.h1`
+export const Title = styled.h1`
   margin-bottom: 20px;
   margin-top: 30px;
 `;
 
-const DoubleInputContainer = styled.div`
+export const DoubleInputContainer = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: 0.8%;
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -39,7 +40,7 @@ const Label = styled.label`
   width: 100%;
 `;
 
-const LocationList = styled.div`
+export const LocationList = styled.div`
   display: grid;
   width: 65%;
   grid-template-columns: 1fr 1fr auto;
@@ -47,13 +48,13 @@ const LocationList = styled.div`
   gap: 25px;
 `;
 
-const LocationItem = styled.div`
+export const LocationItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center;
 `;
 
-const DeleteIcon = styled.span`
+export const DeleteIcon = styled.span`
   cursor: pointer;
   font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
@@ -64,7 +65,7 @@ const DeleteIcon = styled.span`
   }
 `;
 
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
@@ -72,7 +73,7 @@ const ButtonContainer = styled.div`
   gap: 90px;
 `;
 
-const Button = styled.button<{ disabled?: boolean }>`
+export const Button = styled.button<{ disabled?: boolean }>`
   max-width: 150px;
   min-width: 70px;
   width: 25%;
@@ -89,12 +90,12 @@ const Button = styled.button<{ disabled?: boolean }>`
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;
-const Descriptor = styled.div`
+export const Descriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colours.filterText};
   width: 100%;
 `;
-const Asterisk = styled.span`
+export const Asterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `;

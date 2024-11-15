@@ -1,3 +1,6 @@
+import { useTheme } from "styled-components";
+import { ResponsiveActionButton } from "../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { FaBan, FaCheckCircle } from "react-icons/fa";
 
 interface StaffAccessButtonsProps {
   onApproveAll: () => Promise<boolean>;

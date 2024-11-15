@@ -1,9 +1,15 @@
-
-export interface StaffCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  staffDetails: StaffInfo;
-  staffListState: [Array<StaffInfo>, React.Dispatch<React.SetStateAction<Array<StaffInfo>>>];
-}
-
+import { useParams } from "react-router-dom";
+import { CompetitionRole } from "../../../../../../../shared_types/Competition/CompetitionRole";
+import { StaffAccess } from "../../../../../../../shared_types/Competition/staff/StaffInfo";
+import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+import { FC, useEffect } from "react";
+import Fuse from "fuse.js";
+import { FilterTagButton, RemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import { FlexBackground } from "../../../../../../components/general_utility/Background";
+import { NarrowDisplayDiv, WideDisplayDiv } from "../StudentsPage/StudentsPage.styles";
+import { NarrowStaffCard } from "./subcomponents/NarrowStaffCard";
+import { WideStaffHeader } from "./subcomponents/WideStaffHeader";
+import { WideStaffCard } from "./subcomponents/WideStaffCard";
 
 
 const STAFF_DISPLAY_SORT_OPTIONS = [

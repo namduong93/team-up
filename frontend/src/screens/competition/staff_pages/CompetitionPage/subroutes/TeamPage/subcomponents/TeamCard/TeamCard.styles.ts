@@ -1,4 +1,11 @@
-const TeamMemberContainerDiv = styled.div`
+import { motion } from "framer-motion";
+import { FaRegUser } from "react-icons/fa";
+import { IoMdCheckmark } from "react-icons/io";
+import { styled } from "styled-components";
+import { CiCircleAlert } from "react-icons/ci";
+import { LiaTimesSolid } from "react-icons/lia";
+
+export const TeamMemberContainerDiv = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
@@ -9,7 +16,7 @@ const TeamMemberContainerDiv = styled.div`
   border-radius: 10px;
 `
 
-const StyledUserIcon = styled(FaRegUser)`
+export const StyledUserIcon = styled(FaRegUser)`
   width: 50%;
   min-width: 18px;
   margin: auto 0 auto 25%;
@@ -17,7 +24,7 @@ const StyledUserIcon = styled(FaRegUser)`
   user-select: none;
 `
 
-const CenterTextDiv = styled.div<{ $levelChar?: string }>`
+export const CenterTextDiv = styled.div<{ $levelChar?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -27,7 +34,7 @@ const CenterTextDiv = styled.div<{ $levelChar?: string }>`
   font-weight: ${({ $levelChar }) => $levelChar && 'bold' };
 `
 
-const TeamLevelDiv = styled.div<{ $levelChar?: string }>`
+export const TeamLevelDiv = styled.div<{ $levelChar?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -47,7 +54,7 @@ const TeamLevelDiv = styled.div<{ $levelChar?: string }>`
   right: 5px;
 `;
 
-const StyledHoverDiv = styled.div<{$isEditingStatus: boolean, $isEditingNameStatus: boolean, $isDragging: boolean, $numMembers: number}>`
+export const StyledHoverDiv = styled.div<{$isEditingStatus: boolean, $isEditingNameStatus: boolean, $isDragging: boolean, $numMembers: number}>`
   transition: transform 0.2s ease-in-out !important;
   display: flex;
   flex: 0 1 auto;
@@ -81,7 +88,7 @@ const StyledHoverDiv = styled.div<{$isEditingStatus: boolean, $isEditingNameStat
   }
 `;
 
-const CardHeaderDiv = styled.div<{ $statusColor: string }>`
+export const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   background-color: ${(props) => props.$statusColor};
   height: 58px;
   width: 100%;
@@ -92,12 +99,12 @@ const CardHeaderDiv = styled.div<{ $statusColor: string }>`
   /* position: relative; */
 `;
 
-const TitleSpan = styled.span`
+export const TitleSpan = styled.span`
   font-size: 1.5rem;
   margin-left: 5%;
 `
 
-const TeamMatesContainerDiv = styled.div`
+export const TeamMatesContainerDiv = styled.div`
   background-color: ${({ theme }) => theme.colours.cardBackground};
   flex: 1 1 auto;
   border-radius: 0px 0px 20px 20px;
@@ -112,14 +119,14 @@ const TeamMatesContainerDiv = styled.div`
 `
 
 
-const RedTeamNameAlert = styled(CiCircleAlert)`
+export const RedTeamNameAlert = styled(CiCircleAlert)`
   color: red;
   min-height: 32px;
   min-width: 32px;
   margin-right: 5%;
 `;
 
-const ApproveDiv = styled.div`
+export const ApproveDiv = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -127,7 +134,7 @@ const ApproveDiv = styled.div`
   color: ${({ theme }) => theme.colours.confirm};
 `;
 
-const RadioCircleDiv = styled.div<{ $selected: boolean }>`
+export const RadioCircleDiv = styled.div<{ $selected: boolean }>`
   transition: background-color 0.2s ease-in-out !important;
   width: 16px;
   height: 16px;
@@ -139,26 +146,26 @@ const RadioCircleDiv = styled.div<{ $selected: boolean }>`
     )};
 `;
 
-const ApprovalNameDiv = styled.div`
+export const ApprovalNameDiv = styled.div`
   width: 100%;
   height: 33px;
   display: flex;
   justify-content: center;
 `;
 
-const RadioCheckIcon = styled(IoMdCheckmark)`
+export const RadioCheckIcon = styled(IoMdCheckmark)`
   width: 23px;
   height: 23px;
   color: ${({ theme }) => theme.colours.confirm};
 `;
 
-const RadioCrossIcon = styled(LiaTimesSolid)`
+export const RadioCrossIcon = styled(LiaTimesSolid)`
   width: 23px;
   height: 23px;
   color: ${({ theme }) => theme.colours.cancel};
 `;
 
-const RadioIconDiv = styled.div`
+export const RadioIconDiv = styled.div`
   width: 33px;
   height: 33px;
   display: flex;
@@ -168,7 +175,7 @@ const RadioIconDiv = styled.div`
   box-sizing: border-box;
 `;
 
-const TeamNameApprovalDiv = styled.div`
+export const TeamNameApprovalDiv = styled.div`
   width: 100%;
   height: 100%;
   /* background-color: green; */
@@ -178,7 +185,7 @@ const TeamNameApprovalDiv = styled.div`
   flex-direction: column;
 `;
 
-const TeamMemberMotionDiv = styled(motion.div)<{ $isDraggable: boolean }>`
+export const TeamMemberMotionDiv = styled(motion.div)<{ $isDraggable: boolean }>`
   border-radius: 10px;
   border: 1px solid rgb(200, 200, 200);
   width: 85.37%;

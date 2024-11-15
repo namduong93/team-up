@@ -1,3 +1,11 @@
+import { FC, useState } from "react";
+import { AttendeesCardProps } from "./AttendeesCardProps";
+import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar";
+import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
+import { StaffRoles, StandardContainerDiv } from "../../StaffPage/subcomponents/StaffRole";
+import { StandardSpan } from "../../StaffPage/subcomponents/WideStaffCard";
+import { BooleanStatus } from "./BooleanStatus";
+
 export const WideAttendeesCard: FC<AttendeesCardProps> = ({
   attendeesDetails,
   attendeesListState: [attendeesList, setAttendeesList],

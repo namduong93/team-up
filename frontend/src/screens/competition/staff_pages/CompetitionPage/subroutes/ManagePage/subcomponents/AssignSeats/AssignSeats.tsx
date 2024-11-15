@@ -2,6 +2,16 @@
 // CAN SORT TEAMS (ASSIGN 1 SEAT PER TEAM AND SKIP 2 EACH TIME)
 // SEAT ASSIGNMENT NOTIFICATION TO ALL STUDENTS UPON CLOSE OF REGISTRATION TIME
 
+import { ChangeEvent, FC, ReactNode, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { TeamDetails } from "../../../../../../../../../shared_types/Competition/team/TeamDetails";
+import { sendRequest } from "../../../../../../../../utility/request";
+import { Alert, AssignPopupText, AssignSeatsButton, Button, ButtonContainer, CloseButton, CloseButtonContainer, DeleteIcon, DistributeSeats, DownloadButton, Header, InputContainer, InputSection, InputTitleA, InputTitleB, LevelContainer, Levels, ManageContainer, ModalContainer, ModalOverlay, NotifyButton, RoomItem, RoomList, SeatCount, SeatInputSelect, TeamCount, Title } from "./AssignSeats.styles";
+import { FaBell, FaChair, FaDownload, FaTimes } from "react-icons/fa";
+import RadioButton from "../../../../../../../../components/general_utility/RadioButton";
+import DescriptiveTextInput from "../../../../../../../../components/general_utility/DescriptiveTextInput";
+import TextInput from "../../../../../../../../components/general_utility/TextInput";
+
 interface AssignSeatsProps {
   siteName: string;
   siteCapacity: number;
@@ -517,7 +527,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
                 isOpen={false} 
                 icon={<FaDownload />}
               />
-              <NotifyButton 
+              <NotifyButton
                 actionType="secondary" 
                 onClick={handleNotifyTeams} 
                 label="Notify Teams" 

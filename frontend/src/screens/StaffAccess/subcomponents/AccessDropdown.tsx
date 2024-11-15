@@ -1,3 +1,7 @@
+import styled from "styled-components";
+import { UserAccess } from "../../../../shared_types/User/User";
+import { FC, useEffect, useState } from "react";
+import { sendRequest } from "../../../utility/request";
 
 interface AccessDropdownProps {
   staffId: number | undefined;

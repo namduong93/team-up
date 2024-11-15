@@ -1,8 +1,8 @@
 import React, { FC, useState } from "react"
-import { DownloadButtons } from "../../components/DownloadButtons"
-import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
-import { tShirtOptions, dietaryOptions } from "../../../auth/registration/SiteInformation";
 import jsPDF from "jspdf";
+import { AttendeesDetails } from "../../../../../../../../shared_types/Competition/staff/AttendeesDetails";
+import { dietaryOptions, tShirtOptions } from "../../../../../../auth/RegisterForm/subroutes/SiteDataInput/SiteDataOptions";
+import { DownloadButtons } from "../../../components/DownloadButtons";
 
 interface AttendeesButtonsProps {
   attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];

@@ -1,3 +1,4 @@
+import { CenterTextDiv, StyledUserIcon, TeamMemberContainerDiv } from "../../TeamCard.styles";
 
 export const TeamCardMember = ({ memberName, level }: { memberName: string, level: string }) => {
 

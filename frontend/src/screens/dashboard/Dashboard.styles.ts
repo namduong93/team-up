@@ -1,4 +1,7 @@
-const DashboardContent = styled.div`
+import { FaTimes } from "react-icons/fa";
+import { styled } from "styled-components";
+
+export const DashboardContent = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -78,7 +81,7 @@ export const RemoveFilterIcon = styled(FaTimes)`
   }
 `;
 
-const ContentArea = styled.div`
+export const ContentArea = styled.div`
   margin-top: 32px;
   overflow-y: auto;
   overflow-x: auto;
@@ -86,7 +89,7 @@ const ContentArea = styled.div`
   max-height: calc(100vh - 200px);
 `;
 
-const CompetitionGrid = styled.div`
+export const CompetitionGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(294px, 100%), 1fr));
   gap: 20px;

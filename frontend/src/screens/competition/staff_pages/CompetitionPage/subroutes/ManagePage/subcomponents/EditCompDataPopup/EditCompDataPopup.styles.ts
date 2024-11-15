@@ -1,5 +1,6 @@
+import { styled } from "styled-components";
 
-const ModalOverlay = styled.div`
+export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +13,7 @@ const ModalOverlay = styled.div`
   z-index: 5;
 `;
 
-const Modal = styled.div`
+export const Modal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -33,7 +34,7 @@ const Modal = styled.div`
   height: 80%;
 `;
 
-const CloseButton = styled.button`
+export const CloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -49,7 +50,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,7 +58,7 @@ const ButtonContainer = styled.div`
   width: 100%;
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   max-width: 150px;
   min-width: 100px;
   width: 50%;
@@ -85,14 +86,14 @@ const Button = styled.button`
   }
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const RowContainer2 = styled.div`
+export const RowContainer2 = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: start;
@@ -103,7 +104,7 @@ const RowContainer2 = styled.div`
   width: 95%;
 `;
 
-const Title2 = styled.h2`
+export const Title2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;
   font-size: 22px;
@@ -112,14 +113,14 @@ const Title2 = styled.h2`
   text-align: center;
 `;
 
-const Descriptor = styled.div`
+export const Descriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colours.filterText};
   width: 100%;
 `;
 
-const LocationList = styled.div`
+export const LocationList = styled.div`
   display: grid;
   width: 65%;
   grid-template-columns: 1fr 1fr auto;
@@ -127,13 +128,13 @@ const LocationList = styled.div`
   gap: 25px;
 `;
 
-const LocationItem = styled.div`
+export const LocationItem = styled.div`
   display: contents;
   font-size: 16px;
   text-align: center;
 `;
 
-const DeleteIcon = styled.span`
+export const DeleteIcon = styled.span`
   cursor: pointer;
   font-size: 18px;
   color: ${({ theme }) => theme.fonts.colour};
@@ -144,7 +145,7 @@ const DeleteIcon = styled.span`
   }
 `;
 
-const EditorContainer = styled.div`
+export const EditorContainer = styled.div`
   position: relative;
   width: 100%;
   max-height: 800px;

@@ -1,18 +1,40 @@
 
-export interface CompetitionDetails {
-  id?: number;
-  name: string;
-  teamSize?: number;
-  createdDate: EpochTimeStamp;
-  earlyRegDeadline: EpochTimeStamp;
-  startDate: EpochTimeStamp;
-  generalRegDeadline: EpochTimeStamp;
-  siteLocations?: SiteLocation[];
-  otherSiteLocations?: OtherSiteLocation[];
-  code?: string;
-  region: string;
-  information?: string;
-}
+import { FC, useEffect, useState } from "react";
+import { CompetitionInformation as CompetitionDetails } from "../../../../../shared_types/Competition/CompetitionDetails";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
+import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
+import { SortOption } from "../../../../components/page_header/components/SortSelect";
+import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
+import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
+import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
+import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
+import { sendRequest } from "../../../../utility/request";
+import { fetchTeams } from "./utils/fetchTeams";
+import { CompetitionSite } from "../../../../../shared_types/Competition/CompetitionSite";
+import { MainPageDiv, OverflowFlexBackground, PageOptionsContainerDiv } from "./subroutes/CommonSubStyles.styles";
+import { PageHeader } from "../../../../components/page_header/PageHeader";
+import { TeamPageButtons } from "./subroutes/TeamPage/subcomponents/TeamPageButtons";
+import { AttendeesPageButtons } from "./subroutes/AttendeesPage/subcomponents/AttendeesPageButtons";
+import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { CustomToggleSwitch } from "../../../../components/toggle_switch/ToggleSwitch";
+import { AdminToggleOptionDiv, ToggleOptionTextSpan } from "./CompetitionPage.styles";
+
+// export interface CompetitionDetails {
+//   id?: number;
+//   name: string;
+//   teamSize?: number;
+//   createdDate: EpochTimeStamp;
+//   earlyRegDeadline: EpochTimeStamp;
+//   startDate: EpochTimeStamp;
+//   generalRegDeadline: EpochTimeStamp;
+//   siteLocations?: SiteLocation[];
+//   otherSiteLocations?: OtherSiteLocation[];
+//   code?: string;
+//   region: string;
+//   information?: string;
+// }
+
 
 export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
@@ -55,13 +77,13 @@ export const CompetitionPage: FC = () => {
   );
   const [staffList, setStaffList] = useState<Array<StaffInfo>>([]);
   const [compDetails, setCompDetails] = useState<CompetitionDetails>({
-    id: 0,
+    // id: 0,
+    // teamSize: 3,
+    // createdDate: Date.now(),
     name: "",
-    teamSize: 3,
-    createdDate: Date.now(),
-    earlyRegDeadline: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days from now
-    startDate: Date.now() + 14 * 24 * 60 * 60 * 1000, // 14 days from now
-    generalRegDeadline: Date.now() + 10 * 24 * 60 * 60 * 1000, // 10 days from now
+    earlyRegDeadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+    startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+    generalRegDeadline: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
     siteLocations: [],
     otherSiteLocations: [],
     code: "",

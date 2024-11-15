@@ -1,3 +1,12 @@
+import { FC } from "react";
+import { StaffAccessCardProps } from "../StaffAccounts";
+import { UserAccess } from "../../../../shared_types/User/User";
+import { StaffRequests } from "../../../../shared_types/Competition/staff/StaffInfo";
+import { sendRequest } from "../../../utility/request";
+import { UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import { StandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/ManagePage/ManagePage.styles";
+import { StandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
+import { AccessDropdown } from "./AccessDropdown";
 
 export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
   staffDetails,

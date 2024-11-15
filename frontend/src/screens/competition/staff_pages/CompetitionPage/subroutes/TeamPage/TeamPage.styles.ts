@@ -1,4 +1,7 @@
-const TeamCardGridDisplay = styled(motion.div)`
+import styled from "styled-components";
+import { motion } from "framer-motion";
+
+export const TeamCardGridDisplay = styled(motion.div)`
   flex: 1;
   background-color: ${({ theme }) => theme.background};
   display: grid;
@@ -8,7 +11,7 @@ const TeamCardGridDisplay = styled(motion.div)`
   overflow: auto;
 `;
 
-const Overlay = styled.div<{ $isOpen: boolean }>`
+export const Overlay = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
   position: fixed;
   top: 0;
@@ -18,7 +21,7 @@ const Overlay = styled.div<{ $isOpen: boolean }>`
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 `;
-const Heading = styled.h2`
+export const Heading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
   color: ${({ theme }) => theme.colours.notifDark};

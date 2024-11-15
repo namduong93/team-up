@@ -1,8 +1,14 @@
-
-interface AttendeesCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  attendeesListState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
-  attendeesDetails: AttendeesDetails;
-}
+import { FC, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
+import Fuse from "fuse.js";
+import { AttendeesDetails } from "../../../../../../../shared_types/Competition/staff/AttendeesDetails";
+import { FilterTagButton, RemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import { FlexBackground } from "../../../../../../components/general_utility/Background";
+import { NarrowDisplayDiv, WideDisplayDiv } from "../StudentsPage/StudentsPage.styles";
+import { NarrowAttendeesCard } from "./subcomponents/NarrowAttendeesCard";
+import { WideAttendeesHeader } from "./subcomponents/WideAttendeesHeader";
+import { WideAttendeesCard } from "./subcomponents/WideAttendeesCard";
 
 const ATTENDEES_DISPLAY_SORT_OPTIONS = [
   { label: "Default", value: "original" },
