@@ -14,7 +14,7 @@ interface User {
   accessibilityReqs: string;
 };
 
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { DashInfo } from "../dashboard/hooks/useDashInfo";
 import { useNavigate } from "react-router-dom";
 import { backendURL } from "../../../config/backendURLConfig";
@@ -25,6 +25,14 @@ interface AccountProps {
   setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;
 };
 
+/**
+ * A React component to view and edit the current users' account information.
+ * 
+ * @param {AccountProps} props - React AccountProps specified above
+ * @returns {JSX.Element} - Web page that requests from the backend the users information which 
+ * it then displays and allows users to edit before saving and sending the edit request to the
+ * backend to save it
+ */
 export const Account: FC<AccountProps> = ({ setDashInfo }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
