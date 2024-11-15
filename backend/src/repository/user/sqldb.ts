@@ -8,7 +8,7 @@ import { UserType, UserTypeObject } from "../../models/user/user.js";
 import { UserDashInfo } from "../../models/user/user_dash_info.js";
 import { DbError } from "../../errors/db_error.js";
 import { University } from "../../models/university/university.js";
-import { StaffInfo, StaffRequests } from "../../../shared_types/Competition/staff/StaffInfo.js";
+import { LooseStaffInfo, StaffRequests } from "../../../shared_types/Competition/staff/StaffInfo.js";
 import { UserAccess } from "../../../shared_types/User/User.js";
 
 export class SqlDbUserRepository implements UserRepository {
@@ -315,7 +315,7 @@ export class SqlDbUserRepository implements UserRepository {
     return { id: universityId, name: universityName };
   }
 
-  staffRequests = async (): Promise<Array<StaffInfo>> => {
+  staffRequests = async (): Promise<Array<LooseStaffInfo>> => {
     const dbResult = await this.pool.query(`
       SELECT 
         id,
@@ -333,9 +333,9 @@ export class SqlDbUserRepository implements UserRepository {
       WHERE user_type = 'staff'::user_type_enum
       ORDER BY user_access, name ASC
     `);
-    const returnArray: Array<StaffInfo> = [];
+    const returnArray: Array<LooseStaffInfo> = [];
     for (const row of dbResult.rows) {
-      let staffInfo: StaffInfo = {
+      let staffInfo: LooseStaffInfo = {
         userId: row.id,
         universityId: row.university_id,
         name: row.name,

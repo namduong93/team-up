@@ -16,7 +16,7 @@ interface MultiSelectCheckboxGroupProps {
   showOther?: boolean; // New prop to control "Other" visibility
 }
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
@@ -24,7 +24,7 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const Label = styled.label`
+const StyledLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -33,23 +33,23 @@ const Label = styled.label`
   font-size: 18px;
 `;
 
-const Descriptor = styled.div`
+const StyledDescriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: #555;
 `;
 
-const CheckboxContainer = styled.div`
+const StyledCheckboxContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
 `;
 
-const CheckboxInput = styled.input`
+const StyledCheckboxInput = styled.input`
   margin-right: 0.5rem;
 `;
 
-const CheckboxLabel = styled.label`
+const StyledCheckboxLabel = styled.label`
   font-size: 16px;
   font-family: Arial, Helvetica, sans-serif;
 `;
@@ -107,40 +107,40 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
   };
 
   return (
-    <Container>
-      {label && <Label>{label}</Label>}
-      {descriptor && <Descriptor>{descriptor}</Descriptor>}
+    <StyledContainer>
+      {label && <StyledLabel>{label}</StyledLabel>}
+      {descriptor && <StyledDescriptor>{descriptor}</StyledDescriptor>}
       {options.map((option) => (
-        <CheckboxContainer key={option.value}>
-          <CheckboxInput
+        <StyledCheckboxContainer key={option.value}>
+          <StyledCheckboxInput
             type="checkbox"
             id={option.value}
             value={option.value}
             checked={selectedValues.includes(option.value)}
             onChange={() => handleCheckboxChange(option.value)}
           />
-          <CheckboxLabel htmlFor={option.value}>{option.label}</CheckboxLabel>
-        </CheckboxContainer>
+          <StyledCheckboxLabel htmlFor={option.value}>{option.label}</StyledCheckboxLabel>
+        </StyledCheckboxContainer>
       ))}
       {showOther && (
-        <CheckboxContainer>
-          <CheckboxInput
+        <StyledCheckboxContainer>
+          <StyledCheckboxInput
             type="checkbox"
             id="other"
             value="other"
             checked={selectedValues.includes("other")}
             onChange={handleOtherCheckboxChange}
           />
-          <CheckboxLabel htmlFor="other">Other:</CheckboxLabel>
+          <StyledCheckboxLabel htmlFor="other">Other:</StyledCheckboxLabel>
           <OtherInput
             type="text"
             value={otherValue}
             onChange={(e) => setOtherValue(e.target.value)}
             onBlur={handleOtherBlur}
           />
-        </CheckboxContainer>
+        </StyledCheckboxContainer>
       )}
-    </Container>
+    </StyledContainer>
   );
 };
 

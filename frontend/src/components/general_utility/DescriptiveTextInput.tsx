@@ -12,7 +12,7 @@ interface DescriptiveTextInputProps {
   height?: string;
 }
 
-const Container = styled.div<{ width: string }>`
+const StyledContainer = styled.div<{ width: string }>`
   display: flex;
   flex-direction: column;
   margin-bottom: 0px;
@@ -20,7 +20,7 @@ const Container = styled.div<{ width: string }>`
   width: ${({ width }) => width};
 `;
 
-const Label = styled.label`
+const StyledLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -30,14 +30,14 @@ const Label = styled.label`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const Descriptor = styled.div`
+const StyledDescriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.colours.filterText};
   width: 100%;
 `;
 
-const Asterisk = styled.span`
+const StyledAsterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `;
 
@@ -66,14 +66,14 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   height = "100px",
 }) => {
   return (
-    <Container width={width}>
+    <StyledContainer width={width}>
       {label && (
-        <Label>
+        <StyledLabel>
           {label}
-          {required && <Asterisk>*</Asterisk>}
-        </Label>
+          {required && <StyledAsterisk>*</StyledAsterisk>}
+        </StyledLabel>
       )}
-      <Descriptor>{descriptor}</Descriptor>
+      <StyledDescriptor>{descriptor}</StyledDescriptor>
       <StyledTextarea
         placeholder={placeholder}
         value={value}
@@ -81,7 +81,7 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
         $height={height}
         required={required}
       />
-    </Container>
+    </StyledContainer>
   );
 };
 

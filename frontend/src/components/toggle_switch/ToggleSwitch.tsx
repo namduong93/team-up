@@ -27,7 +27,7 @@ const StyledToggleDiv = styled.div<{ $numElems: number, $borderIndex: number }>`
   }
 `;
 
-const ToggleDivOptionDiv = styled.div`
+const StyledToggleDivOptionDiv = styled.div`
   flex: 1;
   cursor: pointer;
   background-color: transparent;
@@ -51,9 +51,9 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style, def
     <StyledToggleDiv $borderIndex={borderIndex} $numElems={numChildren} style={{ maxWidth: `${150 * numChildren}px`, ...style }}>
       {realChildren.map((child, index) => {
         return (
-        <ToggleDivOptionDiv onClick={handleClick} data-index={index} key={index}>
+        <StyledToggleDivOptionDiv onClick={handleClick} data-index={index} key={index}>
           {child}
-        </ToggleDivOptionDiv>);
+        </StyledToggleDivOptionDiv>);
       })}
     </StyledToggleDiv>
   )

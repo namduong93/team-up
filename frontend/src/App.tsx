@@ -6,9 +6,6 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Landing } from "./screens/authentication/login/Landing";
-import { Dashboard } from "./screens/dashboard/Dashboard";
-import { Account } from "./screens/account/Account";
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./themes/defaultTheme";
@@ -16,38 +13,39 @@ import { darkTheme } from "./themes/darkTheme";
 import { christmasTheme } from "./themes/christmasTheme";
 import { colourblindTheme } from "./themes/colourblindTheme";
 import { Settings } from "./screens/settings/Settings";
-import { MultiStepRegoFormProvider } from "./screens/authentication/registration/hooks/useMultiStepRegoForm";
 
 import { TeamProfile } from "./screens/student/TeamProfile";
-import { CompetitionDetails } from "./screens/competition/creation/CompDetails";
-import { CompetitionConfirmation } from "./screens/competition/creation/CompConfirmation";
-import {
-  EmailRecoverForm,
-  EmailSuccess,
-  PasswordCodeRecoverForm,
-  PasswordRecovery,
-} from "./screens/authentication/recovery/PasswordRecovery";
-import { CompetitionPage } from "./screens/competition_staff_page/CompetitionPage";
-import { CompIdNavigate } from "./screens/competition_staff_page/components/CompIdNavigate";
-import { SidebarLayout } from "./screens/SidebarLayout";
-import { TeamDetails } from "./screens/student/TeamDetails";
-import { TeamManage } from "./screens/student/TeamManage";
-import { CompetitionInformation } from "./screens/competition/register/CompInformation";
-import { CompetitionIndividual } from "./screens/competition/register/CompIndividual";
-import { MultiStepCompRegoFormProvider } from "./screens/competition/register/hooks/useMultiStepCompRegoForm";
-import { CompetitionExperience } from "./screens/competition/register/CompExperience";
-import { StaffDisplay } from "./screens/competition_staff_page/staff_page/StaffDisplay";
 import { useDashInfo } from "./screens/dashboard/hooks/useDashInfo";
-import { RoleRegistration } from "./screens/authentication/registration/RoleRegistration";
-import { AccountInformation } from "./screens/authentication/registration/AccountInformation";
-import { SiteInformation } from "./screens/authentication/registration/SiteInformation";
-import { InstitutionInformation } from "./screens/authentication/registration/InstitutionInformation";
-import { TeamDisplay } from "./screens/competition_staff_page/teams_page/TeamDisplay";
-import { StudentDisplay } from "./screens/competition_staff_page/students_page/StudentDisplay";
-import { AttendeesDisplay } from "./screens/competition_staff_page/attendees_page/AttendeesPage";
-import { StaffRoleRegistration } from "./screens/competition/register/StaffRoleRegistration";
-import { StaffAccounts } from "./screens/staff_access/StaffAccounts";
-import { StaffActionCard } from "./screens/competition_staff_page/manage_page/components/StaffActionCard";
+import { Login } from "./screens/auth/Login/Login";
+import { RegisterFormProvider } from "./screens/auth/RegisterForm/RegisterFormProvider";
+import { RoleSelect } from "./screens/auth/RegisterForm/subroutes/RoleSelect/RoleSelect";
+import { AccountDataInput } from "./screens/auth/RegisterForm/subroutes/AccountDataInput/AccountDataInput";
+import { SiteDataInput } from "./screens/auth/RegisterForm/subroutes/SiteDataInput/SiteDataInput";
+import { InstitutionDataInput } from "./screens/auth/RegisterForm/subroutes/InstitutionDataInput/InstitutionDataInput";
+import { PasswordCodeRecoverForm, PasswordRecovery } from "./screens/auth/PasswordRecovery/PasswordRecovery";
+import { EmailForm } from "./screens/auth/PasswordRecovery/subroutes/EmailForm/EmailForm";
+import { EmailSuccess } from "./screens/auth/PasswordRecovery/subroutes/EmailSuccess/EmailSuccess";
+import { SidebarLayout } from "./screens/SidebarLayout";
+import { CompIdNavigate } from "./screens/competition/staff_pages/CompetitionPage/components/CompIdNavigate";
+import { CompetitionPage } from "./screens/competition/staff_pages/CompetitionPage/CompetitionPage";
+import { TeamPage } from "./screens/competition/staff_pages/CompetitionPage/subroutes/TeamPage/TeamPage";
+import { StudentPage } from "./screens/competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentPage";
+import { StaffPage } from "./screens/competition/staff_pages/CompetitionPage/subroutes/StaffPage/StaffPage";
+import { AttendeesDisplay } from "./screens/competition/staff_pages/CompetitionPage/subroutes/AttendeesPage/AttendeesPage";
+import { ManagePage } from "./screens/competition/staff_pages/CompetitionPage/subroutes/ManagePage/ManagePage";
+import { TeamDetails } from "./screens/student/subroutes/TeamDetails";
+import { TeamManage } from "./screens/student/subroutes/TeamManage";
+import { Dashboard } from "./screens/dashboard/Dashboard";
+import { StaffAccessPage } from "./screens/StaffAccess/StaffAccessPage";
+import { Account } from "./screens/Account/Account";
+import { CompDataInput } from "./screens/competition/staff_pages/creation/CompDataInput/CompDataInput";
+import { CompDataConfirmation } from "./screens/competition/staff_pages/creation/CompDataConfirmation/CompDataConfirmation";
+import { CompRegisterFormProvider } from "./screens/competition/register/RegisterForm/CompRegisterFormProvider";
+import { CompetitionInformation } from "./screens/competition/register/RegisterForm/subroutes/CompInformation/CompInformation";
+import { CompIndividualInput } from "./screens/competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput";
+import { CompExperienceInput } from "./screens/competition/register/RegisterForm/subroutes/CompExperienceInput/CompExperienceInput";
+import { StaffRegisterForm } from "./screens/competition/register/StaffRegisterForm/StaffRegisterForm";
+
 
 const themeMap = {
   default: defaultTheme,
@@ -99,43 +97,43 @@ function App() {
       <Router>
         <div style={{ background: currentTheme.background }}></div>
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<Login />} />
 
           <Route
             path="/roleregistration"
             element={
-              <MultiStepRegoFormProvider>
-                <RoleRegistration />
-              </MultiStepRegoFormProvider>
+              <RegisterFormProvider>
+                <RoleSelect />
+              </RegisterFormProvider>
             }
           />
           <Route
             path="/accountinformation"
             element={
-              <MultiStepRegoFormProvider>
-                <AccountInformation />
-              </MultiStepRegoFormProvider>
+              <RegisterFormProvider>
+                <AccountDataInput />
+              </RegisterFormProvider>
             }
           />
           <Route
             path="/siteinformation"
             element={
-              <MultiStepRegoFormProvider>
-                <SiteInformation />
-              </MultiStepRegoFormProvider>
+              <RegisterFormProvider>
+                <SiteDataInput />
+              </RegisterFormProvider>
             }
           />
           <Route
             path="/institutioninformation"
             element={
-              <MultiStepRegoFormProvider>
-                <InstitutionInformation />
-              </MultiStepRegoFormProvider>
+              <RegisterFormProvider>
+                <InstitutionDataInput />
+              </RegisterFormProvider>
             }
           />
           {/* coach page should be split up subrouted TeamsView and StudentsView in the future */}
           <Route path="/password/recovery" element={<PasswordRecovery />}>
-            <Route path="email" element={<EmailRecoverForm />} />
+            <Route path="email" element={<EmailForm />} />
             <Route path="email/success" element={<EmailSuccess />} />
             <Route path="reset/:code" element={<PasswordCodeRecoverForm />} />
           </Route>
@@ -153,11 +151,11 @@ function App() {
             />
             <Route path="/competition/page/" element={<CompetitionPage />}>
               <Route index element={<Navigate to="/dashboard" />} />
-              <Route path="teams/:compId" element={<TeamDisplay />} />
-              <Route path="students/:compId" element={<StudentDisplay />} />
-              <Route path="staff/:compId" element={<StaffDisplay />} />
+              <Route path="teams/:compId" element={<TeamPage />} />
+              <Route path="students/:compId" element={<StudentPage />} />
+              <Route path="staff/:compId" element={<StaffPage />} />
               <Route path="site/:compId" element={<AttendeesDisplay />} />
-              <Route path="manage/:compId" element={<StaffActionCard />} />
+              <Route path="manage/:compId" element={<ManagePage />} />
             </Route>
 
             <Route
@@ -175,7 +173,7 @@ function App() {
             />
             <Route
               path="/staffAccounts"
-              element={<StaffAccounts />}
+              element={<StaffAccessPage />}
             />
             <Route
               path="/account"
@@ -184,40 +182,40 @@ function App() {
             <Route path="/settings" element={<Settings />} />
           </Route>
 
-          <Route path="/competition/create" element={<CompetitionDetails />} />
+          <Route path="/competition/create" element={<CompDataInput />} />
           <Route
             path="/competition/confirmation"
-            element={<CompetitionConfirmation />}
+            element={<CompDataConfirmation />}
           />
 
           <Route
             path="/competition/information/:code?"
             element={
-              <MultiStepCompRegoFormProvider>
+              <CompRegisterFormProvider>
                 <CompetitionInformation />
-              </MultiStepCompRegoFormProvider>
+              </CompRegisterFormProvider>
             }
           />
           <Route
             path="/competition/individual/:code?"
             element={
-              <MultiStepCompRegoFormProvider>
-                <CompetitionIndividual />
-              </MultiStepCompRegoFormProvider>
+              <CompRegisterFormProvider>
+                <CompIndividualInput />
+              </CompRegisterFormProvider>
             }
           />
           <Route
             path="/competition/experience/:code?"
             element={
-              <MultiStepCompRegoFormProvider>
-                <CompetitionExperience />
-              </MultiStepCompRegoFormProvider>
+              <CompRegisterFormProvider>
+                <CompExperienceInput />
+              </CompRegisterFormProvider>
             }
           />
 
           <Route
             path="/competition/staff/register/:code?"
-            element={<StaffRoleRegistration />}
+            element={<StaffRegisterForm />}
           />
         </Routes>
       </Router>

@@ -1,38 +1,34 @@
 import { FC, useEffect, useState } from "react";
-import {
-  MainPageDiv,
-  OverflowFlexBackground,
-  PageOptionsContainerDiv,
-  ToggleOptionDiv,
-} from "../competition_staff_page/components/PageUtils";
+
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
 import styled from "styled-components";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
-import { TeamHeader } from "./components/TeamHeader";
+import { TeamHeader } from "./subcomponents/TeamHeader/TeamHeader";
 import { sendRequest } from "../../utility/request";
 
-import { WithdrawPopUpChain } from "./components/WithdrawPopUpChain";
 import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
 
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement";
+import { StyledMainPageDiv, StyledOverflowFlexBackground, StyledPageOptionsContainerDiv, StyledToggleOptionDiv } from "../competition/staff_pages/CompetitionPage/subroutes/CommonSubStyles.styles";
+import { WithdrawPopupChain } from "./subcomponents/WithdrawPopupChain/WithdrawPopupChain";
 
-const TeamToggleOptionDiv = styled(ToggleOptionDiv)``;
+const StyledTeamToggleOptionDiv = styled(StyledToggleOptionDiv)``;
 
-const ToggleOptionTextSpan = styled.span`
+const StyledToggleOptionTextSpan = styled.span`
   font-size: ${({ theme }) => theme.fonts.fontSizes.subheading};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const TeamOverflowFlexBackground = styled(OverflowFlexBackground)`
+const StyledTeamOverflowFlexBackground = styled(StyledOverflowFlexBackground)`
   align-self: flex-end;
   height: 98%;
 `;
 
-const TeamProfileViews = styled(Outlet)`
+const StyledTeamProvileOutlet = styled(Outlet)`
   /* box-sizing: border-box; */
 `;
 
-const Overlay = styled.div<{ $isOpen: boolean }>`
+const StyledOverlay = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
   position: fixed;
   top: 0;
@@ -116,11 +112,11 @@ export const TeamProfile: FC = () => {
   };
 
   return (
-    <TeamOverflowFlexBackground>
-      <MainPageDiv>
-        <Overlay $isOpen={withdrawPopUpOpen}>
-          <WithdrawPopUpChain handleClose={() => setWithdrawPopUpOpen(false)} />
-        </Overlay>
+    <StyledTeamOverflowFlexBackground>
+      <StyledMainPageDiv>
+        <StyledOverlay $isOpen={withdrawPopUpOpen}>
+          <WithdrawPopupChain handleClose={() => setWithdrawPopUpOpen(false)} />
+        </StyledOverlay>
 
         <TeamHeader
           compName={teamDetails.compName}
@@ -128,29 +124,29 @@ export const TeamProfile: FC = () => {
           compCountdown={compCountdown}
           onWithdrawClick={handleWithdrawClick}
         />
-        <PageOptionsContainerDiv>
+        <StyledPageOptionsContainerDiv>
           <CustomToggleSwitch
             style={{ width: "100%", height: "100%" }}
             defaultBorderIndex={0}
           >
-            <TeamToggleOptionDiv
+            <StyledTeamToggleOptionDiv
               onClick={() => {
                 navigate(`/competition/participant/${compId}/details`);
               }}
             >
-              <ToggleOptionTextSpan>Details</ToggleOptionTextSpan>
-            </TeamToggleOptionDiv>
-            <TeamToggleOptionDiv
+              <StyledToggleOptionTextSpan>Details</StyledToggleOptionTextSpan>
+            </StyledTeamToggleOptionDiv>
+            <StyledTeamToggleOptionDiv
               onClick={() => {
                 navigate(`/competition/participant/${compId}/manage`);
               }}
             >
-              <ToggleOptionTextSpan>Manage</ToggleOptionTextSpan>
-            </TeamToggleOptionDiv>
+              <StyledToggleOptionTextSpan>Manage</StyledToggleOptionTextSpan>
+            </StyledTeamToggleOptionDiv>
           </CustomToggleSwitch>
-        </PageOptionsContainerDiv>
-        <TeamProfileViews context={teamOutletProps} />
-      </MainPageDiv>
-    </TeamOverflowFlexBackground>
+        </StyledPageOptionsContainerDiv>
+        <StyledTeamProvileOutlet context={teamOutletProps} />
+      </StyledMainPageDiv>
+    </StyledTeamOverflowFlexBackground>
   );
 };

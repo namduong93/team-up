@@ -12,7 +12,7 @@ interface DropdownInputProps extends React.HTMLAttributes<HTMLSelectElement> {
   descriptor?: string;
 }
 
-const Container = styled.div<{ $width: string }>`
+const StyledContainer = styled.div<{ $width: string }>`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
@@ -20,7 +20,7 @@ const Container = styled.div<{ $width: string }>`
   width: ${({ $width: width }) => width};
 `;
 
-const Label = styled.label`
+const StyledLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -30,17 +30,17 @@ const Label = styled.label`
   font-size: 18px;
 `;
 
-const Asterisk = styled.span`
+const StyledAsterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `;
 
-const Descriptor = styled.div`
+const StyledDescriptor = styled.div`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${({ theme }) => theme.fonts.descriptor};
 `;
 
-const RelativeSelectGrid = styled.div`
+const StyledRelativeSelectGrid = styled.div`
   width: 100%;
   height: 38px;
   display: grid;
@@ -48,7 +48,7 @@ const RelativeSelectGrid = styled.div`
   grid-template-columns: 1fr 38px;
 `;
 
-const RelativeSelectElement = styled.select`
+const StyledRelativeSelectElement = styled.select`
   appearance: none;
   border: 1px solid ${({ theme }) => theme.colours.notifDark};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
@@ -64,7 +64,7 @@ const RelativeSelectElement = styled.select`
   grid-column: 1 / 3;
 `;
 
-const SelectDownArrow = styled(IoIosArrowDown)`
+const StyledSelectDownArrow = styled(IoIosArrowDown)`
   grid-row: 1 / 2;
   grid-column: 2 / 3;
   margin: auto 6px auto auto;
@@ -80,12 +80,12 @@ interface RelativeSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
 }
 
 const RelativeSelect: React.FC<RelativeSelectProps> = ({ children, value, onChange, required, ...props }) => (
-  <RelativeSelectGrid>
-    <RelativeSelectElement value={value} onChange={onChange} required={required} {...props}>
+  <StyledRelativeSelectGrid>
+    <StyledRelativeSelectElement value={value} onChange={onChange} required={required} {...props}>
       {children}
-    </RelativeSelectElement>
-    <SelectDownArrow />
-  </RelativeSelectGrid>
+    </StyledRelativeSelectElement>
+    <StyledSelectDownArrow />
+  </StyledRelativeSelectGrid>
 );
 
 // DropdownInput Component
@@ -99,12 +99,12 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   descriptor,
 }) => {
   return (
-    <Container $width={width}>
-      <Label>
+    <StyledContainer $width={width}>
+      <StyledLabel>
         {label}
-        {required && <Asterisk>*</Asterisk>}
-      </Label>
-      {descriptor && <Descriptor>{descriptor}</Descriptor>}
+        {required && <StyledAsterisk>*</StyledAsterisk>}
+      </StyledLabel>
+      {descriptor && <StyledDescriptor>{descriptor}</StyledDescriptor>}
       <RelativeSelect value={value} onChange={onChange} required={required}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -112,7 +112,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
           </option>
         ))}
       </RelativeSelect>
-    </Container>
+    </StyledContainer>
   );
 };
 

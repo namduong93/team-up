@@ -2,7 +2,7 @@ import { FC, ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { useTheme } from "styled-components";
 import { TransparentResponsiveButton } from "../ResponsiveButton";
-import { CancelButton, ConfirmButton, PopUpContent, PopUpOverlay, Question, TimeoutConfirmButton } from "./ActionButton";
+import { StyledCancelButton, StyledConfirmButton, StyledPopUpContent, StyledPopUpOverlay, StyledQuestion, StyledTimeoutConfirmButton } from "./ActionButton";
 
 
 export const StyledResponsiveActionDiv = styled.div<{ $actionType: 'primary' | 'secondary' | 'error' | 'confirm' }>`
@@ -100,24 +100,24 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
         />
       </StyledResponsiveActionDiv>
       {isOpen && (
-        <PopUpOverlay onClick={handleClosePopup}>
-          <PopUpContent onClick={(e) => e.stopPropagation()}>
-            <Question>{question}</Question>
+        <StyledPopUpOverlay onClick={handleClosePopup}>
+          <StyledPopUpContent onClick={(e) => e.stopPropagation()}>
+            <StyledQuestion>{question}</StyledQuestion>
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
               {children}
             </div>
             {!timeout ?
-              <ConfirmButton
+              <StyledConfirmButton
               onMouseDown={(e) => e.preventDefault()}
-              onClick={handleConfirm}>Confirm</ConfirmButton>
-            : <TimeoutConfirmButton
+              onClick={handleConfirm}>Confirm</StyledConfirmButton>
+            : <StyledTimeoutConfirmButton
               onMouseDown={(e) => e.preventDefault()}
-              bgColor={theme.colours.confirm} seconds={timeout} onClick={handleConfirm}>Confirm</TimeoutConfirmButton>
+              bgColor={theme.colours.confirm} seconds={timeout} onClick={handleConfirm}>Confirm</StyledTimeoutConfirmButton>
             }
-            <CancelButton onMouseDown={(e) => e.preventDefault()}
-              onClick={handleClosePopup}>Cancel</CancelButton>
-          </PopUpContent>
-        </PopUpOverlay>
+            <StyledCancelButton onMouseDown={(e) => e.preventDefault()}
+              onClick={handleClosePopup}>Cancel</StyledCancelButton>
+          </StyledPopUpContent>
+        </StyledPopUpOverlay>
       )}
     </>
   );

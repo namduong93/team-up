@@ -8,7 +8,7 @@ interface FilterSelectProps {
   currentFilters: { [field: string]: string[] };
 }
 
-const FilterContainer = styled.div<{ $isOpen: boolean }>`
+const StyledFilterContainer = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   top: 33px;
   right: 0;
@@ -27,17 +27,17 @@ const FilterContainer = styled.div<{ $isOpen: boolean }>`
   overflow-x: hidden;
 `;
 
-const FilterField = styled.div`
+const StyledFilterField = styled.div`
   margin-bottom: 20px;
   width: 100%;
 `;
 
-const FieldTitle = styled.h3`
+const StyledFieldTitle = styled.h3`
   font-size: 16px;
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const OptionButton = styled.button<{ selected: boolean }>`
+const StyledOptionButton = styled.button<{ selected: boolean }>`
   background-color: ${({ selected, theme }) =>
     selected ? theme.colours.optionSelected : theme.colours.optionUnselected};
   color: ${({ selected, theme }) =>
@@ -86,22 +86,22 @@ export const FilterSelect: FC<FilterSelectProps> = ({
   };
 
   return (
-    <FilterContainer $isOpen={isOpen}>
+    <StyledFilterContainer $isOpen={isOpen}>
       {Object.entries(options).map(([field, values]) => (
-        <FilterField key={field}>
-          <FieldTitle>{field}</FieldTitle>
+        <StyledFilterField key={field}>
+          <StyledFieldTitle>{field}</StyledFieldTitle>
           {values.map((value) => (
-            <OptionButton
+            <StyledOptionButton
               key={value}
               selected={selectedFilters[field]?.includes(value) || false}
               onClick={() => handleOptionChange(field, value)}
             >
               {value}
-            </OptionButton>
+            </StyledOptionButton>
           ))}
-        </FilterField>
+        </StyledFilterField>
       ))}
-    </FilterContainer>
+    </StyledFilterContainer>
   );
 };
 

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { FaTimes } from 'react-icons/fa';
-import { Title2 } from "../../screens/dashboard/Dashboard";
+import { StyledTitle2 } from "../../screens/dashboard/Dashboard.styles";
 
 interface RegisterPopUpProps {
   isOpen: boolean;
@@ -11,7 +11,7 @@ interface RegisterPopUpProps {
   isStaffRego?: boolean;
 }
 
-const Overlay = styled.div`
+const StyledOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -51,7 +51,7 @@ const Overlay = styled.div`
 //   }
 // `
 
-const CloseButton = styled.button`
+const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
@@ -68,7 +68,7 @@ const CloseButton = styled.button`
   }
 `
 
-const Modal = styled.div`
+const StyledModal = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -113,7 +113,7 @@ const Modal = styled.div`
 //   gap: 40px;
 // `
 
-export const Input = styled.input`
+export const StyledInput = styled.input`
   padding: 10px 1.5%;
   /* height: 100%; */
   box-sizing: border-box;
@@ -146,43 +146,43 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
   if (!isOpen) return null;
 
   return (
-    <Overlay onClick={onClose}>
+    <StyledOverlay onClick={onClose}>
       {/* <Container onClick={(e) => e.stopPropagation()}> */}
-      <Modal>
+      <StyledModal>
 
-      <CloseButton onClick={onClose}>
+      <StyledCloseButton onClick={onClose}>
         <FaTimes />
-      </CloseButton>
+      </StyledCloseButton>
         <div>
           {isRego &&
-            <Title2>
+            <StyledTitle2>
               You have successfully registered for the Competition!{" "}
               {"\n\n"}
               <span style={{ fontWeight: "normal" }}>
                 Please navigate to the Team Profile Page to join a team or
                 invite team members
               </span>
-            </Title2>
+            </StyledTitle2>
           }
 
           {isTeamJoin &&
-            <Title2>
+            <StyledTitle2>
               You have successfully {"\n"} joined the Team: {"\n\n"}{" "}
               <span style={{ fontWeight: "normal", fontStyle: "italic" }}>
                 {teamName}
               </span>
-            </Title2>
+            </StyledTitle2>
           }
 
           {isStaffRego &&
-            <Title2>
+            <StyledTitle2>
               Your Request has been {"\n"} sent {"\n\n"} Please wait for{" "}
               {"\n"} Administrator approval
-            </Title2>
+            </StyledTitle2>
           }
         </div>
-      </Modal>
+      </StyledModal>
       {/* </Container> */}
-    </Overlay>
+    </StyledOverlay>
   );
 };
