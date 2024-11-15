@@ -3,7 +3,7 @@ import { useOutletContext, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
 import { sendRequest } from "../../../utility/request";
-import { ProfileCard } from "../components/ProfileCard";
+import { ProfileCard } from "../subcomponents/ProfileCard/ProfileCard";
 import { backendURL } from "../../../../config/backendURLConfig";
 import { EditCompUserDetails } from "../subcomponents/EditCompUserDetails/EditCompUserDetails";
 

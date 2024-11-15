@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { CustomToggleSwitch } from "../../components/toggle_switch/ToggleSwitch";
 import styled from "styled-components";
 import { useNavigate, useParams, Outlet } from "react-router-dom";
-import { TeamHeader } from "./components/TeamHeader";
+import { TeamHeader } from "./subcomponents/TeamHeader/TeamHeader";
 import { sendRequest } from "../../utility/request";
 
 import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/TeamDetails";

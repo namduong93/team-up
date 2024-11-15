@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Student } from "../../../../shared_types/Competition/team/TeamDetails";
 import { useState } from "react";
 import { TeamActionCard } from "../../../components/general_utility/TeamActionCard";
-import { ProfileCard } from "../components/ProfileCard";
+import { ProfileCard } from "../subcomponents/ProfileCard/ProfileCard";
 import { FaTimes } from "react-icons/fa";
 import { MarkdownDisplay } from "../../general_components/MarkdownDisplay";
 

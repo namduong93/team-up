@@ -8,7 +8,7 @@ import Fuse from "fuse.js";
 import { StyledBackground, StyledDropdownContainer, StyledDropdownContent, StyledDropdownHeader, StyledFAQSearchBar, StyledSettingsContainer, StyledThemeButton, StyledTitle } from "./Settings.styles";
 import { FaChevronDown } from "react-icons/fa";
 import { UpdatePassword } from "./subcomponents/UpdatePassword";
-import { ProfileCard } from "../student/components/ProfileCard";
+import { ProfileCard } from "../student/subcomponents/ProfileCard/ProfileCard";
 import { backendURL } from "../../../config/backendURLConfig";
 
 interface FAQ {
