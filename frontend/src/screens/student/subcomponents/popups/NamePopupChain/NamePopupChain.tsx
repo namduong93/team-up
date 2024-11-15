@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { sendRequest } from "../../../../../utility/request";
-import { FirstStepPopUp } from "./subcomponents/NamePopup1/FirstStepPopUp";
-import { SecondStepPopUp } from "../SecondStepPopUp";
-import { ThirdStepPopUp } from "../ThirdStepPopUp";
+import { NamePopup1 } from "./subcomponents/NamePopup1/NamePopup1";
+import { SecondStepPopup } from "../SecondStepPopup";
+import { ThirdStepPopup } from "../ThirdStepPopup";
 
-interface NamePopUpChainProps {
+interface NamePopupChainProps {
   handleClose: () => void;
 }
 
@@ -19,7 +19,7 @@ const StyledHeading = styled.h2`
   word-break: break-word;
 `;
 
-export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({
+export const NamePopupChain: React.FC<NamePopupChainProps> = ({
   handleClose,
 }) => {
   const { compId } = useParams();
@@ -51,7 +51,7 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({
     switch (currentStep) {
       case 1:
         return (
-          <FirstStepPopUp
+          <NamePopup1
             heading={<StyledHeading>Change Team {"\n Name"}</StyledHeading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
@@ -62,7 +62,7 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({
         );
       case 2:
         return (
-          <SecondStepPopUp
+          <SecondStepPopup
             heading={
               <StyledHeading>
                 Are you sure you would {"\nlike to change your Team's"}{" "}
@@ -75,7 +75,7 @@ export const NamePopUpChain: React.FC<NamePopUpChainProps> = ({
         );
       case 3:
         return (
-          <ThirdStepPopUp
+          <ThirdStepPopup
             heading={
               <StyledHeading>
                 Your team's new name {"\nis now pending approval"}{" "}

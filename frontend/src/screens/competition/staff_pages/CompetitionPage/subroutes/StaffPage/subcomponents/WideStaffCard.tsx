@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import { StaffCardProps } from "./StaffCardProps";
 import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
-import { StaffRoles, StyledStandardContainerDiv } from "./StaffRole";
+import { CompRoles, StyledStandardContainerDiv } from "./CompRoles";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
 import { StyledStaffAccessLevel } from "../StaffPage.styles";
@@ -34,7 +34,7 @@ export const WideStaffCard: FC<StaffCardProps> = ({
 
       <StyledStandardContainerDiv style={{ overflow: 'visible' }}>
         <StyledStandardContainerDiv style={{ maxWidth: '90%', overflow: 'visible' }}>
-          <StaffRoles roles={staffDetails.roles as CompetitionRole[]} />
+          <CompRoles roles={staffDetails.roles as CompetitionRole[]} />
         </StyledStandardContainerDiv>
       </StyledStandardContainerDiv>
 

@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { sendRequest } from "../../../../../utility/request";
 import { SitePopup1 } from "./subcomponents/SitePopup1/SitePopup1";
-import { SecondStepPopUp } from "../SecondStepPopUp";
-import { ThirdStepPopUp } from "../ThirdStepPopUp";
+import { SecondStepPopup } from "../SecondStepPopup";
+import { ThirdStepPopup } from "../ThirdStepPopup";
 
-interface SitePopUpChainProps {
+interface SitePopupChainProps {
   compId?: number;
   handleClose: () => void;
   siteOptionsState?: [
@@ -24,7 +24,7 @@ const StyledHeading = styled.h2`
   word-break: break-word;
 `;
 
-export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({
+export const SitePopupChain: React.FC<SitePopupChainProps> = ({
   compId = useParams().compId,
   handleClose,
   siteOptionsState = [[{ value: "", label: "" }], () => {}],
@@ -68,7 +68,7 @@ export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({
         );
       case 2:
         return (
-          <SecondStepPopUp
+          <SecondStepPopup
             heading={
               <StyledHeading>
                 Are you sure you would {"\nlike to change your Team's"}{" "}
@@ -81,7 +81,7 @@ export const SitePopUpChain: React.FC<SitePopUpChainProps> = ({
         );
       case 3:
         return (
-          <ThirdStepPopUp
+          <ThirdStepPopup
             heading={
               <StyledHeading>
                 Your team's new site location {"\nis now pending approval"}{" "}

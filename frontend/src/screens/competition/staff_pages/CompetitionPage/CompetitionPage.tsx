@@ -4,7 +4,7 @@ import { CompetitionInformation as CompetitionDetails } from "../../../../../sha
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
-import { StyledSortOption } from "../../../../components/page_header/components/SortSelect";
+import { SortOption, StyledSortOption } from "../../../../components/page_header/components/SortSelect";
 import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
 import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";

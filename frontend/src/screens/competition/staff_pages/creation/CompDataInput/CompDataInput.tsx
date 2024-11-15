@@ -8,7 +8,7 @@ import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledContainer, S
 import TextInput from "../../../../../components/general_utility/TextInput";
 import TextInputLight from "../../../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../../../components/general_utility/RadioButton";
-import SiteLocationForm from "./subcomponents/SiteLocationDataInput/SiteLocationForm";
+import SiteLocationDataInput from "./subcomponents/SiteLocationDataInput/SiteLocationDataInput";
 
 
 export interface SiteLocation {
@@ -30,7 +30,7 @@ export interface OtherSiteLocation {
 //   return [{ value: "", label: "Please Select" }, ...timezones];
 // };
 
-export const CompetitionDetails: FC = () => {
+export const CompDataInput: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [locationError, setLocationError] = useState<ReactNode>("");
@@ -369,7 +369,7 @@ export const CompetitionDetails: FC = () => {
             descriptor="Please type a unique code that will be used to identify your Competition"
           />
 
-          <SiteLocationForm onAddLocation={handleAddSiteLocation} />
+          <SiteLocationDataInput onAddLocation={handleAddSiteLocation} />
 
           {locationError && (
             <div

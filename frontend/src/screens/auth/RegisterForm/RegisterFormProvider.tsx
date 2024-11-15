@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MultiStepRegoFormContext } from "./hooks/useMultiStepRegoForm";
 import { FormState, initialState } from "./FormState";
 
-export const MultiStepRegoFormProvider: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({children}) => {
+export const RegisterFormProvider: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({children}) => {
   const [formData, setFormData] = useState<FormState>(initialState);
 
   const updateFormData = (data: Partial<FormState>) => {

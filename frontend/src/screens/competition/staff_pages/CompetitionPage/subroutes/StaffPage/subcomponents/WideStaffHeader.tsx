@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useTheme } from "styled-components";
 import { StyledUserNameContainerDiv, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
-import { StyledStandardContainerDiv } from "./StaffRole";
+import { StyledStandardContainerDiv } from "./CompRoles";
 import { StyledStandardSpan } from "./WideStaffCard";
 
 export const WideStaffHeader: FC = () => {

@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { StaffCardProps } from "./StaffCardProps";
 import { Field, StyledStudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
 import { StyledNarrowStatusDiv, StyledStaffAccessLevel } from "../StaffPage.styles";
-import { StaffRoles } from "./StaffRole";
+import { CompRoles } from "./CompRoles";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
 import { StaffInfoBar } from "../../../components/InfoBar/StaffInfoBar/StaffInfoBar";
@@ -35,7 +35,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
           label="Role"
           value={
             <StyledNarrowStatusDiv>
-              <StaffRoles
+              <CompRoles
                 style={{ width: "100%" }}
                 roles={staffDetails.roles as CompetitionRole[]}
               />

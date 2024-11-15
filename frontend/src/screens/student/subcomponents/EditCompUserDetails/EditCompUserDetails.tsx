@@ -4,7 +4,7 @@ import { StyledButtonContainer, StyledCloseButton, StyledCloseContainer, StyledC
 import { FaTimes } from "react-icons/fa";
 import { StyledColon, StyledDescriptor, StyledDoubleInputContainer, StyledFormLabel, StyledText } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
 import DropdownInputLight from "../../../../components/general_utility/DropDownLight";
-import { yearOptions } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividual";
+import { yearOptions } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput";
 import TextInputLight from "../../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../../components/general_utility/RadioButton";
 import { CompetitionLevel } from "../../../../../shared_types/Competition/CompetitionLevel";
@@ -17,7 +17,7 @@ interface EditCompPreferencesProps {
   onClose: () => void;
 };
 
-export const EditCompPreferences: FC<EditCompPreferencesProps> = ({
+export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
   student,
   onSubmit,
   onClose,

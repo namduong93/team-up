@@ -12,7 +12,7 @@ import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/Advanc
 import TextInput from "../../../../components/general_utility/TextInput";
 import DescriptiveTextInput from "../../../../components/general_utility/DescriptiveTextInput";
 
-export const StaffRoleRegistration: FC = () => {
+export const StaffRegisterForm: FC = () => {
   const { code } = useParams();
   const navigate = useNavigate();
 

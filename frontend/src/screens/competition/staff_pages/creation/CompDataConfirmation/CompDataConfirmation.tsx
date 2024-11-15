@@ -16,7 +16,7 @@ interface LocationState {
   optionDisplayList: Array<{ value: string, label: string, defaultSite: string }>;
 }
 
-export const CompetitionConfirmation: FC = () => {
+export const CompDataConfirmation: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   

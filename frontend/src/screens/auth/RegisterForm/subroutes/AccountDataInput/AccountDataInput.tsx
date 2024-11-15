@@ -8,7 +8,7 @@ import TextInput from "../../../../../components/general_utility/TextInput";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
 import { StyledErrorMessage } from "../../../../general_styles/error_styles";
 
-export const AccountInformation: FC = () => {
+export const AccountDataInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
 

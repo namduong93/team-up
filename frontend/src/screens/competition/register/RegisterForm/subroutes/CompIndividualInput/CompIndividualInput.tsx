@@ -40,7 +40,7 @@ export const yearOptions = [
   { value: "10", label: "10th" },
 ];
 
-export const CompetitionIndividual: FC = () => {
+export const CompIndividualInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepCompRegoForm();
   const { code } = useParams<{ code?: string }>();

@@ -12,7 +12,7 @@ import { defaultCompInformation } from "../../../../../../register/RegisterForm/
 import TextInput from "../../../../../../../../components/general_utility/TextInput";
 import { StyledDoubleInputContainer } from "../../../../../creation/CompDataInput/CompDataInput.styles";
 import TextInputLight from "../../../../../../../../components/general_utility/TextInputLight";
-import SiteLocationForm from "../../../../../creation/CompDataInput/subcomponents/SiteLocationDataInput/SiteLocationForm";
+import SiteLocationDataInput from "../../../../../creation/CompDataInput/subcomponents/SiteLocationDataInput/SiteLocationDataInput";
 import { TransparentResponsiveButton } from "../../../../../../../../components/responsive_fields/ResponsiveButton";
 import MarkdownIt from "markdown-it";
 
@@ -375,7 +375,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
               descriptor="Please type a unique code that will be used to identify your Competition"
             />
 
-            <SiteLocationForm onAddLocation={handleAddSiteLocation} />
+            <SiteLocationDataInput onAddLocation={handleAddSiteLocation} />
 
             {locationError && (
               <div

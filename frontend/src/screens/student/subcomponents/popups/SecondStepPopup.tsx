@@ -47,13 +47,13 @@ const StyledButtonContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-interface SecondStepPopUpProps {
+interface SecondStepPopupProps {
   heading: React.ReactNode;
   onClose: () => void;
   onNext: () => void;
 }
 
-export const SecondStepPopUp: React.FC<SecondStepPopUpProps> = ({
+export const SecondStepPopup: React.FC<SecondStepPopupProps> = ({
   heading,
   onClose,
   onNext,

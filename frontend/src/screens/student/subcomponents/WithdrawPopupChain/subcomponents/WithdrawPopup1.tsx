@@ -54,7 +54,7 @@ interface OptionPopUpProps {
   actionButtonText: string;
 }
 
-export const OptionPopUp: React.FC<OptionPopUpProps> = ({
+export const WithdrawPopup1: React.FC<OptionPopUpProps> = ({
   heading,
   onClose,
   onNext,

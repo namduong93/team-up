@@ -9,7 +9,7 @@ import DescriptiveTextInput from "../../../../../components/general_utility/Desc
 import MultiRadio from "../../../../../components/general_utility/MultiRadio";
 import { dietaryOptions, tShirtOptions } from "./SiteDataOptions";
 
-export const SiteInformation: FC = () => {
+export const SiteDataInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm(); // Access the form context
 

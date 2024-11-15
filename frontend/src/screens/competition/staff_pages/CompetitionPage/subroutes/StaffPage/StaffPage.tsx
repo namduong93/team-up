@@ -22,7 +22,7 @@ const STAFF_DISPLAY_FILTER_OPTIONS = {
   Roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator]
 };
 
-export const StaffDisplay: FC = () => {
+export const StaffPage: FC = () => {
   const { compId } = useParams();
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
     universityOptionState: [universityOption, setUniversityOption],

@@ -7,7 +7,7 @@ import TextInput from "../../../components/general_utility/TextInput";
 import { backendURL } from "../../../../config/backendURLConfig";
 import { StyledCustomButton } from "../../general_styles/button_styles";
 
-export const Landing: FC = () => {
+export const Login: FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

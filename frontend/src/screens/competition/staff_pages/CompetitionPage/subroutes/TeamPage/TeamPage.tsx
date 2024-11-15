@@ -10,7 +10,7 @@ import { fetchTeams } from "../../utils/fetchTeams";
 import { DRAG_ANIMATION_DURATION, TeamCard } from "./subcomponents/TeamCard/TeamCard";
 import { sendRequest } from "../../../../../../utility/request";
 import { StyledHeading, StyledOverlay, StyledTeamCardGridDisplay } from "./TeamPage.styles";
-import { ThirdStepPopUp } from "../../../../../student/subcomponents/popups/ThirdStepPopUp";
+import { ThirdStepPopup } from "../../../../../student/subcomponents/popups/ThirdStepPopup";
 import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
 import { ResponsiveActionButton } from "../../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { FaSave } from "react-icons/fa";
@@ -30,7 +30,7 @@ const TEAM_DISPLAY_FILTER_OPTIONS = {
   "Team Level": ["Level A", "Level B"],
 };
 
-export const TeamDisplay: FC = () => {
+export const TeamPage: FC = () => {
   const { compId } = useParams();
   const theme = useTheme();
   const {
@@ -213,7 +213,7 @@ export const TeamDisplay: FC = () => {
       {isCreationSuccessPopUpOpen && (
         <>
           <StyledOverlay $isOpen={true} />
-          <ThirdStepPopUp
+          <ThirdStepPopup
             heading={
               <StyledHeading>
                 The competition has successfully {"\nbeen created"}{" "}

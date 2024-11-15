@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { sendRequest } from "../../../../utility/request";
-import { OptionPopUp } from "./subcomponents/WithdrawPopup1";
-import { SecondStepPopUp } from "../popups/SecondStepPopUp";
-import InvitePopUp from "../InvitePopUp";
+import { WithdrawPopup1 } from "./subcomponents/WithdrawPopup1";
+import { SecondStepPopup } from "../popups/SecondStepPopup";
+import InvitePopup from "../InvitePopup";
 
 
-interface WithdrawPopUpChainProps {
+interface WithdrawPopupChainProps {
   handleClose: () => void;
 }
 
@@ -20,7 +20,7 @@ const StyledHeading = styled.h2`
   word-break: break-word;
 `;
 
-export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
+export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
   handleClose,
 }) => {
   const { compId } = useParams();
@@ -59,7 +59,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
     switch (currentStep) {
       case 1:
         return (
-          <OptionPopUp
+          <WithdrawPopup1
             heading={
               <StyledHeading>
                 Withdrawing from the Team
@@ -78,7 +78,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
         );
       case 2:
         return (
-          <SecondStepPopUp
+          <SecondStepPopup
             heading={
               <StyledHeading>Are you sure you would {"\nlike to withdraw?"}</StyledHeading>
             }
@@ -88,7 +88,7 @@ export const WithdrawPopUpChain: React.FC<WithdrawPopUpChainProps> = ({
         );
       case 3:
         return (
-          <InvitePopUp
+          <InvitePopup
             heading={
               <StyledHeading>
                 Copy and send your

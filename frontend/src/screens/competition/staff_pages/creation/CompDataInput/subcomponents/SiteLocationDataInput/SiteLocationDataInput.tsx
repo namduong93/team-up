@@ -19,7 +19,7 @@ interface University {
   name: string;
 }
  
-const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) => {
+const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({ onAddLocation }) => {
   const [defaultSite, setDefaultSite] = useState('');
   const [institutionOptions, setInstitutionOptions] = useState<Array<{ value: string, label: string }>>([]);
 
@@ -87,4 +87,4 @@ const SiteLocationForm: React.FC<SiteLocationFormProps> = ({ onAddLocation }) =>
   );
 };
 
-export default SiteLocationForm;
+export default SiteLocationDataInput;

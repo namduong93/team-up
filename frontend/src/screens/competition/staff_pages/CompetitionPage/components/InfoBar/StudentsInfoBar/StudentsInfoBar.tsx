@@ -8,7 +8,7 @@ import { StudentInfo } from "../../../../../../../../shared_types/Competition/st
 import { sendRequest } from "../../../../../../../utility/request";
 import { StyledEditIcon, StyledEditIconButton, StyledProfilePic } from "../../../../../../Account/Account.styles";
 import { backendURL } from "../../../../../../../../config/backendURLConfig";
-import { StaffRoles } from "../../../subroutes/StaffPage/subcomponents/StaffRole";
+import { CompRoles } from "../../../subroutes/StaffPage/subcomponents/CompRoles";
 import { StyledEditableInput, StyledEditableTextArea, StyledToggleSelect } from "../components/TeamStudentInfoCard";
 import { StyledBooleanStatus } from "../../../subroutes/AttendeesPage/subcomponents/BooleanStatus";
 import { CompetitionLevel } from "../../../../../../../../shared_types/Competition/CompetitionLevel";
@@ -171,7 +171,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
 
           <StyledInfoBarField>
             <StyledLabelSpan>Roles:</StyledLabelSpan>
-            <StaffRoles roles={studentData.roles} />
+            <CompRoles roles={studentData.roles} />
             <StyledEditIconButton onClick={() => setIsEditing((p) => !p)}>
               <StyledEditIcon />
             </StyledEditIconButton>

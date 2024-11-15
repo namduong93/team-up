@@ -4,16 +4,16 @@ import { useMultiStepCompRegoForm } from "../../hooks/useMultiStepCompRegoForm";
 import { sendRequest } from "../../../../../../utility/request";
 import { Course, CourseCategory } from "../../../../../../../shared_types/University/Course";
 import { EditRego } from "../../../../../../../shared_types/Competition/staff/Edit";
-import { DEFAULT_REGO_FIELDS } from "../../../../staff_pages/CompetitionPage/subroutes/ManagePage/StaffActionCard";
+import { DEFAULT_REGO_FIELDS } from "../../../../staff_pages/CompetitionPage/subroutes/ManagePage/ManagePage";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
 import { CompRegistrationProgressBar } from "../../../../../../components/progress_bar/ProgressBar";
-import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledTitle } from "./CompExperience.styles";
+import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledTitle } from "./CompExperienceInput.styles";
 import MultiRadio from "../../../../../../components/general_utility/MultiRadio";
 import TextInput from "../../../../../../components/general_utility/TextInput";
 import RadioButton from "../../../../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../../../../components/general_utility/DescriptiveTextInput";
 
-export const CompetitionExperience: FC = () => {
+export const CompExperienceInput: FC = () => {
   const navigate = useNavigate();
   const { code } = useParams<{ code?: string }>();
   const { formData, setFormData } = useMultiStepCompRegoForm();

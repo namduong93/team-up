@@ -10,7 +10,7 @@ import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/T
 
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement";
 import { StyledMainPageDiv, StyledOverflowFlexBackground, StyledPageOptionsContainerDiv, StyledToggleOptionDiv } from "../competition/staff_pages/CompetitionPage/subroutes/CommonSubStyles.styles";
-import { WithdrawPopUpChain } from "./subcomponents/WithdrawPopupChain/WithdrawPopUpChain";
+import { WithdrawPopupChain } from "./subcomponents/WithdrawPopupChain/WithdrawPopupChain";
 
 const StyledTeamToggleOptionDiv = styled(StyledToggleOptionDiv)``;
 
@@ -115,7 +115,7 @@ export const TeamProfile: FC = () => {
     <StyledTeamOverflowFlexBackground>
       <StyledMainPageDiv>
         <StyledOverlay $isOpen={withdrawPopUpOpen}>
-          <WithdrawPopUpChain handleClose={() => setWithdrawPopUpOpen(false)} />
+          <WithdrawPopupChain handleClose={() => setWithdrawPopUpOpen(false)} />
         </StyledOverlay>
 
         <TeamHeader

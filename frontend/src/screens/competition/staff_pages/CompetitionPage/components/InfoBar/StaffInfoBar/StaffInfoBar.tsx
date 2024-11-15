@@ -11,7 +11,7 @@ import { backendURL } from "../../../../../../../../config/backendURLConfig";
 import { StyledEditableTextArea } from "../components/TeamStudentInfoCard";
 import { StyledAccessLabelDiv, StyledCustomCheckbox, StyledCustomRadio, StyledRoleLabelDiv } from "./StaffInfoBar.styles";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
-import { StaffRoles } from "../../../subroutes/StaffPage/subcomponents/StaffRole";
+import { CompRoles } from "../../../subroutes/StaffPage/subcomponents/CompRoles";
 import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
 import { StyledStaffAccessLevel } from "../../../subroutes/StaffPage/StaffPage.styles";
 import { StyledInfoBarField, StyledLabelSpan, StyledNoWrapLabelSpan, StyledVerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
@@ -187,7 +187,7 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
             </StyledInfoBarField>
           </div> :
           <StyledInfoBarField style={{ maxWidth: '160px' }}>
-            <StaffRoles roles={staffData.roles} />
+            <CompRoles roles={staffData.roles} />
           </StyledInfoBarField>}
         </StyledVerticalInfoBarField>
 

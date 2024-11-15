@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { AttendeesCardProps } from "./AttendeesCardProps";
 import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
-import { StaffRoles, StyledStandardContainerDiv } from "../../StaffPage/subcomponents/StaffRole";
+import { CompRoles, StyledStandardContainerDiv } from "../../StaffPage/subcomponents/CompRoles";
 import { StyledStandardSpan } from "../../StaffPage/subcomponents/WideStaffCard";
 import { StyledBooleanStatus } from "./BooleanStatus";
 import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar/AttendeesInfoBar";
@@ -35,7 +35,7 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({
         <StyledStandardSpan>{attendeesDetails.sex}</StyledStandardSpan>
       </StyledStandardContainerDiv>
 
-      <StaffRoles roles={attendeesDetails.roles} />
+      <CompRoles roles={attendeesDetails.roles} />
 
       <StyledStandardContainerDiv>
         <StyledStandardSpan>{attendeesDetails.universityName}</StyledStandardSpan>

@@ -4,7 +4,7 @@ import { useMultiStepRegoForm } from "../../hooks/useMultiStepRegoForm";
 import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { StyledButton, StyledFormContainer, RoleContainer, StyledStaffButton, StyledStudentButton, StyledTitle } from "./RoleSelect.styles";
 
-export const RoleRegistration: FC = () => {
+export const RoleSelect: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
 

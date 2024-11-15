@@ -132,7 +132,7 @@ const StyledAdditionalRolesContainer = styled.div<{ $numContents: number }>`
   top: calc(100% + 2px);
 `;
 
-export const StaffRoles: FC<StaffRolesProps> = ({ roles, children, ...props }) => {
+export const CompRoles: FC<StaffRolesProps> = ({ roles, children, ...props }) => {
   const isMulti = roles.length > 1;
 
 

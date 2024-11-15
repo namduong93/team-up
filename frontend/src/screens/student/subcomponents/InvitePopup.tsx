@@ -72,7 +72,7 @@ interface InvitePopUpProps {
   onClose: () => void;
 }
 
-const InvitePopUp: React.FC<InvitePopUpProps> = ({
+const InvitePopup: React.FC<InvitePopUpProps> = ({
   heading,
   text,
   onClose,
@@ -95,4 +95,4 @@ const InvitePopUp: React.FC<InvitePopUpProps> = ({
   );
 };
 
-export default InvitePopUp;
+export default InvitePopup;

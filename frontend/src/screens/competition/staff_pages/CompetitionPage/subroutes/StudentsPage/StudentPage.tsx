@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 import { useTheme } from "styled-components";
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import Fuse from "fuse.js";
 import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
@@ -21,7 +21,7 @@ const STUDENT_DISPLAY_FILTER_OPTIONS = {
   Status: ['Matched', 'Unmatched'],
 };
 
-export const StudentDisplay = () => {
+export const StudentPage: FC = () => {
   const { filters, sortOption, searchTerm, removeFilter, setFilters,
     universityOptionState: [universityOption, setUniversityOption],
     setFilterOptions, setSortOptions, studentsState: [students, setStudents] } = useCompetitionOutletContext('students');

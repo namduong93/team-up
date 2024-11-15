@@ -5,7 +5,7 @@ import { StudentInfo } from "../../../../shared_types/Competition/student/Studen
 import { sendRequest } from "../../../utility/request";
 import { ProfileCard } from "../components/ProfileCard";
 import { backendURL } from "../../../../config/backendURLConfig";
-import { EditCompPreferences } from "../subcomponents/EditCompUserDetails/EditCompPreferences";
+import { EditCompUserDetails } from "../subcomponents/EditCompUserDetails/EditCompUserDetails";
 
 const StyledDetailsContainer = styled.div`
   display: flex;
@@ -150,7 +150,7 @@ export const TeamDetails: FC = () => {
         ))}
       </StyledStudentsContainer>
       {isEditing && (
-        <EditCompPreferences
+        <EditCompUserDetails
           student={studentInfo}
           onSubmit={handleSave}
           onClose={() => setIsEditing(false)}

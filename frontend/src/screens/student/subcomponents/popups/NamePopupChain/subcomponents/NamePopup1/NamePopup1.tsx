@@ -3,7 +3,7 @@ import { StyledButton, StyledCloseButton, StyledModal } from "./NamePopup1.style
 import TextInputLight from "../../../../../../../components/general_utility/TextInputLight";
 
 
-interface FirstStepPopUpProps {
+interface NamePopup1Props {
   heading: React.ReactNode;
   onClose: () => void;
   onNext: () => void;
@@ -12,7 +12,7 @@ interface FirstStepPopUpProps {
   setInputValue: (value: string) => void;
 }
 
-export const FirstStepPopUp: React.FC<FirstStepPopUpProps> = ({
+export const NamePopup1: React.FC<NamePopup1Props> = ({
   heading,
   onClose,
   onNext,

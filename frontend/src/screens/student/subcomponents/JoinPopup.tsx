@@ -76,7 +76,7 @@ interface JoinPopUpProps {
   currentTeamCode?: string;
 }
 
-const JoinPopUp: React.FC<JoinPopUpProps> = ({
+const JoinPopup: React.FC<JoinPopUpProps> = ({
   heading,
   onClose,
   currentTeamCode,
@@ -130,4 +130,4 @@ const JoinPopUp: React.FC<JoinPopUpProps> = ({
   );
 };
 
-export default JoinPopUp;
+export default JoinPopup;

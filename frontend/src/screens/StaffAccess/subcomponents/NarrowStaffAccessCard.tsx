@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { StaffAccessCardProps } from "../StaffAccounts";
+import { StaffAccessCardProps } from "../StaffAccessPage";
 import { UserAccess } from "../../../../shared_types/User/User";
 import { sendRequest } from "../../../utility/request";
 import { Field, StyledStudentInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/subcomponents/StudentInfoCard";

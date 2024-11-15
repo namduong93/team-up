@@ -1,6 +1,6 @@
 import { PanInfo } from "framer-motion";
 import { Student, TeamDetails } from "../../../../../../../../../shared_types/Competition/team/TeamDetails";
-import { DragEndEvent } from "../../TeamDisplay";
+import { DragEndEvent } from "../../TeamPage";
 import { ButtonConfiguration } from "../../../../hooks/useCompetitionOutletContext";
 import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
 import { FC, useState } from "react";

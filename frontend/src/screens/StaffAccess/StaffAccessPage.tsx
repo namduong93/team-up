@@ -4,7 +4,7 @@ import { UserAccess } from "../../../shared_types/User/User";
 import { fetchStaffRequests } from "./util/fetchStaffRequests";
 import Fuse from "fuse.js";
 import { sendRequest } from "../../utility/request";
-import { StyledFilterTagContainer, StyledPageBackground, StyledStaffContainer, StyledStaffRecords } from "./StaffAccess.styles";
+import { StyledFilterTagContainer, StyledPageBackground, StyledStaffContainer, StyledStaffRecords } from "./StaffAccessPage.styles";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { StaffAccessButtons } from "./subcomponents/StaffAccessButtons";
 import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../dashboard/Dashboard.styles";
@@ -28,7 +28,7 @@ const STAFF_DISPLAY_FILTER_OPTIONS: Record<string, Array<string>> = {
   Access: [UserAccess.Accepted, UserAccess.Pending, UserAccess.Rejected],
 };
 
-export const StaffAccounts: FC = () => {
+export const StaffAccessPage: FC = () => {
   const [staffList, setStaffList] = useState<Array<StaffInfo>>([]);
   const [sortOption, setSortOption] = useState<string | null>(null);
   const [filters, setFilters] = useState<Record<string, Array<string>>>({});

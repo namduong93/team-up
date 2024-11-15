@@ -40,12 +40,12 @@ const StyledCloseButton = styled.button`
   }
 `
 
-interface ThirdStepPopUpProps {
+interface ThirdStepPopupProps {
   heading: React.ReactNode;
   onClose: () => void;
 }
 
-export const ThirdStepPopUp: React.FC<ThirdStepPopUpProps> = ({ heading, onClose }) => {
+export const ThirdStepPopup: React.FC<ThirdStepPopupProps> = ({ heading, onClose }) => {
 
   return (
     <>

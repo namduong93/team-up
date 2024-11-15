@@ -4,10 +4,10 @@ import { FaUserPlus, FaUsers, FaEdit, FaGlobe } from "react-icons/fa";
 import { sendRequest } from "../../utility/request";
 import { useParams } from "react-router-dom";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
-import InvitePopUp from "../../screens/student/subcomponents/InvitePopUp";
-import JoinPopUp from "../../screens/student/subcomponents/JoinPopUp";
-import { SitePopUpChain } from "../../screens/student/subcomponents/popups/SitePopupChain/SitePopUpChain";
-import { NamePopUpChain } from "../../screens/student/subcomponents/popups/NamePopupChain/NamePopUpChain";
+import InvitePopup from "../../screens/student/subcomponents/InvitePopup";
+import JoinPopup from "../../screens/student/subcomponents/JoinPopup";
+import { SitePopupChain } from "../../screens/student/subcomponents/popups/SitePopupChain/SitePopupChain";
+import { NamePopupChain } from "../../screens/student/subcomponents/popups/NamePopupChain/NamePopupChain";
 
 type ActionType = "invite" | "join" | "name" | "site";
 
@@ -185,7 +185,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
       />
 
       {modalOpen === "invite" && (
-        <InvitePopUp
+        <InvitePopup
           heading={
             <StyledHeading>
               Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}
@@ -197,7 +197,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
       )}
 
       {modalOpen === "join" && (
-        <JoinPopUp
+        <JoinPopup
           heading={
             <StyledHeading>
               Enter the details of the {"\nTeam you would like to join"}
@@ -209,14 +209,14 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
       )}
 
       {modalOpen === "site" && (
-        <SitePopUpChain
+        <SitePopupChain
           siteOptionsState={[siteLocationOptions, setSiteLocationOptions]}
           handleClose={() => setModalOpen(null)}
         />
       )}
 
       {modalOpen === "name" && (
-        <NamePopUpChain handleClose={() => setModalOpen(null)} />
+        <NamePopupChain handleClose={() => setModalOpen(null)} />
       )}
     </>
   );

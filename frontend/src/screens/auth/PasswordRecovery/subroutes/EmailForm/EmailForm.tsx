@@ -4,7 +4,7 @@ import { StyledFormContainer } from "../../PasswordRecovery.styles";
 import TextInput from "../../../../../components/general_utility/TextInput";
 import { StyledCustomButton } from "../../../../general_styles/button_styles";
 
-export const EmailRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ...props }) => {
+export const EmailForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ...props }) => {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 

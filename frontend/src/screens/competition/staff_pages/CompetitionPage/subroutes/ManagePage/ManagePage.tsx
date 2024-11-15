@@ -19,7 +19,7 @@ import { EditSiteCapacityPopUp } from "./subcomponents/EditSiteCapacityPopup/Edi
 import { EditCompDetailsPopUp } from "./subcomponents/EditCompDataPopup/EditCompDetailsPopUp";
 
 
-interface StaffActionCardProps {
+interface ManagePageProps {
 }
 
 
@@ -42,7 +42,7 @@ export const DEFAULT_REGO_FIELDS = {
   enableRegionalParticipationField: true,
 }
 
-export const StaffActionCard: FC<StaffActionCardProps> = ({}) => {
+export const ManagePage: FC<ManagePageProps> = ({}) => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);

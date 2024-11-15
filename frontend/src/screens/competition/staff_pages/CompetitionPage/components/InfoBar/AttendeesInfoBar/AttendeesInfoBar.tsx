@@ -3,7 +3,7 @@ import { InfoBar, InfoBarProps } from "../InfoBar";
 import { AttendeesDetails } from "../../../../../../../../shared_types/Competition/staff/AttendeesDetails";
 import { StyledInfoBarField, StyledLabelSpan, StyledVerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
 import { StyledProfilePic } from "../../../../../../Account/Account.styles";
-import { StaffRoles } from "../../../subroutes/StaffPage/subcomponents/StaffRole";
+import { CompRoles } from "../../../subroutes/StaffPage/subcomponents/CompRoles";
 import { backendURL } from "../../../../../../../../config/backendURLConfig";
 
 interface AttendeesInfoProps extends InfoBarProps {
@@ -75,7 +75,7 @@ export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
       <StyledVerticalInfoBarField>
         <StyledLabelSpan>Roles:</StyledLabelSpan>
         <StyledInfoBarField style={{ maxWidth: '130px' }}>
-          <StaffRoles roles={attendeesData.roles} />
+          <CompRoles roles={attendeesData.roles} />
         </StyledInfoBarField>
       </StyledVerticalInfoBarField>
 

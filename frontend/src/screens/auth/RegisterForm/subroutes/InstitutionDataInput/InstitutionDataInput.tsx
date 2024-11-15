@@ -9,7 +9,7 @@ import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentCont
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
 import TextInput from "../../../../../components/general_utility/TextInput";
 
-export const InstitutionInformation: FC = () => {
+export const InstitutionDataInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
   const [institutionOptions, setInstitutionOptions] = useState([
