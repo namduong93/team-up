@@ -6,13 +6,15 @@ import { useTheme } from "styled-components";
 import { ButtonContainer, CloseButton, DeleteIcon, Descriptor, EditorContainer, Label, LocationItem, LocationList, Modal, ModalOverlay, RowContainer2, Title2 } from "./EditCompDataPopup.styles";
 import { FaSave, FaTimes } from "react-icons/fa";
 import ReactMarkdownEditorLite from "react-markdown-editor-lite";
-import MarkdownIt from "markdown-it/index.js";
+import "react-markdown-editor-lite/lib/index.css";
+// import MarkdownIt from "markdown-it";
 import { defaultCompInformation } from "../../../../../../register/RegisterForm/subroutes/CompInformation/CompInformation";
 import TextInput from "../../../../../../../../components/general_utility/TextInput";
 import { DoubleInputContainer } from "../../../../../creation/CompDataInput/CompDataInput.styles";
 import TextInputLight from "../../../../../../../../components/general_utility/TextInputLight";
 import SiteLocationForm from "../../../../../creation/CompDataInput/subcomponents/SiteLocationDataInput/SiteLocationForm";
 import { TransparentResponsiveButton } from "../../../../../../../../components/responsive_fields/ResponsiveButton";
+import MarkdownIt from "markdown-it";
 
 interface EditCompDetailsProps {
   onClose: () => void;

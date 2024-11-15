@@ -1,3 +1,7 @@
+import styled from "styled-components";
+import { FlexBackground } from "../../../../../components/general_utility/Background";
+import { FaSearch } from "react-icons/fa";
+
 export const OverflowFlexBackground = styled(FlexBackground)`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
 `;

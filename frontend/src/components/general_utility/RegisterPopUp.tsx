@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { FaTimes } from 'react-icons/fa';
-import { Title2 } from "../../screens/dashboard/Dashboard";
+import { Title2 } from "../../screens/dashboard/Dashboard.styles";
 
 interface RegisterPopUpProps {
   isOpen: boolean;

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useTheme } from "styled-components";
 import { UserNameContainerDiv, UsernameTextSpan, WideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
-import { StandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/ManagePage/ManagePage.styles";
+import { StandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/StaffRole";
 import { StandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
 
 export const WideStaffAccessHeader: FC = () => {

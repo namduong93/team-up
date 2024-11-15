@@ -1,21 +1,20 @@
 import React, { FC, useEffect, useRef, useState } from "react"
-import { LabelSpan } from "../TeamInfoBar";
-import { CopyButton } from "../../../../../components/general_utility/CopyButton";
-import { BooleanStatus } from "../../../attendees_page/AttendeesPage";
-import { ResponsiveActionButton } from "../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { FaArrowRight, FaSave } from "react-icons/fa";
-import { AdvancedDropdown } from "../../../../../components/AdvancedDropdown/AdvancedDropdown";
-import styled, { useTheme } from "styled-components";
-import { addStudentToTeam } from "../../../teams_page/utility/addStudentToTeam";
-import { ButtonConfiguration } from "../../../hooks/useCompetitionOutletContext";
-import { EditIcon, EditIconButton } from "../../../../Account/Account";
-import { TransparentResponsiveButton } from "../../../../../components/responsive_fields/ResponsiveButton";
 import { RxReset } from "react-icons/rx";
-import { TeamDetails, Student } from "../../../../../../shared_types/Competition/team/TeamDetails";
-import { sendRequest } from "../../../../../utility/request";
+import { Student, TeamDetails } from "../../../../../../../../shared_types/Competition/team/TeamDetails";
+import { ButtonConfiguration } from "../../../hooks/useCompetitionOutletContext";
+import styled, { useTheme } from "styled-components";
+import { TextArea } from "../../../../../../student/subcomponents/EditCompUserDetails/EditCompUserDetails.styles";
 import { useParams } from "react-router-dom";
-import { TextArea } from "../../../../student/components/EditCompPreferences";
-
+import { addStudentToTeam } from "../../../subroutes/TeamPage/utility/addStudentToTeam";
+import { sendRequest } from "../../../../../../../utility/request";
+import { EditIcon, EditIconButton } from "../../../../../../Account/Account.styles";
+import { LabelSpan } from "../TeamInfoBar/TeamInfoBar.styles";
+import { CopyButton } from "../../../../../../../components/general_utility/CopyButton";
+import { BooleanStatus } from "../../../subroutes/AttendeesPage/subcomponents/BooleanStatus";
+import { ResponsiveActionButton } from "../../../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
+import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
+import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
 
 interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   student: Student;

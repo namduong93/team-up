@@ -3,9 +3,9 @@ import { FaSort } from "react-icons/fa";
 import styled from "styled-components";
 import { SortOption, SortSelect } from "./components/SortSelect";
 import { FilterIcon, FilterSelect } from "./components/FilterSelect";
-import { SearchBar } from "../../screens/competition_staff_page/components/PageUtils";
 import { NotificationButton } from "./components/NotificationButton";
 import { ResponsiveButton } from "../responsive_fields/ResponsiveButton";
+import { SearchBar } from "../../screens/competition/staff_pages/CompetitionPage/components/PageUtils";
 
 type Filters = Record<string, Array<string>>;
 

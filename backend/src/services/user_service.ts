@@ -11,7 +11,7 @@ import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
 import { convertGenderToP, UserType, UserTypeObject } from "../models/user/user.js";
 import { UserDashInfo } from "../models/user/user_dash_info.js";
-import { StaffInfo, StaffRequests } from "../../shared_types/Competition/staff/StaffInfo.js";
+import { LooseStaffInfo, StaffInfo, StaffRequests } from "../../shared_types/Competition/staff/StaffInfo.js";
 import { ServiceError } from "../errors/service_error.js";
 
 export class UserService {
@@ -187,7 +187,7 @@ export class UserService {
    * @param userId The ID of the user who asked to retrieve the information.
    * @returns {Promise<UserTypeObject | undefined>} A promise that resolves to a UserTypeObject if found, otherwise undefined.
    */
-  staffRequests = async (userId: number): Promise<Array<StaffInfo> | undefined> => {
+  staffRequests = async (userId: number): Promise<Array<LooseStaffInfo> | undefined> => {
     const userCheckAdmin:UserTypeObject = await this.userRepository.userType(userId);
     if (userCheckAdmin.type !== UserType.SYSTEM_ADMIN) {
       throw new ServiceError(ServiceError.Auth, 'User does not have access to this list');

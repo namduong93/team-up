@@ -1,135 +1,27 @@
 import { FC, useEffect, useState } from "react";
-import { StaffAccess, StaffInfo } from "../../../../../shared_types/Competition/staff/StaffInfo";
-import { InfoBar, InfoBarProps } from "./InfoBar";
-import { InfoBarField, LabelSpan, NoWrapLabelSpan, VerticalInfoBarField } from "./TeamInfoBar";
-import { CompetitionInfoContainerDiv } from "./StudentsInfoBar";
-import { EditableTextArea } from "./components/TeamStudentInfoCard";
-import { EditIcon, EditIconButton, ProfilePic } from "../../../Account/Account";
-import { StaffRoles } from "../../staff_page/components/StaffRole";
-import styled, { useTheme } from "styled-components";
-import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
-import { StaffAccessLevel } from "../../staff_page/StaffDisplay";
-import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { RxReset } from "react-icons/rx";
 import { FaSave } from "react-icons/fa";
-import { backendURL } from "../../../../../config/backendURLConfig";
-import { sendRequest } from "../../../../utility/request";
 import { useParams } from "react-router-dom";
+import { InfoBar, InfoBarProps } from "../InfoBar";
+import { StaffAccess, StaffInfo } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
+import { useTheme } from "styled-components";
+import { sendRequest } from "../../../../../../../utility/request";
+import { EditIcon, EditIconButton, ProfilePic } from "../../../../../../Account/Account.styles";
+import { backendURL } from "../../../../../../../../config/backendURLConfig";
+import { EditableTextArea } from "../components/TeamStudentInfoCard";
+import { AccessLabelDiv, CustomCheckbox, CustomRadio, RoleLabelDiv } from "./StaffInfoBar.styles";
+import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
+import { StaffRoles } from "../../../subroutes/StaffPage/subcomponents/StaffRole";
+import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
+import { StaffAccessLevel } from "../../../subroutes/StaffPage/StaffPage.styles";
+import { InfoBarField, LabelSpan, NoWrapLabelSpan, VerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
+import { CompetitionInfoContainerDiv } from "../StudentsInfoBar/StudentsInfoBar";
 
 
 interface StaffInfoProps extends InfoBarProps {
   staffInfo: StaffInfo;
   staffListState: [Array<StaffInfo>, React.Dispatch<React.SetStateAction<Array<StaffInfo>>>];
 }
-
-const CustomCheckbox = styled.input<{ $role: CompetitionRole }>`
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
-  border-radius: 5px;
-
-
-  &:checked {
-    background-color: ${({ theme, $role }) => (
-      $role === CompetitionRole.Admin ?
-      theme.roles.adminText :
-      $role === CompetitionRole.Coach ?
-      theme.roles.coachText :
-      theme.roles.siteCoordinatorText
-    )};
-  }
-`;
-
-const CustomRadio = styled.input<{ $access: StaffAccess }>`
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-  border: 1px solid ${({ theme }) => theme.colours.sidebarLine};
-  border-radius: 50%;
-
-  &:checked {
-    background-color: ${({ theme, $access }) => (
-      $access === StaffAccess.Accepted ?
-      theme.access.acceptedText :
-      $access === StaffAccess.Pending ?
-      theme.access.pendingText :
-      theme.access.rejectedText
-   )};
-  }
-`;
-
-const RoleLabelDiv = styled.div<{ $role: CompetitionRole }>`
-  width: 60%;
-  border: 1px solid ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminText :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachText :
-    theme.roles.siteCoordinatorText
-  )};
-  border-radius: 5px;
-
-  box-sizing: border-box;
-  padding-left: 2px;
-  margin-bottom: 5px;
-
-  background-color: ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminBackground :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachBackground :
-    theme.roles.siteCoordinatorBackground
-  )};
-
-  color: ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminText :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachText :
-    theme.roles.siteCoordinatorText
-  )};
-`;
-
-const AccessLabelDiv = styled.div<{ $access: StaffAccess }>`
-  width: 60%;
-  border: 1px solid ${({ theme, $access }) => (
-    $access === StaffAccess.Accepted ?
-    theme.access.acceptedText :
-    $access === StaffAccess.Pending ?
-    theme.access.pendingText :
-    theme.access.rejectedText
-  )};
-  border-radius: 5px;
-
-  box-sizing: border-box;
-  padding-left: 2px;
-  margin-bottom: 5px;
-
-  background-color: ${({ theme, $access }) => (
-    $access === StaffAccess.Accepted ?
-    theme.access.acceptedBackground :
-    $access === StaffAccess.Pending ?
-    theme.access.pendingBackground :
-    theme.access.rejectedBackground
-  )};
-
-  color: ${({ theme, $access }) => (
-    $access === StaffAccess.Accepted ?
-    theme.access.acceptedText :
-    $access === StaffAccess.Pending ?
-    theme.access.pendingText :
-    theme.access.rejectedText
-  )};
-`;
 
 export const StaffInfoBar: FC<StaffInfoProps> = ({ 
   staffInfo,

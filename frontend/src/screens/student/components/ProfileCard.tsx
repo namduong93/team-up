@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { CopyButton } from "../../../components/general_utility/CopyButton";
 import { FaEdit, FaUserTie } from "react-icons/fa";
 import { backendURL } from "../../../../config/backendURLConfig";
-import { InfoButton } from "../TeamManage";
+import { InfoButton } from "../subroutes/TeamManage";
 
 interface ProfileCardProps {
   name: string;

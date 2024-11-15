@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaUserPlus, FaUsers, FaEdit, FaGlobe } from "react-icons/fa";
-import InvitePopUp from "../../screens/student/components/InvitePopUp";
-import JoinPopUp from "../../screens/student/components/JoinPopUp";
-import { SitePopUpChain } from "../../screens/student/components/SitePopUpChain";
-import { NamePopUpChain } from "../../screens/student/components/NamePopUpChain";
 import { sendRequest } from "../../utility/request";
 import { useParams } from "react-router-dom";
 import { CompetitionSite } from "../../../shared_types/Competition/CompetitionSite";
+import InvitePopUp from "../../screens/student/subcomponents/InvitePopUp";
+import JoinPopUp from "../../screens/student/subcomponents/JoinPopUp";
+import { SitePopUpChain } from "../../screens/student/subcomponents/popups/SitePopupChain/SitePopUpChain";
+import { NamePopUpChain } from "../../screens/student/subcomponents/popups/NamePopupChain/NamePopUpChain";
 
 type ActionType = "invite" | "join" | "name" | "site";
 

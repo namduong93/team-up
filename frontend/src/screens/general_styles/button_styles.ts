@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 export const CustomButton = styled.button`
   width: 30%;
   min-width: 74px;

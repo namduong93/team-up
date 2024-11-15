@@ -1,10 +1,10 @@
 import { FC, useState } from "react";
-import { InfoBar, InfoBarProps } from "./InfoBar";
-import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
-import { InfoBarField, LabelSpan, VerticalInfoBarField } from "./TeamInfoBar";
-import { backendURL } from "../../../../../config/backendURLConfig";
-import { ProfilePic } from "../../../Account/Account";
-import { StaffRoles } from "../../staff_page/components/StaffRole";
+import { InfoBar, InfoBarProps } from "../InfoBar";
+import { AttendeesDetails } from "../../../../../../../../shared_types/Competition/staff/AttendeesDetails";
+import { InfoBarField, LabelSpan, VerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
+import { ProfilePic } from "../../../../../../Account/Account.styles";
+import { StaffRoles } from "../../../subroutes/StaffPage/subcomponents/StaffRole";
+import { backendURL } from "../../../../../../../../config/backendURLConfig";
 
 interface AttendeesInfoProps extends InfoBarProps {
   attendeesDetails: AttendeesDetails;

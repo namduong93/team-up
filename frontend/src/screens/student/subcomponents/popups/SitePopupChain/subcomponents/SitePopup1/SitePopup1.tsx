@@ -1,3 +1,6 @@
+import { FaTimes } from "react-icons/fa";
+import { Button, CloseButton, Modal } from "./SitePopup1.styles";
+import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 
 interface FirstStepPopUpProps {
   heading: React.ReactNode;

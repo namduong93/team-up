@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaCog, FaSignOutAlt,FaIdBadge } from "react-icons/fa";
 import styled from "styled-components"; 
 import { sendRequest } from "../../utility/request";
-import { ProfilePic } from "../../screens/Account/Account";
 import { backendURL } from "../../../config/backendURLConfig";
+import { ProfilePic } from "../../screens/Account/Account.styles";
 
 export interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   cropState: boolean;
@@ -48,6 +48,7 @@ const SidebarContent = styled.div`
   overflow-y: auto;
   margin-bottom: 10px;
   box-sizing: border-box;
+  max-width: 200px;
 `;
 
 const ProfileSection = styled.div`

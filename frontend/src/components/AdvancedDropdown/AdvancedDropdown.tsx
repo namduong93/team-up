@@ -205,7 +205,9 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     threshold: 1,
   });
 
-  let filteredOptions;
+  let filteredOptions:
+  | Array<FuseResult<{ value: string; label: string }>>
+  | Array<{ item: { value: string; label: string } }>;;
   if (searchTerm) {
     filteredOptions = fuse.search(searchTerm);
   } else {
@@ -213,6 +215,9 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
       return { item: obj };
     });
   }
+
+  const remainingOptions = options.filter(option => !filteredOptions.some(({ item }) => item.value === option.value));
+  filteredOptions = [...filteredOptions, ...remainingOptions.map((option) => ({ item: option }))];
 
   const handleSelectOption = (
     e:

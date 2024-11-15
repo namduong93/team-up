@@ -7,7 +7,7 @@ import {
   FaTrophy, FaHandshake, FaBell, FaAddressCard, FaIdBadge,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { AlertButton } from '../../../screens/dashboard/Dashboard';
+import { AlertButton } from '../../../screens/dashboard/Dashboard.styles';
 
 interface Notification {
   id: number;

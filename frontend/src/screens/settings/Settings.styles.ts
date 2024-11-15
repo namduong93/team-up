@@ -1,4 +1,9 @@
-const Background = styled(FlexBackground)`
+import styled from "styled-components";
+import { FlexBackground } from "../../components/general_utility/Background";
+import { ThemeButtonProps } from "./Settings";
+import { SearchBar } from "../competition/staff_pages/CompetitionPage/components/PageUtils";
+
+export const Background = styled(FlexBackground)`
   background-color: ${({ theme }) => theme.background};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   width: 100%;
@@ -6,7 +11,7 @@ const Background = styled(FlexBackground)`
   align-items: center;
 `;
 
-const ThemeButton = styled.button<
+export const ThemeButton = styled.button<
   ThemeButtonProps & { $isSelected: boolean; $isLight: boolean }
 >`
   background-color: ${({ theme, $newTheme: newTheme }) =>
@@ -27,11 +32,11 @@ const ThemeButton = styled.button<
   }
 `;
 
-const Title = styled.h2`
+export const Title = styled.h2`
   margin-bottom: 20px;
 `;
 
-const SettingsContainer = styled.div`
+export const SettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,13 +47,13 @@ const SettingsContainer = styled.div`
   max-height: 95%;
 `;
 
-const DropdownContainer = styled.div`
+export const DropdownContainer = styled.div`
   width: 100%;
   max-width: 600px;
   margin-top: 20px;
 `;
 
-const DropdownHeader = styled.div<{ $isOpen: boolean }>`
+export const DropdownHeader = styled.div<{ $isOpen: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -66,7 +71,7 @@ const DropdownHeader = styled.div<{ $isOpen: boolean }>`
   }
 `;
 
-const DropdownContent = styled.div<{ $isOpen: boolean }>`
+export const DropdownContent = styled.div<{ $isOpen: boolean }>`
   max-height: ${({ $isOpen }) => ($isOpen ? "100%" : "0")};
   overflow: hidden;
   transition: max-height 0.3s ease !important;
@@ -74,6 +79,6 @@ const DropdownContent = styled.div<{ $isOpen: boolean }>`
   width: 100%;
 `;
 
-const FAQSearchBar = styled(SearchBar)`
+export const FAQSearchBar = styled(SearchBar)`
   height: 40px;
 `;

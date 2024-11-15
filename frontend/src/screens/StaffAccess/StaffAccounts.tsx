@@ -13,6 +13,7 @@ import { NarrowStaffAccessCard } from "./subcomponents/NarrowStaffAccessCard";
 import { WideStaffAccessHeader } from "./subcomponents/WideStaffAccessHeader";
 import { WideStaffAccessCard } from "./subcomponents/WideStaffAccessCard";
 
+
 export interface StaffAccessCardProps extends React.HTMLAttributes<HTMLDivElement> {
   staffDetails: StaffInfo;
   staffListState: [StaffInfo[], React.Dispatch<React.SetStateAction<StaffInfo[]>>];

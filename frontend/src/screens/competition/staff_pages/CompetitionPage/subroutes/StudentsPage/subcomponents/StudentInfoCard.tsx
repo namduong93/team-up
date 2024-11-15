@@ -1,9 +1,9 @@
 import React, { FC, ReactNode, useState } from "react"
 import styled from "styled-components"
 import { StudentInfo } from "../../../../../../../../shared_types/Competition/student/StudentInfo";
-import { StudentsInfoBar } from "../../../components/InfoBar/StudentsInfoBar";
 import { NarrowStatusDiv } from "../../StaffPage/StaffPage.styles";
 import { StudentStatus } from "./StudentStatus";
+import { StudentsInfoBar } from "../../../components/InfoBar/StudentsInfoBar/StudentsInfoBar";
 
 export const StudentInfoContainerDiv = styled.div`
   display: flex;

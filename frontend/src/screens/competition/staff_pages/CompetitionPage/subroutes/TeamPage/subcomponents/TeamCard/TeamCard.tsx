@@ -4,11 +4,11 @@ import { DragEndEvent } from "../../TeamDisplay";
 import { ButtonConfiguration } from "../../../../hooks/useCompetitionOutletContext";
 import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
 import { FC, useState } from "react";
-import { TeamInfoBar } from "../../../../components/InfoBar/TeamInfoBar";
 import { CardHeaderDiv, RedTeamNameAlert, StyledHoverDiv, TeamLevelDiv, TeamMatesContainerDiv, TeamMemberMotionDiv, TeamNameApprovalDiv, TitleSpan } from "./TeamCard.styles";
 import { TeamCardMember } from "./subcomponents/TeamCardMember/TeamCardMember";
 import { ApproveRadio } from "./subcomponents/ApproveRadio/ApproveRadio";
 import { ApproveNameRadios } from "./subcomponents/ApproveNameRadios/ApproveNameRadios";
+import { TeamInfoBar } from "../../../../components/InfoBar/TeamInfoBar/TeamInfoBar";
 
 export enum Member {
   name = 0,

@@ -1,7 +1,7 @@
 import { FC, useState, FormEvent } from "react";
-import { TextInputLight } from "../../components/general_utility/TextInputLight";
 import styled from "styled-components";
-import { sendRequest } from "../../utility/request";
+import { sendRequest } from "../../../utility/request";
+import TextInputLight from "../../../components/general_utility/TextInputLight";
 
 const Button = styled.button`
   border-radius: 10px;

@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
 import { StudentCardProps } from "./StudentInfoCard";
-import { StudentsInfoBar } from "../../../components/InfoBar/StudentsInfoBar";
 import { EmailContainerDiv, EmailSpan, SmallContainerDiv, StatusContainerDiv, StudentIdContainerDiv, TeamNameContainerDiv, UniversityContainerDiv, UserIcon, UserNameContainerDiv, UserNameGrid, UsernameTextSpan, WideInfoContainerDiv } from "../StudentsPage.styles";
 import { StudentStatus } from "./StudentStatus";
+import { StudentsInfoBar } from "../../../components/InfoBar/StudentsInfoBar/StudentsInfoBar";
 
 export const StudentInfoDiv: FC<StudentCardProps> = (
   {

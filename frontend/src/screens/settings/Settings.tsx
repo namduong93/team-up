@@ -1,10 +1,22 @@
+import { FC, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { sendRequest } from "../../utility/request";
+import studentFAQs from "./config/faq_student.json";
+import adminFAQs from "./config/faq_admin.json";
+import staffFAQs from "./config/faq_staff.json";
+import Fuse from "fuse.js";
+import { Background, DropdownContainer, DropdownContent, DropdownHeader, FAQSearchBar, SettingsContainer, ThemeButton, Title } from "./Settings.styles";
+import { FaChevronDown } from "react-icons/fa";
+import { UpdatePassword } from "./subcomponents/UpdatePassword";
+import { ProfileCard } from "../student/components/ProfileCard";
+import { backendURL } from "../../../config/backendURLConfig";
 
 interface FAQ {
   question: string;
   answer: string;
 }
 
-interface ThemeButtonProps {
+export interface ThemeButtonProps {
   $newTheme: "light" | "dark" | "christmas" | "colourblind";
 }
 

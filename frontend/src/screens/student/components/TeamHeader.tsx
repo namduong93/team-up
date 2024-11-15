@@ -6,8 +6,8 @@ import {
   PageTitle,
   PageDescriptionSpan,
 } from "../../../components/page_header/PageHeader";
-import { CompCountdownBar } from "./CompCountdownBar";
 import { ActionButton } from "../../../components/responsive_fields/action_buttons/ActionButton";
+import { CompCountdownBar } from "../subcomponents/CompCountdownBar";
 
 interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   compName: string;

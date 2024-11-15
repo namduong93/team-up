@@ -1,20 +1,20 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { InfoBar, InfoBarProps } from "./InfoBar";
-import { StudentStatus } from "../../students_page/StudentDisplay";
-import { EditIcon, EditIconButton, ProfilePic } from "../../../Account/Account";
-import { backendURL } from "../../../../../config/backendURLConfig";
-import { InfoBarField, LabelSpan, NoWrapLabelSpan, Select, VerticalInfoBarField } from "./TeamInfoBar";
-import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
-import { CompetitionLevel } from "../../../../../shared_types/Competition/CompetitionLevel";
-import { StaffRoles } from "../../staff_page/components/StaffRole";
-import { EditableInput, EditableTextArea, ToggleSelect } from "./components/TeamStudentInfoCard";
-import { BooleanStatus } from "../../attendees_page/AttendeesPage";
 import styled, { useTheme } from "styled-components";
-import { TransparentResponsiveButton } from "../../../../components/responsive_fields/ResponsiveButton";
 import { RxReset } from "react-icons/rx";
 import { FaSave } from "react-icons/fa";
-import { sendRequest } from "../../../../utility/request";
 import { useParams } from "react-router-dom";
+import { InfoBar, InfoBarProps } from "../InfoBar";
+import { StudentInfo } from "../../../../../../../../shared_types/Competition/student/StudentInfo";
+import { sendRequest } from "../../../../../../../utility/request";
+import { EditIcon, EditIconButton, ProfilePic } from "../../../../../../Account/Account.styles";
+import { backendURL } from "../../../../../../../../config/backendURLConfig";
+import { StaffRoles } from "../../../subroutes/StaffPage/subcomponents/StaffRole";
+import { EditableInput, EditableTextArea, ToggleSelect } from "../components/TeamStudentInfoCard";
+import { BooleanStatus } from "../../../subroutes/AttendeesPage/subcomponents/BooleanStatus";
+import { CompetitionLevel } from "../../../../../../../../shared_types/Competition/CompetitionLevel";
+import { StudentStatus } from "../../../subroutes/StudentsPage/subcomponents/StudentStatus";
+import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
+import { InfoBarField, LabelSpan, NoWrapLabelSpan, Select, VerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
 
 interface StudentsInfoProps extends InfoBarProps {
   studentInfo: StudentInfo;

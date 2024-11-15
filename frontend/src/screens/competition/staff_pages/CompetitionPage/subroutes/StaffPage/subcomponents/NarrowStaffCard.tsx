@@ -1,11 +1,11 @@
 import { FC, useState } from "react";
 import { StaffCardProps } from "./StaffCardProps";
-import { StaffInfoBar } from "../../../components/InfoBar/StaffInfoBar";
 import { Field, StudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
 import { NarrowStatusDiv, StaffAccessLevel } from "../StaffPage.styles";
 import { StaffRoles } from "./StaffRole";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
+import { StaffInfoBar } from "../../../components/InfoBar/StaffInfoBar/StaffInfoBar";
 
 
 export const NarrowStaffCard: FC<StaffCardProps> = ({

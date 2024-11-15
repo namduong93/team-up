@@ -6,9 +6,6 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Landing } from "./screens/authentication/login/Landing";
-import { Dashboard } from "./screens/dashboard/Dashboard";
-import { Account } from "./screens/account/Account";
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./themes/defaultTheme";
@@ -16,38 +13,39 @@ import { darkTheme } from "./themes/darkTheme";
 import { christmasTheme } from "./themes/christmasTheme";
 import { colourblindTheme } from "./themes/colourblindTheme";
 import { Settings } from "./screens/settings/Settings";
-import { MultiStepRegoFormProvider } from "./screens/authentication/registration/hooks/useMultiStepRegoForm";
 
 import { TeamProfile } from "./screens/student/TeamProfile";
-import { CompetitionDetails } from "./screens/competition/creation/CompDetails";
-import { CompetitionConfirmation } from "./screens/competition/creation/CompConfirmation";
-import {
-  EmailRecoverForm,
-  EmailSuccess,
-  PasswordCodeRecoverForm,
-  PasswordRecovery,
-} from "./screens/authentication/recovery/PasswordRecovery";
-import { CompetitionPage } from "./screens/competition_staff_page/CompetitionPage";
-import { CompIdNavigate } from "./screens/competition_staff_page/components/CompIdNavigate";
-import { SidebarLayout } from "./screens/SidebarLayout";
-import { TeamDetails } from "./screens/student/TeamDetails";
-import { TeamManage } from "./screens/student/TeamManage";
-import { CompetitionInformation } from "./screens/competition/register/CompInformation";
-import { CompetitionIndividual } from "./screens/competition/register/CompIndividual";
-import { MultiStepCompRegoFormProvider } from "./screens/competition/register/RegisterForm/hooks/useMultiStepCompRegoForm";
-import { CompetitionExperience } from "./screens/competition/register/CompExperience";
-import { StaffDisplay } from "./screens/competition_staff_page/staff_page/StaffDisplay";
 import { useDashInfo } from "./screens/dashboard/hooks/useDashInfo";
-import { RoleRegistration } from "./screens/authentication/registration/RoleRegistration";
-import { AccountInformation } from "./screens/authentication/registration/AccountInformation";
-import { SiteInformation } from "./screens/authentication/registration/SiteInformation";
-import { InstitutionInformation } from "./screens/authentication/registration/InstitutionInformation";
-import { TeamDisplay } from "./screens/competition_staff_page/teams_page/TeamDisplay";
-import { StudentDisplay } from "./screens/competition_staff_page/students_page/StudentDisplay";
-import { AttendeesDisplay } from "./screens/competition_staff_page/attendees_page/AttendeesPage";
-import { StaffRoleRegistration } from "./screens/competition/register/StaffRoleRegistration";
-import { StaffAccounts } from "./screens/staff_access/StaffAccounts";
-import { StaffActionCard } from "./screens/competition_staff_page/manage_page/components/StaffActionCard";
+import { Landing } from "./screens/auth/Login/Landing";
+import { MultiStepRegoFormProvider } from "./screens/auth/RegisterForm/MultiStepRegoFormContext";
+import { RoleRegistration } from "./screens/auth/RegisterForm/subroutes/RoleSelect/RoleRegistration";
+import { AccountInformation } from "./screens/auth/RegisterForm/subroutes/AccountDataInput/AccountInformation";
+import { SiteInformation } from "./screens/auth/RegisterForm/subroutes/SiteDataInput/SiteInformation";
+import { InstitutionInformation } from "./screens/auth/RegisterForm/subroutes/InstitutionDataInput/InstitutionInformation";
+import { PasswordCodeRecoverForm, PasswordRecovery } from "./screens/auth/PasswordRecovery/PasswordRecovery";
+import { EmailRecoverForm } from "./screens/auth/PasswordRecovery/subroutes/EmailForm/EmailRecoverForm";
+import { EmailSuccess } from "./screens/auth/PasswordRecovery/subroutes/EmailSuccess/EmailSuccess";
+import { SidebarLayout } from "./screens/SidebarLayout";
+import { CompIdNavigate } from "./screens/competition/staff_pages/CompetitionPage/components/CompIdNavigate";
+import { CompetitionPage } from "./screens/competition/staff_pages/CompetitionPage/CompetitionPage";
+import { TeamDisplay } from "./screens/competition/staff_pages/CompetitionPage/subroutes/TeamPage/TeamDisplay";
+import { StudentDisplay } from "./screens/competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentDisplay";
+import { StaffDisplay } from "./screens/competition/staff_pages/CompetitionPage/subroutes/StaffPage/StaffDisplay";
+import { AttendeesDisplay } from "./screens/competition/staff_pages/CompetitionPage/subroutes/AttendeesPage/AttendeesPage";
+import { StaffActionCard } from "./screens/competition/staff_pages/CompetitionPage/subroutes/ManagePage/StaffActionCard";
+import { TeamDetails } from "./screens/student/subroutes/TeamDetails";
+import { TeamManage } from "./screens/student/subroutes/TeamManage";
+import { Dashboard } from "./screens/dashboard/Dashboard";
+import { StaffAccounts } from "./screens/StaffAccess/StaffAccounts";
+import { Account } from "./screens/Account/Account";
+import { CompetitionDetails } from "./screens/competition/staff_pages/creation/CompDataInput/CompDetails";
+import { CompetitionConfirmation } from "./screens/competition/staff_pages/creation/CompDataConfirmation/CompConfirmation";
+import { MultiStepCompRegoFormProvider } from "./screens/competition/register/RegisterForm/MultiStepCompRegoFormProvider";
+import { CompetitionInformation } from "./screens/competition/register/RegisterForm/subroutes/CompInformation/CompInformation";
+import { CompetitionIndividual } from "./screens/competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividual";
+import { CompetitionExperience } from "./screens/competition/register/RegisterForm/subroutes/CompExperienceInput/CompExperience";
+import { StaffRoleRegistration } from "./screens/competition/register/StaffRegisterForm/StaffRoleRegistration";
+
 
 const themeMap = {
   default: defaultTheme,

@@ -1,10 +1,10 @@
 import { FC, useState } from "react";
 import { AttendeesCardProps } from "./AttendeesCardProps";
-import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar";
 import { Field, StudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
 import { NarrowStatusDiv } from "../../StaffPage/StaffPage.styles";
 import { StaffRoles } from "../../StaffPage/subcomponents/StaffRole";
 import { BooleanStatus } from "./BooleanStatus";
+import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar/AttendeesInfoBar";
 
 export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
   attendeesDetails,
