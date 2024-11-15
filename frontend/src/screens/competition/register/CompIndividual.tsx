@@ -7,7 +7,7 @@ import DropdownInputLight from "../../../components/general_utility/DropDownLigh
 import {
   SiteLocation,
   useMultiStepCompRegoForm,
-} from "./hooks/useMultiStepCompRegoForm";
+} from "./RegisterForm/hooks/useMultiStepCompRegoForm";
 import TextInputLight from "../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../components/general_utility/RadioButton";
 import { sendRequest } from "../../../utility/request";

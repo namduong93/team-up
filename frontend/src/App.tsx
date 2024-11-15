@@ -34,7 +34,7 @@ import { TeamDetails } from "./screens/student/TeamDetails";
 import { TeamManage } from "./screens/student/TeamManage";
 import { CompetitionInformation } from "./screens/competition/register/CompInformation";
 import { CompetitionIndividual } from "./screens/competition/register/CompIndividual";
-import { MultiStepCompRegoFormProvider } from "./screens/competition/register/hooks/useMultiStepCompRegoForm";
+import { MultiStepCompRegoFormProvider } from "./screens/competition/register/RegisterForm/hooks/useMultiStepCompRegoForm";
 import { CompetitionExperience } from "./screens/competition/register/CompExperience";
 import { StaffDisplay } from "./screens/competition_staff_page/staff_page/StaffDisplay";
 import { useDashInfo } from "./screens/dashboard/hooks/useDashInfo";

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaHome, FaUser, FaCog, FaSignOutAlt,FaIdBadge } from "react-icons/fa";
 import styled from "styled-components"; 
 import { sendRequest } from "../../utility/request";
-import { ProfilePic } from "../../screens/account/Account";
+import { ProfilePic } from "../../screens/Account/Account";
 import { backendURL } from "../../../config/backendURLConfig";
 
 export interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {

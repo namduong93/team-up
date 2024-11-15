@@ -3,7 +3,7 @@ import { FlexBackground } from "../../../components/general_utility/Background";
 import { styled } from "styled-components";
 import { CompRegistrationProgressBar } from "../../../components/progress_bar/ProgressBar";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMultiStepCompRegoForm } from "./hooks/useMultiStepCompRegoForm";
+import { useMultiStepCompRegoForm } from "./RegisterForm/hooks/useMultiStepCompRegoForm";
 import MultiRadio from "../../../components/general_utility/MultiRadio";
 import TextInput from "../../../components/general_utility/TextInput";
 import RadioButton from "../../../components/general_utility/RadioButton";
