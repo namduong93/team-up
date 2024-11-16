@@ -1,8 +1,8 @@
 import { Pool } from "pg";
 import { Notification } from "../../models/notification/notification.js";
-import { NotificationRepository } from "../notification_repository_type.js";
+import { NotificationRepository } from "../NotificationRepository.js";
 import { SeatAssignment } from "../../models/team/team.js";
-import { DbError } from "../../errors/db_error.js";
+import { DbError } from "../../errors/DbError.js";
 
 export class SqlDbNotificationRepository implements NotificationRepository {
   private readonly pool: Pool;

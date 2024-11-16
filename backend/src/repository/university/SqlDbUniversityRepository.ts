@@ -1,8 +1,8 @@
 import { Pool } from "pg";
 import { UniversityListObject } from "../../models/university/university.js";
-import { UniversityRepository } from "../university_repository_type.js";
+import { UniversityRepository } from "../UniversityRepository.js";
 import { Course } from "../../../shared_types/University/Course.js";
-import { DbError } from "../../errors/db_error.js";
+import { DbError } from "../../errors/DbError.js";
 
 export class SqlDbUniversityRepository implements UniversityRepository {
   private readonly pool: Pool;

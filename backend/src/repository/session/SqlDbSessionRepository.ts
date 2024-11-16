@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { SessionRepository, SessionTokenObject } from "../session_repository_type.js";
+import { SessionRepository, SessionTokenObject } from "../SessionRepository.js";
 import { Session } from "../../models/session/session.js";
 
 export class SqlDbSessionRepository implements SessionRepository {

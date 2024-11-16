@@ -1,9 +1,9 @@
-import { BAD_REQUEST } from "../controllers/controller_util/http_error_handler.js";
+import { BAD_REQUEST } from "../controllers/controller_util/httpErrorHandler.js";
 import { Notification } from "../models/notification/notification.js";
 import { SeatAssignment } from "../models/team/team.js";
 import { UserType } from "../models/user/user.js";
-import { NotificationRepository } from "../repository/notification_repository_type.js";
-import { UserRepository } from "../repository/user_repository_type.js";
+import { NotificationRepository } from "../repository/NotificationRepository.js";
+import { UserRepository } from "../repository/UserRepository.js";
 
 export class NotificationService {
   private notificationRepository: NotificationRepository;
