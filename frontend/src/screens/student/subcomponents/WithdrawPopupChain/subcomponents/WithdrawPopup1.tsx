@@ -60,19 +60,16 @@ export const WithdrawPopup1: React.FC<OptionPopUpProps> = ({
   onNext,
   actionButtonText,
 }) => {
-  return (
-    <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
-          <FaTimes />
-        </StyledCloseButton>
-        <div>{heading}</div>
-
-        <StyledButtonContainer>
-          <StyledConfirmButton onClick={onNext}>{actionButtonText}</StyledConfirmButton>
-          <StyledCancelButton onClick={onClose}>Cancel</StyledCancelButton>
-        </StyledButtonContainer>
-      </StyledModal>
-    </>
-  );
+  return <>
+    <StyledModal data-test-id="--StyledModal-0">
+      <StyledCloseButton onClick={onClose} data-test-id="--StyledCloseButton-0">
+        <FaTimes />
+      </StyledCloseButton>
+      <div>{heading}</div>
+      <StyledButtonContainer data-test-id="--StyledButtonContainer-0">
+        <StyledConfirmButton onClick={onNext} data-test-id="--StyledConfirmButton-0">{actionButtonText}</StyledConfirmButton>
+        <StyledCancelButton onClick={onClose} data-test-id="--StyledCancelButton-0">Cancel</StyledCancelButton>
+      </StyledButtonContainer>
+    </StyledModal>
+  </>;
 };

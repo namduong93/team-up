@@ -7,29 +7,25 @@ import { StyledStandardSpan } from "../../competition/staff_pages/CompetitionPag
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
   return (
-    <StyledWideInfoContainerDiv $isHeader={true} style={{
-      backgroundColor: theme.colours.userInfoCardHeader,
-      fontWeight: 'bold'
-    }}>
-      <StyledUserNameContainerDiv>
-        <StyledUsernameTextSpan>
-          Full Name
-        </StyledUsernameTextSpan>
+    <StyledWideInfoContainerDiv
+      $isHeader={true}
+      style={{
+        backgroundColor: theme.colours.userInfoCardHeader,
+        fontWeight: 'bold'
+      }}
+      data-test-id="wide-staff-access-header--StyledWideInfoContainerDiv-0">
+      <StyledUserNameContainerDiv data-test-id="wide-staff-access-header--StyledUserNameContainerDiv-0">
+        <StyledUsernameTextSpan data-test-id="wide-staff-access-header--StyledUsernameTextSpan-0">Full Name</StyledUsernameTextSpan>
       </StyledUserNameContainerDiv>
-
-      <StyledStandardContainerDiv>
-        <StyledStandardSpan>Affiliation</StyledStandardSpan>
+      <StyledStandardContainerDiv data-test-id="wide-staff-access-header--StyledStandardContainerDiv-0">
+        <StyledStandardSpan data-test-id="wide-staff-access-header--StyledStandardSpan-0">Affiliation</StyledStandardSpan>
       </StyledStandardContainerDiv>
-
-      <StyledStandardContainerDiv>
-        <StyledStandardSpan>Access</StyledStandardSpan>
+      <StyledStandardContainerDiv data-test-id="wide-staff-access-header--StyledStandardContainerDiv-1">
+        <StyledStandardSpan data-test-id="wide-staff-access-header--StyledStandardSpan-1">Access</StyledStandardSpan>
       </StyledStandardContainerDiv>
-
-      <StyledStandardContainerDiv>
-        <StyledStandardSpan>Email</StyledStandardSpan>
+      <StyledStandardContainerDiv data-test-id="wide-staff-access-header--StyledStandardContainerDiv-2">
+        <StyledStandardSpan data-test-id="wide-staff-access-header--StyledStandardSpan-2">Email</StyledStandardSpan>
       </StyledStandardContainerDiv>
-
-
     </StyledWideInfoContainerDiv>
-  )
+  );
 }

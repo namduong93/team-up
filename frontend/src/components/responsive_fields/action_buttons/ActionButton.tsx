@@ -161,20 +161,29 @@ export const ActionButton: FC<ActionButtonProps> = ({
     }
   };
 
-  return (
-    <>
-      <StyledButton $actionType={actionType} onClick={handleButtonClick}>
-        {actionName}
-      </StyledButton>
-      {isOpen && (
-        <StyledPopUpOverlay onClick={() => setIsOpen(false)}>
-          <StyledPopUpContent onClick={(e) => e.stopPropagation()}>
-            <StyledQuestion>{question}</StyledQuestion>
-            <StyledConfirmButton onClick={handleConfirm}>Confirm</StyledConfirmButton>
-            <StyledCancelButton onClick={() => setIsOpen(false)}>Cancel</StyledCancelButton>
-          </StyledPopUpContent>
-        </StyledPopUpOverlay>
-      )}
-    </>
-  );
+  return <>
+    <StyledButton
+      $actionType={actionType}
+      onClick={handleButtonClick}
+      data-test-id="action-button--StyledButton-0">
+      {actionName}
+    </StyledButton>
+    {isOpen && (
+      <StyledPopUpOverlay
+        onClick={() => setIsOpen(false)}
+        data-test-id="action-button--StyledPopUpOverlay-0">
+        <StyledPopUpContent
+          onClick={(e) => e.stopPropagation()}
+          data-test-id="action-button--StyledPopUpContent-0">
+          <StyledQuestion data-test-id="action-button--StyledQuestion-0">{question}</StyledQuestion>
+          <StyledConfirmButton
+            onClick={handleConfirm}
+            data-test-id="action-button--StyledConfirmButton-0">Confirm</StyledConfirmButton>
+          <StyledCancelButton
+            onClick={() => setIsOpen(false)}
+            data-test-id="action-button--StyledCancelButton-0">Cancel</StyledCancelButton>
+        </StyledPopUpContent>
+      </StyledPopUpOverlay>
+    )}
+  </>;
 };

@@ -200,48 +200,54 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, s
   }, []);
 
   return (
-    <StyledSidebarContainer $cropState={cropState} style={style} {...props}>
-      <StyledSidebarContent>
+    <StyledSidebarContainer
+      $cropState={cropState}
+      style={style}
+      {...props}
+      data-test-id="dashboard-sidebar--StyledSidebarContainer-0">
+      <StyledSidebarContent data-test-id="dashboard-sidebar--StyledSidebarContent-0">
         {!cropState && (
-          <StyledProfileSection>
-            <StyledProfilePic $imageUrl={sidebarInfo.profile || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
+          <StyledProfileSection data-test-id="dashboard-sidebar--StyledProfileSection-0">
+            <StyledProfilePic
+              $imageUrl={sidebarInfo.profile || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` }
+              data-test-id="dashboard-sidebar--StyledProfilePic-0" />
             <div>Hello</div>
-            <StyledName>{sidebarInfo.preferredName}</StyledName>
+            <StyledName data-test-id="dashboard-sidebar--StyledName-0">{sidebarInfo.preferredName}</StyledName>
             <div>{sidebarInfo.affiliation}</div>
           </StyledProfileSection>
         )}
-
-        <StyledNavLinks>
-          <StyledNavButton 
+        <StyledNavLinks data-test-id="dashboard-sidebar--StyledNavLinks-0">
+          <StyledNavButton
             $active={location.pathname === "/dashboard"}
             onClick={() => handleNavigation('/dashboard')}
-          >
+            data-test-id="dashboard-sidebar--StyledNavButton-0">
             <FaHome /> {!cropState && <span>Dashboard</span>}
           </StyledNavButton>
           {isSysAdmin && 
-            <StyledNavButton 
+            <StyledNavButton
               $active={location.pathname === "/staffAccounts"}
               onClick={() => handleNavigation('/staffAccounts')}
-            >
+              data-test-id="dashboard-sidebar--StyledNavButton-1">
               <FaIdBadge /> {!cropState && <span>Staff Accounts</span>}
             </StyledNavButton>
           }
-          <StyledNavButton 
+          <StyledNavButton
             $active={location.pathname === "/account"}
             onClick={() => handleNavigation('/account')}
-          >
+            data-test-id="dashboard-sidebar--StyledNavButton-2">
             <FaUser /> {!cropState && <span>Account</span>}
           </StyledNavButton>
-          <StyledNavButton 
+          <StyledNavButton
             $active={location.pathname === "/settings"}
             onClick={() => handleNavigation('/settings')}
-          >
+            data-test-id="dashboard-sidebar--StyledNavButton-3">
             <FaCog /> {!cropState && <span>Settings</span>}
           </StyledNavButton>
         </StyledNavLinks>
       </StyledSidebarContent>
-
-      <StyledLogoutButton onClick={handleLogout}>
+      <StyledLogoutButton
+        onClick={handleLogout}
+        data-test-id="dashboard-sidebar--StyledLogoutButton-0">
         <FaSignOutAlt /> <span>Logout</span>
       </StyledLogoutButton>
     </StyledSidebarContainer>

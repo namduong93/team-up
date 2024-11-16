@@ -95,12 +95,11 @@ export const InstitutionDataInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      data-test-id="institution-data-input--StyledFlexBackground-0">
       <RegoProgressBar progressNumber={3} />
-      <StyledContainer>
-        <StyledContentContainer>
-          <StyledTitle>Institution Information</StyledTitle>
-
+      <StyledContainer data-test-id="institution-data-input--StyledContainer-0">
+        <StyledContentContainer data-test-id="institution-data-input--StyledContentContainer-0">
+          <StyledTitle data-test-id="institution-data-input--StyledTitle-0">Institution Information</StyledTitle>
           <DropdownInput
             label="Institution"
             options={institutionOptions}
@@ -109,7 +108,6 @@ export const InstitutionDataInput: FC = () => {
             onChange={handleInstitutionChange}
             width="100%"
           />
-
           {isCustomInstitution && (
             <TextInput
               label="Other Institution"
@@ -122,7 +120,6 @@ export const InstitutionDataInput: FC = () => {
               width="100%"
             />
           )}
-
           {formData.role === "Student" && (
             <TextInput
               label="Student Identifier Number"
@@ -135,16 +132,14 @@ export const InstitutionDataInput: FC = () => {
               width="100%"
             />
           )}
-
-          <StyledButtonContainer>
-            <StyledButton onClick={() => navigate("/siteinformation")}>Back</StyledButton>
-
+          <StyledButtonContainer data-test-id="institution-data-input--StyledButtonContainer-0">
+            <StyledButton
+              onClick={() => navigate("/siteinformation")}
+              data-test-id="institution-data-input--StyledButton-0">Back</StyledButton>
             <StyledCreateAccountButton
               disabled={isButtonDisabled()}
               onClick={handleSubmit}
-            >
-              Create Account
-            </StyledCreateAccountButton>
+              data-test-id="institution-data-input--StyledCreateAccountButton-0">Create Account</StyledCreateAccountButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

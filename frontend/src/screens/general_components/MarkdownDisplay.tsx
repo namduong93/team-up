@@ -23,5 +23,10 @@ const StyledMarkdown = styled(ReactMarkdown)`
 `;
 
 export const MarkdownDisplay: FC<MarkdownDisplayProps> = ({ content }) => {
-  return <StyledMarkdown children={content} rehypePlugins={[rehypeRaw]} />;
+  return (
+    <StyledMarkdown
+      children={content}
+      rehypePlugins={[rehypeRaw]}
+      data-test-id="markdown-display--StyledMarkdown-0" />
+  );
 };

@@ -48,13 +48,22 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style, def
   const realChildren = React.Children.toArray(children).filter((child) => child !== null)
   const numChildren = realChildren.length;
   return (
-    <StyledToggleDiv $borderIndex={borderIndex} $numElems={numChildren} style={{ maxWidth: `${150 * numChildren}px`, ...style }}>
+    <StyledToggleDiv
+      $borderIndex={borderIndex}
+      $numElems={numChildren}
+      style={{ maxWidth: `${150 * numChildren}px`, ...style }}
+      data-test-id="toggle-switch--StyledToggleDiv-0">
       {realChildren.map((child, index) => {
         return (
-        <StyledToggleDivOptionDiv onClick={handleClick} data-index={index} key={index}>
-          {child}
-        </StyledToggleDivOptionDiv>);
+          <StyledToggleDivOptionDiv
+            onClick={handleClick}
+            data-index={index}
+            key={index}
+            data-test-id="toggle-switch--StyledToggleDivOptionDiv-0">
+            {child}
+          </StyledToggleDivOptionDiv>
+        );
       })}
     </StyledToggleDiv>
-  )
+  );
 }

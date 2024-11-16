@@ -11,15 +11,20 @@ interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonEleme
 
 export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon, label, style, isOpen, ...props }) => {
   return (
-    <StyledSortButton onClick={onClick} style={{
-      height: '100%',
-      width: '100%',
-      overflow: 'hidden',
-      padding: '0',
-      display: 'flex',
-      flexWrap: 'wrap',
-      ...style
-    }} $isSortOpen={isOpen} {...props}>
+    <StyledSortButton
+      onClick={onClick}
+      style={{
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden',
+        padding: '0',
+        display: 'flex',
+        flexWrap: 'wrap',
+        ...style
+      }}
+      $isSortOpen={isOpen}
+      {...props}
+      data-test-id="page-utils--StyledSortButton-0">
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
           {icon}
@@ -27,7 +32,7 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon,
         <span>{label}</span>
       </div>
     </StyledSortButton>
-  )
+  );
 }
 
 const StyledSearchContainer = styled.div`
@@ -78,16 +83,21 @@ const StyledSearchCell = styled.div`
 
 export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
   return (
-  <StyledSearchContainer>
-    <StyledSearchInput type="text" value={value} onChange={onChange} {...props} />
-    {!value && <StyledSearchCell>
-      <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
-        <div style={{ height: '200%' }}>
-          <StyledSearchIcon />
+    <StyledSearchContainer data-test-id="page-utils--StyledSearchContainer-0">
+      <StyledSearchInput
+        type="text"
+        value={value}
+        onChange={onChange}
+        {...props}
+        data-test-id="page-utils--StyledSearchInput-0" />
+      {!value && <StyledSearchCell data-test-id="page-utils--StyledSearchCell-0">
+        <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
+          <div style={{ height: '200%' }}>
+            <StyledSearchIcon data-test-id="page-utils--StyledSearchIcon-0" />
+          </div>
+            <span>Search</span>
         </div>
-          <span>Search</span>
-      </div>
-    </StyledSearchCell>}
-  </StyledSearchContainer>
-  )
+      </StyledSearchCell>}
+    </StyledSearchContainer>
+  );
 }

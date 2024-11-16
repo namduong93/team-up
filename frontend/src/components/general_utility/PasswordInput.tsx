@@ -22,10 +22,13 @@ export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
   style
 }) => {
   return (
-    <StyledContainer $width={width} style={style}>
-      <StyledLabel>
+    <StyledContainer
+      $width={width}
+      style={style}
+      data-test-id="password-input--StyledContainer-0">
+      <StyledLabel data-test-id="password-input--StyledLabel-0">
         {label}
-        {required && <StyledAsterisk>*</StyledAsterisk>}
+        {required && <StyledAsterisk data-test-id="password-input--StyledAsterisk-0">*</StyledAsterisk>}
       </StyledLabel>
       <StyledInput
         type={type}
@@ -33,7 +36,7 @@ export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
         value={value}
         onChange={onChange}
         required={required}
-      />
+        data-test-id="password-input--StyledInput-0" />
     </StyledContainer>
   );
 };

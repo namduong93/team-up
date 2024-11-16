@@ -5,14 +5,18 @@ export const TeamCardMember = ({ memberName, level }: { memberName: string, leve
   const levelChar = level.slice(-1);
 
   return (
-  <StyledTeamMemberContainerDiv draggable='false'>
-    <StyledStyledUserIcon />
-    <StyledCenterTextDiv>
-      {memberName}
-    </StyledCenterTextDiv>
-    <StyledCenterTextDiv $levelChar={levelChar} >
-      {levelChar}
-    </StyledCenterTextDiv>
-  </StyledTeamMemberContainerDiv>
+    <StyledTeamMemberContainerDiv
+      draggable='false'
+      data-test-id="team-card-member--StyledTeamMemberContainerDiv-0">
+      <StyledStyledUserIcon data-test-id="team-card-member--StyledStyledUserIcon-0" />
+      <StyledCenterTextDiv data-test-id="team-card-member--StyledCenterTextDiv-0">
+        {memberName}
+      </StyledCenterTextDiv>
+      <StyledCenterTextDiv
+        $levelChar={levelChar}
+        data-test-id="team-card-member--StyledCenterTextDiv-1">
+        {levelChar}
+      </StyledCenterTextDiv>
+    </StyledTeamMemberContainerDiv>
   );
 }

@@ -82,20 +82,21 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   };
 
   return (
-    <StyledModalOverlay>
-      <StyledModal>
-        <StyledView>
-          <StyledCloseButton onClick={onClose}>
+    <StyledModalOverlay data-test-id="edit-site-capacity-pop-up--StyledModalOverlay-0">
+      <StyledModal data-test-id="edit-site-capacity-pop-up--StyledModal-0">
+        <StyledView data-test-id="edit-site-capacity-pop-up--StyledView-0">
+          <StyledCloseButton
+            onClick={onClose}
+            data-test-id="edit-site-capacity-pop-up--StyledCloseButton-0">
             <FaTimes />
           </StyledCloseButton>
-          <StyledContainer>
-            <StyledHeading>{heading}</StyledHeading>
+          <StyledContainer data-test-id="edit-site-capacity-pop-up--StyledContainer-0">
+            <StyledHeading data-test-id="edit-site-capacity-pop-up--StyledHeading-0">{heading}</StyledHeading>
             <div style={{ display: "flex", alignContent: "center" }}>
-              <StyledText>
+              <StyledText data-test-id="edit-site-capacity-pop-up--StyledText-0">
                 <em>Capacity is the number of participants your site can host.</em>
               </StyledText>
             </div>
-
             {roles.includes(CompetitionRole.Admin) && 
             <div style={{ width: '300px' }}>
               <AdvancedDropdown
@@ -114,8 +115,10 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
               onChange={handleCapacityChange}
               currentCapacity={currentCapacity}
             />
-
-            <StyledButton onClick={handleSubmit} disabled={capacity <= 0} >Save Changes</StyledButton>
+            <StyledButton
+              onClick={handleSubmit}
+              disabled={capacity <= 0}
+              data-test-id="edit-site-capacity-pop-up--StyledButton-0">Save Changes</StyledButton>
           </StyledContainer>
         </StyledView>
       </StyledModal>

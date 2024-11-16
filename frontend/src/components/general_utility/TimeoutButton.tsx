@@ -29,8 +29,15 @@ export const TimeoutButton: FC<TimeoutButtonProps> = ({ seconds = 5,
     onClick(e);
   }
   return (
-    <StyledButton $bgColor={bgColor || theme.colours.primaryLight} type="button" style={style} $disabled={!!timeoutSeconds} onClick={handleClick} {...props}>
+    <StyledButton
+      $bgColor={bgColor || theme.colours.primaryLight}
+      type="button"
+      style={style}
+      $disabled={!!timeoutSeconds}
+      onClick={handleClick}
+      {...props}
+      data-test-id="timeout-button--StyledButton-0">
       {timeoutSeconds > 0 ? timeoutSeconds : children}
     </StyledButton>
-  )
+  );
 }

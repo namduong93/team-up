@@ -110,28 +110,28 @@ export const TeamDetails: FC = () => {
 
 
   return (
-    <StyledDetailsContainer>
-      <StyledTeamDetailsContainer>
-        <StyledTeamInfo>
+    <StyledDetailsContainer data-test-id="team-details--StyledDetailsContainer-0">
+      <StyledTeamDetailsContainer data-test-id="team-details--StyledTeamDetailsContainer-0">
+        <StyledTeamInfo data-test-id="team-details--StyledTeamInfo-0">
           <div>
-            <StyledTeamLabel>Team Name:</StyledTeamLabel>
-            <StyledTeamField>{teamName}</StyledTeamField>
+            <StyledTeamLabel data-test-id="team-details--StyledTeamLabel-0">Team Name:</StyledTeamLabel>
+            <StyledTeamField data-test-id="team-details--StyledTeamField-0">{teamName}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Site Location:</StyledTeamLabel>
-            <StyledTeamField>{teamSite}</StyledTeamField>
+            <StyledTeamLabel data-test-id="team-details--StyledTeamLabel-1">Site Location:</StyledTeamLabel>
+            <StyledTeamField data-test-id="team-details--StyledTeamField-1">{teamSite}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Seat:</StyledTeamLabel>
-            <StyledTeamField>{teamSeat}</StyledTeamField>
+            <StyledTeamLabel data-test-id="team-details--StyledTeamLabel-2">Seat:</StyledTeamLabel>
+            <StyledTeamField data-test-id="team-details--StyledTeamField-2">{teamSeat}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Level:</StyledTeamLabel>
-            <StyledTeamField>{teamLevel}</StyledTeamField>
+            <StyledTeamLabel data-test-id="team-details--StyledTeamLabel-3">Level:</StyledTeamLabel>
+            <StyledTeamField data-test-id="team-details--StyledTeamField-3">{teamLevel}</StyledTeamField>
           </div>
         </StyledTeamInfo>
       </StyledTeamDetailsContainer>
-      <StyledStudentsContainer>
+      <StyledStudentsContainer data-test-id="team-details--StyledStudentsContainer-0">
         {students.map((student, index) => (
           <ProfileCard
             key={`student-${index}`}

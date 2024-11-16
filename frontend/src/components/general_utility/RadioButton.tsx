@@ -73,15 +73,15 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
   width, 
 }) => {
   return (
-    <StyledContainer width={width}>
+    <StyledContainer width={width} data-test-id="radio-button--StyledContainer-0">
       {label && (
-        <StyledLabel>
+        <StyledLabel data-test-id="radio-button--StyledLabel-0">
           {label}
-          {required && <StyledAsterisk>*</StyledAsterisk>}
+          {required && <StyledAsterisk data-test-id="radio-button--StyledAsterisk-0">*</StyledAsterisk>}
         </StyledLabel>
       )}
       {descriptor && (
-        <StyledDescriptor>
+        <StyledDescriptor data-test-id="radio-button--StyledDescriptor-0">
           {Array.isArray(descriptor) 
             ? descriptor.map((line, index) => (
                 <React.Fragment key={index}>
@@ -93,17 +93,19 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
           }
         </StyledDescriptor>
       )}
-      <StyledOptionsContainer>
+      <StyledOptionsContainer data-test-id="radio-button--StyledOptionsContainer-0">
         {options.map((option) => (
-          <StyledRadioButtonLabel key={option}>
+          <StyledRadioButtonLabel key={option} data-test-id="radio-button--StyledRadioButtonLabel-0">
             <StyledRadioInput
               type="radio"
-              id={option} // Add an id for accessibility
-              name={label} // Group name for the radio buttons
+              // Add an id for accessibility
+              id={option}
+              // Group name for the radio buttons
+              name={label}
               value={option}
               checked={selectedOption === option}
               onChange={onOptionChange}
-            />
+              data-test-id="radio-button--StyledRadioInput-0" />
             {option}
           </StyledRadioButtonLabel>
         ))}

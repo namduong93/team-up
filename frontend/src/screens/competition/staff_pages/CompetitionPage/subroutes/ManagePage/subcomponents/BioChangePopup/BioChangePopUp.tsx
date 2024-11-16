@@ -26,28 +26,26 @@ export const BioChangePopUp: FC<BioChangePopUpProps> = ({
   const isButtonDisabled = () => bioValue === "" && announcementValue === "";
 
   return (
-    <StyledModalOverlay>
-      <StyledModal>
-        <StyledView>
-          <StyledCloseButton onClick={onClose}>
+    <StyledModalOverlay data-test-id="bio-change-pop-up--StyledModalOverlay-0">
+      <StyledModal data-test-id="bio-change-pop-up--StyledModal-0">
+        <StyledView data-test-id="bio-change-pop-up--StyledView-0">
+          <StyledCloseButton onClick={onClose} data-test-id="bio-change-pop-up--StyledCloseButton-0">
             <FaTimes />
           </StyledCloseButton>
-
-          <StyledContainer>
-            <StyledContentBio>
-              <StyledHeading>Update Your Contact Bio</StyledHeading>
+          <StyledContainer data-test-id="bio-change-pop-up--StyledContainer-0">
+            <StyledContentBio data-test-id="bio-change-pop-up--StyledContentBio-0">
+              <StyledHeading data-test-id="bio-change-pop-up--StyledHeading-0">Update Your Contact Bio</StyledHeading>
               <StyledTextarea
                 value={bioValue}
                 onChange={onBioChange}
                 $height="100px"
                 required={false}
                 placeholder={bioValue}
-              />
+                data-test-id="bio-change-pop-up--StyledTextarea-0" />
             </StyledContentBio>
-            
-            <StyledContentMarkdown>
-              <StyledHeading>Update Announcements to Your Teams</StyledHeading>
-              <StyledEditorContainer>
+            <StyledContentMarkdown data-test-id="bio-change-pop-up--StyledContentMarkdown-0">
+              <StyledHeading data-test-id="bio-change-pop-up--StyledHeading-1">Update Announcements to Your Teams</StyledHeading>
+              <StyledEditorContainer data-test-id="bio-change-pop-up--StyledEditorContainer-0">
                 <ReactMarkdownEditorLite
                   value={announcementValue}
                   onChange={({ text }) => onAnnouncementChange(text)}
@@ -77,10 +75,10 @@ export const BioChangePopUp: FC<BioChangePopUpProps> = ({
               </StyledEditorContainer>
             </StyledContentMarkdown>
           </StyledContainer>
-
-          <StyledButton disabled={isButtonDisabled()} onClick={onNext}>
-            Save Changes
-          </StyledButton>
+          <StyledButton
+            disabled={isButtonDisabled()}
+            onClick={onNext}
+            data-test-id="bio-change-pop-up--StyledButton-0">Save Changes</StyledButton>
         </StyledView>
       </StyledModal>
     </StyledModalOverlay>

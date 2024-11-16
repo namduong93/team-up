@@ -88,37 +88,48 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
     setIsOpen(false);
   }
   
-  return (
-    <>
-      <StyledResponsiveActionDiv $actionType={actionType} style={style} >
-        <TransparentResponsiveButton
-          actionType={actionType}
-          onClick={handleButtonClick}
-          isOpen={isOpen}
-          icon={icon} label={label}
-          {...props}
-        />
-      </StyledResponsiveActionDiv>
-      {isOpen && (
-        <StyledPopUpOverlay onClick={handleClosePopup}>
-          <StyledPopUpContent onClick={(e) => e.stopPropagation()}>
-            <StyledQuestion>{question}</StyledQuestion>
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-              {children}
-            </div>
-            {!timeout ?
-              <StyledConfirmButton
+  return <>
+    <StyledResponsiveActionDiv
+      $actionType={actionType}
+      style={style}
+      data-test-id="responsive-action-button--StyledResponsiveActionDiv-0">
+      <TransparentResponsiveButton
+        actionType={actionType}
+        onClick={handleButtonClick}
+        isOpen={isOpen}
+        icon={icon} label={label}
+        {...props}
+      />
+    </StyledResponsiveActionDiv>
+    {isOpen && (
+      <StyledPopUpOverlay
+        onClick={handleClosePopup}
+        data-test-id="responsive-action-button--StyledPopUpOverlay-0">
+        <StyledPopUpContent
+          onClick={(e) => e.stopPropagation()}
+          data-test-id="responsive-action-button--StyledPopUpContent-0">
+          <StyledQuestion data-test-id="responsive-action-button--StyledQuestion-0">{question}</StyledQuestion>
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+            {children}
+          </div>
+          {!timeout ?
+            <StyledConfirmButton
               onMouseDown={(e) => e.preventDefault()}
-              onClick={handleConfirm}>Confirm</StyledConfirmButton>
-            : <StyledTimeoutConfirmButton
-              onMouseDown={(e) => e.preventDefault()}
-              bgColor={theme.colours.confirm} seconds={timeout} onClick={handleConfirm}>Confirm</StyledTimeoutConfirmButton>
-            }
-            <StyledCancelButton onMouseDown={(e) => e.preventDefault()}
-              onClick={handleClosePopup}>Cancel</StyledCancelButton>
-          </StyledPopUpContent>
-        </StyledPopUpOverlay>
-      )}
-    </>
-  );
+              onClick={handleConfirm}
+              data-test-id="responsive-action-button--StyledConfirmButton-0">Confirm</StyledConfirmButton>
+          : <StyledTimeoutConfirmButton
+            onMouseDown={(e) => e.preventDefault()}
+            bgColor={theme.colours.confirm}
+            seconds={timeout}
+            onClick={handleConfirm}
+            data-test-id="responsive-action-button--StyledTimeoutConfirmButton-0">Confirm</StyledTimeoutConfirmButton>
+          }
+          <StyledCancelButton
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={handleClosePopup}
+            data-test-id="responsive-action-button--StyledCancelButton-0">Cancel</StyledCancelButton>
+        </StyledPopUpContent>
+      </StyledPopUpOverlay>
+    )}
+  </>;
 }

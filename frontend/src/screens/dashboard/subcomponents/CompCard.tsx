@@ -133,31 +133,30 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   // calculate the progress width
   const progressWidth = totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100; // set to 100% if no days left
   return (
-    <StyledCompCardContainer onClick={() => navigate(roleUrl(roles[0]))}>
-      <StyledCardHeader>
-        <StyledCardTop>
-          <StyledCompHeader>
+    <StyledCompCardContainer
+      onClick={() => navigate(roleUrl(roles[0]))}
+      data-test-id="comp-card--StyledCompCardContainer-0">
+      <StyledCardHeader data-test-id="comp-card--StyledCardHeader-0">
+        <StyledCardTop data-test-id="comp-card--StyledCardTop-0">
+          <StyledCompHeader data-test-id="comp-card--StyledCompHeader-0">
             <h2>{compName}</h2>
           </StyledCompHeader>
         </StyledCardTop>
       </StyledCardHeader>
-
-      <StyledCardMiddle>
-        <StyledCardText>{location}</StyledCardText>
-        <StyledCardText>{compDateFormatted}</StyledCardText>
+      <StyledCardMiddle data-test-id="comp-card--StyledCardMiddle-0">
+        <StyledCardText data-test-id="comp-card--StyledCardText-0">{location}</StyledCardText>
+        <StyledCardText data-test-id="comp-card--StyledCardText-1">{compDateFormatted}</StyledCardText>
       </StyledCardMiddle>
-
-      <StyledCardBottom>
-        <StyledRoleContainer>
+      <StyledCardBottom data-test-id="comp-card--StyledCardBottom-0">
+        <StyledRoleContainer data-test-id="comp-card--StyledRoleContainer-0">
           {roles.map((role, index) => (
-            <StyledRole key={index}>{role}</StyledRole>
+            <StyledRole key={index} data-test-id="comp-card--StyledRole-0">{role}</StyledRole>
           ))}
         </StyledRoleContainer>
-        <StyledCountdown>{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</StyledCountdown>
+        <StyledCountdown data-test-id="comp-card--StyledCountdown-0">{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</StyledCountdown>
       </StyledCardBottom>
-
-      <StyledProgressBar>
-        <StyledProgress $width={progressWidth} />
+      <StyledProgressBar data-test-id="comp-card--StyledProgressBar-0">
+        <StyledProgress $width={progressWidth} data-test-id="comp-card--StyledProgress-0" />
       </StyledProgressBar>
     </StyledCompCardContainer>
   );

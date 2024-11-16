@@ -131,7 +131,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     setCompetitionInfo((prev) => ({
       ...prev,
       otherSiteLocations: [
-        ...prev.otherSiteLocations || [],
+        ...(prev.otherSiteLocations || []),
         { universityName: option.label, defaultSite },
       ],
     }));
@@ -238,23 +238,23 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
   const theme = useTheme();
 
   return (
-    <StyledModalOverlay>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
+    <StyledModalOverlay data-test-id="edit-comp-details-pop-up--StyledModalOverlay-0">
+      <StyledModal data-test-id="edit-comp-details-pop-up--StyledModal-0">
+        <StyledCloseButton
+          onClick={onClose}
+          data-test-id="edit-comp-details-pop-up--StyledCloseButton-0">
           <FaTimes />
         </StyledCloseButton>
-
-        <StyledTitle2>Edit Competition Details</StyledTitle2>
-
+        <StyledTitle2 data-test-id="edit-comp-details-pop-up--StyledTitle2-0">Edit Competition Details</StyledTitle2>
         <div></div>
-        <StyledRowContainer2>
+        <StyledRowContainer2 data-test-id="edit-comp-details-pop-up--StyledRowContainer2-0">
           <div
             style={{
               textAlign: "left",
             }}
           >
-            <StyledLabel>Competition Information</StyledLabel>
-            <StyledEditorContainer>
+            <StyledLabel data-test-id="edit-comp-details-pop-up--StyledLabel-0">Competition Information</StyledLabel>
+            <StyledEditorContainer data-test-id="edit-comp-details-pop-up--StyledEditorContainer-0">
               <ReactMarkdownEditorLite
                 value={competitionInfo.information !== null ? competitionInfo.information : defaultCompInformation}
                 onChange={({ text }) => handleMarkdownChange(text)}
@@ -283,7 +283,6 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
               />
             </StyledEditorContainer>
           </div>
-
           <div
             style={{
               textAlign: "left",
@@ -310,9 +309,9 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
               descriptor="Please specify the region your Competition will be held in"
             />
 
-            <StyledLabel>Competition Start</StyledLabel>
+            <StyledLabel data-test-id="edit-comp-details-pop-up--StyledLabel-1">Competition Start</StyledLabel>
 
-            <StyledDoubleInputContainer>
+            <StyledDoubleInputContainer data-test-id="edit-comp-details-pop-up--StyledDoubleInputContainer-0">
               <TextInputLight
                 label="Date and Time (UTC Timezone)"
                 placeholder="dd/mm/yyyy"
@@ -322,17 +321,14 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 onChange={(e) => setStartDateInput(new Date(e.target.value))}
                 width="45%"
               />
-
             </StyledDoubleInputContainer>
 
             {competitionInfo.earlyRegDeadline && (
               <>
-                <StyledLabel>Early Bird Registration Deadline</StyledLabel>
-                <StyledDescriptor>
-                  Please set the Date and Time of your Early Bird Registration
-                  Deadline
-                </StyledDescriptor>
-                <StyledDoubleInputContainer>
+                <StyledLabel data-test-id="edit-comp-details-pop-up--StyledLabel-2">Early Bird Registration Deadline</StyledLabel>
+                <StyledDescriptor data-test-id="edit-comp-details-pop-up--StyledDescriptor-0">Please set the Date and Time of your Early Bird Registration
+                                    Deadline</StyledDescriptor>
+                <StyledDoubleInputContainer data-test-id="edit-comp-details-pop-up--StyledDoubleInputContainer-1">
                   <TextInputLight
                     label="Date and Time (UTC Timezone)"
                     placeholder="dd/mm/yyyy"
@@ -346,12 +342,10 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
               </>
             )}
 
-            <StyledLabel>General Registration Deadline</StyledLabel>
-            <StyledDescriptor>
-              Please set the Date and Time of your General Registration Deadline
-            </StyledDescriptor>
+            <StyledLabel data-test-id="edit-comp-details-pop-up--StyledLabel-3">General Registration Deadline</StyledLabel>
+            <StyledDescriptor data-test-id="edit-comp-details-pop-up--StyledDescriptor-1">Please set the Date and Time of your General Registration Deadline</StyledDescriptor>
 
-            <StyledDoubleInputContainer>
+            <StyledDoubleInputContainer data-test-id="edit-comp-details-pop-up--StyledDoubleInputContainer-2">
               <TextInputLight
                 label="Date and Time (UTC Timezone)"
                 placeholder="dd/mm/yyyy"
@@ -361,7 +355,6 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 onChange={(e) => setGeneralRegInput(new Date(e.target.value))}
                 width="45%"
               />
-
             </StyledDoubleInputContainer>
 
             <TextInput
@@ -385,25 +378,24 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
               </div>
             )}
 
-            <StyledLocationList>
+            <StyledLocationList data-test-id="edit-comp-details-pop-up--StyledLocationList-0">
               {optionDisplayList.map((displayObject, index) => {
                 return (
-                  <StyledLocationItem key={`${displayObject.value}${index}${displayObject.defaultSite}`}>
+                  <StyledLocationItem
+                    key={`${displayObject.value}${index}${displayObject.defaultSite}`}
+                    data-test-id="edit-comp-details-pop-up--StyledLocationItem-0">
                     <div>{displayObject.label}</div>
                     <div>{displayObject.defaultSite}</div>
                     <StyledDeleteIcon
                       onClick={() => handleDeleteSiteLocation(displayObject)}
-                    >
-                      x
-                    </StyledDeleteIcon>
+                      data-test-id="edit-comp-details-pop-up--StyledDeleteIcon-0">x</StyledDeleteIcon>
                   </StyledLocationItem>
                 );
               })}
             </StyledLocationList>
           </div>
         </StyledRowContainer2>
-
-        <StyledButtonContainer>
+        <StyledButtonContainer data-test-id="edit-comp-details-pop-up--StyledButtonContainer-0">
           <TransparentResponsiveButton
             style={{ height: '33px', backgroundColor: theme.colours.primaryLight, maxWidth: '160px' }}
             icon={<FaSave />}
