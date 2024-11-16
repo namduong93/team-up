@@ -1,7 +1,23 @@
 import { FaTimes } from "react-icons/fa";
-import { EditCourse, EditRego } from "../../../../../../../../../shared_types/Competition/staff/Edit";
+import {
+  EditCourse,
+  EditRego,
+} from "../../../../../../../../../shared_types/Competition/staff/Edit";
 import { CourseCategory } from "../../../../../../../../../shared_types/University/Course";
-import { StyledButton, StyledCloseButton, StyledColumn, StyledFirstDiv, StyledInput, StyledLabel, StyledModal, StyledModalOverlay, StyledRowContainer, StyledRowContainer2, StyledText, StyledTitle2 } from "./EditCompRegistrationPopup.styles";
+import {
+  StyledButton,
+  StyledCloseButton,
+  StyledColumn,
+  StyledFirstDiv,
+  StyledInput,
+  StyledLabel,
+  StyledModal,
+  StyledModalOverlay,
+  StyledRowContainer,
+  StyledRowContainer2,
+  StyledText,
+  StyledTitle2,
+} from "./EditCompRegistrationPopup.styles";
 import { ToggleButton } from "../ToggleButton";
 
 interface EditCompRegoPopUpProps {
@@ -14,6 +30,15 @@ interface EditCompRegoPopUpProps {
   setCourses: (category: CourseCategory, value: string) => void;
 }
 
+/**
+ * `EditCompRegoPopUp is a React web page component that displays a pop up for editing and reviewing
+ * competition registration form after the competition has been created. It provides options to toggle to hide
+ * registration questions, as well as text inputs to change the courses assigned to the University course categories
+ * appearing on the registration form
+ *
+ * @returns JSX.Element - A styled container presenting toggles to remove competition registration fields and text boxes to
+ * alter course codes.
+ */
 export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
   heading,
   onClose,
@@ -118,7 +143,9 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
               <StyledRowContainer>
                 <StyledColumn>
                   <StyledLabel>Codeforces</StyledLabel>
-                  <StyledText>Students enter their current Codeforces score</StyledText>
+                  <StyledText>
+                    Students enter their current Codeforces score
+                  </StyledText>
                 </StyledColumn>
                 <StyledColumn>
                   <ToggleButton

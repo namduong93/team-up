@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
 import { sendRequest } from "../../../../../../../../utility/request";
 import { CompetitionSiteCapacity } from "../../../../../../../../../shared_types/Competition/CompetitionSite";
-import { StyledButton, StyledCloseButton, StyledContainer, StyledModal, StyledModalOverlay, StyledView } from "./EditSiteCapacity.styles";
+import {
+  StyledButton,
+  StyledCloseButton,
+  StyledContainer,
+  StyledModal,
+  StyledModalOverlay,
+  StyledView,
+} from "./EditSiteCapacity.styles";
 import { FaTimes } from "react-icons/fa";
 import { StyledHeading } from "../../ManagePage.styles";
 import { StyledText } from "../EditCompRegistrationPopup/EditCompRegistrationPopup.styles";
@@ -14,40 +21,57 @@ import { NumberInputLight } from "../../../../../../../../components/general_uti
 interface EditSiteCapacityPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
-  onSubmit: (site: {label: string, value: number}, capacity: number) => void;
-};
+  onSubmit: (site: { label: string; value: number }, capacity: number) => void;
+}
 
+/**
+ * `EditSiteCapacityPopUp is a React web page component that displays a pop up for editing the capacity of
+ * sites associated with that competition.
+ *
+ * @returns JSX.Element - A styled container presenting a text input field to change the capacity of the site
+ * selected from a dropdow
+ */
 export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   heading,
   onClose,
   onSubmit,
 }) => {
   const { compId } = useParams();
-  const { roles, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext("manage");
-  const [selectedSite, setSelectedSite] = useState<{ value: string; label: string }>({label: "", value: "0"});
+  const {
+    roles,
+    siteOptionsState: [siteOptions, setSiteOptions],
+  } = useCompetitionOutletContext("manage");
+  const [selectedSite, setSelectedSite] = useState<{
+    value: string;
+    label: string;
+  }>({ label: "", value: "0" });
   const [capacity, setCapacity] = useState<number>(0);
   const [currentCapacity, setCurrentCapacity] = useState<number>(0);
 
-  const [siteCapacities, setSiteCapacities] = useState<CompetitionSiteCapacity[] | undefined>()
+  const [siteCapacities, setSiteCapacities] = useState<
+    CompetitionSiteCapacity[] | undefined
+  >();
 
   useEffect(() => {
-
     const fetchSiteCapacities = async () => {
+      const ids = roles.includes(CompetitionRole.Admin)
+        ? siteOptions.map((site) => site.value)
+        : [];
 
-      const ids = (roles.includes(CompetitionRole.Admin) ? siteOptions.map((site) => site.value) : []);
+      const response = await sendRequest.get<{
+        site: CompetitionSiteCapacity[];
+      }>("/competition/site/capacity", { compId, ids });
 
-      const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>(
-        '/competition/site/capacity',
-        { compId, ids });
-      
       const { site: siteCapacities } = response.data;
       setSiteCapacities(siteCapacities);
-    }
+    };
     fetchSiteCapacities();
   }, []);
 
   useEffect(() => {
-    const newCapacity = siteCapacities?.find((site) => site.id === parseInt(selectedSite.value));
+    const newCapacity = siteCapacities?.find(
+      (site) => site.id === parseInt(selectedSite.value)
+    );
     console.log(newCapacity);
     setCurrentCapacity(newCapacity?.capacity || 0);
   }, [selectedSite, siteCapacities]);
@@ -55,7 +79,6 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   useEffect(() => {
     setSelectedSite(siteOptions[0]);
   }, [siteOptions]);
-
 
   // const handleSiteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   //   const selected = siteOptions.find((site) => site.value === e.target.value);
@@ -77,8 +100,12 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
     // Call onSubmit with the site and capacity
     // onSubmit({label: selectedSite.label, value: parseInt(selectedSite.value)}, capacity);
     onClose();
-    
-    await sendRequest.put('/competition/site/capacity/update', { compId, siteId: parseInt(selectedSite.value), capacity });
+
+    await sendRequest.put("/competition/site/capacity/update", {
+      compId,
+      siteId: parseInt(selectedSite.value),
+      capacity,
+    });
   };
 
   return (
@@ -92,22 +119,23 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
             <StyledHeading>{heading}</StyledHeading>
             <div style={{ display: "flex", alignContent: "center" }}>
               <StyledText>
-                <em>Capacity is the number of participants your site can host.</em>
+                <em>
+                  Capacity is the number of participants your site can host.
+                </em>
               </StyledText>
             </div>
 
-            {roles.includes(CompetitionRole.Admin) && 
-            <div style={{ width: '300px' }}>
-              <AdvancedDropdown
-                setCurrentSelected={setSelectedSite}
-                optionsState={[siteOptions, setSiteOptions]}
-                style={{ width: "100%" }}
-                isExtendable={false}
-                defaultSearchTerm={selectedSite.label}
-              />
-            </div>
-            
-            }
+            {roles.includes(CompetitionRole.Admin) && (
+              <div style={{ width: "300px" }}>
+                <AdvancedDropdown
+                  setCurrentSelected={setSelectedSite}
+                  optionsState={[siteOptions, setSiteOptions]}
+                  style={{ width: "100%" }}
+                  isExtendable={false}
+                  defaultSearchTerm={selectedSite.label}
+                />
+              </div>
+            )}
             <NumberInputLight
               label="Provide a capacity"
               value={currentCapacity}
@@ -115,7 +143,9 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
               currentCapacity={currentCapacity}
             />
 
-            <StyledButton onClick={handleSubmit} disabled={capacity <= 0} >Save Changes</StyledButton>
+            <StyledButton onClick={handleSubmit} disabled={capacity <= 0}>
+              Save Changes
+            </StyledButton>
           </StyledContainer>
         </StyledView>
       </StyledModal>

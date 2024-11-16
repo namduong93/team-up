@@ -31,6 +31,12 @@ interface ToggleButtonProps {
   onToggle: () => void;
 }
 
+/**
+ * A React toggle component that allows switching between an 'on' and 'off' state
+ *
+ * @param {ToggleButtonProps} props - React ToggleButtonProps specified above
+ * @returns {JSX.Element} - Web page styled toggle component.
+ */
 export const ToggleButton: React.FC<ToggleButtonProps> = ({
   isOn,
   onToggle,
