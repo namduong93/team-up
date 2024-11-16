@@ -2,11 +2,27 @@ import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { sendRequest } from "../../../utility/request";
 import { StyledFlexBackground } from "../../../components/general_utility/Background";
-import { StyledForgotPassword, StyledFormContainer, StyledImage, StyledInputContainer, StyledSignUpLink, StyledTitle } from "./Login.styles";
+import {
+  StyledForgotPassword,
+  StyledFormContainer,
+  StyledImage,
+  StyledInputContainer,
+  StyledSignUpLink,
+  StyledTitle,
+} from "./Login.styles";
 import TextInput from "../../../components/general_utility/TextInput";
 import { backendURL } from "../../../../config/backendURLConfig";
 import { StyledCustomButton } from "../../general_styles/button_styles";
 
+/**
+ * A React web page component that renders a login form. It includes fields for email and password
+ * and handles the submission of the form to authenticate the user. Upon successful login, the user is
+ * redirected to the dashboard. The component also provides a link to navigate to a password recovery
+ * page and a sign-up page for new users.
+ *
+ * @returns {JSX.Element} - A login form with email, password fields, and links for forgot password
+ *                         and sign-up functionality.
+ */
 export const Login: FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -15,17 +31,25 @@ export const Login: FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await sendRequest.post('/user/login', { email, password });
-      window.location.href = '/dashboard';
+      await sendRequest.post("/user/login", { email, password });
+      window.location.href = "/dashboard";
     } catch (error: unknown) {
-      console.error('Login failed', error);
+      console.error("Login failed", error);
     }
   };
 
   return (
-    <StyledFlexBackground style={{ justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
-      <div style={{ width: '600px', flex: '0 1 auto' }}>
-        <StyledImage src={`${backendURL.HOST}:${backendURL.PORT}/images/icpc_logo_landing.png`} />
+    <StyledFlexBackground
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
+    >
+      <div style={{ width: "600px", flex: "0 1 auto" }}>
+        <StyledImage
+          src={`${backendURL.HOST}:${backendURL.PORT}/images/icpc_logo_landing.png`}
+        />
       </div>
       <StyledFormContainer onSubmit={handleSubmit}>
         <StyledTitle>Welcome</StyledTitle>
@@ -54,13 +78,26 @@ export const Login: FC = () => {
           />
         </StyledInputContainer>
 
-        <StyledForgotPassword onClick={() => navigate('/password/recovery/email')}>Forgot Password?</StyledForgotPassword>
+        <StyledForgotPassword
+          onClick={() => navigate("/password/recovery/email")}
+        >
+          Forgot Password?
+        </StyledForgotPassword>
 
         <StyledCustomButton type="submit">Login</StyledCustomButton>
 
         <div>
-          <span style={{ marginRight: '5px', fontFamily: 'Arial, Helvetica, sans-serif' }}>New Here?</span>
-          <StyledSignUpLink onClick={() => navigate('/roleregistration')}>Sign Up</StyledSignUpLink>
+          <span
+            style={{
+              marginRight: "5px",
+              fontFamily: "Arial, Helvetica, sans-serif",
+            }}
+          >
+            New Here?
+          </span>
+          <StyledSignUpLink onClick={() => navigate("/roleregistration")}>
+            Sign Up
+          </StyledSignUpLink>
         </div>
       </StyledFormContainer>
     </StyledFlexBackground>

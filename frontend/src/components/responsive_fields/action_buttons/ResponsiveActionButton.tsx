@@ -63,10 +63,12 @@ interface ResponsiveActionButtonProps
 }
 
 /**
- * A React button component
+ * A React button component that triggers an action, with an optional confirmation pop-up.
+ * The button style is determined by the `actionType` prop, which can be one of `primary`,
+ * `secondary`, `error`, or `confirm`.
  *
  * @param {ProgressBarProps} props - React ProgressBarProps specified above
- * @returns {JSX.Element} - Web page styled button with optional confirmation popup functionality.
+ * @returns {JSX.Element} - Web page styled button which triggers a confirmation popup on click.
  */
 export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
   question,

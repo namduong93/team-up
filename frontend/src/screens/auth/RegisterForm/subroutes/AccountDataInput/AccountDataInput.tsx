@@ -3,60 +3,77 @@ import { useNavigate } from "react-router-dom";
 import { useMultiStepRegoForm } from "../../hooks/useMultiStepRegoForm";
 import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { RegoProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledDoubleInputContainer, StyledTitle } from "./AccountDataInput.styles";
+import {
+  StyledButton,
+  StyledButtonContainer,
+  StyledContainer,
+  StyledContentContainer,
+  StyledDoubleInputContainer,
+  StyledTitle,
+} from "./AccountDataInput.styles";
 import TextInput from "../../../../../components/general_utility/TextInput";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
 import { StyledErrorMessage } from "../../../../general_styles/error_styles";
 
+/**
+ * A web page form component for collecting account information in a multi-step registration process.
+ *
+ * The `AccountDataInput` component renders input fields for the user to enter personal information,
+ * including first name, last name, preferred name, gender, pronouns, email, password, and confirm password.
+ * It also handles validation, showing error messages if passwords do not match, and tracks the form data
+ * using a multi-step registration context.
+ *
+ * @returns {JSX.Element} - The form UI for the account data input in the registration process.
+ */
 export const AccountDataInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [showOtherGenderInput, setShowOtherGenderInput] = useState(false); // Track if the "Other" gender input should be shown
+  const [showOtherGenderInput, setShowOtherGenderInput] = useState(false);
 
   const pronounOptions = [
-    { value: '', label: 'Please Select' },
-    { value: 'M', label: 'He/Him' },
-    { value: 'F', label: 'She/Her' },
-    { value: 'NB', label: 'They/Them' },
+    { value: "", label: "Please Select" },
+    { value: "M", label: "He/Him" },
+    { value: "F", label: "She/Her" },
+    { value: "NB", label: "They/Them" },
   ];
 
   const genderOptions = [
-    { value: '', label: 'Please Select' },
-    { value: 'M', label: 'Male' },
-    { value: 'F', label: 'Female' },
-    { value: 'NB', label: 'Non-Binary'},
-    { value: 'other', label: 'Other'},
+    { value: "", label: "Please Select" },
+    { value: "M", label: "Male" },
+    { value: "F", label: "Female" },
+    { value: "NB", label: "Non-Binary" },
+    { value: "other", label: "Other" },
   ];
 
   const isButtonDisabled = () => {
     const { firstName, lastName, password, email, gender } = formData;
     return (
-      error !== '' ||
-      password === '' ||
-      confirmPassword === '' ||
-      firstName === '' ||
-      lastName === '' ||
-      email === '' ||
-      gender === ''
+      error !== "" ||
+      password === "" ||
+      confirmPassword === "" ||
+      firstName === "" ||
+      lastName === "" ||
+      email === "" ||
+      gender === ""
     );
   };
 
   const handleConfirmPasswordChange = (value: string) => {
     setConfirmPassword(value);
     if (value !== formData.password) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
     } else {
-      setError('');
+      setError("");
     }
   };
 
   const handleGenderChange = (value: string) => {
-    if (value === 'other') {
-      setShowOtherGenderInput(true); 
-      setFormData({ ...formData, gender: '' }); 
+    if (value === "other") {
+      setShowOtherGenderInput(true);
+      setFormData({ ...formData, gender: "" });
     } else {
       setShowOtherGenderInput(false);
       setFormData({ ...formData, gender: value });
@@ -64,12 +81,19 @@ export const AccountDataInput: FC = () => {
   };
 
   const handleNext = () => {
-    console.log(formData)
-    navigate('/siteinformation');
+    console.log(formData);
+    navigate("/siteinformation");
   };
 
   return (
-    <StyledFlexBackground style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+    <StyledFlexBackground
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        fontFamily: "Arial, Helvetica, sans-serif",
+      }}
+    >
       <RegoProgressBar progressNumber={1} />
       <StyledContainer>
         <StyledContentContainer>
@@ -81,8 +105,10 @@ export const AccountDataInput: FC = () => {
               placeholder="John"
               type="text"
               required={true}
-              value={formData.firstName}  
-              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} 
+              value={formData.firstName}
+              onChange={(e) =>
+                setFormData({ ...formData, firstName: e.target.value })
+              }
               width="45%"
             />
 
@@ -92,8 +118,10 @@ export const AccountDataInput: FC = () => {
               type="text"
               required={true}
               value={formData.lastName}
-              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              width="45%" 
+              onChange={(e) =>
+                setFormData({ ...formData, lastName: e.target.value })
+              }
+              width="45%"
             />
           </StyledDoubleInputContainer>
 
@@ -103,8 +131,10 @@ export const AccountDataInput: FC = () => {
             type="text"
             required={false}
             value={formData.preferredName || ""}
-            onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
-            width="100%" 
+            onChange={(e) =>
+              setFormData({ ...formData, preferredName: e.target.value })
+            }
+            width="100%"
           />
 
           <StyledDoubleInputContainer>
@@ -114,17 +144,19 @@ export const AccountDataInput: FC = () => {
               value={formData.gender}
               required={true}
               onChange={(e) => handleGenderChange(e.target.value)}
-              width="45%" 
+              width="45%"
             />
-            <div style={{ display: 'flex', width: '45%', minWidth: '172px' }}>
-            <DropdownInput
-              label="Preferred Pronouns"
-              options={pronounOptions}
-              value={formData.preferredPronoun || ''}
-              required={false}
-              onChange={(e) => setFormData({ ...formData, preferredPronoun: e.target.value })}
-              width="100%" 
-            />
+            <div style={{ display: "flex", width: "45%", minWidth: "172px" }}>
+              <DropdownInput
+                label="Preferred Pronouns"
+                options={pronounOptions}
+                value={formData.preferredPronoun || ""}
+                required={false}
+                onChange={(e) =>
+                  setFormData({ ...formData, preferredPronoun: e.target.value })
+                }
+                width="100%"
+              />
             </div>
           </StyledDoubleInputContainer>
 
@@ -134,8 +166,10 @@ export const AccountDataInput: FC = () => {
               placeholder="Enter your gender"
               type="text"
               required={true}
-              value={formData.gender || ''}
-              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+              value={formData.gender || ""}
+              onChange={(e) =>
+                setFormData({ ...formData, gender: e.target.value })
+              }
               width="100%"
             />
           )}
@@ -146,7 +180,9 @@ export const AccountDataInput: FC = () => {
             type="text"
             required={true}
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             width="100%"
           />
 
@@ -156,8 +192,10 @@ export const AccountDataInput: FC = () => {
             type="password"
             required={true}
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            width="100%" 
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            width="100%"
           />
 
           <TextInput
@@ -166,14 +204,14 @@ export const AccountDataInput: FC = () => {
             type="password"
             required={true}
             value={confirmPassword}
-            onChange={(e) => handleConfirmPasswordChange(e.target.value)} 
-            width="100%" 
+            onChange={(e) => handleConfirmPasswordChange(e.target.value)}
+            width="100%"
           />
 
           {error && <StyledErrorMessage>{error}</StyledErrorMessage>}
 
           <StyledButtonContainer>
-            <StyledButton onClick={() => navigate('/roleregistration')}>
+            <StyledButton onClick={() => navigate("/roleregistration")}>
               Back
             </StyledButton>
 
@@ -186,4 +224,3 @@ export const AccountDataInput: FC = () => {
     </StyledFlexBackground>
   );
 };
-

@@ -104,10 +104,13 @@ interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * A React component for the form progress bar
+ * A React component that renders a vertical progress bar, displaying a series of
+ * steps or stages in a form or process. Each step is represented by a circle, and
+ * the active step is highlighted based on the `progressNumber` prop.
  *
  * @param {ProgressBarProps} props - React ProgressBarProps specified above
- * @returns {JSX.Element} - Web page progress bar component
+ * @returns {JSX.Element} -  A styled progress bar with a series of circles indicating
+ * progress, where the active circle is determined by the `progressNumber`.
  */
 
 // ACCEPTS PROPS:

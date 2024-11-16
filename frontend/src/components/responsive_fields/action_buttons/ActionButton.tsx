@@ -142,10 +142,12 @@ interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * A React component for action buttons used on the site
+ * A React A button component that triggers an action on the website, such as navigating to a
+ * different path or displaying a confirmation pop-up.
+ * The button's style and behavior depend on the action type (`primary`, `secondary`, `error`).
  *
  * @param {ActionButtonProps} props - React ActionButtonProps specified above
- * @returns {JSX.Element} - Web page button component
+ * @returns {JSX.Element} - Web page button component showing an optional confirmation pop-up upon click
  */
 export const ActionButton: FC<ActionButtonProps> = ({
   actionName,

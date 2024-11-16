@@ -5,10 +5,27 @@ import { University } from "../../../../../../shared_types/Competition/registrat
 import { sendRequest } from "../../../../../utility/request";
 import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { RegoProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledCreateAccountButton, StyledTitle } from "./InstitutionDataInput.styles";
+import {
+  StyledButton,
+  StyledButtonContainer,
+  StyledContainer,
+  StyledContentContainer,
+  StyledCreateAccountButton,
+  StyledTitle,
+} from "./InstitutionDataInput.styles";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
 import TextInput from "../../../../../components/general_utility/TextInput";
 
+/**
+ * A React web page form component for collecting institution-related data during the registration process.
+ *
+ * The `InstitutionDataInput` component allows the user to select an institution from a list of universities,
+ * or enter a custom institution if "Other" is selected. It also includes a field for the student's identifier number
+ * if the user selects the "Student" role. The form data is managed using the `useMultiStepRegoForm` context,
+ * and the data is sent to the backend to register the user as either a staff member or student.
+ *
+ * @returns {JSX.Element} - The form UI for the institution-related input in the registration process.
+ */
 export const InstitutionDataInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
@@ -137,7 +154,9 @@ export const InstitutionDataInput: FC = () => {
           )}
 
           <StyledButtonContainer>
-            <StyledButton onClick={() => navigate("/siteinformation")}>Back</StyledButton>
+            <StyledButton onClick={() => navigate("/siteinformation")}>
+              Back
+            </StyledButton>
 
             <StyledCreateAccountButton
               disabled={isButtonDisabled()}

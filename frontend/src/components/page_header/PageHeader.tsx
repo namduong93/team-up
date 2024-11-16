@@ -98,10 +98,15 @@ interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * A React component for the webpage header
+ * A React component that renders a customizable page header with the following elements:
+ * - A page title and description
+ * - Sort and filter options (if provided)
+ * - A search bar (if provided)
+ * - Additional custom buttons or elements
  *
  * @param {HeaderAttributes} props - React HeaderAttributes specified above
- * @returns {JSX.Element} - Web page header component
+ * @returns {JSX.Element} - Web page header component with title, description, and interactive controls
+ * (sort, filter, search)
  */
 
 // ACCEPTS PROPS:
