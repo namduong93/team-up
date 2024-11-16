@@ -1,17 +1,6 @@
-import { FC, useState} from "react";
+import { FC, useState } from "react";
 import { FaSort } from "react-icons/fa";
 import styled from "styled-components";
-
-export interface SortOption {
-  label: string;
-  value: string;
-}
-
-interface SortSelectProps extends React.HTMLAttributes<HTMLDivElement> {
-  options: SortOption[];
-  onSortChange: (sortOption: string) => void;
-  isOpen: boolean;
-}
 
 export const StyledSortContainer = styled.div<{ $isOpen: boolean }>`
   position: absolute;
@@ -27,7 +16,7 @@ export const StyledSortContainer = styled.div<{ $isOpen: boolean }>`
   height: fit-content;
   padding: 10px;
   max-height: 400px;
-  overflow-y: auto; 
+  overflow-y: auto;
 `;
 
 export const StyledSortOption = styled.div<{ $isSelected: boolean }>`
@@ -43,15 +32,36 @@ export const StyledSortOption = styled.div<{ $isSelected: boolean }>`
   }
 `;
 
-export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, isOpen }) => {
+export interface SortOption {
+  label: string;
+  value: string;
+}
+
+interface SortSelectProps extends React.HTMLAttributes<HTMLDivElement> {
+  options: SortOption[];
+  onSortChange: (sortOption: string) => void;
+  isOpen: boolean;
+}
+
+/**
+ * A React component for a sorting options
+ *
+ * @param {SortSelectProps} props - React SortSelectProps specified above
+ * @returns {JSX.Element} - Web page styled dropdown container with selectable
+ * sort options
+ */
+export const SortSelect: FC<SortSelectProps> = ({
+  options,
+  onSortChange,
+  isOpen,
+}) => {
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
-  
+
   const handleSortChange = (value: string) => {
     setSelectedSort(value);
     onSortChange(value);
   };
 
-  
   if (!isOpen) return null;
 
   return (

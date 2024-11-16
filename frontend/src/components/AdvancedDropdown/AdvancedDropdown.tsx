@@ -40,26 +40,6 @@ const StyledDropdownIconDiv = styled.div`
   pointer-events: none;
 `;
 
-// dropdown opts
-
-interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
-  optionsState: [
-    Array<{
-      value: string;
-      label: string;
-    }>,
-    React.Dispatch<
-      React.SetStateAction<Array<{ value: string; label: string }>>
-    >
-  ];
-  setCurrentSelected: React.Dispatch<
-    React.SetStateAction<{ value: string; label: string }>
-  >;
-  label?: string;
-  isExtendable?: boolean;
-  defaultSearchTerm?: string;
-}
-
 const StyledDropdownOptionsDiv = styled.div`
   position: absolute;
   width: 100%;
@@ -173,6 +153,24 @@ const DropdownOptions: FC<OptionsProps> = ({
   );
 };
 
+interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
+  optionsState: [
+    Array<{
+      value: string;
+      label: string;
+    }>,
+    React.Dispatch<
+      React.SetStateAction<Array<{ value: string; label: string }>>
+    >
+  ];
+  setCurrentSelected: React.Dispatch<
+    React.SetStateAction<{ value: string; label: string }>
+  >;
+  label?: string;
+  isExtendable?: boolean;
+  defaultSearchTerm?: string;
+}
+
 // PROPS:
 // - optionsState ---[ options -- state variable list of { value: string, label: string }, setOptions -- setSate for the options state variable ]
 // - setCurrentSelected --- setState function that should track the currently selected option ({ value: string, label: string })
@@ -196,7 +194,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
-    setSearchTerm(defaultSearchTerm ?? "")
+    setSearchTerm(defaultSearchTerm ?? "");
   }, [defaultSearchTerm]);
   const [displayDropdown, setDisplayDropdown] = useState(false);
 
@@ -206,8 +204,8 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
   });
 
   let filteredOptions:
-  | Array<FuseResult<{ value: string; label: string }>>
-  | Array<{ item: { value: string; label: string } }>;;
+    | Array<FuseResult<{ value: string; label: string }>>
+    | Array<{ item: { value: string; label: string } }>;
   if (searchTerm) {
     filteredOptions = fuse.search(searchTerm);
   } else {
@@ -216,8 +214,13 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     });
   }
 
-  const remainingOptions = options.filter(option => !filteredOptions.some(({ item }) => item.value === option.value));
-  filteredOptions = [...filteredOptions, ...remainingOptions.map((option) => ({ item: option }))];
+  const remainingOptions = options.filter(
+    (option) => !filteredOptions.some(({ item }) => item.value === option.value)
+  );
+  filteredOptions = [
+    ...filteredOptions,
+    ...remainingOptions.map((option) => ({ item: option })),
+  ];
 
   const handleSelectOption = (
     e:

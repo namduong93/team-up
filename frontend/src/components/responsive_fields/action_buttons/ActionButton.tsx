@@ -3,15 +3,9 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { TimeoutButton } from "../../general_utility/TimeoutButton";
 
-interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
-  actionName: string;
-  question: string;
-  redirectPath: string;
-  actionType: "primary" | "secondary" | "error";
-  handleClick?: () => void; // Optional function prop for a custom click handler
-}
-
-const StyledButton = styled.button<{$actionType: "primary" | "secondary" | "error";}>`
+const StyledButton = styled.button<{
+  $actionType: "primary" | "secondary" | "error";
+}>`
   border-radius: 10px;
   padding: 10px;
   border: none;
@@ -139,6 +133,20 @@ export const StyledCancelButton = styled.button`
   }
 `;
 
+interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+  actionName: string;
+  question: string;
+  redirectPath: string;
+  actionType: "primary" | "secondary" | "error";
+  handleClick?: () => void;
+}
+
+/**
+ * A React component for action buttons used on the site
+ *
+ * @param {ActionButtonProps} props - React ActionButtonProps specified above
+ * @returns {JSX.Element} - Web page button component
+ */
 export const ActionButton: FC<ActionButtonProps> = ({
   actionName,
   question,
@@ -150,14 +158,14 @@ export const ActionButton: FC<ActionButtonProps> = ({
   const navigate = useNavigate();
 
   const handleConfirm = () => {
-    navigate(redirectPath); // Go to the correct redirected path
+    navigate(redirectPath);
   };
 
   const handleButtonClick = () => {
     if (handleClick) {
-      handleClick(); // Call the custom click handler if provided
+      handleClick();
     } else {
-      setIsOpen(true); // Open the confirmation pop-up
+      setIsOpen(true);
     }
   };
 
@@ -170,8 +178,12 @@ export const ActionButton: FC<ActionButtonProps> = ({
         <StyledPopUpOverlay onClick={() => setIsOpen(false)}>
           <StyledPopUpContent onClick={(e) => e.stopPropagation()}>
             <StyledQuestion>{question}</StyledQuestion>
-            <StyledConfirmButton onClick={handleConfirm}>Confirm</StyledConfirmButton>
-            <StyledCancelButton onClick={() => setIsOpen(false)}>Cancel</StyledCancelButton>
+            <StyledConfirmButton onClick={handleConfirm}>
+              Confirm
+            </StyledConfirmButton>
+            <StyledCancelButton onClick={() => setIsOpen(false)}>
+              Cancel
+            </StyledCancelButton>
           </StyledPopUpContent>
         </StyledPopUpOverlay>
       )}

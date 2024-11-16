@@ -1,7 +1,6 @@
 import { FC, ReactNode, useState } from "react";
 import styled from "styled-components";
 
-
 export const StyledSortButton = styled.button<{ $isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
@@ -27,37 +26,63 @@ export const StyledSortButton = styled.button<{ $isSortOpen: boolean }>`
   }
 `;
 
-
-interface ResponsiveButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface ResponsiveButtonProps
+  extends React.HTMLAttributes<HTMLButtonElement> {
   isOpen?: boolean;
   icon: ReactNode;
   label: string;
 }
 
-export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, label, style, isOpen = false, ...props }) => {
+/**
+ * A React button component for responsive layouts
+ *
+ * @param {ResponsiveButtonProps} props - React ResponsiveButtonProps specified above
+ * @returns {JSX.Element} - Web page styled responsive button.
+ */
+export const ResponsiveButton: FC<ResponsiveButtonProps> = ({
+  onClick,
+  icon,
+  label,
+  style,
+  isOpen = false,
+  ...props
+}) => {
   return (
-    <StyledSortButton onClick={onClick} style={{
-      height: '100%',
-      width: '100%',
-      overflow: 'hidden',
-      padding: '0',
-      display: 'flex',
-      flexWrap: 'wrap',
-      ...style
-    }} $isSortOpen={isOpen} {...props}>
-      <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
-        <div style={{ height: '200%' }}>
-          {icon}
-        </div>
+    <StyledSortButton
+      onClick={onClick}
+      style={{
+        height: "100%",
+        width: "100%",
+        overflow: "hidden",
+        padding: "0",
+        display: "flex",
+        flexWrap: "wrap",
+        ...style,
+      }}
+      $isSortOpen={isOpen}
+      {...props}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignContent: "start",
+          flexWrap: "wrap",
+          height: "50%",
+          width: "100%",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ height: "200%" }}>{icon}</div>
         <span>{label}</span>
       </div>
     </StyledSortButton>
-  )
-}
+  );
+};
 
-
-
-export const StyledTransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: 'primary' | 'secondary' | 'confirm' | 'error' }>`
+export const StyledTransparentButton = styled.button<{
+  $isSortOpen: boolean;
+  $actionType: "primary" | "secondary" | "confirm" | "error";
+}>`
   background-color: transparent;
   border-radius: 10px;
   box-sizing: border-box;
@@ -77,7 +102,7 @@ export const StyledTransparentButton = styled.button<{ $isSortOpen: boolean, $ac
         return theme.colours.primaryDark;
       } else if (actionType === "secondary") {
         return theme.colours.secondaryDark;
-      } else if (actionType === 'confirm') {
+      } else if (actionType === "confirm") {
         return theme.colours.confirmDark;
       } else {
         return theme.colours.cancelDark;
@@ -89,32 +114,58 @@ export const StyledTransparentButton = styled.button<{ $isSortOpen: boolean, $ac
 `;
 
 interface ResponsiveActionButtonProps extends ResponsiveButtonProps {
-  actionType: 'primary' | 'secondary' | 'confirm' | 'error';
+  actionType: "primary" | "secondary" | "confirm" | "error";
   question?: string;
 }
 
+/**
+ * A React button component variant
+ *
+ * @param {ProgressBarProps} props - React ProgressBarProps specified above
+ * @returns {JSX.Element} - Web page styled transparent button with transparent background, hover,
+ * and action-specific styles
+ */
 export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
-  onClick, actionType, icon, label, style, isOpen = false, question, ...props }) => {
+  onClick,
+  actionType,
+  icon,
+  label,
+  style,
+  isOpen = false,
+  question,
+  ...props
+}) => {
   const [showPopUp, setShowPopUp] = useState(false);
 
   return (
-    <StyledTransparentButton $actionType={actionType} onClick={onClick} style={{
-      height: '100%',
-      width: '100%',
-      overflow: 'hidden',
-      padding: '0',
-      display: 'flex',
-      flexWrap: 'wrap',
-      ...style
-    }} $isSortOpen={isOpen} {...props}>
-      <div style={{ display: 'flex',
-        alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%',
-        justifyContent: 'center' }}>
-        <div style={{ height: '200%' }}>
-          {icon}
-        </div>
-        <span style={{ marginLeft: '5px' }}>{label}</span>
+    <StyledTransparentButton
+      $actionType={actionType}
+      onClick={onClick}
+      style={{
+        height: "100%",
+        width: "100%",
+        overflow: "hidden",
+        padding: "0",
+        display: "flex",
+        flexWrap: "wrap",
+        ...style,
+      }}
+      $isSortOpen={isOpen}
+      {...props}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignContent: "start",
+          flexWrap: "wrap",
+          height: "50%",
+          width: "100%",
+          justifyContent: "center",
+        }}
+      >
+        <div style={{ height: "200%" }}>{icon}</div>
+        <span style={{ marginLeft: "5px" }}>{label}</span>
       </div>
     </StyledTransparentButton>
-  )
-}
+  );
+};

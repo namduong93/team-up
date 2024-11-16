@@ -1,7 +1,11 @@
 import React, { FC, SetStateAction, useState } from "react";
 import { FaSort } from "react-icons/fa";
 import styled from "styled-components";
-import { StyledSortOption, SortSelect, SortOption } from "./components/SortSelect";
+import {
+  StyledSortOption,
+  SortSelect,
+  SortOption,
+} from "./components/SortSelect";
 import { FilterIcon, FilterSelect } from "./components/FilterSelect";
 import { NotificationButton } from "./components/NotificationButton";
 import { ResponsiveButton } from "../responsive_fields/ResponsiveButton";
@@ -64,16 +68,6 @@ export const SortIcon = styled(FaSort)`
   flex: 0 0 auto;
 `;
 
-interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
-  pageTitle: string;
-  pageDescription: string;
-  sortOptions?: Array<SortOption>;
-  filterOptions?: Record<string, Array<string>>;
-  sortOptionState?: { sortOption: string | null, setSortOption: React.Dispatch<SetStateAction<string | null>> };
-  filtersState?: { filters: Filters, setFilters: React.Dispatch<SetStateAction<Filters>> };
-  searchTermState?: { searchTerm: string, setSearchTerm: React.Dispatch<SetStateAction<string>> };
-}
-
 const AdditionalElementsDiv = styled.div`
   height: 100%;
   width: 100%;
@@ -83,6 +77,32 @@ const AdditionalElementsDiv = styled.div`
   flex-direction: row-reverse;
   flex-wrap: wrap;
 `;
+
+interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
+  pageTitle: string;
+  pageDescription: string;
+  sortOptions?: Array<SortOption>;
+  filterOptions?: Record<string, Array<string>>;
+  sortOptionState?: {
+    sortOption: string | null;
+    setSortOption: React.Dispatch<SetStateAction<string | null>>;
+  };
+  filtersState?: {
+    filters: Filters;
+    setFilters: React.Dispatch<SetStateAction<Filters>>;
+  };
+  searchTermState?: {
+    searchTerm: string;
+    setSearchTerm: React.Dispatch<SetStateAction<string>>;
+  };
+}
+
+/**
+ * A React component for the webpage header
+ *
+ * @param {HeaderAttributes} props - React HeaderAttributes specified above
+ * @returns {JSX.Element} - Web page header component
+ */
 
 // ACCEPTS PROPS:
 // - pageTitle --- The large header to appear at the top of the page
@@ -96,74 +116,100 @@ const AdditionalElementsDiv = styled.div`
 // - style --- extra styling for the outermost container of PageHeader if needed
 // - props --- extra props for the outermost container of PageHeader if needed
 export const PageHeader: FC<HeaderAttributes> = ({
-  pageTitle, pageDescription,
+  pageTitle,
+  pageDescription,
   filterOptions,
   sortOptions,
-  sortOptionState /*{ sortOption, setSortOption }*/,
-  filtersState /*{ filters, setFilters } */,
-  searchTermState /*{ searchTerm, setSearchTerm }*/,
-  children, style, ...props }) => {
-
+  sortOptionState,
+  filtersState,
+  searchTermState,
+  children,
+  style,
+  ...props
+}) => {
   const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   return (
-  <PageHeaderContainerDiv style={{ flexDirection: 'row', justifyContent: 'space-between', ...style }} {...props}>
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-around' }}>
-      <PageTitle>{pageTitle}</PageTitle>
-      <PageDescriptionSpan>{pageDescription}</PageDescriptionSpan>
-    </div>
+    <PageHeaderContainerDiv
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        ...style,
+      }}
+      {...props}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          justifyContent: "space-around",
+        }}
+      >
+        <PageTitle>{pageTitle}</PageTitle>
+        <PageDescriptionSpan>{pageDescription}</PageDescriptionSpan>
+      </div>
 
-    <MenuOptionsContainerDiv>
-      <SortFilterSearchContainerDiv>
-        {sortOptions && sortOptionState &&
-        <ButtonContainer>
-          
-          <ResponsiveButton
-            icon={<SortIcon />}
-            label='Sort'
-            isOpen={isSortOpen}
-            onClick={() => setIsSortOpen((prev) => !prev)}
-          />
+      <MenuOptionsContainerDiv>
+        <SortFilterSearchContainerDiv>
+          {sortOptions && sortOptionState && (
+            <ButtonContainer>
+              <ResponsiveButton
+                icon={<SortIcon />}
+                label="Sort"
+                isOpen={isSortOpen}
+                onClick={() => setIsSortOpen((prev) => !prev)}
+              />
 
-          {isSortOpen && 
-          <SortSelect
-            isOpen={isSortOpen}
-            onSortChange={(sortOption) => sortOptionState.setSortOption(sortOption)}
-            options={sortOptions} 
-          />}
+              {isSortOpen && (
+                <SortSelect
+                  isOpen={isSortOpen}
+                  onSortChange={(sortOption) =>
+                    sortOptionState.setSortOption(sortOption)
+                  }
+                  options={sortOptions}
+                />
+              )}
+            </ButtonContainer>
+          )}
 
-        </ButtonContainer>}
-        
-        {filterOptions && filtersState &&
-        <ButtonContainer>
-          <ResponsiveButton
-            icon={<FilterIcon />}
-            label='Filter'
-            isOpen={isFilterOpen}
-            onClick={() => setIsFilterOpen((prev) => !prev)}
-          />
+          {filterOptions && filtersState && (
+            <ButtonContainer>
+              <ResponsiveButton
+                icon={<FilterIcon />}
+                label="Filter"
+                isOpen={isFilterOpen}
+                onClick={() => setIsFilterOpen((prev) => !prev)}
+              />
 
-          {isFilterOpen &&
-            <FilterSelect
-              options={filterOptions}
-              isOpen={isFilterOpen}
-              onFilterChange={(selectedFilters) => filtersState.setFilters(selectedFilters)}
-              currentFilters={filtersState.filters} 
-          />}
-        </ButtonContainer>}
-        
-        {searchTermState &&
-        <ButtonContainer style={{ flex: '1 1 58px' }}>
-          <SearchBar value={searchTermState.searchTerm}
-            onChange={(e) => searchTermState.setSearchTerm(e.target.value)} />
-        </ButtonContainer>}
-      </SortFilterSearchContainerDiv>
-      <AdditionalElementsDiv>
-        <NotificationButton />
-        {children}
-      </AdditionalElementsDiv>
-    </MenuOptionsContainerDiv>
-  </PageHeaderContainerDiv>
-  )
-}
+              {isFilterOpen && (
+                <FilterSelect
+                  options={filterOptions}
+                  isOpen={isFilterOpen}
+                  onFilterChange={(selectedFilters) =>
+                    filtersState.setFilters(selectedFilters)
+                  }
+                  currentFilters={filtersState.filters}
+                />
+              )}
+            </ButtonContainer>
+          )}
+
+          {searchTermState && (
+            <ButtonContainer style={{ flex: "1 1 58px" }}>
+              <SearchBar
+                value={searchTermState.searchTerm}
+                onChange={(e) => searchTermState.setSearchTerm(e.target.value)}
+              />
+            </ButtonContainer>
+          )}
+        </SortFilterSearchContainerDiv>
+        <AdditionalElementsDiv>
+          <NotificationButton />
+          {children}
+        </AdditionalElementsDiv>
+      </MenuOptionsContainerDiv>
+    </PageHeaderContainerDiv>
+  );
+};
