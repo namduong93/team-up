@@ -10,6 +10,8 @@ import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { Student } from "../../../models/user/student/student";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
+import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
 import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
 import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 import { UserIdObject } from "../../../repository/UserRepository";
@@ -25,6 +27,8 @@ import pool, { dropTestDatabase } from "../Utils/dbUtils";
 describe('Staff Update Function', () => {
   let user_db;
   let comp_db;
+  let comp_staff_db;
+  let comp_student_db;
   let uni_db
 
   let dateNow = Date.now()
@@ -67,11 +71,13 @@ describe('Staff Update Function', () => {
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
+    comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
+    comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
     user_db = new SqlDbUserRepository(pool);
     uni_db = new SqlDbUniversityRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
-    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+    comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
 
     const newCourses: EditCourse = {
       [CourseCategory.Introduction]: 'COMP1234',
@@ -79,7 +85,7 @@ describe('Staff Update Function', () => {
       [CourseCategory.AlgorithmDesign]: 'COMP7894',
       [CourseCategory.ProgrammingChallenges]: 'COMP9480',
     }
-    await comp_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1)
+    await comp_staff_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1)
   });
 
 
@@ -88,7 +94,7 @@ describe('Staff Update Function', () => {
   });
 
   test('Success case: updates the information of Staff', async () => {
-    expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([{
+    expect(await comp_staff_db.competitionStaff(id, comp.competitionId)).toStrictEqual([{
       userId: id,
       universityId: 1,
       universityName: 'University of Melbourne',
@@ -122,8 +128,8 @@ describe('Staff Update Function', () => {
       roles: [CompetitionRole.Admin, CompetitionRole.Coach],
       access: StaffAccess.Accepted
     }
-    await comp_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
-    expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([{
+    await comp_staff_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
+    expect(await comp_staff_db.competitionStaff(id, comp.competitionId)).toStrictEqual([{
       userId: id,
       universityId: 1,
       universityName: 'University of Melbourne',

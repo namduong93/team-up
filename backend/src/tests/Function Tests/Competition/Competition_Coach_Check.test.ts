@@ -10,6 +10,8 @@ import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { Student } from "../../../models/user/student/student";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
+import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
 import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
 import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 import { UserIdObject } from "../../../repository/UserRepository";
@@ -18,6 +20,8 @@ import pool, { dropTestDatabase } from "../Utils/dbUtils";
 describe('Coach Check Function', () => {
   let user_db;
   let comp_db;
+  let comp_staff_db;
+  let comp_student_db;
   let uni_db
 
   let dateNow = Date.now()
@@ -62,11 +66,13 @@ describe('Coach Check Function', () => {
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
+    comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
+    comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
     user_db = new SqlDbUserRepository(pool);
     uni_db = new SqlDbUniversityRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
-    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+    comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
 
     const newStaffInfo: StaffInfo = {
       userId: id,
@@ -85,7 +91,7 @@ describe('Coach Check Function', () => {
       roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
       access: StaffAccess.Accepted
     }
-    await comp_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
+    await comp_staff_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
 
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
@@ -127,15 +133,15 @@ describe('Coach Check Function', () => {
       id: 1,
       name: 'University of Melbourne'
     }
-    await comp_db.competitionStudentJoin(newContender, studentUni)
-    teamInfo = await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
     const newCourses: EditCourse = {
       [CourseCategory.Introduction]: 'COMP1234',
       [CourseCategory.DataStructures]: 'COMP9999',
       [CourseCategory.AlgorithmDesign]: 'COMP7894',
       [CourseCategory.ProgrammingChallenges]: 'COMP9480',
     }
-    await comp_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1)
+    await comp_staff_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1)
   });
 
 
@@ -144,9 +150,9 @@ describe('Coach Check Function', () => {
   });
 
   test('failure case: user is not a coach for this competition', async () => {
-    await expect(comp_db.competitionCoachCheck(id + 10, comp.competitionId)).rejects.toThrow("User is not a coach for this competition")
+    await expect(comp_staff_db.competitionCoachCheck(id + 10, comp.competitionId)).rejects.toThrow("User is not a coach for this competition")
   })
   test('Success case: does not throw an error', async () => {
-    expect(await comp_db.competitionCoachCheck(id, comp.competitionId)).toStrictEqual(undefined)
+    expect(await comp_staff_db.competitionCoachCheck(id, comp.competitionId)).toStrictEqual(undefined)
   })
 })

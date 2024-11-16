@@ -4,6 +4,8 @@ import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { Student } from "../../../models/user/student/student";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
+import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
 import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
@@ -11,6 +13,8 @@ import pool, { dropTestDatabase } from "../Utils/dbUtils";
 describe('Student Join Competition Function', () => {
   let user_db;
   let comp_db;
+  let comp_staff_db;
+  let comp_student_db;
 
   let dateNow = Date.now()
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
@@ -49,10 +53,12 @@ describe('Student Join Competition Function', () => {
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
+    comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
+    comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
     user_db = new SqlDbUserRepository(pool)
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
-    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+    comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
 
     const userSiteLocation: CompetitionSiteObject = {
       id: 1,
@@ -75,8 +81,8 @@ describe('Student Join Competition Function', () => {
       accessLevel: CompetitionAccessLevel.ACCEPTED,
       siteLocation: userSiteLocation
     }
-    await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
-    await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
+    await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach);
+    await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator);
   });
 
   afterAll(async () => {
@@ -125,7 +131,7 @@ describe('Student Join Competition Function', () => {
       id: 2,
       name: 'Monash University'
     }
-    await expect(comp_db.competitionStudentJoin(newContender, studentUni)).rejects.toThrow("Your university is not registered for this competition.")
+    await expect(comp_student_db.competitionStudentJoin(newContender, studentUni)).rejects.toThrow("Your university is not registered for this competition.")
   })
 
   test('Sucess case: returns the users team details', async () => {
@@ -170,8 +176,8 @@ describe('Student Join Competition Function', () => {
       id: 1,
       name: 'University of Melbourne'
     }
-    await comp_db.competitionStudentJoin(newContender, studentUni)
-    expect(await comp_db.competitionStudents(id, comp.competitionId)).toStrictEqual([
+    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    expect(await comp_staff_db.competitionStudents(id, comp.competitionId)).toStrictEqual([
       {
         userId: newStudent.userId,
         universityId: 1,

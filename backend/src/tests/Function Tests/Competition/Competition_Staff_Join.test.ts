@@ -4,6 +4,8 @@ import { CompetitionAccessLevel, CompetitionStaff, CompetitionUserRole } from ".
 import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
+import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
 import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
@@ -12,6 +14,8 @@ import pool, { dropTestDatabase } from "../Utils/dbUtils";
 describe('Staff Join Function', () => {
   let user_db;
   let comp_db;
+  let comp_staff_db;
+  let comp_student_db;
 
   let dateNow = Date.now()
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
@@ -79,10 +83,13 @@ describe('Staff Join Function', () => {
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
+    comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
+    comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
+
     user_db = new SqlDbUserRepository(pool)
     user = await user_db.staffRegister(mockStaff);
     id = user.userId;
-    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+    comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
     mockStaffId1 = await user_db.staffRegister(mockStaff1);
     mockStaffId2 = await user_db.staffRegister(mockStaff2);
     mockStaffId3 = await user_db.staffRegister(mockStaff3);
@@ -98,9 +105,9 @@ describe('Staff Join Function', () => {
       accessLevel: CompetitionAccessLevel.ACCEPTED
     }
 
-    await comp_db.competitionStaffJoin(comp.competitionId, newAdmin);
+    await comp_staff_db.competitionStaffJoin(comp.competitionId, newAdmin);
 
-    expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([
+    expect(await comp_staff_db.competitionStaff(id, comp.competitionId)).toStrictEqual([
       {
         userId: id,
         universityId: 1,
@@ -156,8 +163,8 @@ describe('Staff Join Function', () => {
       siteLocation: userSiteLocation
     }
 
-    await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
-    expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([
+    await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach);
+    expect(await comp_staff_db.competitionStaff(id, comp.competitionId)).toStrictEqual([
       {
         userId: id,
         universityId: 1,
@@ -223,8 +230,8 @@ describe('Staff Join Function', () => {
       siteLocation: userSiteLocation
     }
 
-    await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
-    expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([
+    await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator);
+    expect(await comp_staff_db.competitionStaff(id, comp.competitionId)).toStrictEqual([
       {
         userId: id,
         universityId: 1,
@@ -303,7 +310,7 @@ describe('Staff Join Function', () => {
       accessLevel: CompetitionAccessLevel.ACCEPTED
     }
 
-    expect(await comp_db.competitionStaffJoin(comp.competitionId, newAdmin)).rejects.toThrow("User is already an admin for this competition.");
+    expect(await comp_staff_db.competitionStaffJoin(comp.competitionId, newAdmin)).rejects.toThrow("User is already an admin for this competition.");
   })
   test.skip('Fail case: user is already a coach for the competition', async () => {
     const universityOrigin: University = {
@@ -324,7 +331,7 @@ describe('Staff Join Function', () => {
       siteLocation: userSiteLocation
     }
 
-    expect(await comp_db.competitionStaffJoin(comp.competitionId, newCoach)).rejects.toThrow("User is already an coach for this competition.");
+    expect(await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach)).rejects.toThrow("User is already an coach for this competition.");
   })
   test.skip('Fail case: user is already a site coordinator for the competition', async () => {
     const userSiteLocation: CompetitionSiteObject = {
@@ -338,6 +345,6 @@ describe('Staff Join Function', () => {
       siteLocation: userSiteLocation
     }
 
-    expect(await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator)).rejects.toThrow("User is already an site coordinator for this competition.");
+    expect(await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator)).rejects.toThrow("User is already an site coordinator for this competition.");
   })
 })

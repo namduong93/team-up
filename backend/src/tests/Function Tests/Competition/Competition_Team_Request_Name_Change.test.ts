@@ -4,6 +4,8 @@ import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { Student } from "../../../models/user/student/student";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
+import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
 import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
@@ -11,6 +13,9 @@ import pool, { dropTestDatabase } from "../Utils/dbUtils";
 describe('Staff Register Function', () => {
   let user_db;
   let comp_db;
+  let comp_staff_db;
+  let comp_student_db;
+
 
   let dateNow = Date.now()
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
@@ -51,10 +56,12 @@ describe('Staff Register Function', () => {
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
+    comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
+    comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
     user_db = new SqlDbUserRepository(pool)
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
-    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+    comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
 
     const userSiteLocation: CompetitionSiteObject = {
       id: 1,
@@ -77,8 +84,8 @@ describe('Staff Register Function', () => {
       accessLevel: CompetitionAccessLevel.ACCEPTED,
       siteLocation: userSiteLocation
     }
-    await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
-    await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
+    await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach);
+    await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator);
 
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
@@ -120,8 +127,8 @@ describe('Staff Register Function', () => {
       id: 1,
       name: 'University of Melbourne'
     }
-    await comp_db.competitionStudentJoin(newContender, studentUni)
-    teamInfo = await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
   });
 
   afterAll(async () => {
@@ -129,12 +136,12 @@ describe('Staff Register Function', () => {
   });
 
   test('failure case: user isnt a member', async () => {
-    await expect(comp_db.competitionRequestTeamNameChange(newStudent.userId + 1000, comp.competitionId, 'notBulbasaur')).rejects.toThrow("User is not a member of this team.")
+    await expect(comp_staff_db.competitionRequestTeamNameChange(newStudent.userId + 1000, comp.competitionId, 'notBulbasaur')).rejects.toThrow("User is not a member of this team.")
   })
   test('failure case: new team name is same with old', async () => {
-    await expect(comp_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, teamInfo.teamName)).rejects.toThrow("New team name is similar to the old name or an already requested new name.")
+    await expect(comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, teamInfo.teamName)).rejects.toThrow("New team name is similar to the old name or an already requested new name.")
   })
   test('Sucess case: returns the users team details', async () => {
-    expect(await comp_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'notBulbasaur')).toStrictEqual(expect.any(Number))
+    expect(await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'notBulbasaur')).toStrictEqual(expect.any(Number))
   })
 })

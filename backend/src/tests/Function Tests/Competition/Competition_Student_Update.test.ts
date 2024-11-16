@@ -12,6 +12,8 @@ import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { Student } from "../../../models/user/student/student";
 import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
+import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
 import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
 import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 import { UserIdObject } from "../../../repository/UserRepository";
@@ -21,6 +23,9 @@ describe('Student Update Test', () => {
   let user_db;
   let comp_db;
   let uni_db
+  let comp_staff_db;
+  let comp_student_db;
+
 
   let dateNow = Date.now()
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
@@ -66,11 +71,13 @@ describe('Student Update Test', () => {
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
+    comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
+    comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
     user_db = new SqlDbUserRepository(pool);
     uni_db = new SqlDbUniversityRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
-    comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
+    comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
 
     const newStaffInfo: StaffInfo = {
       userId: id,
@@ -89,7 +96,7 @@ describe('Student Update Test', () => {
       roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
       access: StaffAccess.Accepted
     }
-    await comp_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
+    await comp_staff_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
 
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
@@ -131,15 +138,15 @@ describe('Student Update Test', () => {
       id: 1,
       name: 'University of Melbourne'
     }
-    await comp_db.competitionStudentJoin(newContender, studentUni)
-    teamInfo = await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
     const newCourses: EditCourse = {
       [CourseCategory.Introduction]: 'COMP1234',
       [CourseCategory.DataStructures]: 'COMP9999',
       [CourseCategory.AlgorithmDesign]: 'COMP7894',
       [CourseCategory.ProgrammingChallenges]: 'COMP9480',
     }
-    await comp_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1)
+    await comp_staff_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1)
   });
 
 
@@ -148,7 +155,7 @@ describe('Student Update Test', () => {
   });
 
   test('Success case: succesfully changed the students details', async () => {
-    expect(await comp_db.competitionStudentDetails(newStudent.userId, comp.competitionId)).toStrictEqual(
+    expect(await comp_student_db.competitionStudentDetails(newStudent.userId, comp.competitionId)).toStrictEqual(
       {
         name: 'Maximillian Maverick',
         email: 'newcontender11@gmail.com',
@@ -214,9 +221,9 @@ describe('Student Update Test', () => {
       codeforcesRating: 6
     }
 
-    await comp_db.competitionStudentsUpdate(id, [newStudentInfo], comp.competitionId)
+    await comp_staff_db.competitionStudentsUpdate(id, [newStudentInfo], comp.competitionId)
 
-    expect(await comp_db.competitionStudentDetails(newStudent.userId, comp.competitionId)).toStrictEqual({
+    expect(await comp_student_db.competitionStudentDetails(newStudent.userId, comp.competitionId)).toStrictEqual({
       userId: newStudent.userId,
       universityId: 1,
       universityName: 'University of Melbourne',
