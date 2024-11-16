@@ -1,8 +1,5 @@
-import { StaffDashInfo } from "../models/user/staff/staff_dash_info.js";
-import { SystemAdminDashInfo } from "../models/user/staff/system_admin/system_admin_dash_info.js";
-import { StudentDashInfo } from "../models/user/student/student_dash_info.js";
-import { UserRepository } from "../repository/user_repository_type.js";
-import { SessionRepository, SessionTokenObject } from "../repository/session_repository_type.js";
+import { UserRepository } from "../repository/UserRepository.js";
+import { SessionRepository, SessionTokenObject } from "../repository/SessionRepository.js";
 import { Session } from "../models/session/session.js";
 import { v4 as uuidv4 } from 'uuid';
 import { UserProfileInfo } from "../models/user/user_profile_info.js";
@@ -11,8 +8,8 @@ import { Student, validateStudent } from "../models/user/student/student.js";
 import { Staff, validateStaff } from "../models/user/staff/staff.js";
 import { convertGenderToP, UserType, UserTypeObject } from "../models/user/user.js";
 import { UserDashInfo } from "../models/user/user_dash_info.js";
-import { LooseStaffInfo, StaffInfo, StaffRequests } from "../../shared_types/Competition/staff/StaffInfo.js";
-import { ServiceError } from "../errors/service_error.js";
+import { LooseStaffInfo, StaffRequests } from "../../shared_types/Competition/staff/StaffInfo.js";
+import { ServiceError } from "../errors/ServiceError.js";
 
 export class UserService {
   private userRepository: UserRepository;

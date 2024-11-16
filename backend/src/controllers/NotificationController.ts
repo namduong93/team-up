@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Notification } from "../models/notification/notification.js";
-import { NotificationService } from "../services/notification_service.js";
-import { httpErrorHandler } from "./controller_util/http_error_handler.js";
+import { NotificationService } from "../services/NotificationService.js";
+import { httpErrorHandler } from "./controller_util/httpErrorHandler.js";
 
 export class NotificationController {
   private notificationService: NotificationService;

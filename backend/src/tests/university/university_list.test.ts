@@ -1,8 +1,8 @@
-import { UniversityController } from '../../controllers/university_controller';
-import { SessionRepository } from '../../repository/session_repository_type';
-import { SqlDbUniversityRepository } from '../../repository/university/sqldb';
-import { UniversityRepository } from '../../repository/university_repository_type';
-import { UniversityService } from '../../services/university_service';
+import { UniversityController } from '../../controllers/UniversityController';
+import { SessionRepository } from '../../repository/SessionRepository';
+import { SqlDbUniversityRepository } from '../../repository/university/SqlDbUniversityRepository';
+import { UniversityRepository } from '../../repository/UniversityRepository';
+import { UniversityService } from '../../services/UniversityService';
 import { Request, Response } from 'express';
 import pool from '../test_util/test_utilities';
 
