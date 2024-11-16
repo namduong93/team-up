@@ -6,11 +6,6 @@ import { WithdrawPopup1 } from "./subcomponents/WithdrawPopup1";
 import { SecondStepPopup } from "../popups/SecondStepPopup";
 import InvitePopup from "../InvitePopup";
 
-
-interface WithdrawPopupChainProps {
-  handleClose: () => void;
-}
-
 const StyledHeading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
@@ -20,6 +15,20 @@ const StyledHeading = styled.h2`
   word-break: break-word;
 `;
 
+interface WithdrawPopupChainProps {
+  handleClose: () => void;
+}
+
+/**
+ * A component for handling the multi-step process of withdrawing a participant from a competition, starting
+ * with a pop-up prompting users of the consequences of withdrawal, then another pop-up asking users to confirm
+ * their choice, and finally displaying the team code for distribution to a substitute and a message of random
+ * replacement if applicable
+ *
+ * @param {SitePopupChainProps} props - React SitePopupChainProps as specified above
+ *
+ * @returns {JSX.Element} - A modal component that displays different steps of the withdrawal process.
+ */
 export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
   handleClose,
 }) => {
@@ -80,7 +89,9 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
         return (
           <SecondStepPopup
             heading={
-              <StyledHeading>Are you sure you would {"\nlike to withdraw?"}</StyledHeading>
+              <StyledHeading>
+                Are you sure you would {"\nlike to withdraw?"}
+              </StyledHeading>
             }
             onClose={handleCloseWithReset}
             onNext={handleSubmit}

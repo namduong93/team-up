@@ -1,6 +1,9 @@
 import { FaTimes } from "react-icons/fa";
 import { styled } from "styled-components";
-import { StyledCancelButton, StyledConfirmButton } from "../../../../components/responsive_fields/action_buttons/ActionButton";
+import {
+  StyledCancelButton,
+  StyledConfirmButton,
+} from "../../../../components/responsive_fields/action_buttons/ActionButton";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -53,6 +56,13 @@ interface SecondStepPopupProps {
   onNext: () => void;
 }
 
+/**
+ * `SecondStepPopUp` is a React web page component that displays a pop up asking users to confirm
+ * their change
+ *
+ * @returns JSX.Element - A styled container presenting a 'Yes' and 'No' button prompting users
+ * to confirm their choice
+ */
 export const SecondStepPopup: React.FC<SecondStepPopupProps> = ({
   heading,
   onClose,

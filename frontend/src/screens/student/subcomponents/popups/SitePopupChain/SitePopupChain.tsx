@@ -5,6 +5,7 @@ import { sendRequest } from "../../../../../utility/request";
 import { SitePopup1 } from "./subcomponents/SitePopup1/SitePopup1";
 import { SecondStepPopup } from "../SecondStepPopup";
 import { ThirdStepPopup } from "../ThirdStepPopup";
+import { StyledHeading } from "./SitePopupChain.styles";
 
 interface SitePopupChainProps {
   compId?: number;
@@ -15,15 +16,15 @@ interface SitePopupChainProps {
   ];
 }
 
-const StyledHeading = styled.h2`
-  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
-  margin-top: 40px;
-  color: ${({ theme }) => theme.colours.notifDark};
-  margin-bottom: 10%;
-  white-space: pre-wrap;
-  word-break: break-word;
-`;
-
+/**
+ * `SitePopupChain` is a React web page component for handling the multi-step process of changing a
+ * team site, starting with a pop-up prompting users to enter the new site, then confirming the change,
+ * and finally displaying a confirmation message that the change is pending approval from the coach.
+ *
+ * @param {SitePopupChainProps} props - React SitePopupChainProps as specified above
+ *
+ * @returns {JSX.Element} - A modal component that displays different steps of the team site change process.
+ */
 export const SitePopupChain: React.FC<SitePopupChainProps> = ({
   compId = useParams().compId,
   handleClose,
@@ -58,7 +59,9 @@ export const SitePopupChain: React.FC<SitePopupChainProps> = ({
         return (
           <SitePopup1
             siteOptionsState={siteOptionsState}
-            heading={<StyledHeading>Change Team Site {"\nLocation"}</StyledHeading>}
+            heading={
+              <StyledHeading>Change Team Site {"\nLocation"}</StyledHeading>
+            }
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter a location"

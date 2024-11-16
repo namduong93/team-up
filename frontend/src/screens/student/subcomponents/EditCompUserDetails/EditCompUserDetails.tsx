@@ -1,8 +1,26 @@
 import { FC, useEffect, useState } from "react";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
-import { StyledButtonContainer, StyledCloseButton, StyledCloseContainer, StyledContentContainer, StyledField, StyledForm, StyledHeaderContainer, StyledModalContent, StyledModalOverlay, StyledTitle, StyledTitleContainer } from "./EditCompUserDetails.styles";
+import {
+  StyledButtonContainer,
+  StyledCloseButton,
+  StyledCloseContainer,
+  StyledContentContainer,
+  StyledField,
+  StyledForm,
+  StyledHeaderContainer,
+  StyledModalContent,
+  StyledModalOverlay,
+  StyledTitle,
+  StyledTitleContainer,
+} from "./EditCompUserDetails.styles";
 import { FaTimes } from "react-icons/fa";
-import { StyledColon, StyledDescriptor, StyledDoubleInputContainer, StyledFormLabel, StyledText } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
+import {
+  StyledColon,
+  StyledDescriptor,
+  StyledDoubleInputContainer,
+  StyledFormLabel,
+  StyledText,
+} from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
 import DropdownInputLight from "../../../../components/general_utility/DropDownLight";
 import { yearOptions } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput";
 import TextInputLight from "../../../../components/general_utility/TextInputLight";
@@ -15,8 +33,16 @@ interface EditCompPreferencesProps {
   student: StudentInfo;
   onSubmit: (updatedStudent: StudentInfo) => Promise<boolean>;
   onClose: () => void;
-};
+}
 
+/**
+ * `EditCompDetailsPopUp` is a React web page component that displays a pop up for editing and reviewing
+ * entered competition preferences after the user has registered for a competition. It provides relevant input fields
+ * to allow users to change their degree, ICPC eligibility, competition level, site attendance,
+ * biography, and preferred contact method
+ *
+ * @returns JSX.Element - A styled container presenting input fields to edit the student's competition preferences
+ */
 export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
   student,
   onSubmit,
@@ -32,7 +58,7 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
 
   useEffect(() => {
     console.log(student);
-  },[])
+  }, []);
 
   return (
     <StyledModalOverlay>
@@ -100,7 +126,10 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 options={["Level A", "Level B", "No Preference"]}
                 selectedOption={formData.level}
                 onOptionChange={(e) => {
-                  setFormData({ ...formData, level: e.target.value as CompetitionLevel });
+                  setFormData({
+                    ...formData,
+                    level: e.target.value as CompetitionLevel,
+                  });
                 }}
                 required={true}
                 width="100%"
@@ -145,47 +174,56 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
             <StyledField>
               <StyledFormLabel>Preferred Contact Method</StyledFormLabel>
               <StyledDescriptor>
-                Please specify your preferred contact method if you have another preference
+                Please specify your preferred contact method if you have another
+                preference
               </StyledDescriptor>
               <StyledDoubleInputContainer>
-              <TextInputLight
-                label="Platform"
-                placeholder="Please enter"
-                type="text"
-                required={false}
-                value={formData.preferredContact.split(":")[0] || ""}
-                onChange={(e) => {
-                  const newPlatform = e.target.value;
-                  const currentHandle = formData.preferredContact.split(":")[1] || "";
-                  setFormData({ ...formData, preferredContact: `${newPlatform}:${currentHandle}` });
-                }}
-                width="45%"
-              />
+                <TextInputLight
+                  label="Platform"
+                  placeholder="Please enter"
+                  type="text"
+                  required={false}
+                  value={formData.preferredContact.split(":")[0] || ""}
+                  onChange={(e) => {
+                    const newPlatform = e.target.value;
+                    const currentHandle =
+                      formData.preferredContact.split(":")[1] || "";
+                    setFormData({
+                      ...formData,
+                      preferredContact: `${newPlatform}:${currentHandle}`,
+                    });
+                  }}
+                  width="45%"
+                />
 
-              <StyledColon>:</StyledColon>
+                <StyledColon>:</StyledColon>
 
-              <TextInputLight
-                label="Handle"
-                placeholder="Please enter"
-                type="text"
-                required={false}
-                value={formData.preferredContact.split(":")[1] || ""}
-                onChange={(e) => {
-                  const newHandle = e.target.value;
-                  const currentPlatform = formData.preferredContact.split(":")[0] || "";
-                  setFormData({ ...formData, preferredContact: `${currentPlatform}:${newHandle}` });
-                }}
-                width="45%"
-              />
+                <TextInputLight
+                  label="Handle"
+                  placeholder="Please enter"
+                  type="text"
+                  required={false}
+                  value={formData.preferredContact.split(":")[1] || ""}
+                  onChange={(e) => {
+                    const newHandle = e.target.value;
+                    const currentPlatform =
+                      formData.preferredContact.split(":")[0] || "";
+                    setFormData({
+                      ...formData,
+                      preferredContact: `${currentPlatform}:${newHandle}`,
+                    });
+                  }}
+                  width="45%"
+                />
               </StyledDoubleInputContainer>
             </StyledField>
           </StyledForm>
           <StyledButtonContainer>
-            <ResponsiveActionButton 
-              actionType="primary" 
-              label="Save Changes" 
-              question="Are you sure you want to change your competition preferences?" 
-              handleSubmit={handleSubmit} 
+            <ResponsiveActionButton
+              actionType="primary"
+              label="Save Changes"
+              question="Are you sure you want to change your competition preferences?"
+              handleSubmit={handleSubmit}
             />
           </StyledButtonContainer>
         </StyledContentContainer>

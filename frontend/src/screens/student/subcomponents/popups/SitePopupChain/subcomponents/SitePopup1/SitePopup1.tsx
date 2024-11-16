@@ -1,5 +1,9 @@
 import { FaTimes } from "react-icons/fa";
-import { StyledButton, StyledCloseButton, StyledModal } from "./SitePopup1.styles";
+import {
+  StyledButton,
+  StyledCloseButton,
+  StyledModal,
+} from "./SitePopup1.styles";
 import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 
 interface FirstStepPopUpProps {
@@ -17,6 +21,13 @@ interface FirstStepPopUpProps {
   ];
 }
 
+/**
+ * `SitePopUp1` is a React web page component that displays a pop up for editing a team's site. It provides
+ * a text input field to allow users to change their team site
+ *
+ * @returns JSX.Element - A styled container presenting information and a text input to allow users to
+ * change their team site
+ */
 export const SitePopup1: React.FC<FirstStepPopUpProps> = ({
   heading,
   onClose,

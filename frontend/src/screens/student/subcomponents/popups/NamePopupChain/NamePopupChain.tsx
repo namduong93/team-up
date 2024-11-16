@@ -5,20 +5,21 @@ import { sendRequest } from "../../../../../utility/request";
 import { NamePopup1 } from "./subcomponents/NamePopup1/NamePopup1";
 import { SecondStepPopup } from "../SecondStepPopup";
 import { ThirdStepPopup } from "../ThirdStepPopup";
+import { StyledHeading } from "./NamePopupChain.styles";
 
 interface NamePopupChainProps {
   handleClose: () => void;
 }
 
-const StyledHeading = styled.h2`
-  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
-  margin-top: 40px;
-  color: ${({ theme }) => theme.colours.notifDark};
-  margin-bottom: 10%;
-  white-space: pre-wrap;
-  word-break: break-word;
-`;
-
+/**
+ * A component for handling the multi-step process of changing a team name, starting with
+ * a pop-up prompting users to enter the new name, then confirming the change, and finally displaying a
+ * confirmation message that the change is pending approval from the coach.
+ *
+ * @param {NamePopupChainProps} props - React NamePopUpChainProps as specified above
+ *
+ * @returns {JSX.Element} - A modal component that displays different steps of the team name change process.
+ */
 export const NamePopupChain: React.FC<NamePopupChainProps> = ({
   handleClose,
 }) => {
