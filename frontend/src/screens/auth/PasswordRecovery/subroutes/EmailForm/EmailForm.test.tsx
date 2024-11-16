@@ -2,22 +2,17 @@
 import { describe, expect, it } from 'vitest';
 // 
 
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { EmailForm } from './EmailForm';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from '../../../../../themes/defaultTheme';
+import { contextRender } from '../../../../../test_utils/contextRender';
 
 describe('EmailForm', () => {
   it('Renders correctly', () => {
     // ARRANGE
-    render(
-    <ThemeProvider theme={defaultTheme}>
-      <MemoryRouter>
-        <EmailForm />
-      </MemoryRouter>
-    </ThemeProvider>
-    );
+    contextRender(<EmailForm />);
     // ACT
 
     // EXPECT
