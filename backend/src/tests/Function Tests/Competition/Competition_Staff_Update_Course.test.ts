@@ -144,22 +144,22 @@ describe('Competition Staff Update Course Function', () => {
 
     expect(await uni_db.universityCourses(newStudent.userId, 'NEW1')).toStrictEqual([
       {
-        courseId: 5,
+        courseId: expect.any(Number),
         courseName: 'COMP1234',
         category: 'Introduction'
       },
       {
-        courseId: 6,
+        courseId: expect.any(Number),
         courseName: 'COMP9999',
         category: 'Data Structures'
       },
       {
-        courseId: 7,
+        courseId: expect.any(Number),
         courseName: 'COMP7894',
         category: 'Algorithm Design'
       },
       {
-        courseId: 8,
+        courseId: expect.any(Number),
         courseName: 'COMP9480',
         category: 'Programming Challenges'
       }

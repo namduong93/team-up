@@ -12,7 +12,7 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-describe.skip('Template tests', () => {
+describe('Competition Site Function', () => {
   let user_db;
   let comp_db;
   let uni_db
@@ -37,14 +37,14 @@ describe.skip('Template tests', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW',
+    code: 'NEW8',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin@odmin.com',
+    email: 'newadmin8@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -88,7 +88,7 @@ describe.skip('Template tests', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender@gmail.com',
+      email: 'newcontender8@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -141,7 +141,7 @@ describe.skip('Template tests', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Case: Husk', async () => {
-    expect(1 + 1).toBe(2);
+  test('Success case: returns all site in the competition', async () => {
+    expect(await comp_db.competitionSites(comp.competitionId)).toStrictEqual([{ id: expect.any(Number), name: 'TestRoom' }]);
   })
 })

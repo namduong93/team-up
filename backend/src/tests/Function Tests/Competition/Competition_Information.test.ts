@@ -142,6 +142,7 @@ describe('Template tests', () => {
   });
 
   test('Success case: return competition information', async () => {
+    const siteInfo = await comp_db.competitionSites(comp.competitionId)
     expect(await comp_db.competitionInformation(comp.competitionId)).toStrictEqual({
       information: null,
       name: 'TestComp',
@@ -154,7 +155,7 @@ describe('Template tests', () => {
         {
           universityId: 1,
           universityName: 'University of Melbourne',
-          siteId: 10,
+          siteId: siteInfo[0].id,
           defaultSite: 'undefined'
         }
       ]

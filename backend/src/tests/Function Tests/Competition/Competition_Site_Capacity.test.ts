@@ -12,8 +12,7 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-// get coordinating site id function returns 3 objects for some reason and 2 null, need to understand more
-describe.skip('Competition Get Coordinating Site Id Function', () => {
+describe('Site Capacity Function', () => {
   let user_db;
   let comp_db;
   let uni_db
@@ -38,21 +37,33 @@ describe.skip('Competition Get Coordinating Site Id Function', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW4',
+    code: 'NEW6',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin4@odmin.com',
+    email: 'newadmin6@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
     tshirtSize: 'M',
     universityId: 1,
   };
+  const coordinatorStaff: Staff = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'coordinator6@odmin.com',
+    password: 'testPassword',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'M',
+    universityId: 1,
+  };
+
   let user: UserIdObject;
+  let user1: UserIdObject;
   let id: number;
   let comp: CompetitionIdObject;
   let newStudent: UserIdObject;
@@ -63,6 +74,7 @@ describe.skip('Competition Get Coordinating Site Id Function', () => {
     user_db = new SqlDbUserRepository(pool);
     uni_db = new SqlDbUniversityRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
+    user1 = await user_db.staffRegister(coordinatorStaff);
     id = user.userId;
     comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
 
@@ -75,13 +87,13 @@ describe.skip('Competition Get Coordinating Site Id Function', () => {
         name: 'University of Melbourne'
       },
       competitionBio: 'i good, trust',
-      siteLocation: { id: 1, name: 'TestRoom' }
+      siteLocation: { id: 1, name: 'TestRoom', capacity: 200 }
     }
     const newCoordinator: CompetitionStaff = {
-      userId: id,
+      userId: user1.userId,
       competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
       accessLevel: CompetitionAccessLevel.ACCEPTED,
-      siteLocation: { id: 1, name: 'TestRoom' }
+      siteLocation: { id: 1, name: 'TestRoom', capacity: 200 }
     }
     await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
     await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
@@ -89,7 +101,7 @@ describe.skip('Competition Get Coordinating Site Id Function', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender4@gmail.com',
+      email: 'newcontender6@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -142,7 +154,8 @@ describe.skip('Competition Get Coordinating Site Id Function', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Success Case: returns a site id of competition', async () => {
-    expect(await comp_db.competitionGetCoordinatingSiteId(id)).toStrictEqual(1);
+  test('Success case: returns all information on the site capacity', async () => {
+    const siteInfo = await comp_db.competitionSites(comp.competitionId)
+    expect(await comp_db.competitionSiteCapacity(comp.competitionId, [siteInfo[0].id])).toStrictEqual([{ id: expect.any(Number), capacity: 0 }])
   })
 })

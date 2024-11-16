@@ -12,7 +12,8 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-describe.skip('Template tests', () => {
+// //NOTE! when users apply to be admin, coach or site coordinator, the site location is still inputted however for admin and coach, the site location will be inputted as null. thus if you call get coordinating site ID function on site coordinator with multiple roles, like site coordinator and coach or site coordinator and admin, it will return a null and the actual site. HOWEVER, the site id is ordered in when they first was registered. so if the user was an admin first, then it will return a null first. SInce the function only returns 1 row, then the return will be null
+describe('Competition Get Coordinating Site Id Function', () => {
   let user_db;
   let comp_db;
   let uni_db
@@ -37,14 +38,24 @@ describe.skip('Template tests', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW',
+    code: 'NEW4',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin@odmin.com',
+    email: 'newadmin4@odmin.com',
+    password: 'testPassword',
+    gender: 'Male',
+    pronouns: 'He/Him',
+    tshirtSize: 'M',
+    universityId: 1,
+  };
+  const coordinatorStaff: Staff = {
+    name: 'Maximillian Maverick',
+    preferredName: 'X',
+    email: 'coordinator1@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -52,6 +63,7 @@ describe.skip('Template tests', () => {
     universityId: 1,
   };
   let user: UserIdObject;
+  let user1: UserIdObject;
   let id: number;
   let comp: CompetitionIdObject;
   let newStudent: UserIdObject;
@@ -62,6 +74,7 @@ describe.skip('Template tests', () => {
     user_db = new SqlDbUserRepository(pool);
     uni_db = new SqlDbUniversityRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
+    user1 = await user_db.staffRegister(coordinatorStaff);
     id = user.userId;
     comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
 
@@ -77,7 +90,7 @@ describe.skip('Template tests', () => {
       siteLocation: { id: 1, name: 'TestRoom' }
     }
     const newCoordinator: CompetitionStaff = {
-      userId: id,
+      userId: user1.userId,
       competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
       accessLevel: CompetitionAccessLevel.ACCEPTED,
       siteLocation: { id: 1, name: 'TestRoom' }
@@ -88,7 +101,7 @@ describe.skip('Template tests', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender@gmail.com',
+      email: 'newcontender4@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -141,7 +154,7 @@ describe.skip('Template tests', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Case: Husk', async () => {
-    expect(1 + 1).toBe(2);
+  test('Success Case: returns a site id of competition', async () => {
+    expect(await comp_db.competitionGetCoordinatingSiteId(user1.userId)).toStrictEqual(1);
   })
 })

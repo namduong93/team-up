@@ -12,7 +12,7 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-describe.skip('Template tests', () => {
+describe('Site Capacity Update Function', () => {
   let user_db;
   let comp_db;
   let uni_db
@@ -37,14 +37,14 @@ describe.skip('Template tests', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW',
+    code: 'NEW7',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin@odmin.com',
+    email: 'newadmin7@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -80,7 +80,7 @@ describe.skip('Template tests', () => {
       userId: id,
       competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
       accessLevel: CompetitionAccessLevel.ACCEPTED,
-      siteLocation: { id: 1, name: 'TestRoom' }
+      siteLocation: { id: 1, name: 'TestRoom', capacity: 5 }
     }
     await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
     await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
@@ -88,7 +88,7 @@ describe.skip('Template tests', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender@gmail.com',
+      email: 'newcontender7@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -141,7 +141,9 @@ describe.skip('Template tests', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Case: Husk', async () => {
-    expect(1 + 1).toBe(2);
+  test('Success case: successfully update the capacity of a given site', async () => {
+    const siteInfo = await comp_db.competitionSites(comp.competitionId)
+    await comp_db.competitionSiteCapacityUpdate(siteInfo[0].id, 200);
+    expect(await comp_db.competitionSiteCapacity(comp.competitionId, [siteInfo[0].id])).toStrictEqual([{ id: expect.any(Number), capacity: 200 }])
   })
 })
