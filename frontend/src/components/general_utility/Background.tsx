@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const FlexBackground = styled.div`
+export const StyledFlexBackground = styled.div`
   flex: 1;
   width: 100%;
   height: 100%;

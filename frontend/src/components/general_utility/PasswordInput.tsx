@@ -22,23 +22,23 @@ export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
   style
 }) => {
   return (
-    <Container $width={width} style={style}>
-      <Label>
+    <StyledContainer $width={width} style={style}>
+      <StyledLabel>
         {label}
-        {required && <Asterisk>*</Asterisk>}
-      </Label>
-      <Input
+        {required && <StyledAsterisk>*</StyledAsterisk>}
+      </StyledLabel>
+      <StyledInput
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         required={required}
       />
-    </Container>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div<{ $width: string }>`
+const StyledContainer = styled.div<{ $width: string }>`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
@@ -46,7 +46,7 @@ const Container = styled.div<{ $width: string }>`
   width: ${({ $width: width }) => width};
 `;
 
-export const Label = styled.label`
+export const StyledLabel = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 0.5rem;
@@ -55,11 +55,11 @@ export const Label = styled.label`
   font-size: 14px;
 `;
 
-const Asterisk = styled.span`
+const StyledAsterisk = styled.span`
   color: ${({ theme }) => theme.colours.error};
 `;
 
-export const Input = styled.input`
+export const StyledInput = styled.input`
   padding: 10px 1.5%;
   height: 100%;
   box-sizing: border-box;

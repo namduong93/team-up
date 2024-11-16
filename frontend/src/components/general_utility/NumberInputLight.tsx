@@ -1,6 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+  const StyledContainer = styled.div<{ $width: string }>`
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    font-family: ${({ theme }) => theme.fonts.fontFamily};
+    width: ${({ $width }) => $width};
+  `;
+  
+  export const StyledLabel = styled.label`
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    margin-top: 10px;
+    font-family: ${({ theme }) => theme.fonts.fontFamily};
+    font-size: 14px;
+  `;
+  
+  const StyledAsterisk = styled.span`
+    color: ${({ theme }) => theme.colours.error};
+  `;
+  
+  export const StyledInput = styled.input`
+    padding: 10px 1.5%;
+    height: 100%;
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid ${({ theme }) => theme.colours.notifDark};
+    border-radius: 10px;
+    margin-bottom: 5px;
+    font-family: ${({ theme }) => theme.fonts.fontFamily};
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.fonts.colour};
+  `;
+  
 interface NumberInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   name?: string;
@@ -43,52 +77,19 @@ export const NumberInputLight: React.FC<NumberInputLightProps> = ({
   };
 
   return (
-    <Container $width={width} style={style}>
-      <Label>
+    <StyledContainer $width={width} style={style}>
+      <StyledLabel>
         {label}
-        {required && <Asterisk>*</Asterisk>}
-      </Label>
-      <Input
+        {required && <StyledAsterisk>*</StyledAsterisk>}
+      </StyledLabel>
+      <StyledInput
         type={type}
         placeholder={placeholder || '0'}
         value={displayValue === 0 ? '' : displayValue}
         onChange={handleChange}
         required={required}
       />
-    </Container>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div<{ $width: string }>`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-  width: ${({ $width }) => $width};
-`;
-
-export const Label = styled.label`
-  display: block;
-  text-align: left;
-  margin-bottom: 0.5rem;
-  margin-top: 10px;
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-  font-size: 14px;
-`;
-
-const Asterisk = styled.span`
-  color: ${({ theme }) => theme.colours.error};
-`;
-
-export const Input = styled.input`
-  padding: 10px 1.5%;
-  height: 100%;
-  box-sizing: border-box;
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.colours.notifDark};
-  border-radius: 10px;
-  margin-bottom: 5px;
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.fonts.colour};
-`;

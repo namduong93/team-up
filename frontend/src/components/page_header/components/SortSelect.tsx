@@ -13,7 +13,7 @@ interface SortSelectProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpen: boolean;
 }
 
-const SortContainer = styled.div<{ $isOpen: boolean }>`
+export const StyledSortContainer = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   top: 33px;
   right: 0;
@@ -30,7 +30,7 @@ const SortContainer = styled.div<{ $isOpen: boolean }>`
   overflow-y: auto; 
 `;
 
-const SortOption = styled.div<{ $isSelected: boolean }>`
+export const StyledSortOption = styled.div<{ $isSelected: boolean }>`
   padding: 10px;
   cursor: pointer;
   border-radius: 10px;
@@ -55,17 +55,17 @@ export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, isOpen 
   if (!isOpen) return null;
 
   return (
-    <SortContainer $isOpen={isOpen}>
+    <StyledSortContainer $isOpen={isOpen}>
       {options.map((option) => (
-        <SortOption
+        <StyledSortOption
           key={option.value}
           $isSelected={selectedSort === option.value}
           onClick={() => handleSortChange(option.value)}
         >
           {option.label}
-        </SortOption>
+        </StyledSortOption>
       ))}
-    </SortContainer>
+    </StyledSortContainer>
   );
 };
 

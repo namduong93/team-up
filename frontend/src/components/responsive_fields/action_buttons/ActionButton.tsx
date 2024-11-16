@@ -11,9 +11,7 @@ interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   handleClick?: () => void; // Optional function prop for a custom click handler
 }
 
-const Button = styled.button<{
-  $actionType: "primary" | "secondary" | "error";
-}>`
+const StyledButton = styled.button<{$actionType: "primary" | "secondary" | "error";}>`
   border-radius: 10px;
   padding: 10px;
   border: none;
@@ -61,7 +59,7 @@ const Button = styled.button<{
   }
 `;
 
-export const PopUpOverlay = styled.div`
+export const StyledPopUpOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -74,7 +72,7 @@ export const PopUpOverlay = styled.div`
   z-index: 1000;
 `;
 
-export const PopUpContent = styled.div`
+export const StyledPopUpContent = styled.div`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
   padding: 20px;
@@ -85,13 +83,13 @@ export const PopUpContent = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 `;
 
-export const Question = styled.div`
+export const StyledQuestion = styled.div`
   padding: 20px;
   font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-export const ConfirmButton = styled.button`
+export const StyledConfirmButton = styled.button`
   background-color: ${({ theme }) => theme.colours.confirm};
   color: ${({ theme }) => theme.fonts.colour};
   padding: 10px 15px;
@@ -108,7 +106,7 @@ export const ConfirmButton = styled.button`
   }
 `;
 
-export const TimeoutConfirmButton = styled(TimeoutButton)`
+export const StyledTimeoutConfirmButton = styled(TimeoutButton)`
   color: ${({ theme }) => theme.fonts.colour};
   padding: 10px 15px;
   border-radius: 20px;
@@ -124,7 +122,7 @@ export const TimeoutConfirmButton = styled(TimeoutButton)`
   }
 `;
 
-export const CancelButton = styled.button`
+export const StyledCancelButton = styled.button`
   background-color: ${({ theme }) => theme.colours.cancel};
   color: ${({ theme }) => theme.fonts.colour};
   padding: 10px 15px;
@@ -165,17 +163,17 @@ export const ActionButton: FC<ActionButtonProps> = ({
 
   return (
     <>
-      <Button $actionType={actionType} onClick={handleButtonClick}>
+      <StyledButton $actionType={actionType} onClick={handleButtonClick}>
         {actionName}
-      </Button>
+      </StyledButton>
       {isOpen && (
-        <PopUpOverlay onClick={() => setIsOpen(false)}>
-          <PopUpContent onClick={(e) => e.stopPropagation()}>
-            <Question>{question}</Question>
-            <ConfirmButton onClick={handleConfirm}>Confirm</ConfirmButton>
-            <CancelButton onClick={() => setIsOpen(false)}>Cancel</CancelButton>
-          </PopUpContent>
-        </PopUpOverlay>
+        <StyledPopUpOverlay onClick={() => setIsOpen(false)}>
+          <StyledPopUpContent onClick={(e) => e.stopPropagation()}>
+            <StyledQuestion>{question}</StyledQuestion>
+            <StyledConfirmButton onClick={handleConfirm}>Confirm</StyledConfirmButton>
+            <StyledCancelButton onClick={() => setIsOpen(false)}>Cancel</StyledCancelButton>
+          </StyledPopUpContent>
+        </StyledPopUpOverlay>
       )}
     </>
   );

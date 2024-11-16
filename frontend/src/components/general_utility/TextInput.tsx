@@ -13,6 +13,48 @@ interface TextInputProps {
   descriptor?: string;
 }
 
+  const StyledContainer = styled.div<{ $width: string }>`
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    font-family: ${({ theme }) => theme.fonts.fontFamily};
+    width: ${({ $width: width }) => width};
+  `;
+  
+  const StyledLabel = styled.label`
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    margin-top: 10px;
+    font-family: ${({ theme }) => theme.fonts.fontFamily};
+    font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
+    font-size: 18px;
+    color: ${({ theme}) => theme.fonts.colour};
+  `;
+  
+  const StyledAsterisk = styled.span`
+    color: ${({ theme }) => theme.colours.error};
+  `;
+  
+  const StyledInput = styled.input`
+    padding: 10px 1.5%;
+    height: 100%;
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid ${({ theme }) => theme.colours.notifDark};
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.fonts.colour};
+    border-radius: 10px;
+    margin-bottom: 5px;
+    font-family: ${({ theme }) => theme.fonts.fontFamily};
+  `;
+  
+  const StyledDescriptor = styled.div`
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: ${({ theme }) => theme.colours.filterText};
+  `;
+
 const TextInput: React.FC<TextInputProps> = ({
   label,
   placeholder,
@@ -25,13 +67,13 @@ const TextInput: React.FC<TextInputProps> = ({
   descriptor,
 }) => {
   return (
-    <Container $width={width}>
-      <Label>
+    <StyledContainer $width={width}>
+      <StyledLabel>
         {label}
-        {required && <Asterisk>*</Asterisk>}
-      </Label>
-      {descriptor && <Descriptor>{descriptor}</Descriptor>}
-      <Input
+        {required && <StyledAsterisk>*</StyledAsterisk>}
+      </StyledLabel>
+      {descriptor && <StyledDescriptor>{descriptor}</StyledDescriptor>}
+      <StyledInput
         type={type}
         placeholder={placeholder}
         value={value}
@@ -39,50 +81,9 @@ const TextInput: React.FC<TextInputProps> = ({
         required={required}
         maxLength={maxLength}
       />
-    </Container>
+    </StyledContainer>
   );
 };
 
-const Container = styled.div<{ $width: string }>`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-  width: ${({ $width: width }) => width};
-`;
-
-const Label = styled.label`
-  display: block;
-  text-align: left;
-  margin-bottom: 0.5rem;
-  margin-top: 10px;
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  font-size: 18px;
-  color: ${({ theme}) => theme.fonts.colour};
-`;
-
-const Asterisk = styled.span`
-  color: ${({ theme }) => theme.colours.error};
-`;
-
-const Input = styled.input`
-  padding: 10px 1.5%;
-  height: 100%;
-  box-sizing: border-box;
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.colours.notifDark};
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.fonts.colour};
-  border-radius: 10px;
-  margin-bottom: 5px;
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-`;
-
-const Descriptor = styled.div`
-  margin-bottom: 5px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colours.filterText};
-`;
 
 export default TextInput;

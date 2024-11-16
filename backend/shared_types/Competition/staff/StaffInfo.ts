@@ -7,7 +7,7 @@ export const enum StaffAccess {
   Rejected = 'Rejected',
 }
 
-export interface StaffInfo {
+export interface LooseStaffInfo {
   userId?: number;
   universityId: number;
   universityName?: string;
@@ -26,7 +26,26 @@ export interface StaffInfo {
   access?: StaffAccess;
 }
 
+export interface StaffInfo {
+  userId?: number;
+  universityId: number;
+  universityName?: string;
+  name: string;
+  email: string;
+  sex: string;
+  pronouns: string;
+  tshirtSize: string;
+  allergies: string;
+  dietaryReqs: string;
+  accessibilityReqs: string;
+  userAccess: UserAccess;
+
+  bio?: string;
+  roles: CompetitionRole[];
+  access: StaffAccess;
+}
+
 export interface StaffRequests {
   userId: number;
-  access: StaffAccess;
+  access: UserAccess;
 }

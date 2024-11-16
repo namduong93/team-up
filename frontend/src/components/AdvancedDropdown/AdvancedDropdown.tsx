@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import styled from "styled-components";
 
-const DropdownContainerDiv = styled.div`
+const StyledDropdownContainerDiv = styled.div`
   height: 36px;
   border-radius: 10px;
   box-sizing: border-box;
@@ -11,7 +11,7 @@ const DropdownContainerDiv = styled.div`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-const DropdownTextInput = styled.input`
+const StyledDropdownTextInput = styled.input`
   position: relative;
   height: 100%;
   width: 100%;
@@ -27,7 +27,7 @@ const DropdownTextInput = styled.input`
   }
 `;
 
-const DropdownIconDiv = styled.div`
+const StyledDropdownIconDiv = styled.div`
   position: absolute;
   width: 36px;
   height: 100%;
@@ -60,7 +60,7 @@ interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultSearchTerm?: string;
 }
 
-const DropdownOptionsDiv = styled.div`
+const StyledDropdownOptionsDiv = styled.div`
   position: absolute;
   width: 100%;
   right: 0;
@@ -87,7 +87,7 @@ const DropdownOptionsDiv = styled.div`
   }
 `;
 
-const OptionContainerDiv = styled.button<{ $isLast: boolean }>`
+const StyledOptionContainerDiv = styled.button<{ $isLast: boolean }>`
   all: unset;
   width: 100%;
   height: 36px;
@@ -136,10 +136,10 @@ const DropdownOptions: FC<OptionsProps> = ({
 }) => {
   return (
     display && (
-      <DropdownOptionsDiv style={{ ...style }} {...props}>
+      <StyledDropdownOptionsDiv style={{ ...style }} {...props}>
         {options.map(({ item: { value, label } }, index) => {
           return (
-            <OptionContainerDiv
+            <StyledOptionContainerDiv
               type="button"
               key={index}
               $isLast={false}
@@ -149,7 +149,7 @@ const DropdownOptions: FC<OptionsProps> = ({
               }}
             >
               {label}
-            </OptionContainerDiv>
+            </StyledOptionContainerDiv>
           );
         })}
 
@@ -158,7 +158,7 @@ const DropdownOptions: FC<OptionsProps> = ({
           !options.some(
             ({ item: { value: _, label } }) => label === searchTerm
           ) && (
-            <OptionContainerDiv
+            <StyledOptionContainerDiv
               $isLast={true}
               onClick={handleCreate}
               onMouseDown={(e) => {
@@ -166,9 +166,9 @@ const DropdownOptions: FC<OptionsProps> = ({
               }}
             >
               Create "{searchTerm}"
-            </OptionContainerDiv>
+            </StyledOptionContainerDiv>
           )}
-      </DropdownOptionsDiv>
+      </StyledDropdownOptionsDiv>
     )
   );
 };
@@ -205,7 +205,9 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     threshold: 1,
   });
 
-  let filteredOptions;
+  let filteredOptions:
+  | Array<FuseResult<{ value: string; label: string }>>
+  | Array<{ item: { value: string; label: string } }>;;
   if (searchTerm) {
     filteredOptions = fuse.search(searchTerm);
   } else {
@@ -213,6 +215,9 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
       return { item: obj };
     });
   }
+
+  const remainingOptions = options.filter(option => !filteredOptions.some(({ item }) => item.value === option.value));
+  filteredOptions = [...filteredOptions, ...remainingOptions.map((option) => ({ item: option }))];
 
   const handleSelectOption = (
     e:
@@ -246,8 +251,8 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     handleSelectOption(e, "", searchTerm);
   };
   return (
-    <DropdownContainerDiv style={{ ...style }} {...props}>
-      <DropdownTextInput
+    <StyledDropdownContainerDiv style={{ ...style }} {...props}>
+      <StyledDropdownTextInput
         style={{ ...style }}
         type="text"
         onFocus={() => setDisplayDropdown(true)}
@@ -257,10 +262,10 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
           setSearchTerm(e.target.value)
         }
         onKeyDown={handleKeyPress}
-      ></DropdownTextInput>
-      <DropdownIconDiv>
+      ></StyledDropdownTextInput>
+      <StyledDropdownIconDiv>
         <IoIosArrowDown style={{ height: "50%", width: "50%" }} />
-      </DropdownIconDiv>
+      </StyledDropdownIconDiv>
 
       <DropdownOptions
         onMouseDown={(e) => e.preventDefault()}
@@ -271,6 +276,6 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
         searchTerm={searchTerm}
         options={filteredOptions}
       />
-    </DropdownContainerDiv>
+    </StyledDropdownContainerDiv>
   );
 };

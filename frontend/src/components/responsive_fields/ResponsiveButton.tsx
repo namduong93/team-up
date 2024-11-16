@@ -2,7 +2,7 @@ import { FC, ReactNode, useState } from "react";
 import styled from "styled-components";
 
 
-export const SortButton = styled.button<{ $isSortOpen: boolean }>`
+export const StyledSortButton = styled.button<{ $isSortOpen: boolean }>`
   background-color: ${({ theme }) => theme.background};
   border-radius: 10px;
   box-sizing: border-box;
@@ -36,7 +36,7 @@ interface ResponsiveButtonProps extends React.HTMLAttributes<HTMLButtonElement> 
 
 export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, label, style, isOpen = false, ...props }) => {
   return (
-    <SortButton onClick={onClick} style={{
+    <StyledSortButton onClick={onClick} style={{
       height: '100%',
       width: '100%',
       overflow: 'hidden',
@@ -51,13 +51,13 @@ export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, lab
         </div>
         <span>{label}</span>
       </div>
-    </SortButton>
+    </StyledSortButton>
   )
 }
 
 
 
-export const TransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: 'primary' | 'secondary' | 'confirm' | 'error' }>`
+export const StyledTransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: 'primary' | 'secondary' | 'confirm' | 'error' }>`
   background-color: transparent;
   border-radius: 10px;
   box-sizing: border-box;
@@ -98,7 +98,7 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
   const [showPopUp, setShowPopUp] = useState(false);
 
   return (
-    <TransparentButton $actionType={actionType} onClick={onClick} style={{
+    <StyledTransparentButton $actionType={actionType} onClick={onClick} style={{
       height: '100%',
       width: '100%',
       overflow: 'hidden',
@@ -115,6 +115,6 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
         </div>
         <span style={{ marginLeft: '5px' }}>{label}</span>
       </div>
-    </TransparentButton>
+    </StyledTransparentButton>
   )
 }
