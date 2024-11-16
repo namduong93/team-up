@@ -8,11 +8,8 @@ import { FormState } from "../FormState";
  * form data (`setFormData`). The `useMultiStepRegoForm` custom hook provides a way to access
  * and modify the form state from any component within the provider's tree.
  *
- * @throws {Error} - Throws an error if `useMultiStepRegoForm` is used outside of the
- *                   `MultiStepFormProvider` context.
- *
  * @returns {MultiStepRegoFormContextType} - The current form state (`formData`) and the
- *                                           function to update it (`setFormData`).
+ * function to update it (`setFormData`).
  */
 
 interface MultiStepRegoFormContextType {

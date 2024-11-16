@@ -10,10 +10,10 @@ import { FormState, initialState } from "./FormState";
  * function available to any child components that consume the `MultiStepRegoFormContext`.
  *
  * @param {React.HTMLAttributes<HTMLDivElement>} props - The properties passed to the provider,
- *                                                       including any child components to be rendered within the provider.
+ * including any child components to be rendered within the provider.
  *
  * @returns {JSX.Element} - A provider component that supplies the `formData` and `setFormData`
- *                          to its child components through context.
+ * to its child components through context.
  */
 export const RegisterFormProvider: React.FC<
   React.HTMLAttributes<HTMLDivElement>

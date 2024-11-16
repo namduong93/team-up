@@ -24,7 +24,7 @@ import { dietaryOptions, tShirtOptions } from "./SiteDataOptions";
  * The form provides a dropdown for T-shirt size, text inputs for allergies and accessibility, and multi-radio selection
  * for dietary requirements.
  *
- * @returns {JSX.Element} - A form interface for collecting site-related information during registration.
+ * @returns {JSX.Element} - A form UI for collecting site-related information during registration.
  */
 export const SiteDataInput: FC = () => {
   const navigate = useNavigate();

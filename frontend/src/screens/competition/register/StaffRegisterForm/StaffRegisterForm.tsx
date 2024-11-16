@@ -1,17 +1,36 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
-import { StaffRegistration, University } from "../../../../../shared_types/Competition/registration/StaffRegistration";
+import {
+  StaffRegistration,
+  University,
+} from "../../../../../shared_types/Competition/registration/StaffRegistration";
 import { sendRequest } from "../../../../utility/request";
 import { CompetitionSite } from "../../../../../shared_types/Competition/CompetitionSite";
 import { StyledFlexBackground } from "../../../../components/general_utility/Background";
-import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledFormContainer, StyledLabel, StyledTitle } from "./StaffRegisterForm.styles";
+import {
+  StyledAsterisk,
+  StyledButton,
+  StyledButtonContainer,
+  StyledFormContainer,
+  StyledLabel,
+  StyledTitle,
+} from "./StaffRegisterForm.styles";
 import MultiRadio from "../../../../components/general_utility/MultiRadio";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import TextInput from "../../../../components/general_utility/TextInput";
 import DescriptiveTextInput from "../../../../components/general_utility/DescriptiveTextInput";
 
+/**
+ * `StaffRegisterForm` is a React web page form component that handles the registration process
+ * for staff members in a competition. The form allows staff to select their role (Coach,
+ * Site Coordinator, or Administrator), provide relevant information, and submit their registration.
+ *
+ * The form tracks staff registration data, including roles, site information (for Site Coordinators),
+ * and competition biography (for Coaches).
+ *
+ * @returns {JSX.Element} - The competition registration form UI for staff members.
+ */
 export const StaffRegisterForm: FC = () => {
   const { code } = useParams();
   const navigate = useNavigate();
@@ -37,6 +56,7 @@ export const StaffRegisterForm: FC = () => {
       competitionBio: "",
     });
 
+  // initialises the university and site options for selection
   const [siteOptions, setSiteOptions] = useState<
     Array<{ value: string; label: string }>
   >([]);
@@ -87,6 +107,7 @@ export const StaffRegisterForm: FC = () => {
     }
   }, [currentUniversityOption]);
 
+  // Use useEffect to obtain the universities list that staff can manage
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
@@ -106,6 +127,7 @@ export const StaffRegisterForm: FC = () => {
       }
     };
 
+    // Use useEffect to obtain the site list that staff can manage
     const fetchSites = async () => {
       try {
         const response = await sendRequest.get<{
@@ -271,7 +293,9 @@ export const StaffRegisterForm: FC = () => {
         )}
 
         <StyledButtonContainer>
-          <StyledButton onClick={() => navigate("/dashboard")}>Back</StyledButton>
+          <StyledButton onClick={() => navigate("/dashboard")}>
+            Back
+          </StyledButton>
           <StyledButton type="submit" disabled={isButtonDisabled()}>
             Register
           </StyledButton>

@@ -16,7 +16,7 @@ import DropdownInput from "../../../../../components/general_utility/DropDownInp
 import { StyledErrorMessage } from "../../../../general_styles/error_styles";
 
 /**
- * A web page form component for collecting account information in a multi-step registration process.
+ * A React web page form component for collecting account information in a multi-step registration process.
  *
  * The `AccountDataInput` component renders input fields for the user to enter personal information,
  * including first name, last name, preferred name, gender, pronouns, email, password, and confirm password.
@@ -81,7 +81,6 @@ export const AccountDataInput: FC = () => {
   };
 
   const handleNext = () => {
-    console.log(formData);
     navigate("/siteinformation");
   };
 
