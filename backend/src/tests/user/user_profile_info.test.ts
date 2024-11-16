@@ -1,8 +1,8 @@
-import { UserService } from '../../services/user_service';
+import { UserService } from '../../services/UserService';
 import { Student } from '../../models/user/student/student';
-import { SessionTokenObject } from '../../repository/session_repository_type';
-import { SqlDbUserRepository } from '../../repository/user/sqldb';
-import { SqlDbSessionRepository } from '../../repository/session/sqldb';
+import { SessionTokenObject } from '../../repository/SessionRepository';
+import { SqlDbUserRepository } from '../../repository/user/SqlDbUserRepository';
+import { SqlDbSessionRepository } from '../../repository/session/SqlDbSessionRepository';
 import pool, { getUserIdFromSessionId } from '../test_util/test_utilities';
 import { all } from 'axios';
 
