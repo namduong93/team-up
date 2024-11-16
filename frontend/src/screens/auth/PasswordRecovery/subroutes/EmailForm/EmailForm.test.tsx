@@ -4,9 +4,6 @@ import { describe, expect, it } from 'vitest';
 
 import { screen } from '@testing-library/react';
 import { EmailForm } from './EmailForm';
-import { MemoryRouter } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
-import { defaultTheme } from '../../../../../themes/defaultTheme';
 import { contextRender } from '../../../../../test_utils/contextRender';
 
 describe('EmailForm', () => {
