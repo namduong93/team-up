@@ -1,6 +1,9 @@
 import { SiteLocation } from "../../../../shared_types/Competition/CompetitionDetails";
+import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 import { EditCourse } from "../../../../shared_types/Competition/staff/Edit";
+import { StaffAccess, StaffInfo } from "../../../../shared_types/Competition/staff/StaffInfo";
 import { CourseCategory } from "../../../../shared_types/University/Course";
+import { UserAccess } from "../../../../shared_types/User/User";
 import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
 import { University } from "../../../models/university/university";
@@ -12,8 +15,7 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-// NOTE! when users apply to be admin, coach or site coordinator, the site location is still inputted however for admin and coach, the site location will be inputted as null. thus if you call get coordinating site ID function on site coordinator with multiple roles, like site coordinator and coach or site coordinator and admin, it will return a null and the actual site. HOWEVER, the site id is ordered in when they first was registered. so if the user was an admin first, then it will return a null first. SInce the function only returns 1 row, then the return will be null
-describe('Competition Get Coordinating Site Id Function', () => {
+describe('Coach Check Function', () => {
   let user_db;
   let comp_db;
   let uni_db
@@ -38,24 +40,14 @@ describe('Competition Get Coordinating Site Id Function', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW4',
+    code: 'NEW9',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin4@odmin.com',
-    password: 'testPassword',
-    gender: 'Male',
-    pronouns: 'He/Him',
-    tshirtSize: 'M',
-    universityId: 1,
-  };
-  const coordinatorStaff: Staff = {
-    name: 'Maximillian Maverick',
-    preferredName: 'X',
-    email: 'coordinator1@odmin.com',
+    email: 'newadmin9@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -63,7 +55,6 @@ describe('Competition Get Coordinating Site Id Function', () => {
     universityId: 1,
   };
   let user: UserIdObject;
-  let user1: UserIdObject;
   let id: number;
   let comp: CompetitionIdObject;
   let newStudent: UserIdObject;
@@ -74,34 +65,32 @@ describe('Competition Get Coordinating Site Id Function', () => {
     user_db = new SqlDbUserRepository(pool);
     uni_db = new SqlDbUniversityRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
-    user1 = await user_db.staffRegister(coordinatorStaff);
     id = user.userId;
     comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
 
-    const newCoach: CompetitionStaff = {
+    const newStaffInfo: StaffInfo = {
       userId: id,
-      competitionRoles: [CompetitionUserRole.COACH],
-      accessLevel: CompetitionAccessLevel.ACCEPTED,
-      university: {
-        id: 1,
-        name: 'University of Melbourne'
-      },
-      competitionBio: 'i good, trust',
-      siteLocation: { id: 1, name: 'TestRoom' }
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'newadmin@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      userAccess: UserAccess.Pending,
+      bio: 'good bio, trust',
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
+      access: StaffAccess.Accepted
     }
-    const newCoordinator: CompetitionStaff = {
-      userId: user1.userId,
-      competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
-      accessLevel: CompetitionAccessLevel.ACCEPTED,
-      siteLocation: { id: 1, name: 'TestRoom' }
-    }
-    await comp_db.competitionStaffJoin(comp.competitionId, newCoach);
-    await comp_db.competitionStaffJoin(comp.competitionId, newCoordinator);
+    await comp_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
 
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender4@gmail.com',
+      email: 'newcontender9@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -154,7 +143,10 @@ describe('Competition Get Coordinating Site Id Function', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Success Case: returns a site id of competition', async () => {
-    expect(await comp_db.competitionGetCoordinatingSiteId(user1.userId)).toStrictEqual(1);
+  test('failure case: user is not a coach for this competition', async () => {
+    await expect(comp_db.competitionCoachCheck(id + 10, comp.competitionId)).rejects.toThrow("User is not a coach for this competition")
+  })
+  test('Success case: does not throw an error', async () => {
+    expect(await comp_db.competitionCoachCheck(id, comp.competitionId)).toStrictEqual(undefined)
   })
 })

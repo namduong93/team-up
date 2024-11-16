@@ -15,7 +15,14 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-describe.skip('Template tests', () => {
+// Note! competition staff update does not use User id, user access to this function has not been implemented?
+
+// Note! function needs staff info to work, but staff info supplies useless information aswell.
+
+// Note! If there are multiple id of the staff in the same competition, then the function will return an error. problem arise when a person apply to be a staff of a competition seperately as different roles.
+
+// Suggestion: make new type specifically for staff update. which only needs Bio, User id, roles, and access level
+describe('Staff Update Function', () => {
   let user_db;
   let comp_db;
   let uni_db
@@ -40,14 +47,14 @@ describe.skip('Template tests', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW',
+    code: 'NEW10',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin@odmin.com',
+    email: 'newadmin10@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -57,10 +64,6 @@ describe.skip('Template tests', () => {
   let user: UserIdObject;
   let id: number;
   let comp: CompetitionIdObject;
-  let newStudent: UserIdObject;
-  let teamInfo;
-
-
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
@@ -70,67 +73,6 @@ describe.skip('Template tests', () => {
     id = user.userId;
     comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
 
-    const newStaffInfo: StaffInfo = {
-      userId: id,
-      universityId: 1,
-      universityName: 'University of Melbourne',
-      name: 'Maximillian Maverick',
-      email: 'newadmin@odmin.com',
-      sex: 'Male',
-      pronouns: 'He/Him',
-      tshirtSize: 'M',
-      allergies: null,
-      dietaryReqs: '{}',
-      accessibilityReqs: null,
-      userAccess: UserAccess.Pending,
-      bio: 'good bio, trust',
-      roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
-      access: StaffAccess.Accepted
-    }
-    await comp_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
-
-    const mockStudent: Student = {
-      name: 'Maximillian Maverick',
-      preferredName: 'X',
-      email: 'newcontender@gmail.com',
-      password: 'testPassword',
-      gender: 'Male',
-      pronouns: 'He/Him',
-      tshirtSize: 'L',
-      universityId: 1,
-      studentId: 'z5381412'
-    };
-
-    newStudent = await user_db.studentRegister(mockStudent);
-
-    const newContender: CompetitionUser = {
-      userId: newStudent.userId,
-      competitionId: comp.competitionId,
-      competitionRoles: [CompetitionUserRole.PARTICIPANT],
-      ICPCEligible: true,
-      competitionLevel: 'No Preference',
-      siteLocation: {
-        id: 1,
-        name: 'TestRoom',
-      },
-      boersenEligible: true,
-      degreeYear: 3,
-      degree: 'ComSci',
-      isRemote: true,
-      nationalPrizes: 'none',
-      internationalPrizes: 'none',
-      codeforcesRating: 7,
-      universityCourses: ['4511', '9911', '911'],
-      pastRegional: true,
-      competitionBio: 'I good, promise',
-      preferredContact: 'Pigeon Carrier',
-    }
-    const studentUni: University = {
-      id: 1,
-      name: 'University of Melbourne'
-    }
-    await comp_db.competitionStudentJoin(newContender, studentUni)
-    teamInfo = await comp_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
     const newCourses: EditCourse = {
       [CourseCategory.Introduction]: 'COMP1234',
       [CourseCategory.DataStructures]: 'COMP9999',
@@ -145,7 +87,58 @@ describe.skip('Template tests', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Case: Husk', async () => {
-    expect(1 + 1).toBe(2);
+  test('Success case: updates the information of Staff', async () => {
+    expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([{
+      userId: id,
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'newadmin10@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      userAccess: UserAccess.Pending,
+      bio: '',
+      roles: [CompetitionRole.Admin],
+      access: StaffAccess.Accepted
+    }]);
+    const newStaffInfo: StaffInfo = {
+      userId: id,
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'newadmin10@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      userAccess: UserAccess.Pending,
+      bio: 'This is changed',
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach],
+      access: StaffAccess.Accepted
+    }
+    await comp_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
+    expect(await comp_db.competitionStaff(id, comp.competitionId)).toStrictEqual([{
+      userId: id,
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'newadmin10@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      userAccess: UserAccess.Pending,
+      bio: 'This is changed',
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach],
+      access: StaffAccess.Accepted
+    }]);
   })
 })

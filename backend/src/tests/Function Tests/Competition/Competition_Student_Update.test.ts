@@ -1,7 +1,9 @@
 import { SiteLocation } from "../../../../shared_types/Competition/CompetitionDetails";
+import { CompetitionLevel } from "../../../../shared_types/Competition/CompetitionLevel";
 import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
 import { EditCourse } from "../../../../shared_types/Competition/staff/Edit";
 import { StaffAccess, StaffInfo } from "../../../../shared_types/Competition/staff/StaffInfo";
+import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
 import { CourseCategory } from "../../../../shared_types/University/Course";
 import { UserAccess } from "../../../../shared_types/User/User";
 import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
@@ -15,7 +17,7 @@ import { SqlDbUserRepository } from "../../../repository/user/sqldb";
 import { UserIdObject } from "../../../repository/user_repository_type";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-describe.skip('Template tests', () => {
+describe('Student Update Test', () => {
   let user_db;
   let comp_db;
   let uni_db
@@ -40,14 +42,14 @@ describe.skip('Template tests', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW',
+    code: 'NEW11',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin@odmin.com',
+    email: 'newadmin11@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -75,7 +77,7 @@ describe.skip('Template tests', () => {
       universityId: 1,
       universityName: 'University of Melbourne',
       name: 'Maximillian Maverick',
-      email: 'newadmin@odmin.com',
+      email: 'newadmin11@odmin.com',
       sex: 'Male',
       pronouns: 'He/Him',
       tshirtSize: 'M',
@@ -92,7 +94,7 @@ describe.skip('Template tests', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender@gmail.com',
+      email: 'newcontender11@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -145,7 +147,105 @@ describe.skip('Template tests', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Case: Husk', async () => {
-    expect(1 + 1).toBe(2);
+  test('Success case: succesfully changed the students details', async () => {
+    expect(await comp_db.competitionStudentDetails(newStudent.userId, comp.competitionId)).toStrictEqual(
+      {
+        name: 'Maximillian Maverick',
+        email: 'newcontender11@gmail.com',
+        accessibilityReqs: null,
+        allergies: null,
+        bio: "I good, promise",
+        isOfficial: null,
+        level: "No Preference",
+        preferredContact: 'Pigeon Carrier',
+        dietaryReqs: "{}",
+        ICPCEligible: true,
+        boersenEligible: true,
+        degreeYear: 3,
+        degree: 'ComSci',
+        isRemote: true,
+        nationalPrizes: 'none',
+        preferredName: "X",
+        pronouns: "He/Him",
+        roles: "{Participant}",
+        sex: "Male",
+        status: "Accepted",
+        studentId: "z5381412",
+        tshirtSize: "L",
+        internationalPrizes: 'none',
+        codeforcesRating: 7,
+        universityCourses: ['4511', '9911', '911'],
+        pastRegional: true,
+        universityId: 1,
+        universityName: "University of Melbourne",
+        userId: newStudent.userId,
+      }
+    )
+
+    const newStudentInfo: StudentInfo = {
+      name: 'Maximillian Maverick',
+      email: 'newcontender11@gmail.com',
+      accessibilityReqs: null,
+      allergies: null,
+      isOfficial: null,
+      level: CompetitionLevel.LevelA,
+      dietaryReqs: "{}",
+      ICPCEligible: false,
+      preferredName: "X",
+      pronouns: "He/Him",
+      roles: [CompetitionRole.Participant],
+      sex: "Male",
+      status: "Accepted",
+      studentId: "z5381412",
+      tshirtSize: "L",
+      universityCourses: ['4511', '9911', '911'],
+      pastRegional: true,
+      universityId: 1,
+      universityName: "University of Melbourne",
+      userId: newStudent.userId,
+      bio: 'This was changed',
+      boersenEligible: false,
+      degreeYear: 2,
+      degree: 'Engineering',
+      isRemote: false,
+      preferredContact: 'Landline and Pigeon Carrier',
+      nationalPrizes: 'one',
+      internationalPrizes: 'one',
+      codeforcesRating: 6
+    }
+
+    await comp_db.competitionStudentsUpdate(id, [newStudentInfo], comp.competitionId)
+
+    expect(await comp_db.competitionStudentDetails(newStudent.userId, comp.competitionId)).toStrictEqual({
+      userId: newStudent.userId,
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      preferredName: 'X',
+      email: 'newcontender11@gmail.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'L',
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      allergies: null,
+      studentId: 'z5381412',
+      roles: '{Participant}',
+      bio: 'This was changed',
+      ICPCEligible: false,
+      boersenEligible: false,
+      level: 'Level A',
+      degreeYear: 2,
+      degree: 'Engineering',
+      isRemote: false,
+      isOfficial: null,
+      preferredContact: 'Landline and Pigeon Carrier',
+      nationalPrizes: 'one',
+      internationalPrizes: 'one',
+      codeforcesRating: 6,
+      universityCourses: ['4511', '9911', '911'],
+      pastRegional: true,
+      status: 'Accepted'
+    })
   })
 })
