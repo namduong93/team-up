@@ -5,8 +5,8 @@ import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/T
 import { CompetitionTeamNameObject, CompetitionWithdrawalReturnObject } from "../../models/competition/competition";
 import { CompetitionUser } from "../../models/competition/competitionUser";
 import { University } from "../../models/university/university";
-import { DbError } from "../../errors/db_error.js";
-import { CompetitionRepository } from "../competition_repository_type";
+import { DbError } from "../../errors/DbError.js";
+import { CompetitionRepository } from "../CompetitionRepository";
 import { TeamStatus } from "../../models/team/team";
 import pokemon from "pokemon";
 

@@ -1,4 +1,4 @@
-import { ErrorInterface } from "./error_interface";
+import { ErrorInterface } from "./ErrorInterface";
 
 export enum ServiceErrorType {
   Auth = 'Auth',

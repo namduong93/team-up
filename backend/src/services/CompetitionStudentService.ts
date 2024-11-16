@@ -1,11 +1,11 @@
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
-import { ServiceError } from "../errors/service_error.js";
+import { ServiceError } from "../errors/ServiceError.js";
 import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
 import { UserType } from "../models/user/user.js";
-import { CompetitionRepository } from "../repository/competition_repository_type.js";
+import { CompetitionRepository } from "../repository/CompetitionRepository.js";
 import { CompetitionStudentRepository } from "../repository/CompetitionStudentRepository.js";
-import { NotificationRepository } from "../repository/notification_repository_type.js";
-import { UserRepository } from "../repository/user_repository_type.js";
+import { NotificationRepository } from "../repository/NotificationRepository.js";
+import { UserRepository } from "../repository/UserRepository.js";
 
 export class CompetitionStudentService {
   private competitionRepository: CompetitionRepository;

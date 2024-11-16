@@ -1,12 +1,12 @@
 import { Pool } from "pg";
-import { UserIdObject, UserRepository } from "../user_repository_type.js";
+import { UserIdObject, UserRepository } from "../UserRepository.js";
 import { Student } from "../../models/user/student/student.js";
 import bcrypt from 'bcryptjs';
 import { UserProfileInfo } from "../../models/user/user_profile_info.js";
 import { Staff } from "../../models/user/staff/staff.js";
 import { UserType, UserTypeObject } from "../../models/user/user.js";
 import { UserDashInfo } from "../../models/user/user_dash_info.js";
-import { DbError } from "../../errors/db_error.js";
+import { DbError } from "../../errors/DbError.js";
 import { University } from "../../models/university/university.js";
 import { LooseStaffInfo, StaffRequests } from "../../../shared_types/Competition/staff/StaffInfo.js";
 import { UserAccess } from "../../../shared_types/User/User.js";

@@ -1,7 +1,7 @@
 import { CompetitionTeamNameObject, CompetitionWithdrawalReturnObject } from "../models/competition/competition.js";
 import { CompetitionUser } from "../models/competition/competitionUser.js";
 import { University } from "../models/university/university.js";
-import './competition/sqldb'
+import './competition/SqlDbCompetitionRepository.js'
 import { ParticipantTeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
 import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
 import { EditRego } from "../../shared_types/Competition/staff/Edit.js";

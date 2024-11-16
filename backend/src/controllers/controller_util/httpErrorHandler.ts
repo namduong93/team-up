@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
-import { DbError } from "../../errors/db_error.js";
-import { ServiceError } from "../../errors/service_error.js";
+import { DbError } from "../../errors/DbError.js";
+import { ServiceError } from "../../errors/ServiceError.js";
 
 
 export type HTTPFunction = (req: Request, res: Response, next: NextFunction) => Promise<void>;
