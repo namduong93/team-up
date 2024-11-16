@@ -1381,7 +1381,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const updateData = algoTeams.map(team => ({
       id: team.id,
       team_size: team.participants.length,
-      participants: team.participants.map(p => p.userId)
+      participants: team.participants.map(p => p?.userId)
     }));
 
     await this.pool.query(teamUpdateQuery, [JSON.stringify(updateData), compId]);
@@ -1410,8 +1410,8 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         teamsParticipating: algoTeams.map(team => ({
           id: team.id,
           name: team.name,
-          participants: team.participants.map(p => p.userId),
-          algoPoint: Math.max(...team.participants.map(p => studentMap.get(p.id)?.algoPoint || 0))
+          participants: team.participants.map(p => p?.userId),
+          algoPoint: Math.max(...team.participants.map(p => studentMap.get(p?.id)?.algoPoint || 0))
         }))
       }
     };
@@ -1507,10 +1507,10 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
   sortTeams = (teams: CompetitionAlgoTeamDetails[], studentMap: Map<number, CompetitionAlgoStudentDetails>) => {
     teams.sort((teamA, teamB) => {
       const teamAMaxPoint = Math.max(...teamA.participants.map(p =>
-        studentMap.get(p.id)?.algoPoint || 0
+        studentMap.get(p?.id)?.algoPoint || 0
       ));
       const teamBMaxPoint = Math.max(...teamB.participants.map(p =>
-        studentMap.get(p.id)?.algoPoint || 0
+        studentMap.get(p?.id)?.algoPoint || 0
       ));
 
       // Sort in descending order (higher points first)
