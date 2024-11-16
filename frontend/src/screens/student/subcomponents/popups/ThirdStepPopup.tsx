@@ -47,15 +47,12 @@ interface ThirdStepPopupProps {
 
 export const ThirdStepPopup: React.FC<ThirdStepPopupProps> = ({ heading, onClose }) => {
 
-  return (
-    <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
-          <FaTimes />
-        </StyledCloseButton>
-        <div>{heading}</div>
-
-      </StyledModal>
-    </>
-  );
+  return <>
+    <StyledModal data-test-id="third-step-popup--StyledModal-0">
+      <StyledCloseButton onClick={onClose} data-test-id="third-step-popup--StyledCloseButton-0">
+        <FaTimes />
+      </StyledCloseButton>
+      <div>{heading}</div>
+    </StyledModal>
+  </>;
 };

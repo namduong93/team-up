@@ -112,14 +112,12 @@ export const CompIndividualInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      data-test-id="comp-individual-input--StyledFlexBackground-0">
       <CompRegistrationProgressBar progressNumber={1} />
-      <StyledContainer>
-        <StyledContentContainer>
-          <StyledTitle>Individual Information</StyledTitle>
-
-          <StyledFormLabel>Degree</StyledFormLabel>
-
+      <StyledContainer data-test-id="comp-individual-input--StyledContainer-0">
+        <StyledContentContainer data-test-id="comp-individual-input--StyledContentContainer-0">
+          <StyledTitle data-test-id="comp-individual-input--StyledTitle-0">Individual Information</StyledTitle>
+          <StyledFormLabel data-test-id="comp-individual-input--StyledFormLabel-0">Degree</StyledFormLabel>
           <div
             style={{ display: "flex", alignItems: "flex-start", width: "100%" }}
           >
@@ -137,7 +135,6 @@ export const CompIndividualInput: FC = () => {
               width="45%"
             />
           </div>
-
           <TextInputLight
             label="Degree"
             placeholder="Please enter"
@@ -149,7 +146,6 @@ export const CompIndividualInput: FC = () => {
             }
             width="100%"
           />
-
           <RadioButton
             label="ICPC Eligibility"
             options={["Yes", "No"]}
@@ -168,7 +164,6 @@ export const CompIndividualInput: FC = () => {
             descriptor="Are you ICPC eligible?"
             width="100%"
           />
-
           <RadioButton
             label="Competition Level"
             options={["Level A", "Level B", "No Preference"]}
@@ -180,17 +175,13 @@ export const CompIndividualInput: FC = () => {
             // descriptor="Are you ICPC eligible?"
             width="100%"
           />
-
-          <StyledFormLabel>
-            Site Attendance<StyledAsterisk>*</StyledAsterisk>
+          <StyledFormLabel data-test-id="comp-individual-input--StyledFormLabel-1">Site Attendance<StyledAsterisk data-test-id="comp-individual-input--StyledAsterisk-0">*</StyledAsterisk>
           </StyledFormLabel>
-
           <div style={{ display: "flex", alignContent: "center" }}>
-            <StyledText>
+            <StyledText data-test-id="comp-individual-input--StyledText-0">
               <em>{formData.siteLocation.name}</em>
             </StyledText>
           </div>
-
           <RadioButton
             // label="Site Attendance"
             options={["Attending On Site", "Attending Remotely"]}
@@ -209,7 +200,6 @@ export const CompIndividualInput: FC = () => {
             descriptor={["Will you be attending on site or remotely?"]}
             width="100%"
           />
-
           <DescriptiveTextInput
             label="Competition Biography"
             descriptor="Please write a short description about yourself that would help others get to know you"
@@ -221,13 +211,10 @@ export const CompIndividualInput: FC = () => {
             }
             width="100%"
           />
-
-          <StyledFormLabel>Preferred Contact Method</StyledFormLabel>
-          <StyledDescriptor>
-            Please specify your preferred contact method if you have another
-            preference
-          </StyledDescriptor>
-          <StyledDoubleInputContainer>
+          <StyledFormLabel data-test-id="comp-individual-input--StyledFormLabel-2">Preferred Contact Method</StyledFormLabel>
+          <StyledDescriptor data-test-id="comp-individual-input--StyledDescriptor-0">Please specify your preferred contact method if you have another
+                        preference</StyledDescriptor>
+          <StyledDoubleInputContainer data-test-id="comp-individual-input--StyledDoubleInputContainer-0">
             <TextInputLight
               label="Platform"
               placeholder="Please enter"
@@ -239,9 +226,7 @@ export const CompIndividualInput: FC = () => {
               }
               width="45%"
             />
-
-            <StyledColon>:</StyledColon>
-
+            <StyledColon data-test-id="comp-individual-input--StyledColon-0">:</StyledColon>
             <TextInputLight
               label="Handle"
               placeholder="Please enter"
@@ -254,12 +239,12 @@ export const CompIndividualInput: FC = () => {
               width="45%"
             />
           </StyledDoubleInputContainer>
-
-          <StyledButtonContainer>
-            <StyledButton onClick={handleBack}>Back</StyledButton>
-            <StyledButton $disabled={isButtonDisabled()} onClick={handleNext}>
-              Next
-            </StyledButton>
+          <StyledButtonContainer data-test-id="comp-individual-input--StyledButtonContainer-0">
+            <StyledButton onClick={handleBack} data-test-id="comp-individual-input--StyledButton-0">Back</StyledButton>
+            <StyledButton
+              $disabled={isButtonDisabled()}
+              onClick={handleNext}
+              data-test-id="comp-individual-input--StyledButton-1">Next</StyledButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

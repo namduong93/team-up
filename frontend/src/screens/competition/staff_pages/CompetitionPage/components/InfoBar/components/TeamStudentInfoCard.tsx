@@ -160,118 +160,157 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
   }, [isEditingCard, isEdited]);
 
   return (
-    <StyledMemberListItem ref={cardRef} key={student.userId}>
-
+    <StyledMemberListItem
+      ref={cardRef}
+      key={student.userId}
+      data-test-id="team-student-info-card--StyledMemberListItem-0">
       {isEditable && <StyledEditIconButton
         onMouseDown={(e) => e.preventDefault()}
         onClick={handleClickEdit}
         style={{ position: 'absolute', right: 0, top: 0 }}
-        >
-        <StyledEditIcon />
+        data-test-id="team-student-info-card--StyledEditIconButton-0">
+        <StyledEditIcon data-test-id="team-student-info-card--StyledEditIcon-0" />
       </StyledEditIconButton>}
-
-        <StyledMemberFieldDiv>
-          <StyledLabelSpan>User Id:</StyledLabelSpan>
-          <span>{student.userId}</span>
-        </StyledMemberFieldDiv>
-
-      <StyledVerticalMemberFieldDiv>
-        <StyledLabelSpan>Name:</StyledLabelSpan>
+      <StyledMemberFieldDiv data-test-id="team-student-info-card--StyledMemberFieldDiv-0">
+        <StyledLabelSpan data-test-id="team-student-info-card--StyledLabelSpan-0">User Id:</StyledLabelSpan>
+        <span>{student.userId}</span>
+      </StyledMemberFieldDiv>
+      <StyledVerticalMemberFieldDiv data-test-id="team-student-info-card--StyledVerticalMemberFieldDiv-0">
+        <StyledLabelSpan data-test-id="team-student-info-card--StyledLabelSpan-1">Name:</StyledLabelSpan>
         <span>{studentData.name}</span>
       </StyledVerticalMemberFieldDiv>
-
-      <StyledVerticalMemberFieldDiv>
-        <StyledLabelSpan>Email:</StyledLabelSpan>
+      <StyledVerticalMemberFieldDiv data-test-id="team-student-info-card--StyledVerticalMemberFieldDiv-1">
+        <StyledLabelSpan data-test-id="team-student-info-card--StyledLabelSpan-2">Email:</StyledLabelSpan>
         <div>
           <span>{studentData.email}</span>
           <CopyButton textToCopy={studentData.email} />
         </div>
       </StyledVerticalMemberFieldDiv>
-
-      <StyledVerticalMemberFieldDiv>
-        <StyledLabelSpan $isEditing={isEditingCard}>Bio:</StyledLabelSpan>
+      <StyledVerticalMemberFieldDiv data-test-id="team-student-info-card--StyledVerticalMemberFieldDiv-2">
+        <StyledLabelSpan
+          $isEditing={isEditingCard}
+          data-test-id="team-student-info-card--StyledLabelSpan-3">Bio:</StyledLabelSpan>
         {isEditingCard ? <StyledEditableTextArea
           onChange={(e) => setStudentData((p) => ({ ...p, bio: e.target.value }))}
           value={studentData.bio}
-        />
+          data-test-id="team-student-info-card--StyledEditableTextArea-0" />
         : <span>{studentData.bio}</span>}
       </StyledVerticalMemberFieldDiv>
-
-      <StyledVerticalMemberFieldDiv>
-        <StyledLabelSpan $isEditing={isEditingCard}>ICPC Eligibile:</StyledLabelSpan>
+      <StyledVerticalMemberFieldDiv data-test-id="team-student-info-card--StyledVerticalMemberFieldDiv-3">
+        <StyledLabelSpan
+          $isEditing={isEditingCard}
+          data-test-id="team-student-info-card--StyledLabelSpan-4">ICPC Eligibile:</StyledLabelSpan>
         {isEditingCard ?
           <StyledToggleSelect
-            onChange={(e) => setStudentData((p) => ({ ...p, ICPCEligible: e.target.value === 'yes' }))} $toggled={studentData.ICPCEligible}
-          >
-            <option selected={studentData.ICPCEligible} style={{ backgroundColor: theme.colours.confirm }} value='yes'>Yes</option>
-            <option selected={!studentData.ICPCEligible} style={{ backgroundColor: theme.colours.cancel }} value='no'>No</option>
+            onChange={(e) => setStudentData((p) => ({ ...p, ICPCEligible: e.target.value === 'yes' }))}
+            $toggled={studentData.ICPCEligible}
+            data-test-id="team-student-info-card--StyledToggleSelect-0">
+            <option
+              selected={studentData.ICPCEligible}
+              style={{ backgroundColor: theme.colours.confirm }}
+              value='yes'
+              data-test-id="team-student-info-card--option-0">Yes</option>
+            <option
+              selected={!studentData.ICPCEligible}
+              style={{ backgroundColor: theme.colours.cancel }}
+              value='no'
+              data-test-id="team-student-info-card--option-1">No</option>
           </StyledToggleSelect> :
-        <StyledBooleanStatus style={{ height: '25px' }} $toggled={studentData.ICPCEligible} />}
+        <StyledBooleanStatus
+          style={{ height: '25px' }}
+          $toggled={studentData.ICPCEligible}
+          data-test-id="team-student-info-card--StyledBooleanStatus-0" />}
       </StyledVerticalMemberFieldDiv>
-
-      <StyledVerticalMemberFieldDiv>
-        <StyledLabelSpan $isEditing={isEditingCard}>Boersen Eligibile:</StyledLabelSpan>
+      <StyledVerticalMemberFieldDiv data-test-id="team-student-info-card--StyledVerticalMemberFieldDiv-4">
+        <StyledLabelSpan
+          $isEditing={isEditingCard}
+          data-test-id="team-student-info-card--StyledLabelSpan-5">Boersen Eligibile:</StyledLabelSpan>
         {isEditingCard ?
           <StyledToggleSelect
-            onChange={(e) => setStudentData((p) => ({ ...p, boersenEligible: e.target.value === 'yes' }))} $toggled={studentData.boersenEligible}
-          >
-            <option selected={studentData.boersenEligible} style={{ backgroundColor: theme.colours.confirm }} value='yes'>Yes</option>
-            <option selected={!studentData.boersenEligible} style={{ backgroundColor: theme.colours.cancel }} value='no'>No</option>
+            onChange={(e) => setStudentData((p) => ({ ...p, boersenEligible: e.target.value === 'yes' }))}
+            $toggled={studentData.boersenEligible}
+            data-test-id="team-student-info-card--StyledToggleSelect-1">
+            <option
+              selected={studentData.boersenEligible}
+              style={{ backgroundColor: theme.colours.confirm }}
+              value='yes'
+              data-test-id="team-student-info-card--option-2">Yes</option>
+            <option
+              selected={!studentData.boersenEligible}
+              style={{ backgroundColor: theme.colours.cancel }}
+              value='no'
+              data-test-id="team-student-info-card--option-3">No</option>
           </StyledToggleSelect> :
-        <StyledBooleanStatus style={{ height: '25px' }} $toggled={studentData.boersenEligible} />}
+        <StyledBooleanStatus
+          style={{ height: '25px' }}
+          $toggled={studentData.boersenEligible}
+          data-test-id="team-student-info-card--StyledBooleanStatus-1" />}
       </StyledVerticalMemberFieldDiv>
-
-      <StyledVerticalMemberFieldDiv>
-        <StyledLabelSpan $isEditing={isEditingCard}>National Prizes:</StyledLabelSpan>
-
+      <StyledVerticalMemberFieldDiv data-test-id="team-student-info-card--StyledVerticalMemberFieldDiv-5">
+        <StyledLabelSpan
+          $isEditing={isEditingCard}
+          data-test-id="team-student-info-card--StyledLabelSpan-6">National Prizes:</StyledLabelSpan>
         {isEditingCard ?
           <StyledEditableTextArea
             onChange={(e) => setStudentData((p) => ({ ...p, nationalPrizes: e.target.value }))}
             value={studentData.nationalPrizes}
-          />
+            data-test-id="team-student-info-card--StyledEditableTextArea-1" />
           : <span>{studentData.nationalPrizes ? studentData.nationalPrizes : 'None'}</span>
         }
       </StyledVerticalMemberFieldDiv>
-
-      <StyledVerticalMemberFieldDiv>
-        <StyledLabelSpan $isEditing={isEditingCard}>International Prizes:</StyledLabelSpan>
-
+      <StyledVerticalMemberFieldDiv data-test-id="team-student-info-card--StyledVerticalMemberFieldDiv-6">
+        <StyledLabelSpan
+          $isEditing={isEditingCard}
+          data-test-id="team-student-info-card--StyledLabelSpan-7">International Prizes:</StyledLabelSpan>
         {isEditingCard ?
           <StyledEditableTextArea
             onChange={(e) => setStudentData((p) => ({ ...p, internationalPrizes: e.target.value }))}
             value={studentData.internationalPrizes}
-          />
+            data-test-id="team-student-info-card--StyledEditableTextArea-2" />
           : <span>{studentData.internationalPrizes ? studentData.internationalPrizes : 'None'}</span>
         }
       </StyledVerticalMemberFieldDiv>
-
-      <StyledMemberFieldDiv style={{ width: '75%' }}>
-        <StyledLabelSpan $isEditing={isEditingCard}>Codeforces Rating:</StyledLabelSpan>
-
+      <StyledMemberFieldDiv
+        style={{ width: '75%' }}
+        data-test-id="team-student-info-card--StyledMemberFieldDiv-1">
+        <StyledLabelSpan
+          $isEditing={isEditingCard}
+          data-test-id="team-student-info-card--StyledLabelSpan-8">Codeforces Rating:</StyledLabelSpan>
         {isEditingCard ?
-          <StyledEditableInput style={{ flex: 1 }} type="number"
+          <StyledEditableInput
+            style={{ flex: 1 }}
+            type="number"
             onChange={(e) => setStudentData((p) => ({ ...p, codeforcesRating: parseInt(e.target.value) }))}
             value={studentData.codeforcesRating}
-          />
+            data-test-id="team-student-info-card--StyledEditableInput-0" />
           : <span>{studentData.codeforcesRating}</span>
         }
       </StyledMemberFieldDiv>
-
-      <StyledVerticalMemberFieldDiv>
-        <StyledLabelSpan $isEditing={isEditingCard}>Past Regional:</StyledLabelSpan>
-
+      <StyledVerticalMemberFieldDiv data-test-id="team-student-info-card--StyledVerticalMemberFieldDiv-7">
+        <StyledLabelSpan
+          $isEditing={isEditingCard}
+          data-test-id="team-student-info-card--StyledLabelSpan-9">Past Regional:</StyledLabelSpan>
         {isEditingCard ?
           <StyledToggleSelect
             onChange={(e) => setStudentData((p) => ({ ...p, pastRegional: e.target.value === 'true' }))}
             $toggled={studentData.pastRegional}
-          >
-            <option selected={studentData.pastRegional} style={{ backgroundColor: theme.colours.confirm }} value="true">Yes</option>
-            <option selected={!studentData.pastRegional} style={{ backgroundColor: theme.colours.cancel }} value="false">No</option>
+            data-test-id="team-student-info-card--StyledToggleSelect-2">
+            <option
+              selected={studentData.pastRegional}
+              style={{ backgroundColor: theme.colours.confirm }}
+              value="true"
+              data-test-id="team-student-info-card--option-4">Yes</option>
+            <option
+              selected={!studentData.pastRegional}
+              style={{ backgroundColor: theme.colours.cancel }}
+              value="false"
+              data-test-id="team-student-info-card--option-5">No</option>
           </StyledToggleSelect> :
-        <StyledBooleanStatus style={{ height: '25px' }} $toggled={studentData.pastRegional} />}
+        <StyledBooleanStatus
+          style={{ height: '25px' }}
+          $toggled={studentData.pastRegional}
+          data-test-id="team-student-info-card--StyledBooleanStatus-2" />}
       </StyledVerticalMemberFieldDiv>
-
-
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '5px' }}>
         {!isEditingCard && isEditable && <ResponsiveActionButton style={{ height: '30px' }}
           onMouseDown={(e) => e.preventDefault()}
@@ -307,5 +346,5 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
         </div>}
       </div>
     </StyledMemberListItem>
-  )
+  );
 }

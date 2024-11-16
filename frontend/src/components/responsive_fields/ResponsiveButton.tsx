@@ -36,15 +36,20 @@ interface ResponsiveButtonProps extends React.HTMLAttributes<HTMLButtonElement> 
 
 export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, label, style, isOpen = false, ...props }) => {
   return (
-    <StyledSortButton onClick={onClick} style={{
-      height: '100%',
-      width: '100%',
-      overflow: 'hidden',
-      padding: '0',
-      display: 'flex',
-      flexWrap: 'wrap',
-      ...style
-    }} $isSortOpen={isOpen} {...props}>
+    <StyledSortButton
+      onClick={onClick}
+      style={{
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden',
+        padding: '0',
+        display: 'flex',
+        flexWrap: 'wrap',
+        ...style
+      }}
+      $isSortOpen={isOpen}
+      {...props}
+      data-test-id="responsive-button--StyledSortButton-0">
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
           {icon}
@@ -52,7 +57,7 @@ export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, lab
         <span>{label}</span>
       </div>
     </StyledSortButton>
-  )
+  );
 }
 
 
@@ -98,15 +103,21 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
   const [showPopUp, setShowPopUp] = useState(false);
 
   return (
-    <StyledTransparentButton $actionType={actionType} onClick={onClick} style={{
-      height: '100%',
-      width: '100%',
-      overflow: 'hidden',
-      padding: '0',
-      display: 'flex',
-      flexWrap: 'wrap',
-      ...style
-    }} $isSortOpen={isOpen} {...props}>
+    <StyledTransparentButton
+      $actionType={actionType}
+      onClick={onClick}
+      style={{
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden',
+        padding: '0',
+        display: 'flex',
+        flexWrap: 'wrap',
+        ...style
+      }}
+      $isSortOpen={isOpen}
+      {...props}
+      data-test-id="responsive-button--StyledTransparentButton-0">
       <div style={{ display: 'flex',
         alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%',
         justifyContent: 'center' }}>
@@ -116,5 +127,5 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
         <span style={{ marginLeft: '5px' }}>{label}</span>
       </div>
     </StyledTransparentButton>
-  )
+  );
 }

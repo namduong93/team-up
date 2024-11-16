@@ -107,31 +107,31 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
   };
 
   return (
-    <StyledContainer>
-      {label && <StyledLabel>{label}</StyledLabel>}
-      {descriptor && <StyledDescriptor>{descriptor}</StyledDescriptor>}
+    <StyledContainer data-test-id="multi-radio--StyledContainer-0">
+      {label && <StyledLabel data-test-id="multi-radio--StyledLabel-0">{label}</StyledLabel>}
+      {descriptor && <StyledDescriptor data-test-id="multi-radio--StyledDescriptor-0">{descriptor}</StyledDescriptor>}
       {options.map((option) => (
-        <StyledCheckboxContainer key={option.value}>
+        <StyledCheckboxContainer key={option.value} data-test-id="multi-radio--StyledCheckboxContainer-0">
           <StyledCheckboxInput
             type="checkbox"
             id={option.value}
             value={option.value}
             checked={selectedValues.includes(option.value)}
             onChange={() => handleCheckboxChange(option.value)}
-          />
-          <StyledCheckboxLabel htmlFor={option.value}>{option.label}</StyledCheckboxLabel>
+            data-test-id="multi-radio--StyledCheckboxInput-0" />
+          <StyledCheckboxLabel htmlFor={option.value} data-test-id="multi-radio--StyledCheckboxLabel-0">{option.label}</StyledCheckboxLabel>
         </StyledCheckboxContainer>
       ))}
       {showOther && (
-        <StyledCheckboxContainer>
+        <StyledCheckboxContainer data-test-id="multi-radio--StyledCheckboxContainer-1">
           <StyledCheckboxInput
             type="checkbox"
             id="other"
             value="other"
             checked={selectedValues.includes("other")}
             onChange={handleOtherCheckboxChange}
-          />
-          <StyledCheckboxLabel htmlFor="other">Other:</StyledCheckboxLabel>
+            data-test-id="multi-radio--StyledCheckboxInput-1" />
+          <StyledCheckboxLabel htmlFor="other" data-test-id="multi-radio--StyledCheckboxLabel-1">Other:</StyledCheckboxLabel>
           <OtherInput
             type="text"
             value={otherValue}

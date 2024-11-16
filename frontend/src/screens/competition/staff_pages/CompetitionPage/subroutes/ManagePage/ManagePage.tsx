@@ -416,13 +416,14 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
   };
 
   return (
-    <StyledManageContainer>
-      <StyledStandardContainerDiv>
+    <StyledManageContainer data-test-id="manage-page--StyledManageContainer-0">
+      <StyledStandardContainerDiv data-test-id="manage-page--StyledStandardContainerDiv-0">
         {showManageSite ? (
-          <StyledAssignSeatsPage>
-            <StyledBackButton onClick={() => setShowManageSite(false)}>
-              <FaChevronLeft /> Back
-            </StyledBackButton>
+          <StyledAssignSeatsPage data-test-id="manage-page--StyledAssignSeatsPage-0">
+            <StyledBackButton
+              onClick={() => setShowManageSite(false)}
+              data-test-id="manage-page--StyledBackButton-0">
+              <FaChevronLeft />Back</StyledBackButton>
             <AssignSeats
               siteName={siteOption.value ? siteOption.label : teamList[0].teamSite}
               siteCapacity={universityOption.value ? getSiteCapacity(parseInt(universityOption.value)) : getSiteCapacity(teamList[0].siteId)}
@@ -432,7 +433,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
           </StyledAssignSeatsPage>
         ) : (
           <>
-            <StyledActionsContainer>
+            <StyledActionsContainer data-test-id="manage-page--StyledActionsContainer-0">
               {filteredActions.map((action, index) => (
                 <StyledActionCard
                   key={index}
@@ -442,19 +443,19 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
                       : handleActionClick(action.type)
                   }
                   $actionType={action.type}
-                >
+                  data-test-id="manage-page--StyledActionCard-0">
                   {action.type === "code" ? (
-                    <StyledCopyCard>
-                      <StyledCardIcon as={action.icon} />
-                      <StyledCodeCardText>{action.text}</StyledCodeCardText>
-                      <StyledCode>
+                    <StyledCopyCard data-test-id="manage-page--StyledCopyCard-0">
+                      <StyledCardIcon as={action.icon} data-test-id="manage-page--StyledCardIcon-0" />
+                      <StyledCodeCardText data-test-id="manage-page--StyledCodeCardText-0">{action.text}</StyledCodeCardText>
+                      <StyledCode data-test-id="manage-page--StyledCode-0">
                         <p>{compCode}</p>
                       </StyledCode>
                     </StyledCopyCard>
                   ) : (
                     <>
-                      <StyledCardIcon as={action.icon} />
-                      <StyledCardText>{action.text}</StyledCardText>
+                      <StyledCardIcon as={action.icon} data-test-id="manage-page--StyledCardIcon-1" />
+                      <StyledCardText data-test-id="manage-page--StyledCardText-0">{action.text}</StyledCardText>
                     </>
                   )}
                 </StyledActionCard>
@@ -477,10 +478,8 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
             {showEditRego && (
               <EditCompRegoPopUp
                 heading={
-                  <StyledTitle2>
-                    Please select the fields you would like to {"\n"} to remove
-                    from the Competition Registration Form
-                  </StyledTitle2>
+                  <StyledTitle2 data-test-id="manage-page--StyledTitle2-0">Please select the fields you would like to{"\n"}to remove
+                                        from the Competition Registration Form</StyledTitle2>
                 }
                 onClose={() => setShowEditRego(false)}
                 regoFields={regoFields}

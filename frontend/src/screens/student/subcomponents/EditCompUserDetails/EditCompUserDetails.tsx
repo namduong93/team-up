@@ -35,22 +35,26 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
   },[])
 
   return (
-    <StyledModalOverlay>
-      <StyledModalContent>
-        <StyledContentContainer>
-          <StyledHeaderContainer>
-            <StyledTitleContainer>
-              <StyledTitle>Edit Competition Details</StyledTitle>
+    <StyledModalOverlay data-test-id="edit-comp-user-details--StyledModalOverlay-0">
+      <StyledModalContent data-test-id="edit-comp-user-details--StyledModalContent-0">
+        <StyledContentContainer data-test-id="edit-comp-user-details--StyledContentContainer-0">
+          <StyledHeaderContainer data-test-id="edit-comp-user-details--StyledHeaderContainer-0">
+            <StyledTitleContainer data-test-id="edit-comp-user-details--StyledTitleContainer-0">
+              <StyledTitle data-test-id="edit-comp-user-details--StyledTitle-0">Edit Competition Details</StyledTitle>
             </StyledTitleContainer>
-            <StyledCloseContainer>
-              <StyledCloseButton onClick={onClose}>
+            <StyledCloseContainer data-test-id="edit-comp-user-details--StyledCloseContainer-0">
+              <StyledCloseButton
+                onClick={onClose}
+                data-test-id="edit-comp-user-details--StyledCloseButton-0">
                 <FaTimes />
               </StyledCloseButton>
             </StyledCloseContainer>
           </StyledHeaderContainer>
-          <StyledForm onSubmit={handleSubmit}>
-            <StyledField>
-              <StyledFormLabel>Degree</StyledFormLabel>
+          <StyledForm
+            onSubmit={handleSubmit}
+            data-test-id="edit-comp-user-details--StyledForm-0">
+            <StyledField data-test-id="edit-comp-user-details--StyledField-0">
+              <StyledFormLabel data-test-id="edit-comp-user-details--StyledFormLabel-0">Degree</StyledFormLabel>
               <DropdownInputLight
                 label="Current Year of Study"
                 options={yearOptions}
@@ -94,7 +98,7 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField>
+            <StyledField data-test-id="edit-comp-user-details--StyledField-1">
               <RadioButton
                 label="Competition Level"
                 options={["Level A", "Level B", "No Preference"]}
@@ -105,9 +109,9 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 required={true}
                 width="100%"
               />
-              <StyledFormLabel>Site Attendance</StyledFormLabel>
+              <StyledFormLabel data-test-id="edit-comp-user-details--StyledFormLabel-1">Site Attendance</StyledFormLabel>
               <div style={{ display: "flex", alignContent: "center" }}>
-                <StyledText>
+                <StyledText data-test-id="edit-comp-user-details--StyledText-0">
                   <em>{formData.siteName}</em>
                 </StyledText>
               </div>
@@ -129,7 +133,7 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField>
+            <StyledField data-test-id="edit-comp-user-details--StyledField-2">
               <DescriptiveTextInput
                 label="Competition Biography"
                 descriptor="Please write a short description about yourself that would help others get to know you"
@@ -142,45 +146,41 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField>
-              <StyledFormLabel>Preferred Contact Method</StyledFormLabel>
-              <StyledDescriptor>
-                Please specify your preferred contact method if you have another preference
-              </StyledDescriptor>
-              <StyledDoubleInputContainer>
-              <TextInputLight
-                label="Platform"
-                placeholder="Please enter"
-                type="text"
-                required={false}
-                value={formData.preferredContact.split(":")[0] || ""}
-                onChange={(e) => {
-                  const newPlatform = e.target.value;
-                  const currentHandle = formData.preferredContact.split(":")[1] || "";
-                  setFormData({ ...formData, preferredContact: `${newPlatform}:${currentHandle}` });
-                }}
-                width="45%"
-              />
-
-              <StyledColon>:</StyledColon>
-
-              <TextInputLight
-                label="Handle"
-                placeholder="Please enter"
-                type="text"
-                required={false}
-                value={formData.preferredContact.split(":")[1] || ""}
-                onChange={(e) => {
-                  const newHandle = e.target.value;
-                  const currentPlatform = formData.preferredContact.split(":")[0] || "";
-                  setFormData({ ...formData, preferredContact: `${currentPlatform}:${newHandle}` });
-                }}
-                width="45%"
-              />
+            <StyledField data-test-id="edit-comp-user-details--StyledField-3">
+              <StyledFormLabel data-test-id="edit-comp-user-details--StyledFormLabel-2">Preferred Contact Method</StyledFormLabel>
+              <StyledDescriptor data-test-id="edit-comp-user-details--StyledDescriptor-0">Please specify your preferred contact method if you have another preference</StyledDescriptor>
+              <StyledDoubleInputContainer data-test-id="edit-comp-user-details--StyledDoubleInputContainer-0">
+                <TextInputLight
+                  label="Platform"
+                  placeholder="Please enter"
+                  type="text"
+                  required={false}
+                  value={formData.preferredContact.split(":")[0] || ""}
+                  onChange={(e) => {
+                    const newPlatform = e.target.value;
+                    const currentHandle = formData.preferredContact.split(":")[1] || "";
+                    setFormData({ ...formData, preferredContact: `${newPlatform}:${currentHandle}` });
+                  }}
+                  width="45%"
+                />
+                <StyledColon data-test-id="edit-comp-user-details--StyledColon-0">:</StyledColon>
+                <TextInputLight
+                  label="Handle"
+                  placeholder="Please enter"
+                  type="text"
+                  required={false}
+                  value={formData.preferredContact.split(":")[1] || ""}
+                  onChange={(e) => {
+                    const newHandle = e.target.value;
+                    const currentPlatform = formData.preferredContact.split(":")[0] || "";
+                    setFormData({ ...formData, preferredContact: `${currentPlatform}:${newHandle}` });
+                  }}
+                  width="45%"
+                />
               </StyledDoubleInputContainer>
             </StyledField>
           </StyledForm>
-          <StyledButtonContainer>
+          <StyledButtonContainer data-test-id="edit-comp-user-details--StyledButtonContainer-0">
             <ResponsiveActionButton 
               actionType="primary" 
               label="Save Changes" 

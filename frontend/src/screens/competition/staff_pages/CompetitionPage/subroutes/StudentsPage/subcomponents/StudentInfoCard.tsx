@@ -71,11 +71,14 @@ interface FieldContainerProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Field: FC<FieldContainerProps> = ({ label, value, style, ...props }) => {
   return (
-    <StyledContainerDiv style={{ ...style }} {...props}>
-      <StyledFieldTitle>{label}</StyledFieldTitle>
-      <StyledFieldValue>{value}</StyledFieldValue>
+    <StyledContainerDiv
+      style={{ ...style }}
+      {...props}
+      data-test-id="student-info-card--StyledContainerDiv-0">
+      <StyledFieldTitle data-test-id="student-info-card--StyledFieldTitle-0">{label}</StyledFieldTitle>
+      <StyledFieldValue data-test-id="student-info-card--StyledFieldValue-0">{value}</StyledFieldValue>
     </StyledContainerDiv>
-  )
+  );
 }
 
 export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -94,20 +97,24 @@ export const StudentInfoCard: FC<StudentCardProps> = (
 
   const { name, sex, email, status, studentId, teamName, level, tshirtSize, siteName }
     = studentInfo ?? {};
-  return (<>
+  return <>
     {studentInfo &&
     <StudentsInfoBar
       studentInfo={studentInfo}
       isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
       studentsState={[students, setStudents]}
     />}
-    <StyledStudentInfoContainerDiv onDoubleClick={() => setIsInfoBarOpen((p) => !p)} style={style} {...props}>
+    <StyledStudentInfoContainerDiv
+      onDoubleClick={() => setIsInfoBarOpen((p) => !p)}
+      style={style}
+      {...props}
+      data-test-id="student-info-card--StyledStudentInfoContainerDiv-0">
       <Field label="Full Name" value={name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Gender" value={sex} style={{ width: '10%', minWidth: '60px'}} />
       <Field label="Email" value={email} style={{ width: '25%', minWidth: '170px' }} />
       <Field label="Status" 
         value={
-          <StyledNarrowStatusDiv>
+          <StyledNarrowStatusDiv data-test-id="student-info-card--StyledNarrowStatusDiv-0">
             <StudentStatus style={{ minWidth: '78px' }} isMatched={status === 'Matched'}>
               {status}
             </StudentStatus>
@@ -120,11 +127,9 @@ export const StudentInfoCard: FC<StudentCardProps> = (
       <Field label="Level" value={level} style={{ width: '10%', minWidth: '37px' }} />
       <Field label="Shirt Size" value={tshirtSize} style={{ width: '5%', minWidth: '65px' }}/>
       <Field label="Site" value={siteName} style={{ width: '25%', minWidth: '163px' }} />
-
-      
       <div style={{ display: 'flex' }}>
         
       </div>
     </StyledStudentInfoContainerDiv>
-  </>)
+  </>;
 }

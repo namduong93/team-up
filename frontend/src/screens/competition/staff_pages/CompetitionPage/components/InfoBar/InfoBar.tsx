@@ -79,13 +79,13 @@ export const InfoBar: FC<InfoBarProps> = ({ isOpenState: [isOpen, setIsOpen], ch
     <StyledInfoBarContainerDiv
       ref={containerRef}
       tabIndex={9999}
-      $isOpen={isOpen} {...props}
+      $isOpen={isOpen}
+      {...props}
       onClick={(e) => e.stopPropagation()}
-    >
-      <StyledInfoContainer>
+      data-test-id="info-bar--StyledInfoBarContainerDiv-0">
+      <StyledInfoContainer data-test-id="info-bar--StyledInfoContainer-0">
         {children}
       </StyledInfoContainer>
-
     </StyledInfoBarContainerDiv>
-  )
+  );
 }

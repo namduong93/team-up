@@ -58,7 +58,7 @@ export const SitePopupChain: React.FC<SitePopupChainProps> = ({
         return (
           <SitePopup1
             siteOptionsState={siteOptionsState}
-            heading={<StyledHeading>Change Team Site {"\nLocation"}</StyledHeading>}
+            heading={<StyledHeading data-test-id="site-popup-chain--StyledHeading-0">Change Team Site{"\nLocation"}</StyledHeading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter a location"
@@ -70,8 +70,7 @@ export const SitePopupChain: React.FC<SitePopupChainProps> = ({
         return (
           <SecondStepPopup
             heading={
-              <StyledHeading>
-                Are you sure you would {"\nlike to change your Team's"}{" "}
+              <StyledHeading data-test-id="site-popup-chain--StyledHeading-1">Are you sure you would{"\nlike to change your Team's"}{" "}
                 {"\nsite location?"}
               </StyledHeading>
             }
@@ -83,8 +82,7 @@ export const SitePopupChain: React.FC<SitePopupChainProps> = ({
         return (
           <ThirdStepPopup
             heading={
-              <StyledHeading>
-                Your team's new site location {"\nis now pending approval"}{" "}
+              <StyledHeading data-test-id="site-popup-chain--StyledHeading-2">Your team's new site location{"\nis now pending approval"}{" "}
                 {"\nfrom your coach"}
               </StyledHeading>
             }

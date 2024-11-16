@@ -55,13 +55,13 @@ export const SortSelect: FC<SortSelectProps> = ({ options, onSortChange, isOpen 
   if (!isOpen) return null;
 
   return (
-    <StyledSortContainer $isOpen={isOpen}>
+    <StyledSortContainer $isOpen={isOpen} data-test-id="sort-select--StyledSortContainer-0">
       {options.map((option) => (
         <StyledSortOption
           key={option.value}
           $isSelected={selectedSort === option.value}
           onClick={() => handleSortChange(option.value)}
-        >
+          data-test-id="sort-select--StyledSortOption-0">
           {option.label}
         </StyledSortOption>
       ))}

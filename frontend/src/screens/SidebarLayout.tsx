@@ -15,7 +15,7 @@ const StyledSharedBackground = styled.div`
 
 export const SidebarLayout = ({ ...props }: DashboardSidebarProps) => {
   return (
-    <StyledSharedBackground>
+    <StyledSharedBackground data-test-id="sidebar-layout--StyledSharedBackground-0">
       <DashboardSidebar {...props} />
       <Outlet />
     </StyledSharedBackground>

@@ -190,12 +190,11 @@ export const CompExperienceInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      data-test-id="comp-experience-input--StyledFlexBackground-0">
       <CompRegistrationProgressBar progressNumber={2} />
-      <StyledContainer>
-        <StyledContentContainer>
-          <StyledTitle>Competitive Experience</StyledTitle>
-
+      <StyledContainer data-test-id="comp-experience-input--StyledContainer-0">
+        <StyledContentContainer data-test-id="comp-experience-input--StyledContentContainer-0">
+          <StyledTitle data-test-id="comp-experience-input--StyledTitle-0">Competitive Experience</StyledTitle>
           <MultiRadio
             options={courseOptions}
             selectedValues={formData.courses}
@@ -205,13 +204,12 @@ export const CompExperienceInput: FC = () => {
             label={
               <>
                 University Courses Completed
-                <StyledAsterisk>*</StyledAsterisk>
+                <StyledAsterisk data-test-id="comp-experience-input--StyledAsterisk-0">*</StyledAsterisk>
               </>
             }
             descriptor="Please select the courses you have completed"
             showOther={false}
           />
-
           {editRego.enableCodeforcesField && formData.competitionLevel !== "Level B" && (
             <TextInput
               label="Codeforces Score"
@@ -227,7 +225,6 @@ export const CompExperienceInput: FC = () => {
               descriptor="Please enter your current Codeforce score if applicable"
             />
           )}
-
           {editRego.enableRegionalParticipationField &&
             formData.degreeYear.toString() !== "1" &&
             formData.competitionLevel !== "Level B" && (
@@ -250,7 +247,6 @@ export const CompExperienceInput: FC = () => {
                 width="100%"
               />
             )}
-
           {editRego.enableNationalPrizesField &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
@@ -272,7 +268,6 @@ export const CompExperienceInput: FC = () => {
                 width="100%"
               />
             )}
-
           {hasNationalPrize && (
             <DescriptiveTextInput
               descriptor="Please enter any related National Olympiad prizes you may have (NOI, AIO, VNOI, etc) separated by commas"
@@ -285,7 +280,6 @@ export const CompExperienceInput: FC = () => {
               width="100%"
             />
           )}
-
           {editRego.enableInternationalPrizesField &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
@@ -307,7 +301,6 @@ export const CompExperienceInput: FC = () => {
                 width="100%"
               />
             )}
-
           {hasInternationalPrize && (
             <DescriptiveTextInput
               descriptor="Please enter any related International Olympiad prizes you may have (IOI, APIO, CEOI, etc) separated by commas"
@@ -323,7 +316,6 @@ export const CompExperienceInput: FC = () => {
               width="100%"
             />
           )}
-
           {formData.competitionLevel !== "Level B" && (
             <RadioButton
               label="Boersen Prize Eligibility"
@@ -352,12 +344,12 @@ export const CompExperienceInput: FC = () => {
               width="100%"
             />
           )}
-
-          <StyledButtonContainer>
-            <StyledButton onClick={handleBack}>Back</StyledButton>
-            <StyledButton $disabled={isButtonDisabled()} onClick={handleRegister}>
-              Register
-            </StyledButton>
+          <StyledButtonContainer data-test-id="comp-experience-input--StyledButtonContainer-0">
+            <StyledButton onClick={handleBack} data-test-id="comp-experience-input--StyledButton-0">Back</StyledButton>
+            <StyledButton
+              $disabled={isButtonDisabled()}
+              onClick={handleRegister}
+              data-test-id="comp-experience-input--StyledButton-1">Register</StyledButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

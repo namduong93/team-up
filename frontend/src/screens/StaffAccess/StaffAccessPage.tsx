@@ -112,7 +112,7 @@ export const StaffAccessPage: FC = () => {
   };
 
   return (
-    <StyledPageBackground>
+    <StyledPageBackground data-test-id="staff-access-page--StyledPageBackground-0">
       <PageHeader
         pageTitle="Staff Account Management"
         pageDescription="Review pending staff account requests"
@@ -124,27 +124,26 @@ export const StaffAccessPage: FC = () => {
       >
         <StaffAccessButtons onApproveAll={handleApproveAll} onRejectAll={handleRejectAll} editingForAll={isPendingOnly}/>
       </PageHeader>
-
-
-      <StyledFilterTagContainer>
+      <StyledFilterTagContainer data-test-id="staff-access-page--StyledFilterTagContainer-0">
         {Object.entries(filters).map(([field, values]) =>
           values.map((value) => (
-          <StyledFilterTagButton key={`${field}-${value}`}>
-            {value} 
+          <StyledFilterTagButton
+            key={`${field}-${value}`}
+            data-test-id="staff-access-page--StyledFilterTagButton-0">
+            {value}
             <StyledRemoveFilterIcon
               onClick={(e) => {
               e.stopPropagation();
               removeFilter(field, value);
-              }} 
-            />
+              }}
+              data-test-id="staff-access-page--StyledRemoveFilterIcon-0" />
           </StyledFilterTagButton>
           ))
         )}
       </StyledFilterTagContainer>
-
-      <StyledStaffContainer>
-        <StyledNarrowDisplayDiv>
-          <StyledStaffRecords>
+      <StyledStaffContainer data-test-id="staff-access-page--StyledStaffContainer-0">
+        <StyledNarrowDisplayDiv data-test-id="staff-access-page--StyledNarrowDisplayDiv-0">
+          <StyledStaffRecords data-test-id="staff-access-page--StyledStaffRecords-0">
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }) => (
                 <NarrowStaffAccessCard 
@@ -158,9 +157,9 @@ export const StaffAccessPage: FC = () => {
             )}
           </StyledStaffRecords>
         </StyledNarrowDisplayDiv>
-        <StyledWideDisplayDiv>
+        <StyledWideDisplayDiv data-test-id="staff-access-page--StyledWideDisplayDiv-0">
           <WideStaffAccessHeader />
-          <StyledStaffRecords>
+          <StyledStaffRecords data-test-id="staff-access-page--StyledStaffRecords-1">
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }) => (
                 <WideStaffAccessCard 

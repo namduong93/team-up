@@ -70,29 +70,35 @@ export const ApproveNameRadios: FC<ApprovalNameRadiosProps> = ({ setTeamIds, set
   }, [selectedOption]);
 
   return (
-    <StyledApprovalNameDiv {...props}>
-      
-      <StyledRadioIconDiv onClick={handleCheckClick} style={{
-        border: `1px solid ${theme.colours.confirm}`,
-        backgroundColor: selectedOption === RadioOption.Check ? theme.colours.confirm : theme.background
-      }}>
-        <StyledRadioCheckIcon style={{
-          color: selectedOption === RadioOption.Check ? theme.background : theme.colours.confirm
-        }} />
+    <StyledApprovalNameDiv {...props} data-test-id="approve-name-radios--StyledApprovalNameDiv-0">
+      <StyledRadioIconDiv
+        onClick={handleCheckClick}
+        style={{
+          border: `1px solid ${theme.colours.confirm}`,
+          backgroundColor: selectedOption === RadioOption.Check ? theme.colours.confirm : theme.background
+        }}
+        data-test-id="approve-name-radios--StyledRadioIconDiv-0">
+        <StyledRadioCheckIcon
+          style={{
+            color: selectedOption === RadioOption.Check ? theme.background : theme.colours.confirm
+          }}
+          data-test-id="approve-name-radios--StyledRadioCheckIcon-0" />
       </StyledRadioIconDiv>
-
       <div style={{ flex: '0 2 20px' }} />
-      
-      <StyledRadioIconDiv onClick={handleCrossClick} style={{
-        border: `1px solid ${theme.colours.cancel}`,
-        backgroundColor: selectedOption === RadioOption.Cross ? theme.colours.cancel : theme.background,
-        color: selectedOption === RadioOption.Cross ? theme.background : theme.colours.cancel
-      }}>
-        <StyledRadioCrossIcon style={{
+      <StyledRadioIconDiv
+        onClick={handleCrossClick}
+        style={{
+          border: `1px solid ${theme.colours.cancel}`,
+          backgroundColor: selectedOption === RadioOption.Cross ? theme.colours.cancel : theme.background,
           color: selectedOption === RadioOption.Cross ? theme.background : theme.colours.cancel
-        }} />
+        }}
+        data-test-id="approve-name-radios--StyledRadioIconDiv-1">
+        <StyledRadioCrossIcon
+          style={{
+            color: selectedOption === RadioOption.Cross ? theme.background : theme.colours.cancel
+          }}
+          data-test-id="approve-name-radios--StyledRadioCrossIcon-0" />
       </StyledRadioIconDiv>
-    
     </StyledApprovalNameDiv>
-  )
+  );
 }

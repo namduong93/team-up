@@ -104,30 +104,28 @@ const JoinPopup: React.FC<JoinPopUpProps> = ({
     }
   };
 
-  return (
-    <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
-          <FaTimes />
-        </StyledCloseButton>
-        <div>{heading}</div>
-        <div style={{ width: "80%" }}>
-          <TextInputLight
-            label="Team Code"
-            placeholder="Please enter"
-            required={true}
-            value={teamCode}
-            onChange={(e) => setTeamCode(e.target.value)}
-            width="100%"
-          />
-        </div>
-
-        <StyledButton disabled={isButtonDisabled()} onClick={handleJoin}>
-          Join
-        </StyledButton>
-      </StyledModal>
-    </>
-  );
+  return <>
+    <StyledModal data-test-id="join-popup--StyledModal-0">
+      <StyledCloseButton onClick={onClose} data-test-id="join-popup--StyledCloseButton-0">
+        <FaTimes />
+      </StyledCloseButton>
+      <div>{heading}</div>
+      <div style={{ width: "80%" }}>
+        <TextInputLight
+          label="Team Code"
+          placeholder="Please enter"
+          required={true}
+          value={teamCode}
+          onChange={(e) => setTeamCode(e.target.value)}
+          width="100%"
+        />
+      </div>
+      <StyledButton
+        disabled={isButtonDisabled()}
+        onClick={handleJoin}
+        data-test-id="join-popup--StyledButton-0">Join</StyledButton>
+    </StyledModal>
+  </>;
 };
 
 export default JoinPopup;

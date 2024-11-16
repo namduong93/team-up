@@ -77,15 +77,15 @@ export const CompetitionInformation: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      data-test-id="comp-information--StyledFlexBackground-0">
       <CompRegistrationProgressBar progressNumber={0} />
-      <StyledContainer>
-        <StyledContentContainer>
-          <StyledTitle>Competition Information</StyledTitle>
+      <StyledContainer data-test-id="comp-information--StyledContainer-0">
+        <StyledContentContainer data-test-id="comp-information--StyledContentContainer-0">
+          <StyledTitle data-test-id="comp-information--StyledTitle-0">Competition Information</StyledTitle>
           <MarkdownDisplay content={compInformation !== null ? compInformation : defaultCompInformation} />
-          <StyledButtonContainer>
-            <StyledButton onClick={handleBack}>Back</StyledButton>
-            <StyledButton onClick={handleNext}>Next</StyledButton>
+          <StyledButtonContainer data-test-id="comp-information--StyledButtonContainer-0">
+            <StyledButton onClick={handleBack} data-test-id="comp-information--StyledButton-0">Back</StyledButton>
+            <StyledButton onClick={handleNext} data-test-id="comp-information--StyledButton-1">Next</StyledButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

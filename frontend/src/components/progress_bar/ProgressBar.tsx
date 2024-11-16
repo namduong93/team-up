@@ -129,17 +129,29 @@ export const CompRegistrationProgressBar: FC<ProgressBarProps> = ({ progressNumb
 export const ProgressBar: FC<ProgressBarProps> = ({ progressNumber = 0, children, style, ...props }) => {
 
   return (
-  <StyledRegoProgressContainer style={{ position: 'relative', ...style }} {...props}>
-    <StyledRegoProgressContainer style={{...style}} {...props} >
-      <StyledProgressItemsContainer>
-        {React.Children.map(children, (child, index) => {
-          return (
-          <StyledProgressBarOptionContainer key={index} >
-            <StyledProgressCircle $isCurrentProgress={index === progressNumber} />
-            {child}
-          </StyledProgressBarOptionContainer>);
-        })}
-      </StyledProgressItemsContainer>
+    <StyledRegoProgressContainer
+      style={{ position: 'relative', ...style }}
+      {...props}
+      data-test-id="progress-bar--StyledRegoProgressContainer-0">
+      <StyledRegoProgressContainer
+        style={{...style}}
+        {...props}
+        data-test-id="progress-bar--StyledRegoProgressContainer-1">
+        <StyledProgressItemsContainer data-test-id="progress-bar--StyledProgressItemsContainer-0">
+          {React.Children.map(children, (child, index) => {
+            return (
+              <StyledProgressBarOptionContainer
+                key={index}
+                data-test-id="progress-bar--StyledProgressBarOptionContainer-0">
+                <StyledProgressCircle
+                  $isCurrentProgress={index === progressNumber}
+                  data-test-id="progress-bar--StyledProgressCircle-0" />
+                {child}
+              </StyledProgressBarOptionContainer>
+            );
+          })}
+        </StyledProgressItemsContainer>
+      </StyledRegoProgressContainer>
     </StyledRegoProgressContainer>
-  </StyledRegoProgressContainer>)
+  );
 }

@@ -91,25 +91,26 @@ export const StudentPage: FC = () => {
     searchedStudents = sortedStudents.map((student) => { return { item: student } });
   }
 
-  return (
-  <>
+  return <>
   <div>
       {Object.entries(filters).map(([field, values]) =>
         values.map((value) => (
-        <StyledFilterTagButton key={`${field}-${value}`}>
-          {value} 
+        <StyledFilterTagButton
+          key={`${field}-${value}`}
+          data-test-id="student-page--StyledFilterTagButton-0">
+          {value}
           <StyledRemoveFilterIcon
             onClick={(e) => {
             e.stopPropagation();
             removeFilter(field, value);
-            }} 
-          />
+            }}
+            data-test-id="student-page--StyledRemoveFilterIcon-0" />
         </StyledFilterTagButton>
         ))
       )}
     </div>
-  <StyledFlexBackground>
-    <StyledNarrowDisplayDiv>
+  <StyledFlexBackground data-test-id="student-page--StyledFlexBackground-0">
+    <StyledNarrowDisplayDiv data-test-id="student-page--StyledNarrowDisplayDiv-0">
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoCard
           studentsState={[students, setStudents]}
@@ -117,8 +118,7 @@ export const StudentPage: FC = () => {
           studentInfo={studentInfo}
         />))}
     </StyledNarrowDisplayDiv>
-
-    <StyledWideDisplayDiv>
+    <StyledWideDisplayDiv data-test-id="student-page--StyledWideDisplayDiv-0">
       <StudentInfoDiv studentsState={[students, setStudents]} style={{
         backgroundColor: theme.colours.userInfoCardHeader,
         fontWeight: 'bold'
@@ -131,6 +131,5 @@ export const StudentPage: FC = () => {
         />))}
     </StyledWideDisplayDiv>
   </StyledFlexBackground>
-  </>
-  );
+  </>;
 }

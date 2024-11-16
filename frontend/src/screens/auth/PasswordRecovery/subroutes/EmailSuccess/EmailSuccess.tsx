@@ -10,11 +10,14 @@ export const EmailSuccess: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style,
     // handle resend email.
   }
   return (
-    <StyledFormContainer style={{ justifyContent: 'center', ...style }} {...props}>
+    <StyledFormContainer
+      style={{ justifyContent: 'center', ...style }}
+      {...props}
+      data-test-id="email-success--StyledFormContainer-0">
       <div style={{
         fontSize: '24px',
       }}>An email has been sent to your address with password recovery steps</div>
       <TimeoutButton onClick={handleResend} >Resend Email</TimeoutButton>
     </StyledFormContainer>
-  )
+  );
 }

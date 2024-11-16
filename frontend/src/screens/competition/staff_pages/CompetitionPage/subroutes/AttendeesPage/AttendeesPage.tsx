@@ -65,50 +65,48 @@ export const AttendeesDisplay: FC = () => {
     searchedAttendees = sortedAttendees.map((attendees) => { return { item: attendees } });
   }
 
-  return (
-    <>
-    <div>
-      {Object.entries(filters).map(([field, values]) =>
-        values.map((value) => (
-        <StyledFilterTagButton key={`${field}-${value}`}>
-          {value} 
-          <StyledRemoveFilterIcon
-            onClick={(e) => {
-            e.stopPropagation();
-            removeFilter(field, value);
-            }} 
+  return <>
+  <div>
+    {Object.entries(filters).map(([field, values]) =>
+      values.map((value) => (
+      <StyledFilterTagButton
+        key={`${field}-${value}`}
+        data-test-id="attendees-page--StyledFilterTagButton-0">
+        {value}
+        <StyledRemoveFilterIcon
+          onClick={(e) => {
+          e.stopPropagation();
+          removeFilter(field, value);
+          }}
+          data-test-id="attendees-page--StyledRemoveFilterIcon-0" />
+      </StyledFilterTagButton>
+      ))
+    )}
+  </div>
+  <StyledFlexBackground data-test-id="attendees-page--StyledFlexBackground-0">
+    <StyledNarrowDisplayDiv data-test-id="attendees-page--StyledNarrowDisplayDiv-0">
+      {searchedAttendees.map(({ item: attendeesDetails }, index) => {
+        return (
+          <NarrowAttendeesCard
+            attendeesListState={[attendeesList, setAttendeesList]}
+            key={`${attendeesDetails.email}${index}`}
+            attendeesDetails={attendeesDetails}
           />
-        </StyledFilterTagButton>
-        ))
-      )}
-    </div>
-    <StyledFlexBackground>
-      <StyledNarrowDisplayDiv>
-        {searchedAttendees.map(({ item: attendeesDetails }, index) => {
-          return (
-            <NarrowAttendeesCard
-              attendeesListState={[attendeesList, setAttendeesList]}
-              key={`${attendeesDetails.email}${index}`}
-              attendeesDetails={attendeesDetails}
-            />
-          );
-        })}
-      </StyledNarrowDisplayDiv>
-
-      <StyledWideDisplayDiv>
-        <WideAttendeesHeader />
-        {searchedAttendees.map(({ item: attendeesDetails }, index) => {
-          return (
-            <WideAttendeesCard
-              attendeesListState={[attendeesList, setAttendeesList]}
-              key={`${attendeesDetails.email}${index}`}
-              attendeesDetails={attendeesDetails}
-            />
-          );
-        })}
-
-      </StyledWideDisplayDiv>
-    </StyledFlexBackground>
-    </>
-  )
+        );
+      })}
+    </StyledNarrowDisplayDiv>
+    <StyledWideDisplayDiv data-test-id="attendees-page--StyledWideDisplayDiv-0">
+      <WideAttendeesHeader />
+      {searchedAttendees.map(({ item: attendeesDetails }, index) => {
+        return (
+          <WideAttendeesCard
+            attendeesListState={[attendeesList, setAttendeesList]}
+            key={`${attendeesDetails.email}${index}`}
+            attendeesDetails={attendeesDetails}
+          />
+        );
+      })}
+    </StyledWideDisplayDiv>
+  </StyledFlexBackground>
+  </>;
 };

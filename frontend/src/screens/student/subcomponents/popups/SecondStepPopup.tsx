@@ -58,19 +58,16 @@ export const SecondStepPopup: React.FC<SecondStepPopupProps> = ({
   onClose,
   onNext,
 }) => {
-  return (
-    <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
-          <FaTimes />
-        </StyledCloseButton>
-        <div>{heading}</div>
-
-        <StyledButtonContainer>
-          <StyledConfirmButton onClick={onNext}>Yes</StyledConfirmButton>
-          <StyledCancelButton onClick={onClose}>No</StyledCancelButton>
-        </StyledButtonContainer>
-      </StyledModal>
-    </>
-  );
+  return <>
+    <StyledModal data-test-id="second-step-popup--StyledModal-0">
+      <StyledCloseButton onClick={onClose} data-test-id="second-step-popup--StyledCloseButton-0">
+        <FaTimes />
+      </StyledCloseButton>
+      <div>{heading}</div>
+      <StyledButtonContainer data-test-id="second-step-popup--StyledButtonContainer-0">
+        <StyledConfirmButton onClick={onNext} data-test-id="second-step-popup--StyledConfirmButton-0">Yes</StyledConfirmButton>
+        <StyledCancelButton onClick={onClose} data-test-id="second-step-popup--StyledCancelButton-0">No</StyledCancelButton>
+      </StyledButtonContainer>
+    </StyledModal>
+  </>;
 };

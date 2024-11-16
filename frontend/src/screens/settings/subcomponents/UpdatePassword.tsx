@@ -70,45 +70,45 @@ export const UpdatePassword: FC<UpdatePasswordProps> = ({ isOpen }) => {
     clearFields();
   };
 
-  return (
-    isOpen && (
-      <div>
-        <form onSubmit={handleSubmitPassword}>
-          <div>
-            <TextInputLight
-              label="Current Password"
-              type="password"
-              name="current"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required={true}
-            />
-          </div>
-          <div>
-            <TextInputLight
-              label="New Password"
-              type="password"
-              name="new"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required={true}
-            />
-          </div>
-          <div>
-            <TextInputLight
-              label="Confirm New Password"
-              type="password"
-              name="confirm"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required={true}
-            />
-          </div>
-          <StyledButton type="submit">Update Password</StyledButton>
-        </form>
+  return isOpen && (
+    <div>
+      <form onSubmit={handleSubmitPassword} data-test-id="update-password--form-0">
+        <div>
+          <TextInputLight
+            label="Current Password"
+            type="password"
+            name="current"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            required={true}
+          />
+        </div>
+        <div>
+          <TextInputLight
+            label="New Password"
+            type="password"
+            name="new"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required={true}
+          />
+        </div>
+        <div>
+          <TextInputLight
+            label="Confirm New Password"
+            type="password"
+            name="confirm"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required={true}
+          />
+        </div>
+        <StyledButton type="submit" data-test-id="update-password--StyledButton-0">Update Password</StyledButton>
+      </form>
 
-        {warningMessage && <StyledWarningMessage $isSuccess={isSuccess}>{warningMessage}</StyledWarningMessage>}
-      </div>
-    )
+      {warningMessage && <StyledWarningMessage
+        $isSuccess={isSuccess}
+        data-test-id="update-password--StyledWarningMessage-0">{warningMessage}</StyledWarningMessage>}
+    </div>
   );
 };

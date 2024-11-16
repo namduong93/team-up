@@ -137,32 +137,30 @@ export const TeamManage: React.FC = () => {
   };
 
   return (
-    <StyledManageContainer>
+    <StyledManageContainer data-test-id="team-manage--StyledManageContainer-0">
       <TeamActionCard
         numMembers={students.filter((s) => s.name !== null).length}
       />
-      <StyledInfoContainer>
+      <StyledInfoContainer data-test-id="team-manage--StyledInfoContainer-0">
         <ProfileCard
           name={coach.name}
           email={coach.email}
           bio={coach.bio}
           isCoach={true}
         />
-
-        <StyledInfoCard>
-          <StyledInfoContent>
-            <StyledInfoLabel>Competition Details and Announcements:</StyledInfoLabel>
-            <StyledInfoLink onClick={handleOpenModal}>
-              see competition details →
-            </StyledInfoLink>
+        <StyledInfoCard data-test-id="team-manage--StyledInfoCard-0">
+          <StyledInfoContent data-test-id="team-manage--StyledInfoContent-0">
+            <StyledInfoLabel data-test-id="team-manage--StyledInfoLabel-0">Competition Details and Announcements:</StyledInfoLabel>
+            <StyledInfoLink onClick={handleOpenModal} data-test-id="team-manage--StyledInfoLink-0">see competition details →</StyledInfoLink>
           </StyledInfoContent>
         </StyledInfoCard>
       </StyledInfoContainer>
-
       {isModalOpen && (
-        <StyledModalOverlay>
-          <StyledModalContent>
-            <StyledCloseButton onClick={handleCloseModal}>
+        <StyledModalOverlay data-test-id="team-manage--StyledModalOverlay-0">
+          <StyledModalContent data-test-id="team-manage--StyledModalContent-0">
+            <StyledCloseButton
+              onClick={handleCloseModal}
+              data-test-id="team-manage--StyledCloseButton-0">
               <FaTimes />
             </StyledCloseButton>
             <MarkdownDisplay content={announcements} />
