@@ -1443,6 +1443,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         UPDATE competition_teams
         SET participants = $1, team_size = ${teamResult.rows[0].participants.length - 1}, team_status = 'Pending'::competition_team_status
         WHERE id = $2
+        RETURNING id
       `;
       const leaveTeamResult = await this.pool.query(leaveTeamQuery, [teamResult.rows[0].participants.filter((id) => id !== userId), teamResult.rows[0].id]);
       if (leaveTeamResult.rowCount === 0) {
@@ -1465,7 +1466,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
         teamResult.rows[0].site_attending_id
       ];
       const newTeamJoinResult = await this.pool.query(newTeamJoinQuery, newTeamJoinValues);
-      return { competitionCode: teamCode, competitionName, teamId: newTeamJoinResult.rows[0].id, teamName: newTeamJoinResult.rows[0].name };
+      return { competitionCode: teamCode, competitionName, teamId: leaveTeamResult.rows[0].id, teamName: newTeamJoinResult.rows[0].name };
     }
   }
 
