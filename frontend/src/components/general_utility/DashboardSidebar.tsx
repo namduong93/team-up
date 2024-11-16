@@ -189,30 +189,17 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   const [isSysAdmin, setIsSysAdmin] = useState(false);
   const navigate = useNavigate();
 
-  /**
-   * Handles navigation to a specified path.
-   *
-   * @param {string} path - The route to navigate to.
-   */
   const handleNavigation = (path: string) => {
     navigate(path);
   };
 
-  /**
-   * Logs the user out and redirects to the home page.
-   *
-   * @param {React.MouseEvent<HTMLButtonElement>} e - The click event.
-   */
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await sendRequest.post("/user/logout");
     handleNavigation("/");
   };
 
-  /**
-   * Fetches the user type to determine if the user is a system administrator.
-   * Automatically redirects to the home page in case of authentication errors.
-   */
+  // Fetches the user type to determine if the user is a system administrator.
   useEffect(() => {
     (async () => {
       try {

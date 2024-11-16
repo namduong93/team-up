@@ -126,10 +126,6 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
     { type: "site" as ActionType, icon: FaGlobe, text: "Change Team Site" },
   ];
 
-  /**
-   * Fetch site locations for the current competition.
-   * Updates the `siteLocationOptions` state with data from the API.
-   */
   useEffect(() => {
     const fetchSiteLocations = async () => {
       const response = await sendRequest.get<{ sites: Array<CompetitionSite> }>(
@@ -145,10 +141,6 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
     fetchSiteLocations();
   }, []);
 
-  /**
-   * Fetch the invite code for the team.
-   * Updates the `teamCode` state with the received code.
-   */
   useEffect(() => {
     const fetchTeamCode = async () => {
       const response = await sendRequest.get<{ code: string }>(
@@ -162,12 +154,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
     fetchTeamCode();
   }, []);
 
-  /**
-   * Determines whether an action should be disabled based on the number of members.
-   *
-   * @param {ActionType} actionType - The type of action being evaluated.
-   * @returns {boolean} - True if the action should be disabled; false otherwise.
-   */
+  // Determines whether an action should be disabled based on the number of members.
   const isDisabled = (actionType: ActionType) => {
     if (numMembers === 1) return actionType === "name" || actionType === "site";
     if (numMembers > 1 && numMembers < MAX_MEMBERS)

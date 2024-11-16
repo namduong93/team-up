@@ -38,10 +38,6 @@ interface CopyButtonProps {
 export const CopyButton: FC<CopyButtonProps> = ({ textToCopy }) => {
   const [copied, setCopied] = useState(false);
 
-  /**
-   * Copies the specified text to the clipboard and updates the state to reflect the action.
-   * Displays a confirmation icon for 2 seconds after the text is copied.
-   */
   const copyToClipboard = () => {
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
