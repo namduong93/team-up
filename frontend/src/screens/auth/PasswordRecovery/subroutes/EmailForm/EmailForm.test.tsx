@@ -1,5 +1,8 @@
-import { render, screen } from '@testing-library/react';
+// IMPORTANT!!!!! Make sure you import these from vitest
 import { describe, expect, it } from 'vitest';
+// 
+
+import { render, screen } from '@testing-library/react';
 import { EmailForm } from './EmailForm';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
