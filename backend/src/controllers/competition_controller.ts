@@ -47,14 +47,7 @@ export class CompetitionController {
     res.json({});
   });
 
-  competitionStudentsRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
-    const { userId, code } = req.query;
-    const regoFields = await this.competitionService.competitionStudentsRegoToggles(
-      parseInt(userId as string), code as string);
-
-    res.json({ regoFields });
-  });
-
+  
   competitionStaffUpdateRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const { compId, regoFields, universityId } = req.body as {
@@ -148,61 +141,6 @@ export class CompetitionController {
     res.json({ attendees });
   });
 
-  /**
-   * Handles the request to get the details of a team in a competition.
-   */
-  competitionTeamDetails = httpErrorHandler(async (req: Request, res: Response) => {
-    const { userId, compId } = req.query;
-
-    const teamDetails = await this.competitionService.competitionTeamDetails(
-      parseInt(userId as string), parseInt(compId as string));
-
-    res.json(teamDetails);
-  });
-
-  /**
-   * Handles the request to generate an invite code for a competition team.
-   */
-  competitionTeamInviteCode = httpErrorHandler(async (req: Request, res: Response) => {
-    const { userId, compId } = req.query;
-
-    const inviteCode = await this.competitionService.competitionTeamInviteCode(
-      parseInt(userId as string), parseInt(compId as string));
-
-    res.json({ code: inviteCode });
-  });
-
-  /**
-   * Handles the request to join a competition team by a user.
-   */
-  competitionTeamJoin = httpErrorHandler(async (req: Request, res: Response) => {
-    const { userId } = req.query;
-    const { compId, teamCode } = req.body;
-
-    const teamId = await this.competitionService.competitionTeamJoin(Number(userId), Number(compId), String(teamCode));
-
-    res.json({ teamName: teamId.teamName });
-  });
-
-  /**
-   * Handles the request to get student details for a specific competition.
-   */
-  competitionStudentDetails = httpErrorHandler(async (req: Request, res: Response) => {
-    const { userId, compId } = req.query;
-
-    const studentDetails = await this.competitionService.competitionStudentDetails(
-      parseInt(userId as string), parseInt(compId as string));
-
-    res.json({ studentDetails });
-  });
-
-  competitionStudentDetailsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
-    const { userId } = req.query;
-    const { compId } = req.body;
-    const studentDetails = req.body.studentDetails as StudentInfo;
-    await this.competitionService.competitionStudentDetailsUpdate(
-      parseInt(userId as string), parseInt(compId as string), studentDetails);
-  });
 
   competitionStaffDetails = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, compId } = req.query;
@@ -371,17 +309,7 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the request for a student to join a competition by code.
-   */
-  competitionStudentJoin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const code = req.body.code;
-    const competitionUserInfo = req.body.competitionUser;
-    competitionUserInfo.userId = Number(req.query.userId);
-    await this.competitionService.competitionStudentJoin(String(code), competitionUserInfo);
-    res.json({});
-    return;
-  });
+
 
   competitionStudentJoin1 = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     res.json({ incompleteTeamId: 1 });
@@ -393,16 +321,7 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the withdrawal of a student from a competition.
-   */
-  competitionStudentWithdraw = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const userId = req.query.userId;
-    const compId = req.body.compId;
-    const result = await this.competitionService.competitionStudentWithdraw(Number(userId), Number(compId));
-    res.json(result);
-    return;
-  });
+
   /**
    * Approves team assignments for a competition.
    */
@@ -436,15 +355,7 @@ export class CompetitionController {
     return;
   });
 
-  /**
-   * Handles the request to change the site of a competition for a user.
-   */
-  competitionRequestSiteChange = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const userId = req.query.userId;
-    const { compId, newSiteId } = req.body;
-    const result = await this.competitionService.competitionRequestSiteChange(Number(userId), Number(compId), Number(newSiteId));
-    res.json(result);
-  });
+
 
   /**
    * Handles the approval or rejection of site changes for a competition.

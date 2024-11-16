@@ -21,6 +21,9 @@ import { SqlDbUniversityRepository } from './repository/university/sqldb.js';
 import { NotificationController } from './controllers/notification_controller.js';
 import { SqlDbNotificationRepository } from './repository/notification/sqldb.js';
 import { NotificationService } from './services/notification_service.js';
+import { SqlDbCompetitionStudentRepository } from './repository/competition_student/sqldb.js';
+import { CompetitionStudentService } from './services/CompetitionStudentService.js';
+import { CompetitionStudentController } from './controllers/CompetitionStudentController.js';
 
 const { HOST, PORT } = serverAddress;
 const app = express();
@@ -68,6 +71,12 @@ const competitionController = new CompetitionController(competitionService);
 const universityRepository = new SqlDbUniversityRepository(pool);
 const universityService = new UniversityService(universityRepository);
 const universityController = new UniversityController(universityService);
+
+const competitionStudentRepository = new SqlDbCompetitionStudentRepository(pool, competitionRepository);
+const competitionStudentService = new CompetitionStudentService(
+  competitionStudentRepository, competitionRepository, userRepository, notificationRepository);
+
+const competitionStudentController = new CompetitionStudentController(competitionStudentService);
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
@@ -161,7 +170,7 @@ app.get('/competition/user/default_site', competitionController.competitionUserD
 // PARAMS: { code, competitionUser: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote, nationalPrizes, international_prizes, codeforces_rating, university_courses, competitionBio, preferredContact } }
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { }
-app.post('/competition/student/join', competitionController.competitionStudentJoin);
+app.post('/competition/student/join', competitionStudentController.competitionStudentJoin);
 
 // Student join competition with 1 friend
 // PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote },
@@ -181,7 +190,7 @@ app.post('/competition/student/join/2', competitionController.competitionStudent
 // Student withdraws from competition
 // PARAMS: { compId: number }
 // RESPONSE: { competitionCode: string }
-app.post('/competition/student/withdraw', competitionController.competitionStudentWithdraw);
+app.post('/competition/student/withdraw', competitionStudentController.competitionStudentWithdraw);
 
 // Coach approves the team assignment (changing status from pending to unregistered)
 // PARAMS: { compId: number, approveIds: Array<number> }
@@ -201,7 +210,7 @@ app.put('/competition/coach/team_name_approve', competitionController.competitio
 // Student requests to change the team site
 // PARAMS: { compId: number, newSiteId: number }
 // RESPONSE: {}
-app.put('/competition/student/site_change', competitionController.competitionRequestSiteChange);
+app.put('/competition/student/site_change', competitionStudentController.competitionRequestSiteChange);
 
 // Coach approves the team site change (for many teams in one specific competition at once)
 // PARAMS: { compId: number, approveIds: Array<number>, rejectIds: Array<number> }
@@ -278,17 +287,17 @@ app.post('/notification/team_seat_assignments', notificationController.notificat
 // PARAMS: { compId }
 // RESPONSE: 
 // Get all the details of a team in a competition
-app.get('/competition/team/details', competitionController.competitionTeamDetails);
+app.get('/competition/team/details', competitionStudentController.competitionTeamDetails);
 
 // PARAMS: { compId }
 // RESPONSE:
 // Get the invite code for a team in a competition
-app.get('/competition/team/invite_code', competitionController.competitionTeamInviteCode);
+app.get('/competition/team/invite_code', competitionStudentController.competitionTeamInviteCode);
 
 // PARAMS: { compId, code }
 // RESPONSE: {}
 // Join a team in a competition
-app.post('/competition/team/join', competitionController.competitionTeamJoin);
+app.post('/competition/team/join', competitionStudentController.competitionTeamJoin);
 
 // Sort teams based on userId university
 app.post('/competition/algorithm', competitionController.competitionAlgorithm);
@@ -299,11 +308,11 @@ app.get('/competition/attendees', competitionController.competitionAttendees);
 // RESPONSE: 
 // { studentDetails: StudentInfo }
 // Get all the details of a student in a competition
-app.get('/competition/student/details', competitionController.competitionStudentDetails);
+app.get('/competition/student/details', competitionStudentController.competitionStudentDetails);
 
 // PARAMS: { compId, studentInfo: StudentInfo }
 // RESPONSE: { }
-app.put('/competition/student/details', competitionController.competitionStudentDetailsUpdate);
+app.put('/competition/student/details', competitionStudentController.competitionStudentDetailsUpdate);
 
 
 // PARAMS: { compId }
@@ -343,7 +352,7 @@ app.get('/competition/staff/rego_toggles', competitionController.competitionStaf
 
 app.post('/competition/staff/update_rego_toggles', competitionController.competitionStaffUpdateRegoToggles);
 
-app.get('/competition/students/rego_toggles', competitionController.competitionStudentsRegoToggles);
+app.get('/competition/students/rego_toggles', competitionStudentController.competitionStudentsRegoToggles);
 
 app.get('/competition/site/capacity', competitionController.competitionSiteCapacity);
 
