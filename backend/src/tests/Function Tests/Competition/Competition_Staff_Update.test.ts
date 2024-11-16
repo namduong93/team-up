@@ -9,10 +9,10 @@ import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionU
 import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { SqlDbUniversityRepository } from "../../../repository/university/sqldb";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb";
-import { UserIdObject } from "../../../repository/user_repository_type";
+import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
+import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 // Note! competition staff update does not use User id, user access to this function has not been implemented?

@@ -1,4 +1,4 @@
-import { ErrorInterface } from "./error_interface";
+import { ErrorInterface } from "./ErrorInterface";
 
 enum DbErrorType {
   Auth = 'Auth',

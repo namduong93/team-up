@@ -3,9 +3,9 @@ import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/comp
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUserRole } from "../../../models/competition/competitionUser";
 import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb";
-import { UserIdObject } from "../../../repository/user_repository_type";
+import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
+import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 // fail testing failed

@@ -1,6 +1,6 @@
 import { userInfo } from "os";
 import { Staff } from "../../../models/user/staff/staff";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb"
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Staff Register Function', () => {

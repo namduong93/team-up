@@ -6,10 +6,10 @@ import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionU
 import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { SqlDbUniversityRepository } from "../../../repository/university/sqldb";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb";
-import { UserIdObject } from "../../../repository/user_repository_type";
+import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
+import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 // NOTE! when users apply to be admin, coach or site coordinator, the site location is still inputted however for admin and coach, the site location will be inputted as null. thus if you call get coordinating site ID function on site coordinator with multiple roles, like site coordinator and coach or site coordinator and admin, it will return a null and the actual site. HOWEVER, the site id is ordered in when they first was registered. so if the user was an admin first, then it will return a null first. SInce the function only returns 1 row, then the return will be null

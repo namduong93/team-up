@@ -1,6 +1,6 @@
 import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb"
-import { UserIdObject } from "../../../repository/user_repository_type";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
+import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 

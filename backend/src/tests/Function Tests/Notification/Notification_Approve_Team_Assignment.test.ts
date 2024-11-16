@@ -1,6 +1,6 @@
-import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { SqlDbNotificationRepository } from "../../../repository/notification/sqldb";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb";
+import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbNotificationRepository } from "../../../repository/notification/SqlDbNotificationRepository";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils"
 
 describe.skip('Notification Approve Team Assignment Function', () => {

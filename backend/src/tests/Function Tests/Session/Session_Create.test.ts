@@ -1,8 +1,8 @@
 import { Session } from "../../../models/session/session";
 import { Student } from "../../../models/user/student/student";
-import { SqlDbSessionRepository } from "../../../repository/session/sqldb";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb";
-import { UserIdObject } from "../../../repository/user_repository_type";
+import { SqlDbSessionRepository } from "../../../repository/session/SqlDbSessionRepository";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
+import { UserIdObject } from "../../../repository/UserRepository";
 
 import pool, { dropTestDatabase } from "../Utils/dbUtils"
 

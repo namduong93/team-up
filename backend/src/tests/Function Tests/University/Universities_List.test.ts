@@ -1,4 +1,4 @@
-import { SqlDbUniversityRepository } from "../../../repository/university/sqldb";
+import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Universities List Function', () => {

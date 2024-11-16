@@ -1,10 +1,10 @@
-import { SqlDbSessionRepository } from "../../../repository/session/sqldb";
+import { SqlDbSessionRepository } from "../../../repository/session/SqlDbSessionRepository";
 
 import pool, { dropTestDatabase } from "../Utils/dbUtils"
-import { UserIdObject } from "../../../repository/user_repository_type";
+import { UserIdObject } from "../../../repository/UserRepository";
 import { Student } from "../../../models/user/student/student";
 import { Session } from "../../../models/session/session";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 
 describe('Session Find Function', () => {
   let session_db;

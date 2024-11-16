@@ -9,16 +9,18 @@ import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionU
 import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
 import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { SqlDbUniversityRepository } from "../../../repository/university/sqldb";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb";
-import { UserIdObject } from "../../../repository/user_repository_type";
+import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
+import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('Competition Attendees Function', () => {
   let user_db;
   let comp_db;
   let uni_db
+
+  SqlDbUniversityRepository
 
   let dateNow = Date.now()
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);

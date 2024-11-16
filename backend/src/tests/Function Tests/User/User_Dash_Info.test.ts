@@ -1,5 +1,5 @@
 import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb"
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 describe('User Dash Info Function', () => {

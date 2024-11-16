@@ -1,4 +1,4 @@
-import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
+import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
 // have not been implemented*

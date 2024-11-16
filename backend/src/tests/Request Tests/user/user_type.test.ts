@@ -1,9 +1,9 @@
-import { UserService } from '../../../services/user_service';
+import { UserService } from '../../../services/UserService';
 import { UserType } from '../../../models/user/user';
-import { SqlDbUserRepository } from '../../../repository/user/sqldb';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
 import pool, { getUserIdFromSessionId } from '../test_util/test_utilities';
-import { SqlDbSessionRepository } from '../../../repository/session/sqldb';
-import { SessionTokenObject } from '../../../repository/session_repository_type';
+import { SqlDbSessionRepository } from '../../../repository/session/SqlDbSessionRepository';
+import { SessionTokenObject } from '../../../repository/SessionRepository';
 
 describe('GET /user/type', () => {
   let userService: UserService;

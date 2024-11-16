@@ -1,9 +1,9 @@
 import exp from "constants";
 import { Staff } from "../../../models/user/staff/staff";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/sqldb";
-import { UserIdObject } from "../../../repository/user_repository_type";
+import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
+import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
-import { SqlDbUserRepository } from "../../../repository/user/sqldb";
+import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
 import { CompetitionIdObject } from "../../../models/competition/competition";
 
 describe('System Admin Create Function', () => {
