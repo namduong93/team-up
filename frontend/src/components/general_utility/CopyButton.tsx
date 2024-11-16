@@ -2,10 +2,6 @@ import { FC, useState } from "react";
 import { FaRegCopy, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 
-interface CopyButtonProps {
-  textToCopy: string;
-}
-
 const StyledIconButton = styled(FaRegCopy)<{ $copied: boolean }>`
   margin-left: 3%;
   width: auto;
@@ -29,14 +25,32 @@ const StyledCheckIcon = styled(FaCheck)`
   box-sizing: border-box;
 `;
 
+interface CopyButtonProps {
+  textToCopy: string;
+}
+
+/**
+ * A React component to allow users to copy text to clipboard.
+ *
+ * @param {CopyButtonProps} props - React CopyButtonProps specified above
+ * @returns {JSX.Element} - Web page component to allow users to copy text to clipboard.
+ */
 export const CopyButton: FC<CopyButtonProps> = ({ textToCopy }) => {
   const [copied, setCopied] = useState(false);
 
+  /**
+   * Copies the specified text to the clipboard and updates the state to reflect the action.
+   * Displays a confirmation icon for 2 seconds after the text is copied.
+   */
   const copyToClipboard = () => {
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  return copied ? <StyledCheckIcon /> : <StyledIconButton $copied={copied} onClick={copyToClipboard} />;
+  return copied ? (
+    <StyledCheckIcon />
+  ) : (
+    <StyledIconButton $copied={copied} onClick={copyToClipboard} />
+  );
 };

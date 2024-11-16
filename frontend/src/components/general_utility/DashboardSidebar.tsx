@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaHome, FaUser, FaCog, FaSignOutAlt,FaIdBadge } from "react-icons/fa";
-import styled from "styled-components"; 
+import { FaHome, FaUser, FaCog, FaSignOutAlt, FaIdBadge } from "react-icons/fa";
+import styled from "styled-components";
 import { sendRequest } from "../../utility/request";
 import { backendURL } from "../../../config/backendURLConfig";
 import { StyledProfilePic } from "../../screens/Account/Account.styles";
-
-export interface DashboardSidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  cropState: boolean;
-  sidebarInfo: { preferredName: string, affiliation: string, profile?: string };
-}
 
 const StyledSidebarContainer = styled.div<{ $cropState: boolean }>`
   min-width: ${({ $cropState: cropState }) => (cropState ? "40px" : "200px")};
@@ -17,7 +12,7 @@ const StyledSidebarContainer = styled.div<{ $cropState: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px; 
+  padding: 10px;
   border-radius: 20px;
   margin: 15px;
   height: calc(100vh - 50px);
@@ -83,7 +78,8 @@ const StyledNavLinks = styled.nav`
 `;
 
 const StyledNavButton = styled.button<{ $active: boolean }>`
-  background-color: ${({ theme, $active: active }) => (active ? theme.background : "transparent")};
+  background-color: ${({ theme, $active: active }) =>
+    active ? theme.background : "transparent"};
   border: none;
   color: ${({ theme }) => theme.fonts.colour};
   cursor: pointer;
@@ -143,7 +139,7 @@ const StyledLogoutButton = styled.button`
   flex-shrink: 1;
   letter-spacing: ${({ theme }) => theme.fonts.spacing.normal};
   box-sizing: border-box;
-  
+
   svg {
     width: 20px;
     height: 20px;
@@ -162,7 +158,7 @@ const StyledLogoutButton = styled.button`
     span {
       display: none;
     }
-    
+
     svg {
       width: 24px;
       min-width: 16px;
@@ -171,24 +167,58 @@ const StyledLogoutButton = styled.button`
   }
 `;
 
-export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, sidebarInfo, style, ...props }) => {
+export interface DashboardSidebarProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  cropState: boolean;
+  sidebarInfo: { preferredName: string; affiliation: string; profile?: string };
+}
+
+/**
+ * A React component displaying the allowable side bar operations for all users.
+ *
+ * @param {DashboardSidebarProps} props - React DashboardSidebarProps specified above
+ * @returns {JSX.Element} - Web page component displaying the allowable side bar operations
+ * for all users.
+ */
+export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
+  cropState,
+  sidebarInfo,
+  style,
+  ...props
+}) => {
   const [isSysAdmin, setIsSysAdmin] = useState(false);
   const navigate = useNavigate();
 
+  /**
+   * Handles navigation to a specified path.
+   *
+   * @param {string} path - The route to navigate to.
+   */
   const handleNavigation = (path: string) => {
     navigate(path);
   };
 
+  /**
+   * Logs the user out and redirects to the home page.
+   *
+   * @param {React.MouseEvent<HTMLButtonElement>} e - The click event.
+   */
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    await sendRequest.post('/user/logout');
-    handleNavigation('/');
+    await sendRequest.post("/user/logout");
+    handleNavigation("/");
   };
 
+  /**
+   * Fetches the user type to determine if the user is a system administrator.
+   * Automatically redirects to the home page in case of authentication errors.
+   */
   useEffect(() => {
     (async () => {
       try {
-        const typeResponse = await sendRequest.get<{ type: string }>("/user/type");
+        const typeResponse = await sendRequest.get<{ type: string }>(
+          "/user/type"
+        );
         setIsSysAdmin(typeResponse.data.type === "system_admin");
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
@@ -204,7 +234,12 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, s
       <StyledSidebarContent>
         {!cropState && (
           <StyledProfileSection>
-            <StyledProfilePic $imageUrl={sidebarInfo.profile || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` } />
+            <StyledProfilePic
+              $imageUrl={
+                sidebarInfo.profile ||
+                `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
+              }
+            />
             <div>Hello</div>
             <StyledName>{sidebarInfo.preferredName}</StyledName>
             <div>{sidebarInfo.affiliation}</div>
@@ -212,29 +247,29 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ cropState, s
         )}
 
         <StyledNavLinks>
-          <StyledNavButton 
+          <StyledNavButton
             $active={location.pathname === "/dashboard"}
-            onClick={() => handleNavigation('/dashboard')}
+            onClick={() => handleNavigation("/dashboard")}
           >
             <FaHome /> {!cropState && <span>Dashboard</span>}
           </StyledNavButton>
-          {isSysAdmin && 
-            <StyledNavButton 
+          {isSysAdmin && (
+            <StyledNavButton
               $active={location.pathname === "/staffAccounts"}
-              onClick={() => handleNavigation('/staffAccounts')}
+              onClick={() => handleNavigation("/staffAccounts")}
             >
               <FaIdBadge /> {!cropState && <span>Staff Accounts</span>}
             </StyledNavButton>
-          }
-          <StyledNavButton 
+          )}
+          <StyledNavButton
             $active={location.pathname === "/account"}
-            onClick={() => handleNavigation('/account')}
+            onClick={() => handleNavigation("/account")}
           >
             <FaUser /> {!cropState && <span>Account</span>}
           </StyledNavButton>
-          <StyledNavButton 
+          <StyledNavButton
             $active={location.pathname === "/settings"}
-            onClick={() => handleNavigation('/settings')}
+            onClick={() => handleNavigation("/settings")}
           >
             <FaCog /> {!cropState && <span>Settings</span>}
           </StyledNavButton>
