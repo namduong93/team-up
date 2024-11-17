@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 import { sendRequest } from "../../../../../utility/request";
 import { SitePopup1 } from "./subcomponents/SitePopup1/SitePopup1";
 import { SecondStepPopup } from "../SecondStepPopup";
