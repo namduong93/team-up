@@ -73,17 +73,6 @@ export const CompExperienceInput: FC = () => {
 
     try {
       console.log(payload);
-      const allFieldsFalse = Object.values(editRego).every(
-        (value) => value === false
-      );
-
-      // TO-DO: uncomment when the other API is confirmed
-
-      // const apiEndpoint = allFieldsFalse
-      //   ? "/competition/student/join"
-      //   : "NEW_ONE"; // change when the other API is done
-
-      // const response = await sendRequest.post(apiEndpoint, payload);
       
       const response = await sendRequest.post('/competition/student/join', payload);
       console.log("Response:", response.data);
@@ -110,6 +99,7 @@ export const CompExperienceInput: FC = () => {
     const fetchCourses = async () => {
       const response = await sendRequest.get<{ courses: Array<Course> }>('/university/courses', { code });
       const { courses } = response.data;
+      console.log(courses);
 
       courses.length &&
       setCourseOptions(courses.map((course) => ({ value: course.category, label: course.courseName })));
@@ -117,27 +107,6 @@ export const CompExperienceInput: FC = () => {
 
     fetchCourses();
   }, []);
-
-    
-  // const courseOptions = [
-  //   {
-  //     value: "Introduction to Programming / Programming Fundamentals",
-  //     label:
-  //       "Introduction to Programming / Programming Fundamentals (and any advanced versions)",
-  //   },
-  //   {
-  //     value: "Data Structures and Algorithms",
-  //     label: "Data Structures and Algorithms (and any advanced versions)",
-  //   },
-  //   {
-  //     value: "Algorithm Design and Analysis",
-  //     label: "Algorithm Design and Analysis (and any advanced versions)",
-  //   },
-  //   {
-  //     value: "Programming Challenges and Problems",
-  //     label: "Programming Challenges and Problems (and any advanced versions)",
-  //   },
-  // ];
 
   function isButtonDisabled(): boolean | undefined {
     const {
@@ -164,7 +133,6 @@ export const CompExperienceInput: FC = () => {
     }
   }
 
-  // TO-DO: call the EditRego interface for the competition from backend
   const [editRego, setEditRego] = useState<EditRego>({
     enableCodeforcesField: false,
     enableNationalPrizesField: false,

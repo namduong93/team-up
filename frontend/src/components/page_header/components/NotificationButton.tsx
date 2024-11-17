@@ -9,7 +9,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { StyledAlertButton } from '../../../screens/dashboard/Dashboard.styles';
 
-interface Notification {
+export interface Notification {
   id: number;
   type:
     | 'withdrawal'
