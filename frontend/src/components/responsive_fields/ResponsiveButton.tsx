@@ -121,7 +121,7 @@ interface ResponsiveActionButtonProps extends ResponsiveButtonProps {
 /**
  * A React button component variant
  *
- * @param {ProgressBarProps} props - React ProgressBarProps specified above
+ * @param {ResponsiveActionButtonProps} props - React ResponsiveActionButtonProps specified above
  * @returns {JSX.Element} - Web page styled transparent button with transparent background, hover,
  * and action-specific styles
  */

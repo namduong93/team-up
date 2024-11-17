@@ -74,6 +74,11 @@ export const StaffRegisterForm: FC = () => {
   });
 
   // Use useEffect to watch for changes in currentSiteOption
+  // For new site option entries, a numerical value of -1 is
+  // assigned, which will be processed in the backend to add a new
+  // site to the competition
+  // Otherwise, the numerical ID for existing sites is assigned for
+  // sending to the backend
   useEffect(() => {
     if (currentSiteOption.label) {
       setStaffRegistrationData((prev) => ({
@@ -91,7 +96,10 @@ export const StaffRegisterForm: FC = () => {
     }
   }, [currentSiteOption]);
 
-  // Use useEffect to watch for changes in currentUniversityOption
+  // Use useEffect to watch for changes in currentUniversityOption,
+  // assigning a numerical value to the university option for backend
+  // processing
+  // A value of 0 is used if the user did not input an institution
   useEffect(() => {
     if (currentUniversityOption.value) {
       setStaffRegistrationData((prev) => ({

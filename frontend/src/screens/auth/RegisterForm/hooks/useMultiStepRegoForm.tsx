@@ -1,6 +1,11 @@
 import { createContext, useContext } from "react";
 import { FormState } from "../FormState";
 
+interface MultiStepRegoFormContextType {
+  formData: FormState;
+  setFormData: (data: Partial<FormState>) => void;
+}
+
 /**
  * Creates a context and custom hook for managing the state of a multi-step registration form.
  *
@@ -11,11 +16,6 @@ import { FormState } from "../FormState";
  * @returns {MultiStepRegoFormContextType} - The current form state (`formData`) and the
  * function to update it (`setFormData`).
  */
-
-interface MultiStepRegoFormContextType {
-  formData: FormState;
-  setFormData: (data: Partial<FormState>) => void;
-}
 
 export const MultiStepRegoFormContext = createContext<
   MultiStepRegoFormContextType | undefined

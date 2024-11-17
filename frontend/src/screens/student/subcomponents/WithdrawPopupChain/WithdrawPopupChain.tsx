@@ -41,21 +41,24 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
     setCurrentStep((prevStep) => prevStep + 1);
   };
 
+  // Closes the Pop-Up chain and resets the numerical index to 1
+  // so the Pop-Up displays from the first Pop-Up
   const handleCloseWithReset = () => {
     setCurrentStep(1);
     handleClose();
     navigate("/dashboard");
   };
 
+  // Send a request to the backend to withdraw from the team and
+  // updating the competition code with the response from the backend
+  // request
   const handleSubmit = async () => {
     try {
-      // Send a request to the backend to withdraw from the team.
       const withdrawResponse = await sendRequest.post<string>(
         "/competition/student/withdraw",
         { compId }
       );
 
-      // Retrieve the competition code from the response and update the state.
       setCompCode(withdrawResponse.data);
 
       setCurrentStep((prevStep) => prevStep + 1);

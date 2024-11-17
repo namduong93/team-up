@@ -63,7 +63,7 @@ interface ResponsiveActionButtonProps
 }
 
 /**
- * A React button component that triggers an action, with an optional confirmation pop-up.
+ * A React button component that triggers an action, with a confirmation pop-up.
  * The button style is determined by the `actionType` prop, which can be one of `primary`,
  * `secondary`, `error`, or `confirm`.
  *
@@ -103,6 +103,7 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
     }
   };
 
+  // Displays a Confirmation Pop-Up once the button is clicked
   const handleButtonClick = () => {
     if (handleClick) {
       handleClick();
