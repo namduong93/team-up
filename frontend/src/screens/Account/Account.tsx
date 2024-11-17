@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { backendURL } from "../../../config/backendURLConfig";
 import { sendRequest } from "../../utility/request";
 import { StyledAccountCard, StyledAccountContainer, StyledAccountItem, StyledActionButtons, StyledBackground, StyledButton, StyledButtonGroup, StyledCardContainer, StyledDetailsCard, StyledDetailsText, StyledEditIcon, StyledEditIconButton, StyledInput, StyledLabel, StyledOption, StyledProfileContainer, StyledProfileEditContainer, StyledProfilePic, StyledSelect } from "./Account.styles";
+import { tShirtOptions } from "../auth/RegisterForm/subroutes/SiteDataInput/SiteDataOptions";
 
 interface AccountProps {
   setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;
@@ -223,12 +224,9 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
                     value={newDetails.tshirtSize}
                     onChange={(e) => setNewDetails({ ...newDetails, tshirtSize: e.target.value })}
                     className="account--StyledSelect-2">
-                    <StyledOption value="Male L" className="account--StyledOption-7">Male L</StyledOption>
-                    <StyledOption value="Male M" className="account--StyledOption-8">Male M</StyledOption>
-                    <StyledOption value="Male S" className="account--StyledOption-9">Male S</StyledOption>
-                    <StyledOption value="Female L" className="account--StyledOption-10">Female L</StyledOption>
-                    <StyledOption value="Female M" className="account--StyledOption-11">Female M</StyledOption>
-                    <StyledOption value="Female S" className="account--StyledOption-12">Female S</StyledOption>
+                    {tShirtOptions.map((option) => (
+                      <StyledOption className={`account-StyledOption-${option.value}`} key={option.value} value={option.value} >{option.label}</StyledOption>
+                      ))}
                     <StyledOption value="Other" className="account--StyledOption-13">Other</StyledOption>
                   </StyledSelect>
                 ) : (

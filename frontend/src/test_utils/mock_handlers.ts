@@ -323,4 +323,27 @@ export const handlers = [
     });
   }),
 
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/user/profile_info`, async () => {
+    return HttpResponse.json({
+      role: 'staff',
+      profilePic: 'test profilepic',
+      name: 'test name',
+      preferredName: 'test preferred name',
+      email: 'test@example.com',
+      affiliation: 'test affiliation',
+      gender: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'MXL',
+      allergies: '',
+      dietaryReqs: 'test chicken nuggets',
+      accessibilityReqs: ''
+    })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/images/:imageName`, async () => {
+    return new HttpResponse('test img', {
+      status: 200,
+      headers: { 'Content-Type': 'image/png' }
+    });
+  })
 ]
