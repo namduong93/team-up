@@ -319,7 +319,7 @@ describe.skip('Team Update Function', () => {
 
     const newTeamInfo: TeamDetails = {
       siteId: 2,
-      teamId: teamInformation.siteId,
+      teamId: teamInformation.team_id,
       universityId: 1,
       status: TeamStatus.Pending,
       teamNameApproved: true,
