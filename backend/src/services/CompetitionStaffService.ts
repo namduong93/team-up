@@ -67,7 +67,6 @@ export class CompetitionStaffService {
 
       // (site Id can't be 0 btw cos it's a postgres SERIAL)
       !siteId && (siteId = await this.competitionStaffRepository.competitionGetCoordinatingSiteId(userId, siteId));
-      console.log(siteId);
     }
 
     await this.competitionStaffRepository.competitionSiteCapacityUpdate(siteId, capacity);

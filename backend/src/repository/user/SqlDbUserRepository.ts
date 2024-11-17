@@ -357,9 +357,6 @@ export class SqlDbUserRepository implements UserRepository {
     const userIds = staffRequests.map(request => request.userId);
     const accessValues = staffRequests.map(request => request.access);
 
-    console.log(userIds);
-    console.log(accessValues);
-
     await this.pool.query(
       `UPDATE users 
       SET user_access = updated_values.access::user_access_enum
