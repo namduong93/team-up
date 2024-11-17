@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { StudentCardProps } from "./StudentInfoCard";
-import { StyledEmailContainerDiv, StyledEmailSpan, StyledSmallContainerDiv, StyledStatusContainerDiv, StyledStudentIdContainerDiv, StyledTeamNameContainerDiv, StyledUniversityContainerDiv, StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../StudentsPage.styles";
+import { StyledEmailContainerDiv, StyledEmailSpan, StyledSmallContainerDiv, StyledStatusContainerDiv, StyledStudentIdContainerDiv, StyledTeamNameContainerDiv, StyledUniversityContainerDiv, StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../StudentPage.styles";
 import { StudentStatus } from "./StudentStatus";
 import { StudentsInfoBar } from "../../../components/InfoBar/StudentsInfoBar/StudentsInfoBar";
 

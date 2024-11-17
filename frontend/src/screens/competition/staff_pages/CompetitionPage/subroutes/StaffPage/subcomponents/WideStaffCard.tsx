@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import styled from "styled-components";
 import { StaffCardProps } from "./StaffCardProps";
-import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
+import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentPage.styles";
 import { CompRoles, StyledStandardContainerDiv } from "./CompRoles";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";

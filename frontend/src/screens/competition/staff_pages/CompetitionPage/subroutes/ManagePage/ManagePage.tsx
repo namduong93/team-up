@@ -53,23 +53,24 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
 
-  const [staffRoles, setRoles] = useState<Array<CompetitionRole>>([]);
+  // const [staffRoles, setRoles] = useState<Array<CompetitionRole>>([]);
 
 
-  // Fetch the user type and set the state accordingly
-  useEffect(() => {
-    const fetchRoles = async () => {
-      const roleResponse = await sendRequest.get<{ roles: Array<CompetitionRole> }>('/competition/roles', { compId });
-      const { roles } = roleResponse.data;
-      setRoles(roles);
-    }
-    fetchRoles();
-  }, [])
+  // // Fetch the user type and set the state accordingly
+  // useEffect(() => {
+  //   const fetchRoles = async () => {
+  //     const roleResponse = await sendRequest.get<{ roles: Array<CompetitionRole> }>('/competition/roles', { compId });
+  //     const { roles } = roleResponse.data;
+  //     setRoles(roles);
+  //   }
+  //   fetchRoles();
+  // }, [])
 
   const { 
     universityOptionState: [universityOption, setUniversityOption],
     siteOptionState: [siteOption, setSiteOption], teamListState: [teamList, setTeamList],
     siteOptionsState: [siteOptions, setSiteOptions],
+    roles: staffRoles,
     compDetails
   } = useCompetitionOutletContext(
     "manage",

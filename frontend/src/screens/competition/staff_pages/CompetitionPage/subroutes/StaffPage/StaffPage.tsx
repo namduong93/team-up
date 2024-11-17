@@ -6,7 +6,7 @@ import { FC, useEffect } from "react";
 import Fuse from "fuse.js";
 import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
-import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../StudentsPage/StudentsPage.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../StudentsPage/StudentPage.styles";
 import { NarrowStaffCard } from "./subcomponents/NarrowStaffCard";
 import { WideStaffHeader } from "./subcomponents/WideStaffHeader";
 import { WideStaffCard } from "./subcomponents/WideStaffCard";

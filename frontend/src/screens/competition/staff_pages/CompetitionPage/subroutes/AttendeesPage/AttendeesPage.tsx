@@ -5,7 +5,7 @@ import Fuse from "fuse.js";
 import { AttendeesDetails } from "../../../../../../../shared_types/Competition/staff/AttendeesDetails";
 import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
-import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../StudentsPage/StudentsPage.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../StudentsPage/StudentPage.styles";
 import { NarrowAttendeesCard } from "./subcomponents/NarrowAttendeesCard";
 import { WideAttendeesHeader } from "./subcomponents/WideAttendeesHeader";
 import { WideAttendeesCard } from "./subcomponents/WideAttendeesCard";

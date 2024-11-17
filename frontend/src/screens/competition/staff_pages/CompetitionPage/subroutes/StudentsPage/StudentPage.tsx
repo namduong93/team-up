@@ -5,7 +5,7 @@ import { FC, useEffect } from "react";
 import Fuse from "fuse.js";
 import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
-import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "./StudentsPage.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "./StudentPage.styles";
 import { StudentInfo } from "../../../../../../../shared_types/Competition/student/StudentInfo";
 import { StudentInfoCard } from "./subcomponents/StudentInfoCard";
 import { StudentInfoDiv } from "./subcomponents/StudentInfoDiv";

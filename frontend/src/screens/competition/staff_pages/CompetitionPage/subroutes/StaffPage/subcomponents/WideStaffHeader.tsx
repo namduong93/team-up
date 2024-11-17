@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useTheme } from "styled-components";
-import { StyledUserNameContainerDiv, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
+import { StyledUserNameContainerDiv, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentPage.styles";
 import { StyledStandardContainerDiv } from "./CompRoles";
 import { StyledStandardSpan } from "./WideStaffCard";
 

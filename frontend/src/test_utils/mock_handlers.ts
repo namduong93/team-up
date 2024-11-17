@@ -5,6 +5,13 @@ import { StaffAccess, StaffInfo } from '../../shared_types/Competition/staff/Sta
 import { UserAccess } from '../../shared_types/User/User';
 import { CompetitionRole } from '../../shared_types/Competition/CompetitionRole';
 import { Notification } from '../components/page_header/components/NotificationButton';
+import { CompetitionInformation } from '../../shared_types/Competition/CompetitionDetails';
+import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo';
+import { CompetitionLevel } from '../../shared_types/Competition/CompetitionLevel';
+import { AttendeesDetails } from '../../shared_types/Competition/staff/AttendeesDetails';
+import { CompetitionSite } from '../../shared_types/Competition/CompetitionSite';
+import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails';
+import { TeamStatus } from '../../shared_types/Competition/team/TeamStatus';
 
 export const handlers = [
 
@@ -99,7 +106,221 @@ export const handlers = [
         }
       ]
     )
-  })
+  }),
 
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/details`, async () => {
+    return HttpResponse.json<{ competition: CompetitionInformation }>({
+      competition: {
+      information: 'test comp info',
+      name: 'test comp',
+      region: 'test land',
+      startDate: new Date('2024-11-17T12:11:33.616Z'),
+      earlyRegDeadline: new Date('2024-11-17T12:11:33.616Z'),
+      generalRegDeadline: new Date('2024-11-17T12:11:33.616Z'),
+      code: 'test1234',
+      siteLocations:[{
+        universityId: 1,
+        universityName: 'test uni',
+        siteId: 1,
+        defaultSite: 'test site'
+      }],
+      }
+    });
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/students`, async () => {
+    return HttpResponse.json<{ students: Array<StudentInfo> }>({
+      students: [
+        {
+          userId: 1,
+          universityId: 1,
+          universityName: 'test uni',
+          name: 'test name',
+          preferredName: 'test preferred name',
+          email: 'test@example.com',
+          sex: 'F',
+          pronouns: 'she/her',
+          tshirtSize: 'MXL',
+          allergies: '',
+          dietaryReqs: '',
+          accessibilityReqs: '',
+          studentId: '01234567',
+        
+          // competition_user info
+          roles: [CompetitionRole.Participant],
+          bio: 'test bio',
+          ICPCEligible: true,
+          boersenEligible: true,
+          level: CompetitionLevel.LevelA,
+          degreeYear: 3,
+          degree: 'CompSci',
+          isRemote: false,
+          isOfficial: true,
+          preferredContact: 'discord:test',
+          nationalPrizes: '',
+          internationalPrizes: '',
+          codeforcesRating: 0,
+          universityCourses: [CourseCategory.Introduction],
+          pastRegional: false,
+          status: 'Unmatched',
+        
+          // team info
+          teamName: 'test team name',
+          siteName: 'test site name',
+          siteId: 1,
+        }
+      ]
+    });
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/attendees`, async () => {
+    return HttpResponse.json<{ attendees: Array<AttendeesDetails> }>({
+      attendees: [
+        {
+          userId: 1,
+          universityId: 1,
+          universityName: 'test uni',
+          name: 'test name',
+          preferredName: 'test preferred name',
+          email: 'test@example.com',
+          sex: 'M',
+          tshirtSize: 'MXL',
+          dietaryNeeds: '',
+          accessibilityNeeds: '',
+          allergies: '',
+          teamSeat: 'Bongo11',
+
+          roles: [CompetitionRole.Participant],
+
+          siteId: 1,
+          pendingSiteId: 1,
+          siteName: 'test site',
+          pendingSiteName: 'test pending site',
+          siteCapacity: 100,
+          pendingSiteCapacity: 200,
+        }
+      ]
+    })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/staff`, async () => {
+    
+    return HttpResponse.json<{ staff: Array<StaffInfo> }>({
+      staff: [
+        {
+          userId: 1,
+          universityId: 1,
+          universityName: 'test uni',
+          name: 'person 1 name',
+          email: 'person1@example.com',
+          sex: 'M',
+          pronouns: 'he/him',
+          tshirtSize: 'MXL',
+          allergies: '',
+          dietaryReqs: '',
+          accessibilityReqs: '',
+          userAccess: UserAccess.Pending,
+          
+          bio: 'person 1 bio',
+          roles: [CompetitionRole.Coach],
+          access: StaffAccess.Pending
+        },
+        {
+          userId: 2,
+          universityId: 2,
+          universityName: 'test uni',
+          name: 'person 2 name',
+          email: 'person2@example.com',
+          sex: 'M',
+          pronouns: 'he/him',
+          tshirtSize: 'MXL',
+          allergies: '',
+          dietaryReqs: '',
+          accessibilityReqs: '',
+          userAccess: UserAccess.Pending,
+          
+          bio: 'person 2 bio',
+          roles: [CompetitionRole.Coach],
+          access: StaffAccess.Pending
+        },
+      ]
+    })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/sites`, async () => {
+    return HttpResponse.json<{ sites: Array<CompetitionSite> }>({
+      sites: [
+        {
+          id: 1,
+          name: 'test site'
+        }
+      ]
+    })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/universities/list`, async () => {
+    return HttpResponse.json<{ universities: Array<{ id: number, name: string }> }>({
+      universities: [
+        {
+          id: 1,
+          name: 'test uni',
+        }
+      ]
+    });
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/roles`, async () => {
+    return HttpResponse.json<{ roles: Array<CompetitionRole> }>({
+      roles: [
+        CompetitionRole.Admin
+      ]
+    });
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/teams`, async () => {
+    return HttpResponse.json<{ teamList: Array<TeamDetails> }>({
+      teamList: [
+        {
+          teamId: 1,
+          universityId: 1,
+          status: TeamStatus.Pending,
+          teamNameApproved: false,
+          
+          compName: 'test comp',
+          teamName: 'test team',
+          teamSite: 'test team site',
+          siteId: 1,
+          teamSeat: 'Bongo11',
+          teamLevel: CompetitionLevel.LevelB,
+          startDate: new Date('2024-11-17T12:11:33.616Z'),
+          students: [
+            {
+              userId: 1,
+              name: 'test student',
+              preferredName: 'test student preferred',
+              sex: 'MXL',
+              email: 'student@example.com',
+              bio: 'test student bio',
+              preferredContact: 'discord:@test',
+              ICPCEligible: true,
+              level: CompetitionLevel.LevelA,
+              boersenEligible: false,
+              isRemote: false,
+              universityCourses: [CourseCategory.Introduction],
+              nationalPrizes: '',
+              internationalPrizes: '',
+              codeforcesRating: 0,
+              pastRegional: false
+            }
+          ],
+          coach: {
+            name: 'test coach',
+            email: 'coach@example.com',
+            bio: 'test coach bio'
+          }
+        }
+      ]
+    });
+  }),
 
 ]

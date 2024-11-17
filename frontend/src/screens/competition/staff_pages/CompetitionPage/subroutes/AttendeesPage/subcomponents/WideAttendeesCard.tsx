@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { AttendeesCardProps } from "./AttendeesCardProps";
-import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentsPage.styles";
+import { StyledUserIcon, StyledUserNameContainerDiv, StyledUserNameGrid, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../StudentsPage/StudentPage.styles";
 import { CompRoles, StyledStandardContainerDiv } from "../../StaffPage/subcomponents/CompRoles";
 import { StyledStandardSpan } from "../../StaffPage/subcomponents/WideStaffCard";
 import { StyledBooleanStatus } from "./BooleanStatus";

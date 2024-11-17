@@ -8,7 +8,7 @@ import { StyledFilterTagContainer, StyledPageBackground, StyledStaffContainer, S
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { StaffAccessButtons } from "./subcomponents/StaffAccessButtons";
 import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../dashboard/Dashboard.styles";
-import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentPage.styles";
 import { NarrowStaffAccessCard } from "./subcomponents/NarrowStaffAccessCard";
 import { WideStaffAccessHeader } from "./subcomponents/WideStaffAccessHeader";
 import { WideStaffAccessCard } from "./subcomponents/WideStaffAccessCard";
