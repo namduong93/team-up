@@ -411,7 +411,6 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
           FROM competition_attendees AS ca
         WHERE ca.competition_id = $1;`, [compId]
       );
-      console.log(dbResult.rows[0]);
       return dbResult.rows.map((row) => ({ ...row, roles: parse(row.roles) }));
     }
 
@@ -604,14 +603,12 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
     // for the normal siteLocations that have university Ids:
     competition.siteLocations.forEach(async ({ universityId, defaultSite: name }) => {
-      console.log(competitionId, universityId, name);
       await this.pool.query(
         `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
         VALUES (${competitionId}, ${universityId}, '${name}', 0)`
       );
     });
 
-    console.log(competition.otherSiteLocations);
     // handle otherSiteLocations with universityName
     competition.otherSiteLocations?.forEach(async ({ universityName, defaultSite: name }) => {
       // Insert new university and get the universityId
