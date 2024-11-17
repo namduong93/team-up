@@ -104,7 +104,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
     $numMembers={teamDetails.students.length}
     onDoubleClick={() => setInfoBarOpen((p) => !p)}
     {...props}
-    className="team-card--StyledHoverDiv-0">
+    >
     {!isEditNameThisCard &&
     <>
       <StyledCardHeaderDiv
@@ -136,7 +136,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
               onDragStart={() => setIsDragging(true)}
               onDragTransitionEnd={() => setIsDragging(false)}
               onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
-              className="team-card--StyledTeamMemberMotionDiv-0">
+              >
               <TeamCardMember memberName={member.name} level={member.level} />
             </StyledTeamMemberMotionDiv>
           ))}

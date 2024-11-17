@@ -17,6 +17,7 @@ describe('AccountDataInput', () => {
     // ACT
 
     // EXPECT
+    expect(screen.getAllByText('Account Information').length).toBe(2);
     expect(screen.getByText('First Name')).toBeInstanceOf(HTMLLabelElement)
     expect(screen.getByText('Last Name')).toBeInstanceOf(HTMLLabelElement)
     expect(screen.getByText('Preferred Name')).toBeInstanceOf(HTMLLabelElement)
