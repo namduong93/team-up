@@ -35,26 +35,26 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
   },[])
 
   return (
-    <StyledModalOverlay data-test-id="edit-comp-user-details--StyledModalOverlay-0">
-      <StyledModalContent data-test-id="edit-comp-user-details--StyledModalContent-0">
-        <StyledContentContainer data-test-id="edit-comp-user-details--StyledContentContainer-0">
-          <StyledHeaderContainer data-test-id="edit-comp-user-details--StyledHeaderContainer-0">
-            <StyledTitleContainer data-test-id="edit-comp-user-details--StyledTitleContainer-0">
-              <StyledTitle data-test-id="edit-comp-user-details--StyledTitle-0">Edit Competition Details</StyledTitle>
+    <StyledModalOverlay className="edit-comp-user-details--StyledModalOverlay-0">
+      <StyledModalContent className="edit-comp-user-details--StyledModalContent-0">
+        <StyledContentContainer className="edit-comp-user-details--StyledContentContainer-0">
+          <StyledHeaderContainer className="edit-comp-user-details--StyledHeaderContainer-0">
+            <StyledTitleContainer className="edit-comp-user-details--StyledTitleContainer-0">
+              <StyledTitle className="edit-comp-user-details--StyledTitle-0">Edit Competition Details</StyledTitle>
             </StyledTitleContainer>
-            <StyledCloseContainer data-test-id="edit-comp-user-details--StyledCloseContainer-0">
+            <StyledCloseContainer className="edit-comp-user-details--StyledCloseContainer-0">
               <StyledCloseButton
                 onClick={onClose}
-                data-test-id="edit-comp-user-details--StyledCloseButton-0">
+                className="edit-comp-user-details--StyledCloseButton-0">
                 <FaTimes />
               </StyledCloseButton>
             </StyledCloseContainer>
           </StyledHeaderContainer>
           <StyledForm
             onSubmit={handleSubmit}
-            data-test-id="edit-comp-user-details--StyledForm-0">
-            <StyledField data-test-id="edit-comp-user-details--StyledField-0">
-              <StyledFormLabel data-test-id="edit-comp-user-details--StyledFormLabel-0">Degree</StyledFormLabel>
+            className="edit-comp-user-details--StyledForm-0">
+            <StyledField className="edit-comp-user-details--StyledField-0">
+              <StyledFormLabel className="edit-comp-user-details--StyledFormLabel-0">Degree</StyledFormLabel>
               <DropdownInputLight
                 label="Current Year of Study"
                 options={yearOptions}
@@ -98,7 +98,7 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField data-test-id="edit-comp-user-details--StyledField-1">
+            <StyledField className="edit-comp-user-details--StyledField-1">
               <RadioButton
                 label="Competition Level"
                 options={["Level A", "Level B", "No Preference"]}
@@ -109,9 +109,9 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 required={true}
                 width="100%"
               />
-              <StyledFormLabel data-test-id="edit-comp-user-details--StyledFormLabel-1">Site Attendance</StyledFormLabel>
+              <StyledFormLabel className="edit-comp-user-details--StyledFormLabel-1">Site Attendance</StyledFormLabel>
               <div style={{ display: "flex", alignContent: "center" }}>
-                <StyledText data-test-id="edit-comp-user-details--StyledText-0">
+                <StyledText className="edit-comp-user-details--StyledText-0">
                   <em>{formData.siteName}</em>
                 </StyledText>
               </div>
@@ -133,7 +133,7 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField data-test-id="edit-comp-user-details--StyledField-2">
+            <StyledField className="edit-comp-user-details--StyledField-2">
               <DescriptiveTextInput
                 label="Competition Biography"
                 descriptor="Please write a short description about yourself that would help others get to know you"
@@ -146,10 +146,10 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField data-test-id="edit-comp-user-details--StyledField-3">
-              <StyledFormLabel data-test-id="edit-comp-user-details--StyledFormLabel-2">Preferred Contact Method</StyledFormLabel>
-              <StyledDescriptor data-test-id="edit-comp-user-details--StyledDescriptor-0">Please specify your preferred contact method if you have another preference</StyledDescriptor>
-              <StyledDoubleInputContainer data-test-id="edit-comp-user-details--StyledDoubleInputContainer-0">
+            <StyledField className="edit-comp-user-details--StyledField-3">
+              <StyledFormLabel className="edit-comp-user-details--StyledFormLabel-2">Preferred Contact Method</StyledFormLabel>
+              <StyledDescriptor className="edit-comp-user-details--StyledDescriptor-0">Please specify your preferred contact method if you have another preference</StyledDescriptor>
+              <StyledDoubleInputContainer className="edit-comp-user-details--StyledDoubleInputContainer-0">
                 <TextInputLight
                   label="Platform"
                   placeholder="Please enter"
@@ -163,7 +163,7 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                   }}
                   width="45%"
                 />
-                <StyledColon data-test-id="edit-comp-user-details--StyledColon-0">:</StyledColon>
+                <StyledColon className="edit-comp-user-details--StyledColon-0">:</StyledColon>
                 <TextInputLight
                   label="Handle"
                   placeholder="Please enter"
@@ -180,7 +180,7 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
               </StyledDoubleInputContainer>
             </StyledField>
           </StyledForm>
-          <StyledButtonContainer data-test-id="edit-comp-user-details--StyledButtonContainer-0">
+          <StyledButtonContainer className="edit-comp-user-details--StyledButtonContainer-0">
             <ResponsiveActionButton 
               actionType="primary" 
               label="Save Changes" 

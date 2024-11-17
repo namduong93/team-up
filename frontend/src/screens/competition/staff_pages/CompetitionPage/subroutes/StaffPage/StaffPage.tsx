@@ -87,27 +87,27 @@ export const StaffPage: FC = () => {
       values.map((value) => (
       <StyledFilterTagButton
         key={`${field}-${value}`}
-        data-test-id="staff-page--StyledFilterTagButton-0">
+        className="staff-page--StyledFilterTagButton-0">
         {value}
         <StyledRemoveFilterIcon
           onClick={(e) => {
           e.stopPropagation();
           removeFilter(field, value);
           }}
-          data-test-id="staff-page--StyledRemoveFilterIcon-0" />
+          className="staff-page--StyledRemoveFilterIcon-0" />
       </StyledFilterTagButton>
       ))
     )}
   </div>
-  <StyledFlexBackground data-test-id="staff-page--StyledFlexBackground-0">
-    <StyledNarrowDisplayDiv data-test-id="staff-page--StyledNarrowDisplayDiv-0">
+  <StyledFlexBackground className="staff-page--StyledFlexBackground-0">
+    <StyledNarrowDisplayDiv className="staff-page--StyledNarrowDisplayDiv-0">
       {searchedStaff.map(({ item: staffDetails }, index) => {
         return (
           <NarrowStaffCard key={`${staffDetails.email}${index}`} staffDetails={staffDetails} staffListState={[staffList, setStaffList]} />
         );
       })}
     </StyledNarrowDisplayDiv>
-    <StyledWideDisplayDiv data-test-id="staff-page--StyledWideDisplayDiv-0">
+    <StyledWideDisplayDiv className="staff-page--StyledWideDisplayDiv-0">
       <WideStaffHeader />
       {searchedStaff.map(({ item: staffDetails }, index) => {
         return (

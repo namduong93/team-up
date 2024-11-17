@@ -82,8 +82,8 @@ export const InfoBar: FC<InfoBarProps> = ({ isOpenState: [isOpen, setIsOpen], ch
       $isOpen={isOpen}
       {...props}
       onClick={(e) => e.stopPropagation()}
-      data-test-id="info-bar--StyledInfoBarContainerDiv-0">
-      <StyledInfoContainer data-test-id="info-bar--StyledInfoContainer-0">
+      className="info-bar--StyledInfoBarContainerDiv-0">
+      <StyledInfoContainer className="info-bar--StyledInfoContainer-0">
         {children}
       </StyledInfoContainer>
     </StyledInfoBarContainerDiv>

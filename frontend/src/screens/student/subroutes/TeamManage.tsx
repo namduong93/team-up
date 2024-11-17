@@ -137,30 +137,30 @@ export const TeamManage: React.FC = () => {
   };
 
   return (
-    <StyledManageContainer data-test-id="team-manage--StyledManageContainer-0">
+    <StyledManageContainer className="team-manage--StyledManageContainer-0">
       <TeamActionCard
         numMembers={students.filter((s) => s.name !== null).length}
       />
-      <StyledInfoContainer data-test-id="team-manage--StyledInfoContainer-0">
+      <StyledInfoContainer className="team-manage--StyledInfoContainer-0">
         <ProfileCard
           name={coach.name}
           email={coach.email}
           bio={coach.bio}
           isCoach={true}
         />
-        <StyledInfoCard data-test-id="team-manage--StyledInfoCard-0">
-          <StyledInfoContent data-test-id="team-manage--StyledInfoContent-0">
-            <StyledInfoLabel data-test-id="team-manage--StyledInfoLabel-0">Competition Details and Announcements:</StyledInfoLabel>
-            <StyledInfoLink onClick={handleOpenModal} data-test-id="team-manage--StyledInfoLink-0">see competition details →</StyledInfoLink>
+        <StyledInfoCard className="team-manage--StyledInfoCard-0">
+          <StyledInfoContent className="team-manage--StyledInfoContent-0">
+            <StyledInfoLabel className="team-manage--StyledInfoLabel-0">Competition Details and Announcements:</StyledInfoLabel>
+            <StyledInfoLink onClick={handleOpenModal} className="team-manage--StyledInfoLink-0">see competition details →</StyledInfoLink>
           </StyledInfoContent>
         </StyledInfoCard>
       </StyledInfoContainer>
       {isModalOpen && (
-        <StyledModalOverlay data-test-id="team-manage--StyledModalOverlay-0">
-          <StyledModalContent data-test-id="team-manage--StyledModalContent-0">
+        <StyledModalOverlay className="team-manage--StyledModalOverlay-0">
+          <StyledModalContent className="team-manage--StyledModalContent-0">
             <StyledCloseButton
               onClick={handleCloseModal}
-              data-test-id="team-manage--StyledCloseButton-0">
+              className="team-manage--StyledCloseButton-0">
               <FaTimes />
             </StyledCloseButton>
             <MarkdownDisplay content={announcements} />

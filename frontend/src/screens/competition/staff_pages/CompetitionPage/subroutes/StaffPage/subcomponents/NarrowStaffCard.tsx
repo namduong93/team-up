@@ -24,7 +24,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
     <StyledStudentInfoContainerDiv
       onDoubleClick={() => setIsInfoBarOpen(true)}
       {...props}
-      data-test-id="narrow-staff-card--StyledStudentInfoContainerDiv-0">
+      className="narrow-staff-card--StyledStudentInfoContainerDiv-0">
       <Field
         label="Full Name"
         value={staffDetails.name}
@@ -33,7 +33,7 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
       <Field
         label="Role"
         value={
-          <StyledNarrowStatusDiv data-test-id="narrow-staff-card--StyledNarrowStatusDiv-0">
+          <StyledNarrowStatusDiv className="narrow-staff-card--StyledNarrowStatusDiv-0">
             <CompRoles
               style={{ width: "100%" }}
               roles={staffDetails.roles as CompetitionRole[]}
@@ -54,10 +54,10 @@ export const NarrowStaffCard: FC<StaffCardProps> = ({
       <Field
         label="Access"
         value={
-          <StyledNarrowStatusDiv data-test-id="narrow-staff-card--StyledNarrowStatusDiv-1">
+          <StyledNarrowStatusDiv className="narrow-staff-card--StyledNarrowStatusDiv-1">
             <StyledStaffAccessLevel
               $access={staffDetails.access as StaffAccess}
-              data-test-id="narrow-staff-card--StyledStaffAccessLevel-0">
+              className="narrow-staff-card--StyledStaffAccessLevel-0">
               {staffDetails.access}
             </StyledStaffAccessLevel>
           </StyledNarrowStatusDiv>

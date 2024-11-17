@@ -73,15 +73,15 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
   width, 
 }) => {
   return (
-    <StyledContainer width={width} data-test-id="radio-button--StyledContainer-0">
+    <StyledContainer width={width} className="radio-button--StyledContainer-0">
       {label && (
-        <StyledLabel data-test-id="radio-button--StyledLabel-0">
+        <StyledLabel className="radio-button--StyledLabel-0">
           {label}
-          {required && <StyledAsterisk data-test-id="radio-button--StyledAsterisk-0">*</StyledAsterisk>}
+          {required && <StyledAsterisk className="radio-button--StyledAsterisk-0">*</StyledAsterisk>}
         </StyledLabel>
       )}
       {descriptor && (
-        <StyledDescriptor data-test-id="radio-button--StyledDescriptor-0">
+        <StyledDescriptor className="radio-button--StyledDescriptor-0">
           {Array.isArray(descriptor) 
             ? descriptor.map((line, index) => (
                 <React.Fragment key={index}>
@@ -93,9 +93,9 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
           }
         </StyledDescriptor>
       )}
-      <StyledOptionsContainer data-test-id="radio-button--StyledOptionsContainer-0">
+      <StyledOptionsContainer className="radio-button--StyledOptionsContainer-0">
         {options.map((option) => (
-          <StyledRadioButtonLabel key={option} data-test-id="radio-button--StyledRadioButtonLabel-0">
+          <StyledRadioButtonLabel key={option} className="radio-button--StyledRadioButtonLabel-0">
             <StyledRadioInput
               type="radio"
               // Add an id for accessibility
@@ -105,7 +105,7 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
               value={option}
               checked={selectedOption === option}
               onChange={onOptionChange}
-              data-test-id="radio-button--StyledRadioInput-0" />
+              className="radio-button--StyledRadioInput-0" />
             {option}
           </StyledRadioButtonLabel>
         ))}

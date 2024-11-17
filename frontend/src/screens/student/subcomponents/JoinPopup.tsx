@@ -105,8 +105,8 @@ const JoinPopup: React.FC<JoinPopUpProps> = ({
   };
 
   return <>
-    <StyledModal data-test-id="join-popup--StyledModal-0">
-      <StyledCloseButton onClick={onClose} data-test-id="join-popup--StyledCloseButton-0">
+    <StyledModal className="join-popup--StyledModal-0">
+      <StyledCloseButton onClick={onClose} className="join-popup--StyledCloseButton-0">
         <FaTimes />
       </StyledCloseButton>
       <div>{heading}</div>
@@ -123,7 +123,7 @@ const JoinPopup: React.FC<JoinPopUpProps> = ({
       <StyledButton
         disabled={isButtonDisabled()}
         onClick={handleJoin}
-        data-test-id="join-popup--StyledButton-0">Join</StyledButton>
+        className="join-popup--StyledButton-0">Join</StyledButton>
     </StyledModal>
   </>;
 };

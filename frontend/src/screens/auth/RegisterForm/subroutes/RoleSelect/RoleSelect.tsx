@@ -24,25 +24,25 @@ export const RoleSelect: FC = () => {
   return (
     <StyledFlexBackground
       style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
-      data-test-id="role-select--StyledFlexBackground-0">
-      <StyledFormContainer onSubmit={handleSubmit} data-test-id="role-select--StyledFormContainer-0">
-        <StyledTitle data-test-id="role-select--StyledTitle-0">What is your role?</StyledTitle>
+      className="role-select--StyledFlexBackground-0">
+      <StyledFormContainer onSubmit={handleSubmit} className="role-select--StyledFormContainer-0">
+        <StyledTitle className="role-select--StyledTitle-0">What is your role?</StyledTitle>
         <RoleContainer>
           <StyledStudentButton
             type='button'
             // Pass isSelected prop
             isSelected={formData.role === 'Student'}
             onClick={() => handleRoleClick('Student')}
-            data-test-id="role-select--StyledStudentButton-0">Student</StyledStudentButton>
+            className="role-select--StyledStudentButton-0">Student</StyledStudentButton>
 
           <StyledStaffButton
             type='button'
             // Pass isSelected prop
             isSelected={formData.role === 'Staff'}
             onClick={() => handleRoleClick('Staff')}
-            data-test-id="role-select--StyledStaffButton-0">Staff</StyledStaffButton>
+            className="role-select--StyledStaffButton-0">Staff</StyledStaffButton>
         </RoleContainer>
-        <StyledButton disabled={!formData.role} data-test-id="role-select--StyledButton-0">Next</StyledButton>
+        <StyledButton disabled={!formData.role} className="role-select--StyledButton-0">Next</StyledButton>
       </StyledFormContainer>
     </StyledFlexBackground>
   );

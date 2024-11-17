@@ -23,12 +23,12 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
     <StyledStudentInfoContainerDiv
       onDoubleClick={() => setIsInfoBarOpen((p) => !p)}
       {...props}
-      data-test-id="narrow-attendees-card--StyledStudentInfoContainerDiv-0">
+      className="narrow-attendees-card--StyledStudentInfoContainerDiv-0">
       <Field label="Full Name" value={attendeesDetails.name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Gender" value={attendeesDetails.sex} style={{ width: '10%', minWidth: '60px' }} />
       <Field label="Role" 
         value={
-          <StyledNarrowStatusDiv data-test-id="narrow-attendees-card--StyledNarrowStatusDiv-0">
+          <StyledNarrowStatusDiv className="narrow-attendees-card--StyledNarrowStatusDiv-0">
             <CompRoles roles={attendeesDetails.roles} />
           </StyledNarrowStatusDiv>
         }
@@ -39,10 +39,10 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
       <Field label="Shirt Size" value={attendeesDetails.tshirtSize} style={{ width: '20%', minWidth: '170px' }} />
       <Field label="Dietary Needs" style={{ width: '10%', minWidth: '90px' }}
         value={
-          <StyledNarrowStatusDiv data-test-id="narrow-attendees-card--StyledNarrowStatusDiv-1">
+          <StyledNarrowStatusDiv className="narrow-attendees-card--StyledNarrowStatusDiv-1">
             <StyledBooleanStatus
               $toggled={!!attendeesDetails.dietaryNeeds}
-              data-test-id="narrow-attendees-card--StyledBooleanStatus-0">
+              className="narrow-attendees-card--StyledBooleanStatus-0">
               {/* {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'} */}
             </StyledBooleanStatus>
           </StyledNarrowStatusDiv>
@@ -50,10 +50,10 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
       />
       <Field label="Allergies" style={{ width: '10%', minWidth: '90px' }}
         value={
-          <StyledNarrowStatusDiv data-test-id="narrow-attendees-card--StyledNarrowStatusDiv-2">
+          <StyledNarrowStatusDiv className="narrow-attendees-card--StyledNarrowStatusDiv-2">
             <StyledBooleanStatus
               $toggled={!!attendeesDetails.allergies}
-              data-test-id="narrow-attendees-card--StyledBooleanStatus-1">
+              className="narrow-attendees-card--StyledBooleanStatus-1">
               {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
             </StyledBooleanStatus>
           </StyledNarrowStatusDiv>
@@ -61,10 +61,10 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
       />
       <Field label="Accessibility" style={{ width: '10%', minWidth: '90px' }}
         value={
-          <StyledNarrowStatusDiv data-test-id="narrow-attendees-card--StyledNarrowStatusDiv-3">
+          <StyledNarrowStatusDiv className="narrow-attendees-card--StyledNarrowStatusDiv-3">
             <StyledBooleanStatus
               $toggled={!!attendeesDetails.accessibilityNeeds}
-              data-test-id="narrow-attendees-card--StyledBooleanStatus-2">
+              className="narrow-attendees-card--StyledBooleanStatus-2">
               {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
             </StyledBooleanStatus>
           </StyledNarrowStatusDiv>

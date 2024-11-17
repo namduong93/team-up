@@ -71,12 +71,12 @@ export const AccountDataInput: FC = () => {
   return (
     <StyledFlexBackground
       style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}
-      data-test-id="account-data-input--StyledFlexBackground-0">
+      className="account-data-input--StyledFlexBackground-0">
       <RegoProgressBar progressNumber={1} />
-      <StyledContainer data-test-id="account-data-input--StyledContainer-0">
-        <StyledContentContainer data-test-id="account-data-input--StyledContentContainer-0">
-          <StyledTitle data-test-id="account-data-input--StyledTitle-0">Account Information</StyledTitle>
-          <StyledDoubleInputContainer data-test-id="account-data-input--StyledDoubleInputContainer-0">
+      <StyledContainer className="account-data-input--StyledContainer-0">
+        <StyledContentContainer className="account-data-input--StyledContentContainer-0">
+          <StyledTitle className="account-data-input--StyledTitle-0">Account Information</StyledTitle>
+          <StyledDoubleInputContainer className="account-data-input--StyledDoubleInputContainer-0">
             <TextInput
               label="First Name"
               placeholder="John"
@@ -105,7 +105,7 @@ export const AccountDataInput: FC = () => {
             onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
             width="100%" 
           />
-          <StyledDoubleInputContainer data-test-id="account-data-input--StyledDoubleInputContainer-1">
+          <StyledDoubleInputContainer className="account-data-input--StyledDoubleInputContainer-1">
             <DropdownInput
               label="Gender"
               options={genderOptions}
@@ -163,15 +163,15 @@ export const AccountDataInput: FC = () => {
             onChange={(e) => handleConfirmPasswordChange(e.target.value)} 
             width="100%" 
           />
-          {error && <StyledErrorMessage data-test-id="account-data-input--StyledErrorMessage-0">{error}</StyledErrorMessage>}
-          <StyledButtonContainer data-test-id="account-data-input--StyledButtonContainer-0">
+          {error && <StyledErrorMessage className="account-data-input--StyledErrorMessage-0">{error}</StyledErrorMessage>}
+          <StyledButtonContainer className="account-data-input--StyledButtonContainer-0">
             <StyledButton
               onClick={() => navigate('/roleregistration')}
-              data-test-id="account-data-input--StyledButton-0">Back</StyledButton>
+              className="account-data-input--StyledButton-0">Back</StyledButton>
             <StyledButton
               $disabled={isButtonDisabled()}
               onClick={handleNext}
-              data-test-id="account-data-input--StyledButton-1">Next</StyledButton>
+              className="account-data-input--StyledButton-1">Next</StyledButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

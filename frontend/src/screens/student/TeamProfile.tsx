@@ -112,9 +112,9 @@ export const TeamProfile: FC = () => {
   };
 
   return (
-    <StyledTeamOverflowFlexBackground data-test-id="team-profile--StyledTeamOverflowFlexBackground-0">
-      <StyledMainPageDiv data-test-id="team-profile--StyledMainPageDiv-0">
-        <StyledOverlay $isOpen={withdrawPopUpOpen} data-test-id="team-profile--StyledOverlay-0">
+    <StyledTeamOverflowFlexBackground className="team-profile--StyledTeamOverflowFlexBackground-0">
+      <StyledMainPageDiv className="team-profile--StyledMainPageDiv-0">
+        <StyledOverlay $isOpen={withdrawPopUpOpen} className="team-profile--StyledOverlay-0">
           <WithdrawPopupChain handleClose={() => setWithdrawPopUpOpen(false)} />
         </StyledOverlay>
         <TeamHeader
@@ -123,7 +123,7 @@ export const TeamProfile: FC = () => {
           compCountdown={compCountdown}
           onWithdrawClick={handleWithdrawClick}
         />
-        <StyledPageOptionsContainerDiv data-test-id="team-profile--StyledPageOptionsContainerDiv-0">
+        <StyledPageOptionsContainerDiv className="team-profile--StyledPageOptionsContainerDiv-0">
           <CustomToggleSwitch
             style={{ width: "100%", height: "100%" }}
             defaultBorderIndex={0}
@@ -132,21 +132,21 @@ export const TeamProfile: FC = () => {
               onClick={() => {
                 navigate(`/competition/participant/${compId}/details`);
               }}
-              data-test-id="team-profile--StyledTeamToggleOptionDiv-0">
-              <StyledToggleOptionTextSpan data-test-id="team-profile--StyledToggleOptionTextSpan-0">Details</StyledToggleOptionTextSpan>
+              className="team-profile--StyledTeamToggleOptionDiv-0">
+              <StyledToggleOptionTextSpan className="team-profile--StyledToggleOptionTextSpan-0">Details</StyledToggleOptionTextSpan>
             </StyledTeamToggleOptionDiv>
             <StyledTeamToggleOptionDiv
               onClick={() => {
                 navigate(`/competition/participant/${compId}/manage`);
               }}
-              data-test-id="team-profile--StyledTeamToggleOptionDiv-1">
-              <StyledToggleOptionTextSpan data-test-id="team-profile--StyledToggleOptionTextSpan-1">Manage</StyledToggleOptionTextSpan>
+              className="team-profile--StyledTeamToggleOptionDiv-1">
+              <StyledToggleOptionTextSpan className="team-profile--StyledToggleOptionTextSpan-1">Manage</StyledToggleOptionTextSpan>
             </StyledTeamToggleOptionDiv>
           </CustomToggleSwitch>
         </StyledPageOptionsContainerDiv>
         <StyledTeamProvileOutlet
           context={teamOutletProps}
-          data-test-id="team-profile--StyledTeamProvileOutlet-0" />
+          className="team-profile--StyledTeamProvileOutlet-0" />
       </StyledMainPageDiv>
     </StyledTeamOverflowFlexBackground>
   );

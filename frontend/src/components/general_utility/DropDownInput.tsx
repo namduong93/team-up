@@ -80,16 +80,16 @@ interface RelativeSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
 }
 
 const RelativeSelect: React.FC<RelativeSelectProps> = ({ children, value, onChange, required, ...props }) => (
-  <StyledRelativeSelectGrid data-test-id="drop-down-input--StyledRelativeSelectGrid-0">
+  <StyledRelativeSelectGrid className="drop-down-input--StyledRelativeSelectGrid-0">
     <StyledRelativeSelectElement
       value={value}
       onChange={onChange}
       required={required}
       {...props}
-      data-test-id="drop-down-input--StyledRelativeSelectElement-0">
+      className="drop-down-input--StyledRelativeSelectElement-0">
       {children}
     </StyledRelativeSelectElement>
-    <StyledSelectDownArrow data-test-id="drop-down-input--StyledSelectDownArrow-0" />
+    <StyledSelectDownArrow className="drop-down-input--StyledSelectDownArrow-0" />
   </StyledRelativeSelectGrid>
 );
 
@@ -104,18 +104,18 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   descriptor,
 }) => {
   return (
-    <StyledContainer $width={width} data-test-id="drop-down-input--StyledContainer-0">
-      <StyledLabel data-test-id="drop-down-input--StyledLabel-0">
+    <StyledContainer $width={width} className="drop-down-input--StyledContainer-0">
+      <StyledLabel className="drop-down-input--StyledLabel-0">
         {label}
-        {required && <StyledAsterisk data-test-id="drop-down-input--StyledAsterisk-0">*</StyledAsterisk>}
+        {required && <StyledAsterisk className="drop-down-input--StyledAsterisk-0">*</StyledAsterisk>}
       </StyledLabel>
-      {descriptor && <StyledDescriptor data-test-id="drop-down-input--StyledDescriptor-0">{descriptor}</StyledDescriptor>}
+      {descriptor && <StyledDescriptor className="drop-down-input--StyledDescriptor-0">{descriptor}</StyledDescriptor>}
       <RelativeSelect value={value} onChange={onChange} required={required}>
         {options.map((option) => (
           <option
             key={option.value}
             value={option.value}
-            data-test-id="drop-down-input--option-0">
+            className="drop-down-input--option-0">
             {option.label}
           </option>
         ))}

@@ -36,29 +36,29 @@ export const WideStaffAccessCard: FC<StaffAccessCardProps> = ({
   return <>
     <StyledWideInfoContainerDiv
       {...props}
-      data-test-id="wide-staff-access-card--StyledWideInfoContainerDiv-0">
-      <StyledUserNameContainerDiv data-test-id="wide-staff-access-card--StyledUserNameContainerDiv-0">
-        <StyledUserNameGrid data-test-id="wide-staff-access-card--StyledUserNameGrid-0">
-          <StyledUserIcon data-test-id="wide-staff-access-card--StyledUserIcon-0" />
-          <StyledUsernameTextSpan data-test-id="wide-staff-access-card--StyledUsernameTextSpan-0">
+      className="wide-staff-access-card--StyledWideInfoContainerDiv-0">
+      <StyledUserNameContainerDiv className="wide-staff-access-card--StyledUserNameContainerDiv-0">
+        <StyledUserNameGrid className="wide-staff-access-card--StyledUserNameGrid-0">
+          <StyledUserIcon className="wide-staff-access-card--StyledUserIcon-0" />
+          <StyledUsernameTextSpan className="wide-staff-access-card--StyledUsernameTextSpan-0">
             {staffDetails.name}
           </StyledUsernameTextSpan>
         </StyledUserNameGrid>
       </StyledUserNameContainerDiv>
-      <StyledStandardContainerDiv data-test-id="wide-staff-access-card--StyledStandardContainerDiv-0">
-        <StyledStandardSpan data-test-id="wide-staff-access-card--StyledStandardSpan-0">
+      <StyledStandardContainerDiv className="wide-staff-access-card--StyledStandardContainerDiv-0">
+        <StyledStandardSpan className="wide-staff-access-card--StyledStandardSpan-0">
           {staffDetails.universityName}
         </StyledStandardSpan>
       </StyledStandardContainerDiv>
-      <StyledStandardContainerDiv data-test-id="wide-staff-access-card--StyledStandardContainerDiv-1">
+      <StyledStandardContainerDiv className="wide-staff-access-card--StyledStandardContainerDiv-1">
         <AccessDropdown
           staffId={staffDetails.userId}
           currentAccess={staffDetails.userAccess}
           onChange={(newAccess) => handleAccessChange(staffDetails.userId, newAccess)}
         />
       </StyledStandardContainerDiv>
-      <StyledStandardContainerDiv data-test-id="wide-staff-access-card--StyledStandardContainerDiv-2">
-        <StyledStandardSpan data-test-id="wide-staff-access-card--StyledStandardSpan-1">
+      <StyledStandardContainerDiv className="wide-staff-access-card--StyledStandardContainerDiv-2">
+        <StyledStandardSpan className="wide-staff-access-card--StyledStandardSpan-1">
           {staffDetails.email}
         </StyledStandardSpan>
       </StyledStandardContainerDiv>

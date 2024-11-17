@@ -32,13 +32,13 @@ export const NarrowStaffAccessCard: FC<StaffAccessCardProps> = ({
   return (
     <StyledStudentInfoContainerDiv
       {...props}
-      data-test-id="narrow-staff-access-card--StyledStudentInfoContainerDiv-0">
+      className="narrow-staff-access-card--StyledStudentInfoContainerDiv-0">
       <Field label="Full Name" value={staffDetails.name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Affiliation" value={staffDetails.universityName} style={{ width: '20%', minWidth: '170px', whiteSpace: 'break-spaces' }} />
       <Field
         label="Access"
         value={
-          <StyledNarrowStatusDiv data-test-id="narrow-staff-access-card--StyledNarrowStatusDiv-0">
+          <StyledNarrowStatusDiv className="narrow-staff-access-card--StyledNarrowStatusDiv-0">
             <AccessDropdown
               staffId={staffDetails.userId}
               currentAccess={staffDetails.userAccess}

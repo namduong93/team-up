@@ -234,32 +234,32 @@ export const NotificationButton: FC = () => {
   };
 
   return (
-    <StyledNotificationButtonContainer data-test-id="notification-button--StyledNotificationButtonContainer-0">
+    <StyledNotificationButtonContainer className="notification-button--StyledNotificationButtonContainer-0">
       <StyledAlertButton
         onClick={() => setIsNotificationsVisible(prev => !prev)}
-        data-test-id="notification-button--StyledAlertButton-0">
+        className="notification-button--StyledAlertButton-0">
         <FaBell size={15} />
       </StyledAlertButton>
-      {isNotificationsVisible && <StyledNotificationsContainer data-test-id="notification-button--StyledNotificationsContainer-0">
+      {isNotificationsVisible && <StyledNotificationsContainer className="notification-button--StyledNotificationsContainer-0">
         {notifications.map((notification) => (
           <StyledNotificationItem
             key={notification.id}
             onClick={() => handleNavigate(notification)}
-            data-test-id="notification-button--StyledNotificationItem-0">
-            <StyledNotificationIcon data-test-id="notification-button--StyledNotificationIcon-0">{getNotificationIcon(notification.type)}</StyledNotificationIcon>
-            <StyledNotificationMsg data-test-id="notification-button--StyledNotificationMsg-0">
+            className="notification-button--StyledNotificationItem-0">
+            <StyledNotificationIcon className="notification-button--StyledNotificationIcon-0">{getNotificationIcon(notification.type)}</StyledNotificationIcon>
+            <StyledNotificationMsg className="notification-button--StyledNotificationMsg-0">
               <div>{notification.message}</div>
               {notification.type === 'withdrawal' && notification.decision && (
                 <small>Decision: {notification.decision}</small>
               )}
-              <StyledNotificationDate data-test-id="notification-button--StyledNotificationDate-0">{formatDate(notification.createdAt)}</StyledNotificationDate>
+              <StyledNotificationDate className="notification-button--StyledNotificationDate-0">{formatDate(notification.createdAt)}</StyledNotificationDate>
             </StyledNotificationMsg>
             <StyledCloseButton
               onClick={(e) => {
                 e.stopPropagation();
                 handleRemoveNotification(notification.id);
               }}
-              data-test-id="notification-button--StyledCloseButton-0" />
+              className="notification-button--StyledCloseButton-0" />
           </StyledNotificationItem>
         ))}
       </StyledNotificationsContainer>}

@@ -80,10 +80,10 @@ export const NumberInputLight: React.FC<NumberInputLightProps> = ({
     <StyledContainer
       $width={width}
       style={style}
-      data-test-id="number-input-light--StyledContainer-0">
-      <StyledLabel data-test-id="number-input-light--StyledLabel-0">
+      className="number-input-light--StyledContainer-0">
+      <StyledLabel className="number-input-light--StyledLabel-0">
         {label}
-        {required && <StyledAsterisk data-test-id="number-input-light--StyledAsterisk-0">*</StyledAsterisk>}
+        {required && <StyledAsterisk className="number-input-light--StyledAsterisk-0">*</StyledAsterisk>}
       </StyledLabel>
       <StyledInput
         type={type}
@@ -91,7 +91,7 @@ export const NumberInputLight: React.FC<NumberInputLightProps> = ({
         value={displayValue === 0 ? '' : displayValue}
         onChange={handleChange}
         required={required}
-        data-test-id="number-input-light--StyledInput-0" />
+        className="number-input-light--StyledInput-0" />
     </StyledContainer>
   );
 };

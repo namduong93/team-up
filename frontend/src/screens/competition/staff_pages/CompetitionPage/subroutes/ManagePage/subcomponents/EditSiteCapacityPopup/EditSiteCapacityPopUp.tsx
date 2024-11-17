@@ -82,18 +82,18 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   };
 
   return (
-    <StyledModalOverlay data-test-id="edit-site-capacity-pop-up--StyledModalOverlay-0">
-      <StyledModal data-test-id="edit-site-capacity-pop-up--StyledModal-0">
-        <StyledView data-test-id="edit-site-capacity-pop-up--StyledView-0">
+    <StyledModalOverlay className="edit-site-capacity-pop-up--StyledModalOverlay-0">
+      <StyledModal className="edit-site-capacity-pop-up--StyledModal-0">
+        <StyledView className="edit-site-capacity-pop-up--StyledView-0">
           <StyledCloseButton
             onClick={onClose}
-            data-test-id="edit-site-capacity-pop-up--StyledCloseButton-0">
+            className="edit-site-capacity-pop-up--StyledCloseButton-0">
             <FaTimes />
           </StyledCloseButton>
-          <StyledContainer data-test-id="edit-site-capacity-pop-up--StyledContainer-0">
-            <StyledHeading data-test-id="edit-site-capacity-pop-up--StyledHeading-0">{heading}</StyledHeading>
+          <StyledContainer className="edit-site-capacity-pop-up--StyledContainer-0">
+            <StyledHeading className="edit-site-capacity-pop-up--StyledHeading-0">{heading}</StyledHeading>
             <div style={{ display: "flex", alignContent: "center" }}>
-              <StyledText data-test-id="edit-site-capacity-pop-up--StyledText-0">
+              <StyledText className="edit-site-capacity-pop-up--StyledText-0">
                 <em>Capacity is the number of participants your site can host.</em>
               </StyledText>
             </div>
@@ -118,7 +118,7 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
             <StyledButton
               onClick={handleSubmit}
               disabled={capacity <= 0}
-              data-test-id="edit-site-capacity-pop-up--StyledButton-0">Save Changes</StyledButton>
+              className="edit-site-capacity-pop-up--StyledButton-0">Save Changes</StyledButton>
           </StyledContainer>
         </StyledView>
       </StyledModal>

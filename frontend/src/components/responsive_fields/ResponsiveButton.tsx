@@ -49,7 +49,7 @@ export const ResponsiveButton: FC<ResponsiveButtonProps> = ({ onClick, icon, lab
       }}
       $isSortOpen={isOpen}
       {...props}
-      data-test-id="responsive-button--StyledSortButton-0">
+      className="responsive-button--StyledSortButton-0">
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
           {icon}
@@ -117,7 +117,7 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
       }}
       $isSortOpen={isOpen}
       {...props}
-      data-test-id="responsive-button--StyledTransparentButton-0">
+      className="responsive-button--StyledTransparentButton-0">
       <div style={{ display: 'flex',
         alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%',
         justifyContent: 'center' }}>

@@ -72,7 +72,7 @@ export const UpdatePassword: FC<UpdatePasswordProps> = ({ isOpen }) => {
 
   return isOpen && (
     <div>
-      <form onSubmit={handleSubmitPassword} data-test-id="update-password--form-0">
+      <form onSubmit={handleSubmitPassword} className="update-password--form-0">
         <div>
           <TextInputLight
             label="Current Password"
@@ -103,12 +103,12 @@ export const UpdatePassword: FC<UpdatePasswordProps> = ({ isOpen }) => {
             required={true}
           />
         </div>
-        <StyledButton type="submit" data-test-id="update-password--StyledButton-0">Update Password</StyledButton>
+        <StyledButton type="submit" className="update-password--StyledButton-0">Update Password</StyledButton>
       </form>
 
       {warningMessage && <StyledWarningMessage
         $isSuccess={isSuccess}
-        data-test-id="update-password--StyledWarningMessage-0">{warningMessage}</StyledWarningMessage>}
+        className="update-password--StyledWarningMessage-0">{warningMessage}</StyledWarningMessage>}
     </div>
   );
 };

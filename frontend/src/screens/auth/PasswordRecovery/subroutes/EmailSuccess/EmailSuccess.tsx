@@ -13,7 +13,7 @@ export const EmailSuccess: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style,
     <StyledFormContainer
       style={{ justifyContent: 'center', ...style }}
       {...props}
-      data-test-id="email-success--StyledFormContainer-0">
+      className="email-success--StyledFormContainer-0">
       <div style={{
         fontSize: '24px',
       }}>An email has been sent to your address with password recovery steps</div>

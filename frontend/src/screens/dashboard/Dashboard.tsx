@@ -230,8 +230,8 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   };
 
   return isLoaded && (
-    <StyledOverflowFlexBackground data-test-id="dashboard--StyledOverflowFlexBackground-0">
-      <StyledDashboardContent data-test-id="dashboard--StyledDashboardContent-0">
+    <StyledOverflowFlexBackground className="dashboard--StyledOverflowFlexBackground-0">
+      <StyledDashboardContent className="dashboard--StyledDashboardContent-0">
         {/* <CompCreatePopUp isOpen={isPopUpOpen} onClose={handleClosePopUp} message={message} code={code} /> */}
         <PageHeader
           pageTitle="Dashboard"
@@ -274,14 +274,14 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
                 onChange={(e) => {
                   setCompRegisterCode(e.target.value);
                 }}
-                data-test-id="dashboard--StyledInput-0" />
+                className="dashboard--StyledInput-0" />
             </div>
 
             <div>
               {errorMessage && (
                 <StyledErrorMessage
                   style={{ marginTop: "10px" }}
-                  data-test-id="dashboard--StyledErrorMessage-0">
+                  className="dashboard--StyledErrorMessage-0">
                   {errorMessage}
                 </StyledErrorMessage>
               )}
@@ -294,20 +294,20 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             values.map((value) => (
               <StyledFilterTagButton
                 key={`${field}-${value}`}
-                data-test-id="dashboard--StyledFilterTagButton-0">
+                className="dashboard--StyledFilterTagButton-0">
                 {value}
                 <StyledRemoveFilterIcon
                   onClick={(e) => {
                     e.stopPropagation();
                     removeFilter(field, value);
                   }}
-                  data-test-id="dashboard--StyledRemoveFilterIcon-0" />
+                  className="dashboard--StyledRemoveFilterIcon-0" />
               </StyledFilterTagButton>
             ))
           )}
         </div>
-        <StyledContentArea data-test-id="dashboard--StyledContentArea-0">
-          <StyledCompetitionGrid data-test-id="dashboard--StyledCompetitionGrid-0">
+        <StyledContentArea className="dashboard--StyledContentArea-0">
+          <StyledCompetitionGrid className="dashboard--StyledCompetitionGrid-0">
             {sortedCompetitions.map((comp, index) => (
               <CompCard
                 key={index}
@@ -321,7 +321,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
             ))}
           </StyledCompetitionGrid>
           {isRegoSucessPopUpOpen && (
-            <RegisterPopUp
+            <RegisterPopUp 
               isOpen={isRegoSucessPopUpOpen}
               onClose={() => setRegoSuccessPopUp(false)}
               isRego={true}

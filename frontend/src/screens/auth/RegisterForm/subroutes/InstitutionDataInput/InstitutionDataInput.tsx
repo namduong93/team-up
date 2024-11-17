@@ -95,11 +95,11 @@ export const InstitutionDataInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-      data-test-id="institution-data-input--StyledFlexBackground-0">
+      className="institution-data-input--StyledFlexBackground-0">
       <RegoProgressBar progressNumber={3} />
-      <StyledContainer data-test-id="institution-data-input--StyledContainer-0">
-        <StyledContentContainer data-test-id="institution-data-input--StyledContentContainer-0">
-          <StyledTitle data-test-id="institution-data-input--StyledTitle-0">Institution Information</StyledTitle>
+      <StyledContainer className="institution-data-input--StyledContainer-0">
+        <StyledContentContainer className="institution-data-input--StyledContentContainer-0">
+          <StyledTitle className="institution-data-input--StyledTitle-0">Institution Information</StyledTitle>
           <DropdownInput
             label="Institution"
             options={institutionOptions}
@@ -132,14 +132,14 @@ export const InstitutionDataInput: FC = () => {
               width="100%"
             />
           )}
-          <StyledButtonContainer data-test-id="institution-data-input--StyledButtonContainer-0">
+          <StyledButtonContainer className="institution-data-input--StyledButtonContainer-0">
             <StyledButton
               onClick={() => navigate("/siteinformation")}
-              data-test-id="institution-data-input--StyledButton-0">Back</StyledButton>
+              className="institution-data-input--StyledButton-0">Back</StyledButton>
             <StyledCreateAccountButton
               disabled={isButtonDisabled()}
               onClick={handleSubmit}
-              data-test-id="institution-data-input--StyledCreateAccountButton-0">Create Account</StyledCreateAccountButton>
+              className="institution-data-input--StyledCreateAccountButton-0">Create Account</StyledCreateAccountButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

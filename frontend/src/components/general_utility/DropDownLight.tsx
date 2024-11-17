@@ -76,16 +76,16 @@ interface RelativeSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
 }
 
 const RelativeSelect: React.FC<RelativeSelectProps> = ({ children, value, onChange, required, ...props }) => (
-  <StyledRelativeSelectGrid data-test-id="drop-down-light--StyledRelativeSelectGrid-0">
+  <StyledRelativeSelectGrid className="drop-down-light--StyledRelativeSelectGrid-0">
     <StyledRelativeSelectElement
       value={value}
       onChange={onChange}
       required={required}
       {...props}
-      data-test-id="drop-down-light--StyledRelativeSelectElement-0">
+      className="drop-down-light--StyledRelativeSelectElement-0">
       {children}
     </StyledRelativeSelectElement>
-    <StyledSelectDownArrow data-test-id="drop-down-light--StyledSelectDownArrow-0" />
+    <StyledSelectDownArrow className="drop-down-light--StyledSelectDownArrow-0" />
   </StyledRelativeSelectGrid>
 );
 
@@ -100,18 +100,18 @@ const DropdownInputLight: React.FC<DropdownInputLightProps> = ({
   descriptor,
 }) => {
   return (
-    <StyledContainer $width={width} data-test-id="drop-down-light--StyledContainer-0">
-      <StyledLabel data-test-id="drop-down-light--StyledLabel-0">
+    <StyledContainer $width={width} className="drop-down-light--StyledContainer-0">
+      <StyledLabel className="drop-down-light--StyledLabel-0">
         {label}
-        {required && <StyledAsterisk data-test-id="drop-down-light--StyledAsterisk-0">*</StyledAsterisk>}
+        {required && <StyledAsterisk className="drop-down-light--StyledAsterisk-0">*</StyledAsterisk>}
       </StyledLabel>
-      {descriptor && <StyledDescriptor data-test-id="drop-down-light--StyledDescriptor-0">{descriptor}</StyledDescriptor>}
+      {descriptor && <StyledDescriptor className="drop-down-light--StyledDescriptor-0">{descriptor}</StyledDescriptor>}
       <RelativeSelect value={value} onChange={onChange} required={required}>
         {options.map((option) => (
           <option
             key={option.value}
             value={option.value}
-            data-test-id="drop-down-light--option-0">
+            className="drop-down-light--option-0">
             {option.label}
           </option>
         ))}

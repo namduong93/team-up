@@ -86,16 +86,16 @@ export const FilterSelect: FC<FilterSelectProps> = ({
   };
 
   return (
-    <StyledFilterContainer $isOpen={isOpen} data-test-id="filter-select--StyledFilterContainer-0">
+    <StyledFilterContainer $isOpen={isOpen} className="filter-select--StyledFilterContainer-0">
       {Object.entries(options).map(([field, values]) => (
-        <StyledFilterField key={field} data-test-id="filter-select--StyledFilterField-0">
-          <StyledFieldTitle data-test-id="filter-select--StyledFieldTitle-0">{field}</StyledFieldTitle>
+        <StyledFilterField key={field} className="filter-select--StyledFilterField-0">
+          <StyledFieldTitle className="filter-select--StyledFieldTitle-0">{field}</StyledFieldTitle>
           {values.map((value) => (
             <StyledOptionButton
               key={value}
               selected={selectedFilters[field]?.includes(value) || false}
               onClick={() => handleOptionChange(field, value)}
-              data-test-id="filter-select--StyledOptionButton-0">
+              className="filter-select--StyledOptionButton-0">
               {value}
             </StyledOptionButton>
           ))}

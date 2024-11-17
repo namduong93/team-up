@@ -92,7 +92,7 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
     <StyledResponsiveActionDiv
       $actionType={actionType}
       style={style}
-      data-test-id="responsive-action-button--StyledResponsiveActionDiv-0">
+      className="responsive-action-button--StyledResponsiveActionDiv-0">
       <TransparentResponsiveButton
         actionType={actionType}
         onClick={handleButtonClick}
@@ -104,11 +104,11 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
     {isOpen && (
       <StyledPopUpOverlay
         onClick={handleClosePopup}
-        data-test-id="responsive-action-button--StyledPopUpOverlay-0">
+        className="responsive-action-button--StyledPopUpOverlay-0">
         <StyledPopUpContent
           onClick={(e) => e.stopPropagation()}
-          data-test-id="responsive-action-button--StyledPopUpContent-0">
-          <StyledQuestion data-test-id="responsive-action-button--StyledQuestion-0">{question}</StyledQuestion>
+          className="responsive-action-button--StyledPopUpContent-0">
+          <StyledQuestion className="responsive-action-button--StyledQuestion-0">{question}</StyledQuestion>
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             {children}
           </div>
@@ -116,18 +116,18 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
             <StyledConfirmButton
               onMouseDown={(e) => e.preventDefault()}
               onClick={handleConfirm}
-              data-test-id="responsive-action-button--StyledConfirmButton-0">Confirm</StyledConfirmButton>
+              className="responsive-action-button--StyledConfirmButton-0">Confirm</StyledConfirmButton>
           : <StyledTimeoutConfirmButton
             onMouseDown={(e) => e.preventDefault()}
             bgColor={theme.colours.confirm}
             seconds={timeout}
             onClick={handleConfirm}
-            data-test-id="responsive-action-button--StyledTimeoutConfirmButton-0">Confirm</StyledTimeoutConfirmButton>
+            className="responsive-action-button--StyledTimeoutConfirmButton-0">Confirm</StyledTimeoutConfirmButton>
           }
           <StyledCancelButton
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleClosePopup}
-            data-test-id="responsive-action-button--StyledCancelButton-0">Cancel</StyledCancelButton>
+            className="responsive-action-button--StyledCancelButton-0">Cancel</StyledCancelButton>
         </StyledPopUpContent>
       </StyledPopUpOverlay>
     )}

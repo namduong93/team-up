@@ -74,9 +74,9 @@ export const Field: FC<FieldContainerProps> = ({ label, value, style, ...props }
     <StyledContainerDiv
       style={{ ...style }}
       {...props}
-      data-test-id="student-info-card--StyledContainerDiv-0">
-      <StyledFieldTitle data-test-id="student-info-card--StyledFieldTitle-0">{label}</StyledFieldTitle>
-      <StyledFieldValue data-test-id="student-info-card--StyledFieldValue-0">{value}</StyledFieldValue>
+      className="student-info-card--StyledContainerDiv-0">
+      <StyledFieldTitle className="student-info-card--StyledFieldTitle-0">{label}</StyledFieldTitle>
+      <StyledFieldValue className="student-info-card--StyledFieldValue-0">{value}</StyledFieldValue>
     </StyledContainerDiv>
   );
 }
@@ -108,13 +108,13 @@ export const StudentInfoCard: FC<StudentCardProps> = (
       onDoubleClick={() => setIsInfoBarOpen((p) => !p)}
       style={style}
       {...props}
-      data-test-id="student-info-card--StyledStudentInfoContainerDiv-0">
+      className="student-info-card--StyledStudentInfoContainerDiv-0">
       <Field label="Full Name" value={name} style={{ width: '20%', minWidth: '120px' }} />
       <Field label="Gender" value={sex} style={{ width: '10%', minWidth: '60px'}} />
       <Field label="Email" value={email} style={{ width: '25%', minWidth: '170px' }} />
       <Field label="Status" 
         value={
-          <StyledNarrowStatusDiv data-test-id="student-info-card--StyledNarrowStatusDiv-0">
+          <StyledNarrowStatusDiv className="student-info-card--StyledNarrowStatusDiv-0">
             <StudentStatus style={{ minWidth: '78px' }} isMatched={status === 'Matched'}>
               {status}
             </StudentStatus>

@@ -33,8 +33,8 @@ export const SitePopup1: React.FC<FirstStepPopUpProps> = ({
   };
 
   return <>
-    <StyledModal data-test-id="--StyledModal-0">
-      <StyledCloseButton onClick={onClose} data-test-id="--StyledCloseButton-0">
+    <StyledModal className="--StyledModal-0">
+      <StyledCloseButton onClick={onClose} className="--StyledCloseButton-0">
         <FaTimes />
       </StyledCloseButton>
       <div>{heading}</div>
@@ -52,7 +52,7 @@ export const SitePopup1: React.FC<FirstStepPopUpProps> = ({
       <StyledButton
         disabled={isButtonDisabled()}
         onClick={onNext}
-        data-test-id="--StyledButton-0">Request</StyledButton>
+        className="--StyledButton-0">Request</StyledButton>
     </StyledModal>
   </>;
 };

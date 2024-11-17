@@ -145,34 +145,34 @@ export const CompRoles: FC<StaffRolesProps> = ({ roles, children, ...props }) =>
   const numContents = roles.length - 1;
 
   return (
-    <StyledStaffRolesContainerDiv data-test-id="comp-roles--StyledStaffRolesContainerDiv-0">
-      <StyledStaffRoleContainer $isOpen={isOpen} data-test-id="comp-roles--StyledStaffRoleContainer-0">
+    <StyledStaffRolesContainerDiv className="comp-roles--StyledStaffRolesContainerDiv-0">
+      <StyledStaffRoleContainer $isOpen={isOpen} className="comp-roles--StyledStaffRoleContainer-0">
         <StyledStaffRoleDisplay
           tabIndex={0}
           onClick={handleClick}
           onBlur={() => setIsOpen(false)}
           $isMulti={isMulti}
           $role={roles[0]}
-          data-test-id="comp-roles--StyledStaffRoleDisplay-0">
+          className="comp-roles--StyledStaffRoleDisplay-0">
           <div style={{ pointerEvents: 'none' }}>{roles[0]}</div>
         </StyledStaffRoleDisplay>
         {isOpen &&
         <StyledAdditionalRolesContainer
           onMouseDown={(e) => { e.preventDefault(); }}
           $numContents={numContents}
-          data-test-id="comp-roles--StyledAdditionalRolesContainer-0">
+          className="comp-roles--StyledAdditionalRolesContainer-0">
           {roles.slice(1).map((role, index) => 
           <StyledStaffRoleDisplay
             style={{ height: `${100 / numContents}%` }}
             key={`${role}${index}`}
             $role={role}
-            data-test-id="comp-roles--StyledStaffRoleDisplay-1">
+            className="comp-roles--StyledStaffRoleDisplay-1">
             <span style={{ pointerEvents: 'none' }}>{role}</span>
           </StyledStaffRoleDisplay>
           )}
         </StyledAdditionalRolesContainer>}
         {isMulti &&
-        <StyledRoleDropdownIcon data-test-id="comp-roles--StyledRoleDropdownIcon-0" />}
+        <StyledRoleDropdownIcon className="comp-roles--StyledRoleDropdownIcon-0" />}
       </StyledStaffRoleContainer>
     </StyledStaffRolesContainerDiv>
   );

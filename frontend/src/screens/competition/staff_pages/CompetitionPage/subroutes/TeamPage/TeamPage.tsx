@@ -211,10 +211,10 @@ export const TeamPage: FC = () => {
   return <>
     {isCreationSuccessPopUpOpen && (
       <>
-        <StyledOverlay $isOpen={true} data-test-id="team-page--StyledOverlay-0" />
+        <StyledOverlay $isOpen={true} className="team-page--StyledOverlay-0" />
         <ThirdStepPopup
           heading={
-            <StyledHeading data-test-id="team-page--StyledHeading-0">The competition has successfully{"\nbeen created"}{" "}
+            <StyledHeading className="team-page--StyledHeading-0">The competition has successfully{"\nbeen created"}{" "}
             </StyledHeading>
           }
           onClose={handleClosePopUp}
@@ -226,14 +226,14 @@ export const TeamPage: FC = () => {
         values.map((value) => (
           <StyledFilterTagButton
             key={`${field}-${value}`}
-            data-test-id="team-page--StyledFilterTagButton-0">
+            className="team-page--StyledFilterTagButton-0">
             {value}
             <StyledRemoveFilterIcon
               onClick={(e) => {
                 e.stopPropagation();
                 removeFilter(field, value);
               }}
-              data-test-id="team-page--StyledRemoveFilterIcon-0" />
+              className="team-page--StyledRemoveFilterIcon-0" />
           </StyledFilterTagButton>
         ))
       )}
@@ -271,7 +271,7 @@ export const TeamPage: FC = () => {
         </div>
       }
     </div>
-    <StyledTeamCardGridDisplay data-test-id="team-page--StyledTeamCardGridDisplay-0">
+    <StyledTeamCardGridDisplay className="team-page--StyledTeamCardGridDisplay-0">
       {searchedCompetitions.map(({ item: teamDetails }, index) => {
         return (
           <TeamCard

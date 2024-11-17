@@ -371,18 +371,18 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
   };
 
   return (
-    <StyledManageContainer data-test-id="assign-seats--StyledManageContainer-0">
-      <StyledHeader data-test-id="assign-seats--StyledHeader-0">
+    <StyledManageContainer className="assign-seats--StyledManageContainer-0">
+      <StyledHeader className="assign-seats--StyledHeader-0">
         <div>
-          <StyledTitle data-test-id="assign-seats--StyledTitle-0">Manage Seats for{siteOption.label}</StyledTitle>
+          <StyledTitle className="assign-seats--StyledTitle-0">Manage Seats for{siteOption.label}</StyledTitle>
           {enoughSeats && 
-            <StyledAlert data-test-id="assign-seats--StyledAlert-0">Warning! You do not have enough seats for your teams!</StyledAlert>
+            <StyledAlert className="assign-seats--StyledAlert-0">Warning! You do not have enough seats for your teams!</StyledAlert>
           }
         </div>
-        <StyledDistributeSeats data-test-id="assign-seats--StyledDistributeSeats-0">
-          <StyledTeamCount $level="Level A" data-test-id="assign-seats--StyledTeamCount-0">A Teams to Assign:{numATeamsToAssign}</StyledTeamCount>
-          <StyledTeamCount $level="Level B" data-test-id="assign-seats--StyledTeamCount-1">B Teams to Assign:{numBTeamsToAssign}</StyledTeamCount>
-          <StyledSeatCount data-test-id="assign-seats--StyledSeatCount-0">Team Seats Available:{seatCount}</StyledSeatCount>
+        <StyledDistributeSeats className="assign-seats--StyledDistributeSeats-0">
+          <StyledTeamCount $level="Level A" className="assign-seats--StyledTeamCount-0">A Teams to Assign:{numATeamsToAssign}</StyledTeamCount>
+          <StyledTeamCount $level="Level B" className="assign-seats--StyledTeamCount-1">B Teams to Assign:{numBTeamsToAssign}</StyledTeamCount>
+          <StyledSeatCount className="assign-seats--StyledSeatCount-0">Team Seats Available:{seatCount}</StyledSeatCount>
           {(seatString.length > 0 || rooms.length > 0) && teamListToAssign.length > 0 && enoughSeats &&
             <StyledAssignSeatsButton
               actionType="secondary"
@@ -391,12 +391,12 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
               isOpen={false}
               icon={<FaChair />}
               $disabled={!enoughSeats}
-              data-test-id="assign-seats--StyledAssignSeatsButton-0" />
+              className="assign-seats--StyledAssignSeatsButton-0" />
           }
         </StyledDistributeSeats>
       </StyledHeader>
       {/* Seat Input Type Selection */}
-      <StyledSeatInputSelect data-test-id="assign-seats--StyledSeatInputSelect-0">
+      <StyledSeatInputSelect className="assign-seats--StyledSeatInputSelect-0">
         <RadioButton
           label="Select Seat Input Method"
           options={["Text", "Inputs"]}
@@ -425,7 +425,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
           />
         }
       </StyledSeatInputSelect>
-      <StyledInputSection data-test-id="assign-seats--StyledInputSection-0">
+      <StyledInputSection className="assign-seats--StyledInputSection-0">
         {isTextInput && 
           <DescriptiveTextInput
             descriptor="Please enter all available seat names separated by commas"
@@ -437,10 +437,10 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
           />
         }
         {!isTextInput && 
-          <StyledInputContainer data-test-id="assign-seats--StyledInputContainer-0">
-            <StyledLevels data-test-id="assign-seats--StyledLevels-0">
-              <StyledLevelContainer data-test-id="assign-seats--StyledLevelContainer-0">
-                <StyledInputTitleA data-test-id="assign-seats--StyledInputTitleA-0">Level A</StyledInputTitleA>
+          <StyledInputContainer className="assign-seats--StyledInputContainer-0">
+            <StyledLevels className="assign-seats--StyledLevels-0">
+              <StyledLevelContainer className="assign-seats--StyledLevelContainer-0">
+                <StyledInputTitleA className="assign-seats--StyledInputTitleA-0">Level A</StyledInputTitleA>
                 <TextInput
                   label="Room Name"
                   placeholder="Bongo"
@@ -460,8 +460,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
                   width="100%"
                 />
               </StyledLevelContainer>
-              <StyledLevelContainer data-test-id="assign-seats--StyledLevelContainer-1">
-                <StyledInputTitleB data-test-id="assign-seats--StyledInputTitleB-0">Level B</StyledInputTitleB>
+              <StyledLevelContainer className="assign-seats--StyledLevelContainer-1">
+                <StyledInputTitleB className="assign-seats--StyledInputTitleB-0">Level B</StyledInputTitleB>
                 <TextInput
                   label="Room Name"
                   placeholder="Bongo"
@@ -486,17 +486,17 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
               type="button"
               onClick={handleAddRoom}
               disabled={cannotAddRoom()}
-              data-test-id="assign-seats--StyledButton-0">Add Room</StyledButton>
+              className="assign-seats--StyledButton-0">Add Room</StyledButton>
             {error && <div style={{ color: "red" }}>{error}</div>}
-            <StyledRoomList data-test-id="assign-seats--StyledRoomList-0">
+            <StyledRoomList className="assign-seats--StyledRoomList-0">
               {rooms.map((room, index) => (
-                <StyledRoomItem key={index} data-test-id="assign-seats--StyledRoomItem-0">
+                <StyledRoomItem key={index} className="assign-seats--StyledRoomItem-0">
                   <span>Room {room.roomName}</span>
                   <span>Level {room.level}</span>
                   <span>{room.numSeats} seats</span>
                   <StyledDeleteIcon
                     onClick={() => handleDeleteRoom(room)}
-                    data-test-id="assign-seats--StyledDeleteIcon-0">
+                    className="assign-seats--StyledDeleteIcon-0">
                     <FaTimes />
                   </StyledDeleteIcon>
                 </StyledRoomItem>
@@ -506,34 +506,34 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
         }
       </StyledInputSection>
       { seatModalState && (
-        <StyledModalOverlay data-test-id="assign-seats--StyledModalOverlay-0">
-          <StyledModalContainer data-test-id="assign-seats--StyledModalContainer-0">
-            <StyledCloseButtonContainer data-test-id="assign-seats--StyledCloseButtonContainer-0">
+        <StyledModalOverlay className="assign-seats--StyledModalOverlay-0">
+          <StyledModalContainer className="assign-seats--StyledModalContainer-0">
+            <StyledCloseButtonContainer className="assign-seats--StyledCloseButtonContainer-0">
               <StyledCloseButton
                 onClick={() => {
                   setSeatModalState(false);
                   setSeatString("");
                 }}
-                data-test-id="assign-seats--StyledCloseButton-0">
+                className="assign-seats--StyledCloseButton-0">
                 <FaTimes />
               </StyledCloseButton>
             </StyledCloseButtonContainer>
-            <StyledAssignPopupText data-test-id="assign-seats--StyledAssignPopupText-0">Seats Assigned Successfully!</StyledAssignPopupText>
-            <StyledButtonContainer data-test-id="assign-seats--StyledButtonContainer-0">
+            <StyledAssignPopupText className="assign-seats--StyledAssignPopupText-0">Seats Assigned Successfully!</StyledAssignPopupText>
+            <StyledButtonContainer className="assign-seats--StyledButtonContainer-0">
               <StyledDownloadButton
                 actionType="primary"
                 onClick={handleDownload}
                 label="Download"
                 isOpen={false}
                 icon={<FaDownload />}
-                data-test-id="assign-seats--StyledDownloadButton-0" />
+                className="assign-seats--StyledDownloadButton-0" />
               <StyledNotifyButton
                 actionType="secondary"
                 onClick={handleNotifyTeams}
                 label="Notify Teams"
                 isOpen={false}
                 icon={<FaBell />}
-                data-test-id="assign-seats--StyledNotifyButton-0" />
+                className="assign-seats--StyledNotifyButton-0" />
             </StyledButtonContainer>
           </StyledModalContainer>
         </StyledModalOverlay>

@@ -146,15 +146,15 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
   if (!isOpen) return null;
 
   return (
-    <StyledOverlay onClick={onClose} data-test-id="register-pop-up--StyledOverlay-0">
+    <StyledOverlay onClick={onClose} className="register-pop-up--StyledOverlay-0">
       {/* <Container onClick={(e) => e.stopPropagation()}> */}
-      <StyledModal data-test-id="register-pop-up--StyledModal-0">
-        <StyledCloseButton onClick={onClose} data-test-id="register-pop-up--StyledCloseButton-0">
+      <StyledModal className="register-pop-up--StyledModal-0">
+        <StyledCloseButton onClick={onClose} className="register-pop-up--StyledCloseButton-0">
           <FaTimes />
         </StyledCloseButton>
         <div>
           {isRego &&
-            <StyledTitle2 data-test-id="register-pop-up--StyledTitle2-0">You have successfully registered for the Competition!{" "}
+            <StyledTitle2 className="register-pop-up--StyledTitle2-0">You have successfully registered for the Competition!{" "}
               {"\n\n"}
               <span style={{ fontWeight: "normal" }}>
                 Please navigate to the Team Profile Page to join a team or
@@ -164,7 +164,7 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
           }
 
           {isTeamJoin &&
-            <StyledTitle2 data-test-id="register-pop-up--StyledTitle2-1">You have successfully{"\n"}joined the Team:{"\n\n"}{" "}
+            <StyledTitle2 className="register-pop-up--StyledTitle2-1">You have successfully{"\n"}joined the Team:{"\n\n"}{" "}
               <span style={{ fontWeight: "normal", fontStyle: "italic" }}>
                 {teamName}
               </span>
@@ -172,7 +172,7 @@ export const RegisterPopUp: React.FC<RegisterPopUpProps> = ({
           }
 
           {isStaffRego &&
-            <StyledTitle2 data-test-id="register-pop-up--StyledTitle2-2">Your Request has been{"\n"}sent{"\n\n"}Please wait for{" "}
+            <StyledTitle2 className="register-pop-up--StyledTitle2-2">Your Request has been{"\n"}sent{"\n\n"}Please wait for{" "}
               {"\n"}Administrator approval</StyledTitle2>
           }
         </div>

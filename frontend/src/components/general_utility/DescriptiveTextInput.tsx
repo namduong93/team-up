@@ -66,21 +66,21 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   height = "100px",
 }) => {
   return (
-    <StyledContainer width={width} data-test-id="descriptive-text-input--StyledContainer-0">
+    <StyledContainer width={width} className="descriptive-text-input--StyledContainer-0">
       {label && (
-        <StyledLabel data-test-id="descriptive-text-input--StyledLabel-0">
+        <StyledLabel className="descriptive-text-input--StyledLabel-0">
           {label}
-          {required && <StyledAsterisk data-test-id="descriptive-text-input--StyledAsterisk-0">*</StyledAsterisk>}
+          {required && <StyledAsterisk className="descriptive-text-input--StyledAsterisk-0">*</StyledAsterisk>}
         </StyledLabel>
       )}
-      <StyledDescriptor data-test-id="descriptive-text-input--StyledDescriptor-0">{descriptor}</StyledDescriptor>
+      <StyledDescriptor className="descriptive-text-input--StyledDescriptor-0">{descriptor}</StyledDescriptor>
       <StyledTextarea
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         $height={height}
         required={required}
-        data-test-id="descriptive-text-input--StyledTextarea-0" />
+        className="descriptive-text-input--StyledTextarea-0" />
     </StyledContainer>
   );
 };

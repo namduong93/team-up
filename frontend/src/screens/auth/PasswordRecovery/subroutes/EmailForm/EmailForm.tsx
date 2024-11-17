@@ -27,7 +27,7 @@ export const EmailForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ..
       onSubmit={handleEmailSubmit}
       style={style}
       {...props}
-      data-test-id="email-form--StyledFormContainer-0">
+      className="email-form--StyledFormContainer-0">
       <h1>Recover Password</h1>
       <div style={{ width: '68%' }}>
         <TextInput
@@ -42,7 +42,7 @@ export const EmailForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ..
       </div>
       <StyledCustomButton
         style={{ minWidth: '134px' }}
-        data-test-id="email-form--StyledCustomButton-0">Get Recovery Code</StyledCustomButton>
+        className="email-form--StyledCustomButton-0">Get Recovery Code</StyledCustomButton>
     </StyledFormContainer>
   );
 }

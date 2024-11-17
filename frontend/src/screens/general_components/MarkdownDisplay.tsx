@@ -27,6 +27,6 @@ export const MarkdownDisplay: FC<MarkdownDisplayProps> = ({ content }) => {
     <StyledMarkdown
       children={content}
       rehypePlugins={[rehypeRaw]}
-      data-test-id="markdown-display--StyledMarkdown-0" />
+      className="markdown-display--StyledMarkdown-0" />
   );
 };

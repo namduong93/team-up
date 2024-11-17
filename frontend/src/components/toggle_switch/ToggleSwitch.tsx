@@ -52,14 +52,14 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({ children, style, def
       $borderIndex={borderIndex}
       $numElems={numChildren}
       style={{ maxWidth: `${150 * numChildren}px`, ...style }}
-      data-test-id="toggle-switch--StyledToggleDiv-0">
+      className="toggle-switch--StyledToggleDiv-0">
       {realChildren.map((child, index) => {
         return (
           <StyledToggleDivOptionDiv
             onClick={handleClick}
             data-index={index}
             key={index}
-            data-test-id="toggle-switch--StyledToggleDivOptionDiv-0">
+            className="toggle-switch--StyledToggleDivOptionDiv-0">
             {child}
           </StyledToggleDivOptionDiv>
         );

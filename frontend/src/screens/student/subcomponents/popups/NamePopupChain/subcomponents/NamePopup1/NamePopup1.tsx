@@ -27,8 +27,8 @@ export const NamePopup1: React.FC<NamePopup1Props> = ({
   };
 
   return <>
-    <StyledModal data-test-id="--StyledModal-0">
-      <StyledCloseButton onClick={onClose} data-test-id="--StyledCloseButton-0">
+    <StyledModal className="--StyledModal-0">
+      <StyledCloseButton onClick={onClose} className="--StyledCloseButton-0">
         <FaTimes />
       </StyledCloseButton>
       <div>{heading}</div>
@@ -48,7 +48,7 @@ export const NamePopup1: React.FC<NamePopup1Props> = ({
       <StyledButton
         disabled={isButtonDisabled()}
         onClick={onNext}
-        data-test-id="--StyledButton-0">Request</StyledButton>
+        className="--StyledButton-0">Request</StyledButton>
     </StyledModal>
   </>;
 };

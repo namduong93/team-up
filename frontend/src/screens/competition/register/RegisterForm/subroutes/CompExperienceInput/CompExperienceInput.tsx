@@ -190,11 +190,11 @@ export const CompExperienceInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-      data-test-id="comp-experience-input--StyledFlexBackground-0">
+      className="comp-experience-input--StyledFlexBackground-0">
       <CompRegistrationProgressBar progressNumber={2} />
-      <StyledContainer data-test-id="comp-experience-input--StyledContainer-0">
-        <StyledContentContainer data-test-id="comp-experience-input--StyledContentContainer-0">
-          <StyledTitle data-test-id="comp-experience-input--StyledTitle-0">Competitive Experience</StyledTitle>
+      <StyledContainer className="comp-experience-input--StyledContainer-0">
+        <StyledContentContainer className="comp-experience-input--StyledContentContainer-0">
+          <StyledTitle className="comp-experience-input--StyledTitle-0">Competitive Experience</StyledTitle>
           <MultiRadio
             options={courseOptions}
             selectedValues={formData.courses}
@@ -204,7 +204,7 @@ export const CompExperienceInput: FC = () => {
             label={
               <>
                 University Courses Completed
-                <StyledAsterisk data-test-id="comp-experience-input--StyledAsterisk-0">*</StyledAsterisk>
+                <StyledAsterisk className="comp-experience-input--StyledAsterisk-0">*</StyledAsterisk>
               </>
             }
             descriptor="Please select the courses you have completed"
@@ -344,12 +344,12 @@ export const CompExperienceInput: FC = () => {
               width="100%"
             />
           )}
-          <StyledButtonContainer data-test-id="comp-experience-input--StyledButtonContainer-0">
-            <StyledButton onClick={handleBack} data-test-id="comp-experience-input--StyledButton-0">Back</StyledButton>
+          <StyledButtonContainer className="comp-experience-input--StyledButtonContainer-0">
+            <StyledButton onClick={handleBack} className="comp-experience-input--StyledButton-0">Back</StyledButton>
             <StyledButton
               $disabled={isButtonDisabled()}
               onClick={handleRegister}
-              data-test-id="comp-experience-input--StyledButton-1">Register</StyledButton>
+              className="comp-experience-input--StyledButton-1">Register</StyledButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

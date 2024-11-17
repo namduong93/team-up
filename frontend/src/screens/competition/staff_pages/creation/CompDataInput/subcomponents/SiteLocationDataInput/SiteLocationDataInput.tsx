@@ -54,11 +54,11 @@ const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({ onAddLocation 
   }, []);
 
   return (
-    <StyledContainer data-test-id="site-location-data-input--StyledContainer-0">
-      <StyledTitle data-test-id="site-location-data-input--StyledTitle-0">Site Locations</StyledTitle>
-      <StyledDoubleInputContainer data-test-id="site-location-data-input--StyledDoubleInputContainer-0">
+    <StyledContainer className="site-location-data-input--StyledContainer-0">
+      <StyledTitle className="site-location-data-input--StyledTitle-0">Site Locations</StyledTitle>
+      <StyledDoubleInputContainer className="site-location-data-input--StyledDoubleInputContainer-0">
         <div style={{ display: 'flex', flexDirection: 'column', width: '45%' }}>
-          <StyledLabel data-test-id="site-location-data-input--StyledLabel-0">Institution</StyledLabel>
+          <StyledLabel className="site-location-data-input--StyledLabel-0">Institution</StyledLabel>
           <AdvancedDropdown
             setCurrentSelected={setCurrentOption}
             optionsState={[institutionOptions, setInstitutionOptions]}
@@ -75,10 +75,10 @@ const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({ onAddLocation 
           width="45%"
         />
       </StyledDoubleInputContainer>
-      <StyledAddButtonContainer data-test-id="site-location-data-input--StyledAddButtonContainer-0">
+      <StyledAddButtonContainer className="site-location-data-input--StyledAddButtonContainer-0">
         <StyledAddButton
           onClick={handleAddLocation}
-          data-test-id="site-location-data-input--StyledAddButton-0">+</StyledAddButton>
+          className="site-location-data-input--StyledAddButton-0">+</StyledAddButton>
       </StyledAddButtonContainer>
     </StyledContainer>
   );

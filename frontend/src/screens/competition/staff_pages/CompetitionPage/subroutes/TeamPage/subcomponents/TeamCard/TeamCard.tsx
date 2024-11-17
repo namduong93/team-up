@@ -104,20 +104,20 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
     $numMembers={teamDetails.students.length}
     onDoubleClick={() => setInfoBarOpen((p) => !p)}
     {...props}
-    data-test-id="team-card--StyledHoverDiv-0">
+    className="team-card--StyledHoverDiv-0">
     {!isEditNameThisCard &&
     <>
       <StyledCardHeaderDiv
         $statusColor={colorMap[status]}
-        data-test-id="team-card--StyledCardHeaderDiv-0">
-        <StyledTitleSpan data-test-id="team-card--StyledTitleSpan-0">{teamDetails.teamName}</StyledTitleSpan>
-        {!teamDetails.teamNameApproved && <StyledRedTeamNameAlert data-test-id="team-card--StyledRedTeamNameAlert-0" />}
-        <StyledTeamLevelDiv $levelChar={levelChar} data-test-id="team-card--StyledTeamLevelDiv-0">
+        className="team-card--StyledCardHeaderDiv-0">
+        <StyledTitleSpan className="team-card--StyledTitleSpan-0">{teamDetails.teamName}</StyledTitleSpan>
+        {!teamDetails.teamNameApproved && <StyledRedTeamNameAlert className="team-card--StyledRedTeamNameAlert-0" />}
+        <StyledTeamLevelDiv $levelChar={levelChar} className="team-card--StyledTeamLevelDiv-0">
           <span>{levelChar}</span>
         </StyledTeamLevelDiv>
       </StyledCardHeaderDiv>
   
-        <StyledTeamMatesContainerDiv data-test-id="team-card--StyledTeamMatesContainerDiv-0">
+        <StyledTeamMatesContainerDiv className="team-card--StyledTeamMatesContainerDiv-0">
           {teamDetails.students.map((member, index) => (
             <StyledTeamMemberMotionDiv
               key={`${member.userId}`}
@@ -136,7 +136,7 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
               onDragStart={() => setIsDragging(true)}
               onDragTransitionEnd={() => setIsDragging(false)}
               onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
-              data-test-id="team-card--StyledTeamMemberMotionDiv-0">
+              className="team-card--StyledTeamMemberMotionDiv-0">
               <TeamCardMember memberName={member.name} level={member.level} />
             </StyledTeamMemberMotionDiv>
           ))}
@@ -148,10 +148,10 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
         </StyledTeamMatesContainerDiv>
   </>}
     {isEditNameThisCard &&
-      <StyledTeamNameApprovalDiv data-test-id="team-card--StyledTeamNameApprovalDiv-0">
+      <StyledTeamNameApprovalDiv className="team-card--StyledTeamNameApprovalDiv-0">
         <StyledTitleSpan
           style={{ margin: '0', marginBottom: '20px' }}
-          data-test-id="team-card--StyledTitleSpan-1">{teamDetails.teamName}</StyledTitleSpan>
+          className="team-card--StyledTitleSpan-1">{teamDetails.teamName}</StyledTitleSpan>
         <ApproveNameRadios
           setTeamIds={setTeamIds}
           setRejectedTeamIds={setRejectedTeamIds}

@@ -135,28 +135,28 @@ export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, c
   return (
     <StyledCompCardContainer
       onClick={() => navigate(roleUrl(roles[0]))}
-      data-test-id="comp-card--StyledCompCardContainer-0">
-      <StyledCardHeader data-test-id="comp-card--StyledCardHeader-0">
-        <StyledCardTop data-test-id="comp-card--StyledCardTop-0">
-          <StyledCompHeader data-test-id="comp-card--StyledCompHeader-0">
+      className="comp-card--StyledCompCardContainer-0">
+      <StyledCardHeader className="comp-card--StyledCardHeader-0">
+        <StyledCardTop className="comp-card--StyledCardTop-0">
+          <StyledCompHeader className="comp-card--StyledCompHeader-0">
             <h2>{compName}</h2>
           </StyledCompHeader>
         </StyledCardTop>
       </StyledCardHeader>
-      <StyledCardMiddle data-test-id="comp-card--StyledCardMiddle-0">
-        <StyledCardText data-test-id="comp-card--StyledCardText-0">{location}</StyledCardText>
-        <StyledCardText data-test-id="comp-card--StyledCardText-1">{compDateFormatted}</StyledCardText>
+      <StyledCardMiddle className="comp-card--StyledCardMiddle-0">
+        <StyledCardText className="comp-card--StyledCardText-0">{location}</StyledCardText>
+        <StyledCardText className="comp-card--StyledCardText-1">{compDateFormatted}</StyledCardText>
       </StyledCardMiddle>
-      <StyledCardBottom data-test-id="comp-card--StyledCardBottom-0">
-        <StyledRoleContainer data-test-id="comp-card--StyledRoleContainer-0">
+      <StyledCardBottom className="comp-card--StyledCardBottom-0">
+        <StyledRoleContainer className="comp-card--StyledRoleContainer-0">
           {roles.map((role, index) => (
-            <StyledRole key={index} data-test-id="comp-card--StyledRole-0">{role}</StyledRole>
+            <StyledRole key={index} className="comp-card--StyledRole-0">{role}</StyledRole>
           ))}
         </StyledRoleContainer>
-        <StyledCountdown data-test-id="comp-card--StyledCountdown-0">{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</StyledCountdown>
+        <StyledCountdown className="comp-card--StyledCountdown-0">{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</StyledCountdown>
       </StyledCardBottom>
-      <StyledProgressBar data-test-id="comp-card--StyledProgressBar-0">
-        <StyledProgress $width={progressWidth} data-test-id="comp-card--StyledProgress-0" />
+      <StyledProgressBar className="comp-card--StyledProgressBar-0">
+        <StyledProgress $width={progressWidth} className="comp-card--StyledProgress-0" />
       </StyledProgressBar>
     </StyledCompCardContainer>
   );

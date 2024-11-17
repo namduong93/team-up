@@ -24,7 +24,7 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon,
       }}
       $isSortOpen={isOpen}
       {...props}
-      data-test-id="page-utils--StyledSortButton-0">
+      className="page-utils--StyledSortButton-0">
       <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
         <div style={{ height: '200%' }}>
           {icon}
@@ -83,17 +83,17 @@ const StyledSearchCell = styled.div`
 
 export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
   return (
-    <StyledSearchContainer data-test-id="page-utils--StyledSearchContainer-0">
+    <StyledSearchContainer className="page-utils--StyledSearchContainer-0">
       <StyledSearchInput
         type="text"
         value={value}
         onChange={onChange}
         {...props}
-        data-test-id="page-utils--StyledSearchInput-0" />
-      {!value && <StyledSearchCell data-test-id="page-utils--StyledSearchCell-0">
+        className="page-utils--StyledSearchInput-0" />
+      {!value && <StyledSearchCell className="page-utils--StyledSearchCell-0">
         <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
           <div style={{ height: '200%' }}>
-            <StyledSearchIcon data-test-id="page-utils--StyledSearchIcon-0" />
+            <StyledSearchIcon className="page-utils--StyledSearchIcon-0" />
           </div>
             <span>Search</span>
         </div>

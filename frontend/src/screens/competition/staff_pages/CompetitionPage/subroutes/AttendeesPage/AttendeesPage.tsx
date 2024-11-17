@@ -71,20 +71,20 @@ export const AttendeesDisplay: FC = () => {
       values.map((value) => (
       <StyledFilterTagButton
         key={`${field}-${value}`}
-        data-test-id="attendees-page--StyledFilterTagButton-0">
+        className="attendees-page--StyledFilterTagButton-0">
         {value}
         <StyledRemoveFilterIcon
           onClick={(e) => {
           e.stopPropagation();
           removeFilter(field, value);
           }}
-          data-test-id="attendees-page--StyledRemoveFilterIcon-0" />
+          className="attendees-page--StyledRemoveFilterIcon-0" />
       </StyledFilterTagButton>
       ))
     )}
   </div>
-  <StyledFlexBackground data-test-id="attendees-page--StyledFlexBackground-0">
-    <StyledNarrowDisplayDiv data-test-id="attendees-page--StyledNarrowDisplayDiv-0">
+  <StyledFlexBackground className="attendees-page--StyledFlexBackground-0">
+    <StyledNarrowDisplayDiv className="attendees-page--StyledNarrowDisplayDiv-0">
       {searchedAttendees.map(({ item: attendeesDetails }, index) => {
         return (
           <NarrowAttendeesCard
@@ -95,7 +95,7 @@ export const AttendeesDisplay: FC = () => {
         );
       })}
     </StyledNarrowDisplayDiv>
-    <StyledWideDisplayDiv data-test-id="attendees-page--StyledWideDisplayDiv-0">
+    <StyledWideDisplayDiv className="attendees-page--StyledWideDisplayDiv-0">
       <WideAttendeesHeader />
       {searchedAttendees.map(({ item: attendeesDetails }, index) => {
         return (

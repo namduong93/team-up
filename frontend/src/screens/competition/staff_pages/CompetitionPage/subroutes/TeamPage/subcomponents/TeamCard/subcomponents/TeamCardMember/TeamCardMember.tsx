@@ -7,14 +7,14 @@ export const TeamCardMember = ({ memberName, level }: { memberName: string, leve
   return (
     <StyledTeamMemberContainerDiv
       draggable='false'
-      data-test-id="team-card-member--StyledTeamMemberContainerDiv-0">
-      <StyledStyledUserIcon data-test-id="team-card-member--StyledStyledUserIcon-0" />
-      <StyledCenterTextDiv data-test-id="team-card-member--StyledCenterTextDiv-0">
+      className="team-card-member--StyledTeamMemberContainerDiv-0">
+      <StyledStyledUserIcon className="team-card-member--StyledStyledUserIcon-0" />
+      <StyledCenterTextDiv className="team-card-member--StyledCenterTextDiv-0">
         {memberName}
       </StyledCenterTextDiv>
       <StyledCenterTextDiv
         $levelChar={levelChar}
-        data-test-id="team-card-member--StyledCenterTextDiv-1">
+        className="team-card-member--StyledCenterTextDiv-1">
         {levelChar}
       </StyledCenterTextDiv>
     </StyledTeamMemberContainerDiv>

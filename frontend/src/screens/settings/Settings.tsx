@@ -77,30 +77,30 @@ export const Settings: FC = () => {
   };
 
   return isLoaded && (
-    <StyledBackground data-test-id="settings--StyledBackground-0">
-      <StyledSettingsContainer data-test-id="settings--StyledSettingsContainer-0">
-        <StyledTitle data-test-id="settings--StyledTitle-0">Settings Page</StyledTitle>
-        <StyledDropdownContainer data-test-id="settings--StyledDropdownContainer-0">
+    <StyledBackground className="settings--StyledBackground-0">
+      <StyledSettingsContainer className="settings--StyledSettingsContainer-0">
+        <StyledTitle className="settings--StyledTitle-0">Settings Page</StyledTitle>
+        <StyledDropdownContainer className="settings--StyledDropdownContainer-0">
           <StyledDropdownHeader
             $isOpen={passwordOpen}
             onClick={() => setPasswordOpen(!passwordOpen)}
-            data-test-id="settings--StyledDropdownHeader-0">Update Password<FaChevronDown />
+            className="settings--StyledDropdownHeader-0">Update Password<FaChevronDown />
           </StyledDropdownHeader>
-          <StyledDropdownContent $isOpen={passwordOpen} data-test-id="settings--StyledDropdownContent-0">
+          <StyledDropdownContent $isOpen={passwordOpen} className="settings--StyledDropdownContent-0">
             <UpdatePassword isOpen={passwordOpen} />
           </StyledDropdownContent>
         </StyledDropdownContainer>
-        <StyledDropdownContainer data-test-id="settings--StyledDropdownContainer-1">
+        <StyledDropdownContainer className="settings--StyledDropdownContainer-1">
           <StyledDropdownHeader
             $isOpen={faqOpen}
             onClick={() => setFaqOpen(!faqOpen)}
-            data-test-id="settings--StyledDropdownHeader-1">FAQs<FaChevronDown />
+            className="settings--StyledDropdownHeader-1">FAQs<FaChevronDown />
           </StyledDropdownHeader>
-          <StyledDropdownContent $isOpen={faqOpen} data-test-id="settings--StyledDropdownContent-1">
+          <StyledDropdownContent $isOpen={faqOpen} className="settings--StyledDropdownContent-1">
             <StyledFAQSearchBar
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              data-test-id="settings--StyledFAQSearchBar-0" />
+              className="settings--StyledFAQSearchBar-0" />
             {searchedFAQs.length > 0 ? (
               searchedFAQs.map((faq, index) => (
                 <div key={index}>
@@ -113,48 +113,48 @@ export const Settings: FC = () => {
             )}
           </StyledDropdownContent>
         </StyledDropdownContainer>
-        <StyledDropdownContainer data-test-id="settings--StyledDropdownContainer-2">
+        <StyledDropdownContainer className="settings--StyledDropdownContainer-2">
           <StyledDropdownHeader
             $isOpen={appearancesOpen}
             onClick={() => setAppearancesOpen(!appearancesOpen)}
-            data-test-id="settings--StyledDropdownHeader-2">Appearances<FaChevronDown />
+            className="settings--StyledDropdownHeader-2">Appearances<FaChevronDown />
           </StyledDropdownHeader>
           <StyledDropdownContent
             $isOpen={appearancesOpen}
-            data-test-id="settings--StyledDropdownContent-2">
+            className="settings--StyledDropdownContent-2">
             <StyledThemeButton
               $isLight={true}
               $newTheme={"light"}
               $isSelected={theme === "light"}
               onClick={() => changeTheme("light")}
-              data-test-id="settings--StyledThemeButton-0">Light</StyledThemeButton>
+              className="settings--StyledThemeButton-0">Light</StyledThemeButton>
             <StyledThemeButton
               $isLight={false}
               $newTheme={"dark"}
               $isSelected={theme === "dark"}
               onClick={() => changeTheme("dark")}
-              data-test-id="settings--StyledThemeButton-1">Dark</StyledThemeButton>
+              className="settings--StyledThemeButton-1">Dark</StyledThemeButton>
             <StyledThemeButton
               $isLight={false}
               $newTheme={"christmas"}
               $isSelected={theme === "christmas"}
               onClick={() => changeTheme("christmas")}
-              data-test-id="settings--StyledThemeButton-2">Christmas</StyledThemeButton>
+              className="settings--StyledThemeButton-2">Christmas</StyledThemeButton>
             <StyledThemeButton
               $isLight={false}
               $newTheme={"colourblind"}
               $isSelected={theme === "colourblind"}
               onClick={() => changeTheme("colourblind")}
-              data-test-id="settings--StyledThemeButton-3">Colour Blind</StyledThemeButton>
+              className="settings--StyledThemeButton-3">Colour Blind</StyledThemeButton>
           </StyledDropdownContent>
         </StyledDropdownContainer>
-        <StyledDropdownContainer data-test-id="settings--StyledDropdownContainer-3">
+        <StyledDropdownContainer className="settings--StyledDropdownContainer-3">
           <StyledDropdownHeader
             $isOpen={creditsOpen}
             onClick={() => setCreditsOpen(!creditsOpen)}
-            data-test-id="settings--StyledDropdownHeader-3">Credits<FaChevronDown />
+            className="settings--StyledDropdownHeader-3">Credits<FaChevronDown />
           </StyledDropdownHeader>
-          <StyledDropdownContent $isOpen={creditsOpen} data-test-id="settings--StyledDropdownContent-3">
+          <StyledDropdownContent $isOpen={creditsOpen} className="settings--StyledDropdownContent-3">
             <p>
               We are a team of computer science students from UNSW who created
               TeamUP!

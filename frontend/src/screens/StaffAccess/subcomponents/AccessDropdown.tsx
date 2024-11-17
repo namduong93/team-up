@@ -83,19 +83,19 @@ export const AccessDropdown: FC<AccessDropdownProps> = ({ staffId, currentAccess
       $access={selectedAccess}
       value={selectedAccess}
       onChange={handleChange}
-      data-test-id="access-dropdown--StyledDropdown-0">
+      className="access-dropdown--StyledDropdown-0">
       <StyledOption
         $access={UserAccess.Accepted}
         value={UserAccess.Accepted}
-        data-test-id="access-dropdown--StyledOption-0">Accepted</StyledOption>
+        className="access-dropdown--StyledOption-0">Accepted</StyledOption>
       <StyledOption
         $access={UserAccess.Pending}
         value={UserAccess.Pending}
-        data-test-id="access-dropdown--StyledOption-1">Pending</StyledOption>
+        className="access-dropdown--StyledOption-1">Pending</StyledOption>
       <StyledOption
         $access={UserAccess.Rejected}
         value={UserAccess.Rejected}
-        data-test-id="access-dropdown--StyledOption-2">Rejected</StyledOption>
+        className="access-dropdown--StyledOption-2">Rejected</StyledOption>
     </StyledDropdown>
   );
 };

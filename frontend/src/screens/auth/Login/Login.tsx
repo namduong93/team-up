@@ -25,15 +25,15 @@ export const Login: FC = () => {
   return (
     <StyledFlexBackground
       style={{ justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}
-      data-test-id="login--StyledFlexBackground-0">
+      className="login--StyledFlexBackground-0">
       <div style={{ width: '600px', flex: '0 1 auto' }}>
         <StyledImage
           src={`${backendURL.HOST}:${backendURL.PORT}/images/icpc_logo_landing.png`}
-          data-test-id="login--StyledImage-0" />
+          className="login--StyledImage-0" />
       </div>
-      <StyledFormContainer onSubmit={handleSubmit} data-test-id="login--StyledFormContainer-0">
-        <StyledTitle data-test-id="login--StyledTitle-0">Welcome</StyledTitle>
-        <StyledInputContainer data-test-id="login--StyledInputContainer-0">
+      <StyledFormContainer onSubmit={handleSubmit} className="login--StyledFormContainer-0">
+        <StyledTitle className="login--StyledTitle-0">Welcome</StyledTitle>
+        <StyledInputContainer className="login--StyledInputContainer-0">
           <TextInput
             label="Email"
             placeholder="email@example.com"
@@ -44,7 +44,7 @@ export const Login: FC = () => {
             width="97%"
           />
         </StyledInputContainer>
-        <StyledInputContainer data-test-id="login--StyledInputContainer-1">
+        <StyledInputContainer className="login--StyledInputContainer-1">
           <TextInput
             label="Password"
             placeholder="Enter your password"
@@ -57,13 +57,13 @@ export const Login: FC = () => {
         </StyledInputContainer>
         <StyledForgotPassword
           onClick={() => navigate('/password/recovery/email')}
-          data-test-id="login--StyledForgotPassword-0">Forgot Password?</StyledForgotPassword>
-        <StyledCustomButton type="submit" data-test-id="login--StyledCustomButton-0">Login</StyledCustomButton>
+          className="login--StyledForgotPassword-0">Forgot Password?</StyledForgotPassword>
+        <StyledCustomButton type="submit" className="login--StyledCustomButton-0">Login</StyledCustomButton>
         <div>
           <span style={{ marginRight: '5px', fontFamily: 'Arial, Helvetica, sans-serif' }}>New Here?</span>
           <StyledSignUpLink
             onClick={() => navigate('/roleregistration')}
-            data-test-id="login--StyledSignUpLink-0">Sign Up</StyledSignUpLink>
+            className="login--StyledSignUpLink-0">Sign Up</StyledSignUpLink>
         </div>
       </StyledFormContainer>
     </StyledFlexBackground>

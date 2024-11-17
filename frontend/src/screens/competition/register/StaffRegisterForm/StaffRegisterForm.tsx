@@ -172,11 +172,11 @@ export const StaffRegisterForm: FC = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
-      data-test-id="staff-register-form--StyledFlexBackground-0">
+      className="staff-register-form--StyledFlexBackground-0">
       <StyledFormContainer
         onSubmit={handleSubmit}
-        data-test-id="staff-register-form--StyledFormContainer-0">
-        <StyledTitle data-test-id="staff-register-form--StyledTitle-0">Staff Registration</StyledTitle>
+        className="staff-register-form--StyledFormContainer-0">
+        <StyledTitle className="staff-register-form--StyledTitle-0">Staff Registration</StyledTitle>
         <MultiRadio
           options={staffOptions}
           selectedValues={staffRegistrationData.roles}
@@ -199,7 +199,7 @@ export const StaffRegisterForm: FC = () => {
             });
           }}
           label={
-            <StyledLabel data-test-id="staff-register-form--StyledLabel-0">Role<StyledAsterisk data-test-id="staff-register-form--StyledAsterisk-0">*</StyledAsterisk>
+            <StyledLabel className="staff-register-form--StyledLabel-0">Role<StyledAsterisk className="staff-register-form--StyledAsterisk-0">*</StyledAsterisk>
             </StyledLabel>
           }
           showOther={false}
@@ -215,7 +215,7 @@ export const StaffRegisterForm: FC = () => {
                 width: "100%",
               }}
             >
-              <StyledLabel data-test-id="staff-register-form--StyledLabel-1">Site Overseeing<StyledAsterisk data-test-id="staff-register-form--StyledAsterisk-1">*</StyledAsterisk>
+              <StyledLabel className="staff-register-form--StyledLabel-1">Site Overseeing<StyledAsterisk className="staff-register-form--StyledAsterisk-1">*</StyledAsterisk>
               </StyledLabel>
               <AdvancedDropdown
                 isExtendable={true}
@@ -266,14 +266,14 @@ export const StaffRegisterForm: FC = () => {
             />
           </>
         )}
-        <StyledButtonContainer data-test-id="staff-register-form--StyledButtonContainer-0">
+        <StyledButtonContainer className="staff-register-form--StyledButtonContainer-0">
           <StyledButton
             onClick={() => navigate("/dashboard")}
-            data-test-id="staff-register-form--StyledButton-0">Back</StyledButton>
+            className="staff-register-form--StyledButton-0">Back</StyledButton>
           <StyledButton
             type="submit"
             disabled={isButtonDisabled()}
-            data-test-id="staff-register-form--StyledButton-1">Register</StyledButton>
+            className="staff-register-form--StyledButton-1">Register</StyledButton>
         </StyledButtonContainer>
       </StyledFormContainer>
     </StyledFlexBackground>

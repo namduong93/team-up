@@ -97,20 +97,20 @@ export const StudentPage: FC = () => {
         values.map((value) => (
         <StyledFilterTagButton
           key={`${field}-${value}`}
-          data-test-id="student-page--StyledFilterTagButton-0">
+          className="student-page--StyledFilterTagButton-0">
           {value}
           <StyledRemoveFilterIcon
             onClick={(e) => {
             e.stopPropagation();
             removeFilter(field, value);
             }}
-            data-test-id="student-page--StyledRemoveFilterIcon-0" />
+            className="student-page--StyledRemoveFilterIcon-0" />
         </StyledFilterTagButton>
         ))
       )}
     </div>
-  <StyledFlexBackground data-test-id="student-page--StyledFlexBackground-0">
-    <StyledNarrowDisplayDiv data-test-id="student-page--StyledNarrowDisplayDiv-0">
+  <StyledFlexBackground className="student-page--StyledFlexBackground-0">
+    <StyledNarrowDisplayDiv className="student-page--StyledNarrowDisplayDiv-0">
       {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
         (<StudentInfoCard
           studentsState={[students, setStudents]}
@@ -118,7 +118,7 @@ export const StudentPage: FC = () => {
           studentInfo={studentInfo}
         />))}
     </StyledNarrowDisplayDiv>
-    <StyledWideDisplayDiv data-test-id="student-page--StyledWideDisplayDiv-0">
+    <StyledWideDisplayDiv className="student-page--StyledWideDisplayDiv-0">
       <StudentInfoDiv studentsState={[students, setStudents]} style={{
         backgroundColor: theme.colours.userInfoCardHeader,
         fontWeight: 'bold'

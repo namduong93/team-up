@@ -38,46 +38,46 @@ export const StudentInfoDiv: FC<StudentCardProps> = (
     onDoubleClick={() => studentInfo && setIsInfoBarOpen((p) => !p)}
     style={style}
     {...props}
-    data-test-id="student-info-div--StyledWideInfoContainerDiv-0">
-    <StyledUserNameContainerDiv data-test-id="student-info-div--StyledUserNameContainerDiv-0">
-      {!studentInfo ? <StyledUsernameTextSpan data-test-id="student-info-div--StyledUsernameTextSpan-0">{name}</StyledUsernameTextSpan> :
-     <StyledUserNameGrid data-test-id="student-info-div--StyledUserNameGrid-0">
-       <StyledUserIcon data-test-id="student-info-div--StyledUserIcon-0" />
-       <StyledUsernameTextSpan data-test-id="student-info-div--StyledUsernameTextSpan-1">{name}</StyledUsernameTextSpan>
+    className="student-info-div--StyledWideInfoContainerDiv-0">
+    <StyledUserNameContainerDiv className="student-info-div--StyledUserNameContainerDiv-0">
+      {!studentInfo ? <StyledUsernameTextSpan className="student-info-div--StyledUsernameTextSpan-0">{name}</StyledUsernameTextSpan> :
+     <StyledUserNameGrid className="student-info-div--StyledUserNameGrid-0">
+       <StyledUserIcon className="student-info-div--StyledUserIcon-0" />
+       <StyledUsernameTextSpan className="student-info-div--StyledUsernameTextSpan-1">{name}</StyledUsernameTextSpan>
      </StyledUserNameGrid>}
     </StyledUserNameContainerDiv>
     <StyledSmallContainerDiv
       style={{ width: '10%' }}
-      data-test-id="student-info-div--StyledSmallContainerDiv-0">
+      className="student-info-div--StyledSmallContainerDiv-0">
       {sex}
     </StyledSmallContainerDiv>
     <StyledEmailContainerDiv
       $isHeader={!studentInfo}
-      data-test-id="student-info-div--StyledEmailContainerDiv-0">
+      className="student-info-div--StyledEmailContainerDiv-0">
       <StyledEmailSpan
         $isHeader={!studentInfo}
-        data-test-id="student-info-div--StyledEmailSpan-0">
+        className="student-info-div--StyledEmailSpan-0">
         {email}
       </StyledEmailSpan>
     </StyledEmailContainerDiv>
-    <StyledStudentIdContainerDiv data-test-id="student-info-div--StyledStudentIdContainerDiv-0">
+    <StyledStudentIdContainerDiv className="student-info-div--StyledStudentIdContainerDiv-0">
       {studentId}
     </StyledStudentIdContainerDiv>
-    <StyledStatusContainerDiv data-test-id="student-info-div--StyledStatusContainerDiv-0">
+    <StyledStatusContainerDiv className="student-info-div--StyledStatusContainerDiv-0">
       {studentInfo ? <StudentStatus isMatched={status === 'Matched'} >{status}</StudentStatus>
       : status}
     </StyledStatusContainerDiv>
-    <StyledTeamNameContainerDiv data-test-id="student-info-div--StyledTeamNameContainerDiv-0">
+    <StyledTeamNameContainerDiv className="student-info-div--StyledTeamNameContainerDiv-0">
       {teamName}
     </StyledTeamNameContainerDiv>
-    <StyledSmallContainerDiv data-test-id="student-info-div--StyledSmallContainerDiv-1">{level}</StyledSmallContainerDiv>
-    <StyledSmallContainerDiv data-test-id="student-info-div--StyledSmallContainerDiv-2">
+    <StyledSmallContainerDiv className="student-info-div--StyledSmallContainerDiv-1">{level}</StyledSmallContainerDiv>
+    <StyledSmallContainerDiv className="student-info-div--StyledSmallContainerDiv-2">
       {tshirtSize}
     </StyledSmallContainerDiv>
-    <StyledUniversityContainerDiv data-test-id="student-info-div--StyledUniversityContainerDiv-0">
+    <StyledUniversityContainerDiv className="student-info-div--StyledUniversityContainerDiv-0">
       {siteName}
     </StyledUniversityContainerDiv>
-    <StyledSmallContainerDiv data-test-id="student-info-div--StyledSmallContainerDiv-3"></StyledSmallContainerDiv>
+    <StyledSmallContainerDiv className="student-info-div--StyledSmallContainerDiv-3"></StyledSmallContainerDiv>
   </StyledWideInfoContainerDiv>
   </>;
 }

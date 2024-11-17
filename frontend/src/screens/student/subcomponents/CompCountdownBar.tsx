@@ -67,13 +67,13 @@ const StyledMedalIcon = styled(FaMedal)`
 
 export const CompCountdownBar: React.FC<ProgressBarProps> = ({ daysRemaining, progress }) => {
   return (
-    <StyledContainer data-test-id="comp-countdown-bar--StyledContainer-0">
-      <StyledTitle data-test-id="comp-countdown-bar--StyledTitle-0">{daysRemaining}days to go!</StyledTitle>
-      <StyledProgressWrapper data-test-id="comp-countdown-bar--StyledProgressWrapper-0">
-        <StyledProgressBarContainer data-test-id="comp-countdown-bar--StyledProgressBarContainer-0">
-          <StyledProgress $progress={progress} data-test-id="comp-countdown-bar--StyledProgress-0" />
+    <StyledContainer className="comp-countdown-bar--StyledContainer-0">
+      <StyledTitle className="comp-countdown-bar--StyledTitle-0">{daysRemaining}days to go!</StyledTitle>
+      <StyledProgressWrapper className="comp-countdown-bar--StyledProgressWrapper-0">
+        <StyledProgressBarContainer className="comp-countdown-bar--StyledProgressBarContainer-0">
+          <StyledProgress $progress={progress} className="comp-countdown-bar--StyledProgress-0" />
         </StyledProgressBarContainer>
-        <StyledMedalIcon data-test-id="comp-countdown-bar--StyledMedalIcon-0" />
+        <StyledMedalIcon className="comp-countdown-bar--StyledMedalIcon-0" />
       </StyledProgressWrapper>
     </StyledContainer>
   );

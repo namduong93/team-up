@@ -160,7 +160,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
   // when implemented
 
   return <>
-    <StyledActionsContainer data-test-id="team-action-card--StyledActionsContainer-0">
+    <StyledActionsContainer className="team-action-card--StyledActionsContainer-0">
       {actions.map((action, index) => (
         <StyledActionCard
           key={index}
@@ -169,14 +169,14 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
           }
           $actionType={action.type}
           $disabled={isDisabled(action.type)}
-          data-test-id="team-action-card--StyledActionCard-0">
+          className="team-action-card--StyledActionCard-0">
           <StyledCardIcon
             $disabled={isDisabled(action.type)}
             as={action.icon}
-            data-test-id="team-action-card--StyledCardIcon-0" />
+            className="team-action-card--StyledCardIcon-0" />
           <StyledCardText
             $disabled={isDisabled(action.type)}
-            data-test-id="team-action-card--StyledCardText-0">
+            className="team-action-card--StyledCardText-0">
             {action.text}
           </StyledCardText>
         </StyledActionCard>
@@ -186,12 +186,12 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
     <StyledOverlay
       $isOpen={modalOpen !== null}
       onClick={() => setModalOpen(null)}
-      data-test-id="team-action-card--StyledOverlay-0" />
+      className="team-action-card--StyledOverlay-0" />
 
     {modalOpen === "invite" && (
       <InvitePopup
         heading={
-          <StyledHeading data-test-id="team-action-card--StyledHeading-0">Copy and send your{"\nTeam Code to invite your"} {"\nmembers"}
+          <StyledHeading className="team-action-card--StyledHeading-0">Copy and send your{"\nTeam Code to invite your"} {"\nmembers"}
           </StyledHeading>
         }
         text={teamCode}
@@ -202,7 +202,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
     {modalOpen === "join" && (
       <JoinPopup
         heading={
-          <StyledHeading data-test-id="team-action-card--StyledHeading-1">Enter the details of the{"\nTeam you would like to join"}
+          <StyledHeading className="team-action-card--StyledHeading-1">Enter the details of the{"\nTeam you would like to join"}
           </StyledHeading>
         }
         onClose={() => setModalOpen(null)}
