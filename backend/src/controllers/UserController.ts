@@ -154,19 +154,9 @@ export class UserController {
     return;
   });
 
-  userPasswordRecoveryGenerateCode = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    //  send them 6 character code e.g. '123456' via email
-    res.json({});
-    return;
-  });
-
-  userPasswordRecoveryInputCode = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    const { code, password } = req.body;
-    // set the new password
-    res.json({});
-    return;
-  })
-
+  /**
+   * Handles the request to get all staff members.
+   */
   staffRequests = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const staffList = await this.userService.staffRequests(Number(userId));
@@ -174,6 +164,9 @@ export class UserController {
     return;
   })
 
+  /**
+   * Handles the request to update staff members details.
+   */
   staffRequestsUpdate = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const userId = req.query.userId;
     const { staffRequests } = req.body;

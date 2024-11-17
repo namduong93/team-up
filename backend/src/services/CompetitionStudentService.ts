@@ -24,6 +24,13 @@ export class CompetitionStudentService {
 
   }
 
+  /**
+   * Retrieves the competition relevant fields enabled for a student registration in a competition.
+   *
+   * @param userId The ID of the user whose toggles are being retrieved.
+   * @param code The code of the competition.
+   * @returns A promise that resolves to an object containing the toggles for the student
+   */
   competitionStudentsRegoToggles = async (userId: number, code: string) => {
     return await this.competitionStudentRepository.competitionStudentsRegoToggles(userId, code);
   }
