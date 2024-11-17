@@ -18,5 +18,7 @@ describe('EmailForm', () => {
     })).toHaveTextContent('Recover Password');
 
     expect(screen.getByPlaceholderText('email@example.com')).toBeInstanceOf(HTMLInputElement);
+
+    expect(screen.getByText('Get Recovery Code')).toBeInstanceOf(HTMLButtonElement);
   });
 });
