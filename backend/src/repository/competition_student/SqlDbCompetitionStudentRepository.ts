@@ -20,7 +20,13 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     this.competitionRepository = competitionRepository;
   }
 
-
+  /**
+   * Retrieves the competition relevant fields enabled for a student registration in a competition.
+   *
+   * @param userId The ID of the user whose toggles are being retrieved.
+   * @param code The code of the competition.
+   * @returns A promise that resolves to an object containing the toggles for the student
+   */
   competitionStudentsRegoToggles = async (userId: number, code: string) => {
     const dbResult = await this.pool.query(
       `SELECT 
@@ -38,7 +44,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     return dbResult.rows[0];
   }
 
-    /**
+  /**
    * Retrieves the details of a competition team for a specific student and competition.
    *
    * @param userId The ID of the user whose team details are being retrieved.
@@ -67,7 +73,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     return { ...teamDetails, students };
   }
 
-    /**
+  /**
    * Generates an encrypted invite code for a team in a competition that the user is a participant of.
    *
    * @param userId The ID of the user.
@@ -88,7 +94,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     return encryptedTeamId;
   }
 
-    /**
+  /**
    * Let a user joins a competition team via its code.
    *
    * @param userId The ID of the user joining the team.
@@ -171,7 +177,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     return { teamName: teamResult.rows[0].teamName };
   }
 
-    /**
+  /**
    * Retrieves detailed information about a student in a specific competition.
    *
    * @param userId The ID of the user whose details are being retrieved.
@@ -264,7 +270,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     return studentDetails;
   }
 
-    /**
+  /**
    * Updates the details of a student in a specific competition.
    *
    * @param userId The ID of the user performing the update.
@@ -305,7 +311,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     return {};
   }
 
-    /**
+  /**
    * Registers a student for a competition and creates a new (placeholder) team for them.
    * 
    * @param {CompetitionUser} competitionUserInfo The information of the user joining the competition.
@@ -411,7 +417,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     return {};
   }
 
-    /**
+  /**
    * Withdraws a student from a competition. If the student is the only participant in their team,
    * the team and its notifications are deleted. Otherwise, the student is removed from the team
    * and a new team is created for the student.
@@ -501,7 +507,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     }
   }
 
-    /**
+  /**
    * Requests a site change for a competition team member.
    *
    * @param userId The ID of the user requesting the site change.
@@ -547,6 +553,4 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
 
     return result.rows[0].id; // Return the team ID
   }
-
-  
 }

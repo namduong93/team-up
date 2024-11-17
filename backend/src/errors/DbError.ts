@@ -3,10 +3,13 @@ import { ErrorInterface } from "./ErrorInterface";
 enum DbErrorType {
   Auth = 'Auth',
   Query = 'Query',
-  Insert = 'Insert',
+  Insert = 'Insert', 
   Update = 'Update',
 }
 
+/**
+ * Represents an error that occurred during a database operation.
+ */
 export class DbError extends Error implements ErrorInterface {
   
   private errorType: DbErrorType | string;
