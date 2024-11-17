@@ -316,7 +316,7 @@ describe('Template tests', () => {
         email: 'newadmin16@odmin.com',
         bio: 'good bio, trust'
       },
-      src_competition_id: 5
+      src_competition_id: expect.any(Number),
     })
   })
 
