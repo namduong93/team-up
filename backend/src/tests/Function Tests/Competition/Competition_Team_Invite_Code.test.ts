@@ -17,7 +17,7 @@ import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepositor
 import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-describe.skip('Template tests', () => {
+describe('Team Invite Code Test', () => {
   let user_db;
   let comp_db;
   let uni_db;
@@ -44,14 +44,14 @@ describe.skip('Template tests', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW',
+    code: 'NEW15',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin@odmin.com',
+    email: 'newadmin15@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -79,7 +79,7 @@ describe.skip('Template tests', () => {
       universityId: 1,
       universityName: 'University of Melbourne',
       name: 'Maximillian Maverick',
-      email: 'newadmin@odmin.com',
+      email: 'newadmin15@odmin.com',
       sex: 'Male',
       pronouns: 'He/Him',
       tshirtSize: 'M',
@@ -96,7 +96,7 @@ describe.skip('Template tests', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender@gmail.com',
+      email: 'newcontender15@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -149,7 +149,11 @@ describe.skip('Template tests', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Case: Husk', async () => {
-    expect(1 + 1).toBe(2);
+  test('Failure case: User is not a participant in any team in this competition.', async () => {
+    await expect(comp_student_db.competitionTeamInviteCode(newStudent.userId + 10, comp.competitionId)).rejects.toThrow("User is not a participant in any team in this competition.")
+  })
+
+  test('Success case: returns an encrypted code', async () => {
+    expect(await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId)).toStrictEqual(expect.any(String))
   })
 })
