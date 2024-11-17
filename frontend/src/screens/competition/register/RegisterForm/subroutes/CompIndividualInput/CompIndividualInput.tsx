@@ -110,6 +110,8 @@ export const CompIndividualInput: FC = () => {
     accessibilityReqs: "",
   });
 
+  // Obtains the User's information from the backend and the default
+  // site assigned to the user's institution
   useEffect(() => {
     (async () => {
       try {
@@ -120,7 +122,6 @@ export const CompIndividualInput: FC = () => {
           { code }
         );
         setFormData({ ...formData, siteLocation: siteResponse.data.site });
-        console.log("Site info:", siteResponse.data.site);
       } catch (error: unknown) {
         console.log("Error fetching user info:", error);
       }

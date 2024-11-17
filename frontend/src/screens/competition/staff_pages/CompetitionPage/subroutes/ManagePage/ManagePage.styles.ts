@@ -130,14 +130,6 @@ export const StyledCodeCardText = styled(StyledCardText)`
   font-size: 1.25rem;
 `;
 
-// const Title2 = styled.h2`
-//   margin-top: 40px;
-//   margin-bottom: 20px;
-//   font-size: 22px;
-//   white-space: pre-wrap;
-//   word-break: break-word;
-// `;
-
 export const StyledTitle2 = styled.h2`
   margin-top: 40px;
   margin-bottom: 20px;

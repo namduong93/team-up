@@ -14,6 +14,7 @@ import {
 import TextInput from "../../../../../components/general_utility/TextInput";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
 import { StyledErrorMessage } from "../../../../general_styles/error_styles";
+import { genderOptions, pronounOptions } from "./AccountDataOptions";
 
 /**
  * A React web page form component for collecting account information in a multi-step registration process.
@@ -33,21 +34,6 @@ export const AccountDataInput: FC = () => {
   const [error, setError] = useState("");
   const [showOtherGenderInput, setShowOtherGenderInput] = useState(false);
 
-  const pronounOptions = [
-    { value: "", label: "Please Select" },
-    { value: "M", label: "He/Him" },
-    { value: "F", label: "She/Her" },
-    { value: "NB", label: "They/Them" },
-  ];
-
-  const genderOptions = [
-    { value: "", label: "Please Select" },
-    { value: "M", label: "Male" },
-    { value: "F", label: "Female" },
-    { value: "NB", label: "Non-Binary" },
-    { value: "other", label: "Other" },
-  ];
-
   const isButtonDisabled = () => {
     const { firstName, lastName, password, email, gender } = formData;
     return (
@@ -61,6 +47,8 @@ export const AccountDataInput: FC = () => {
     );
   };
 
+  // Verifies that the Password and Confirm Password entries are the same
+  // displaying an error if they are not
   const handleConfirmPasswordChange = (value: string) => {
     setConfirmPassword(value);
     if (value !== formData.password) {
@@ -70,6 +58,8 @@ export const AccountDataInput: FC = () => {
     }
   };
 
+  // Allows users to enter their own gender designation if it
+  // is not one of the provided options
   const handleGenderChange = (value: string) => {
     if (value === "other") {
       setShowOtherGenderInput(true);

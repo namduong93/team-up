@@ -21,7 +21,16 @@ interface DownloadButtonProps {
   hasAttendeesToDownload?: boolean;
 }
 
-export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = false, isEditingNameStatus = false,
+/**
+ * `DownloadButtons` is a React functional component that provides download options for CSV and PDF files, as well as the ability to update team status.
+ * It also includes controls for enabling and disabling the download actions based on the current state.
+ *
+ * @param {DownloadButtonProps} props - React DownloadButtonProps specified above
+ * @returns {JSX.Element} The rendered download button component, with actions depending on the current state.
+ */
+export const DownloadButtons: FC<DownloadButtonProps> = ({
+  isEditingStatus = false,
+  isEditingNameStatus = false,
   isDownloadingState: [isDownloading, setIsDownloading],
   handleEnable = () => {},
   handleDisable = () => {},
@@ -38,68 +47,75 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({ isEditingStatus = fal
   const enableDownloading = () => {
     setIsDownloading(true);
     handleEnable();
-  }
+  };
 
   const disableDownloading = () => {
     setIsDownloading(false);
     handleDisable();
-  }
+  };
 
   return (
     <>
-      {!isEditingStatus && !isEditingNameStatus && !isDownloading &&
-        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-          <TransparentResponsiveButton actionType="primary"
+      {!isEditingStatus && !isEditingNameStatus && !isDownloading && (
+        <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+          <TransparentResponsiveButton
+            actionType="primary"
             label="Download"
             icon={<FaDownload />}
             style={{ backgroundColor: theme.colours.primaryLight }}
-            onClick={enableDownloading} isOpen={false}
-          />
-
-        </div>
-      }
-      {isDownloading && (hasTeamsToDownload || hasAttendeesToDownload) &&
-      <>
-        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-          <TransparentResponsiveButton actionType="error"
-            onClick={disableDownloading} label="Cancel" isOpen={false}
-            icon={<GiCancel />}
-            style={{
-              backgroundColor: theme.colours.cancel,
-          }} />
-        </div>
-        
-        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-          <ResponsiveActionButton actionType="secondary"
-            label="Download CSV"
-            question={downloadQuestion}
-            icon={<GrDocumentCsv />}
-            handleSubmit={downloadCSV}
+            onClick={enableDownloading}
+            isOpen={false}
           />
         </div>
-
-        <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-          <ResponsiveActionButton actionType="primary"
-            label="Download PDF"
-            question={downloadQuestion}
-            icon={<GrDocumentPdf />}
-            handleSubmit={downloadPDF}
-          />
-        </div>
-
-        {!isSiteDownload && hasTeamsToDownload &&
-          <div style={{ maxWidth: '150px', width: '100%', height: '35px' }}>
-            <ResponsiveActionButton actionType="confirm"
-              label="Update Status"
-              question="Are you sure you have registered these teams on ICPC and would like to update their status to 'Registered'?"
-              icon={<FaStamp />}
-              handleSubmit={updateTeamStatus}
+      )}
+      {isDownloading && (hasTeamsToDownload || hasAttendeesToDownload) && (
+        <>
+          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+            <TransparentResponsiveButton
+              actionType="error"
+              onClick={disableDownloading}
+              label="Cancel"
+              isOpen={false}
+              icon={<GiCancel />}
+              style={{
+                backgroundColor: theme.colours.cancel,
+              }}
             />
           </div>
-        }
-      </>
-      }
+
+          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+            <ResponsiveActionButton
+              actionType="secondary"
+              label="Download CSV"
+              question={downloadQuestion}
+              icon={<GrDocumentCsv />}
+              handleSubmit={downloadCSV}
+            />
+          </div>
+
+          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+            <ResponsiveActionButton
+              actionType="primary"
+              label="Download PDF"
+              question={downloadQuestion}
+              icon={<GrDocumentPdf />}
+              handleSubmit={downloadPDF}
+            />
+          </div>
+
+          {!isSiteDownload && hasTeamsToDownload && (
+            <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+              <ResponsiveActionButton
+                actionType="confirm"
+                label="Update Status"
+                question="Are you sure you have registered these teams on ICPC and would like to update their status to 'Registered'?"
+                icon={<FaStamp />}
+                handleSubmit={updateTeamStatus}
+              />
+            </div>
+          )}
+        </>
+      )}
     </>
-    
-  )
-}
+  );
+};

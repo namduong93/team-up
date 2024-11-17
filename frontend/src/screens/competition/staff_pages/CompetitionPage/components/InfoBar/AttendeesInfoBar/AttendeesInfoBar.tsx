@@ -1,34 +1,44 @@
 import { FC, useState } from "react";
 import { InfoBar, InfoBarProps } from "../InfoBar";
 import { AttendeesDetails } from "../../../../../../../../shared_types/Competition/staff/AttendeesDetails";
-import { StyledInfoBarField, StyledLabelSpan, StyledVerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
+import {
+  StyledInfoBarField,
+  StyledLabelSpan,
+  StyledVerticalInfoBarField,
+} from "../TeamInfoBar/TeamInfoBar.styles";
 import { StyledProfilePic } from "../../../../../../Account/Account.styles";
 import { CompRoles } from "../../../subroutes/StaffPage/subcomponents/CompRoles";
 import { backendURL } from "../../../../../../../../config/backendURLConfig";
 
 interface AttendeesInfoProps extends InfoBarProps {
   attendeesDetails: AttendeesDetails;
-  attendeesState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
 }
 
+/**
+ * A functional component for displaying attendee information in a collapsible info bar.
+ *
+ * The `AttendeesInfoBar` component provides a detailed view of attendee information,
+ * including their name, contact details, roles, dietary requirements, and site-related information.
+ *
+ * @param {AttendeesInfoProps} props - React AttendeesInfoProps specified above, where isOpenState manages
+ * the open/closed state of the `InfoBar`.
+ * @returns {JSX.Element} - A collapsible information bar displaying attendee details.
+ */
 export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
   attendeesDetails,
-  attendeesState: [attendeesList, setAttendeesList],
   isOpenState: [isOpen, setIsOpen],
 }) => {
-
-  const [attendeesData, setAttendeesData] = useState(attendeesDetails);
+  const [attendeesData] = useState(attendeesDetails);
 
   return (
     <InfoBar isOpenState={[isOpen, setIsOpen]}>
-
       <StyledInfoBarField>
         <StyledLabelSpan>User Id:</StyledLabelSpan>
         <span>{attendeesData.userId}</span>
       </StyledInfoBarField>
 
       <StyledProfilePic
-        style={{ marginBottom: '15px' }}
+        style={{ marginBottom: "15px" }}
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
       />
 
@@ -74,7 +84,7 @@ export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
 
       <StyledVerticalInfoBarField>
         <StyledLabelSpan>Roles:</StyledLabelSpan>
-        <StyledInfoBarField style={{ maxWidth: '130px' }}>
+        <StyledInfoBarField style={{ maxWidth: "130px" }}>
           <CompRoles roles={attendeesData.roles} />
         </StyledInfoBarField>
       </StyledVerticalInfoBarField>
@@ -91,14 +101,21 @@ export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
 
       <StyledVerticalInfoBarField>
         <StyledLabelSpan>Pending Site:</StyledLabelSpan>
-        <span>{attendeesData.pendingSiteName ? attendeesData.pendingSiteName : 'None'}</span>
+        <span>
+          {attendeesData.pendingSiteName
+            ? attendeesData.pendingSiteName
+            : "None"}
+        </span>
       </StyledVerticalInfoBarField>
 
       <StyledInfoBarField>
         <StyledLabelSpan>Pending Site Capacity:</StyledLabelSpan>
-        <span>{attendeesData.pendingSiteCapacity ? attendeesData.pendingSiteCapacity : 'N/A'}</span>
+        <span>
+          {attendeesData.pendingSiteCapacity
+            ? attendeesData.pendingSiteCapacity
+            : "N/A"}
+        </span>
       </StyledInfoBarField>
-
     </InfoBar>
-  )
-}
+  );
+};

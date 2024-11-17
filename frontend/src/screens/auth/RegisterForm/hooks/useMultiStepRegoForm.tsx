@@ -6,6 +6,10 @@ interface MultiStepRegoFormContextType {
   setFormData: (data: Partial<FormState>) => void;
 }
 
+export const MultiStepRegoFormContext = createContext<
+  MultiStepRegoFormContextType | undefined
+>(undefined);
+
 /**
  * Creates a context and custom hook for managing the state of a multi-step registration form.
  *
@@ -16,10 +20,6 @@ interface MultiStepRegoFormContextType {
  * @returns {MultiStepRegoFormContextType} - The current form state (`formData`) and the
  * function to update it (`setFormData`).
  */
-
-export const MultiStepRegoFormContext = createContext<
-  MultiStepRegoFormContextType | undefined
->(undefined);
 
 export const useMultiStepRegoForm = () => {
   const context = useContext(MultiStepRegoFormContext);

@@ -34,6 +34,7 @@ export const InstitutionDataInput: FC = () => {
   ]);
   const [isCustomInstitution, setIsCustomInstitution] = useState(false);
 
+  // Obtains the University List from the backend when the component first mounts
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
@@ -57,6 +58,8 @@ export const InstitutionDataInput: FC = () => {
     fetchUniversities();
   }, []);
 
+  // Displays a text input box for users to enter a different institution not included
+  // in the default University list
   const handleInstitutionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
 
@@ -76,6 +79,8 @@ export const InstitutionDataInput: FC = () => {
     );
   };
 
+  // Sends the entered user data to either the staff or student register backend
+  // depending on role selection
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -98,7 +103,7 @@ export const InstitutionDataInput: FC = () => {
         studentId: formData.role === "Student" ? formData.studentId : undefined,
       });
 
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error during registration:", error);
     }
