@@ -1,10 +1,12 @@
-
 import { FC, useEffect, useState } from "react";
 import { CompetitionInformation as CompetitionDetails } from "../../../../../shared_types/Competition/CompetitionDetails";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
-import { SortOption, StyledSortOption } from "../../../../components/page_header/components/SortSelect";
+import {
+  SortOption,
+  StyledSortOption,
+} from "../../../../components/page_header/components/SortSelect";
 import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
 import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
@@ -12,30 +14,29 @@ import { StaffInfo } from "../../../../../shared_types/Competition/staff/StaffIn
 import { sendRequest } from "../../../../utility/request";
 import { fetchTeams } from "./utils/fetchTeams";
 import { CompetitionSite } from "../../../../../shared_types/Competition/CompetitionSite";
-import { StyledMainPageDiv, StyledOverflowFlexBackground, StyledPageOptionsContainerDiv } from "./subroutes/CommonSubStyles.styles";
+import {
+  StyledMainPageDiv,
+  StyledOverflowFlexBackground,
+  StyledPageOptionsContainerDiv,
+} from "./subroutes/CommonSubStyles.styles";
 import { PageHeader } from "../../../../components/page_header/PageHeader";
 import { TeamPageButtons } from "./subroutes/TeamPage/subcomponents/TeamPageButtons";
 import { AttendeesPageButtons } from "./subroutes/AttendeesPage/subcomponents/AttendeesPageButtons";
 import { AdvancedDropdown } from "../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { CustomToggleSwitch } from "../../../../components/toggle_switch/ToggleSwitch";
-import { StyledAdminToggleOptionDiv, StyledToggleOptionTextSpan } from "./CompetitionPage.styles";
+import {
+  StyledAdminToggleOptionDiv,
+  StyledToggleOptionTextSpan,
+} from "./CompetitionPage.styles";
 
-// export interface CompetitionDetails {
-//   id?: number;
-//   name: string;
-//   teamSize?: number;
-//   createdDate: EpochTimeStamp;
-//   earlyRegDeadline: EpochTimeStamp;
-//   startDate: EpochTimeStamp;
-//   generalRegDeadline: EpochTimeStamp;
-//   siteLocations?: SiteLocation[];
-//   otherSiteLocations?: OtherSiteLocation[];
-//   code?: string;
-//   region: string;
-//   information?: string;
-// }
-
-
+/**
+ * CompetitionPage is a React functional component that manages and displays
+ * information related to a specific competition. It fetches competition details,
+ * team lists, student information, staff, attendees, and site data based on
+ * the competition ID and user roles.
+ *
+ * @returns {JSX.Element} - The rendered JSX of the CompetitionPage component.
+ */
 export const CompetitionPage: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
@@ -57,11 +58,8 @@ export const CompetitionPage: FC = () => {
       enableStudentButtons: false,
       enableStaffButtons: false,
       enableTeamsChangedButtons: false,
-    }
-  );
+    });
 
-
-  ////
   const [isEditingStatus, setIsEditingStatus] = useState<boolean>(false);
   const [approveTeamIds, setApproveTeamIds] = useState<Array<number>>([]);
 
@@ -77,9 +75,6 @@ export const CompetitionPage: FC = () => {
   );
   const [staffList, setStaffList] = useState<Array<StaffInfo>>([]);
   const [compDetails, setCompDetails] = useState<CompetitionDetails>({
-    // id: 0,
-    // teamSize: 3,
-    // createdDate: Date.now(),
     name: "",
     earlyRegDeadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
     startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
@@ -90,18 +85,24 @@ export const CompetitionPage: FC = () => {
     region: "Unknown",
     information: "",
   });
-  ////
-  const [siteOptions, setSiteOptions] = useState([{ value: '', label: '' }]);
-  const [siteOption, setSiteOption] = useState({ value: '', label: '' });
-  const [universityOptions, setUniversityOptions] = useState([{ value: '', label: '' }]);
-  const [universityOption, setUniversityOption] = useState({ value: '', label: '' });
-  
-  const [dropdownOptions, setDropdownOptions] = useState<
-  Array<{ value: string; label: string }>
-  >([{ value: "", label: "" }]);
-  const [dropdownOption, setDropdownOption] = useState({ value: "", label: "" });
+  const [siteOptions, setSiteOptions] = useState([{ value: "", label: "" }]);
+  const [siteOption, setSiteOption] = useState({ value: "", label: "" });
+  const [universityOptions, setUniversityOptions] = useState([
+    { value: "", label: "" },
+  ]);
+  const [universityOption, setUniversityOption] = useState({
+    value: "",
+    label: "",
+  });
 
-  
+  const [dropdownOptions, setDropdownOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([{ value: "", label: "" }]);
+  const [dropdownOption, setDropdownOption] = useState({
+    value: "",
+    label: "",
+  });
+
   useEffect(() => {
     const fetchCompetitionDetails = async () => {
       try {
@@ -110,10 +111,7 @@ export const CompetitionPage: FC = () => {
         }>("/competition/details", { compId });
         const { competition } = response.data;
         setCompDetails(competition);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (err: unknown) {
-        /* empty */
-      }
+      } catch (err: unknown) {}
     };
 
     const fetchCompetitionTeams = async () => {
@@ -153,7 +151,7 @@ export const CompetitionPage: FC = () => {
         setSiteOptions(
           sites.map((site) => ({ value: String(site.id), label: site.name }))
         );
-        setSiteOption({value: String(sites[0].id), label: sites[0].name });
+        setSiteOption({ value: String(sites[0].id), label: sites[0].name });
       } catch (error: unknown) {
         console.error("Error fetching sites:", error);
       }
@@ -173,8 +171,10 @@ export const CompetitionPage: FC = () => {
       setDropdownOptions(uniOptions);
       setUniversityOptions(uniOptions);
 
-      // TODO: Change the default to the users' own university
-      setUniversityOption({ value: String(universities[0].id), label: universities[0].name });
+      setUniversityOption({
+        value: String(universities[0].id),
+        label: universities[0].name,
+      });
     };
 
     const fetchInfo = async () => {
@@ -212,7 +212,7 @@ export const CompetitionPage: FC = () => {
         fetchStaffList();
         fetchUniversities();
       }
-      
+
       fetchSites();
     };
 
@@ -226,7 +226,7 @@ export const CompetitionPage: FC = () => {
       if (updatedFilters[field].length === 0) {
         delete updatedFilters[field];
       }
-      return updatedFilters; // trigger render to update filter dropdown
+      return updatedFilters;
     });
   };
 
@@ -301,7 +301,9 @@ export const CompetitionPage: FC = () => {
                   navigate(`/competition/page/students/${compId}`);
                 }}
               >
-                <StyledToggleOptionTextSpan>Students</StyledToggleOptionTextSpan>
+                <StyledToggleOptionTextSpan>
+                  Students
+                </StyledToggleOptionTextSpan>
               </StyledAdminToggleOptionDiv>
             )}
 
@@ -331,7 +333,9 @@ export const CompetitionPage: FC = () => {
                   navigate(`/competition/page/site/${compId}`);
                 }}
               >
-                <StyledToggleOptionTextSpan>Attendees</StyledToggleOptionTextSpan>
+                <StyledToggleOptionTextSpan>
+                  Attendees
+                </StyledToggleOptionTextSpan>
               </StyledAdminToggleOptionDiv>
             )}
 
@@ -367,7 +371,7 @@ export const CompetitionPage: FC = () => {
             rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
             registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
             teamListState: [teamList, setTeamList],
-            
+
             setFilterOptions,
             setSortOptions,
             buttonConfigurationState: [
@@ -381,7 +385,7 @@ export const CompetitionPage: FC = () => {
             siteOptionsState: [siteOptions, setSiteOptions],
             dropdownOptionsState: [dropdownOptions, setDropdownOptions],
             universityOptionsState: [universityOptions, setUniversityOptions],
-            
+
             siteOptionState: [siteOption, setSiteOption],
             universityOptionState: [universityOption, setUniversityOption],
             dropdownOptionState: [dropdownOption, setDropdownOption],

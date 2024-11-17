@@ -56,10 +56,6 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
     return true;
   };
 
-  useEffect(() => {
-    console.log(student);
-  }, []);
-
   return (
     <StyledModalOverlay>
       <StyledModalContent>

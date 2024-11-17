@@ -25,15 +25,28 @@ const StyledButton = styled.button`
 `;
 
 const StyledWarningMessage = styled.p<{ $isSuccess: boolean }>`
-  color: ${({ $isSuccess: isSuccess, theme }) => isSuccess ? theme.colours.confirm : theme.colours.error };
+  color: ${({ $isSuccess: isSuccess, theme }) =>
+    isSuccess ? theme.colours.confirm : theme.colours.error};
   font-size: 14px;
   margin-top: 10px;
 `;
 
 interface UpdatePasswordProps {
   isOpen: boolean;
-};
+}
 
+/**
+ * A React component that allows users to update their password.
+ *
+ * The `UpdatePassword` component provides a form where users can enter their current password, new password,
+ * and confirm the new password. It validates that the new password matches the confirmation and then makes
+ * an API request to update the password. The component also shows success or error messages based on the outcome
+ * of the password update attempt.
+ *
+ * @param {UpdatePasswordProps} props - React UpdatePasswordProps as specified above
+ * @returns {JSX.Element} - A UI component that renders a form for updating the user's password and displays
+ * success or error messages.
+ */
 export const UpdatePassword: FC<UpdatePasswordProps> = ({ isOpen }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -49,20 +62,25 @@ export const UpdatePassword: FC<UpdatePasswordProps> = ({ isOpen }) => {
 
   const handleSubmitPassword = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(`current: ${currentPassword}, new: ${newPassword}, confirm: ${confirmPassword}`);
+    console.log(
+      `current: ${currentPassword}, new: ${newPassword}, confirm: ${confirmPassword}`
+    );
 
     if (newPassword !== confirmPassword) {
       setWarningMessage("Passwords do not match.");
       setIsSuccess(false);
     } else {
       try {
-        await sendRequest.put("/user/password", { oldPassword: currentPassword, newPassword: newPassword });
+        await sendRequest.put("/user/password", {
+          oldPassword: currentPassword,
+          newPassword: newPassword,
+        });
         setWarningMessage("Password updated successfully!");
         setIsSuccess(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           console.log("Error updating password: ", error);
-        })
+        });
         setIsSuccess(false);
         setWarningMessage("Failed to update password.");
       }
@@ -107,7 +125,11 @@ export const UpdatePassword: FC<UpdatePasswordProps> = ({ isOpen }) => {
           <StyledButton type="submit">Update Password</StyledButton>
         </form>
 
-        {warningMessage && <StyledWarningMessage $isSuccess={isSuccess}>{warningMessage}</StyledWarningMessage>}
+        {warningMessage && (
+          <StyledWarningMessage $isSuccess={isSuccess}>
+            {warningMessage}
+          </StyledWarningMessage>
+        )}
       </div>
     )
   );

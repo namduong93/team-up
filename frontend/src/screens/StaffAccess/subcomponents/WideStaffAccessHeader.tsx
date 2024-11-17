@@ -1,20 +1,33 @@
 import { FC } from "react";
 import { useTheme } from "styled-components";
-import { StyledUserNameContainerDiv, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import {
+  StyledUserNameContainerDiv,
+  StyledUsernameTextSpan,
+  StyledWideInfoContainerDiv,
+} from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
 import { StyledStandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/CompRoles";
 import { StyledStandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
 
+/**
+ * A React functional component for rendering the header row in the wide staff access table.
+ *
+ * The `WideStaffAccessHeader` component displays column headers for the wide staff information card,
+ * including labels for "Full Name," "Role," "Affiliation," "Access," and "Email."
+ *
+ * @returns {JSX.Element} - A styled header row component for the wide staff access table
+ */
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
   return (
-    <StyledWideInfoContainerDiv $isHeader={true} style={{
-      backgroundColor: theme.colours.userInfoCardHeader,
-      fontWeight: 'bold'
-    }}>
+    <StyledWideInfoContainerDiv
+      $isHeader={true}
+      style={{
+        backgroundColor: theme.colours.userInfoCardHeader,
+        fontWeight: "bold",
+      }}
+    >
       <StyledUserNameContainerDiv>
-        <StyledUsernameTextSpan>
-          Full Name
-        </StyledUsernameTextSpan>
+        <StyledUsernameTextSpan>Full Name</StyledUsernameTextSpan>
       </StyledUserNameContainerDiv>
 
       <StyledStandardContainerDiv>
@@ -28,8 +41,6 @@ export const WideStaffAccessHeader: FC = () => {
       <StyledStandardContainerDiv>
         <StyledStandardSpan>Email</StyledStandardSpan>
       </StyledStandardContainerDiv>
-
-
     </StyledWideInfoContainerDiv>
-  )
-}
+  );
+};

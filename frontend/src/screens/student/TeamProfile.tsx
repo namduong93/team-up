@@ -29,9 +29,7 @@ const StyledTeamOverflowFlexBackground = styled(StyledOverflowFlexBackground)`
   height: 98%;
 `;
 
-const StyledTeamProvileOutlet = styled(Outlet)`
-  /* box-sizing: border-box; */
-`;
+const StyledTeamProvileOutlet = styled(Outlet)``;
 
 const StyledOverlay = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};

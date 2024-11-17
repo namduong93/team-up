@@ -5,7 +5,16 @@ import studentFAQs from "./config/faq_student.json";
 import adminFAQs from "./config/faq_admin.json";
 import staffFAQs from "./config/faq_staff.json";
 import Fuse from "fuse.js";
-import { StyledBackground, StyledDropdownContainer, StyledDropdownContent, StyledDropdownHeader, StyledFAQSearchBar, StyledSettingsContainer, StyledThemeButton, StyledTitle } from "./Settings.styles";
+import {
+  StyledBackground,
+  StyledDropdownContainer,
+  StyledDropdownContent,
+  StyledDropdownHeader,
+  StyledFAQSearchBar,
+  StyledSettingsContainer,
+  StyledThemeButton,
+  StyledTitle,
+} from "./Settings.styles";
 import { FaChevronDown } from "react-icons/fa";
 import { UpdatePassword } from "./subcomponents/UpdatePassword";
 import { ProfileCard } from "../student/subcomponents/ProfileCard/ProfileCard";
@@ -20,6 +29,17 @@ export interface ThemeButtonProps {
   $newTheme: "light" | "dark" | "christmas" | "colourblind";
 }
 
+/**
+ * A React component for managing user settings and preferences.
+ *
+ * The `Settings` component allows users to update their password, search FAQs, change themes, and view credits.
+ * The component dynamically loads FAQs based on the user's type (student, staff, or system_admin) and provides
+ * a search bar to filter FAQs. It also includes dropdown sections for updating passwords, selecting appearance themes,
+ * and displaying credits.
+ *
+ * @returns {JSX.Element} - A UI component for managing user settings, including options for password update,
+ * theme selection, FAQ search, and credits display.
+ */
 export const Settings: FC = () => {
   const [theme, setTheme] = useState<string>("light");
   const [passwordOpen, setPasswordOpen] = useState<boolean>(false);
@@ -50,6 +70,7 @@ export const Settings: FC = () => {
     })();
   }, []);
 
+  // Fetches the appropriate FAQs based on the user's type
   const fetchFAQs = (userType: string) => {
     let faqs: FAQ[] = [];
 
@@ -64,11 +85,13 @@ export const Settings: FC = () => {
     setFAQ(faqs);
   };
 
+  // Handles FAQS searching based on the user query
   const fuse = new Fuse(faq, { keys: ["question", "answer"], threshold: 1 });
   const searchedFAQs = searchQuery
     ? fuse.search(searchQuery).map((result) => result.item)
     : faq;
 
+  // Sets the global website theme according to the available theme styles
   const changeTheme = (newTheme: string) => {
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
@@ -187,13 +210,13 @@ export const Settings: FC = () => {
               <ProfileCard
                 name="Tuyet Nguyen"
                 email="https://www.linkedin.com/in/tuyet-nguyen-431192221"
-                bio="Currently studying a Bachelors Degree in Mechanical and Manufacturing Engineering (Hon), and Computer Science. I’m an experienced Laboratory Assistant and Tutor at UNSW specialising in Python coding."
+                bio="Currently studying a Bachelors Degree in Mechanical and Manufacturing Engineering (Hon), and Computer Science. I’m an experienced Tutor at UNSW specialising in Python coding."
                 image={`${backendURL.HOST}:${backendURL.PORT}/images/tuyet_credits.jpg`}
               />
               <ProfileCard
                 name="Olivia Chen"
                 email="https://www.linkedin.com/in/olivia-chen-oc2601"
-                bio="Currently studying a Double Degree in Eletrical Engineering and Computer Science. Born to girlie, forced grind."
+                bio="Currently studying a Double Degree in Electrical Engineering and Computer Science. Born to be a girlie, forced to grind."
                 image={`${backendURL.HOST}:${backendURL.PORT}/images/olivia_credits.jpg`}
               />
               <ProfileCard

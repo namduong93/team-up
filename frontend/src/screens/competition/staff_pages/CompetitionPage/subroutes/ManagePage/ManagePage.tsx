@@ -106,7 +106,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
 
   const compCode = compDetails.code ?? "COMP1234";
 
-  // styles the apperance and designates the staff access to competition
+  // Styles the apperance and designates the staff access to competition
   // administration tiles
   const actions = [
     {
@@ -156,7 +156,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
     action.roles.some((role) => staffRoles.includes(role))
   );
 
-  // sets the state to control the appearance of Pop Ups depending on
+  // Triggers the appearance of Pop Ups depending on
   // tile selected
   const handleActionClick = (actionType: ActionType) => {
     if (actionType === "seat") {
@@ -294,7 +294,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
     [CourseCategory.ProgrammingChallenges]: "",
   });
 
-  // updates the Edit Course object storing the course codes for the University
+  // Updates the Edit Course object storing the course codes for the University
   // coding courses completed
   const handleEditCourseChange = (category: CourseCategory, value: string) => {
     setEditCourse((prevEditCourse) => ({
@@ -303,7 +303,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
     }));
   };
 
-  // ensures that on first load it doesn't request the data since it will be
+  // Ensures that on first load it doesn't request the data since it will be
   // re-requested once the universityOption is set
   useEffect(() => {
     if (isFirstLoad) {
@@ -321,7 +321,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
     fetchRegoFields();
   }, [universityOption]);
 
-  // packages the EditRego object specifying which questions to hide and
+  // Packages the EditRego object specifying which questions to hide and
   // sends it to the backend for storage, where EditRego is an object
   // with boolean fields for removable questions on the registration form
   const handleRegoEditSubmit = async (regoFields: EditRego) => {
@@ -389,7 +389,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
       otherSiteLocations: [],
     });
 
-  // obtains the competition information from the backend for display
+  // Obtains the competition information from the backend for display
   // and update on the Pop Up
   useEffect(() => {
     const fetchCompetitionInfo = async () => {
@@ -414,7 +414,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
     fetchCompetitionInfo();
   }, []);
 
-  // packages edited competition information and sends it to the
+  // Packages edited competition information and sends it to the
   // backend for storage and update, where CompetitionInfo is an
   // object with fields storing the details of the competition
   const handleCompEditSubmit = async (

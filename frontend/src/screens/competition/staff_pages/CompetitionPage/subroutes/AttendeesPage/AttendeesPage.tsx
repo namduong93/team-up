@@ -110,7 +110,6 @@ export const AttendeesDisplay: FC = () => {
           {searchedAttendees.map(({ item: attendeesDetails }, index) => {
             return (
               <NarrowAttendeesCard
-                // attendeesListState={[attendeesList, setAttendeesList]}
                 key={`${attendeesDetails.email}${index}`}
                 attendeesDetails={attendeesDetails}
               />
@@ -123,7 +122,6 @@ export const AttendeesDisplay: FC = () => {
           {searchedAttendees.map(({ item: attendeesDetails }, index) => {
             return (
               <WideAttendeesCard
-                // attendeesListState={[attendeesList, setAttendeesList]}
                 key={`${attendeesDetails.email}${index}`}
                 attendeesDetails={attendeesDetails}
               />

@@ -11,7 +11,6 @@ import { StyledLabel } from "../../CompDataInput.styles";
 import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 import TextInputLight from "../../../../../../../components/general_utility/TextInputLight";
 
-// pass the a boolean too and receive on CompDetails
 interface SiteLocationFormProps {
   onAddLocation: (
     currentOption: {
