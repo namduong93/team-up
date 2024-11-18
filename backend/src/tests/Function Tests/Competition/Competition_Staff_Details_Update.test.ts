@@ -4,7 +4,7 @@ import { EditCourse } from "../../../../shared_types/Competition/staff/Edit";
 import { StaffAccess, StaffInfo } from "../../../../shared_types/Competition/staff/StaffInfo";
 import { CourseCategory } from "../../../../shared_types/University/Course";
 import { UserAccess } from "../../../../shared_types/User/User";
-import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
+import { Competition, CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
 import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
@@ -17,7 +17,7 @@ import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepositor
 import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-describe('Staff Details Function', () => {
+describe('Staff Details Update Function', () => {
   let user_db;
   let comp_db;
   let uni_db;
@@ -36,7 +36,7 @@ describe('Staff Details Function', () => {
     defaultSite: 'TestRoom',
   }
 
-  const mockCompetition = {
+  const mockCompetition: Competition = {
     name: 'TestComp',
     teamSize: 5,
     createdDate: dateNow,
@@ -44,14 +44,14 @@ describe('Staff Details Function', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW17',
+    code: 'NEW18',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin17@odmin.com',
+    email: 'newadmin18@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -79,7 +79,7 @@ describe('Staff Details Function', () => {
       universityId: 1,
       universityName: 'University of Melbourne',
       name: 'Maximillian Maverick',
-      email: 'newadmin17@odmin.com',
+      email: 'newadmin18@odmin.com',
       sex: 'Male',
       pronouns: 'He/Him',
       tshirtSize: 'M',
@@ -96,7 +96,7 @@ describe('Staff Details Function', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender17@gmail.com',
+      email: 'newcontender18@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -149,17 +149,13 @@ describe('Staff Details Function', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Failure case: Staff does not exist or is not a part of this competition.', async () => {
-    await expect(comp_staff_db.competitionStaffDetails(id + 10, comp.competitionId)).rejects.toThrow("Staff does not exist or is not a part of this competition.");
-  })
-
-  test('Success case: Succesfully return staff details', async () => {
+  test('Success case: staff detail is succesfully updated', async () => {
     expect(await comp_staff_db.competitionStaffDetails(id, comp.competitionId)).toStrictEqual({
-      userId: 30,
+      userId: id,
       universityId: 1,
       universityName: 'University of Melbourne',
       name: 'Maximillian Maverick',
-      email: 'newadmin17@odmin.com',
+      email: 'newadmin18@odmin.com',
       sex: 'Male',
       pronouns: 'He/Him',
       tshirtSize: 'M',
@@ -170,6 +166,44 @@ describe('Staff Details Function', () => {
       bio: 'good bio, trust',
       roles: ['Admin', 'Coach', 'Site-Coordinator'],
       access: 'Accepted'
-    });
+    })
+
+    const newStaffInfo: StaffInfo = 
+      {
+      userId: id,
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'newadmin18@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      userAccess: UserAccess.Pending,
+      bio: 'this was changed',
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator ],
+      access: StaffAccess.Pending
+    }
+    await comp_staff_db.competitionStaffDetailsUpdate(id, comp.competitionId, newStaffInfo)
+
+    expect(await comp_staff_db.competitionStaffDetails(id, comp.competitionId)).toStrictEqual({
+      userId: id,
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'newadmin18@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      userAccess: 'Pending',
+      bio: 'this was changed',
+      roles: ['Admin', 'Coach', 'Site-Coordinator'],
+      access: 'Pending'
+    })
   })
 })
