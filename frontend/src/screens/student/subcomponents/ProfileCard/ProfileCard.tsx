@@ -59,6 +59,8 @@ export const ProfileCard: FC<ProfileCardProps> = ({
     <StyledStudentCard $isFirst={isFirst} className="profile-card--StyledStudentCard-0">
       <StyledStudentCardContent className="profile-card--StyledStudentCardContent-0">
         <StyledContentContainer className="profile-card--StyledContentContainer-0">
+          <StyledStudentInfo className="profile-card--StyledStudentInfo-0">
+            <StyledContactEdit className="profile-card--StyledContactEdit-0">
           {isCoach ? (
             <StyledIconWrapper className="profile-card--StyledIconWrapper-0">
               <FaUserTie />
@@ -73,8 +75,6 @@ export const ProfileCard: FC<ProfileCardProps> = ({
               alt={`${name}'s profile`}
               className="profile-card--StyledStudentImage-0" />
           )}
-          <StyledStudentInfo className="profile-card--StyledStudentInfo-0">
-            <StyledContactEdit className="profile-card--StyledContactEdit-0">
               <StyledStudentContact className="profile-card--StyledStudentContact-0">
                 <StyledStudentName className="profile-card--StyledStudentName-0">{name}</StyledStudentName>
                 <StyledStudentEmail className="profile-card--StyledStudentEmail-0">

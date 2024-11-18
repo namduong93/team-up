@@ -38,7 +38,7 @@ import { AssignSeats } from "./subcomponents/AssignSeats/AssignSeats";
 import { BioChangePopUp } from "./subcomponents/BioChangePopup/BioChangePopUp";
 import { EditCompRegoPopUp } from "./subcomponents/EditCompRegistrationPopup/EditCompRegoPopUp";
 import { EditSiteCapacityPopUp } from "./subcomponents/EditSiteCapacityPopup/EditSiteCapacityPopUp";
-import { EditCompDetailsPopUp } from "./subcomponents/EditCompDataPopup/EditCompDetailsPopUp";
+import { EditCompDataPopup } from "./subcomponents/EditCompDataPopup/EditCompDataPopup";
 
 const defaultAnnouncement = `
 The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.
@@ -75,19 +75,6 @@ export const ManagePage: FC = () => {
   const [currentBio, setCurrentBio] = useState("Default Bio");
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
-
-  // const [staffRoles, setRoles] = useState<Array<CompetitionRole>>([]);
-
-
-  // // Fetch the user type and set the state accordingly
-  // useEffect(() => {
-  //   const fetchRoles = async () => {
-  //     const roleResponse = await sendRequest.get<{ roles: Array<CompetitionRole> }>('/competition/roles', { compId });
-  //     const { roles } = roleResponse.data;
-  //     setRoles(roles);
-  //   }
-  //   fetchRoles();
-  // }, [])
 
   const { 
     universityOptionState: [universityOption, setUniversityOption],
@@ -519,7 +506,7 @@ export const ManagePage: FC = () => {
             )}
 
             {showEditComp && (
-              <EditCompDetailsPopUp
+              <EditCompDataPopup
                 onClose={() => setShowEditComp(false)}
                 competitionInfo={competitionInfo}
                 setCompetitionInfo={setCompetitionInfo}

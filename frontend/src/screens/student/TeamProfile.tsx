@@ -127,7 +127,7 @@ export const TeamProfile: FC = () => {
 
   return (
     <StyledTeamOverflowFlexBackground className="team-profile--StyledTeamOverflowFlexBackground-0">
-      <StyledMainPageDiv className="team-profile--StyledMainPageDiv-0">
+      <StyledMainPageDiv style={{ height: 'fit-content' }} className="team-profile--StyledMainPageDiv-0">
         <StyledOverlay $isOpen={withdrawPopUpOpen} className="team-profile--StyledOverlay-0">
           <WithdrawPopupChain handleClose={() => setWithdrawPopUpOpen(false)} />
         </StyledOverlay>
@@ -139,7 +139,7 @@ export const TeamProfile: FC = () => {
         />
         <StyledPageOptionsContainerDiv className="team-profile--StyledPageOptionsContainerDiv-0">
           <CustomToggleSwitch
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "79px" }}
             defaultBorderIndex={0}
           >
             <StyledTeamToggleOptionDiv

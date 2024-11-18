@@ -108,7 +108,7 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
               </StyledText>
             </div>
             {roles.includes(CompetitionRole.Admin) && 
-            <div style={{ width: '300px' }}>
+            <div style={{ width: '100%', maxWidth: '300px' }}>
               <AdvancedDropdown
                 setCurrentSelected={setSelectedSite}
                 optionsState={[siteOptions, setSiteOptions]}
@@ -120,6 +120,7 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
             
             }
             <NumberInputLight
+              style={{ width: '100%', maxWidth: '300px' }}
               label="Provide a capacity"
               value={currentCapacity}
               onChange={handleCapacityChange}

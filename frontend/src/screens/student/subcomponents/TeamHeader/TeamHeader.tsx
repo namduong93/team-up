@@ -38,7 +38,7 @@ export const TeamHeader: FC<HeaderAttributes> = ({
     <StyledResponsiveHeader className="team-header--StyledResponsiveHeader-0">
       <StyledHeaderContent className="team-header--StyledHeaderContent-0">
         <StyledTeamTitle className="team-header--StyledTeamTitle-0">{compName}</StyledTeamTitle>
-        <StyledTeamDescription className="team-header--StyledTeamDescription-0">Team{teamName}</StyledTeamDescription>
+        <StyledTeamDescription className="team-header--StyledTeamDescription-0">Team {teamName}</StyledTeamDescription>
         {/* <div>{compCountdown}</div> */}
       </StyledHeaderContent>
       <StyledHeaderRightSection className="team-header--StyledHeaderRightSection-0">

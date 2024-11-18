@@ -22,16 +22,17 @@ export const StyledModal = styled.div`
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 12px;
-  padding: 30px;
+  /* padding: 30px; */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 100%;
+  width: 95%;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-y: scroll;
-  height: 80%;
+  height: 95%;
+  box-sizing: border-box;
 `;
 
 export const StyledCloseButton = styled.button`
@@ -94,13 +95,15 @@ export const StyledLabel = styled.label`
 `;
 
 export const StyledRowContainer2 = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* display: grid;
+  grid-template-columns: 1fr 1fr; */
+  display: flex;
+  flex-wrap: wrap;
   align-items: start;
   justify-content: center;
-  gap: 60px;
-  margin-top: 10px;
-  margin-bottom: 30px;
+  gap: 20px;
+  /* margin-top: 10px; */
+  /* margin-bottom: 30px; */
   width: 95%;
 `;
 
@@ -154,4 +157,18 @@ export const StyledEditorContainer = styled.div`
   margin-top: 10px;
   margin-bottom: 55px;
   align-self: stretch;
+`;
+
+export const StyledInfoEditContainer = styled.div`
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 450px;
+`;
+
+export const StyledCompDetailsEditContainer = styled.div`
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 450px;
 `;
