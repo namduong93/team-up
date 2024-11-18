@@ -1,14 +1,15 @@
 import { useOutletContext } from "react-router-dom";
 import styled from "styled-components";
-import { Student } from "../../../../shared_types/Competition/team/TeamDetails";
 import { useState } from "react";
-import { TeamActionCard } from "../../../components/general_utility/TeamActionCard";
-import { ProfileCard } from "../subcomponents/ProfileCard/ProfileCard";
 import { FaTimes } from "react-icons/fa";
-import { MarkdownDisplay } from "../../general_components/MarkdownDisplay";
+import { Student } from "../../../../../shared_types/Competition/team/TeamDetails";
+import { TeamActionCard } from "../../../../components/general_utility/TeamActionCard";
+import { ProfileCard } from "../../subcomponents/ProfileCard/ProfileCard";
+import { MarkdownDisplay } from "../../../general_components/MarkdownDisplay";
 
 const StyledManageContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   max-width: 100%;
   width: 100%;
@@ -18,9 +19,11 @@ const StyledManageContainer = styled.div`
 `;
 
 const StyledInfoContainer = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 50%;
+  /* max-width: 100; */
+  flex: 1 1 300px;
 `;
 
 const StyledInfoCard = styled.div`

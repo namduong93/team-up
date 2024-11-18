@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { contextRender } from '../../../../../../../../test_utils/contextRender';
 import { server } from '../../../../../../../../test_utils/mock_server';
 import { screen, waitFor } from '@testing-library/dom';
-import { EditCompDetailsPopUp } from './EditCompDetailsPopUp';
+import { EditCompDataPopup } from './EditCompDataPopup';
 import { testCompDetails } from '../../../../../../../../test_utils/testCompDetails';
 import { useState } from 'react';
 import { CompetitionInformation } from '../../../../../../../../../shared_types/Competition/CompetitionDetails';
@@ -17,7 +17,7 @@ const TestEditCompDataPopup = () => {
   const [competitionData, setCompetitionData] = useState<CompetitionInformation>(testCompDetails);
 
   return (
-  <EditCompDetailsPopUp
+  <EditCompDataPopup
     onClose={() => {}}
     onSubmit={() => {}}
     competitionInfo={competitionData}

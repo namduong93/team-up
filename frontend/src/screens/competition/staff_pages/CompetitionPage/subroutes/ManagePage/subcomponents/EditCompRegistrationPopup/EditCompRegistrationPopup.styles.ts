@@ -22,14 +22,16 @@ export const StyledModal = styled.div`
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 12px;
-  padding: 30px;
+  /* padding: 30px; */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 100%;
+  width: 95%;
+  height: 95%;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
   /* overflow-y: scroll;
   height: 70%; */
 `;
@@ -55,6 +57,7 @@ export const StyledButton = styled.button`
   min-width: 100px;
   width: 50%;
   height: 35px;
+  min-height: 35px;
   border: 0px;
   border-radius: 30px;
   background-color: ${({ theme, disabled }) =>
@@ -106,20 +109,21 @@ export const StyledRowContainer2 = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 60px;
-  margin-top: 10px;
-  margin-bottom: 30px;
-  width: 95%;
+  gap: 30px;
+  width: 100%;
+  /* margin-top: 10px; */
+  /* margin-bottom: 30px; */
 `;
 export const StyledInput = styled.input`
   padding: 10px 1.5%;
+  min-height: 37px;
   height: 100%;
   box-sizing: border-box;
   width: 100%;
   border: 1px solid ${({ theme }) => theme.colours.notifDark};
   border-radius: 10px;
-  margin-bottom: 5px;
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
@@ -132,7 +136,7 @@ export const StyledColumn = styled.div`
   justify-content: center;
   text-align: left;
   gap: 10px;
-  padding: 5px;
+  /* padding: 5px; */
 `;
 
 export const StyledTitle2 = styled.h2`
@@ -144,13 +148,27 @@ export const StyledTitle2 = styled.h2`
   text-align: center; // Add this line to center the text
 `;
 
+export const StyledSecondDiv = styled.div`
+  /* min-width: 300px; */
+  max-width: 515px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 350px;
+  padding: 20px;
+`;
+
 export const StyledFirstDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  box-sizing: border-box;
   gap: 20px;
-  padding: 5px;
+  padding: 20px;
   width: 100%;
   margin-bottom: 32px;
-  min-width: 300px;
+  /* min-width: 300px; */
+  max-width: 515px;
+  flex: 1 1 350px;
 `;

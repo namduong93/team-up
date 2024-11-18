@@ -16,6 +16,8 @@ const StyledActionsContainer = styled.div`
   width: 100%;
   margin: 5% 5%;
   box-sizing: border-box;
+  flex: 1 1 300px;
+  flex-wrap: wrap;
 `;
 
 const StyledActionCard = styled.button<ActionCardProps>`
@@ -24,6 +26,7 @@ const StyledActionCard = styled.button<ActionCardProps>`
   align-items: center;
   justify-content: center;
   width: 100%;
+  flex: 1 1 200px;
   max-width: 280px;
   height: 100%;
   aspect-ratio: 1;
@@ -34,7 +37,7 @@ const StyledActionCard = styled.button<ActionCardProps>`
       ? "none"
       : `1px solid ${theme.teamProfile[`${$actionType}Border`]}`};
   border-radius: 12px;
-  padding: 20px;
+  /* padding: 20px; */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   cursor: ${({ $disabled }) => ($disabled ? "not-allowed" : "pointer")};

@@ -34,8 +34,7 @@ import { StudentPage } from "./screens/competition/staff_pages/CompetitionPage/s
 import { StaffPage } from "./screens/competition/staff_pages/CompetitionPage/subroutes/StaffPage/StaffPage";
 import { AttendeesDisplay } from "./screens/competition/staff_pages/CompetitionPage/subroutes/AttendeesPage/AttendeesPage";
 import { ManagePage } from "./screens/competition/staff_pages/CompetitionPage/subroutes/ManagePage/ManagePage";
-import { TeamDetails } from "./screens/student/subroutes/TeamDetails";
-import { TeamManage } from "./screens/student/subroutes/TeamManage";
+
 import { Dashboard } from "./screens/dashboard/Dashboard";
 import { StaffAccessPage } from "./screens/StaffAccess/StaffAccessPage";
 import { Account } from "./screens/Account/Account";
@@ -46,6 +45,8 @@ import { CompetitionInformation } from "./screens/competition/register/RegisterF
 import { CompIndividualInput } from "./screens/competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput";
 import { CompExperienceInput } from "./screens/competition/register/RegisterForm/subroutes/CompExperienceInput/CompExperienceInput";
 import { StaffRegisterForm } from "./screens/competition/register/StaffRegisterForm/StaffRegisterForm";
+import { TeamDetails } from "./screens/student/subroutes/TeamDetails/TeamDetails";
+import { TeamManage } from "./screens/student/subroutes/TeamManage/TeamManage";
 
 const themeMap = {
   default: defaultTheme,

@@ -1,19 +1,26 @@
 import { FC, useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
-import { sendRequest } from "../../../utility/request";
-import { ProfileCard } from "../subcomponents/ProfileCard/ProfileCard";
-import { backendURL } from "../../../../config/backendURLConfig";
-import { EditCompUserDetails } from "../subcomponents/EditCompUserDetails/EditCompUserDetails";
+import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
+import { sendRequest } from "../../../../utility/request";
+import { ProfileCard } from "../../subcomponents/ProfileCard/ProfileCard";
+import { EditCompUserDetails } from "../../subcomponents/EditCompUserDetails/EditCompUserDetails";
+import { backendURL } from "../../../../../config/backendURLConfig";
+
 
 const StyledDetailsContainer = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
   height: 100%;
-  max-height: 70%;
-  gap: 5%;
+  /* height: fit-content; */
+  /* min-height: fit-content; */
+  align-items: flex-start;
+  margin-top: 10px;
+  /* max-height: 60%; */
+  column-gap: 5%;
+  row-gap: 20px;
+  flex-wrap: wrap;
 `;
 
 const StyledTeamDetailsContainer = styled.div`
@@ -21,15 +28,15 @@ const StyledTeamDetailsContainer = styled.div`
   grid-template-columns: 1fr;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
   border-radius: 12px;
-  width: 100%;
-  max-width: 40%;
-  max-height: 80%;
+  max-height: 600px;
   height: 100%;
   background-color: ${({ theme }) => theme.background};
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
   padding: 15px;
   box-sizing: border-box;
+  min-width: 200px;
+  flex: 1 1 250px;
 `;
 
 const StyledTeamInfo = styled.div`
@@ -59,10 +66,12 @@ const StyledTeamField = styled.p`
 
 const StyledStudentsContainer = styled.div`
   width: 100%;
-  max-width: 90%;
+  max-width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  flex: 1 1 500px;
 `;
 
 /**

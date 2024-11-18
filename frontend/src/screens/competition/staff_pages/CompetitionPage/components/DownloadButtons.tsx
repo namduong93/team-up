@@ -5,6 +5,7 @@ import { FaDownload, FaStamp } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 import { ResponsiveActionButton } from "../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { GrDocumentCsv, GrDocumentPdf } from "react-icons/gr";
+import { ResponsiveButtonContainer, StyledButtonContainer } from "../subroutes/TeamPage/subcomponents/TeamPageButtons";
 
 interface DownloadButtonProps {
   isEditingStatus?: boolean;
@@ -57,7 +58,7 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({
   return (
     <>
       {!isEditingStatus && !isEditingNameStatus && !isDownloading && (
-        <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+        <StyledButtonContainer>
           <TransparentResponsiveButton
             actionType="primary"
             label="Download"
@@ -66,11 +67,11 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({
             onClick={enableDownloading}
             isOpen={false}
           />
-        </div>
+        </StyledButtonContainer>
       )}
       {isDownloading && (hasTeamsToDownload || hasAttendeesToDownload) && (
-        <>
-          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+        <ResponsiveButtonContainer>
+          <StyledButtonContainer>
             <TransparentResponsiveButton
               actionType="error"
               onClick={disableDownloading}
@@ -81,9 +82,9 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({
                 backgroundColor: theme.colours.cancel,
               }}
             />
-          </div>
+          </StyledButtonContainer>
 
-          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+          <StyledButtonContainer>
             <ResponsiveActionButton
               actionType="secondary"
               label="Download CSV"
@@ -91,9 +92,9 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({
               icon={<GrDocumentCsv />}
               handleSubmit={downloadCSV}
             />
-          </div>
+          </StyledButtonContainer>
 
-          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+          <StyledButtonContainer>
             <ResponsiveActionButton
               actionType="primary"
               label="Download PDF"
@@ -101,10 +102,10 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({
               icon={<GrDocumentPdf />}
               handleSubmit={downloadPDF}
             />
-          </div>
+          </StyledButtonContainer>
 
           {!isSiteDownload && hasTeamsToDownload && (
-            <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+            <StyledButtonContainer>
               <ResponsiveActionButton
                 actionType="confirm"
                 label="Update Status"
@@ -112,9 +113,9 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({
                 icon={<FaStamp />}
                 handleSubmit={updateTeamStatus}
               />
-            </div>
+            </StyledButtonContainer>
           )}
-        </>
+        </ResponsiveButtonContainer>
       )}
     </>
   );

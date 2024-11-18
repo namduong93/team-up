@@ -15,6 +15,7 @@ import {
   StyledModalOverlay,
   StyledRowContainer,
   StyledRowContainer2,
+  StyledSecondDiv,
   StyledText,
   StyledTitle2,
 } from "./EditCompRegistrationPopup.styles";
@@ -85,6 +86,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
             flexWrap: "wrap",
             overflow: "auto",
             height: "auto",
+            width: '100%'
           }}
         >
           <StyledRowContainer2 className="edit-comp-rego-pop-up--StyledRowContainer2-0">
@@ -130,7 +132,9 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
                 }
                 className="edit-comp-rego-pop-up--StyledInput-3" />
             </StyledFirstDiv>
-            <div style={{ minWidth: "300px" }}>
+
+            
+            <StyledSecondDiv>
               <StyledTitle2 className="edit-comp-rego-pop-up--StyledTitle2-1">Please toggle the fields you would{"\n"}like to show on the
                                 Competition Registration Form</StyledTitle2>
 
@@ -192,7 +196,7 @@ export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({
                   />
                 </StyledColumn>
               </StyledRowContainer>
-            </div>
+            </StyledSecondDiv>
           </StyledRowContainer2>
         </div>
         <StyledButton
