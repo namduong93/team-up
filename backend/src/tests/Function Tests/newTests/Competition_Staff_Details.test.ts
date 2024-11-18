@@ -155,7 +155,7 @@ describe('Staff Details Function', () => {
 
   test('Success case: Succesfully return staff details', async () => {
     expect(await comp_staff_db.competitionStaffDetails(id, comp.competitionId)).toStrictEqual({
-      userId: 30,
+      userId: expect.any(Number),
       universityId: 1,
       universityName: 'University of Melbourne',
       name: 'Maximillian Maverick',

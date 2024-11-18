@@ -1,4 +1,4 @@
-import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
+import { Competition, CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
 import { University } from '../../../models/university/university';
 import { Staff } from '../../../models/user/staff/staff';
@@ -11,10 +11,10 @@ import { UserIdObject } from '../../../repository/UserRepository';
 import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Competition Team Detail Function', () => {
-  let user_db;
-  let comp_db;
-  let comp_staff_db;
-  let comp_student_db;
+  let user_db : SqlDbUserRepository;
+  let comp_db : SqlDbCompetitionRepository;
+  let comp_staff_db : SqlDbCompetitionStaffRepository;
+  let comp_student_db : SqlDbCompetitionStudentRepository;
 
 
   let dateNow = Date.now();
@@ -22,7 +22,7 @@ describe('Competition Team Detail Function', () => {
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
 
-  const mockCompetition = {
+  const mockCompetition : Competition = {
     name: 'TestComp',
     teamSize: 5,
     createdDate: dateNow,
@@ -31,8 +31,9 @@ describe('Competition Team Detail Function', () => {
     generalRegDeadline: generalDate,
     siteLocations: [{
       universityId: 1,
-      name: 'TestRoom',
-      capacity: 2000
+      universityName: 'University of Melbourne',
+      siteId: 1,
+      defaultSite: 'Library',
     }],
     code: 'TC18',
     region: 'Australia'
