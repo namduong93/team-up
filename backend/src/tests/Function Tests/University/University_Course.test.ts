@@ -148,7 +148,6 @@ describe('Universe Courses Function', () => {
   });
   //need competition add course
   test('Sucess case: returns a list of courses', async () => {
-    console.log(await uni_db.universityCourses(newStudent.userId, 'UT1'))
     // expect(await uni_db.universityCourses(user.userId)).toStrictEqual([
     //   {
     //     courseId: 1,

@@ -116,6 +116,16 @@ const StyledCloseButton = styled.button`
   }
 `;
 
+/**
+ * `TeamManage` is a React web page component that manages and displays information
+ * for a competition team.It renders a `TeamActionCard` displaying the number of students
+ * in the team, a `ProfileCard` for the team's coach, and a section for viewing competition
+ * details and announcements. When the "see competition details" link is clicked,
+ * a modal is opened to display the competition details and announcements in markdown
+ * format.
+ *
+ * @returns {JSX.Element} - The rendered component showing team details and coach info.
+ */
 export const TeamManage: React.FC = () => {
   const { students, coach, announcements } = useOutletContext<{
     students: Student[];
@@ -151,7 +161,9 @@ export const TeamManage: React.FC = () => {
 
         <StyledInfoCard>
           <StyledInfoContent>
-            <StyledInfoLabel>Competition Details and Announcements:</StyledInfoLabel>
+            <StyledInfoLabel>
+              Competition Details and Announcements:
+            </StyledInfoLabel>
             <StyledInfoLink onClick={handleOpenModal}>
               see competition details →
             </StyledInfoLink>

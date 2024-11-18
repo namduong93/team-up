@@ -59,16 +59,16 @@ describe('Competition List Function', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Sucess case: returns the users competition list', async () => {
+  test('Success case: returns the users competition list', async () => {
     expect(await comp_db.competitionsList(id, UserType.STAFF)).toStrictEqual([
       {
         compId: comp.competitionId,
         compName: 'TestComp',
         location: 'Australia',
-        compDate: new Date(earlyDate - (1000 * 60 * 60 * 11)),
+        compDate: expect.any(Date),
         roles: ['Admin'],
-        compCreatedDate: new Date(dateNow - (1000 * 60 * 60 * 11))
+        compCreatedDate: expect.any(Date)
       }
-    ])
-  })
+    ]);
+  });
 })

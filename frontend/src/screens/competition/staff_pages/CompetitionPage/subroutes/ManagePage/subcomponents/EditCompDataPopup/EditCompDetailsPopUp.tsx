@@ -1,13 +1,24 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import { CompetitionInformation } from "../../../../../../../../../shared_types/Competition/CompetitionDetails";
-import { useLocation } from "react-router-dom";
 import { dateToUTC, formatDate } from "../../../../../creation/util/formatDate";
 import { useTheme } from "styled-components";
-import { StyledButtonContainer, StyledCloseButton, StyledDeleteIcon, StyledDescriptor, StyledEditorContainer, StyledLabel, StyledLocationItem, StyledLocationList, StyledModal, StyledModalOverlay, StyledRowContainer2, StyledTitle2 } from "./EditCompDataPopup.styles";
+import {
+  StyledButtonContainer,
+  StyledCloseButton,
+  StyledDeleteIcon,
+  StyledDescriptor,
+  StyledEditorContainer,
+  StyledLabel,
+  StyledLocationItem,
+  StyledLocationList,
+  StyledModal,
+  StyledModalOverlay,
+  StyledRowContainer2,
+  StyledTitle2,
+} from "./EditCompDataPopup.styles";
 import { FaSave, FaTimes } from "react-icons/fa";
 import ReactMarkdownEditorLite from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-// import MarkdownIt from "markdown-it";
 import { defaultCompInformation } from "../../../../../../register/RegisterForm/subroutes/CompInformation/CompInformation";
 import TextInput from "../../../../../../../../components/general_utility/TextInput";
 import { StyledDoubleInputContainer } from "../../../../../creation/CompDataInput/CompDataInput.styles";
@@ -23,15 +34,23 @@ interface EditCompDetailsProps {
     React.SetStateAction<CompetitionInformation>
   >;
   onSubmit: (competitionInfo: CompetitionInformation) => void;
-}
+};
 
+/**
+ * `EditCompDetailsPopUp is a React web page component that displays a pop up for editing and reviewing
+ * entered competition details after the competition has been created. It provides relevant input fields
+ * to change the information, name, code, dates, deadlines and site locations for that competition
+ * 
+ * @param {EditCompDetailsProps} props - Contains the competition information and functions handling allowing
+ * the user to open/close the pop-up, update the competition information, and perform some action when submitted.
+ * @returns JSX.Element - A styled container presenting input fields to edit the competition details
+ */
 export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
   onClose,
   competitionInfo,
   setCompetitionInfo,
   onSubmit,
 }) => {
-  const location = useLocation();
   const [locationError, setLocationError] = useState<ReactNode>("");
 
   const [optionDisplayList, setOptionDisplayList] = useState<
@@ -57,7 +76,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     }
     setCompetitionInfo((p) => ({
       ...p,
-      startDate: dateToUTC(startDateInput)
+      startDate: dateToUTC(startDateInput),
     }));
   }, [startDateInput]);
 
@@ -67,7 +86,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     }
     setCompetitionInfo((p) => ({
       ...p,
-      earlyRegDeadline: dateToUTC(earlyRegInput)
+      earlyRegDeadline: dateToUTC(earlyRegInput),
     }));
   }, [earlyRegInput]);
 
@@ -77,10 +96,9 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     }
     setCompetitionInfo((p) => ({
       ...p,
-      generalRegDeadline: dateToUTC(generalRegInput)
+      generalRegDeadline: dateToUTC(generalRegInput),
     }));
   }, [generalRegInput]);
-
 
   useEffect(() => {
     const initialDisplayList = [
@@ -114,7 +132,11 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
       ...prev,
       siteLocations: [
         ...prev.siteLocations,
-        { universityId: parseInt(option.value), defaultSite, universityName: option.label },
+        {
+          universityId: parseInt(option.value),
+          defaultSite,
+          universityName: option.label,
+        },
       ],
     }));
 
@@ -131,7 +153,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
     setCompetitionInfo((prev) => ({
       ...prev,
       otherSiteLocations: [
-        ...prev.otherSiteLocations || [],
+        ...(prev.otherSiteLocations || []),
         { universityName: option.label, defaultSite },
       ],
     }));
@@ -224,7 +246,6 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
 
   const handleSubmit = async (): Promise<boolean> => {
     try {
-      
       onSubmit(competitionInfo);
       onClose();
 
@@ -256,7 +277,11 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
             <StyledLabel>Competition Information</StyledLabel>
             <StyledEditorContainer>
               <ReactMarkdownEditorLite
-                value={competitionInfo.information !== null ? competitionInfo.information : defaultCompInformation}
+                value={
+                  competitionInfo.information !== null
+                    ? competitionInfo.information
+                    : defaultCompInformation
+                }
                 onChange={({ text }) => handleMarkdownChange(text)}
                 style={{ height: "800px" }}
                 renderHTML={(text: string) => MarkdownIt().render(text)}
@@ -322,7 +347,6 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 onChange={(e) => setStartDateInput(new Date(e.target.value))}
                 width="45%"
               />
-
             </StyledDoubleInputContainer>
 
             {competitionInfo.earlyRegDeadline && (
@@ -361,7 +385,6 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 onChange={(e) => setGeneralRegInput(new Date(e.target.value))}
                 width="45%"
               />
-
             </StyledDoubleInputContainer>
 
             <TextInput
@@ -388,7 +411,9 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
             <StyledLocationList>
               {optionDisplayList.map((displayObject, index) => {
                 return (
-                  <StyledLocationItem key={`${displayObject.value}${index}${displayObject.defaultSite}`}>
+                  <StyledLocationItem
+                    key={`${displayObject.value}${index}${displayObject.defaultSite}`}
+                  >
                     <div>{displayObject.label}</div>
                     <div>{displayObject.defaultSite}</div>
                     <StyledDeleteIcon
@@ -405,7 +430,11 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
 
         <StyledButtonContainer>
           <TransparentResponsiveButton
-            style={{ height: '33px', backgroundColor: theme.colours.primaryLight, maxWidth: '160px' }}
+            style={{
+              height: "33px",
+              backgroundColor: theme.colours.primaryLight,
+              maxWidth: "160px",
+            }}
             icon={<FaSave />}
             actionType="primary"
             label="Save Changes"

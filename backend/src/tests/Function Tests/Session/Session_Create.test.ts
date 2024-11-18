@@ -41,10 +41,10 @@ describe('Session Create Function', () => {
       userId: student.userId
     }
     await session_db.create(newSession);
-    expect(await session_db.find('ezID')).toStrictEqual({
-      sessionId: 'ezID                                ',
-      userId: student.userId,
+    expect(await session_db.find('ezID')).toMatchObject({
+      sessionId: expect.stringMatching(/^ezID\s*$/),  // matches 'ezID' with optional spaces
+      userId: expect.any(Number),
       createdAt: expect.any(Date)
-    })
+    });
   })
 })

@@ -5,7 +5,7 @@ import rehypeRaw from "rehype-raw";
 
 interface MarkdownDisplayProps {
   content: string;
-}
+};
 
 const StyledMarkdown = styled(ReactMarkdown)`
   font-size: 1rem;
@@ -22,6 +22,10 @@ const StyledMarkdown = styled(ReactMarkdown)`
   }
 `;
 
+/**
+ * A React component that displays Markdown content with custom styling.
+ * It uses `react-markdown` to render the Markdown and `rehypeRaw` to handle raw HTML content within the Markdown.
+ */
 export const MarkdownDisplay: FC<MarkdownDisplayProps> = ({ content }) => {
   return <StyledMarkdown children={content} rehypePlugins={[rehypeRaw]} />;
 };

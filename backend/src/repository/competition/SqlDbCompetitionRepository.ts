@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from "../../services/CompetitionService.js";
+import { UniversityDisplayInfo } from "../../services/CompetitionService.js";
 import { CompetitionRepository } from "../CompetitionRepository.js";
 import { Competition, CompetitionShortDetailsObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionInput } from "../../models/competition/competition.js";
 
@@ -9,7 +9,6 @@ import { CompetitionUserRole } from "../../models/competition/competitionUser.js
 import { DbError } from "../../errors/DbError.js";
 import { University } from "../../models/university/university.js";
 import { CompetitionSite, CompetitionSiteCapacity } from "../../../shared_types/Competition/CompetitionSite.js";
-import { TeamDetails } from "../../../shared_types/Competition/team/TeamDetails.js";
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
 
 
@@ -20,7 +19,12 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     this.pool = pool;
   }
 
-
+  /**
+   * Retrieves the university ID of a user.
+   *
+   * @param userId The ID of the user.
+   * @returns The university ID of the user.
+   */
   getUserUniversityId = async (userId: number) => {
     const dbResult = await this.pool.query(
       `SELECT university_id as "universityId"
@@ -181,19 +185,13 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   }
 
 
-
-  competitionStudentJoin1 = async (sessionToken: string, individualInfo: IndividualTeamInfo,
-    teamMate1: TeamMateData): Promise<IncompleteTeamIdObject> => {
-
-    return { incompleteTeamId: 1 };
-  }
-
-  competitionStudentJoin2 = async (sessionToken: string, teamInfo: TeamDetails,
-    teamMate1: TeamMateData, teamMate2: TeamMateData): Promise<TeamIdObject> => {
-
-    return { teamId: 1 };
-  }
-
+  /**
+   * Retrieves the competition announcement for a specific competition and university.
+   *
+   * @param compId The ID of the competition.
+   * @param university The university object containing the university ID.
+   * @returns A promise that resolves to an Announcement object if found, otherwise undefined.
+   */
   competitionAnnouncement = async (compId: number, university: University): Promise< Announcement | undefined> => {
     const announcementResult = await this.pool.query(
       `SELECT id, message, created_date AS "createdDate", university_id AS "universityId"
@@ -211,11 +209,6 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       createdAt: announcement.createdDate,
       universityId: announcement.universityId
     };
-  }
-
-  competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {
-
-    return [{ id: 1, name: 'Macquarie University' }]
   }
 
   /**
@@ -256,15 +249,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     return competitionIdResult.rows[0].id;
   }
 
-  // Helper function to add competition ids to map
-  private addCompetitionIdsToMap = (rows: any[], competitionMap: Map<number, { userType: Array<CompetitionUserRole>, competition: Competition }>, userType: CompetitionUserRole) => {
-    rows.forEach(row => {
-      if (!competitionMap.has(row.id)) {
-        competitionMap.set(row.id, { userType: [userType], competition: row });
-      } else {
-        competitionMap.get(row.id)?.userType.push(userType);
-      }
-    });
+
+  /**
+   * Retrieves the capacity information for specified competition sites.
+   *
+   * @param compId The ID of the competition.
+   * @param siteId An array of site IDs to retrieve capacity information for.
+   * @returns A promise that resolves to an array of `CompetitionSiteCapacity` objects or undefined if no sites are found.
+   */
+  competitionSiteCapacity = async (compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity> | undefined> => {
+    const siteList = await this.pool.query('SELECT id, capacity FROM competition_sites WHERE competition_id = $1 AND id = ANY($2::int[]);', [compId, siteId])
+    return siteList.rows
   }
 
   SALTED_TEAM_CODE = 12345;
@@ -278,9 +273,4 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const id = parseInt(text) - this.SALTED_TEAM_CODE;
     return id;
   };
-
-  competitionSiteCapacity = async (compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity> | undefined> => {
-    const siteList = await this.pool.query('SELECT id, capacity FROM competition_sites WHERE competition_id = $1 AND id = ANY($2::int[]);', [compId, siteId])
-    return siteList.rows
-  }
 }

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import "./App.css";
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,7 +12,6 @@ import { darkTheme } from "./themes/darkTheme";
 import { christmasTheme } from "./themes/christmasTheme";
 import { colourblindTheme } from "./themes/colourblindTheme";
 import { Settings } from "./screens/settings/Settings";
-
 import { TeamProfile } from "./screens/student/TeamProfile";
 import { useDashInfo } from "./screens/dashboard/hooks/useDashInfo";
 import { Login } from "./screens/auth/Login/Login";
@@ -22,7 +20,10 @@ import { RoleSelect } from "./screens/auth/RegisterForm/subroutes/RoleSelect/Rol
 import { AccountDataInput } from "./screens/auth/RegisterForm/subroutes/AccountDataInput/AccountDataInput";
 import { SiteDataInput } from "./screens/auth/RegisterForm/subroutes/SiteDataInput/SiteDataInput";
 import { InstitutionDataInput } from "./screens/auth/RegisterForm/subroutes/InstitutionDataInput/InstitutionDataInput";
-import { PasswordCodeRecoverForm, PasswordRecovery } from "./screens/auth/PasswordRecovery/PasswordRecovery";
+import {
+  PasswordCodeRecoverForm,
+  PasswordRecovery,
+} from "./screens/auth/PasswordRecovery/PasswordRecovery";
 import { EmailForm } from "./screens/auth/PasswordRecovery/subroutes/EmailForm/EmailForm";
 import { EmailSuccess } from "./screens/auth/PasswordRecovery/subroutes/EmailSuccess/EmailSuccess";
 import { SidebarLayout } from "./screens/SidebarLayout";
@@ -46,7 +47,6 @@ import { CompIndividualInput } from "./screens/competition/register/RegisterForm
 import { CompExperienceInput } from "./screens/competition/register/RegisterForm/subroutes/CompExperienceInput/CompExperienceInput";
 import { StaffRegisterForm } from "./screens/competition/register/StaffRegisterForm/StaffRegisterForm";
 
-
 const themeMap = {
   default: defaultTheme,
   dark: darkTheme,
@@ -54,11 +54,19 @@ const themeMap = {
   colourblind: colourblindTheme,
 } as const;
 
+/**
+ * The main entry point of the application, responsible for routing and theme management.
+ *
+ * This component uses React Router for routing between different pages and implements
+ * theme management using styled-components' ThemeProvider.
+ *
+ * @returns {JSX.Element} - The app's UI, including routing and theme switching functionality.
+ */
 function App() {
   const [theme, setTheme] = useState<keyof typeof themeMap>("default");
   const currentTheme = themeMap[theme];
 
-  // use local storage for theme preference (change later)
+  // use local storage for theme preference
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme && savedTheme in themeMap) {
@@ -171,10 +179,7 @@ function App() {
               path="/dashboard"
               element={<Dashboard dashInfo={dashInfo} />}
             />
-            <Route
-              path="/staffAccounts"
-              element={<StaffAccessPage />}
-            />
+            <Route path="/staffAccounts" element={<StaffAccessPage />} />
             <Route
               path="/account"
               element={<Account setDashInfo={setDashInfo} />}

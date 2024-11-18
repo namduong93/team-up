@@ -3,7 +3,23 @@ import { CopyButton } from "../../../../components/general_utility/CopyButton";
 import { FaUserTie } from "react-icons/fa";
 import { backendURL } from "../../../../../config/backendURLConfig";
 import { StyledInfoButton } from "../../subroutes/TeamManage";
-import { StyledCoachContact, StyledContactEdit, StyledContentContainer, StyledEditIcon, StyledIconWrapper, StyledPreferredContact, StyledPreferredContactHandle, StyledStudentBio, StyledStudentCard, StyledStudentCardContent, StyledStudentContact, StyledStudentEmail, StyledStudentImage, StyledStudentInfo, StyledStudentName } from "./ProfileCard.styles";
+import {
+  StyledCoachContact,
+  StyledContactEdit,
+  StyledContentContainer,
+  StyledEditIcon,
+  StyledIconWrapper,
+  StyledPreferredContact,
+  StyledPreferredContactHandle,
+  StyledStudentBio,
+  StyledStudentCard,
+  StyledStudentCardContent,
+  StyledStudentContact,
+  StyledStudentEmail,
+  StyledStudentImage,
+  StyledStudentInfo,
+  StyledStudentName,
+} from "./ProfileCard.styles";
 
 interface ProfileCardProps {
   name: string;
@@ -14,9 +30,19 @@ interface ProfileCardProps {
   isFirst?: boolean;
   onEdit?: () => void;
   isCoach?: boolean;
-}
+};
 
-
+/**
+ * The ProfileCard component is used to display the profile information of a student or coach,
+ * including their name, email, bio, profile image, and preferred contact method.
+ *
+ * This component conditionally renders different content based on whether the user is a coach or a student.
+ * It also supports copying the email and preferred contact details to the clipboard,
+ * and allows for editing the profile if the `onEdit` callback is provided and `isFirst` is true.
+ *
+ * @param {ProfileCardProps} props - React ProfileCardProps as specified above.
+ * @returns {JSX.Element} - The rendered ProfileCard component.
+ */
 export const ProfileCard: FC<ProfileCardProps> = ({
   name,
   email,
@@ -42,7 +68,7 @@ export const ProfileCard: FC<ProfileCardProps> = ({
               src={
                 image ||
                 `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
-              } // Use defaultProfile if image is undefined
+              }
               alt={`${name}'s profile`}
             />
           )}
@@ -51,11 +77,11 @@ export const ProfileCard: FC<ProfileCardProps> = ({
               <StyledStudentContact>
                 <StyledStudentName>{name}</StyledStudentName>
                 <StyledStudentEmail>
-                <StyledInfoButton
-                  onClick={() => navigator.clipboard.writeText(email)}
-                >
-                  {email}
-                </StyledInfoButton>
+                  <StyledInfoButton
+                    onClick={() => navigator.clipboard.writeText(email)}
+                  >
+                    {email}
+                  </StyledInfoButton>
                   <CopyButton textToCopy={email} />
                 </StyledStudentEmail>
                 {!isCoach && preferredContact && contactParts.length === 2 ? (
@@ -69,7 +95,9 @@ export const ProfileCard: FC<ProfileCardProps> = ({
                 ) : (
                   // only students should have a preferred contact
                   isCoach && (
-                    <StyledCoachContact>No preferred contact available.</StyledCoachContact>
+                    <StyledCoachContact>
+                      No preferred contact available.
+                    </StyledCoachContact>
                   )
                 )}
               </StyledStudentContact>

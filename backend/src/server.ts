@@ -28,6 +28,10 @@ import { SqlDbCompetitionStaffRepository } from './repository/competition_staff/
 import { CompetitionStaffService } from './services/CompetitionStaffService.js';
 import { CompetitionStaffController } from './controllers/CompetitionStaffController.js';
 
+/* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/**
+ * Set up the server and the database connection.
+ */
 const { HOST, PORT } = serverAddress;
 const app = express();
 app.use(morgan('dev'));
@@ -38,6 +42,7 @@ app.use(cors({
 app.use(cookieParser());
 app.use(json());
 
+// Database connection
 const { Pool } = pkg;
 const pool = new Pool({
   user: dbConfig.DB_USER,
@@ -48,7 +53,7 @@ const pool = new Pool({
   max: 10,
 });
 
-//Middleware to authenticate request
+// Middleware to authenticate request
 const authenticator = new Authenticator();
 
 // User Registry
@@ -70,22 +75,20 @@ const competitionRepository = new SqlDbCompetitionRepository(pool);
 const competitionService = new CompetitionService(competitionRepository, userRepository, notificationRepository);
 const competitionController = new CompetitionController(competitionService);
 
-// University Registry
-const universityRepository = new SqlDbUniversityRepository(pool);
-const universityService = new UniversityService(universityRepository);
-const universityController = new UniversityController(universityService);
-
 const competitionStudentRepository = new SqlDbCompetitionStudentRepository(pool, competitionRepository);
-const competitionStudentService = new CompetitionStudentService(
-  competitionStudentRepository, competitionRepository, userRepository, notificationRepository
-);
+const competitionStudentService = new CompetitionStudentService(competitionStudentRepository, competitionRepository, userRepository, notificationRepository);
 const competitionStudentController = new CompetitionStudentController(competitionStudentService);
 
 const competitionStaffRepository = new SqlDbCompetitionStaffRepository(pool, competitionRepository);
 const competitionStaffService = new CompetitionStaffService(competitionStaffRepository, competitionRepository, userRepository, notificationRepository);
 const competitionStaffController = new CompetitionStaffController(competitionStaffService);
 
+// University Registry
+const universityRepository = new SqlDbUniversityRepository(pool);
+const universityService = new UniversityService(universityRepository);
+const universityController = new UniversityController(universityService);
 
+// Sanity check
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
 
@@ -93,7 +96,10 @@ app.get('/', async (req: Request, res: Response) => {
   res.json("Health check");
 });
 
-
+/* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/**
+ * All API endpoints 
+ */ 
 // PARAMS: { name, preferredName, email, password, gender, pronouns?, tshirtSize,
 // 	allergies?, dietaryReqs, accessibilityReqs?, universityId?, studentId? }
 // RESPONSE: { }
@@ -106,22 +112,29 @@ app.post('/student/register', userController.studentRegister);
 // RESPONSE: { }
 app.post('/staff/register', userController.staffRegister);
 
+// Log in a user with the provided email and password.
 // PARAMS: { email, password }
 // RESPONSE: {} --- NOTE: response will set sessionId cookie in the browser.
 app.post('/user/login', userController.userLogin);
 
+// Log out a user
 // PARAMS: { }
 // RESPONSE: {} --- NOTE: will require the sessionId cookie in browser. response will clear the sessionId cookie in the browser.
 app.post('/user/logout', userController.userLogout);
 
+// Get the profile information of the user
 // PARAMS: {}
 // RESPONSE: { name, preferredName, email, affiliation, gender, pronouns, tshirtSize, allergies, dietaryReqs, accessibilityReqs}
 app.get('/user/profile_info', userController.userProfileInfo);
 
+// Update the profile information of the user
 // PARAMS: { name, preferredName, email, affiliation, gender, pronouns, tshirtSize, allergies, dietaryReqs, accessibilityReqs }
 // RESPONSE: {}
 app.put('/user/profile_info', userController.userUpdateProfile);
 
+// Update the password of the user
+// PARAMS: { oldPassword, newPassword }
+// RESPONSE: {}
 app.put('/user/password', userController.userUpdatePassword);
 
 // This should return things that need to be displayed on the dash
@@ -146,16 +159,13 @@ app.get('/user/staff_requests', userController.staffRequests);
 // RESPONSE: {}
 app.post('/user/staff_requests', userController.staffRequestsUpdate);
 
-// DEV: name of the site will appear as defaultSite on the FE. This is because the actual site object does not have a "default site" field,
-// that is a field in university. In actuality, we are creating a new site based on the default site of the university specified in the FE.
+// Create a new competition
 // PARAMS: { name: string, earlyRegDeadline, generalRegDeadline, code, startDate, region,
 //  siteLocations: Array<{ universityId: number, defaultSite: string }>, otherSiteLocations: Array<{ universityName: string, defaultSite: string } }
 // RESPONSE: { competitionId: number }
 app.post('/competition/system_admin/create', competitionStaffController.competitionsSystemAdminCreate);
 
-// TODO: Add competition code and other site locations, but lets wait for FE design
-// Update a competition's details
-// TODO: Handle empty field cases (FE may prefill it, but if not we want to fill it with old info)
+// Update a competition
 // PARAMS: { id: number, name?: string, teamSize?: number, earlyRegDeadline?: Date, generalRegDeadline?: Date,
 //          siteLocations?: Array<{ universityId: number, name: string, startDate?, region? }> }
 // RESPONSE: {}
@@ -170,6 +180,7 @@ app.get('/competition/details', competitionController.competitionGetDetails)
 // PARAMS: { code: string }
 app.get('/competition/student/status', competitionController.competitionCodeStatus);
 
+// Get the default site for a competition user
 // PARAMS: { code: string }
 // RESPONSE: { siteLocation: {id, name} }
 app.get('/competition/user/default_site', competitionController.competitionUserDefaultSite);
@@ -179,21 +190,6 @@ app.get('/competition/user/default_site', competitionController.competitionUserD
 // --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
 // RESPONSE: { }
 app.post('/competition/student/join', competitionStudentController.competitionStudentJoin);
-
-// Student join competition with 1 friend
-// PARAMS: { code, individualInfo: { ICPCEligible, competitionLevel, boersenEligible, degreeYear, degree, isRemote },
-//          teamMate1: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree }
-// --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { incompleteTeamId }
-app.post('/competition/student/join/1', competitionController.competitionStudentJoin1);
-
-// Student join competition with 2 friends
-// PARAMS: { code, teamInfo: { teamName, competitionLevel, ICPCEligible, boersenEligible, isRemote }
-//          teamMate1: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree },
-// 	        teamMate2: { teamMateEmail, teamMateName, teamMateICPCEmail, teamMateDegreeYear, teamMateDegree } }
-// --- NOTE: will require the sessionToken cookie in browser DEV: assume it has the cookie
-// RESPONSE: { teamId }
-app.post('/competition/student/join/2', competitionController.competitionStudentJoin2);
 
 // Student withdraws from competition
 // PARAMS: { compId: number }
@@ -235,19 +231,14 @@ app.put('/competition/staff/seat_assignments', competitionStaffController.compet
 // RESPONSE: {}
 app.put('/competition/staff/register_teams', competitionStaffController.competitionRegisterTeams);
 
-// PARAMS: { competitionId }
-// RESPONSE: { universities: Array<{ id: number, name: string }> }
-app.get('/competition/universities/list', competitionController.competitionUniversitiesList)
-
-////////// Competition staff joining with a specific coach, site or admin code.
-
+// Staff joins a competition with a specific code
 // PARAMS: { code, staffRegistrationData : { competitionRoles: Array<CompetitionUserRole>, siteLocation?: CompetitionSiteObject }, competitionBio?: string }
 // RESPONSE: {} --- (still receives 200 OK or an error)
 app.post('/competition/staff/join', competitionStaffController.competitionStaffJoin);
 
+// Get the list of universities
 // PARAMS: {}
-// RESPONSW: {universities: Array<{id: number, name: string}>}
-// TODO: Add it into middleware
+// RESPONSE: {universities: Array<{id: number, name: string}>}
 app.get('/universities/list', universityController.universitiesList);
 
 // Gets all competitions that this user is a part of
@@ -255,121 +246,167 @@ app.get('/universities/list', universityController.universitiesList);
 // RESPONSE: { competitions: Competition[] }
 app.get('/competitions/list', competitionController.competitionsList);
 
-// PARAMS: { email: string }
-// RESPONSE: {} --- NOTE: emails them a 6 character code e.g '123456'
-app.post('/user/password_recovery/generate_code', userController.userPasswordRecoveryGenerateCode);
-
-// PARAMS: { code: string }
-// RESPONSE: {} --- NOTE: No error if successful, error if not successful
-app.post('/user/password_recovery/input_code', userController.userPasswordRecoveryInputCode);
-
+// Get the teams in a competition
 // PARAMS: { compId: number }
 // RESPONSE: { unknown }
 app.get('/competition/teams', competitionStaffController.competitionTeams)
 
+// Get the roles of the user in a competition
 // PARAMS: { compId: number }
 // RESPONSE: { roles: Array<'participant' | 'coach' | 'admin' | 'site-coordinator'> }
 app.get('/competition/roles', competitionController.competitionRoles);
 
+// Get the students in a competition
 // PARAMS: { compId: number }
 // RESPONSE: { students: Array<{ name, sex, email, studentId, status, level, tshirtSize, siteName, teamName? }> }
 // all the above are strings
 app.get('/competition/students', competitionStaffController.competitionStudents);
 
+// Get the staff in a competition
 // PARAMS: { compId: number }
 // RESPONSE: { staffs: Array<StaffInfo> }
 app.get('/competition/staff', competitionStaffController.competitionStaff);
 
+// Get all the notifications for a user
 // PARAMS: {}
 // Get all notifications for a user
 app.get('/user/notifications', notificationController.userNotificationsList);
 
+// Delete a notification
 // PARAMS: { notificationId }
 // RESPONSE: {}
 app.delete('/notification', notificationController.notificationRemove);
 
+// Notification for team seat assignments to all team members
 // PARAMS: { compId, seatAssignments: Array<SeatAssignment> }
 // RESPONSE: {}
 app.post('/notification/team_seat_assignments', notificationController.notificationTeamSeatAssignments);
 
+// Get all the details of a team in a competition
 // PARAMS: { compId }
 // RESPONSE: 
-// Get all the details of a team in a competition
 app.get('/competition/team/details', competitionStudentController.competitionTeamDetails);
 
+// Generate an invite code for a competition team
 // PARAMS: { compId }
 // RESPONSE:
 // Get the invite code for a team in a competition
 app.get('/competition/team/invite_code', competitionStudentController.competitionTeamInviteCode);
 
+// Join a team in a competition via an invite code
 // PARAMS: { compId, code }
 // RESPONSE: {}
-// Join a team in a competition
 app.post('/competition/team/join', competitionStudentController.competitionTeamJoin);
 
 // Sort teams based on userId university
+// PARAMS: { compId }
+// RESPONSE: {}
 app.post('/competition/algorithm', competitionStaffController.competitionAlgorithm);
 
+// Get all the attendees of a competition
+// PARAMS: { compId }
+// RESPONSE: { attendees: Array<AttendeesDetails> }
 app.get('/competition/attendees', competitionStaffController.competitionAttendees);
 
-// PARAMS: { compId }
-// RESPONSE: 
-// { studentDetails: StudentInfo }
 // Get all the details of a student in a competition
+// PARAMS: { compId }
+// RESPONSE: { studentDetails: StudentInfo }
 app.get('/competition/student/details', competitionStudentController.competitionStudentDetails);
 
+// Update the details of a student in a competition
 // PARAMS: { compId, studentInfo: StudentInfo }
 // RESPONSE: { }
 app.put('/competition/student/details', competitionStudentController.competitionStudentDetailsUpdate);
 
-
+// Get all the details of a staff in a competition
 // PARAMS: { compId }
 // RESPONSE: { staffDetails: StaffInfo }
 app.get('/competition/staff/details', competitionStaffController.competitionStaffDetails);
 
+// Update the details of a staff in a competition
 // PARAMS: { compId, staffInfo: StaffInfo }
 // RESPONSE: { }
 app.put('/competition/staff/details', competitionStaffController.competitionStaffDetailsUpdate);
 
+// Get al the competition sites based for a competition based on the competition ID
 // PARAMS: { compId }
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites', competitionController.competitionSites);
 
+// Get al the competition sites based for a competition based on the competition code
 // PARAMS: { code }
 // RESPONSE: { sites: Array<CompetitionSite> }
 app.get('/competition/sites_code', competitionController.competitionSitesCodes);
 
+// Get the announcement for a competition
 // PARAMS: { compId }
 // RESPONSE: { announcement: Announcement }
 app.get('/competition/announcement', competitionController.competitionAnnouncement);
 
+// Update the announcement for a competition
 // PARAMS: { compId, announcementMessage: string }
 // RESPONSE: {}
 app.put('/competition/announcement', competitionStaffController.competitionAnnouncementUpdate);
 
-
+// Get the list of courses for a university
+// PARAMS: { code }
+// RESPONSE: { courses: Array<Course> }
 app.get('/university/courses', universityController.universityCourses);
 
+// Update team details in a competition
+// PARAMS: { teamList: Array<TeamDetails>, compId }
+// RESPONSE: {}
 app.post('/competition/teams/update', competitionStaffController.competitionTeamsUpdate);
 
+// Update the details of students in a competition
+// PARAMS: { studentList: Array<StudentInfo>, compId }
+// RESPONSE: {}
 app.post('/competition/students/update', competitionStaffController.competitionStudentsUpdate);
 
+// Update the details of staff in a competition
+// PARAMS: { staffList: Array<StaffInfo>, compId }
+// RESPONSE: {}
 app.post('/competition/staff/update', competitionStaffController.competitionStaffUpdate);
 
+// Get the registration fields for staff in a competition
+// PARAMS: { compId }
+// RESPONSE: { regoFields: EditRego }
 app.get('/competition/staff/rego_toggles', competitionStaffController.competitionStaffRegoToggles);
 
+// Update the registration fields for staff in a competition
+// PARAMS: { regoFields: EditRego, compId }
+// RESPONSE: {}
 app.post('/competition/staff/update_rego_toggles', competitionStaffController.competitionStaffUpdateRegoToggles);
 
+// Get the registration fields for students in a competition
+// PARAMS: { compId }
+// RESPONSE: { regoFields: EditRego }
 app.get('/competition/students/rego_toggles', competitionStudentController.competitionStudentsRegoToggles);
 
+// Get the site capacity for a competition
+// PARAMS: { compId, siteIds }
+// RESPONSE: { siteCapacity: Array<CompetitionSiteCapacity> }
 app.get('/competition/site/capacity', competitionStaffController.competitionSiteCapacity);
 
+// Update the site capacity for a competition
+// PARAMS: { siteId, capacity }
+// RESPONSE: {}
 app.put('/competition/site/capacity/update', competitionStaffController.competitionSiteCapacityUpdate);
 
+// Get the competition information
+// PARAMS: { compId }
+// RESPONSE: { competitionInformation: CompetitionInformation }
 app.get('/competition/information', competitionStaffController.competitionInformation);
 
+// Update the courses for a competition
+// PARAMS: { editCourse, compId }
+// RESPONSE: {}
 app.put('/competition/staff/update_courses', competitionStaffController.competitionStaffUpdateCourses);
 
+/* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+/**
+ * Start the server
+ */
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
 })

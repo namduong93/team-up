@@ -25,6 +25,16 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     this.competitionRepository = competitionRepository;
   }
 
+  /**
+   * Updates the courses for a given competition and university.
+   * 
+   * @param compId The ID of the competition.
+   * @param editCourse An object containing the courses to be edited.
+   * @param universityId The ID of the university.
+   * 
+   * @throws {DbError} If there is an error inserting or updating a course in the database.
+   * @returns {Promise<void>} A promise that resolves when the operation is complete.
+   */
   competitionStaffUpdateCourses = async (compId: number, editCourse: EditCourse, universityId: number) => {
     for (const [courseCategory, courseName] of Object.entries(editCourse)) {
       try {
@@ -53,6 +63,13 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
   }
 
     
+  /**
+   * Retrieves detailed information about a competition, including its general details
+   * and associated site locations.
+   *
+   * @param compId The ID of the competition to retrieve information for.
+   * @returns {Promise<Object>} A promise that resolves to an object containing the competition's details.
+   */
   competitionInformation = async (compId: number) => {
     const dbResult = await this.pool.query(
       `SELECT 
@@ -84,9 +101,15 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
 
     return dbResult.rows[0];
-
   }
 
+  /**
+   * Retrieves the site ID that a given user (site-coordinator) is coordinating.
+   *
+   * @param userId The ID of the user whose coordinating site ID is to be retrieved.
+   * @returns A promise that resolves to the site ID the user is coordinating.
+   * @throws {DbError} If the user is not coordinating any site.
+   */
   competitionGetCoordinatingSiteId = async (userId: number): Promise<number> => {
     const dbResult = await this.pool.query(
       `SELECT site_id
@@ -102,6 +125,14 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return dbResult.rows[0].site_id;
   }
 
+  /**
+   * Updates the capacity of a competition site in the database.
+   *
+   * @param siteId The ID of the competition site to update.
+   * @param capacity The new capacity value to set for the competition site.
+   * @throws {DbError} Throws an error if the database update operation fails.
+   * @returns {Promise<void>} A promise that resolves when the update operation is complete.
+   */
   competitionSiteCapacityUpdate = async (siteId: number, capacity: number) => {
     try {
       await this.pool.query(
@@ -117,15 +148,21 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return;
   }
 
+  /**
+   * Update whether certain competitive programming relevant fields are enabled for registration for a competition site.
+   *
+   * @param userId The ID of the user performing the update.
+   * @param compId The ID of the competition.
+   * @param regoFields An object containing the fields to update.
+   * @param universityId The ID of the university.
+   * @returns {Promise<void>} A promise that resolves when the update operation is complete.
+   */
   competitionStaffUpdateRegoToggles = async (userId: number, compId: number, regoFields: EditRego, universityId?: number) => {
-
     const uniId = universityId || (await this.pool.query(
       `SELECT u.university_id AS "universityId"
       FROM users AS u
       WHERE u.id = ${userId}
       `)).rows[0].universityId;
-
-    // if (!universityId) {
 
     await this.pool.query(
       `INSERT INTO competition_registration_toggles (
@@ -152,8 +189,15 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return;
   }
 
+  /**
+   * Retrieve what competitive programming relevant fields are enabled for registration for a competition site.
+   *
+   * @param userId The ID of the user.
+   * @param compId The ID of the competition.
+   * @param universityId The ID of the university.
+   * @returns {Promise<void>} A promise that resolves when the update operation is complete.
+   */
   competitionStaffRegoToggles = async (userId: number, compId: number, universityId?: number) => {
-
     if (!universityId) {
       // If user did not provide a uni id assume they are the coach of the competition and find for their uni
       const dbResult = await this.pool.query(
@@ -186,6 +230,14 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return dbResult.rows[0];
   }
 
+  /**
+   * Checks if a user is a coach for a specific competition.
+   *
+   * @param userId The ID of the user to check.
+   * @param compId The ID of the competition to check.
+   * @throws {DbError} If the user is not a coach for the specified competition.
+   * @returns {Promise<void>} A promise that resolves if the user is a coach for the competition.
+   */
   competitionCoachCheck = async (userId: number, compId: number) => {
     const dbResult = await this.pool.query(
       `SELECT cu.competition_id AS "competitionId"
@@ -193,6 +245,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}
       `
     );
+
     if (!dbResult.rowCount) {
       throw new DbError(DbError.Auth, 'User is not a coach for this competition');
     }
@@ -200,7 +253,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return;
   }
 
-    /**
+  /**
    * Updates the competition user details for a list of staff in a specific competition.
    *
    * @param userId The ID of the user performing the update.
@@ -230,7 +283,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return;
   }
 
-    /**
+  /**
    * Updates the competition user details for a list of students in a specific competition.
    *
    * @param userId The ID of the user performing the update.
@@ -240,7 +293,6 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
    * @throws {DbError} Throws an error if the update operation fails.
    */
   competitionStudentsUpdate = async (userId: number, studentList: StudentInfo[], compId: number) => {
-
     for (const student of studentList) {
       try {
         await this.pool.query(
@@ -270,7 +322,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return;
   }
 
-    /**
+  /**
    * Checks if a coach is coaching all the students (their teams) in the provided list.
    *
    * @param userId The ID of the coach.
@@ -279,24 +331,32 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
    * @throws {DbError} If the coach is not coaching some of the students in the provided list.
    * @returns A promise that resolves if the coach is coaching all the students.
    */
-    coachCheckIdsStudent = async (userId: number, userIds: Array<number>, compId: number) => {
-      const dbResult = await this.pool.query(
-        `SELECT cu.user_id AS "userId"
-        FROM competition_users AS cu_coach
-        JOIN competition_users AS cu ON cu.competition_coach_id = cu_coach.id
-        WHERE cu_coach.user_id = ${userId} AND cu_coach.competition_id = ${compId}
-        `
-      );
-  
-      const resultIds = dbResult.rows.map((row) => row.userId);
-  
-      if (!userIds.every((id) => resultIds.includes(id))) {
-        throw new DbError(DbError.Auth, "Coach is not coaching some of the students in the provided list");
-      }
-    }
+  coachCheckIdsStudent = async (userId: number, userIds: Array<number>, compId: number) => {
+    const dbResult = await this.pool.query(
+      `SELECT cu.user_id AS "userId"
+      FROM competition_users AS cu_coach
+      JOIN competition_users AS cu ON cu.competition_coach_id = cu_coach.id
+      WHERE cu_coach.user_id = ${userId} AND cu_coach.competition_id = ${compId}
+      `
+    );
 
+    const resultIds = dbResult.rows.map((row) => row.userId);
+
+    if (!userIds.every((id) => resultIds.includes(id))) {
+      throw new DbError(DbError.Auth, "Coach is not coaching some of the students in the provided list");
+    }
+  }
+
+  /**
+   * Checks if a coach is coaching all the specified teams in a competition.
+   *
+   * @param userId The ID of the user (coach) to check.
+   * @param teamIds An array of team IDs to verify the coach's association with.
+   * @param compId The ID of the competition.
+   * @throws {DbError} If the coach is not coaching some of the teams in the provided team IDs.
+   * @returns {Promise<void>} A promise that resolves if the coach is coaching all specified teams, otherwise it throws an error.
+   */
   coachCheckIds = async (userId: number, teamIds: Array<number>, compId: number) => {
-    // Check if the coach is coaching all the teams in approveIds
     const coachCheckQuery = 
     `SELECT id
       FROM competition_teams
@@ -317,7 +377,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return;
   }
 
-    /**
+  /**
    * Updates the details of competition teams and their participants in the database.
    *
    * @param teamList An array of team details to be updated.
@@ -373,7 +433,8 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
     return;
   }
-    /**
+
+  /**
    * Retrieves the details of competition attendees based on the user's role.
    * 
    * If the user has an ADMIN role, all attendees of the competition are returned.
@@ -446,6 +507,13 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return [];
   }
 
+  /**
+   * Retrieves the staff information for a given competition if the user has admin roles.
+   *
+   * @param userId The ID of the user requesting the staff information.
+   * @param compId The ID of the competition for which the staff information is requested.
+   * @returns A promise that resolves to an array of `StaffInfo` objects if the user has admin roles, otherwise an empty array.
+   */
   competitionStaff = async (userId: number, compId: number): Promise<StaffInfo[]> => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 
@@ -461,7 +529,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return [];
   }
 
-    /**
+  /**
    * Retrieves a list of students associated with a competition based on the user's role.
    *
    * If the user has an ADMIN role in the competition, all students in the competition are returned.
@@ -492,7 +560,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return [];
   }
 
-    /**
+  /**
    * Retrieves the details of teams participating in a competition based on the user's role.
    * 
    * The function performs different queries based on the user's role in the competition:
@@ -551,7 +619,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     throw new DbError(DbError.Auth, 'User is not staff of this competition');
   };
 
-    /**
+  /**
    * Creates a new competition and assigns the admin role to the user.
    * 
    * @param userId - The ID of the user creating the competition.
@@ -630,7 +698,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return { competitionId: competitionId };
   }
 
-    /**
+  /**
    * Updates the details of a competition if the user is an admin of the competition.
    *
    * @param userId The ID of the user attempting to update the competition.
@@ -773,6 +841,15 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     };
   }
 
+  /**
+   * Updates the details of a staff member in a competition.
+   *
+   * @param userId The ID of the user performing the update.
+   * @param compId The ID of the competition.
+   * @param staffInfo The updated staff information.
+   * @returns A promise that resolves to an empty object.
+   * @throws {DbError} If the staff does not exist
+   */
   competitionStaffDetailsUpdate = async (userId: number, compId: number, staffInfo: StaffInfo): Promise<{}> => {
     if(!staffInfo) {
       return {};
@@ -793,7 +870,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return {};
   }
 
-    /**
+  /**
    * Approves team assignments for a competition.
    *
    * @param userId The ID of the user performing the approval.
@@ -866,7 +943,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return {};
   }
 
-    /**
+  /**
    * Requests a team name change for a competition.
    *
    * @param userId The ID of the user requesting the team name change.
@@ -911,7 +988,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return teamId;
   }
 
-    /**
+  /**
    * Approves or rejects team name changes for a competition.
    *
    * @param userId The ID of the user performing the action.
@@ -990,7 +1067,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return {};
   }
 
-    /**
+  /**
    * Approves or rejects site changes for teams in a competition.
    *
    * @param userId The ID of the user performing the action.
@@ -1069,7 +1146,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return {};
   }
 
-    /**
+  /**
    * Assigns seats to teams in a competition.
    *
    * @param userId The ID of the user making the request.
@@ -1137,7 +1214,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return {};
   }
 
-    /**
+  /**
    * Registers teams for a competition to ICPC global (Setting their status to Registered).
    *
    * @param userId The ID of the user performing the registration.
@@ -1190,7 +1267,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return {};
   }
 
-    /**
+  /**
    * Adds a staff member to a competition with specific roles.
    * Access level will be set to 'Pending' for the staff member until an admin approves the request.
    * 
@@ -1252,7 +1329,16 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return {};
   }
 
-    competitionAnnouncementUpdate = async (compId: number, university: University, announcement: Announcement): Promise<void> => {
+  /**
+   * Updates the announcement for a competition.
+   *
+   * @param compId The ID of the competition.
+   * @param university The university object containing the university ID.
+   * @param announcement The announcement object containing the message and created date.
+   * @returns A promise that resolves to an empty object.
+   * @throws {DbError} If the compettion announcement fails to update (the competition most likely does not exist).
+   */
+  competitionAnnouncementUpdate = async (compId: number, university: University, announcement: Announcement): Promise<void> => {
     const announcementResult = await this.pool.query(`
       SELECT id, message, created_date AS "createdDate", university_id AS "universityId"
       FROM competition_announcements
@@ -1284,6 +1370,13 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     return ;
   }
 
+  /**
+   * The main algorithm that sorts and forms teams for a competition.
+   *
+   * @param compId The ID of the competition.
+   * @param userId The ID of the user performing the action.
+   * @returns A promise that resolves to an empty object.
+   */
   competitionAlgorithm = async (compId: number, userId: number): Promise<{} | undefined> => {
     const competitionCoachId = await this.competitionRepository.competitionCoachIdFromCompId(compId, userId);
 
@@ -1414,7 +1507,12 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     };
   }
 
-  // Calculate point for each participant
+  /**
+   * A heuristic algorithm to calculate the points assigned for each participant.
+   *
+   * @param students A map of student IDs to their competition details.
+   * @returns A promise that resolves to an empty object.
+   */
   heuristicStudent = (students: Map<number, CompetitionAlgoStudentDetails>) => {
     for (let student of students.values()) {
       if (student.codeforcesRating) {
@@ -1444,6 +1542,13 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
   }
 
+  /**
+   * Forms teams based on the sorted list of teams.
+   *
+   * @param teams The list of teams to be formed.
+   * @param deletedTeams A set of team IDs that have been deleted.
+   * @returns A promise that resolves to an empty object.
+   */
   formTeams = (teams: CompetitionAlgoTeamDetails[], deletedTeams: Set<number>) => {
     for (let i = 0; i < teams.length; i++) {
       if (deletedTeams.has(teams[i].id)) {
@@ -1501,6 +1606,13 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
   }
 
+  /**
+   * Sorts the teams based on the maximum points of the participants.
+   *
+   * @param teams The list of teams to be sorted.
+   * @param studentMap A map of student IDs to their competition details.
+   * @returns A promise that resolves to an empty object.
+   */
   sortTeams = (teams: CompetitionAlgoTeamDetails[], studentMap: Map<number, CompetitionAlgoStudentDetails>) => {
     teams.sort((teamA, teamB) => {
       const teamAMaxPoint = Math.max(...teamA.participants.map(p =>
@@ -1515,5 +1627,4 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     });
     return teams;
   }
-
 }

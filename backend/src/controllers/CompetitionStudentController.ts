@@ -11,6 +11,9 @@ export class CompetitionStudentController {
     this.competitionStudentService = competitionStudentService;
   }
 
+  /**
+   * Handles the request to retrieve the competition relevant fields enabled for a student registration in a competition.
+   */
   competitionStudentsRegoToggles = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId, code } = req.query;
     const regoFields = await this.competitionStudentService.competitionStudentsRegoToggles(
@@ -55,6 +58,9 @@ export class CompetitionStudentController {
     res.json({ studentDetails });
   });
 
+  /**
+   * Handles the request to update student details for a specific competition.
+   */
   competitionStudentDetailsUpdate = httpErrorHandler(async (req: Request, res: Response) => {
     const { userId } = req.query;
     const { compId } = req.body;
@@ -107,6 +113,4 @@ export class CompetitionStudentController {
     const result = await this.competitionStudentService.competitionRequestSiteChange(Number(userId), Number(compId), Number(newSiteId));
     res.json(result);
   });
-
-
 }

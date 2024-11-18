@@ -147,6 +147,5 @@ describe('Template tests', () => {
   });
 
   test('Case: Husk', async () => {
-    console.log(await comp_student_db.competitionStudentsRegoToggles(newStudent.userId, comp.competitionId))
   })
 })
