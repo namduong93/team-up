@@ -116,6 +116,7 @@ describe('Staff Register Function', () => {
       userId: siteCoorId.userId,
       competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
       accessLevel: CompetitionAccessLevel.ACCEPTED,
+      competitionBio: 'i good, trust',
       siteLocation: userSiteLocation
     };
 
@@ -127,6 +128,7 @@ describe('Staff Register Function', () => {
       sex: 'Male',
       pronouns: 'He/Him',
       tshirtSize: 'M',
+      bio: 'i good, trust',
       allergies: null,
       dietaryReqs: null,
       accessibilityReqs: null,
