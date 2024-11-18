@@ -171,12 +171,22 @@ interface DropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultSearchTerm?: string;
 }
 
-// PROPS:
-// - optionsState ---[ options -- state variable list of { value: string, label: string }, setOptions -- setSate for the options state variable ]
-// - setCurrentSelected --- setState function that should track the currently selected option ({ value: string, label: string })
-// - style --- additional styling to apply to the dropdown container
-// - props --- additional props to apply to the dropdown container
-//
+/**
+ * A React component for creating a styled, searchable, and extendable dropdown menu.
+ *
+ * The `AdvancedDropdown` component allows users to select options from a list, perform fuzzy searches to filter
+ * available options, and create new options dynamically if desired. The dropdown supports real-time updates
+ * to the options list.
+ *
+ * @param {DropdownProps} props - React DropDownProps as specified above, where:
+ * `optionsState` [ options -- state variable list of { value: string, label: string }, setOptions -- setSate for the options state variable ]
+ * `setCurrentSelected` setState function that should track the currently selected option ({ value: string, label: string })
+ * `isExtendable` determines if users can create new options not found in the list.
+ * `defaultSearchTerm` {string} (optional), which is the initial value displayed in the search field.
+ * - Additional props such as `style` or `props` which can be passed to customize the container.
+ * @returns {JSX.Element} - A fully styled and functional dropdown component that supports searching, selecting, and extending options.
+ */
+
 // INSTRUCTIONS:
 // To use the advanced dropdown create a state variable [<optionList>, set<OptionList>] of some kind that contains the list of options
 // that can be chosen from in the dropdown, then create a state variable [currentSelected, setCurrentSelected] that should store
@@ -193,6 +203,9 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
   ...props
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Updates the 'searchTerm' whenever the 'defaultSearchTerm' changes,
+  // ensuring that the search input is initialised
   useEffect(() => {
     setSearchTerm(defaultSearchTerm ?? "");
   }, [defaultSearchTerm]);
@@ -203,6 +216,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     threshold: 1,
   });
 
+  // Sorts the selection in the Dropdown depending on the user's input
   let filteredOptions:
     | Array<FuseResult<{ value: string; label: string }>>
     | Array<{ item: { value: string; label: string } }>;
@@ -222,6 +236,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     ...remainingOptions.map((option) => ({ item: option })),
   ];
 
+  // Updates the 'currentSelected' to the selected option's label
   const handleSelectOption = (
     e:
       | React.MouseEvent<HTMLButtonElement>
@@ -236,6 +251,8 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     e.currentTarget.blur();
   };
 
+  // Mnages the keyboard navigation within the drpdown, selecting the first
+  // filtered option on Enter
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSelectOption(
@@ -246,6 +263,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     }
   };
 
+  // Handles the creation of a new option by adding to the 'options' state
   const handleCreate = (e: React.MouseEvent<HTMLButtonElement>) => {
     setOptions((prevOptions) => [
       ...prevOptions,
