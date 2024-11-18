@@ -47,4 +47,7 @@ describe('Session Find Function', () => {
       createdAt: expect.any(Date)
     });
   });
+  test('failure case: returns null', async () => {
+    expect(await session_db.find('wrongId')).toStrictEqual(null);
+  });
 });
