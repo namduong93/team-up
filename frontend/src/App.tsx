@@ -12,7 +12,6 @@ import { darkTheme } from "./themes/darkTheme";
 import { christmasTheme } from "./themes/christmasTheme";
 import { colourblindTheme } from "./themes/colourblindTheme";
 import { Settings } from "./screens/settings/Settings";
-
 import { TeamProfile } from "./screens/student/TeamProfile";
 import { useDashInfo } from "./screens/dashboard/hooks/useDashInfo";
 import { Login } from "./screens/auth/Login/Login";
