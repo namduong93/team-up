@@ -1,3 +1,4 @@
+import { access } from "fs";
 import { CompetitionSiteCapacity } from "../../shared_types/Competition/CompetitionSite.js";
 import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
 import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
@@ -184,7 +185,12 @@ export class CompetitionStaffService {
       throw new ServiceError(ServiceError.Auth, 'User is not an Admin for this competition');
     }
 
-    await this.competitionStaffRepository.competitionStaffUpdate(userId, staffList, compId);
+    const accessUpdatedStaff = await this.competitionStaffRepository.competitionStaffUpdate(userId, staffList, compId);
+    for (const staff of accessUpdatedStaff) {
+      // Send a welcome notification to the user
+      await this.notificationRepository.notificationWelcomeToCompetition(staff, compId);
+    }
+    
     return;
   }
 

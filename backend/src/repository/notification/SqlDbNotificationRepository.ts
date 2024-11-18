@@ -12,6 +12,37 @@ export class SqlDbNotificationRepository implements NotificationRepository {
   }
 
   /**
+   * Sends a welcome notification to a user for a specific competition.
+   *
+   * @param userId The ID of the user to send the notification to.
+   * @param competitionId The ID of the competition.
+   * @param competitionName The name of the competition.
+   * @returns A promise that resolves to an empty object.
+   */
+  notificationWelcomeToCompetition = async (userId: number, compId: number): Promise<{}> => {
+    // Get the competition name
+    const competitionNameQuery = `
+      SELECT name 
+      FROM competitions 
+      WHERE id = $1
+    `;
+    const competitionNameResult = await this.pool.query(competitionNameQuery, [compId]);
+    const competitionName = competitionNameResult.rows[0]?.name;
+
+    // Create notification message
+    const notificationMessage = `Welcome to competition ${competitionName}.`;
+  
+    // Insert notification into the database
+    const notificationQuery = `
+      INSERT INTO notifications (user_id, message, type, competition_id, created_date)
+      VALUES ($1, $2, 'welcomeCompetition'::notification_type_enum, $3, NOW())
+    `;
+    await this.pool.query(notificationQuery, [userId, notificationMessage, compId]);
+
+    return {};
+  }
+
+  /**
    * Sends notifications to other team members and the coach when a user withdraws from a competition.
    *
    * @param userId The ID of the user withdrawing from the competition.
