@@ -315,6 +315,11 @@ export class SqlDbUserRepository implements UserRepository {
     return { id: universityId, name: universityName };
   }
 
+  /**
+   * Retrieves a list of all staff members from the database.
+   *
+   * @returns {Promise<Array<LooseStaffInfo>>} A promise that resolves to an array of `LooseStaffInfo` objects.
+   */
   staffRequests = async (): Promise<Array<LooseStaffInfo>> => {
     const dbResult = await this.pool.query(`
       SELECT 
@@ -353,6 +358,12 @@ export class SqlDbUserRepository implements UserRepository {
     return returnArray;
   }
 
+  /**
+   * Updates the access levels of multiple staff users in the database.
+   *
+   * @param staffRequests An array of `StaffRequests` objects containing user IDs and their corresponding access levels.
+   * @returns A promise that resolves when the update operation is complete.
+   */
   staffRequestsUpdate = async (staffRequests: Array<StaffRequests>): Promise<void> => {
     const userIds = staffRequests.map(request => request.userId);
     const accessValues = staffRequests.map(request => request.access);
@@ -368,5 +379,4 @@ export class SqlDbUserRepository implements UserRepository {
       [userIds, accessValues]
     );
   }
-
 }

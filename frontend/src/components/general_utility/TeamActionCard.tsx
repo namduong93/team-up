@@ -9,20 +9,6 @@ import JoinPopup from "../../screens/student/subcomponents/JoinPopup";
 import { SitePopupChain } from "../../screens/student/subcomponents/popups/SitePopupChain/SitePopupChain";
 import { NamePopupChain } from "../../screens/student/subcomponents/popups/NamePopupChain/NamePopupChain";
 
-type ActionType = "invite" | "join" | "name" | "site";
-
-const MAX_MEMBERS = 3; // Maximum number of team members
-
-interface ActionCardProps {
-  $actionType: ActionType;
-  $disabled: boolean;
-}
-
-interface TeamActionCardProps {
-  numMembers: number;
-  compId?: number;
-}
-
 const StyledActionsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -98,18 +84,47 @@ const StyledHeading = styled.h2`
   box-sizing: border-box;
 `;
 
+type ActionType = "invite" | "join" | "name" | "site";
+
+const MAX_MEMBERS = 3;
+
+interface ActionCardProps {
+  $actionType: ActionType;
+  $disabled: boolean;
+}
+
+interface TeamActionCardProps {
+  numMembers: number;
+  compId?: number;
+}
+
+/**
+ * A React component for the Team Action tiles.
+ *
+ * @param {TeamActionCardProps} props - React TeamActionCardProps specified above
+ * @returns {JSX.Element} - Web page component displaying the allowable team actions,
+ * routing to other display elements
+ */
 export const TeamActionCard: React.FC<TeamActionCardProps> = ({
   numMembers,
 }) => {
   const [modalOpen, setModalOpen] = useState<
     "invite" | "join" | "name" | "site" | null
   >(null);
+
   const [teamCode, setTeamCode] = useState("");
   const { compId } = useParams<{ compId: string }>();
 
   const [siteLocationOptions, setSiteLocationOptions] = useState([
     { value: "", label: "" },
   ]);
+
+  const actions = [
+    { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a Friend" },
+    { type: "join" as ActionType, icon: FaUsers, text: "Join a Team" },
+    { type: "name" as ActionType, icon: FaEdit, text: "Change Team Name" },
+    { type: "site" as ActionType, icon: FaGlobe, text: "Change Team Site" },
+  ];
 
   useEffect(() => {
     const fetchSiteLocations = async () => {
@@ -139,14 +154,7 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
     fetchTeamCode();
   }, []);
 
-  const actions = [
-    { type: "invite" as ActionType, icon: FaUserPlus, text: "Invite a Friend" },
-    { type: "join" as ActionType, icon: FaUsers, text: "Join a Team" },
-    { type: "name" as ActionType, icon: FaEdit, text: "Change Team Name" },
-    { type: "site" as ActionType, icon: FaGlobe, text: "Change Team Site" },
-  ];
-
-  // Determine which actions should be disabled based on the number of members
+  // Determines whether an action should be disabled based on the number of members.
   const isDisabled = (actionType: ActionType) => {
     if (numMembers === 1) return actionType === "name" || actionType === "site";
     if (numMembers > 1 && numMembers < MAX_MEMBERS)
@@ -155,9 +163,6 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
       return actionType === "invite" || actionType === "join";
     return false;
   };
-
-  // TO-DO: backend route to obtain the teamCode --> replace text in InvitePopUp with teamCode
-  // when implemented
 
   return (
     <>
@@ -171,7 +176,10 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
             $actionType={action.type}
             $disabled={isDisabled(action.type)}
           >
-            <StyledCardIcon $disabled={isDisabled(action.type)} as={action.icon} />
+            <StyledCardIcon
+              $disabled={isDisabled(action.type)}
+              as={action.icon}
+            />
             <StyledCardText $disabled={isDisabled(action.type)}>
               {action.text}
             </StyledCardText>

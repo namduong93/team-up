@@ -1,12 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { FaFilter } from "react-icons/fa";
 import styled from "styled-components";
-interface FilterSelectProps {
-  options: { [key: string]: string[] };
-  onFilterChange: (selectedFilters: { [key: string]: string[] }) => void;
-  isOpen: boolean;
-  currentFilters: { [field: string]: string[] };
-}
 
 const StyledFilterContainer = styled.div<{ $isOpen: boolean }>`
   position: absolute;
@@ -21,7 +15,7 @@ const StyledFilterContainer = styled.div<{ $isOpen: boolean }>`
   padding: 10px;
   max-width: 300px;
   width: 200px;
-  
+
   height: fit-content;
   overflow-y: auto;
   overflow-x: hidden;
@@ -41,7 +35,8 @@ const StyledOptionButton = styled.button<{ selected: boolean }>`
   background-color: ${({ selected, theme }) =>
     selected ? theme.colours.optionSelected : theme.colours.optionUnselected};
   color: ${({ selected, theme }) =>
-    selected ? theme.background : theme.fonts.colour};  margin: 5px;
+    selected ? theme.background : theme.fonts.colour};
+  margin: 5px;
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -53,13 +48,28 @@ const StyledOptionButton = styled.button<{ selected: boolean }>`
   }
 `;
 
+interface FilterSelectProps {
+  options: { [key: string]: string[] };
+  onFilterChange: (selectedFilters: { [key: string]: string[] }) => void;
+  isOpen: boolean;
+  currentFilters: { [field: string]: string[] };
+}
+
+/**
+ * A React component for a filter dropdown
+ *
+ * @param {FilterSelectProps} props - React FilterSelectProps specified above
+ * @returns {JSX.Element} - Web page styled filter dropdown with options
+ */
 export const FilterSelect: FC<FilterSelectProps> = ({
   options,
   onFilterChange,
   isOpen,
   currentFilters,
 }) => {
-  const [selectedFilters, setSelectedFilters] = useState<{ [field: string]: string[] }>({});
+  const [selectedFilters, setSelectedFilters] = useState<{
+    [field: string]: string[];
+  }>({});
 
   // update the current filters selected when prompted from filter tags in dashboard
   useEffect(() => {

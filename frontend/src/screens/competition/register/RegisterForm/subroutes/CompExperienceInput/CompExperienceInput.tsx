@@ -2,17 +2,38 @@ import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMultiStepCompRegoForm } from "../../hooks/useMultiStepCompRegoForm";
 import { sendRequest } from "../../../../../../utility/request";
-import { Course, CourseCategory } from "../../../../../../../shared_types/University/Course";
+import {
+  Course,
+  CourseCategory,
+} from "../../../../../../../shared_types/University/Course";
 import { EditRego } from "../../../../../../../shared_types/Competition/staff/Edit";
 import { DEFAULT_REGO_FIELDS } from "../../../../staff_pages/CompetitionPage/subroutes/ManagePage/ManagePage";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
 import { CompRegistrationProgressBar } from "../../../../../../components/progress_bar/ProgressBar";
-import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledTitle } from "./CompExperienceInput.styles";
+import {
+  StyledAsterisk,
+  StyledButton,
+  StyledButtonContainer,
+  StyledContainer,
+  StyledContentContainer,
+  StyledTitle,
+} from "./CompExperienceInput.styles";
 import MultiRadio from "../../../../../../components/general_utility/MultiRadio";
 import TextInput from "../../../../../../components/general_utility/TextInput";
 import RadioButton from "../../../../../../components/general_utility/RadioButton";
 import DescriptiveTextInput from "../../../../../../components/general_utility/DescriptiveTextInput";
 
+/**
+ * A React web page form component for collecting competitive experience data during the competition registration process.
+ *
+ * The `CompExperienceInput` component gathers information about the user's university courses, competitive experience,
+ * and eligibility for various prizes and awards, such as Codeforces score, National and International Olympiad prizes,
+ * and Boersen Prize eligibility. The component conditionally renders fields based on the competition level and user input.
+ * It manages state for the competition experience, course selection, and prize eligibility through the form context.
+ * Upon clicking the "Register" button, the form data is submitted to the backend for registration.
+ *
+ * @returns {JSX.Element} - A form UI for collecting competitive experience during the competition registration.
+ */
 export const CompExperienceInput: FC = () => {
   const navigate = useNavigate();
   const { code } = useParams<{ code?: string }>();
@@ -72,22 +93,11 @@ export const CompExperienceInput: FC = () => {
     };
 
     try {
-      console.log(payload);
-      const allFieldsFalse = Object.values(editRego).every(
-        (value) => value === false
+      const response = await sendRequest.post(
+        "/competition/student/join",
+        payload
       );
-
-      // TO-DO: uncomment when the other API is confirmed
-
-      // const apiEndpoint = allFieldsFalse
-      //   ? "/competition/student/join"
-      //   : "NEW_ONE"; // change when the other API is done
-
-      // const response = await sendRequest.post(apiEndpoint, payload);
-      
-      const response = await sendRequest.post('/competition/student/join', payload);
       console.log("Response:", response.data);
-      
 
       navigate("/dashboard", {
         state: {
@@ -100,44 +110,46 @@ export const CompExperienceInput: FC = () => {
   };
 
   const [courseOptions, setCourseOptions] = useState([
-    { value: CourseCategory.Introduction, label: 'Introduction to Programming / Programming Fundamentals (and any advanced versions' },
-    { value: CourseCategory.DataStructures, label: 'Data Structures and Algorithms (and any advanced versions)' },
-    { value: CourseCategory.AlgorithmDesign, label: 'Algorithm Design and Analysis (and any advanced versions' },
-    { value: CourseCategory.ProgrammingChallenges, label: 'Programming Challenges and Problems (and any advanced versions' },
+    {
+      value: CourseCategory.Introduction,
+      label:
+        "Introduction to Programming / Programming Fundamentals (and any advanced versions)",
+    },
+    {
+      value: CourseCategory.DataStructures,
+      label: "Data Structures and Algorithms (and any advanced versions)",
+    },
+    {
+      value: CourseCategory.AlgorithmDesign,
+      label: "Algorithm Design and Analysis (and any advanced versions)",
+    },
+    {
+      value: CourseCategory.ProgrammingChallenges,
+      label: "Programming Challenges and Problems (and any advanced versions)",
+    },
   ]);
 
+  // obtains the courses for the associated university
   useEffect(() => {
     const fetchCourses = async () => {
-      const response = await sendRequest.get<{ courses: Array<Course> }>('/university/courses', { code });
+      const response = await sendRequest.get<{ courses: Array<Course> }>(
+        "/university/courses",
+        { code }
+      );
       const { courses } = response.data;
 
-      courses.length &&
-      setCourseOptions(courses.map((course) => ({ value: course.category, label: course.courseName })));
-    }
+      if (courses.length) {
+        setCourseOptions(
+          courses.map((course) => ({
+            value: course.category,
+            label: course.courseName,
+          }))
+        );
+      };      
+    };
 
     fetchCourses();
   }, []);
-
-    
-  // const courseOptions = [
-  //   {
-  //     value: "Introduction to Programming / Programming Fundamentals",
-  //     label:
-  //       "Introduction to Programming / Programming Fundamentals (and any advanced versions)",
-  //   },
-  //   {
-  //     value: "Data Structures and Algorithms",
-  //     label: "Data Structures and Algorithms (and any advanced versions)",
-  //   },
-  //   {
-  //     value: "Algorithm Design and Analysis",
-  //     label: "Algorithm Design and Analysis (and any advanced versions)",
-  //   },
-  //   {
-  //     value: "Programming Challenges and Problems",
-  //     label: "Programming Challenges and Problems (and any advanced versions)",
-  //   },
-  // ];
 
   function isButtonDisabled(): boolean | undefined {
     const {
@@ -152,7 +164,8 @@ export const CompExperienceInput: FC = () => {
     } else {
       return (
         courses.length === 0 ||
-        (editRego.enableNationalPrizesField && hasNationalPrize === undefined) ||
+        (editRego.enableNationalPrizesField &&
+          hasNationalPrize === undefined) ||
         (hasNationalPrize && nationalPrizes === "") ||
         (editRego.enableInternationalPrizesField &&
           hasInternationalPrize === undefined) ||
@@ -164,7 +177,6 @@ export const CompExperienceInput: FC = () => {
     }
   }
 
-  // TO-DO: call the EditRego interface for the competition from backend
   const [editRego, setEditRego] = useState<EditRego>({
     enableCodeforcesField: false,
     enableNationalPrizesField: false,
@@ -172,13 +184,17 @@ export const CompExperienceInput: FC = () => {
     enableRegionalParticipationField: false,
   });
 
+  // Obtains the editRego object that specifies question fields that staff
+  // would like to hide
   useEffect(() => {
     const fetchEditRego = async () => {
       const response = await sendRequest.get<{ regoFields: EditRego }>(
-        '/competition/students/rego_toggles', { code });
+        "/competition/students/rego_toggles",
+        { code }
+      );
       const { regoFields } = response.data;
       setEditRego(regoFields || DEFAULT_REGO_FIELDS);
-    }
+    };
     fetchEditRego();
   }, []);
 
@@ -212,21 +228,22 @@ export const CompExperienceInput: FC = () => {
             showOther={false}
           />
 
-          {editRego.enableCodeforcesField && formData.competitionLevel !== "Level B" && (
-            <TextInput
-              label="Codeforces Score"
-              placeholder="Please enter"
-              type="numeric"
-              required={false}
-              value={formData.codeforce?.toString() || ""}
-              onChange={(e) => {
-                const value = e.target.value;
-                setFormData({ ...formData, codeforce: Number(value) });
-              }}
-              width="100%"
-              descriptor="Please enter your current Codeforce score if applicable"
-            />
-          )}
+          {editRego.enableCodeforcesField &&
+            formData.competitionLevel !== "Level B" && (
+              <TextInput
+                label="Codeforces Score"
+                placeholder="Please enter"
+                type="numeric"
+                required={false}
+                value={formData.codeforce?.toString() || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFormData({ ...formData, codeforce: Number(value) });
+                }}
+                width="100%"
+                descriptor="Please enter your current Codeforce score if applicable"
+              />
+            )}
 
           {editRego.enableRegionalParticipationField &&
             formData.degreeYear.toString() !== "1" &&
@@ -355,7 +372,10 @@ export const CompExperienceInput: FC = () => {
 
           <StyledButtonContainer>
             <StyledButton onClick={handleBack}>Back</StyledButton>
-            <StyledButton $disabled={isButtonDisabled()} onClick={handleRegister}>
+            <StyledButton
+              $disabled={isButtonDisabled()}
+              onClick={handleRegister}
+            >
               Register
             </StyledButton>
           </StyledButtonContainer>

@@ -1,7 +1,10 @@
 import React from "react";
 import { FaTimes } from "react-icons/fa";
 import { styled } from "styled-components";
-import { StyledCancelButton, StyledConfirmButton } from "../../../../../components/responsive_fields/action_buttons/ActionButton";
+import {
+  StyledCancelButton,
+  StyledConfirmButton,
+} from "../../../../../components/responsive_fields/action_buttons/ActionButton";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -52,8 +55,14 @@ interface OptionPopUpProps {
   onClose: () => void;
   onNext: () => void;
   actionButtonText: string;
-}
+};
 
+/**
+ * `WithdrawPopup1` is a React web page component that displays the conseqeunces of withdrawing
+ * to users, prompting them to confirm their withdrawal
+ *
+ * @returns JSX.Element - A styled container presenting information
+ */
 export const WithdrawPopup1: React.FC<OptionPopUpProps> = ({
   heading,
   onClose,
@@ -69,7 +78,9 @@ export const WithdrawPopup1: React.FC<OptionPopUpProps> = ({
         <div>{heading}</div>
 
         <StyledButtonContainer>
-          <StyledConfirmButton onClick={onNext}>{actionButtonText}</StyledConfirmButton>
+          <StyledConfirmButton onClick={onNext}>
+            {actionButtonText}
+          </StyledConfirmButton>
           <StyledCancelButton onClick={onClose}>Cancel</StyledCancelButton>
         </StyledButtonContainer>
       </StyledModal>

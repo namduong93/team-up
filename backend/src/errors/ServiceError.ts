@@ -5,6 +5,9 @@ export enum ServiceErrorType {
   NotFound = 'NotFound',
 }
 
+/**
+ * Represents an error that occurred during a service operation.
+ */
 export class ServiceError extends Error implements ErrorInterface {
   
   private errorType: ServiceErrorType | string;

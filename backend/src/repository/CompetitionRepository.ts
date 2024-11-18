@@ -23,16 +23,6 @@ export interface CompetitionRepository {
   competitionsList(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject>>;
   competitionSiteCapacity(compId: number, siteIds: number[]): Promise<Array<CompetitionSiteCapacity> | undefined>;
   
-  
-  // Staff
-
-  competitionStudentJoin1(sessionToken: string, individualInfo: IndividualTeamInfo,
-    teamMate1: TeamMateData): Promise<IncompleteTeamIdObject>;
-  competitionStudentJoin2(sessionToken: string, teamInfo: TeamDetails,
-    teamMate1: TeamMateData, teamMate2: TeamMateData ): Promise<TeamIdObject>;
-  competitionUniversitiesList(compId: number): Promise<Array<UniversityDisplayInfo> | undefined>;
-  
   encrypt(id: number): string;
   decrypt(encoded: string): number;
-
 }

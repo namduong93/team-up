@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
 import { CopyButton } from "../../../components/general_utility/CopyButton";
 
-// Modal styles
 const StyledModal = styled.div`
   position: fixed;
   top: 50%;
@@ -24,7 +23,6 @@ const StyledModal = styled.div`
   align-items: center;
 `;
 
-// Close button styles
 const StyledCloseButton = styled.button`
   background: transparent;
   border: none;
@@ -33,12 +31,12 @@ const StyledCloseButton = styled.button`
   top: 10px;
   right: 10px;
   font-size: 20px;
-  color: #d9534f; // Change color as needed
+  color: #d9534f;
   transition: color 0.2s;
   font-size: 26px;
 
   &:hover {
-    color: #c9302c; // Change color on hover
+    color: #c9302c;
   }
 `;
 
@@ -70,8 +68,15 @@ interface InvitePopUpProps {
   heading: React.ReactNode;
   text: string;
   onClose: () => void;
-}
+};
 
+/**
+ * `InvitePopUp` is a React web page component that displays the team code for
+ * users to copy to clipboard and distribute to their team members
+ *
+ * @returns JSX.Element - A styled container presenting the team code with a
+ * copy to clipboard functionality
+ */
 const InvitePopup: React.FC<InvitePopUpProps> = ({
   heading,
   text,

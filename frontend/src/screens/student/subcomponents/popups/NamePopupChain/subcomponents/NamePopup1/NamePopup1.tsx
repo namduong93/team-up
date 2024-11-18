@@ -1,7 +1,10 @@
 import { FaTimes } from "react-icons/fa";
-import { StyledButton, StyledCloseButton, StyledModal } from "./NamePopup1.styles";
+import {
+  StyledButton,
+  StyledCloseButton,
+  StyledModal,
+} from "./NamePopup1.styles";
 import TextInputLight from "../../../../../../../components/general_utility/TextInputLight";
-
 
 interface NamePopup1Props {
   heading: React.ReactNode;
@@ -10,8 +13,15 @@ interface NamePopup1Props {
   text: string;
   inputValue: string;
   setInputValue: (value: string) => void;
-}
+};
 
+/**
+ * `NamePopUp1` is a React web page component that displays a pop up for editing a team's name. It provides
+ * a text input field to allow users to change their team name
+ *
+ * @returns JSX.Element - A styled container presenting information and a text input to allow users to
+ * change their team name
+ */
 export const NamePopup1: React.FC<NamePopup1Props> = ({
   heading,
   onClose,
@@ -20,8 +30,6 @@ export const NamePopup1: React.FC<NamePopup1Props> = ({
   inputValue,
   setInputValue,
 }) => {
-  // const [inputValue, setInputValue] = useState("");
-
   const isButtonDisabled = () => {
     return inputValue === "";
   };

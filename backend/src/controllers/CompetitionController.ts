@@ -83,20 +83,10 @@ export class CompetitionController {
     res.json({ site: defaultSite });
     return;
   });
-
-
-
-  competitionStudentJoin1 = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ incompleteTeamId: 1 });
-    return;
-  });
-
-  competitionStudentJoin2 = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ teamId: 1 });
-    return;
-  });
-
   
+  /**
+   * Handles the request to get the announcement for a competition.
+   */
   competitionAnnouncement = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
     const { userId, compId, universityId } = req.query;
     const announcement = await this.competitionService.competitionAnnouncement(
@@ -106,33 +96,14 @@ export class CompetitionController {
     return;
   });
 
-
-
-  competitionStaffJoinSiteCoordinator = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({});
-    return;
-  });
-
-  competitionStaffJoinAdmin = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({});
-    return;
-  });
-
-  competitionUniversitiesList = httpErrorHandler(async (req: Request, res: Response): Promise<void> => {
-    res.json({ id: 1, name: 'Macquarie University' });
-    return;
-  });
-
-
-    /**
+  /**
    * Handles the request to get competition roles for a user in a specific competition.
    */
-    competitionRoles = httpErrorHandler(async (req: Request, res: Response) => {
-      const { userId, compId } = req.query;
-      const roles = await this.competitionService.competitionRoles(
-        parseInt(userId as string), parseInt(compId as string));
-  
-      res.json({ roles });
-    });
+  competitionRoles = httpErrorHandler(async (req: Request, res: Response) => {
+    const { userId, compId } = req.query;
+    const roles = await this.competitionService.competitionRoles(
+      parseInt(userId as string), parseInt(compId as string));
 
+    res.json({ roles });
+  });
 }

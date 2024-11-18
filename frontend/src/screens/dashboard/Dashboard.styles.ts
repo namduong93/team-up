@@ -1,5 +1,12 @@
 import { FaTimes } from "react-icons/fa";
 import { styled } from "styled-components";
+import { StyledFlexBackground } from "../../components/general_utility/Background";
+
+export const StyledOverflowFlexBackground = styled(StyledFlexBackground)`
+  font-family: ${({ theme }) => theme.fonts.fontFamily};
+  height: 100vh;
+  background-color: ${({ theme }) => theme.background};
+`;
 
 export const StyledDashboardContent = styled.div`
   display: flex;
@@ -7,7 +14,6 @@ export const StyledDashboardContent = styled.div`
   width: 100%;
   height: 100%;
   min-height: 600px;
-  /* overflow-y: hidden; */
   overflow-x: visible;
   color: ${({ theme }) => theme.fonts.colour};
 `;
@@ -95,7 +101,6 @@ export const StyledCompetitionGrid = styled.div`
   gap: 20px;
   width: 100%;
   min-height: 500px;
-  /* padding: 0 20px; */
   box-sizing: border-box;
 `;
 
