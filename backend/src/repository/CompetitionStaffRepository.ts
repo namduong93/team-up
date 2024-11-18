@@ -1,14 +1,14 @@
-import { CompetitionInformation } from "../../shared_types/Competition/CompetitionDetails";
-import { Announcement } from "../../shared_types/Competition/staff/Announcement";
-import { AttendeesDetails } from "../../shared_types/Competition/staff/AttendeesDetails";
-import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit";
-import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo";
-import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo";
-import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails";
-import { Competition, CompetitionIdObject } from "../models/competition/competition";
-import { CompetitionStaff } from "../models/competition/competitionUser";
-import { SeatAssignment } from "../models/team/team";
-import { University } from "../models/university/university";
+import { CompetitionInformation } from '../../shared_types/Competition/CompetitionDetails';
+import { Announcement } from '../../shared_types/Competition/staff/Announcement';
+import { AttendeesDetails } from '../../shared_types/Competition/staff/AttendeesDetails';
+import { EditCourse, EditRego } from '../../shared_types/Competition/staff/Edit';
+import { StaffInfo } from '../../shared_types/Competition/staff/StaffInfo';
+import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo';
+import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails';
+import { Competition, CompetitionIdObject } from '../models/competition/competition';
+import { CompetitionStaff } from '../models/competition/competitionUser';
+import { SeatAssignment } from '../models/team/team';
+import { University } from '../models/university/university';
 
 export interface CompetitionStaffRepository {
   competitionStaffUpdateCourses(compId: number, editCourse: EditCourse, universityId: number): Promise<void>;

@@ -1,18 +1,18 @@
-import { CompetitionSiteCapacity } from "../../shared_types/Competition/CompetitionSite.js";
-import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
-import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
-import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
-import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
-import { ServiceError } from "../errors/ServiceError.js";
-import { Competition, CompetitionIdObject } from "../models/competition/competition.js";
-import { CompetitionStaff, CompetitionUserRole } from "../models/competition/competitionUser.js";
-import { SeatAssignment } from "../models/team/team.js";
-import { University } from "../models/university/university.js";
-import { UserType } from "../models/user/user.js";
-import { CompetitionRepository } from "../repository/CompetitionRepository.js";
-import { CompetitionStaffRepository } from "../repository/CompetitionStaffRepository.js";
-import { NotificationRepository } from "../repository/NotificationRepository.js";
-import { UserRepository } from "../repository/UserRepository.js";
+import { CompetitionSiteCapacity } from '../../shared_types/Competition/CompetitionSite.js';
+import { EditCourse, EditRego } from '../../shared_types/Competition/staff/Edit.js';
+import { StaffInfo } from '../../shared_types/Competition/staff/StaffInfo.js';
+import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo.js';
+import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails.js';
+import { ServiceError } from '../errors/ServiceError.js';
+import { Competition, CompetitionIdObject } from '../models/competition/competition.js';
+import { CompetitionStaff, CompetitionUserRole } from '../models/competition/competitionUser.js';
+import { SeatAssignment } from '../models/team/team.js';
+import { University } from '../models/university/university.js';
+import { UserType } from '../models/user/user.js';
+import { CompetitionRepository } from '../repository/CompetitionRepository.js';
+import { CompetitionStaffRepository } from '../repository/CompetitionStaffRepository.js';
+import { NotificationRepository } from '../repository/NotificationRepository.js';
+import { UserRepository } from '../repository/UserRepository.js';
 
 
 export class CompetitionStaffService {
@@ -55,7 +55,7 @@ export class CompetitionStaffService {
 
     await this.competitionStaffRepository.competitionStaffUpdateCourses(compId, editCourse, universityId);
     return;
-  }
+  };
 
   /**
    * Retrieves detailed information about a competition, including its general details
@@ -74,7 +74,7 @@ export class CompetitionStaffService {
     }
 
     return await this.competitionStaffRepository.competitionInformation(compId);
-  }
+  };
 
   /**
    * Updates the capacity of a competition site in the database.
@@ -100,7 +100,7 @@ export class CompetitionStaffService {
 
     await this.competitionStaffRepository.competitionSiteCapacityUpdate(siteId, capacity);
     return;
-  }
+  };
 
   /**
    * Update whether certain competitive programming relevant fields are enabled for registration for a competition site.
@@ -133,7 +133,7 @@ export class CompetitionStaffService {
 
     await this.competitionStaffRepository.competitionStaffUpdateRegoToggles(userId, compId, regoFields);
     return;
-  }
+  };
 
   /**
    * Retrieve what competitive programming relevant fields are enabled for registration for a competition site.
@@ -166,7 +166,7 @@ export class CompetitionStaffService {
     }
 
     return await this.competitionStaffRepository.competitionStaffRegoToggles(userId, compId);
-  }
+  };
 
   /**
    * Updates the competition user details for a list of staff in a specific competition.
@@ -186,7 +186,7 @@ export class CompetitionStaffService {
 
     await this.competitionStaffRepository.competitionStaffUpdate(userId, staffList, compId);
     return;
-  }
+  };
 
   /**
    * Updates the competition user details for a list of students in a specific competition.
@@ -209,7 +209,7 @@ export class CompetitionStaffService {
 
     await this.competitionStaffRepository.competitionStudentsUpdate(userId, studentList, compId);
     return;
-  }
+  };
 
   /**
    * Updates the details of teams in a competition.
@@ -234,9 +234,9 @@ export class CompetitionStaffService {
 
     await this.competitionStaffRepository.competitionTeamsUpdate(teamList, compId);
     return;
-  }
+  };
 
-    /**
+  /**
    * Retrieves the attendees of a competition for a given user.
    * 
    * @param userId The ID of the user requesting the attendees.
@@ -252,26 +252,26 @@ export class CompetitionStaffService {
     }
 
     return await this.competitionStaffRepository.competitionAttendees(userId, compId);
-  }
+  };
 
   competitionStaffDetails = async (userId: number, compId: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.ADMIN) && !roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a staff for this competition.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a staff for this competition.');
     }
 
     return await this.competitionStaffRepository.competitionStaffDetails(userId, compId);
-  }
+  };
 
   competitionStaffDetailsUpdate = async (userId: number, compId: number, staffInfo: StaffInfo) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.ADMIN) && !roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a staff for this competition.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a staff for this competition.');
     }
     await this.competitionStaffRepository.competitionStaffDetailsUpdate(userId, compId, staffInfo);
-  }
+  };
 
-    /**
+  /**
    * Retrieves the staff information for a specific competition.
    *
    * @param userId The ID of the user requesting the staff information.
@@ -280,9 +280,9 @@ export class CompetitionStaffService {
    */
   competitionStaff = async (userId: number, compId: number): Promise<Array<StaffInfo>> => {
     return await this.competitionStaffRepository.competitionStaff(userId, compId);
-  }
+  };
 
-    /**
+  /**
    * Retrieves a list of students participating in a specific competition.
    *
    * @param userId The ID of the user requesting the information.
@@ -291,9 +291,9 @@ export class CompetitionStaffService {
    */
   competitionStudents = async (userId: number, compId: number): Promise<Array<StudentInfo>> => {
     return await this.competitionStaffRepository.competitionStudents(userId, compId);
-  }
+  };
 
-    /**
+  /**
    * Retrieves the teams participating in a competition for a given user (staff).
    *
    * @param userId The ID of the user requesting the competition teams.
@@ -311,9 +311,9 @@ export class CompetitionStaffService {
   competitionTeams = async (userId: number, compId: number) => {
     // Staff
     return await this.competitionStaffRepository.competitionTeams(userId, compId);
-  }
+  };
 
-    /**
+  /**
    * Creates a new competition as a system administrator.
    *
    * @param userId The ID of the user attempting to create the competition.
@@ -332,9 +332,9 @@ export class CompetitionStaffService {
     const competitionId = await this.competitionStaffRepository.competitionSystemAdminCreate(userId, competition);
 
     return competitionId;
-  }
+  };
 
-    /**
+  /**
    * Updates a competition's details by a system admin.
    *
    * @param userId The ID of the user attempting to perform the update.
@@ -353,9 +353,9 @@ export class CompetitionStaffService {
     const competitionId = await this.competitionStaffRepository.competitionSystemAdminUpdate(userId, competition);
 
     return competitionId;
-  }
+  };
 
-    /**
+  /**
    * Approves team assignments for a competition and notifies team members.
    *
    * @param userId The ID of the user performing the approval.
@@ -373,9 +373,9 @@ export class CompetitionStaffService {
     await this.notificationRepository.notificationApproveTeamAssignment(compId, approveIds);
 
     return {};
-  }
+  };
 
-    /**
+  /**
    * Requests a team name change for a competition and notifies the coach
    *
    * @param userId The ID of the user requesting the change.
@@ -388,12 +388,12 @@ export class CompetitionStaffService {
     // Check if user is a participant
     const userTypeObject = await this.userRepository.userType(userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw new ServiceError(ServiceError.Auth, "User is not a student.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a student.');
     }
 
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a participant for this competition.');
     }
 
     // Request team name change
@@ -403,9 +403,9 @@ export class CompetitionStaffService {
     await this.notificationRepository.notificationRequestTeamNameChange(teamId, compId);
 
     return {};
-  }
+  };
 
-    /**
+  /**
    * Approves or rejects team name change requests for a competition and notifies team members.
    *
    * @param userId The ID of the user performing the action.
@@ -422,9 +422,9 @@ export class CompetitionStaffService {
     await this.notificationRepository.notificationApproveTeamNameChange(compId, approveIds, rejectIds);
 
     return {};
-  }
+  };
 
-    /**
+  /**
    * Approves or rejects site ID changes for a competition and notifies team members.
    *
    * @param userId The ID of the user performing the action.
@@ -441,9 +441,9 @@ export class CompetitionStaffService {
     await this.notificationRepository.notificationApproveSiteChange(compId, approveIds, rejectIds);
 
     return {};
-  }
+  };
 
-    /**
+  /**
    * Assigns seats to teams in a competition and sends notifications to the teams.
    *
    * @param userId The ID of the user performing the assignment.
@@ -459,9 +459,9 @@ export class CompetitionStaffService {
     await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);
 
     return {};
-  }
+  };
 
-    /**
+  /**
    * Registers teams for a competition.
    *
    * @param userId The ID of the user performing the registration.
@@ -472,10 +472,10 @@ export class CompetitionStaffService {
   competitionRegisterTeams = async (userId: number, compId: number, teamIds: Array<number>): Promise<{} | undefined> => {
     await this.competitionStaffRepository.competitionRegisterTeams(userId, compId, teamIds);
     return {};
-  }
+  };
 
 
-    /**
+  /**
    * Adds a staff member to a competition based on the provided competition code and staff information.
    * 
    * @param code The unique code of the competition.
@@ -528,7 +528,7 @@ export class CompetitionStaffService {
     await this.competitionStaffRepository.competitionStaffJoin(competitionId, competitionStaffInfo);
 
     return {};
-  }
+  };
 
 
   /**
@@ -567,7 +567,7 @@ export class CompetitionStaffService {
     };
 
     await this.competitionStaffRepository.competitionAnnouncementUpdate(compId, university, announcement);
-  }
+  };
 
   /**
    * Executes the competition algorithm for a given competition.
@@ -589,7 +589,7 @@ export class CompetitionStaffService {
     }
     const teamsParticipating = await this.competitionStaffRepository.competitionAlgorithm(compId, userId);
     return teamsParticipating;
-  }
+  };
 
   /**
    * Retrieves the capacity information for competition sites.
@@ -605,6 +605,6 @@ export class CompetitionStaffService {
       siteIds = [await this.competitionStaffRepository.competitionGetCoordinatingSiteId(userId, compId)];
     }
 
-    return await this.competitionRepository.competitionSiteCapacity(compId, siteIds)
-  }
+    return await this.competitionRepository.competitionSiteCapacity(compId, siteIds);
+  };
 }

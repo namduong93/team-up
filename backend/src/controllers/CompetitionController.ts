@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { CompetitionService } from "../services/CompetitionService.js";
-import { httpErrorHandler } from "./controller_util/httpErrorHandler.js";
+import { Request, Response } from 'express';
+import { CompetitionService } from '../services/CompetitionService.js';
+import { httpErrorHandler } from './controller_util/httpErrorHandler.js';
 
 export class CompetitionController {
   private competitionService: CompetitionService;

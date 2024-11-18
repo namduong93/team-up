@@ -1,4 +1,4 @@
-import { ErrorInterface } from "./ErrorInterface";
+import { ErrorInterface } from './ErrorInterface';
 
 export enum ServiceErrorType {
   Auth = 'Auth',
@@ -19,10 +19,10 @@ export class ServiceError extends Error implements ErrorInterface {
     Object.setPrototypeOf(this, new.target.prototype);
   }
   
-  public static Auth = ServiceErrorType.Auth;
-  public static NotFound = ServiceErrorType.NotFound;
+  static Auth = ServiceErrorType.Auth;
+  static NotFound = ServiceErrorType.NotFound;
 
-  public getErrorType() {
+  getErrorType() {
     return this.errorType;
   }
 }

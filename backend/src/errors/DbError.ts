@@ -1,4 +1,4 @@
-import { ErrorInterface } from "./ErrorInterface";
+import { ErrorInterface } from './ErrorInterface';
 
 enum DbErrorType {
   Auth = 'Auth',
@@ -21,13 +21,13 @@ export class DbError extends Error implements ErrorInterface {
     Object.setPrototypeOf(this, new.target.prototype);
   }
   
-  public static Auth = DbErrorType.Auth;
-  public static Query = DbErrorType.Query;
-  public static Insert = DbErrorType.Insert;
-  public static Update = DbErrorType.Update;
+  static Auth = DbErrorType.Auth;
+  static Query = DbErrorType.Query;
+  static Insert = DbErrorType.Insert;
+  static Update = DbErrorType.Update;
   
 
-  public getErrorType() {
+  getErrorType() {
     return this.errorType;
   }
 }

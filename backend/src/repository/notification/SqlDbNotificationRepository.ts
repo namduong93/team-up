@@ -1,8 +1,8 @@
-import { Pool } from "pg";
-import { Notification } from "../../models/notification/notification.js";
-import { NotificationRepository } from "../NotificationRepository.js";
-import { SeatAssignment } from "../../models/team/team.js";
-import { DbError } from "../../errors/DbError.js";
+import { Pool } from 'pg';
+import { Notification } from '../../models/notification/notification.js';
+import { NotificationRepository } from '../NotificationRepository.js';
+import { SeatAssignment } from '../../models/team/team.js';
+import { DbError } from '../../errors/DbError.js';
 
 export class SqlDbNotificationRepository implements NotificationRepository {
   private readonly pool: Pool;
@@ -53,7 +53,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     await this.pool.query(coachNotificationQuery, [competitionId, teamId, coachNotification]);
 
     return {};
-  }
+  };
 
   /**
    * Sends a notification to the coach when a team requests a name change.
@@ -99,7 +99,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     await this.pool.query(notificationQuery, [competitionId, teamId, notificationMessage]);
 
     return {};
-  }
+  };
 
   /**
    * Sends notifications to participants of a competition team regarding the approval or rejection of their new team name.
@@ -146,7 +146,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     }
 
     return {};
-  }
+  };
 
   /**
    * Sends a notification to the coach when a team requests a site change.
@@ -200,7 +200,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     await this.pool.query(notificationQuery, [competitionId, teamId, notificationMessage]);
 
     return {};
-  }
+  };
 
   /**
    * Sends notifications to participants of a team about the approval or rejection of their site change requests for a competition.
@@ -247,7 +247,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     }
 
     return {};
-  }
+  };
 
   /**
    * Sends a notification to participants about their team assignment for a competition.
@@ -280,7 +280,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     }
 
     return {};
-  }
+  };
 
   /**
    * Sends notifications to team members about their seat assignments for a specific competition.
@@ -311,7 +311,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       await this.pool.query(seatAssignmentNotificationQuery, [compId, seatAssignment.teamId, seatAssignmentMessage]);
     }
     return {};
-  }
+  };
 
   /**
    * Checks if there are any staff accounts pending approval for the competitions
@@ -332,7 +332,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
       AND competition_roles @> ARRAY['Admin'::competition_role_enum]
     `;
     const competitionIdsResult = await this.pool.query(competitionIdsQuery, [userId]);
-    const competitionIds = competitionIdsResult.rows.map(row => row.competition_id);
+    const competitionIds = competitionIdsResult.rows.map((row) => row.competition_id);
 
     if (competitionIds.length === 0) {
       throw new DbError(DbError.Query, `User with ID ${userId} is not an admin for any competitions`);
@@ -350,7 +350,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
 
     if (pendingUsersCount > 0) {
       // Create notification message
-      const notificationMessage = `New staff account(s) pending approval. Please review in the staff management panel.`;
+      const notificationMessage = 'New staff account(s) pending approval. Please review in the staff management panel.';
 
       // Check if the same type of notification has been added in the last 24 hours
       const existingNotificationQuery = `
@@ -382,7 +382,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     }
 
     return {};
-  }
+  };
 
   /**
    * Removes a notification from the database by its ID.
@@ -404,7 +404,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     }
 
     return {};
-  }
+  };
 
   /**
    * Retrieves a list of notifications for a specific user.
@@ -433,5 +433,5 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     });
 
     return parsedNotifications;
-  }
+  };
 }

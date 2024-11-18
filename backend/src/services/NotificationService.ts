@@ -1,9 +1,9 @@
-import { BAD_REQUEST } from "../controllers/controller_util/httpErrorHandler.js";
-import { Notification } from "../models/notification/notification.js";
-import { SeatAssignment } from "../models/team/team.js";
-import { UserType } from "../models/user/user.js";
-import { NotificationRepository } from "../repository/NotificationRepository.js";
-import { UserRepository } from "../repository/UserRepository.js";
+import { BAD_REQUEST } from '../controllers/controller_util/httpErrorHandler.js';
+import { Notification } from '../models/notification/notification.js';
+import { SeatAssignment } from '../models/team/team.js';
+import { UserType } from '../models/user/user.js';
+import { NotificationRepository } from '../repository/NotificationRepository.js';
+import { UserRepository } from '../repository/UserRepository.js';
 
 export class NotificationService {
   private notificationRepository: NotificationRepository;
@@ -22,7 +22,7 @@ export class NotificationService {
    */
   notificationRemove = async (notificationId: number): Promise<{}> => {
     return await this.notificationRepository.notificationRemove(notificationId);
-  }
+  };
 
   /**
    * Retrieves a list of notifications for a specific user.
@@ -42,7 +42,7 @@ export class NotificationService {
     const result = this.notificationRepository.userNotificationsList(userId);
 
     return result;
-  }
+  };
 
   /**
    * Sends notifications for team seat assignments.
@@ -53,5 +53,5 @@ export class NotificationService {
    */
   notificationTeamSeatAssignments = async (compId: number, seatAssignments: Array<SeatAssignment>): Promise<{}> => {
     return await this.notificationRepository.notificationTeamSeatAssignments(compId, seatAssignments);
-  }
+  };
 }

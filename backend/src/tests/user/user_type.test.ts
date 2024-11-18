@@ -66,7 +66,7 @@ describe('GET /user/type', () => {
         type: UserType.STUDENT,
       }));
     });
-  })
+  });
 
   // describe('failing cases', () => {
   //   test('missing name', async () => {

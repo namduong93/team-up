@@ -1,4 +1,4 @@
-import { sendRequest } from "../test_util/requests";
+import { sendRequest } from '../test_util/requests';
 
 describe('POST /student/register', () => {
   describe('successful cases', () => {

@@ -1,5 +1,5 @@
-import { CompetitionLevel } from "../CompetitionLevel";
-import { CompetitionRole } from "../CompetitionRole";
+import { CompetitionLevel } from '../CompetitionLevel';
+import { CompetitionRole } from '../CompetitionRole';
 
 export interface StudentInfo {
   userId?: number;

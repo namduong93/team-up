@@ -1,15 +1,15 @@
-import { Pool } from "pg";
-import { UserIdObject, UserRepository } from "../UserRepository.js";
-import { Student } from "../../models/user/student/student.js";
+import { Pool } from 'pg';
+import { UserIdObject, UserRepository } from '../UserRepository.js';
+import { Student } from '../../models/user/student/student.js';
 import bcrypt from 'bcryptjs';
-import { UserProfileInfo } from "../../models/user/user_profile_info.js";
-import { Staff } from "../../models/user/staff/staff.js";
-import { UserType, UserTypeObject } from "../../models/user/user.js";
-import { UserDashInfo } from "../../models/user/user_dash_info.js";
-import { DbError } from "../../errors/DbError.js";
-import { University } from "../../models/university/university.js";
-import { LooseStaffInfo, StaffRequests } from "../../../shared_types/Competition/staff/StaffInfo.js";
-import { UserAccess } from "../../../shared_types/User/User.js";
+import { UserProfileInfo } from '../../models/user/user_profile_info.js';
+import { Staff } from '../../models/user/staff/staff.js';
+import { UserType, UserTypeObject } from '../../models/user/user.js';
+import { UserDashInfo } from '../../models/user/user_dash_info.js';
+import { DbError } from '../../errors/DbError.js';
+import { University } from '../../models/university/university.js';
+import { LooseStaffInfo, StaffRequests } from '../../../shared_types/Competition/staff/StaffInfo.js';
+import { UserAccess } from '../../../shared_types/User/User.js';
 
 export class SqlDbUserRepository implements UserRepository {
   private readonly pool: Pool;
@@ -75,7 +75,7 @@ export class SqlDbUserRepository implements UserRepository {
     const newUserId = userResult.rows[0].id;
 
     return { userId: newUserId };
-  }
+  };
 
   /**
    * Registers a new staff member in the database.
@@ -131,7 +131,7 @@ export class SqlDbUserRepository implements UserRepository {
     const newUserId = userResult.rows[0].id;
 
     return { userId: newUserId };
-  }
+  };
 
   /**
    * Authenticates a user by their email and password.
@@ -142,7 +142,7 @@ export class SqlDbUserRepository implements UserRepository {
    * @throws {DbError} If the user does not exist or the password is incorrect.
    */
   userLogin = async (email: string, password: string): Promise<UserIdObject> => {
-    const userQuery = `SELECT id, hashed_password FROM users WHERE email = $1 AND user_access = 'Accepted' LIMIT 1`;
+    const userQuery = 'SELECT id, hashed_password FROM users WHERE email = $1 AND user_access = \'Accepted\' LIMIT 1';
     const userResult = await this.pool.query(userQuery, [email]);
 
     if (userResult.rowCount === 0) {
@@ -154,7 +154,7 @@ export class SqlDbUserRepository implements UserRepository {
     }
 
     return { userId: userResult.rows[0].id };
-  }
+  };
 
   /**
    * Retrieves the profile information of a user by their user ID.
@@ -175,7 +175,7 @@ export class SqlDbUserRepository implements UserRepository {
     }
 
     return userResult.rows[0];
-  }
+  };
 
   /**
    * Retrieves the dashboard information (name + university) for a user by their user ID.
@@ -194,7 +194,7 @@ export class SqlDbUserRepository implements UserRepository {
     }
 
     return dbResult.rows[0];
-  }
+  };
 
   /**
    * Updates the profile information of a user in the database.
@@ -232,7 +232,7 @@ export class SqlDbUserRepository implements UserRepository {
     ];
     await this.pool.query(userQuery, userValues);
     return;
-  }
+  };
 
   /**
    * Updates the password for a user.
@@ -244,33 +244,33 @@ export class SqlDbUserRepository implements UserRepository {
    * @throws {DbError} If the user is not found, the current password is incorrect, or the new password is the same as the old password.
    */
   userUpdatePassword = async (userId: number, oldPassword: string, newPassword: string): Promise<void> => {
-    const userQuery = `SELECT hashed_password FROM users WHERE id = $1 AND user_access = 'Accepted' LIMIT 1`;
+    const userQuery = 'SELECT hashed_password FROM users WHERE id = $1 AND user_access = \'Accepted\' LIMIT 1';
     const userResult = await this.pool.query(userQuery, [userId]);
 
     if (userResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "User not found");
+      throw new DbError(DbError.Query, 'User not found');
     }
 
     // Check if old password is correct
     if (!await bcrypt.compare(oldPassword, userResult.rows[0].hashed_password)) {
-      throw new DbError(DbError.Query, "Current password is incorrect");
+      throw new DbError(DbError.Query, 'Current password is incorrect');
     }
 
     if (await bcrypt.compare(newPassword, userResult.rows[0].hashed_password)) {
-      throw new DbError(DbError.Query, "New password must be different from old password");
+      throw new DbError(DbError.Query, 'New password must be different from old password');
     }
 
     // Update new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    const updateQuery = `UPDATE users SET hashed_password = $2 WHERE id = $1;`;
+    const updateQuery = 'UPDATE users SET hashed_password = $2 WHERE id = $1;';
     await this.pool.query(updateQuery, [userId, hashedPassword]);
 
     // Delete all associated sessions after the password update
-    const deleteSessionsQuery = `DELETE FROM sessions WHERE user_id = $1;`;
+    const deleteSessionsQuery = 'DELETE FROM sessions WHERE user_id = $1;';
     await this.pool.query(deleteSessionsQuery, [userId]);
 
     return;
-  }
+  };
 
   /**
    * Retrieves the user type for a given user ID.
@@ -290,7 +290,7 @@ export class SqlDbUserRepository implements UserRepository {
     }
 
     return { type: dbResult.rows[0].userType };
-  }
+  };
 
   /**
    * Retrieves the university information for a given user.
@@ -300,20 +300,20 @@ export class SqlDbUserRepository implements UserRepository {
    * @throws {DbError} If the user is not found or the university is not found.
    */
   userUniversity = async (userId: number): Promise<University> => {
-    const universityIdResult = await this.pool.query(`SELECT university_id FROM users WHERE id = $1`, [userId]);
+    const universityIdResult = await this.pool.query('SELECT university_id FROM users WHERE id = $1', [userId]);
     if (universityIdResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'User not found');
     }
     const universityId = universityIdResult.rows[0].university_id;
 
-    const universityNameResult = await this.pool.query(`SELECT name FROM universities WHERE id = $1`, [universityId]);
+    const universityNameResult = await this.pool.query('SELECT name FROM universities WHERE id = $1', [universityId]);
     if (universityNameResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'University not found');
     }
     const universityName = universityNameResult.rows[0].name;
 
     return { id: universityId, name: universityName };
-  }
+  };
 
   /**
    * Retrieves a list of all staff members from the database.
@@ -356,7 +356,7 @@ export class SqlDbUserRepository implements UserRepository {
       returnArray.push(staffInfo);
     }
     return returnArray;
-  }
+  };
 
   /**
    * Updates the access levels of multiple staff users in the database.
@@ -365,8 +365,8 @@ export class SqlDbUserRepository implements UserRepository {
    * @returns A promise that resolves when the update operation is complete.
    */
   staffRequestsUpdate = async (staffRequests: Array<StaffRequests>): Promise<void> => {
-    const userIds = staffRequests.map(request => request.userId);
-    const accessValues = staffRequests.map(request => request.access);
+    const userIds = staffRequests.map((request) => request.userId);
+    const accessValues = staffRequests.map((request) => request.access);
 
     await this.pool.query(
       `UPDATE users 
@@ -378,5 +378,5 @@ export class SqlDbUserRepository implements UserRepository {
       WHERE users.id = updated_values.user_id`,
       [userIds, accessValues]
     );
-  }
+  };
 }

@@ -1,5 +1,5 @@
-import { UserAccess } from "../../User/User.js";
-import { CompetitionRole } from "../CompetitionRole.js";
+import { UserAccess } from '../../User/User.js';
+import { CompetitionRole } from '../CompetitionRole.js';
 
 export const enum StaffAccess {
   Accepted = 'Accepted',

@@ -1,11 +1,11 @@
-import { COMPETITION_NOT_FOUND, COMPETITION_USER_REGISTERED } from "../controllers/controller_util/httpErrorHandler.js";
-import { ServiceError } from "../errors/ServiceError.js";
-import { CompetitionInput, CompetitionShortDetailsObject, CompetitionSiteObject } from "../models/competition/competition.js";
-import { CompetitionRepository } from "../repository/CompetitionRepository.js";
-import { NotificationRepository } from "../repository/NotificationRepository.js";
-import { UserRepository } from "../repository/UserRepository.js";
-import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
-import { University } from "../models/university/university.js";
+import { COMPETITION_NOT_FOUND, COMPETITION_USER_REGISTERED } from '../controllers/controller_util/httpErrorHandler.js';
+import { ServiceError } from '../errors/ServiceError.js';
+import { CompetitionInput, CompetitionShortDetailsObject, CompetitionSiteObject } from '../models/competition/competition.js';
+import { CompetitionRepository } from '../repository/CompetitionRepository.js';
+import { NotificationRepository } from '../repository/NotificationRepository.js';
+import { UserRepository } from '../repository/UserRepository.js';
+import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails.js';
+import { University } from '../models/university/university.js';
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };
 export type TeamIdObject = { teamId: number };
@@ -69,7 +69,7 @@ export class CompetitionService {
     const compId = await this.competitionRepository.competitionIdFromCode(code);
 
     return await this.competitionSites(compId);
-  }
+  };
 
   /**
    * Retrieves the competition sites for a given competition ID.
@@ -79,7 +79,7 @@ export class CompetitionService {
    */
   competitionSites = async (compId: number) => {
     return await this.competitionRepository.competitionSites(compId);
-  }
+  };
   
   /**
    * Retrieves the roles of a user in a specific competition.
@@ -90,7 +90,7 @@ export class CompetitionService {
    */
   competitionRoles = async (userId: number, compId: number) => {
     return await this.competitionRepository.competitionRoles(userId, compId);
-  }
+  };
 
   /**
    * Retrieves the details of a competition by its ID.
@@ -107,7 +107,7 @@ export class CompetitionService {
     const competitionDetails = await this.competitionRepository.competitionGetDetails(competitionId);
 
     return competitionDetails;
-  }
+  };
 
   /**
    * Retrieves a list of competitions that the user is a part of.
@@ -122,7 +122,7 @@ export class CompetitionService {
     const competitions = await this.competitionRepository.competitionsList(userId, userTypeObject.type);
 
     return competitions;
-  }
+  };
 
   /**
    * Checks if a competition code is valid.
@@ -150,7 +150,7 @@ export class CompetitionService {
     }
 
     return {};
-  }
+  };
 
   /**
    * Retrieves the default site for a user in a competition based on their university.
@@ -172,7 +172,7 @@ export class CompetitionService {
     }
     const defaultSite = await this.competitionRepository.competitionUniversityDefaultSite(competitionId, university);
     return defaultSite;
-  }
+  };
 
 
   /**
@@ -197,7 +197,7 @@ export class CompetitionService {
     }
     let announcement = await this.competitionRepository.competitionAnnouncement(compId, university);
     return { announcement };
-  }
+  };
 
   /**
    * Retrieves the competition ID associated with the given competition code.
@@ -207,5 +207,5 @@ export class CompetitionService {
    */
   competitionIdFromCode = async (code: string): Promise<number> => {
     return await this.competitionRepository.competitionIdFromCode(code);
-  }
+  };
 }
