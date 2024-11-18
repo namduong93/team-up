@@ -32,6 +32,13 @@ describe('Staff Register Function', () => {
     defaultSite: 'TestRoom',
   };
 
+  const userSiteLocation2: SiteLocation = {
+    universityId: 2,
+    universityName: 'University of New South Wales',
+    siteId: 2,
+    defaultSite: 'TestRoom2',
+  };
+
   const mockCompetition = {
     name: 'TestComp',
     teamSize: 5,
@@ -39,15 +46,15 @@ describe('Staff Register Function', () => {
     earlyRegDeadline: earlyDate,
     startDate: startDate,
     generalRegDeadline: generalDate,
-    siteLocations: [userSiteLocation1],
-    code: 'TC55',
+    siteLocations: [userSiteLocation1, userSiteLocation2],
+    code: 'TC15',
     region: 'Australia'
   };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'dasOddodmin55@odmin.com',
+    email: 'dasOddodmin14@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -96,7 +103,7 @@ describe('Staff Register Function', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newStudentSacrifice66@gmail.com',
+      email: 'newStudentSacrifice686@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -141,36 +148,40 @@ describe('Staff Register Function', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Sucess case: name was successfully changed', async () => {
-    const teamId = await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'notBulbasaur');
+  test('Sucess case: site was successfully changed', async () => {
+    const oldTeamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+    
+    const teamId = await comp_student_db.competitionRequestSiteChange(newStudent.userId, comp.competitionId, 2);
 
-    await comp_staff_db.competitionApproveTeamNameChange(id, comp.competitionId, [teamId], []);
+    await comp_staff_db.competitionApproveSiteChange(id, comp.competitionId, [teamId], []);
 
     const newTeamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
 
-    expect(newTeamInfo.teamName).toStrictEqual('notBulbasaur');
+    expect(newTeamInfo.teamSite).not.toStrictEqual(oldTeamInfo.teamSite);
   });
 
-  test('Sucess case: name was successfully rejected', async () => {
-    const teamId = await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'Bulbasaur');
+  test('Sucess case: site was successfully rejected', async () => {
+    const oldTeamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+    
+    const teamId = await comp_student_db.competitionRequestSiteChange(newStudent.userId, comp.competitionId, 1);
 
-    await comp_staff_db.competitionApproveTeamNameChange(id, comp.competitionId, [], [teamId]);
+    await comp_staff_db.competitionApproveSiteChange(id, comp.competitionId, [], [teamId]);
 
     const newTeamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
 
-    expect(newTeamInfo.teamName).toStrictEqual('notBulbasaur');
+    expect(newTeamInfo.teamSite).toStrictEqual(oldTeamInfo.teamSite);
   });
 
   test('Fail cases: non-existing competition or unauthorized', async () => {
-    const teamId = await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'Bulbasaur');
+    const teamId = await comp_student_db.competitionRequestSiteChange(newStudent.userId, comp.competitionId, 1);
 
     // User not a admin or coach
-    await expect(comp_staff_db.competitionApproveTeamNameChange(999, comp.competitionId, [teamId], [])).rejects.toThrow(DbError);
+    await expect(comp_staff_db.competitionApproveSiteChange(999, comp.competitionId, [teamId], [])).rejects.toThrow(DbError);
     
     // Competition does not exist
-    await expect(comp_staff_db.competitionApproveTeamNameChange(id, 999, [teamId], [])).rejects.toThrow(DbError);
-    
+    await expect(comp_staff_db.competitionApproveSiteChange(id, 999, [teamId], [])).rejects.toThrow(DbError);
+
     // Duplicated team id
-    await expect(comp_staff_db.competitionApproveTeamNameChange(id, comp.competitionId, [teamId], [teamId])).rejects.toThrow(DbError);
+    await expect(comp_staff_db.competitionApproveSiteChange(id, comp.competitionId, [teamId], [teamId])).rejects.toThrow(DbError);
   });
 });

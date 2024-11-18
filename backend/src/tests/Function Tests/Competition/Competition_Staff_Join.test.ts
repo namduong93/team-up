@@ -1,4 +1,5 @@
-import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
+import { DbError } from '../../../errors/DbError';
+import { Competition, CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUserRole } from '../../../models/competition/competitionUser';
 import { University } from '../../../models/university/university';
 import { Staff } from '../../../models/user/staff/staff';
@@ -11,24 +12,24 @@ import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 // fail testing failed
 describe('Staff Join Function', () => {
-  let user_db;
-  let comp_db;
-  let comp_staff_db;
-  let comp_student_db;
+  let user_db : SqlDbUserRepository;
+  let comp_db : SqlDbCompetitionRepository;
+  let comp_staff_db : SqlDbCompetitionStaffRepository;
+  let comp_student_db : SqlDbCompetitionStudentRepository;
 
   let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
 
-  const mockCompetition = {
+  const mockCompetition : Competition = {
     name: 'TestComp',
     teamSize: 5,
     createdDate: dateNow,
     earlyRegDeadline: earlyDate,
     startDate: startDate,
     generalRegDeadline: generalDate,
-    siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
+    siteLocations: [{ universityId: 1, defaultSite: 'Library', universityName: 'University of Melbourne', siteId: 1 }],
     code: 'TC14',
     region: 'Australia'
   };
@@ -302,16 +303,19 @@ describe('Staff Join Function', () => {
     ]);
   });
 
-  test.skip('Fail case: user is already a admin for the competition', async () => {
+  test('Fail case: user is already a admin for the competition', async () => {
     const newAdmin: CompetitionStaff = {
       userId: mockStaffId1.userId,
       competitionRoles: [CompetitionUserRole.ADMIN],
       accessLevel: CompetitionAccessLevel.ACCEPTED
     };
 
-    expect(await comp_staff_db.competitionStaffJoin(comp.competitionId, newAdmin)).rejects.toThrow('User is already an admin for this competition.');
+    await expect(
+      comp_staff_db.competitionStaffJoin(comp.competitionId, newAdmin)
+    ).rejects.toThrow(DbError);
+    
   });
-  test.skip('Fail case: user is already a coach for the competition', async () => {
+  test('Fail case: user is already a coach for the competition', async () => {
     const universityOrigin: University = {
       id: 1,
       name: 'University of Melbourne'
@@ -330,9 +334,11 @@ describe('Staff Join Function', () => {
       siteLocation: userSiteLocation
     };
 
-    expect(await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach)).rejects.toThrow('User is already an coach for this competition.');
+    await expect(
+      comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach)
+    ).rejects.toThrow(DbError);
   });
-  test.skip('Fail case: user is already a site coordinator for the competition', async () => {
+  test('Fail case: user is already a site coordinator for the competition', async () => {
     const userSiteLocation: CompetitionSiteObject = {
       id: 1,
       name: 'the place in the ring',
@@ -344,6 +350,8 @@ describe('Staff Join Function', () => {
       siteLocation: userSiteLocation
     };
 
-    expect(await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator)).rejects.toThrow('User is already an site coordinator for this competition.');
+    await expect(
+      comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator)
+    ).rejects.toThrow(DbError);
   });
 });
