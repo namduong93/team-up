@@ -5,10 +5,27 @@ import { University } from "../../../../../../shared_types/Competition/registrat
 import { sendRequest } from "../../../../../utility/request";
 import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { RegoProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledCreateAccountButton, StyledTitle } from "./InstitutionDataInput.styles";
+import {
+  StyledButton,
+  StyledButtonContainer,
+  StyledContainer,
+  StyledContentContainer,
+  StyledCreateAccountButton,
+  StyledTitle,
+} from "./InstitutionDataInput.styles";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
 import TextInput from "../../../../../components/general_utility/TextInput";
 
+/**
+ * A React web page form component for collecting institution-related data during the registration process.
+ *
+ * The `InstitutionDataInput` component allows the user to select an institution from a list of universities,
+ * or enter a custom institution if "Other" is selected. It also includes a field for the student's identifier number
+ * if the user selects the "Student" role. The form data is managed using the `useMultiStepRegoForm` context,
+ * and the data is sent to the backend to register the user as either a staff member or student.
+ *
+ * @returns {JSX.Element} - The form UI for the institution-related input in the registration process.
+ */
 export const InstitutionDataInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm();
@@ -17,6 +34,7 @@ export const InstitutionDataInput: FC = () => {
   ]);
   const [isCustomInstitution, setIsCustomInstitution] = useState(false);
 
+  // Obtains the University List from the backend when the component first mounts
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
@@ -40,6 +58,8 @@ export const InstitutionDataInput: FC = () => {
     fetchUniversities();
   }, []);
 
+  // Displays a text input box for users to enter a different institution not included
+  // in the default University list
   const handleInstitutionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
 
@@ -59,6 +79,8 @@ export const InstitutionDataInput: FC = () => {
     );
   };
 
+  // Sends the entered user data to either the staff or student register backend
+  // depending on role selection
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -81,7 +103,7 @@ export const InstitutionDataInput: FC = () => {
         studentId: formData.role === "Student" ? formData.studentId : undefined,
       });
 
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error during registration:", error);
     }
@@ -137,7 +159,9 @@ export const InstitutionDataInput: FC = () => {
           )}
 
           <StyledButtonContainer>
-            <StyledButton onClick={() => navigate("/siteinformation")}>Back</StyledButton>
+            <StyledButton onClick={() => navigate("/siteinformation")}>
+              Back
+            </StyledButton>
 
             <StyledCreateAccountButton
               disabled={isButtonDisabled()}

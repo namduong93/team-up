@@ -688,7 +688,7 @@ VALUES
   'staff',
   2,
   NULL,
-  'Pending'), -- password is 'pleasechange'
+  'Accepted'), -- password is 'pleasechange'
 ( -- id: 5
   'New User',
   'New User',

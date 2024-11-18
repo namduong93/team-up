@@ -1,16 +1,6 @@
-import React from 'react';
-import { IoIosArrowDown } from 'react-icons/io';
-import styled from 'styled-components';
-
-interface DropdownInputProps extends React.HTMLAttributes<HTMLSelectElement> {
-  label: string;
-  options: Array<{ value: string; label: string }>;
-  required?: boolean;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  width?: string;
-  descriptor?: string;
-}
+import React from "react";
+import { IoIosArrowDown } from "react-icons/io";
+import styled from "styled-components";
 
 const StyledContainer = styled.div<{ $width: string }>`
   display: flex;
@@ -53,7 +43,7 @@ const StyledRelativeSelectElement = styled.select`
   border: 1px solid ${({ theme }) => theme.colours.notifDark};
   font-family: ${({ theme }) => theme.fonts.fontFamily};
   color: ${({ theme }) => theme.fonts.colour};
-  background-color: ${({ theme }) => theme.background};;
+  background-color: ${({ theme }) => theme.background};
   height: 100%;
   width: 100%;
   padding: 10px 1.5%;
@@ -79,23 +69,50 @@ interface RelativeSelectProps extends React.HTMLAttributes<HTMLSelectElement> {
   required: boolean;
 }
 
-const RelativeSelect: React.FC<RelativeSelectProps> = ({ children, value, onChange, required, ...props }) => (
+const RelativeSelect: React.FC<RelativeSelectProps> = ({
+  children,
+  value,
+  onChange,
+  required,
+  ...props
+}) => (
   <StyledRelativeSelectGrid>
-    <StyledRelativeSelectElement value={value} onChange={onChange} required={required} {...props}>
+    <StyledRelativeSelectElement
+      value={value}
+      onChange={onChange}
+      required={required}
+      {...props}
+    >
       {children}
     </StyledRelativeSelectElement>
     <StyledSelectDownArrow />
   </StyledRelativeSelectGrid>
 );
 
-// DropdownInput Component
+interface DropdownInputProps extends React.HTMLAttributes<HTMLSelectElement> {
+  label: string;
+  options: Array<{ value: string; label: string }>;
+  required?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  width?: string;
+  descriptor?: string;
+}
+
+/**
+ * A React component to allow users to select an option from a dropdown.
+ *
+ * @param {DropdownInputProps} props - React DropdownInputProps specified above
+ * @returns {JSX.Element} - Web page component that allows users to select an
+ * option from a selection
+ */
 const DropdownInput: React.FC<DropdownInputProps> = ({
   label,
   options,
   required = false,
   value,
   onChange,
-  width = '300px',
+  width = "300px",
   descriptor,
 }) => {
   return (
