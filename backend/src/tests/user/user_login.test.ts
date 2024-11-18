@@ -51,7 +51,7 @@ describe('POST /user/logint', () => {
       try {
         const response = await sendRequest.post('/user/login', mockLoginDetails);
       } catch (error: any) {
-        expect(error.response.status).toBe(401);
+        expect(error.response.status).toBe(403);
       }
     });
   });

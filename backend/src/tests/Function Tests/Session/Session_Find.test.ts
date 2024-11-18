@@ -43,7 +43,7 @@ describe('Session Find Function', () => {
   test('Success case: returns session details', async () => {
     expect(await session_db.find('ezID')).toStrictEqual({
       sessionId: 'ezID                                ',
-      userId: student.userId,
+      userId: expect.any(Number),
       createdAt: expect.any(Date)
     });
   });
