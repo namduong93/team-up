@@ -14,7 +14,7 @@ import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepositor
 import { UserIdObject, UserRepository } from '../../../repository/UserRepository';
 import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
-describe('Staff Register Function', () => {
+describe('Approve Site Change Function', () => {
   let user_db: UserRepository;
   let comp_db: CompetitionRepository;
   let comp_staff_db: CompetitionStaffRepository;

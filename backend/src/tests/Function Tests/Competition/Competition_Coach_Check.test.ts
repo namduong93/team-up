@@ -150,7 +150,7 @@ describe('Coach Check Function', () => {
   });
 
   test('failure case: user is not a coach for this competition', async () => {
-    await expect(comp_staff_db.competitionCoachCheck(id + 10, comp.competitionId)).rejects.toThrow('User is not a coach for this competition');
+    await expect(comp_staff_db.competitionCoachCheck(id + 1000, comp.competitionId)).rejects.toThrow('User is not a coach for this competition');
   });
   test('Success case: does not throw an error', async () => {
     expect(await comp_staff_db.competitionCoachCheck(id, comp.competitionId)).toStrictEqual(undefined);

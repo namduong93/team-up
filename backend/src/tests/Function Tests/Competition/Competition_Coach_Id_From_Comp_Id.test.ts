@@ -154,6 +154,6 @@ describe('Coach Id From Comp Id Function', () => {
     expect(await comp_db.competitionCoachIdFromCompId(comp.competitionId, id)).toStrictEqual(expect.any(Number))
   });
   test('Failure case: User is not a coach for this competition.', async () => {
-    await expect( comp_db.competitionCoachIdFromCompId(comp.competitionId, id + 10)).rejects.toThrow("User is not a coach for this competition.")
+    await expect( comp_db.competitionCoachIdFromCompId(comp.competitionId, id + 1000)).rejects.toThrow("User is not a coach for this competition.")
   });
 });

@@ -1,4 +1,3 @@
-import { Student } from '../../../models/user/student/student';
 import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
 import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
 import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
