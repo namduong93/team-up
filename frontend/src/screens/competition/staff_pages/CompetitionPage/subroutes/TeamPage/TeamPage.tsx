@@ -250,94 +250,93 @@ export const TeamPage: FC = () => {
     return true;
   };
 
-  return (
-    <>
-      {isCreationSuccessPopUpOpen && (
-        <>
-          <StyledOverlay $isOpen={true} />
-          <ThirdStepPopup
-            heading={
-              <StyledHeading>
-                The competition has successfully {"\nbeen created"}{" "}
-              </StyledHeading>
-            }
-            onClose={handleClosePopUp}
-          />
-        </>
+  return <>
+    {isCreationSuccessPopUpOpen && (
+      <>
+        <StyledOverlay $isOpen={true} className="team-page--StyledOverlay-0" />
+        <ThirdStepPopup
+          heading={
+            <StyledHeading className="team-page--StyledHeading-0">The competition has successfully{"\nbeen created"}{" "}
+            </StyledHeading>
+          }
+          onClose={handleClosePopUp}
+        />
+      </>
+    )}
+    <div>
+      {Object.entries(filters).map(([field, values]) =>
+        values.map((value) => (
+          <StyledFilterTagButton
+            key={`${field}-${value}`}
+            className="team-page--StyledFilterTagButton-0">
+            {value}
+            <StyledRemoveFilterIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                removeFilter(field, value);
+              }}
+              className="team-page--StyledRemoveFilterIcon-0" />
+          </StyledFilterTagButton>
+        ))
       )}
-      <div>
-        {Object.entries(filters).map(([field, values]) =>
-          values.map((value) => (
-            <StyledFilterTagButton key={`${field}-${value}`}>
-              {value}
-              <StyledRemoveFilterIcon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFilter(field, value);
-                }}
-              />
-            </StyledFilterTagButton>
-          ))
-        )}
-        {
-          <div
-            style={{
-              display: "flex",
-              marginTop: "5px",
-              marginBottom: "-25px",
-              width: "100%",
-              height: buttonConfiguration.enableTeamsChangedButtons
-                ? "35px"
-                : "0",
-              transition: "height 0.25s ease",
-            }}
-          >
-            <ResponsiveActionButton
-              style={{ height: "100%" }}
-              icon={<FaSave />}
-              label="Save"
-              question="Do you want to save your changes"
-              actionType="confirm"
-              handleSubmit={handleSaveChanges}
+      {
+        <div
+          style={{
+            display: "flex",
+            marginTop: "5px",
+            marginBottom: "-25px",
+            width: "100%",
+            height: buttonConfiguration.enableTeamsChangedButtons
+              ? "35px"
+              : "0",
+            transition: "height 0.25s ease",
+          }}
+        >
+          <ResponsiveActionButton
+            style={{ height: "100%" }}
+            icon={<FaSave />}
+            label="Save"
+            question="Do you want to save your changes"
+            actionType="confirm"
+            handleSubmit={handleSaveChanges}
+          />
+          <div style={{ maxWidth: "150px", width: "100%", height: "100%" }}>
+            <TransparentResponsiveButton
+              style={{ backgroundColor: theme.colours.cancel }}
+              isOpen={false}
+              icon={<GiCancel />}
+              label="Cancel"
+              actionType="error"
+              onClick={handleClose}
             />
-            <div style={{ maxWidth: "150px", width: "100%", height: "100%" }}>
-              <TransparentResponsiveButton
-                style={{ backgroundColor: theme.colours.cancel }}
-                isOpen={false}
-                icon={<GiCancel />}
-                label="Cancel"
-                actionType="error"
-                onClick={handleClose}
-              />
-            </div>
           </div>
-        }
-      </div>
-      <StyledTeamCardGridDisplay>
-        {searchedCompetitions.map(({ item: teamDetails }, index) => {
-          return (
-            <TeamCard
-              // handler to take in memberId and newTeamID (updates list of teams)
-              data-index={index}
-              roles={roles}
-              siteOptionsState={[siteOptions, setSiteOptions]}
-              handleDragDropCard={handleDragDropCard}
-              isDraggingState={[isDragging, setIsDragging]}
-              teamIdsState={[approveTeamIds, setApproveTeamIds]}
-              rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
-              isEditingStatus={isEditingStatus}
-              isEditingNameStatus={isEditingNameStatus}
-              teamListState={[teamList, setTeamList]}
-              buttonConfigurationState={[
-                buttonConfiguration,
-                setButtonConfiguration,
-              ]}
-              key={`${teamDetails.teamName}${teamDetails.status}${index}`}
-              teamDetails={teamDetails}
-            />
-          );
-        })}
-      </StyledTeamCardGridDisplay>
-    </>
-  );
+        </div>
+      }
+    </div>
+    <StyledTeamCardGridDisplay className="team-page--StyledTeamCardGridDisplay-0">
+      {searchedCompetitions.map(({ item: teamDetails }, index) => {
+        return (
+          <TeamCard
+            // handler to take in memberId and newTeamID (updates list of teams)
+            data-index={index}
+            roles={roles}
+            siteOptionsState={[siteOptions, setSiteOptions]}
+            handleDragDropCard={handleDragDropCard}
+            isDraggingState={[isDragging, setIsDragging]}
+            teamIdsState={[approveTeamIds, setApproveTeamIds]}
+            rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
+            isEditingStatus={isEditingStatus}
+            isEditingNameStatus={isEditingNameStatus}
+            teamListState={[teamList, setTeamList]}
+            buttonConfigurationState={[
+              buttonConfiguration,
+              setButtonConfiguration,
+            ]}
+            key={`${teamDetails.teamName}${teamDetails.status}${index}`}
+            teamDetails={teamDetails}
+          />
+        );
+      })}
+    </StyledTeamCardGridDisplay>
+  </>;
 };

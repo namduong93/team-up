@@ -126,83 +126,78 @@ export const TeamCard: FC<TeamCardProps> = ({
     !roles.includes(CompetitionRole.Admin)
   );
   const levelChar = teamDetails.teamLevel.slice(-1);
-  return (
+  return <>
+  <TeamInfoBar
+    buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
+    teamListState={[teamList, setTeamlist]}
+    isOpenState={[infoBarOpen, setInfoBarOpen]}
+    teamDetails={teamDetails}
+    siteOptionsState={[siteOptions, setSiteOptions]}
+    isEditable={isEditable}
+  />
+  <StyledHoverDiv
+    className="team-card-cell"
+    $isDragging={isDragging}
+    $isEditingStatus={isEditThisCard}
+    $isEditingNameStatus={isEditNameThisCard}
+    $numMembers={teamDetails.students.length}
+    onDoubleClick={() => setInfoBarOpen((p) => !p)}
+    {...props}
+    >
+    {!isEditNameThisCard &&
     <>
-      <TeamInfoBar
-        buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
-        teamListState={[teamList, setTeamlist]}
-        isOpenState={[infoBarOpen, setInfoBarOpen]}
-        teamDetails={teamDetails}
-        siteOptionsState={[siteOptions, setSiteOptions]}
-        isEditable={isEditable}
-      />
-      <StyledHoverDiv
-        className="team-card-cell"
-        $isDragging={isDragging}
-        $isEditingStatus={isEditThisCard}
-        $isEditingNameStatus={isEditNameThisCard}
-        $numMembers={teamDetails.students.length}
-        onDoubleClick={() => setInfoBarOpen((p) => !p)}
-        {...props}
-      >
-        {!isEditNameThisCard && (
-          <>
-            <StyledCardHeaderDiv $statusColor={colorMap[status]}>
-              <StyledTitleSpan>{teamDetails.teamName}</StyledTitleSpan>
-              {!teamDetails.teamNameApproved && <StyledRedTeamNameAlert />}
-              <StyledTeamLevelDiv $levelChar={levelChar}>
-                <span>{levelChar}</span>
-              </StyledTeamLevelDiv>
-            </StyledCardHeaderDiv>
-
-            <StyledTeamMatesContainerDiv>
-              {teamDetails.students.map((member) => (
-                <StyledTeamMemberMotionDiv
-                  key={`${member.userId}`}
-                  layoutId={`${member.userId}`}
-                  layout
-                  transition={{
-                    type: isDragging ? "spring" : false,
-                    duration: DRAG_ANIMATION_DURATION,
-                  }}
-                  className="team-member-cell"
-                  drag={isEditable}
-                  $isDraggable={isEditable}
-                  dragElastic={1}
-                  dragConstraints={{ left: 0, top: 0, right: 0, bottom: 0 }}
-                  onDragStart={() => setIsDragging(true)}
-                  onDragTransitionEnd={() => setIsDragging(false)}
-                  onDragEnd={(event, info) =>
-                    handleDragDropCard(event, info, member, teamDetails.teamId)
-                  }
-                >
-                  <TeamCardMember
-                    memberName={member.name}
-                    level={member.level}
-                  />
-                </StyledTeamMemberMotionDiv>
-              ))}
-
-              {isEditThisCard && (
-                <ApproveRadio onClick={toggleCurrentId}>Approve</ApproveRadio>
-              )}
-            </StyledTeamMatesContainerDiv>
-          </>
-        )}
-
-        {isEditNameThisCard && (
-          <StyledTeamNameApprovalDiv>
-            <StyledTitleSpan style={{ margin: "0", marginBottom: "20px" }}>
-              {teamDetails.teamName}
-            </StyledTitleSpan>
-            <ApproveNameRadios
-              setTeamIds={setTeamIds}
-              setRejectedTeamIds={setRejectedTeamIds}
-              teamId={teamDetails.teamId}
-            />
-          </StyledTeamNameApprovalDiv>
-        )}
-      </StyledHoverDiv>
-    </>
-  );
-};
+      <StyledCardHeaderDiv
+        $statusColor={colorMap[status]}
+        className="team-card--StyledCardHeaderDiv-0">
+        <StyledTitleSpan className="team-card--StyledTitleSpan-0">{teamDetails.teamName}</StyledTitleSpan>
+        {!teamDetails.teamNameApproved && <StyledRedTeamNameAlert className="team-card--StyledRedTeamNameAlert-0" />}
+        <StyledTeamLevelDiv $levelChar={levelChar} className="team-card--StyledTeamLevelDiv-0">
+          <span>{levelChar}</span>
+        </StyledTeamLevelDiv>
+      </StyledCardHeaderDiv>
+  
+        <StyledTeamMatesContainerDiv className="team-card--StyledTeamMatesContainerDiv-0">
+          {teamDetails.students.map((member, index) => (
+            <StyledTeamMemberMotionDiv
+              key={`${member.userId}`}
+              layoutId={`${member.userId}`}
+              layout
+              transition={{
+                type: isDragging ? 'spring' : false,
+                duration: DRAG_ANIMATION_DURATION
+              }}
+              // animate={{ opacity: isDragging ? 0.8 : 1 }}
+              className="team-member-cell"
+              drag={isEditable}
+              $isDraggable={isEditable}
+              dragElastic={1}
+              dragConstraints={{left: 0, top: 0, right: 0, bottom: 0}}
+              onDragStart={() => setIsDragging(true)}
+              onDragTransitionEnd={() => setIsDragging(false)}
+              onDragEnd={(event, info) => handleDragDropCard(event, info, member, teamDetails.teamId)}
+              >
+              <TeamCardMember memberName={member.name} level={member.level} />
+            </StyledTeamMemberMotionDiv>
+          ))}
+          {isEditThisCard &&
+            <ApproveRadio onClick={toggleCurrentId}>
+              Approve
+            </ApproveRadio>
+          }
+        </StyledTeamMatesContainerDiv>
+  </>}
+    {isEditNameThisCard &&
+      <StyledTeamNameApprovalDiv className="team-card--StyledTeamNameApprovalDiv-0">
+        <StyledTitleSpan
+          style={{ margin: '0', marginBottom: '20px' }}
+          className="team-card--StyledTitleSpan-1">{teamDetails.teamName}</StyledTitleSpan>
+        <ApproveNameRadios
+          setTeamIds={setTeamIds}
+          setRejectedTeamIds={setRejectedTeamIds}
+          teamId={teamDetails.teamId}
+        />
+      </StyledTeamNameApprovalDiv>
+    }
+  </StyledHoverDiv>
+  </>;
+}

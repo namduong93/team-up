@@ -1,11 +1,11 @@
-import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
-import { ServiceError } from "../errors/ServiceError.js";
-import { CompetitionUser, CompetitionUserRole } from "../models/competition/competitionUser.js";
-import { UserType } from "../models/user/user.js";
-import { CompetitionRepository } from "../repository/CompetitionRepository.js";
-import { CompetitionStudentRepository } from "../repository/CompetitionStudentRepository.js";
-import { NotificationRepository } from "../repository/NotificationRepository.js";
-import { UserRepository } from "../repository/UserRepository.js";
+import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo.js';
+import { ServiceError } from '../errors/ServiceError.js';
+import { CompetitionUser, CompetitionUserRole } from '../models/competition/competitionUser.js';
+import { UserType } from '../models/user/user.js';
+import { CompetitionRepository } from '../repository/CompetitionRepository.js';
+import { CompetitionStudentRepository } from '../repository/CompetitionStudentRepository.js';
+import { NotificationRepository } from '../repository/NotificationRepository.js';
+import { UserRepository } from '../repository/UserRepository.js';
 
 export class CompetitionStudentService {
   private competitionRepository: CompetitionRepository;
@@ -14,8 +14,8 @@ export class CompetitionStudentService {
   private notificationRepository: NotificationRepository;
   
   constructor(competitionStudentRepository: CompetitionStudentRepository,
-      competitionRepository: CompetitionRepository,
-      userRepository: UserRepository, notificationRepository: NotificationRepository) {
+    competitionRepository: CompetitionRepository,
+    userRepository: UserRepository, notificationRepository: NotificationRepository) {
     
     this.competitionStudentRepository = competitionStudentRepository;
     this.userRepository = userRepository;
@@ -33,7 +33,7 @@ export class CompetitionStudentService {
    */
   competitionStudentsRegoToggles = async (userId: number, code: string) => {
     return await this.competitionStudentRepository.competitionStudentsRegoToggles(userId, code);
-  }
+  };
 
   /**
     * Retrieves the details of a competition team for a given user.
@@ -50,7 +50,7 @@ export class CompetitionStudentService {
         'competition/team/details route is only for participants to use');
     }
     return await this.competitionStudentRepository.competitionTeamDetails(userId, compId);
-  }
+  };
 
     
   /**
@@ -68,9 +68,9 @@ export class CompetitionStudentService {
         'User is not a participant for this competition.');
     }
     return await this.competitionStudentRepository.competitionTeamInviteCode(userId, compId);
-  }
+  };
 
-    /**
+  /**
    * Allows a user to join a competition team using a team code.
    * 
    * @param userId The ID of the user attempting to join the team.
@@ -91,9 +91,9 @@ export class CompetitionStudentService {
       throw new ServiceError(ServiceError.NotFound, 'User is not a part of an university');
     }
     return await this.competitionStudentRepository.competitionTeamJoin(userId, compId, teamCode, university);
-  }
+  };
 
-    /**
+  /**
    * Retrieves the details of a student participating in a competition.
    *
    * @param userId The ID of the user.
@@ -104,20 +104,20 @@ export class CompetitionStudentService {
   competitionStudentDetails = async (userId: number, compId: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a participant for this competition.');
     }
 
     return await this.competitionStudentRepository.competitionStudentDetails(userId, compId);
-  }
+  };
 
   competitionStudentDetailsUpdate = async (userId: number, compId: number, studentInfo: StudentInfo) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a participant for this competition.');
     }
 
     return await this.competitionStudentRepository.competitionStudentDetailsUpdate(userId, compId, studentInfo);
-  }
+  };
 
   /**
    * Allows a student to join a competition using a provided code.
@@ -159,10 +159,15 @@ export class CompetitionStudentService {
     }
 
     await this.competitionStudentRepository.competitionStudentJoin(competitionUserInfo, university);
-    return;
-  }
 
-    /**
+    // Send a welcome notification to the user
+    const compId = await this.competitionRepository.competitionIdFromCode(code);
+    await this.notificationRepository.notificationWelcomeToCompetition(competitionUserInfo.userId, compId);
+    
+    return;
+  };
+
+  /**
    * Withdraws a student from a competition.
    *
    * @param userId The ID of the user to withdraw.
@@ -179,7 +184,7 @@ export class CompetitionStudentService {
 
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a participant for this competition.');
     }
 
     // Remove student from competition
@@ -189,9 +194,9 @@ export class CompetitionStudentService {
     await this.notificationRepository.notificationWithdrawal(userId, compId, result.competitionName, result.teamId, result.teamName);
 
     return result.competitionCode;
-  }
+  };
 
-    /**
+  /**
    * Requests a site change for a competition participant and notifies the coach.
    *
    * @param userId The ID of the user requesting the site change.
@@ -204,12 +209,12 @@ export class CompetitionStudentService {
     // Check if user is a participant
     const userTypeObject = await this.userRepository.userType(userId);
     if (userTypeObject.type !== UserType.STUDENT) {
-      throw new ServiceError(ServiceError.Auth, "User is not a student.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a student.');
     }
 
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.PARTICIPANT)) {
-      throw new ServiceError(ServiceError.Auth, "User is not a participant for this competition.");
+      throw new ServiceError(ServiceError.Auth, 'User is not a participant for this competition.');
     }
 
     // Request site ID change
@@ -219,5 +224,5 @@ export class CompetitionStudentService {
     await this.notificationRepository.notificationRequestSiteChange(teamId, compId);
 
     return {};
-  }
+  };
 }

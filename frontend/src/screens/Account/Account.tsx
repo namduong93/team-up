@@ -24,6 +24,7 @@ import {
   StyledProfilePic,
   StyledSelect,
 } from "./Account.styles";
+import { tShirtOptions } from "../auth/RegisterForm/subroutes/SiteDataInput/SiteDataOptions";
 
 interface User {
   role: "student" | "staff";
@@ -138,253 +139,182 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     })();
   }, []);
 
-  return (
-    isLoaded && (
-      <StyledBackground>
-        <StyledAccountContainer>
-          <StyledCardContainer>
-            <StyledAccountCard $isEditing={isEditingUser}>
-              <StyledProfileEditContainer>
-                <StyledProfileContainer>
-                  <StyledProfilePic
-                    $imageUrl={
-                      newDetails.profilePic ||
-                      `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
-                    }
-                  />
-                </StyledProfileContainer>
-                {!isEditingUser && (
-                  <StyledEditIconButton onClick={handleEditUser}>
-                    <StyledEditIcon />
-                  </StyledEditIconButton>
-                )}
-              </StyledProfileEditContainer>
-              <StyledDetailsCard>
-                <StyledAccountItem>
-                  {isEditingUser && (
-                    <StyledLabel $isEditing={isEditingUser}>
-                      Profile Picture:
-                    </StyledLabel>
-                  )}
-                  {isEditingUser && (
-                    <StyledInput
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePhotoUpload}
-                    />
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>Name:</StyledLabel>
-                  {isEditingUser ? (
-                    <StyledInput
-                      type="text"
-                      value={newDetails.name}
-                      onChange={(e) =>
-                        setNewDetails({ ...newDetails, name: e.target.value })
-                      }
-                    />
-                  ) : (
-                    <StyledDetailsText>{user.name}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>
-                    Preferred Name:
-                  </StyledLabel>
-                  {isEditingUser ? (
-                    <StyledInput
-                      type="text"
-                      value={newDetails.preferredName}
-                      onChange={(e) =>
-                        setNewDetails({
-                          ...newDetails,
-                          preferredName: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    <StyledDetailsText>{user.preferredName}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>Email:</StyledLabel>
-                  {isEditingUser ? (
-                    <StyledInput
-                      type="email"
-                      value={newDetails.email}
-                      onChange={(e) =>
-                        setNewDetails({ ...newDetails, email: e.target.value })
-                      }
-                    />
-                  ) : (
-                    <StyledDetailsText>{user.email}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>
-                    Affiliation:
-                  </StyledLabel>
-                  {isEditingUser ? (
-                    <StyledInput
-                      type="text"
-                      value={newDetails.affiliation}
-                      onChange={(e) =>
-                        setNewDetails({
-                          ...newDetails,
-                          affiliation: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    <StyledDetailsText>{user.affiliation}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>Gender:</StyledLabel>
-                  {isEditingUser ? (
-                    <StyledSelect
-                      value={newDetails.gender}
-                      onChange={(e) =>
-                        setNewDetails({
-                          ...newDetails,
-                          gender: e.target.value as User["gender"],
-                        })
-                      }
-                    >
-                      <StyledOption value="Male">Male</StyledOption>
-                      <StyledOption value="Female">Female</StyledOption>
-                      <StyledOption value="Other">Other</StyledOption>
-                    </StyledSelect>
-                  ) : (
-                    <StyledDetailsText>{user.gender}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>
-                    Preferred Pronouns:
-                  </StyledLabel>
-                  {isEditingUser ? (
-                    <StyledSelect
-                      value={newDetails.pronouns}
-                      onChange={(e) =>
-                        setNewDetails({
-                          ...newDetails,
-                          pronouns: e.target.value as User["pronouns"],
-                        })
-                      }
-                    >
-                      <StyledOption value="She/Her">She/Her</StyledOption>
-                      <StyledOption value="He/Him">He/Him</StyledOption>
-                      <StyledOption value="They/Them">They/Them</StyledOption>
-                      <StyledOption value="Other">Other</StyledOption>
-                    </StyledSelect>
-                  ) : (
-                    <StyledDetailsText>{user.pronouns}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>
-                    T-Shirt Size:
-                  </StyledLabel>
-                  {isEditingUser ? (
-                    <StyledSelect
-                      value={newDetails.tshirtSize}
-                      onChange={(e) =>
-                        setNewDetails({
-                          ...newDetails,
-                          tshirtSize: e.target.value,
-                        })
-                      }
-                    >
-                      <StyledOption value="Male L">Male L</StyledOption>
-                      <StyledOption value="Male M">Male M</StyledOption>
-                      <StyledOption value="Male S">Male S</StyledOption>
-                      <StyledOption value="Female L">Female L</StyledOption>
-                      <StyledOption value="Female M">Female M</StyledOption>
-                      <StyledOption value="Female S">Female S</StyledOption>
-                      <StyledOption value="Other">Other</StyledOption>
-                    </StyledSelect>
-                  ) : (
-                    <StyledDetailsText>{user.tshirtSize}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>
-                    Dietary Preferences:
-                  </StyledLabel>
-                  {isEditingUser ? (
-                    <StyledInput
-                      type="text"
-                      value={newDetails.dietaryReqs}
-                      onChange={(e) =>
-                        setNewDetails({
-                          ...newDetails,
-                          dietaryReqs: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    <StyledDetailsText>{user.dietaryReqs}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>
-                    Allergy Preferences:
-                  </StyledLabel>
-                  {isEditingUser ? (
-                    <StyledInput
-                      type="text"
-                      value={newDetails.allergies}
-                      onChange={(e) =>
-                        setNewDetails({
-                          ...newDetails,
-                          allergies: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    <StyledDetailsText>{user.allergies}</StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-                <StyledAccountItem>
-                  <StyledLabel $isEditing={isEditingUser}>
-                    Accessibility Preferences:
-                  </StyledLabel>
-                  {isEditingUser ? (
-                    <StyledInput
-                      type="text"
-                      value={newDetails.accessibilityReqs}
-                      onChange={(e) =>
-                        setNewDetails({
-                          ...newDetails,
-                          accessibilityReqs: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    <StyledDetailsText>
-                      {user.accessibilityReqs}
-                    </StyledDetailsText>
-                  )}
-                </StyledAccountItem>
-              </StyledDetailsCard>
-              <StyledActionButtons>
+  return isLoaded &&
+    <StyledBackground className="account--StyledBackground-0">
+      <StyledAccountContainer className="account--StyledAccountContainer-0">
+        <StyledCardContainer className="account--StyledCardContainer-0">
+          <StyledAccountCard $isEditing={isEditingUser} className="account--StyledAccountCard-0">
+            <StyledProfileEditContainer className="account--StyledProfileEditContainer-0">
+              <StyledProfileContainer className="account--StyledProfileContainer-0">
+                <StyledProfilePic
+                  $imageUrl={newDetails.profilePic || `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg` }
+                  className="account--StyledProfilePic-0" />
+              </StyledProfileContainer>
+              {!isEditingUser && (
+                <StyledEditIconButton onClick={handleEditUser} className="account--StyledEditIconButton-0">
+                  <StyledEditIcon className="account--StyledEditIcon-0" />
+                </StyledEditIconButton>
+              )}
+            </StyledProfileEditContainer>
+            <StyledDetailsCard className="account--StyledDetailsCard-0">
+              <StyledAccountItem className="account--StyledAccountItem-0">
+                {isEditingUser && <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-0">Profile Picture:</StyledLabel>}
                 {isEditingUser && (
-                  <StyledButtonGroup>
-                    <StyledButton type="confirm" onClick={handleSaveUser}>
-                      Save
-                    </StyledButton>
-                    <StyledButton type="cancel" onClick={handleCancelUser}>
-                      Cancel
-                    </StyledButton>
-                  </StyledButtonGroup>
+                  <StyledInput
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="account--StyledInput-0" />
                 )}
-              </StyledActionButtons>
-            </StyledAccountCard>
-          </StyledCardContainer>
-        </StyledAccountContainer>
-      </StyledBackground>
-    )
-  );
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-1">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-1">Name:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledInput
+                    type="text"
+                    value={newDetails.name}
+                    onChange={(e) => setNewDetails({ ...newDetails, name: e.target.value })}
+                    className="account--StyledInput-1" />
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-0">{user.name}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-2">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-2">Preferred Name:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledInput
+                    type="text"
+                    value={newDetails.preferredName}
+                    onChange={(e) => setNewDetails({ ...newDetails, preferredName: e.target.value })}
+                    className="account--StyledInput-2" />
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-1">{user.preferredName}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-3">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-3">Email:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledInput
+                    type="email"
+                    value={newDetails.email}
+                    onChange={(e) => setNewDetails({ ...newDetails, email: e.target.value })}
+                    className="account--StyledInput-3" />
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-2">{user.email}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-4">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-4">Affiliation:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledInput
+                    type="text"
+                    value={newDetails.affiliation}
+                    onChange={(e) => setNewDetails({ ...newDetails, affiliation: e.target.value })}
+                    className="account--StyledInput-4" />
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-3">{user.affiliation}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-5">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-5">Gender:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledSelect
+                    value={newDetails.gender}
+                    onChange={(e) => setNewDetails({ ...newDetails, gender: e.target.value as User["gender"] })}
+                    className="account--StyledSelect-0">
+                    <StyledOption value="Male" className="account--StyledOption-0">Male</StyledOption>
+                    <StyledOption value="Female" className="account--StyledOption-1">Female</StyledOption>
+                    <StyledOption value="Other" className="account--StyledOption-2">Other</StyledOption>
+                  </StyledSelect>
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-4">{user.gender}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-6">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-6">Preferred Pronouns:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledSelect
+                    value={newDetails.pronouns}
+                    onChange={(e) => setNewDetails({ ...newDetails, pronouns: e.target.value as User["pronouns"] })}
+                    className="account--StyledSelect-1">
+                    <StyledOption value="She/Her" className="account--StyledOption-3">She/Her</StyledOption>
+                    <StyledOption value="He/Him" className="account--StyledOption-4">He/Him</StyledOption>
+                    <StyledOption value="They/Them" className="account--StyledOption-5">They/Them</StyledOption>
+                    <StyledOption value="Other" className="account--StyledOption-6">Other</StyledOption>
+                  </StyledSelect>
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-5">{user.pronouns}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-7">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-7">T-Shirt Size:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledSelect
+                    value={newDetails.tshirtSize}
+                    onChange={(e) => setNewDetails({ ...newDetails, tshirtSize: e.target.value })}
+                    className="account--StyledSelect-2">
+                    {tShirtOptions.map((option) => (
+                      <StyledOption className={`account-StyledOption-${option.value}`} key={option.value} value={option.value} >{option.label}</StyledOption>
+                      ))}
+                    <StyledOption value="Other" className="account--StyledOption-13">Other</StyledOption>
+                  </StyledSelect>
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-6">{user.tshirtSize}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-8">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-8">Dietary Preferences:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledInput
+                    type="text"
+                    value={newDetails.dietaryReqs}
+                    onChange={(e) => setNewDetails({ ...newDetails, dietaryReqs: e.target.value })}
+                    className="account--StyledInput-5" />
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-7">{user.dietaryReqs}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-9">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-9">Allergy Preferences:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledInput
+                    type="text"
+                    value={newDetails.allergies}
+                    onChange={(e) => setNewDetails({ ...newDetails, allergies: e.target.value })}
+                    className="account--StyledInput-6" />
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-8">{user.allergies}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+              <StyledAccountItem className="account--StyledAccountItem-10">
+                <StyledLabel $isEditing={isEditingUser} className="account--StyledLabel-10">Accessibility Preferences:</StyledLabel>
+                {isEditingUser ? (
+                  <StyledInput
+                    type="text"
+                    value={newDetails.accessibilityReqs}
+                    onChange={(e) => setNewDetails({ ...newDetails, accessibilityReqs: e.target.value })}
+                    className="account--StyledInput-7" />
+                ) : (
+                  <StyledDetailsText className="account--StyledDetailsText-9">{user.accessibilityReqs}</StyledDetailsText>
+                )}
+              </StyledAccountItem>
+            </StyledDetailsCard>
+            <StyledActionButtons className="account--StyledActionButtons-0">
+              {isEditingUser && (
+                <StyledButtonGroup className="account--StyledButtonGroup-0">
+                  <StyledButton
+                    type="confirm"
+                    onClick={handleSaveUser}
+                    className="account--StyledButton-0">Save</StyledButton>
+                  <StyledButton
+                    type="cancel"
+                    onClick={handleCancelUser}
+                    className="account--StyledButton-1">Cancel</StyledButton>
+                </StyledButtonGroup>
+              )}
+            </StyledActionButtons>
+          </StyledAccountCard>
+        </StyledCardContainer>
+      </StyledAccountContainer>
+    </StyledBackground>;
 };

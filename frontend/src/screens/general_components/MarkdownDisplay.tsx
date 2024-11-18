@@ -27,5 +27,10 @@ const StyledMarkdown = styled(ReactMarkdown)`
  * It uses `react-markdown` to render the Markdown and `rehypeRaw` to handle raw HTML content within the Markdown.
  */
 export const MarkdownDisplay: FC<MarkdownDisplayProps> = ({ content }) => {
-  return <StyledMarkdown children={content} rehypePlugins={[rehypeRaw]} />;
+  return (
+    <StyledMarkdown
+      children={content}
+      rehypePlugins={[rehypeRaw]}
+      className="markdown-display--StyledMarkdown-0" />
+  );
 };

@@ -27,33 +27,26 @@ export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({
     <StyledSortButton
       onClick={onClick}
       style={{
-        height: "100%",
-        width: "100%",
-        overflow: "hidden",
-        padding: "0",
-        display: "flex",
-        flexWrap: "wrap",
-        ...style,
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden',
+        padding: '0',
+        display: 'flex',
+        flexWrap: 'wrap',
+        ...style
       }}
       $isSortOpen={isOpen}
       {...props}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignContent: "start",
-          flexWrap: "wrap",
-          height: "50%",
-          width: "100%",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ height: "200%" }}>{icon}</div>
+      className="page-utils--StyledSortButton-0">
+      <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
+        <div style={{ height: '200%' }}>
+          {icon}
+        </div>
         <span>{label}</span>
       </div>
     </StyledSortButton>
   );
-};
+}
 
 const StyledSearchContainer = styled.div`
   width: 100%;
@@ -112,32 +105,21 @@ export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
   ...props
 }) => {
   return (
-    <StyledSearchContainer>
+    <StyledSearchContainer className="page-utils--StyledSearchContainer-0">
       <StyledSearchInput
         type="text"
         value={value}
         onChange={onChange}
         {...props}
-      />
-      {!value && (
-        <StyledSearchCell>
-          <div
-            style={{
-              display: "flex",
-              alignContent: "start",
-              flexWrap: "wrap",
-              height: "50%",
-              width: "100%",
-              justifyContent: "center",
-            }}
-          >
-            <div style={{ height: "200%" }}>
-              <StyledSearchIcon />
-            </div>
-            <span>Search</span>
+        className="page-utils--StyledSearchInput-0" />
+      {!value && <StyledSearchCell className="page-utils--StyledSearchCell-0">
+        <div style={{ display: 'flex', alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%', justifyContent: 'center' }}>
+          <div style={{ height: '200%' }}>
+            <StyledSearchIcon className="page-utils--StyledSearchIcon-0" />
           </div>
-        </StyledSearchCell>
-      )}
+            <span>Search</span>
+        </div>
+      </StyledSearchCell>}
     </StyledSearchContainer>
   );
-};
+}

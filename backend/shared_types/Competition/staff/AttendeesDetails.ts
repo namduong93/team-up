@@ -1,4 +1,4 @@
-import { CompetitionRole } from "../CompetitionRole";
+import { CompetitionRole } from '../CompetitionRole';
 
 export interface AttendeesDetails {
   userId: number;

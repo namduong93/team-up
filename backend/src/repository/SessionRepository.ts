@@ -1,4 +1,4 @@
-import { Session } from "../models/session/session.js";
+import { Session } from '../models/session/session.js';
 
 export type SessionTokenObject = { sessionId: string };
 // This is the repository layer. It is responsible for handling database operations.

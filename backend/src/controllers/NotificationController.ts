@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import { Notification } from "../models/notification/notification.js";
-import { NotificationService } from "../services/NotificationService.js";
-import { httpErrorHandler } from "./controller_util/httpErrorHandler.js";
+import { NotificationService } from '../services/NotificationService.js';
+import { httpErrorHandler } from './controller_util/httpErrorHandler.js';
 
 export class NotificationController {
   private notificationService: NotificationService;
@@ -29,7 +28,7 @@ export class NotificationController {
     const notifications = await this.notificationService.userNotificationsList(Number(userId));
     res.json(notifications);
     return;
-  })
+  });
 
   /**
    * Handles the request to send notifications for team seat assignments.
@@ -39,5 +38,5 @@ export class NotificationController {
     await this.notificationService.notificationTeamSeatAssignments(Number(compId), seatAssignments);
     res.json({});
     return;
-  })
+  });
 }

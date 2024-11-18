@@ -138,114 +138,72 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
 
   return (
     <InfoBar isOpenState={[isOpen || isPopupOpen, setIsOpen]} {...props}>
-      <StyledTeamContainer>
-        <StyledInfoBarField>
-          <StyledTeamDetailsLabelSpan>Team Id:</StyledTeamDetailsLabelSpan>
+      <StyledTeamContainer className="team-info-bar--StyledTeamContainer-0">
+        <StyledInfoBarField className="team-info-bar--StyledInfoBarField-0">
+          <StyledTeamDetailsLabelSpan className="team-info-bar--StyledTeamDetailsLabelSpan-0">Team Id:</StyledTeamDetailsLabelSpan>
           <span>{teamDetails.teamId}</span>
         </StyledInfoBarField>
-
-        {isEditable && (
-          <StyledEditIconButton
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => {
-              setIsEditing((p) => !p);
-            }}
-            style={{ position: "absolute", right: 0, top: 0 }}
-          >
-            <StyledEditIcon />
-          </StyledEditIconButton>
-        )}
-
-        <StyledTitleDiv $isOpen={isOpen || isPopupOpen}>
-          {isEditing ? (
-            <StyledEditableInput
-              value={teamData.teamName}
-              onChange={(e) =>
-                setTeamData((p) => ({ ...p, teamName: e.target.value }))
-              }
-              style={{
-                width: "50%",
-                height: "47px",
-                fontSize: theme.fonts.fontSizes.title,
-              }}
-            />
-          ) : (
-            <>{teamData.teamName}</>
-          )}
+        {isEditable && <StyledEditIconButton
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => { setIsEditing((p) => !p) }}
+          style={{ position: 'absolute', right: 0, top: 0 }}
+          className="team-info-bar--StyledEditIconButton-0">
+          <StyledEditIcon className="team-info-bar--StyledEditIcon-0" />
+        </StyledEditIconButton>}
+        <StyledTitleDiv
+          $isOpen={isOpen || isPopupOpen}
+          className="team-info-bar--StyledTitleDiv-0">
+          {isEditing ?
+          <StyledEditableInput
+            value={teamData.teamName}
+            onChange={(e) => setTeamData((p) => ({ ...p, teamName: e.target.value }))}
+            style={{ width: '50%', height: '47px', fontSize: theme.fonts.fontSizes.title }}
+            className="team-info-bar--StyledEditableInput-0" /> : <>{teamData.teamName}</>
+          }
         </StyledTitleDiv>
-
-        <StyledVerticalInfoBarField>
-          <StyledTeamDetailsLabelSpan>Coach:</StyledTeamDetailsLabelSpan>
+        <StyledVerticalInfoBarField className="team-info-bar--StyledVerticalInfoBarField-0">
+          <StyledTeamDetailsLabelSpan className="team-info-bar--StyledTeamDetailsLabelSpan-1">Coach:</StyledTeamDetailsLabelSpan>
           <span>{teamDetails.coach.name}</span>
         </StyledVerticalInfoBarField>
-
-        <StyledVerticalInfoBarField>
-          <StyledTeamDetailsLabelSpan>Status:</StyledTeamDetailsLabelSpan>
-          <StyledTeamStatusDiv $status={teamDetails.status}>
-            {teamDetails.status}
-          </StyledTeamStatusDiv>
+        <StyledVerticalInfoBarField className="team-info-bar--StyledVerticalInfoBarField-1">
+          <StyledTeamDetailsLabelSpan className="team-info-bar--StyledTeamDetailsLabelSpan-2">Status:</StyledTeamDetailsLabelSpan>
+          <StyledTeamStatusDiv
+            $status={teamDetails.status}
+            className="team-info-bar--StyledTeamStatusDiv-0">{teamDetails.status}</StyledTeamStatusDiv>
         </StyledVerticalInfoBarField>
-
-        <StyledVerticalInfoBarField>
-          <StyledTeamDetailsLabelSpan>Level:</StyledTeamDetailsLabelSpan>
+        <StyledVerticalInfoBarField className="team-info-bar--StyledVerticalInfoBarField-2">
+          <StyledTeamDetailsLabelSpan className="team-info-bar--StyledTeamDetailsLabelSpan-3">Level:</StyledTeamDetailsLabelSpan>
           <span>{teamData.teamLevel}</span>
         </StyledVerticalInfoBarField>
-
-        <StyledVerticalInfoBarField>
-          <StyledTeamDetailsLabelSpan $isEditing={isEditing}>
-            Site:
-          </StyledTeamDetailsLabelSpan>
-          {isEditing ? (
-            <div style={{ width: "100%" }}>
-              <AdvancedDropdown
-                isExtendable={false}
-                style={{
-                  height: "30px",
-                  borderRadius: "5px",
-                  width: "100%",
-                  marginBottom: "2px",
-                }}
-                defaultSearchTerm={teamData.teamSite}
-                setCurrentSelected={setCurrentSiteOption}
-                optionsState={[siteOptions, setSiteOptions]}
-              />
-            </div>
-          ) : (
-            <span>{teamData.teamSite}</span>
-          )}
+        <StyledVerticalInfoBarField className="team-info-bar--StyledVerticalInfoBarField-3">
+          <StyledTeamDetailsLabelSpan
+            $isEditing={isEditing}
+            className="team-info-bar--StyledTeamDetailsLabelSpan-4">Site:</StyledTeamDetailsLabelSpan>
+          {isEditing ? 
+          <div style={{ width: '100%' }}>
+          <AdvancedDropdown
+            isExtendable={false}
+            style={{ height: '30px', borderRadius: '5px', width: '100%', marginBottom: '2px' }}
+            defaultSearchTerm={teamData.teamSite}
+            setCurrentSelected={setCurrentSiteOption}
+            optionsState={[siteOptions, setSiteOptions]}
+          /></div> :
+          <span>{teamData.teamSite}</span>}
         </StyledVerticalInfoBarField>
-
-        <StyledVerticalInfoBarField>
-          <StyledTeamDetailsLabelSpan $isEditing={isEditing}>
-            Seat:
-          </StyledTeamDetailsLabelSpan>
-          {isEditing ? (
-            <StyledEditableInput
-              value={teamData.teamSeat}
-              onChange={(e) =>
-                setTeamData((p) => ({ ...p, teamSeat: e.target.value }))
-              }
-            />
-          ) : (
-            <span>{teamData.teamSeat}</span>
-          )}
+        <StyledVerticalInfoBarField className="team-info-bar--StyledVerticalInfoBarField-4">
+          <StyledTeamDetailsLabelSpan
+            $isEditing={isEditing}
+            className="team-info-bar--StyledTeamDetailsLabelSpan-5">Seat:</StyledTeamDetailsLabelSpan>
+          {isEditing ?
+          <StyledEditableInput
+            value={teamData.teamSeat}
+            onChange={(e) => setTeamData((p) => ({ ...p, teamSeat: e.target.value }))}
+            className="team-info-bar--StyledEditableInput-1" /> :
+          <span>{teamData.teamSeat}</span>}
         </StyledVerticalInfoBarField>
-        <br />
-
-        {isEdited && (
-          <div
-            style={{
-              width: "100%",
-              height: "30px",
-              display: "flex",
-              maxWidth: "300px",
-            }}
-          >
-            <TransparentResponsiveButton
-              actionType="error"
-              label="Reset"
-              isOpen={false}
-              onClick={() => setTeamData(teamDetails)}
+        <br/>
+        {isEdited && <div style={{ width: '100%', height: '30px', display: 'flex', maxWidth: '300px' }}>
+          <TransparentResponsiveButton actionType="error" label="Reset" isOpen={false} onClick={() => setTeamData(teamDetails)}
               icon={<RxReset />}
               style={{
                 backgroundColor: theme.colours.cancel,
@@ -259,16 +217,15 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
               icon={<FaSave />}
               style={{
                 backgroundColor: theme.colours.confirm,
-              }}
-            />
-          </div>
-        )}
-        <StyledMemberSpan>Members</StyledMemberSpan>
-      </StyledTeamContainer>
+              }} />
 
-      <StyledMemberContainer>
-        <StyledInfoBarField>
-          <StyledMemberUl>
+        </div>}
+        <StyledMemberSpan className="team-info-bar--StyledMemberSpan-0">Members</StyledMemberSpan>
+      </StyledTeamContainer>
+      
+      <StyledMemberContainer className="team-info-bar--StyledMemberContainer-0">
+        <StyledInfoBarField className="team-info-bar--StyledInfoBarField-1">
+          <StyledMemberUl className="team-info-bar--StyledMemberUl-0">
             {teamDetails.students.map((student) => {
               return (
                 <TeamStudentInfoCard
@@ -290,4 +247,4 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
       </StyledMemberContainer>
     </InfoBar>
   );
-};
+}

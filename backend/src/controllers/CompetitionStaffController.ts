@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
-import { httpErrorHandler } from "./controller_util/httpErrorHandler.js";
-import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
-import { CompetitionStaffService } from "../services/CompetitionStaffService.js";
-import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
-import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
-import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
-import { Competition } from "../models/competition/competition.js";
-import { CompetitionAccessLevel, CompetitionStaff } from "../models/competition/competitionUser.js";
+import { Request, Response } from 'express';
+import { httpErrorHandler } from './controller_util/httpErrorHandler.js';
+import { EditCourse, EditRego } from '../../shared_types/Competition/staff/Edit.js';
+import { CompetitionStaffService } from '../services/CompetitionStaffService.js';
+import { StaffInfo } from '../../shared_types/Competition/staff/StaffInfo.js';
+import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo.js';
+import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails.js';
+import { Competition } from '../models/competition/competition.js';
+import { CompetitionAccessLevel, CompetitionStaff } from '../models/competition/competitionUser.js';
 
 export class CompetitionStaffController {
   private competitionStaffService: CompetitionStaffService;
@@ -188,7 +188,7 @@ export class CompetitionStaffController {
     const teamList = await this.competitionStaffService.competitionTeams(
       parseInt(userId as string), parseInt(compId as string));
 
-    res.json({ teamList })
+    res.json({ teamList });
   });
 
   /**
@@ -320,7 +320,7 @@ export class CompetitionStaffController {
       accessLevel: CompetitionAccessLevel.PENDING,
       siteLocation: req.body.staffRegistrationData.site,
       competitionBio: req.body.staffRegistrationData.competitionBio
-    }
+    };
     await this.competitionStaffService.competitionStaffJoin(String(code), competitionStaffInfo);
     res.json({});
     return;

@@ -1,5 +1,51 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+
+interface PasswordInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
+  label: string;
+  placeholder?: string;
+  type: string;
+  required?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  width?: string;
+}
+
+/**
+ * A React component to allow users to enter their password.
+ *
+ * @param {PasswordInputLightProps} props - React PasswordInputLightProps specified above
+ * @returns {JSX.Element} - Web page component that allows users to enter their password
+ */
+export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
+  label,
+  placeholder,
+  type = 'text',
+  required = false,
+  value,
+  onChange,
+  width = '300px',
+  style
+}) => {
+  return (
+    <StyledContainer
+      $width={width}
+      style={style}
+      className="password-input--StyledContainer-0">
+      <StyledLabel className="password-input--StyledLabel-0">
+        {label}
+        {required && <StyledAsterisk className="password-input--StyledAsterisk-0">*</StyledAsterisk>}
+      </StyledLabel>
+      <StyledInput
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className="password-input--StyledInput-0" />
+    </StyledContainer>
+  );
+};
 
 const StyledContainer = styled.div<{ $width: string }>`
   display: flex;
@@ -35,45 +81,3 @@ export const StyledInput = styled.input`
   color: ${({ theme }) => theme.fonts.colour};
 `;
 
-interface PasswordInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
-  label: string;
-  placeholder?: string;
-  type: string;
-  required?: boolean;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  width?: string;
-}
-
-/**
- * A React component to allow users to enter their password.
- *
- * @param {PasswordInputLightProps} props - React PasswordInputLightProps specified above
- * @returns {JSX.Element} - Web page component that allows users to enter their password
- */
-export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
-  label,
-  placeholder,
-  type = "text",
-  required = false,
-  value,
-  onChange,
-  width = "300px",
-  style,
-}) => {
-  return (
-    <StyledContainer $width={width} style={style}>
-      <StyledLabel>
-        {label}
-        {required && <StyledAsterisk>*</StyledAsterisk>}
-      </StyledLabel>
-      <StyledInput
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        required={required}
-      />
-    </StyledContainer>
-  );
-};

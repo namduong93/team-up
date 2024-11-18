@@ -1,7 +1,8 @@
-import { Notification } from "../models/notification/notification";
-import { SeatAssignment } from "../models/team/team";
+import { Notification } from '../models/notification/notification';
+import { SeatAssignment } from '../models/team/team';
 
 export interface NotificationRepository {
+  notificationWelcomeToCompetition(userId: number, compId: number): Promise<{}>;
   notificationWithdrawal(userId: number, competitionId: number, competitionName: string, teamId: number, teamName: string): Promise<{}>;
   notificationApproveTeamAssignment(compId: number, approveIds: Array<number>): Promise<{}>;
   notificationRequestTeamNameChange(userId: number, competitionId: number): Promise<{}>;

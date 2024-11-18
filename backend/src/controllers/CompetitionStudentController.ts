@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { CompetitionStudentService } from "../services/CompetitionStudentService.js";
-import { httpErrorHandler } from "./controller_util/httpErrorHandler.js";
-import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
+import { Request, Response } from 'express';
+import { CompetitionStudentService } from '../services/CompetitionStudentService.js';
+import { httpErrorHandler } from './controller_util/httpErrorHandler.js';
+import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo.js';
 
 
 export class CompetitionStudentController {

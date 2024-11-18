@@ -19,7 +19,7 @@ import { StyledErrorMessage } from "../general_styles/error_styles";
 import { CompCard } from "./subcomponents/CompCard";
 import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 
-interface Competition {
+export interface Competition {
   compName: string;
   location: string;
   compDate: string;
@@ -241,121 +241,121 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     return await validateCode();
   };
 
-  return (
-    isLoaded && (
-      <StyledOverflowFlexBackground>
-        <StyledDashboardContent>
-          <PageHeader
-            pageTitle="Dashboard"
-            pageDescription={`Welcome back, ${dashInfo.preferredName}!`}
-            sortOptions={sortOptions}
-            filterOptions={filterOptions}
-            sortOptionState={{ sortOption, setSortOption }}
-            filtersState={{ filters, setFilters }}
-            searchTermState={{ searchTerm, setSearchTerm }}
-          >
-            {isAdmin && (
-              <ResponsiveActionButton
-                icon={<IoIosCreate />}
-                label="Create"
-                question="Create a new competition?"
-                redirectPath="/competition/create"
-                actionType="secondary"
-              />
-            )}
-
+  return isLoaded && (
+    <StyledOverflowFlexBackground className="dashboard--StyledOverflowFlexBackground-0">
+      <StyledDashboardContent className="dashboard--StyledDashboardContent-0">
+        {/* <CompCreatePopUp isOpen={isPopUpOpen} onClose={handleClosePopUp} message={message} code={code} /> */}
+        <PageHeader
+          pageTitle="Dashboard"
+          pageDescription={`Welcome back, ${dashInfo.preferredName}!`}
+          sortOptions={sortOptions}
+          filterOptions={filterOptions}
+          sortOptionState={{ sortOption, setSortOption }}
+          filtersState={{ filters, setFilters }}
+          searchTermState={{ searchTerm, setSearchTerm }}
+        >
+          {isAdmin && (
             <ResponsiveActionButton
-              icon={<MdAssignmentAdd />}
-              label="Register"
-              question="Register for a new competition?"
-              redirectPath={
-                userType === "student"
-                  ? `/competition/information/${compRegisterCode}`
-                  : `/competition/staff/register/${compRegisterCode}`
-              }
-              actionType="primary"
-              handleSubmit={handleRegisterConfirm}
-              timeout={2}
-              handleClose={() => setErrorMessage(null)}
-            >
-              <div>
-                <StyledInput
-                  type="text"
-                  placeholder="COMP1234"
-                  onChange={(e) => {
-                    setCompRegisterCode(e.target.value);
+              icon={<IoIosCreate />}
+              label="Create"
+              question="Create a new competition?"
+              redirectPath="/competition/create"
+              // handleClick={handleCreateClick}
+              actionType="secondary"
+            />
+          )}
+
+          <ResponsiveActionButton
+            icon={<MdAssignmentAdd />}
+            label="Register"
+            question="Register for a new competition?"
+            redirectPath={
+              userType === "student"
+                ? `/competition/information/${compRegisterCode}`
+                : `/competition/staff/register/${compRegisterCode}`
+            }
+            actionType="primary"
+            handleSubmit={handleRegisterConfirm}
+            timeout={2}
+            handleClose={() => setErrorMessage(null)}
+          >
+            <div>
+              <StyledInput
+                type="text"
+                placeholder="COMP1234"
+                onChange={(e) => {
+                  setCompRegisterCode(e.target.value);
+                }}
+                className="dashboard--StyledInput-0" />
+            </div>
+
+            <div>
+              {errorMessage && (
+                <StyledErrorMessage
+                  style={{ marginTop: "10px" }}
+                  className="dashboard--StyledErrorMessage-0">
+                  {errorMessage}
+                </StyledErrorMessage>
+              )}
+            </div>
+          </ResponsiveActionButton>
+        </PageHeader>
+        {/* Active Filters Display */}
+        <div>
+          {Object.entries(filters).map(([field, values]) =>
+            values.map((value) => (
+              <StyledFilterTagButton
+                key={`${field}-${value}`}
+                className="dashboard--StyledFilterTagButton-0">
+                {value}
+                <StyledRemoveFilterIcon
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFilter(field, value);
                   }}
-                />
-              </div>
-
-              <div>
-                {errorMessage && (
-                  <StyledErrorMessage style={{ marginTop: "10px" }}>
-                    {errorMessage}
-                  </StyledErrorMessage>
-                )}
-              </div>
-            </ResponsiveActionButton>
-          </PageHeader>
-
-          <div>
-            {Object.entries(filters).map(([field, values]) =>
-              values.map((value) => (
-                <StyledFilterTagButton key={`${field}-${value}`}>
-                  {value}
-                  <StyledRemoveFilterIcon
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeFilter(field, value);
-                    }}
-                  />
-                </StyledFilterTagButton>
-              ))
-            )}
-          </div>
-
-          <StyledContentArea>
-            <StyledCompetitionGrid>
-              {sortedCompetitions.map((comp, index) => (
-                <CompCard
-                  key={index}
-                  compName={comp.compName}
-                  location={comp.location}
-                  compDate={comp.compDate}
-                  roles={comp.roles}
-                  compId={comp.compId}
-                  compCreationDate={comp.compCreatedDate}
-                />
-              ))}
-            </StyledCompetitionGrid>
-
-            {isRegoSucessPopUpOpen && (
-              <RegisterPopUp
-                isOpen={isRegoSucessPopUpOpen}
-                onClose={() => setRegoSuccessPopUp(false)}
-                isRego={true}
+                  className="dashboard--StyledRemoveFilterIcon-0" />
+              </StyledFilterTagButton>
+            ))
+          )}
+        </div>
+        <StyledContentArea className="dashboard--StyledContentArea-0">
+          <StyledCompetitionGrid className="dashboard--StyledCompetitionGrid-0">
+            {sortedCompetitions.map((comp, index) => (
+              <CompCard
+                key={index}
+                compName={comp.compName}
+                location={comp.location}
+                compDate={comp.compDate}
+                roles={comp.roles}
+                compId={comp.compId}
+                compCreationDate={comp.compCreatedDate}
               />
-            )}
-
-            {isJoinPopUpOpen && (
-              <RegisterPopUp
-                isOpen={isJoinPopUpOpen}
-                onClose={() => setIsJoinPopUpOpen(false)}
-                teamName={location.state ? location.state.teamName : teamName}
-                isTeamJoin={true}
-              />
-            )}
-
-            {isStaffRegoPopUpOpen && (
-              <RegisterPopUp
-                isOpen={isStaffRegoPopUpOpen}
-                onClose={() => setStaffRegoPopUpOpen(false)}
-                isStaffRego={true}
-              />
-            )}
-          </StyledContentArea>
-        </StyledDashboardContent>
-      </StyledOverflowFlexBackground>
-    )
+            ))}
+          </StyledCompetitionGrid>
+          {isRegoSucessPopUpOpen && (
+            <RegisterPopUp 
+              isOpen={isRegoSucessPopUpOpen}
+              onClose={() => setRegoSuccessPopUp(false)}
+              isRego={true}
+            />
+          )}
+          {isJoinPopUpOpen && (
+            <RegisterPopUp
+              isOpen={isJoinPopUpOpen}
+              onClose={() => setIsJoinPopUpOpen(false)}
+              teamName={location.state ? location.state.teamName : teamName}
+              isTeamJoin={true}
+            />
+          )}
+          {isStaffRegoPopUpOpen && (
+            <RegisterPopUp
+              isOpen={isStaffRegoPopUpOpen}
+              onClose={() => setStaffRegoPopUpOpen(false)}
+              isStaffRego={true}
+            />
+          )}
+        </StyledContentArea>
+      </StyledDashboardContent>
+    </StyledOverflowFlexBackground>
   );
 };

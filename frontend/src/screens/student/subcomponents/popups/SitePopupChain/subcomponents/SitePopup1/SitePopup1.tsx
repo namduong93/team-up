@@ -41,29 +41,27 @@ export const SitePopup1: React.FC<FirstStepPopUpProps> = ({
     return inputOption.value === "";
   };
 
-  return (
-    <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
-          <FaTimes />
-        </StyledCloseButton>
-        <div>{heading}</div>
-        <span style={{ marginBottom: "20px" }}>
-          Your Coach will review <br /> your change, where you will
-          <br />
-          receive a notification <br /> with the results of the review
-        </span>
-        <AdvancedDropdown
-          setCurrentSelected={setInputOption}
-          optionsState={[siteOptions, setSiteOptions]}
-          style={{ width: "100%" }}
-          isExtendable={false}
-        />
-
-        <StyledButton disabled={isButtonDisabled()} onClick={onNext}>
-          Request
-        </StyledButton>
-      </StyledModal>
-    </>
-  );
+  return <>
+    <StyledModal className="--StyledModal-0">
+      <StyledCloseButton onClick={onClose} className="--StyledCloseButton-0">
+        <FaTimes />
+      </StyledCloseButton>
+      <div>{heading}</div>
+      <span style={{ marginBottom: "20px" }}>
+        Your Coach will review <br /> your change, where you will
+        <br />
+        receive a notification <br /> with the results of the review
+      </span>
+      <AdvancedDropdown
+        setCurrentSelected={setInputOption}
+        optionsState={[siteOptions, setSiteOptions]}
+        style={{ width: "100%" }}
+        isExtendable={false}
+      />
+      <StyledButton
+        disabled={isButtonDisabled()}
+        onClick={onNext}
+        className="--StyledButton-0">Request</StyledButton>
+    </StyledModal>
+  </>;
 };

@@ -120,28 +120,28 @@ export const TeamDetails: FC = () => {
   };
 
   return (
-    <StyledDetailsContainer>
-      <StyledTeamDetailsContainer>
-        <StyledTeamInfo>
+    <StyledDetailsContainer className="team-details--StyledDetailsContainer-0">
+      <StyledTeamDetailsContainer className="team-details--StyledTeamDetailsContainer-0">
+        <StyledTeamInfo className="team-details--StyledTeamInfo-0">
           <div>
-            <StyledTeamLabel>Team Name:</StyledTeamLabel>
-            <StyledTeamField>{teamName}</StyledTeamField>
+            <StyledTeamLabel className="team-details--StyledTeamLabel-0">Team Name:</StyledTeamLabel>
+            <StyledTeamField className="team-details--StyledTeamField-0">{teamName}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Site Location:</StyledTeamLabel>
-            <StyledTeamField>{teamSite}</StyledTeamField>
+            <StyledTeamLabel className="team-details--StyledTeamLabel-1">Site Location:</StyledTeamLabel>
+            <StyledTeamField className="team-details--StyledTeamField-1">{teamSite}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Seat:</StyledTeamLabel>
-            <StyledTeamField>{teamSeat}</StyledTeamField>
+            <StyledTeamLabel className="team-details--StyledTeamLabel-2">Seat:</StyledTeamLabel>
+            <StyledTeamField className="team-details--StyledTeamField-2">{teamSeat}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Level:</StyledTeamLabel>
-            <StyledTeamField>{teamLevel}</StyledTeamField>
+            <StyledTeamLabel className="team-details--StyledTeamLabel-3">Level:</StyledTeamLabel>
+            <StyledTeamField className="team-details--StyledTeamField-3">{teamLevel}</StyledTeamField>
           </div>
         </StyledTeamInfo>
       </StyledTeamDetailsContainer>
-      <StyledStudentsContainer>
+      <StyledStudentsContainer className="team-details--StyledStudentsContainer-0">
         {students.map((student, index) => (
           <ProfileCard
             key={`student-${index}`}

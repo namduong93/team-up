@@ -166,9 +166,9 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
 
   return (
     <>
-      <StyledActionsContainer>
+      <StyledActionsContainer className="team-action-card--StyledActionsContainer-0">
         {actions.map((action, index) => (
-          <StyledActionCard
+          <StyledActionCard className="team-action-card--StyledActionCard-0"
             key={index}
             onClick={() =>
               !isDisabled(action.type) && setModalOpen(action.type)
@@ -176,56 +176,53 @@ export const TeamActionCard: React.FC<TeamActionCardProps> = ({
             $actionType={action.type}
             $disabled={isDisabled(action.type)}
           >
-            <StyledCardIcon
+            <StyledCardIcon className="team-action-card--StyledCardIcon-0"
               $disabled={isDisabled(action.type)}
               as={action.icon}
             />
-            <StyledCardText $disabled={isDisabled(action.type)}>
+            <StyledCardText className="team-action-card--StyledCardText-0" $disabled={isDisabled(action.type)}>
               {action.text}
             </StyledCardText>
           </StyledActionCard>
         ))}
       </StyledActionsContainer>
 
-      <StyledOverlay
-        $isOpen={modalOpen !== null}
-        onClick={() => setModalOpen(null)}
+    <StyledOverlay
+      $isOpen={modalOpen !== null}
+      onClick={() => setModalOpen(null)}
+      className="team-action-card--StyledOverlay-0" />
+
+    {modalOpen === "invite" && (
+      <InvitePopup
+        heading={
+          <StyledHeading className="team-action-card--StyledHeading-0">Copy and send your{"\nTeam Code to invite your"} {"\nmembers"}
+          </StyledHeading>
+        }
+        text={teamCode}
+        onClose={() => setModalOpen(null)}
       />
+    )}
 
-      {modalOpen === "invite" && (
-        <InvitePopup
-          heading={
-            <StyledHeading>
-              Copy and send your {"\nTeam Code to invite your"} {"\nmembers"}
-            </StyledHeading>
-          }
-          text={teamCode}
-          onClose={() => setModalOpen(null)}
-        />
-      )}
+    {modalOpen === "join" && (
+      <JoinPopup
+        heading={
+          <StyledHeading className="team-action-card--StyledHeading-1">Enter the details of the{"\nTeam you would like to join"}
+          </StyledHeading>
+        }
+        onClose={() => setModalOpen(null)}
+        currentTeamCode={teamCode}
+      />
+    )}
 
-      {modalOpen === "join" && (
-        <JoinPopup
-          heading={
-            <StyledHeading>
-              Enter the details of the {"\nTeam you would like to join"}
-            </StyledHeading>
-          }
-          onClose={() => setModalOpen(null)}
-          currentTeamCode={teamCode}
-        />
-      )}
+    {modalOpen === "site" && (
+      <SitePopupChain
+        siteOptionsState={[siteLocationOptions, setSiteLocationOptions]}
+        handleClose={() => setModalOpen(null)}
+      />
+    )}
 
-      {modalOpen === "site" && (
-        <SitePopupChain
-          siteOptionsState={[siteLocationOptions, setSiteLocationOptions]}
-          handleClose={() => setModalOpen(null)}
-        />
-      )}
-
-      {modalOpen === "name" && (
-        <NamePopupChain handleClose={() => setModalOpen(null)} />
-      )}
-    </>
-  );
+    {modalOpen === "name" && (
+      <NamePopupChain handleClose={() => setModalOpen(null)} />
+    )}
+  </>);
 };

@@ -83,13 +83,13 @@ export const CompCountdownBar: React.FC<ProgressBarProps> = ({
   progress,
 }) => {
   return (
-    <StyledContainer>
-      <StyledTitle>{daysRemaining} days to go!</StyledTitle>
-      <StyledProgressWrapper>
-        <StyledProgressBarContainer>
-          <StyledProgress $progress={progress} />
+    <StyledContainer className="comp-countdown-bar--StyledContainer-0">
+      <StyledTitle className="comp-countdown-bar--StyledTitle-0">{daysRemaining} days to go!</StyledTitle>
+      <StyledProgressWrapper className="comp-countdown-bar--StyledProgressWrapper-0">
+        <StyledProgressBarContainer className="comp-countdown-bar--StyledProgressBarContainer-0">
+          <StyledProgress $progress={progress} className="comp-countdown-bar--StyledProgress-0" />
         </StyledProgressBarContainer>
-        <StyledMedalIcon />
+        <StyledMedalIcon className="comp-countdown-bar--StyledMedalIcon-0" />
       </StyledProgressWrapper>
     </StyledContainer>
   );

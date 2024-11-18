@@ -76,26 +76,25 @@ export const ManagePage: FC = () => {
   const [staffInfo, setStaffInfo] = useState<StaffInfo>();
   const [announcementMessage, setAnnouncementMessage] = useState("");
 
-  const [staffRoles, setRoles] = useState<Array<CompetitionRole>>([]);
+  // const [staffRoles, setRoles] = useState<Array<CompetitionRole>>([]);
 
-  // Fetch the user type and set the state accordingly
-  useEffect(() => {
-    const fetchRoles = async () => {
-      const roleResponse = await sendRequest.get<{
-        roles: Array<CompetitionRole>;
-      }>("/competition/roles", { compId });
-      const { roles } = roleResponse.data;
-      setRoles(roles);
-    };
-    fetchRoles();
-  }, []);
 
-  const {
-    universityOptionState: [universityOption, ],
-    siteOptionState: [siteOption, setSiteOption],
-    teamListState: [teamList, setTeamList],
-    siteOptionsState: [siteOptions, ],
-    compDetails,
+  // // Fetch the user type and set the state accordingly
+  // useEffect(() => {
+  //   const fetchRoles = async () => {
+  //     const roleResponse = await sendRequest.get<{ roles: Array<CompetitionRole> }>('/competition/roles', { compId });
+  //     const { roles } = roleResponse.data;
+  //     setRoles(roles);
+  //   }
+  //   fetchRoles();
+  // }, [])
+
+  const { 
+    universityOptionState: [universityOption, setUniversityOption],
+    siteOptionState: [siteOption, setSiteOption], teamListState: [teamList, setTeamList],
+    siteOptionsState: [siteOptions, setSiteOptions],
+    roles: staffRoles,
+    compDetails
   } = useCompetitionOutletContext(
     "manage",
     showManageSite,
@@ -432,13 +431,14 @@ export const ManagePage: FC = () => {
   };
 
   return (
-    <StyledManageContainer>
-      <StyledStandardContainerDiv>
+    <StyledManageContainer className="manage-page--StyledManageContainer-0">
+      <StyledStandardContainerDiv className="manage-page--StyledStandardContainerDiv-0">
         {showManageSite ? (
-          <StyledAssignSeatsPage>
-            <StyledBackButton onClick={() => setShowManageSite(false)}>
-              <FaChevronLeft /> Back
-            </StyledBackButton>
+          <StyledAssignSeatsPage className="manage-page--StyledAssignSeatsPage-0">
+            <StyledBackButton
+              onClick={() => setShowManageSite(false)}
+              className="manage-page--StyledBackButton-0">
+              <FaChevronLeft />Back</StyledBackButton>
             <AssignSeats
               siteName={
                 siteOption.value ? siteOption.label : teamList[0].teamSite
@@ -454,7 +454,7 @@ export const ManagePage: FC = () => {
           </StyledAssignSeatsPage>
         ) : (
           <>
-            <StyledActionsContainer>
+            <StyledActionsContainer className="manage-page--StyledActionsContainer-0">
               {filteredActions.map((action, index) => (
                 <StyledActionCard
                   key={index}
@@ -464,19 +464,19 @@ export const ManagePage: FC = () => {
                       : handleActionClick(action.type)
                   }
                   $actionType={action.type}
-                >
+                  className="manage-page--StyledActionCard-0">
                   {action.type === "code" ? (
-                    <StyledCopyCard>
-                      <StyledCardIcon as={action.icon} />
-                      <StyledCodeCardText>{action.text}</StyledCodeCardText>
-                      <StyledCode>
+                    <StyledCopyCard className="manage-page--StyledCopyCard-0">
+                      <StyledCardIcon as={action.icon} className="manage-page--StyledCardIcon-0" />
+                      <StyledCodeCardText className="manage-page--StyledCodeCardText-0">{action.text}</StyledCodeCardText>
+                      <StyledCode className="manage-page--StyledCode-0">
                         <p>{compCode}</p>
                       </StyledCode>
                     </StyledCopyCard>
                   ) : (
                     <>
-                      <StyledCardIcon as={action.icon} />
-                      <StyledCardText>{action.text}</StyledCardText>
+                      <StyledCardIcon as={action.icon} className="manage-page--StyledCardIcon-1" />
+                      <StyledCardText className="manage-page--StyledCardText-0">{action.text}</StyledCardText>
                     </>
                   )}
                 </StyledActionCard>
@@ -499,10 +499,8 @@ export const ManagePage: FC = () => {
             {showEditRego && (
               <EditCompRegoPopUp
                 heading={
-                  <StyledTitle2>
-                    Please select the fields you would like to {"\n"} to remove
-                    from the Competition Registration Form
-                  </StyledTitle2>
+                  <StyledTitle2 className="manage-page--StyledTitle2-0">Please select the fields you would like to{"\n"}to remove
+                                        from the Competition Registration Form</StyledTitle2>
                 }
                 onClose={() => setShowEditRego(false)}
                 regoFields={regoFields}

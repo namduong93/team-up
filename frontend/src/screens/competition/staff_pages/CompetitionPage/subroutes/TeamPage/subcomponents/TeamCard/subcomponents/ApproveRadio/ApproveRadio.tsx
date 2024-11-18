@@ -21,8 +21,11 @@ export const ApproveRadio: FC<React.HTMLAttributes<HTMLDivElement>> = ({
     onClick(e);
   };
   return (
-    <StyledApproveDiv onClick={handleClick} {...props}>
-      <StyledRadioCircleDiv $selected={selected} />
+    <StyledApproveDiv
+      onClick={handleClick}
+      {...props}
+      className="approve-radio--StyledApproveDiv-0">
+      <StyledRadioCircleDiv $selected={selected} className="approve-radio--StyledRadioCircleDiv-0" />
       {children}
     </StyledApproveDiv>
   );

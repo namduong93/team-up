@@ -74,12 +74,12 @@ const TextInput: React.FC<TextInputProps> = ({
   descriptor,
 }) => {
   return (
-    <StyledContainer $width={width}>
-      <StyledLabel>
+    <StyledContainer $width={width} className="text-input--StyledContainer-0">
+      <StyledLabel className="text-input--StyledLabel-0">
         {label}
-        {required && <StyledAsterisk>*</StyledAsterisk>}
+        {required && <StyledAsterisk className="text-input--StyledAsterisk-0">*</StyledAsterisk>}
       </StyledLabel>
-      {descriptor && <StyledDescriptor>{descriptor}</StyledDescriptor>}
+      {descriptor && <StyledDescriptor className="text-input--StyledDescriptor-0">{descriptor}</StyledDescriptor>}
       <StyledInput
         type={type}
         placeholder={placeholder}
@@ -87,7 +87,7 @@ const TextInput: React.FC<TextInputProps> = ({
         onChange={onChange}
         required={required}
         maxLength={maxLength}
-      />
+        className="text-input--StyledInput-0" />
     </StyledContainer>
   );
 };

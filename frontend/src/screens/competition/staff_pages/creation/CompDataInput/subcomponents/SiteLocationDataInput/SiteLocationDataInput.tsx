@@ -75,18 +75,17 @@ const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({
   }, []);
 
   return (
-    <StyledContainer>
-      <StyledTitle>Site Locations</StyledTitle>
-      <StyledDoubleInputContainer>
-        <div style={{ display: "flex", flexDirection: "column", width: "45%" }}>
-          <StyledLabel>Institution</StyledLabel>
+    <StyledContainer className="site-location-data-input--StyledContainer-0">
+      <StyledTitle className="site-location-data-input--StyledTitle-0">Site Locations</StyledTitle>
+      <StyledDoubleInputContainer className="site-location-data-input--StyledDoubleInputContainer-0">
+        <div style={{ display: 'flex', flexDirection: 'column', width: '45%' }}>
+          <StyledLabel className="site-location-data-input--StyledLabel-0">Institution</StyledLabel>
           <AdvancedDropdown
             setCurrentSelected={setCurrentOption}
             optionsState={[institutionOptions, setInstitutionOptions]}
             style={{ width: "100%" }}
           />
         </div>
-
         <TextInputLight
           label="Default Site Location"
           placeholder="Please type"
@@ -97,9 +96,10 @@ const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({
           width="45%"
         />
       </StyledDoubleInputContainer>
-
-      <StyledAddButtonContainer>
-        <StyledAddButton onClick={handleAddLocation}>+</StyledAddButton>
+      <StyledAddButtonContainer className="site-location-data-input--StyledAddButtonContainer-0">
+        <StyledAddButton
+          onClick={handleAddLocation}
+          className="site-location-data-input--StyledAddButton-0">+</StyledAddButton>
       </StyledAddButtonContainer>
     </StyledContainer>
   );

@@ -11,9 +11,7 @@ import {
   StyledTimeoutConfirmButton,
 } from "./ActionButton";
 
-export const StyledResponsiveActionDiv = styled.div<{
-  $actionType: "primary" | "secondary" | "error" | "confirm";
-}>`
+export const StyledResponsiveActionDiv = styled.div<{ $actionType: "primary" | "secondary" | "error" | "confirm"; }>`
   border-radius: 10px;
   box-sizing: border-box;
   height: 35px;
@@ -118,7 +116,7 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
 
   return (
     <>
-      <StyledResponsiveActionDiv $actionType={actionType} style={style}>
+      <StyledResponsiveActionDiv className="responsive-action-button--StyledResponsiveActionDiv-0" $actionType={actionType} style={style}>
         <TransparentResponsiveButton
           actionType={actionType}
           onClick={handleButtonClick}
@@ -129,9 +127,9 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
         />
       </StyledResponsiveActionDiv>
       {isOpen && (
-        <StyledPopUpOverlay onClick={handleClosePopup}>
-          <StyledPopUpContent onClick={(e) => e.stopPropagation()}>
-            <StyledQuestion>{question}</StyledQuestion>
+        <StyledPopUpOverlay className="responsive-action-button--StyledPopUpOverlay-0" onClick={handleClosePopup}>
+          <StyledPopUpContent className="responsive-action-button--StyledPopUpContent-0" onClick={(e) => e.stopPropagation()}>
+            <StyledQuestion className="responsive-action-button--StyledQuestion-0">{question}</StyledQuestion>
             <div
               style={{
                 width: "100%",
@@ -142,14 +140,14 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
               {children}
             </div>
             {!timeout ? (
-              <StyledConfirmButton
+              <StyledConfirmButton className="responsive-action-button--StyledConfirmButton-0"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={handleConfirm}
               >
                 Confirm
               </StyledConfirmButton>
             ) : (
-              <StyledTimeoutConfirmButton
+              <StyledTimeoutConfirmButton className="responsive-action-button--StyledTimeoutConfirmButton-0"
                 onMouseDown={(e) => e.preventDefault()}
                 bgColor={theme.colours.confirm}
                 seconds={timeout}
@@ -158,7 +156,7 @@ export const ResponsiveActionButton: FC<ResponsiveActionButtonProps> = ({
                 Confirm
               </StyledTimeoutConfirmButton>
             )}
-            <StyledCancelButton
+            <StyledCancelButton className="responsive-action-button--StyledCancelButton-0"
               onMouseDown={(e) => e.preventDefault()}
               onClick={handleClosePopup}
             >

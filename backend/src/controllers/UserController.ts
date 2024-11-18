@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
-import { UserService } from "../services/UserService.js";
-import { httpErrorHandler } from "./controller_util/httpErrorHandler.js";
-import { Student } from "../models/user/student/student.js";
-import { Staff } from "../models/user/staff/staff.js";
-import { defaultCookieOptions } from "./controller_util/defaultCookieOptions.js";
-import { UserProfileInfo } from "../models/user/user_profile_info.js";
+import { NextFunction, Request, Response } from 'express';
+import { UserService } from '../services/UserService.js';
+import { httpErrorHandler } from './controller_util/httpErrorHandler.js';
+import { Student } from '../models/user/student/student.js';
+import { Staff } from '../models/user/staff/staff.js';
+import { defaultCookieOptions } from './controller_util/defaultCookieOptions.js';
+import { UserProfileInfo } from '../models/user/user_profile_info.js';
 
 export class UserController {
   private userService: UserService;
@@ -162,7 +162,7 @@ export class UserController {
     const staffList = await this.userService.staffRequests(Number(userId));
     res.json({staffRequests: staffList});
     return;
-  })
+  });
 
   /**
    * Handles the request to update staff members details.
