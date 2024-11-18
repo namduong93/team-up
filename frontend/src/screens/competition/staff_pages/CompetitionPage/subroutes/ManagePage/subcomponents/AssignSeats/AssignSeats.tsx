@@ -374,7 +374,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({ siteName, siteCapacity, team
     <StyledManageContainer className="assign-seats--StyledManageContainer-0">
       <StyledHeader className="assign-seats--StyledHeader-0">
         <div>
-          <StyledTitle className="assign-seats--StyledTitle-0">Manage Seats for{siteOption.label}</StyledTitle>
+          <StyledTitle className="assign-seats--StyledTitle-0">Manage Seats for {siteOption.label}</StyledTitle>
           {enoughSeats && 
             <StyledAlert className="assign-seats--StyledAlert-0">Warning! You do not have enough seats for your teams!</StyledAlert>
           }

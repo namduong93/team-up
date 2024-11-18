@@ -108,7 +108,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
     {
       type: "contact" as ActionType,
       icon: FaChair,
-      text: "Update Your Bio and Annoucements",
+      text: "Update Your Bio and Announcements",
       roles: [CompetitionRole.Admin, CompetitionRole.Coach],
     },
     {

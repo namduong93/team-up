@@ -116,8 +116,9 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
         ...style
       }}
       $isSortOpen={isOpen}
+      className="responsive-button--StyledTransparentButton-0"
       {...props}
-      className="responsive-button--StyledTransparentButton-0">
+      >
       <div style={{ display: 'flex',
         alignContent: 'start', flexWrap: 'wrap', height: '50%', width: '100%',
         justifyContent: 'center' }}>

@@ -9,10 +9,13 @@ import { CompetitionInformation } from '../../shared_types/Competition/Competiti
 import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo';
 import { CompetitionLevel } from '../../shared_types/Competition/CompetitionLevel';
 import { AttendeesDetails } from '../../shared_types/Competition/staff/AttendeesDetails';
-import { CompetitionSite } from '../../shared_types/Competition/CompetitionSite';
+import { CompetitionSite, CompetitionSiteCapacity } from '../../shared_types/Competition/CompetitionSite';
 import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails';
 import { TeamStatus } from '../../shared_types/Competition/team/TeamStatus';
 import { testStudent } from './testStudent';
+import { Announcement } from '../../shared_types/Competition/staff/Announcement';
+import { testCompDetails } from './testCompDetails';
+import { EditRego } from '../../shared_types/Competition/staff/Edit';
 
 export const handlers = [
 
@@ -321,5 +324,68 @@ export const handlers = [
 
   http.post(`${backendURL.HOST}:${backendURL.PORT}/competition/student/withdraw`, async () => {
     return HttpResponse.text('code1234', { status: 200 });
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/site/capacity`, async () => {
+    return HttpResponse.json<{ site: CompetitionSiteCapacity[] }>({
+      site: [
+        {
+          id: 1,
+          capacity: 100
+        }
+      ]}
+    )
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/staff/details`, async () => {
+    return HttpResponse.json<{ staffDetails: StaffInfo }>({
+      staffDetails: {
+        userId: 1,
+        universityId: 1,
+        universityName: 'test uni',
+        name: 'test name',
+        email: 'test@example.com',
+        sex: 'Male',
+        pronouns: 'He/Him',
+        tshirtSize: 'MXL',
+        allergies: '',
+        dietaryReqs: '',
+        accessibilityReqs: '',
+        userAccess: UserAccess.Accepted,
+
+        bio: 'test bio',
+        roles: [CompetitionRole.Coach],
+        access: StaffAccess.Accepted,
+      }
+    })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/announcement`, async () => {
+    return HttpResponse.json<{ announcement: Announcement }>({
+      announcement: {
+        competitionId: 1,
+        userId: 1,
+        message: 'test announcement',
+        createdAt: Date.now(),
+        universityId: 1,
+      }
+    })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/information`, async () => {
+    return HttpResponse.json<{ compInfo: CompetitionInformation }>({
+      compInfo: testCompDetails
+    })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/staff/rego_toggles`, async () => {
+    return HttpResponse.json<{ regoFields: EditRego }>({
+      regoFields: {
+        enableCodeforcesField: true,
+        enableInternationalPrizesField: true,
+        enableNationalPrizesField: true,
+        enableRegionalParticipationField: true
+      }
+    })
   })
 ]

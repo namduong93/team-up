@@ -1,8 +1,9 @@
 import { CompetitionLevel } from "../../shared_types/Competition/CompetitionLevel";
+import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails";
 import { TeamStatus } from "../../shared_types/Competition/team/TeamStatus";
 import { CourseCategory } from "../../shared_types/University/Course";
 
-export const testTeam = {
+export const testTeam: TeamDetails = {
   teamId: 1,
   universityId: 1,
   status: TeamStatus.Pending,
