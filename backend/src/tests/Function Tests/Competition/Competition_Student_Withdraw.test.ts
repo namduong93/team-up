@@ -1,3 +1,4 @@
+import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
 import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
 import { University } from '../../../models/university/university';
@@ -11,15 +12,22 @@ import { UserIdObject } from '../../../repository/UserRepository';
 import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Student Withdraw Function', () => {
-  let user_db;
-  let comp_db;
-  let comp_staff_db;
-  let comp_student_db;
+  let user_db: SqlDbUserRepository;
+  let comp_db: SqlDbCompetitionRepository;
+  let comp_staff_db: SqlDbCompetitionStaffRepository;
+  let comp_student_db: SqlDbCompetitionStudentRepository;
 
   let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
+
+  const userSiteLocation: SiteLocation = {
+    universityId: 1,
+    universityName: 'University of Melbourne',
+    siteId: 1,
+    defaultSite: 'TestRoom',
+  };
 
   const mockCompetition = {
     name: 'TestComp',
@@ -28,11 +36,7 @@ describe('Student Withdraw Function', () => {
     earlyRegDeadline: earlyDate,
     startDate: startDate,
     generalRegDeadline: generalDate,
-    siteLocations: [{
-      universityId: 1,
-      name: 'TestRoom',
-      capacity: 2000
-    }],
+    siteLocations: [userSiteLocation],
     code: 'TC12',
     region: 'Australia'
   };
@@ -51,6 +55,7 @@ describe('Student Withdraw Function', () => {
   let id: number;
   let comp: CompetitionIdObject;
   let newStudent: UserIdObject;
+  let newStudent2: UserIdObject;
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
@@ -97,7 +102,20 @@ describe('Student Withdraw Function', () => {
       studentId: 'z5381412'
     };
 
+    const mockStudent2: Student = {
+      name: 'Maximillian Maverick',
+      preferredName: 'X',
+      email: 'newteammat3231@gmail.com',
+      password: 'testPassword',
+      gender: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'L',
+      universityId: 1,
+      studentId: 'z5381412'
+    };
+
     newStudent = await user_db.studentRegister(mockStudent);
+    newStudent2 = await user_db.studentRegister(mockStudent2);
 
     const newContender: CompetitionUser = {
       userId: newStudent.userId,
@@ -121,11 +139,40 @@ describe('Student Withdraw Function', () => {
       competitionBio: 'I good, promise',
       preferredContact: 'Pigeon Carrier',
     };
+
+    const newContender2: CompetitionUser = {
+      userId: newStudent2.userId,
+      competitionId: comp.competitionId,
+      competitionRoles: [CompetitionUserRole.PARTICIPANT],
+      ICPCEligible: true,
+      competitionLevel: 'No Preference',
+      siteLocation: {
+        id: 1,
+        name: 'TestRoom',
+      },
+      boersenEligible: true,
+      degreeYear: 3,
+      degree: 'ComSci',
+      isRemote: true,
+      nationalPrizes: 'none',
+      internationalPrizes: 'none',
+      codeforcesRating: 7,
+      universityCourses: ['4511', '9911', '911'],
+      pastRegional: true,
+      competitionBio: 'I good, promise',
+      preferredContact: 'Pigeon Carrier',
+    };
+
     const studentUni: University = {
       id: 1,
       name: 'University of Melbourne'
     };
+
     await comp_student_db.competitionStudentJoin(newContender, studentUni);
+    await comp_student_db.competitionStudentJoin(newContender2, studentUni);
+
+    const teamCode = await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId);
+    await comp_student_db.competitionTeamJoin(newStudent2.userId, comp.competitionId, teamCode, studentUni);
   });
 
   afterAll(async () => {
@@ -141,14 +188,23 @@ describe('Student Withdraw Function', () => {
   });
 
   test('Sucess case: returns the users team details', async () => {
-    const teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
     const teamCode = await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId);
 
+    // Leave the team
     expect(await comp_student_db.competitionStudentWithdraw(newStudent.userId, comp.competitionId)).toStrictEqual({
       competitionCode: teamCode,
       competitionName: 'TestComp',
       teamId: expect.any(Number),
-      teamName: teamInfo.teamName
+      teamName: expect.any(String),
+    });
+
+    // Leave the competition
+    const teamCodeNew = await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId);
+    expect(await comp_student_db.competitionStudentWithdraw(newStudent.userId, comp.competitionId)).toStrictEqual({
+      competitionCode: teamCodeNew,
+      competitionName: 'TestComp',
+      teamId: expect.any(Number),
+      teamName: expect.any(String),
     });
   });
 });
