@@ -1,9 +1,6 @@
-import { Student } from '../../../models/user/student/student';
-import { SessionTokenObject } from '../../../repository/SessionRepository';
 import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
 import { SqlDbSessionRepository } from '../../../repository/session/SqlDbSessionRepository';
-import pool, { getUserIdFromSessionId } from '../test_util/test_utilities';
-import { all } from 'axios';
+import pool from '../test_util/test_utilities';
 import { UserService } from '../../../services/UserService';
 
 describe('GET /user/profile_info', () => {

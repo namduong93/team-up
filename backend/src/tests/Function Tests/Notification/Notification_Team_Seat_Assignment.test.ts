@@ -1,19 +1,19 @@
-import { SiteLocation } from "../../../../shared_types/Competition/CompetitionDetails";
-import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
-import { StaffAccess, StaffInfo } from "../../../../shared_types/Competition/staff/StaffInfo";
-import { UserAccess } from "../../../../shared_types/User/User";
-import { Competition } from "../../../models/competition/competition";
-import { CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
-import { University } from "../../../models/university/university";
-import { Staff } from "../../../models/user/staff/staff";
-import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
-import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
-import { SqlDbNotificationRepository } from "../../../repository/notification/SqlDbNotificationRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils"
+import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
+import { CompetitionRole } from '../../../../shared_types/Competition/CompetitionRole';
+import { StaffAccess, StaffInfo } from '../../../../shared_types/Competition/staff/StaffInfo';
+import { UserAccess } from '../../../../shared_types/User/User';
+import { Competition } from '../../../models/competition/competition';
+import { CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
+import { University } from '../../../models/university/university';
+import { Staff } from '../../../models/user/staff/staff';
+import { Student } from '../../../models/user/student/student';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
+import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SqlDbNotificationRepository } from '../../../repository/notification/SqlDbNotificationRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Notification Team Seat Assignment Function', () => {
   let user_db: SqlDbUserRepository;
@@ -22,7 +22,7 @@ describe('Notification Team Seat Assignment Function', () => {
   let comp_staff_db: SqlDbCompetitionStaffRepository;
   let comp_student_db: SqlDbCompetitionStudentRepository;
   
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -36,14 +36,14 @@ describe('Notification Team Seat Assignment Function', () => {
   const studentUni1: University = {
     id: 1,
     name: 'University of Melbourne'
-  }
+  };
 
   const userSiteLocation1: SiteLocation = {
     universityId: 1,
     universityName: 'University of Melbourne',
     siteId: 1,
     defaultSite: 'Any',
-  }
+  };
 
   const mockCompetition: Competition = {
     name: 'TestComp69',
@@ -55,7 +55,7 @@ describe('Notification Team Seat Assignment Function', () => {
     siteLocations: [userSiteLocation1],
     code: 'NOTIF7',
     region: 'Australia'
-  }
+  };
 
   const staff: Staff = {
     name: 'Very Example Staff',
@@ -107,7 +107,7 @@ describe('Notification Team Seat Assignment Function', () => {
       bio: 'good bio, trust',
       roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
       access: StaffAccess.Accepted
-    }
+    };
     await comp_staff_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId);
 
     teamMate1 = await user_db.studentRegister(member1);
@@ -133,7 +133,7 @@ describe('Notification Team Seat Assignment Function', () => {
       pastRegional: true,
       competitionBio: 'I good, promise',
       preferredContact: 'Pigeon Carrier',
-    }
+    };
 
     await comp_student_db.competitionStudentJoin(participant1, studentUni1);
 
@@ -155,7 +155,7 @@ describe('Notification Team Seat Assignment Function', () => {
       teamId: teamId.toString(),
       teamName: 'Should be a Pokemon',
       teamLevel: 'Level A'
-    }]
+    }];
 
     await notif_db.notificationTeamSeatAssignments(compId, teamSeat);
     const notifications1 = await notif_db.userNotificationsList(teamMate1.userId);
@@ -167,5 +167,5 @@ describe('Notification Team Seat Assignment Function', () => {
         }),
       ])
     );
-  })
-})
+  });
+});

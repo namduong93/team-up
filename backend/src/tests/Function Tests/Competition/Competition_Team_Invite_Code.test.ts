@@ -1,21 +1,21 @@
-import { SiteLocation } from "../../../../shared_types/Competition/CompetitionDetails";
-import { CompetitionRole } from "../../../../shared_types/Competition/CompetitionRole";
-import { EditCourse } from "../../../../shared_types/Competition/staff/Edit";
-import { StaffAccess, StaffInfo } from "../../../../shared_types/Competition/staff/StaffInfo";
-import { CourseCategory } from "../../../../shared_types/University/Course";
-import { UserAccess } from "../../../../shared_types/User/User";
-import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
-import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
-import { University } from "../../../models/university/university";
-import { Staff } from "../../../models/user/staff/staff";
-import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
-import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
-import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
+import { CompetitionRole } from '../../../../shared_types/Competition/CompetitionRole';
+import { EditCourse } from '../../../../shared_types/Competition/staff/Edit';
+import { StaffAccess, StaffInfo } from '../../../../shared_types/Competition/staff/StaffInfo';
+import { CourseCategory } from '../../../../shared_types/University/Course';
+import { UserAccess } from '../../../../shared_types/User/User';
+import { CompetitionIdObject } from '../../../models/competition/competition';
+import { CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
+import { University } from '../../../models/university/university';
+import { Staff } from '../../../models/user/staff/staff';
+import { Student } from '../../../models/user/student/student';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
+import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SqlDbUniversityRepository } from '../../../repository/university/SqlDbUniversityRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Team Invite Code Test', () => {
   let user_db;
@@ -24,7 +24,7 @@ describe('Team Invite Code Test', () => {
   let comp_staff_db;
   let comp_student_db;
 
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -34,7 +34,7 @@ describe('Team Invite Code Test', () => {
     universityName: 'University of Melbourne',
     siteId: 1,
     defaultSite: 'TestRoom',
-  }
+  };
 
   const mockCompetition = {
     name: 'TestComp',
@@ -46,7 +46,7 @@ describe('Team Invite Code Test', () => {
     siteLocations: [userSiteLocation],
     code: 'NEW15',
     region: 'Australia'
-  }
+  };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
@@ -90,8 +90,8 @@ describe('Team Invite Code Test', () => {
       bio: 'good bio, trust',
       roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
       access: StaffAccess.Accepted
-    }
-    await comp_staff_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId)
+    };
+    await comp_staff_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId);
 
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
@@ -128,20 +128,20 @@ describe('Team Invite Code Test', () => {
       pastRegional: true,
       competitionBio: 'I good, promise',
       preferredContact: 'Pigeon Carrier',
-    }
+    };
     const studentUni: University = {
       id: 1,
       name: 'University of Melbourne'
-    }
-    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    };
+    await comp_student_db.competitionStudentJoin(newContender, studentUni);
     teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
     const newCourses: EditCourse = {
       [CourseCategory.Introduction]: 'COMP1234',
       [CourseCategory.DataStructures]: 'COMP9999',
       [CourseCategory.AlgorithmDesign]: 'COMP7894',
       [CourseCategory.ProgrammingChallenges]: 'COMP9480',
-    }
-    await comp_staff_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1)
+    };
+    await comp_staff_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1);
   });
 
 
@@ -150,10 +150,10 @@ describe('Team Invite Code Test', () => {
   });
 
   test('Failure case: User is not a participant in any team in this competition.', async () => {
-    await expect(comp_student_db.competitionTeamInviteCode(newStudent.userId + 10, comp.competitionId)).rejects.toThrow("User is not a participant in any team in this competition.")
-  })
+    await expect(comp_student_db.competitionTeamInviteCode(newStudent.userId + 10, comp.competitionId)).rejects.toThrow('User is not a participant in any team in this competition.');
+  });
 
   test('Success case: returns an encrypted code', async () => {
-    expect(await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId)).toStrictEqual(expect.any(String))
-  })
-})
+    expect(await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId)).toStrictEqual(expect.any(String));
+  });
+});

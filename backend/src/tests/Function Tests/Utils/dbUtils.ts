@@ -17,7 +17,7 @@ const pool = new Pool({
 
 // deletes test database 
 export const dropTestDatabase = async (pool: Pool) => {
-  await pool.end()
+  await pool.end();
 };
 
 export default pool;

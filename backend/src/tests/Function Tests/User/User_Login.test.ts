@@ -1,6 +1,6 @@
-import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { Student } from '../../../models/user/student/student';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 
 describe('User Login Function', () => {
@@ -30,13 +30,13 @@ describe('User Login Function', () => {
   });
 
   test('Failed case: Wrong Username', async () => {
-    await expect(user_db.userLogin("whatdafuq@gmail.com", "ezpass")).rejects.toThrow("User with email does not exist")
-  })
+    await expect(user_db.userLogin('whatdafuq@gmail.com', 'ezpass')).rejects.toThrow('User with email does not exist');
+  });
   test('Failed case: Wrong Password', async () => {
-    await expect(user_db.userLogin("OwOwhudis@OwO.com", "passwordfail")).rejects.toThrow("Incorrect password")
-  })
+    await expect(user_db.userLogin('OwOwhudis@OwO.com', 'passwordfail')).rejects.toThrow('Incorrect password');
+  });
   test('Sucess case: returns a number', async () => {
-    const result = await user_db.userLogin("OwOwhudis@OwO.com", "ezpass");
+    const result = await user_db.userLogin('OwOwhudis@OwO.com', 'ezpass');
     expect(result).toEqual({ userId: user.userId });
-  })
-})
+  });
+});

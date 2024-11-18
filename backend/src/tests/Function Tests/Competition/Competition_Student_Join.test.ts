@@ -1,14 +1,14 @@
-import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
-import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
-import { University } from "../../../models/university/university";
-import { Staff } from "../../../models/user/staff/staff";
-import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
-import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
+import { University } from '../../../models/university/university';
+import { Staff } from '../../../models/user/staff/staff';
+import { Student } from '../../../models/user/student/student';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
+import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Student Join Competition Function', () => {
   let user_db;
@@ -16,7 +16,7 @@ describe('Student Join Competition Function', () => {
   let comp_staff_db;
   let comp_student_db;
 
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -35,7 +35,7 @@ describe('Student Join Competition Function', () => {
     }],
     code: 'TC8',
     region: 'Australia'
-  }
+  };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
@@ -55,7 +55,7 @@ describe('Student Join Competition Function', () => {
     comp_db = new SqlDbCompetitionRepository(pool);
     comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
     comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
-    user_db = new SqlDbUserRepository(pool)
+    user_db = new SqlDbUserRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
     comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
@@ -63,7 +63,7 @@ describe('Student Join Competition Function', () => {
     const userSiteLocation: CompetitionSiteObject = {
       id: 1,
       name: 'the place in the ring',
-    }
+    };
     const newCoach: CompetitionStaff = {
       userId: id,
       competitionRoles: [CompetitionUserRole.COACH],
@@ -74,13 +74,13 @@ describe('Student Join Competition Function', () => {
       },
       competitionBio: 'i good, trust',
       siteLocation: userSiteLocation
-    }
+    };
     const newCoordinator: CompetitionStaff = {
       userId: id,
       competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
       accessLevel: CompetitionAccessLevel.ACCEPTED,
       siteLocation: userSiteLocation
-    }
+    };
     await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach);
     await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator);
   });
@@ -125,14 +125,14 @@ describe('Student Join Competition Function', () => {
       pastRegional: true,
       competitionBio: 'I good, promise',
       preferredContact: 'Pigeon Carrier',
-    }
+    };
 
     const studentUni: University = {
       id: 2,
       name: 'Monash University'
-    }
-    await expect(comp_student_db.competitionStudentJoin(newContender, studentUni)).rejects.toThrow("Your university is not registered for this competition.")
-  })
+    };
+    await expect(comp_student_db.competitionStudentJoin(newContender, studentUni)).rejects.toThrow('Your university is not registered for this competition.');
+  });
 
   test('Sucess case: returns the users team details', async () => {
     const mockStudent: Student = {
@@ -170,13 +170,13 @@ describe('Student Join Competition Function', () => {
       pastRegional: true,
       competitionBio: 'I good, promise',
       preferredContact: 'Pigeon Carrier',
-    }
+    };
 
     const studentUni: University = {
       id: 1,
       name: 'University of Melbourne'
-    }
-    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    };
+    await comp_student_db.competitionStudentJoin(newContender, studentUni);
     expect(await comp_staff_db.competitionStudents(id, comp.competitionId)).toStrictEqual([
       {
         userId: newStudent.userId,
@@ -212,6 +212,6 @@ describe('Student Join Competition Function', () => {
         siteName: 'Library',
         siteId: 1
       }
-    ])
-  })
-})
+    ]);
+  });
+});

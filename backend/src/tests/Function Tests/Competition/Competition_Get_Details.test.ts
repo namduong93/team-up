@@ -1,11 +1,11 @@
-import { CompetitionIdObject } from "../../../models/competition/competition";
-import { Staff } from "../../../models/user/staff/staff";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
-import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { CompetitionIdObject } from '../../../models/competition/competition';
+import { Staff } from '../../../models/user/staff/staff';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
+import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Competition Get Details Function', () => {
   let user_db;
@@ -15,7 +15,7 @@ describe('Competition Get Details Function', () => {
 
 
 
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -34,7 +34,7 @@ describe('Competition Get Details Function', () => {
     }],
     code: 'TC2',
     region: 'Australia'
-  }
+  };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
@@ -65,8 +65,8 @@ describe('Competition Get Details Function', () => {
   });
 
   test('Failure case: Competition does not exist', async () => {
-    await expect(comp_db.competitionGetDetails(comp.competitionId + 10000)).rejects.toThrow("Competition does not exist.")
-  })
+    await expect(comp_db.competitionGetDetails(comp.competitionId + 10000)).rejects.toThrow('Competition does not exist.');
+  });
 
   test('Sucess case: returns the competition details', async () => {
     expect(await comp_db.competitionGetDetails(comp.competitionId)).toStrictEqual({
@@ -86,6 +86,6 @@ describe('Competition Get Details Function', () => {
         capacity: 0,
         id: expect.any(Number)
       }]
-    })
-  })
-})
+    });
+  });
+});

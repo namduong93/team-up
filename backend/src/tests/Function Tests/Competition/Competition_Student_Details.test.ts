@@ -1,14 +1,14 @@
-import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
-import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
-import { University } from "../../../models/university/university";
-import { Staff } from "../../../models/user/staff/staff";
-import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
-import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
+import { University } from '../../../models/university/university';
+import { Staff } from '../../../models/user/staff/staff';
+import { Student } from '../../../models/user/student/student';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
+import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Competition Student Details Function', () => {
   let user_db;
@@ -16,7 +16,7 @@ describe('Competition Student Details Function', () => {
   let comp_staff_db;
   let comp_student_db;
 
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -35,7 +35,7 @@ describe('Competition Student Details Function', () => {
     }],
     code: 'TC11',
     region: 'Australia'
-  }
+  };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
@@ -56,7 +56,7 @@ describe('Competition Student Details Function', () => {
     comp_db = new SqlDbCompetitionRepository(pool);
     comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
     comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
-    user_db = new SqlDbUserRepository(pool)
+    user_db = new SqlDbUserRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
     comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
@@ -64,7 +64,7 @@ describe('Competition Student Details Function', () => {
     const userSiteLocation: CompetitionSiteObject = {
       id: 1,
       name: 'the place in the ring',
-    }
+    };
     const newCoach: CompetitionStaff = {
       userId: id,
       competitionRoles: [CompetitionUserRole.COACH],
@@ -75,13 +75,13 @@ describe('Competition Student Details Function', () => {
       },
       competitionBio: 'i good, trust',
       siteLocation: userSiteLocation
-    }
+    };
     const newCoordinator: CompetitionStaff = {
       userId: id,
       competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
       accessLevel: CompetitionAccessLevel.ACCEPTED,
       siteLocation: userSiteLocation
-    }
+    };
     await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach);
     await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator);
 
@@ -120,12 +120,12 @@ describe('Competition Student Details Function', () => {
       pastRegional: true,
       competitionBio: 'I good, promise',
       preferredContact: 'Pigeon Carrier',
-    }
+    };
     const studentUni: University = {
       id: 1,
       name: 'University of Melbourne'
-    }
-    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    };
+    await comp_student_db.competitionStudentJoin(newContender, studentUni);
   });
 
   afterAll(async () => {
@@ -134,7 +134,7 @@ describe('Competition Student Details Function', () => {
 
   test('Failure case: user is not in this competition or isnt a participant', async () => {
     await expect(comp_student_db.competitionStudentDetails(newStudent.userId + 1, comp.competitionId)).rejects.toThrow('User does not exist or is not a participant in this competition.');
-  })
+  });
 
   test('Sucess case: returns the users team details', async () => {
     expect(await comp_student_db.competitionStudentDetails(newStudent.userId, comp.competitionId)).toStrictEqual(
@@ -143,32 +143,32 @@ describe('Competition Student Details Function', () => {
         email: 'newStudentSacrifice2@gmail.com',
         accessibilityReqs: null,
         allergies: null,
-        bio: "I good, promise",
+        bio: 'I good, promise',
         isOfficial: null,
-        level: "No Preference",
+        level: 'No Preference',
         preferredContact: 'Pigeon Carrier',
-        dietaryReqs: "{}",
+        dietaryReqs: '{}',
         ICPCEligible: true,
         boersenEligible: true,
         degreeYear: 3,
         degree: 'ComSci',
         isRemote: true,
         nationalPrizes: 'none',
-        preferredName: "X",
-        pronouns: "He/Him",
-        roles: "{Participant}",
-        sex: "Male",
-        status: "Accepted",
-        studentId: "z5381412",
-        tshirtSize: "L",
+        preferredName: 'X',
+        pronouns: 'He/Him',
+        roles: '{Participant}',
+        sex: 'Male',
+        status: 'Accepted',
+        studentId: 'z5381412',
+        tshirtSize: 'L',
         internationalPrizes: 'none',
         codeforcesRating: 7,
         universityCourses: ['4511', '9911', '911'],
         pastRegional: true,
         universityId: 1,
-        universityName: "University of Melbourne",
+        universityName: 'University of Melbourne',
         userId: newStudent.userId,
       }
-    )
-  })
-})
+    );
+  });
+});
