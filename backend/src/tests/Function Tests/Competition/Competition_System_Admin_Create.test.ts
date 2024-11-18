@@ -6,6 +6,7 @@ import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepositor
 import { CompetitionIdObject } from '../../../models/competition/competition';
 import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
 import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
 
 describe('System Admin Create Function', () => {
   let user_db;
@@ -18,6 +19,12 @@ describe('System Admin Create Function', () => {
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
 
+  const newSiteLocation: SiteLocation = {
+    universityId: 1,
+    universityName: 'University of Melbourne',
+    defaultSite: 'TestRoom'
+  }
+
   const mockCompetition = {
     name: 'TestComp',
     teamSize: 5,
@@ -25,7 +32,7 @@ describe('System Admin Create Function', () => {
     earlyRegDeadline: earlyDate,
     startDate: startDate,
     generalRegDeadline: generalDate,
-    siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
+    siteLocations: [newSiteLocation],
     code: 'TC1',
     region: 'Australia'
   };
@@ -73,7 +80,7 @@ describe('System Admin Create Function', () => {
       region: 'Australia',
       siteLocations: [{
         universityId: 1,
-        name: 'undefined',
+        name: 'TestRoom',
         capacity: 0,
         id: expect.any(Number)
       }]

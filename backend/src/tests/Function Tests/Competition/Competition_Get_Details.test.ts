@@ -1,3 +1,4 @@
+import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
 import { CompetitionIdObject } from '../../../models/competition/competition';
 import { Staff } from '../../../models/user/staff/staff';
 import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
@@ -20,6 +21,12 @@ describe('Competition Get Details Function', () => {
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
 
+  const newSiteLocation: SiteLocation = {
+    universityId: 1,
+    universityName: 'University of Melbourne',
+    defaultSite: 'TestRoom'
+  }
+
   const mockCompetition = {
     name: 'TestComp',
     teamSize: 5,
@@ -27,11 +34,7 @@ describe('Competition Get Details Function', () => {
     earlyRegDeadline: earlyDate,
     startDate: startDate,
     generalRegDeadline: generalDate,
-    siteLocations: [{
-      universityId: 1,
-      name: 'TestRoom',
-      capacity: 2000
-    }],
+    siteLocations: [newSiteLocation],
     code: 'TC2',
     region: 'Australia'
   };
@@ -82,7 +85,7 @@ describe('Competition Get Details Function', () => {
       region: 'Australia',
       siteLocations: [{
         universityId: 1,
-        name: 'undefined',
+        name: 'TestRoom',
         capacity: 0,
         id: expect.any(Number)
       }]

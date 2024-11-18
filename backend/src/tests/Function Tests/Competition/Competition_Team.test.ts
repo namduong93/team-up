@@ -1,3 +1,4 @@
+import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
 import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
 import { University } from '../../../models/university/university';
@@ -22,6 +23,12 @@ describe('Competition Teams Function', () => {
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
 
+  const newSiteLocation: SiteLocation = {
+    universityId: 1,
+    universityName: 'University of Melbourne',
+    defaultSite: 'TestRoom'
+  }
+
   const mockCompetition = {
     name: 'TestComp',
     teamSize: 5,
@@ -29,11 +36,7 @@ describe('Competition Teams Function', () => {
     earlyRegDeadline: earlyDate,
     startDate: startDate,
     generalRegDeadline: generalDate,
-    siteLocations: [{
-      universityId: 1,
-      name: 'TestRoom',
-      capacity: 2000
-    }],
+    siteLocations: [newSiteLocation],
     code: 'TC17',
     region: 'Australia'
   };
