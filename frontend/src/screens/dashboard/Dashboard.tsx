@@ -14,7 +14,7 @@ import { StyledErrorMessage } from "../general_styles/error_styles";
 import { CompCard } from "./subcomponents/CompCard";
 import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 
-interface Competition {
+export interface Competition {
   compName: string;
   location: string;
   compDate: string; // format: "YYYY-MM-DD"

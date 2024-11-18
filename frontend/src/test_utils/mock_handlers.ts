@@ -16,6 +16,7 @@ import { testStudent } from './testStudent';
 import { Announcement } from '../../shared_types/Competition/staff/Announcement';
 import { testCompDetails } from './testCompDetails';
 import { EditRego } from '../../shared_types/Competition/staff/Edit';
+import { Competition } from '../screens/dashboard/Dashboard';
 
 export const handlers = [
 
@@ -387,5 +388,22 @@ export const handlers = [
         enableRegionalParticipationField: true
       }
     })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competitions/list`, async () => {
+    return HttpResponse.json<{ competitions: Competition[] }>(
+      {
+        competitions: [
+          {
+            compId: '1',
+            compName: 'test comp',
+            compCreatedDate: '2024-09-23',
+            compDate: '2025-09-23',
+            location: 'Australia',
+            roles: [CompetitionRole.Admin, CompetitionRole.SiteCoordinator, CompetitionRole.Coach],
+          }
+        ]
+      }
+    )
   })
 ]
