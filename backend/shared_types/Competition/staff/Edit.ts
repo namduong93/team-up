@@ -1,4 +1,4 @@
-import { CourseCategory } from "../../University/Course";
+import { CourseCategory } from '../../University/Course';
 
 export interface EditRego {
   enableCodeforcesField: boolean;

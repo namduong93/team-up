@@ -1,15 +1,14 @@
-import { Pool } from "pg";
-import { UniversityDisplayInfo } from "../../services/CompetitionService.js";
-import { CompetitionRepository } from "../CompetitionRepository.js";
-import { Competition, CompetitionShortDetailsObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionInput } from "../../models/competition/competition.js";
+import { Pool } from 'pg';
+import { CompetitionRepository } from '../CompetitionRepository.js';
+import { CompetitionShortDetailsObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionInput } from '../../models/competition/competition.js';
 
-import { UserType } from "../../models/user/user.js";
-import { parse } from "postgres-array";
-import { CompetitionUserRole } from "../../models/competition/competitionUser.js";
-import { DbError } from "../../errors/DbError.js";
-import { University } from "../../models/university/university.js";
-import { CompetitionSite, CompetitionSiteCapacity } from "../../../shared_types/Competition/CompetitionSite.js";
-import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
+import { UserType } from '../../models/user/user.js';
+import { parse } from 'postgres-array';
+import { CompetitionUserRole } from '../../models/competition/competitionUser.js';
+import { DbError } from '../../errors/DbError.js';
+import { University } from '../../models/university/university.js';
+import { CompetitionSite, CompetitionSiteCapacity } from '../../../shared_types/Competition/CompetitionSite.js';
+import { Announcement } from '../../../shared_types/Competition/staff/Announcement.js';
 
 
 export class SqlDbCompetitionRepository implements CompetitionRepository {
@@ -33,7 +32,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     );
 
     return dbResult.rows[0].universityId;
-  }
+  };
 
   /**
    * Retrieves the competition sites associated with a given competition ID.
@@ -51,7 +50,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     );
 
     return dbResult.rows;
-  }
+  };
 
 
   /**
@@ -70,7 +69,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       return [];
     }
     return parse(dbResult.rows[0].roles) as Array<CompetitionUserRole>;
-  }
+  };
 
 
   /**
@@ -90,7 +89,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
 
     // Verify if competition exists
     if (competitionResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Competition does not exist.");
+      throw new DbError(DbError.Query, 'Competition does not exist.');
     }
 
     const competitionData = competitionResult.rows[0];
@@ -103,7 +102,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     `;
     const siteLocationsResult = await this.pool.query(siteLocationsQuery, [competitionId]);
 
-    const siteLocations: Array<CompetitionSiteObject> = siteLocationsResult.rows.map(row => ({
+    const siteLocations: Array<CompetitionSiteObject> = siteLocationsResult.rows.map((row) => ({
       id: row.id,
       universityId: row.university_id,
       name: row.name,
@@ -126,7 +125,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     };
 
     return competitionDetails;
-  }
+  };
 
   /**
    * Returns only shortened competition details that are displayed on a dashboard. Sites details are not included.
@@ -153,7 +152,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     }
 
     return competitions;
-  }
+  };
 
   /**
    * Retrieves the default site for a given university in a specific competition.
@@ -172,17 +171,17 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     );
 
     if (siteResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Site not found.");
+      throw new DbError(DbError.Query, 'Site not found.');
     }
 
     let site = {
       id: siteResult.rows[0].id || 0,
       universityId: university.id,
-      name: siteResult.rows[0].name || "Not Found",
+      name: siteResult.rows[0].name || 'Not Found',
     };
 
     return site;
-  }
+  };
 
 
   /**
@@ -209,7 +208,7 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
       createdAt: announcement.createdDate,
       universityId: announcement.universityId
     };
-  }
+  };
 
   /**
    * Retrieves the competition coach ID for a given competition and user id.
@@ -227,10 +226,10 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     `;
     const competitionCoachIdResult = await this.pool.query(competitionCoachIdQuery, [userId, compId]);
     if (competitionCoachIdResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "User is not a coach for this competition.");
+      throw new DbError(DbError.Query, 'User is not a coach for this competition.');
     }
     return competitionCoachIdResult.rows[0].id;
-  }
+  };
 
   /**
    * Retrieves the competition ID associated with the given competition code.
@@ -240,14 +239,14 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
    * @throws {DbError} If no competition is found with the given code.
    */
   competitionIdFromCode = async (code: string): Promise<number> => {
-    const competitionIdQuery = `SELECT id FROM competitions WHERE code = $1 LIMIT 1`;
+    const competitionIdQuery = 'SELECT id FROM competitions WHERE code = $1 LIMIT 1';
     const competitionIdResult = await this.pool.query(competitionIdQuery, [code]);
     if (competitionIdResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Competition not found.");
+      throw new DbError(DbError.Query, 'Competition not found.');
     }
 
     return competitionIdResult.rows[0].id;
-  }
+  };
 
 
   /**
@@ -258,9 +257,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
    * @returns A promise that resolves to an array of `CompetitionSiteCapacity` objects or undefined if no sites are found.
    */
   competitionSiteCapacity = async (compId: number, siteId: number[]): Promise<Array<CompetitionSiteCapacity> | undefined> => {
-    const siteList = await this.pool.query('SELECT id, capacity FROM competition_sites WHERE competition_id = $1 AND id = ANY($2::int[]);', [compId, siteId])
-    return siteList.rows
-  }
+    const siteList = await this.pool.query('SELECT id, capacity FROM competition_sites WHERE competition_id = $1 AND id = ANY($2::int[]);', [compId, siteId]);
+    return siteList.rows;
+  };
 
   SALTED_TEAM_CODE = 12345;
   encrypt = (id: number) => {

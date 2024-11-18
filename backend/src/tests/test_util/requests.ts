@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from 'axios';
 
 // Later can make a .env file and use the dotenv package to load
 // HOST and PORT into process.env
 export const backendURL = {
   HOST: 'http://127.0.0.1',
   PORT: '8000'
-}
+};
 
 // USAGE:
 // To use the request interface, call the corresponding function,
@@ -15,7 +15,7 @@ export const backendURL = {
 // request.get(/student/details, { studentId: 5 });
 
 export class sendRequest {
-  public static get<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
+  static get<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
     return axios.get<T>(`${backendURL.HOST}:${backendURL.PORT}${path}?${new URLSearchParams(params)}`, {
       withCredentials: true,
       ...headers
@@ -24,21 +24,21 @@ export class sendRequest {
     // are sent everytime in every request.
   }
 
-  public static post<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
+  static post<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
     return axios.post<T>(`${backendURL.HOST}:${backendURL.PORT}${path}`, params, {
       withCredentials: true,
       ...headers
     });
   }
 
-  public static put<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>>  {
+  static put<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>>  {
     return axios.put<T>(`${backendURL.HOST}:${backendURL.PORT}${path}`, params, {
       withCredentials: true,
       ...headers
     });
   }
 
-  public static delete<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
+  static delete<T>(path: string, params: Record<string, any> = {}, headers: Record<string, any> = {}): Promise<AxiosResponse<T, any>> {
     return axios.delete<T>(`${backendURL.HOST}:${backendURL.PORT}${path}?${new URLSearchParams(params)}`, {
       withCredentials: true,
       ...headers
@@ -47,7 +47,7 @@ export class sendRequest {
 
   // handleErrorStatus(error, [400, 401, etc.], () => { do something })
   // give the error object a list of status codes and a callback function for handling those error statuses
-  public static handleErrorStatus(error: unknown, statuses: Array<number>, handler: CallableFunction) {
+  static handleErrorStatus(error: unknown, statuses: Array<number>, handler: CallableFunction) {
     if (axios.isAxiosError(error)) {
       const potentialErrorStatus = error.response?.status;
       if (potentialErrorStatus) {

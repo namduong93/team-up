@@ -1,4 +1,4 @@
-import { Staff } from "../staff.js";
+import { Staff } from '../staff.js';
 
 export interface SystemAdmin extends Staff {
 }

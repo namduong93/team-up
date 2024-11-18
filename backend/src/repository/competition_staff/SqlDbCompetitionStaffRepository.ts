@@ -1,19 +1,19 @@
-import { Pool } from "pg";
-import { CompetitionStaffRepository } from "../CompetitionStaffRepository.js";
-import { EditCourse, EditRego } from "../../../shared_types/Competition/staff/Edit.js";
-import { DbError } from "../../errors/DbError.js";
-import { StaffInfo } from "../../../shared_types/Competition/staff/StaffInfo.js";
-import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo.js";
-import { TeamDetails } from "../../../shared_types/Competition/team/TeamDetails.js";
-import { AttendeesDetails } from "../../../shared_types/Competition/staff/AttendeesDetails.js";
-import { CompetitionRepository } from "../CompetitionRepository.js";
-import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionUserRole } from "../../models/competition/competitionUser.js";
-import { parse } from "postgres-array";
-import { DEFAULT_TEAM_SIZE, SeatAssignment } from "../../models/team/team.js";
-import { Competition, CompetitionIdObject } from "../../models/competition/competition.js";
-import { University } from "../../models/university/university.js";
-import { Announcement } from "../../../shared_types/Competition/staff/Announcement.js";
-import { CourseCategory } from "../../../shared_types/University/Course.js";
+import { Pool } from 'pg';
+import { CompetitionStaffRepository } from '../CompetitionStaffRepository.js';
+import { EditCourse, EditRego } from '../../../shared_types/Competition/staff/Edit.js';
+import { DbError } from '../../errors/DbError.js';
+import { StaffInfo } from '../../../shared_types/Competition/staff/StaffInfo.js';
+import { StudentInfo } from '../../../shared_types/Competition/student/StudentInfo.js';
+import { TeamDetails } from '../../../shared_types/Competition/team/TeamDetails.js';
+import { AttendeesDetails } from '../../../shared_types/Competition/staff/AttendeesDetails.js';
+import { CompetitionRepository } from '../CompetitionRepository.js';
+import { AlgoConversion, CompetitionAlgoStudentDetails, CompetitionAlgoTeamDetails, CompetitionStaff, CompetitionUserRole } from '../../models/competition/competitionUser.js';
+import { parse } from 'postgres-array';
+import { DEFAULT_TEAM_SIZE, SeatAssignment } from '../../models/team/team.js';
+import { Competition, CompetitionIdObject } from '../../models/competition/competition.js';
+import { University } from '../../models/university/university.js';
+import { Announcement } from '../../../shared_types/Competition/staff/Announcement.js';
+import { CourseCategory } from '../../../shared_types/University/Course.js';
 
 export class SqlDbCompetitionStaffRepository implements CompetitionStaffRepository {
   private readonly pool: Pool;
@@ -60,7 +60,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return;
-  }
+  };
 
     
   /**
@@ -101,7 +101,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
 
     return dbResult.rows[0];
-  }
+  };
 
   /**
    * Retrieves the site ID that a given user (site-coordinator) is coordinating.
@@ -116,14 +116,14 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       FROM competition_users AS cu
       WHERE cu.user_id = ${userId}
       `
-    )
+    );
 
     if (!dbResult.rowCount) {
       throw new DbError(DbError.Auth, 'Site Coordinator is not coordinating this site');
     }
 
     return dbResult.rows[0].site_id;
-  }
+  };
 
   /**
    * Updates the capacity of a competition site in the database.
@@ -146,7 +146,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       throw new DbError(DbError.Query, 'Error with database Update competition site');
     }
     return;
-  }
+  };
 
   /**
    * Update whether certain competitive programming relevant fields are enabled for registration for a competition site.
@@ -187,7 +187,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         `
     );
     return;
-  }
+  };
 
   /**
    * Retrieve what competitive programming relevant fields are enabled for registration for a competition site.
@@ -211,7 +211,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         JOIN users AS u ON u.id = cu.user_id
         WHERE u.id = ${userId} AND u.university_id = crt.university_id AND crt.competition_id = ${compId};
         `
-      )
+      );
 
       return dbResult.rows[0];
     }
@@ -228,7 +228,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       `
     );
     return dbResult.rows[0];
-  }
+  };
 
   /**
    * Checks if a user is a coach for a specific competition.
@@ -251,7 +251,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return;
-  }
+  };
 
   /**
    * Updates the competition user details for a list of staff in a specific competition.
@@ -268,7 +268,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     for (const staff of staffList) {
       // Find out if this staff is getting accepted into their registering competition
       const oldInfoResult = await this.pool.query(
-      `SELECT access_level
+        `SELECT access_level
         FROM competition_users
         WHERE user_id = ${staff.userId} AND competition_id = ${compId};
       `
@@ -298,7 +298,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return updatedAccessStaff;
-  }
+  };
 
   /**
    * Updates the competition user details for a list of students in a specific competition.
@@ -337,7 +337,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return;
-  }
+  };
 
   /**
    * Checks if a coach is coaching all the students (their teams) in the provided list.
@@ -360,9 +360,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const resultIds = dbResult.rows.map((row) => row.userId);
 
     if (!userIds.every((id) => resultIds.includes(id))) {
-      throw new DbError(DbError.Auth, "Coach is not coaching some of the students in the provided list");
+      throw new DbError(DbError.Auth, 'Coach is not coaching some of the students in the provided list');
     }
-  }
+  };
 
   /**
    * Checks if a coach is coaching all the specified teams in a competition.
@@ -389,10 +389,10 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const resultIds = coachCheckResult.rows.map((row) => row.id);
 
     if (!teamIds.every((id) => resultIds.includes(id))) {
-      throw new DbError(DbError.Auth, "Coach is not coaching some of the teams in the provided team IDs.");
+      throw new DbError(DbError.Auth, 'Coach is not coaching some of the teams in the provided team IDs.');
     }
     return;
-  }
+  };
 
   /**
    * Updates the details of competition teams and their participants in the database.
@@ -449,7 +449,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return;
-  }
+  };
 
   /**
    * Retrieves the details of competition attendees based on the user's role.
@@ -522,7 +522,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return [];
-  }
+  };
 
   /**
    * Retrieves the staff information for a given competition if the user has admin roles.
@@ -544,7 +544,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
 
     return [];
-  }
+  };
 
   /**
    * Retrieves a list of students associated with a competition based on the user's role.
@@ -575,7 +575,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
     // Should be changed later when we have a comprehensive error system.
     return [];
-  }
+  };
 
   /**
    * Retrieves the details of teams participating in a competition based on the user's role.
@@ -656,7 +656,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     `;
     const codeCheckResult = await this.pool.query(codeCheckQuery, [competition.code]);
     if (codeCheckResult.rowCount > 0) {
-      throw new DbError(DbError.Query, "Competition code is already in use.");
+      throw new DbError(DbError.Query, 'Competition code is already in use.');
     }
 
     // Insert competition into competitions table
@@ -713,7 +713,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     });
 
     return { competitionId: competitionId };
-  }
+  };
 
   /**
    * Updates the details of a competition if the user is an admin of the competition.
@@ -728,7 +728,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const roles = await this.competitionRepository.competitionRoles(userId, competition.id);
 
     if (!roles.includes(CompetitionUserRole.ADMIN)) {
-      throw new DbError(DbError.Query, "User is not an admin for this competition.");
+      throw new DbError(DbError.Query, 'User is not an admin for this competition.');
     }
 
     // Verify if competition exists
@@ -741,7 +741,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const competitionExistResult = await this.pool.query(competitionExistQuery, [competition.id]);
 
     if (competitionExistResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Competition does not exist.");
+      throw new DbError(DbError.Query, 'Competition does not exist.');
     }
 
     // Update competition details
@@ -810,9 +810,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return {};
-  }
+  };
 
-    competitionStaffDetails = async(userId: number, compId: number): Promise<StaffInfo> => {
+  competitionStaffDetails = async(userId: number, compId: number): Promise<StaffInfo> => {
     const dbResult = await this.pool.query(
       `SELECT 
         "userId", 
@@ -856,7 +856,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       roles: result.roles,
       access: result.access
     };
-  }
+  };
 
   /**
    * Updates the details of a staff member in a competition.
@@ -885,7 +885,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       throw new DbError(DbError.Query, 'Staff does not exist or is not a part of this competition.');
     }
     return {};
-  }
+  };
 
   /**
    * Approves team assignments for a competition.
@@ -903,7 +903,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
   competitionApproveTeamAssignment = async(userId: number, compId: number, approveIds: Array<number>): Promise<{}> => {
     // No team to approve
     if (approveIds.length < 1) {
-      throw new DbError(DbError.Query, "No team to approve.");
+      throw new DbError(DbError.Query, 'No team to approve.');
     }
 
     // Verify if competition exists
@@ -915,7 +915,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
 
     if (competitionExistResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Competition not found.");
+      throw new DbError(DbError.Query, 'Competition not found.');
     }
 
     // Check if any of the ids in approveIds has team_status as 'Registered'
@@ -929,7 +929,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const registeredTeamsResult = await this.pool.query(registeredTeamsQuery, [approveIds, compId]);
 
     if (registeredTeamsResult.rowCount > 0) {
-      throw new DbError(DbError.Query, "One or more teams are already registered into ICPC system.");
+      throw new DbError(DbError.Query, 'One or more teams are already registered into ICPC system.');
     }
 
     // Check if the user is an admin or a coach of this competition.
@@ -937,7 +937,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const userRoles = await this.competitionRepository.competitionRoles(userId, compId);
 
     if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
-      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+      throw new DbError(DbError.Auth, 'User is not a coach or an admin for this competition.');
     }
 
     if (userRoles.includes(CompetitionUserRole.COACH)) {
@@ -954,11 +954,11 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
     // If no rows were updated, it implies that no matching records were found
     if (approveResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+      throw new DbError(DbError.Query, 'No matching teams found for the provided approved IDs in this competition.');
     }
 
     return {};
-  }
+  };
 
   /**
    * Requests a team name change for a competition.
@@ -981,11 +981,11 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [compId, userId]);
 
     if (teamMemberCheckResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "User is not a member of this team.");
+      throw new DbError(DbError.Query, 'User is not a member of this team.');
     }
 
     if (teamMemberCheckResult.rows[0].name === newTeamName || teamMemberCheckResult.rows[0].pending_name === newTeamName) {
-      throw new DbError(DbError.Query, "New team name is similar to the old name or an already requested new name.");
+      throw new DbError(DbError.Query, 'New team name is similar to the old name or an already requested new name.');
     }
 
     // Update the pending name in the competition teams table
@@ -999,11 +999,11 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const teamId = result.rows[0].id;
 
     if (result.rowCount === 0) {
-      throw new DbError(DbError.Query, "No matching team found for the provided ID in this competition.");
+      throw new DbError(DbError.Query, 'No matching team found for the provided ID in this competition.');
     }
 
     return teamId;
-  }
+  };
 
   /**
    * Approves or rejects team name changes for a competition.
@@ -1029,13 +1029,13 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
 
     if (competitionExistResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Competition not found.");
+      throw new DbError(DbError.Query, 'Competition not found.');
     }
 
     // Verify if there are duplicate IDs in the approveIds and rejectIds arrays
-    const duplicateIds = approveIds.filter(id => rejectIds.includes(id));
+    const duplicateIds = approveIds.filter((id) => rejectIds.includes(id));
     if (duplicateIds.length > 0) {
-      throw new DbError(DbError.Query, "Duplicate team IDs found in team name approve and reject lists.");
+      throw new DbError(DbError.Query, 'Duplicate team IDs found in team name approve and reject lists.');
     }
 
     // Check if the user is an admin or a coach of this competition.
@@ -1043,7 +1043,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const userRoles = await this.competitionRepository.competitionRoles(userId, compId);
 
     if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
-      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+      throw new DbError(DbError.Auth, 'User is not a coach or an admin for this competition.');
     }
 
     if (userRoles.includes(CompetitionUserRole.COACH)) {
@@ -1062,7 +1062,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
       // If no rows were updated, it implies that no matching records were found
       if (approveResult.rowCount === 0) {
-        throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+        throw new DbError(DbError.Query, 'No matching teams found for the provided approved IDs in this competition.');
       }
     }
 
@@ -1077,12 +1077,12 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       const rejectResult = await this.pool.query(rejectQuery, [rejectIds, compId]);
 
       if (rejectResult.rowCount === 0) {
-        throw new DbError(DbError.Insert, "No matching teams found for the provided rejected IDs in this competition.");
+        throw new DbError(DbError.Insert, 'No matching teams found for the provided rejected IDs in this competition.');
       }
     }
 
     return {};
-  }
+  };
 
   /**
    * Approves or rejects site changes for teams in a competition.
@@ -1108,13 +1108,13 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
 
     if (competitionExistResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Competition not found.");
+      throw new DbError(DbError.Query, 'Competition not found.');
     }
 
     // Verify if there are duplicate IDs in the approveIds and rejectIds arrays
-    const duplicateIds = approveIds.filter(id => rejectIds.includes(id));
+    const duplicateIds = approveIds.filter((id) => rejectIds.includes(id));
     if (duplicateIds.length > 0) {
-      throw new DbError(DbError.Query, "Duplicate team IDs found in site ID approve and reject lists.");
+      throw new DbError(DbError.Query, 'Duplicate team IDs found in site ID approve and reject lists.');
     }
 
     // Check if the user is an admin or a coach of this competition.
@@ -1122,7 +1122,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const userRoles = await this.competitionRepository.competitionRoles(userId, compId);
 
     if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
-      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+      throw new DbError(DbError.Auth, 'User is not a coach or an admin for this competition.');
     }
 
     if (userRoles.includes(CompetitionUserRole.COACH)) {
@@ -1141,7 +1141,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
       // If no rows were updated, it implies that no matching records were found
       if (approveResult.rowCount === 0) {
-        throw new DbError(DbError.Query, "No matching teams found for the provided approved IDs in this competition.");
+        throw new DbError(DbError.Query, 'No matching teams found for the provided approved IDs in this competition.');
       }
     }
 
@@ -1156,12 +1156,12 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       const rejectResult = await this.pool.query(rejectQuery, [rejectIds, compId]);
 
       if (rejectResult.rowCount === 0) {
-        throw new DbError(DbError.Insert, "No matching teams found for the provided rejected IDs in this competition.");
+        throw new DbError(DbError.Insert, 'No matching teams found for the provided rejected IDs in this competition.');
       }
     }
 
     return {};
-  }
+  };
 
   /**
    * Assigns seats to teams in a competition.
@@ -1185,7 +1185,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
 
     if (competitionExistResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Competition not found.");
+      throw new DbError(DbError.Query, 'Competition not found.');
     }
 
     // Check if the user is an admin or a site coordinator of this competition.
@@ -1193,11 +1193,11 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const userRoles = await this.competitionRepository.competitionRoles(userId, compId);
 
     if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
-      throw new DbError(DbError.Auth, "User is not a site coordinator or an admin for this competition.");
+      throw new DbError(DbError.Auth, 'User is not a site coordinator or an admin for this competition.');
     }
 
     if (userRoles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
-      const siteIds = seatAssignments.map(assignment => assignment.siteId);
+      const siteIds = seatAssignments.map((assignment) => assignment.siteId);
       const siteCoordinatorCheckQuery = `
         SELECT site_id
         FROM competition_users
@@ -1206,7 +1206,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       const siteCoordinatorCheckResult = await this.pool.query(siteCoordinatorCheckQuery, [userId, compId, siteIds]);
 
       if (siteCoordinatorCheckResult.rowCount !== siteIds.length) {
-        throw new DbError(DbError.Auth, "User is not a site coordinator for all the provided sites.");
+        throw new DbError(DbError.Auth, 'User is not a site coordinator for all the provided sites.');
       }
     }
 
@@ -1229,7 +1229,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return {};
-  }
+  };
 
   /**
    * Registers teams for a competition to ICPC global (Setting their status to Registered).
@@ -1252,7 +1252,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const competitionExistResult = await this.pool.query(competitionExistQuery, [compId]);
 
     if (competitionExistResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Competition not found.");
+      throw new DbError(DbError.Query, 'Competition not found.');
     }
 
     // Check if the user is an admin or a coach of this competition.
@@ -1260,7 +1260,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const userRoles = await this.competitionRepository.competitionRoles(userId, compId);
 
     if (!userRoles.includes(CompetitionUserRole.ADMIN) && !userRoles.includes(CompetitionUserRole.COACH)) {
-      throw new DbError(DbError.Auth, "User is not a coach or an admin for this competition.");
+      throw new DbError(DbError.Auth, 'User is not a coach or an admin for this competition.');
     }
 
     if (userRoles.includes(CompetitionUserRole.COACH)) {
@@ -1278,11 +1278,11 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
     // If no rows were updated, it implies that no matching records were found
     if (registerResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "No matching teams found for the provided team IDs in this competition.");
+      throw new DbError(DbError.Query, 'No matching teams found for the provided team IDs in this competition.');
     }
 
     return {};
-  }
+  };
 
   /**
    * Adds a staff member to a competition with specific roles.
@@ -1302,7 +1302,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     // Admin staff
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       if (competitionExistRole.includes(CompetitionUserRole.ADMIN)) {
-        throw new DbError(DbError.Query, "User is already an admin for this competition.");
+        throw new DbError(DbError.Query, 'User is already an admin for this competition.');
       }
 
       const addAdminQuery = `
@@ -1317,7 +1317,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     if (roles.includes(CompetitionUserRole.COACH)) {
       const competitionBio = staffCompetitionInfo.competitionBio;
       if (competitionExistRole.includes(CompetitionUserRole.COACH)) {
-        throw new DbError(DbError.Query, "User is already a coach for this competition.");
+        throw new DbError(DbError.Query, 'User is already a coach for this competition.');
       }
 
       const addCoachQuery = `
@@ -1332,7 +1332,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     if (roles.includes(CompetitionUserRole.SITE_COORDINATOR)) {
       const siteId = staffCompetitionInfo.siteLocation.id;
       if (competitionExistRole.includes(CompetitionUserRole.SITE_COORDINATOR)) {
-        throw new DbError(DbError.Query, "User is already a site coordinator for this competition.");
+        throw new DbError(DbError.Query, 'User is already a site coordinator for this competition.');
       }
 
       const addSiteCoordinatorQuery = `
@@ -1344,7 +1344,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return {};
-  }
+  };
 
   /**
    * Updates the announcement for a competition.
@@ -1360,17 +1360,17 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       SELECT id, message, created_date AS "createdDate", university_id AS "universityId"
       FROM competition_announcements
       WHERE competition_id = $1 AND university_id = $2`,
-      [compId, university.id]
+    [compId, university.id]
     );
 
     if(announcementResult.rowCount === 0) {
       const announcementInsertResult = await this.pool.query(`
         INSERT INTO competition_announcements (competition_id, user_id, message, university_id, created_date)
         VALUES ($1, $2, $3, $4, $5)`, 
-        [compId, announcement.userId, announcement.message, announcement.universityId, new Date(announcement.createdAt).toISOString()]
+      [compId, announcement.userId, announcement.message, announcement.universityId, new Date(announcement.createdAt).toISOString()]
       );
       if(announcementInsertResult.rowCount === 0) {
-        throw new DbError(DbError.Insert, "Failed to insert announcement.");
+        throw new DbError(DbError.Insert, 'Failed to insert announcement.');
       }
     }
     else {
@@ -1378,14 +1378,14 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         UPDATE competition_announcements
         SET message = $1, created_date = $2
         WHERE competition_id = $3 AND university_id = $4`,
-        [announcement.message, new Date(announcement.createdAt).toISOString(), compId, university.id]
+      [announcement.message, new Date(announcement.createdAt).toISOString(), compId, university.id]
       );
       if(announcementUpdateResult.rowCount === 0) {
-        throw new DbError(DbError.Update, "Failed to update announcement.");
+        throw new DbError(DbError.Update, 'Failed to update announcement.');
       }
     }
     return ;
-  }
+  };
 
   /**
    * The main algorithm that sorts and forms teams for a competition.
@@ -1485,10 +1485,10 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     `;
 
     // Prepare the data
-    const updateData = algoTeams.map(team => ({
+    const updateData = algoTeams.map((team) => ({
       id: team.id,
       team_size: team.participants.length,
-      participants: team.participants.map(p => p?.userId)
+      participants: team.participants.map((p) => p?.userId)
     }));
 
     await this.pool.query(teamUpdateQuery, [JSON.stringify(updateData), compId]);
@@ -1498,7 +1498,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       DELETE FROM notifications
       WHERE team_id = ANY($1::int[]) 
       AND competition_id = $2
-    `
+    `;
     const deleteNotiResult = await this.pool.query(deleteNotificationsQuery, [Array.from(deletedTeams), compId]);
     await this.pool.query(deleteNotificationsQuery, [Array.from(deletedTeams), compId]);
 
@@ -1514,15 +1514,15 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     // This is for demo only
     return {
       algorithm: {
-        teamsParticipating: algoTeams.map(team => ({
+        teamsParticipating: algoTeams.map((team) => ({
           id: team.id,
           name: team.name,
-          participants: team.participants.map(p => p?.userId),
-          algoPoint: Math.max(...team.participants.map(p => studentMap.get(p?.id)?.algoPoint || 0))
+          participants: team.participants.map((p) => p?.userId),
+          algoPoint: Math.max(...team.participants.map((p) => studentMap.get(p?.id)?.algoPoint || 0))
         }))
       }
     };
-  }
+  };
 
   /**
    * A heuristic algorithm to calculate the points assigned for each participant.
@@ -1557,7 +1557,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         student.algoPoint = Math.max(student.algoPoint, AlgoConversion.INTERNATION_PRIZE);
       }
     }
-  }
+  };
 
   /**
    * Forms teams based on the sorted list of teams.
@@ -1621,7 +1621,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         }
       }
     }
-  }
+  };
 
   /**
    * Sorts the teams based on the maximum points of the participants.
@@ -1632,10 +1632,10 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
    */
   sortTeams = (teams: CompetitionAlgoTeamDetails[], studentMap: Map<number, CompetitionAlgoStudentDetails>) => {
     teams.sort((teamA, teamB) => {
-      const teamAMaxPoint = Math.max(...teamA.participants.map(p =>
+      const teamAMaxPoint = Math.max(...teamA.participants.map((p) =>
         studentMap.get(p?.id)?.algoPoint || 0
       ));
-      const teamBMaxPoint = Math.max(...teamB.participants.map(p =>
+      const teamBMaxPoint = Math.max(...teamB.participants.map((p) =>
         studentMap.get(p?.id)?.algoPoint || 0
       ));
 
@@ -1643,5 +1643,5 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       return teamBMaxPoint - teamAMaxPoint;
     });
     return teams;
-  }
+  };
 }

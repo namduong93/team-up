@@ -1,6 +1,6 @@
 
-import { UniversityListObject } from "../models/university/university.js";
-import { UniversityRepository } from "../repository/UniversityRepository.js";
+import { UniversityListObject } from '../models/university/university.js';
+import { UniversityRepository } from '../repository/UniversityRepository.js';
 
 export type SessionIdObject = { sessionId: string };
 
@@ -19,7 +19,7 @@ export class UniversityService {
    */
   universityCourses = async (userId: number, code: string) => {
     return await this.universityRepository.universityCourses(userId, code);
-  }
+  };
 
   /**
    * Retrieves a list of universities from the university repository.

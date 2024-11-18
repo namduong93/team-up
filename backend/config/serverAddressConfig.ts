@@ -3,4 +3,4 @@
 export const serverAddress = {
   HOST: process.env.IP || '0.0.0.0',
   PORT: process.env.PORT || '8000'
-}
+};

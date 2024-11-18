@@ -1,4 +1,4 @@
-import { CompetitionUser } from "../competition/competitionUser";
+import { CompetitionUser } from '../competition/competitionUser';
 
 /**
  * Represents a team participating in a competition.

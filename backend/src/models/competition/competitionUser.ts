@@ -1,5 +1,5 @@
-import { University } from "../university/university";
-import { CompetitionSiteObject } from "./competition";
+import { University } from '../university/university';
+import { CompetitionSiteObject } from './competition';
 
 /**
  * Represents a competition user (student and staff).

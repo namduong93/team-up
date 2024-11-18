@@ -1,4 +1,4 @@
-import { CookieOptions } from "express";
+import { CookieOptions } from 'express';
 
 export const defaultCookieOptions: CookieOptions = {
   httpOnly: true,
@@ -6,4 +6,4 @@ export const defaultCookieOptions: CookieOptions = {
   sameSite: 'none',
   secure: true
   // secure: true --- for ensuring it is only sent over https (for production)
-}
+};

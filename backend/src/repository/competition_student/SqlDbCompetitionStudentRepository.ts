@@ -1,14 +1,14 @@
-import { Pool } from "pg";
-import { CompetitionStudentRepository } from "../CompetitionStudentRepository";
-import { StudentInfo } from "../../../shared_types/Competition/student/StudentInfo";
-import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
-import { CompetitionTeamNameObject, CompetitionWithdrawalReturnObject } from "../../models/competition/competition";
-import { CompetitionUser } from "../../models/competition/competitionUser";
-import { University } from "../../models/university/university";
-import { DbError } from "../../errors/DbError.js";
-import { CompetitionRepository } from "../CompetitionRepository";
-import { TeamStatus } from "../../models/team/team";
-import pokemon from "pokemon";
+import { Pool } from 'pg';
+import { CompetitionStudentRepository } from '../CompetitionStudentRepository';
+import { StudentInfo } from '../../../shared_types/Competition/student/StudentInfo';
+import { ParticipantTeamDetails } from '../../../shared_types/Competition/team/TeamDetails';
+import { CompetitionTeamNameObject, CompetitionWithdrawalReturnObject } from '../../models/competition/competition';
+import { CompetitionUser } from '../../models/competition/competitionUser';
+import { University } from '../../models/university/university';
+import { DbError } from '../../errors/DbError.js';
+import { CompetitionRepository } from '../CompetitionRepository';
+import { TeamStatus } from '../../models/team/team';
+import pokemon from 'pokemon';
 
 export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepository {
   private readonly pool: Pool;
@@ -42,7 +42,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     );
 
     return dbResult.rows[0];
-  }
+  };
 
   /**
    * Retrieves the details of a competition team for a specific student and competition.
@@ -71,7 +71,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     const currentStudent = students.splice(currentStudentIndex, 1)[0];
     students.unshift(currentStudent);
     return { ...teamDetails, students };
-  }
+  };
 
   /**
    * Generates an encrypted invite code for a team in a competition that the user is a participant of.
@@ -92,7 +92,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     }
     const encryptedTeamId = this.competitionRepository.encrypt(teamResult.rows[0].id);
     return encryptedTeamId;
-  }
+  };
 
   /**
    * Let a user joins a competition team via its code.
@@ -175,7 +175,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
       }
     }
     return { teamName: teamResult.rows[0].teamName };
-  }
+  };
 
   /**
    * Retrieves detailed information about a student in a specific competition.
@@ -268,7 +268,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     };
 
     return studentDetails;
-  }
+  };
 
   /**
    * Updates the details of a student in a specific competition.
@@ -309,7 +309,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     }
 
     return {};
-  }
+  };
 
   /**
    * Registers a student for a competition and creates a new (placeholder) team for them.
@@ -330,13 +330,13 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     let degreeYear = competitionUserInfo.degreeYear;
     let degree = competitionUserInfo.degree;
     let isRemote = competitionUserInfo.isRemote;
-    let nationalPrizes = competitionUserInfo.nationalPrizes || "";
-    let internationalPrizes = competitionUserInfo.internationalPrizes || "";
+    let nationalPrizes = competitionUserInfo.nationalPrizes || '';
+    let internationalPrizes = competitionUserInfo.internationalPrizes || '';
     let codeforcesRating = competitionUserInfo.codeforcesRating || 0;
     let universityCourses = competitionUserInfo.universityCourses || [];
     let pastRegional = competitionUserInfo.pastRegional || false;
-    let competitionBio = competitionUserInfo.competitionBio || "";
-    let preferredContact = competitionUserInfo.preferredContact || "";
+    let competitionBio = competitionUserInfo.competitionBio || '';
+    let preferredContact = competitionUserInfo.preferredContact || '';
 
     const coachUserIdResult = await this.pool.query(
       `SELECT "userId" 
@@ -347,7 +347,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     );
 
     if (coachUserIdResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "Your university is not registered for this competition.");
+      throw new DbError(DbError.Query, 'Your university is not registered for this competition.');
     }
     const competitionCoachIdResult = await this.pool.query(`
       SELECT id FROM competition_users WHERE user_id = $1 AND competition_id = $2
@@ -415,7 +415,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     // Insert the team into competition_teams table
     let checkId = await this.pool.query(teamQuery, teamNameValues);
     return {};
-  }
+  };
 
   /**
    * Withdraws a student from a competition. If the student is the only participant in their team,
@@ -506,7 +506,7 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
       const newTeamJoinResult = await this.pool.query(newTeamJoinQuery, newTeamJoinValues);
       return { competitionCode: teamCode, competitionName, teamId: leaveTeamResult.rows[0].id, teamName: newTeamJoinResult.rows[0].name };
     }
-  }
+  };
 
   /**
    * Requests a site change for a competition team member.
@@ -529,14 +529,14 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     const teamMemberCheckResult = await this.pool.query(teamMemberCheckQuery, [compId, userId]);
 
     if (teamMemberCheckResult.rowCount === 0) {
-      throw new DbError(DbError.Query, "User is not a member of any team in this competition.");
+      throw new DbError(DbError.Query, 'User is not a member of any team in this competition.');
     }
 
     const currentSiteId = teamMemberCheckResult.rows[0].site_attending_id;
     const pendingSiteId = teamMemberCheckResult.rows[0].pending_site_attending_id;
 
     if (currentSiteId === newSiteId || pendingSiteId === newSiteId) {
-      throw new DbError(DbError.Query, "New site ID is similar to the current site ID or an already requested new site ID.");
+      throw new DbError(DbError.Query, 'New site ID is similar to the current site ID or an already requested new site ID.');
     }
 
     // Update the pending site ID in the competition teams table
@@ -549,9 +549,9 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     const result = await this.pool.query(siteIdUpdateQuery, [compId, userId, newSiteId]);
 
     if (result.rowCount === 0) {
-      throw new DbError(DbError.Query, "No matching team found for the provided ID in this competition.");
+      throw new DbError(DbError.Query, 'No matching team found for the provided ID in this competition.');
     }
 
     return result.rows[0].id; // Return the team ID
-  }
+  };
 }
