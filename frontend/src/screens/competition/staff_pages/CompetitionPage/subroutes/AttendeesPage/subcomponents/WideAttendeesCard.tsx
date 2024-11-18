@@ -8,7 +8,6 @@ import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar/A
 
 export const WideAttendeesCard: FC<AttendeesCardProps> = ({
   attendeesDetails,
-  attendeesListState: [attendeesList, setAttendeesList],
   ...props
 }) => {
 
@@ -16,7 +15,6 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({
 
   return <>
     <AttendeesInfoBar
-      attendeesState={[attendeesList, setAttendeesList]}
       attendeesDetails={attendeesDetails}
       isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
     />

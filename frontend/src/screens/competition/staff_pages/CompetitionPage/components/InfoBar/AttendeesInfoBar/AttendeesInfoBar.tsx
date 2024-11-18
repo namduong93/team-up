@@ -8,12 +8,10 @@ import { backendURL } from "../../../../../../../../config/backendURLConfig";
 
 interface AttendeesInfoProps extends InfoBarProps {
   attendeesDetails: AttendeesDetails;
-  attendeesState: [Array<AttendeesDetails>, React.Dispatch<React.SetStateAction<Array<AttendeesDetails>>>];
 }
 
 export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
   attendeesDetails,
-  attendeesState: [attendeesList, setAttendeesList],
   isOpenState: [isOpen, setIsOpen],
 }) => {
 

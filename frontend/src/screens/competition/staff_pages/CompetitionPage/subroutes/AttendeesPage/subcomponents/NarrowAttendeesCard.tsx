@@ -8,7 +8,6 @@ import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar/A
 
 export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
   attendeesDetails,
-  attendeesListState: [attendeesList, setAttendeesList],
   ...props
 }) => {
 
@@ -17,7 +16,6 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
   return <>
     <AttendeesInfoBar
       attendeesDetails={attendeesDetails}
-      attendeesState={[attendeesList, setAttendeesList]}
       isOpenState={[isInfoBarOpen, setIsInfoBarOpen]}
     />
     <StyledStudentInfoContainerDiv

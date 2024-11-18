@@ -145,8 +145,7 @@ export const TeamProfile: FC = () => {
           </CustomToggleSwitch>
         </StyledPageOptionsContainerDiv>
         <StyledTeamProvileOutlet
-          context={teamOutletProps}
-          className="team-profile--StyledTeamProvileOutlet-0" />
+          context={teamOutletProps} />
       </StyledMainPageDiv>
     </StyledTeamOverflowFlexBackground>
   );
