@@ -6,7 +6,6 @@ import { UserIdObject } from '../../../repository/UserRepository';
 
 import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
-// need session create
 describe('Session Delete Function', () => {
   let session_db;
   let timeStamp = Date.now();
