@@ -4,7 +4,7 @@ import { EditCourse } from "../../../../shared_types/Competition/staff/Edit";
 import { StaffAccess, StaffInfo } from "../../../../shared_types/Competition/staff/StaffInfo";
 import { CourseCategory } from "../../../../shared_types/University/Course";
 import { UserAccess } from "../../../../shared_types/User/User";
-import { Competition, CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
+import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
 import { University } from "../../../models/university/university";
 import { Staff } from "../../../models/user/staff/staff";
@@ -17,7 +17,7 @@ import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepositor
 import { UserIdObject } from "../../../repository/UserRepository";
 import pool, { dropTestDatabase } from "../Utils/dbUtils";
 
-describe.skip('Template tests', () => {
+describe('Staff Details Function', () => {
   let user_db;
   let comp_db;
   let uni_db;
@@ -36,7 +36,7 @@ describe.skip('Template tests', () => {
     defaultSite: 'TestRoom',
   }
 
-  const mockCompetition: Competition = {
+  const mockCompetition = {
     name: 'TestComp',
     teamSize: 5,
     createdDate: dateNow,
@@ -44,14 +44,14 @@ describe.skip('Template tests', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW',
+    code: 'NEW17',
     region: 'Australia'
   }
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin@odmin.com',
+    email: 'newadmin17@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -79,7 +79,7 @@ describe.skip('Template tests', () => {
       universityId: 1,
       universityName: 'University of Melbourne',
       name: 'Maximillian Maverick',
-      email: 'newadmin@odmin.com',
+      email: 'newadmin17@odmin.com',
       sex: 'Male',
       pronouns: 'He/Him',
       tshirtSize: 'M',
@@ -96,7 +96,7 @@ describe.skip('Template tests', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender@gmail.com',
+      email: 'newcontender17@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -149,7 +149,27 @@ describe.skip('Template tests', () => {
     await dropTestDatabase(pool);
   });
 
-  test('Case: Husk', async () => {
-    expect(1 + 1).toBe(2);
+  test('Failure case: Staff does not exist or is not a part of this competition.', async () => {
+    await expect(comp_staff_db.competitionStaffDetails(id + 10, comp.competitionId)).rejects.toThrow("Staff does not exist or is not a part of this competition.");
+  })
+
+  test('Success case: Succesfully return staff details', async () => {
+    expect(await comp_staff_db.competitionStaffDetails(id, comp.competitionId)).toStrictEqual({
+      userId: 30,
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'newadmin17@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      userAccess: 'Pending',
+      bio: 'good bio, trust',
+      roles: ['Admin', 'Coach', 'Site-Coordinator'],
+      access: 'Accepted'
+    });
   })
 })
