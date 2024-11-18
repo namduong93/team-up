@@ -1,4 +1,5 @@
 import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
+import { ParticipantTeamDetails } from '../../../../shared_types/Competition/team/TeamDetails';
 import { DbError } from '../../../errors/DbError';
 import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
@@ -40,14 +41,14 @@ describe('Approve Team Name Function', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation1],
-    code: 'TC55',
+    code: 'TC543',
     region: 'Australia'
   };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'dasOddodmin55@odmin.com',
+    email: 'dasOddodmin543@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -58,7 +59,8 @@ describe('Approve Team Name Function', () => {
   let id: number;
   let comp: CompetitionIdObject;
   let newStudent: UserIdObject;
-  let teamInfo;
+  let teamInfo: ParticipantTeamDetails;
+  let teamId: number;
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
@@ -96,7 +98,7 @@ describe('Approve Team Name Function', () => {
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newStudentSacrifice66@gmail.com',
+      email: 'newStudentSacrifice543@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -135,42 +137,104 @@ describe('Approve Team Name Function', () => {
     };
     await comp_student_db.competitionStudentJoin(newContender, studentUni);
     teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+    const teamCode = await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId);
+    teamId = comp_db.decrypt(teamCode);
   });
 
   afterAll(async () => {
     await dropTestDatabase(pool);
   });
 
-  test('Sucess case: name was successfully changed', async () => {
-    const teamId = await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'notBulbasaur');
+  test('Sucess case: team assignment approved', async () => {
+    await comp_staff_db.competitionApproveTeamAssignment(id, comp.competitionId, [teamId]);
 
-    await comp_staff_db.competitionApproveTeamNameChange(id, comp.competitionId, [teamId], []);
+    expect(await comp_staff_db.competitionTeams(id, comp.competitionId)).toStrictEqual([
+      {
+        siteId: 1,
+        teamId: expect.any(Number),
+        universityId: 1,
+        status: 'Unregistered',
+        teamNameApproved: true,
+        compName: 'TestComp',
+        teamName: 'Bulbasaur',
+        teamSite: 'Library',
+        teamSeat: null,
+        teamLevel: 'Level B',
+        startDate: new Date(startDate),
+        students: [{
+          'ICPCEligible': true,
+          'bio': 'I good, promise',
+          'boersenEligible': true,
+          'codeforcesRating': 7,
+          'email': 'newStudentSacrifice543@gmail.com',
+          'internationalPrizes': 'none',
+          'isRemote': true,
+          'level': 'No Preference',
+          'name': 'Maximillian Maverick',
+          'preferredName': 'X',
+          'sex': 'Male',
+          'nationalPrizes': 'none',
+          'pastRegional': true,
+          'preferredContact': 'Pigeon Carrier',
+          'universityCourses': [
+            '4511',
+            '9911',
+            '911',
+          ],
 
-    const newTeamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
-
-    expect(newTeamInfo.teamName).toStrictEqual('notBulbasaur');
+          'userId': newStudent.userId,
+        }, {
+          'ICPCEligible': null,
+          'bio': null,
+          'boersenEligible': null,
+          'codeforcesRating': null,
+          'email': null,
+          'internationalPrizes': null,
+          'isRemote': null,
+          'level': null,
+          'name': null,
+          'nationalPrizes': null,
+          'preferredName': null,
+          'sex': null,
+          'pastRegional': null,
+          'preferredContact': null,
+          'universityCourses': null,
+          'userId': null,
+        }, {
+          'ICPCEligible': null,
+          'bio': null,
+          'boersenEligible': null,
+          'codeforcesRating': null,
+          'email': null,
+          'internationalPrizes': null,
+          'isRemote': null,
+          'level': null,
+          'name': null,
+          'preferredName': null,
+          'sex': null,
+          'nationalPrizes': null,
+          'pastRegional': null,
+          'preferredContact': null,
+          'universityCourses': null,
+          'userId': null,
+        }],
+        coach: {
+          name: 'Maximillian Maverick',
+          email: 'dasOddodmin543@odmin.com',
+          bio: 'i good, trust'
+        }
+      }
+    ]);
   });
 
-  test('Sucess case: name was successfully rejected', async () => {
-    const teamId = await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'Bulbasaur');
-
-    await comp_staff_db.competitionApproveTeamNameChange(id, comp.competitionId, [], [teamId]);
-
-    const newTeamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
-
-    expect(newTeamInfo.teamName).toStrictEqual('notBulbasaur');
-  });
-
-  test('Fail cases: non-existing competition or unauthorized', async () => {
-    const teamId = await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'Bulbasaur');
+  test('Fail cases', async () => {
+    // No team to approve
+    await expect(comp_staff_db.competitionApproveTeamAssignment(id, comp.competitionId, [])).rejects.toThrow(DbError);
+    
+    // Competition not found
+    await expect(comp_staff_db.competitionApproveTeamAssignment(id, 99, [teamId])).rejects.toThrow(DbError);
 
     // User not a admin or coach
-    await expect(comp_staff_db.competitionApproveTeamNameChange(999, comp.competitionId, [teamId], [])).rejects.toThrow(DbError);
-    
-    // Competition does not exist
-    await expect(comp_staff_db.competitionApproveTeamNameChange(id, 999, [teamId], [])).rejects.toThrow(DbError);
-    
-    // Duplicated team id
-    await expect(comp_staff_db.competitionApproveTeamNameChange(id, comp.competitionId, [teamId], [teamId])).rejects.toThrow(DbError);
+    await expect(comp_staff_db.competitionApproveTeamAssignment(99, comp.competitionId, [teamId])).rejects.toThrow(DbError);
   });
 });
