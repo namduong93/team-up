@@ -30,8 +30,9 @@ export const StyledButtonContainer = styled.div`
 export const ResponsiveButtonContainer = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(49px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(47px, 1fr));
   min-width: 100px;
+  gap: 2px;
 `;
 
 export interface PageButtonsProps {
