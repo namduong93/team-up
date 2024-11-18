@@ -58,30 +58,64 @@ export interface CompetitionPageContext {
     React.Dispatch<React.SetStateAction<Array<StaffInfo>>>
   ];
   compDetails: CompetitionDetails;
-  
+
   buttonConfigurationState: [
     ButtonConfiguration,
     React.Dispatch<React.SetStateAction<ButtonConfiguration>>
   ];
   siteOptionsState: [
     Array<{ value: string; label: string }>,
-    React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
+    React.Dispatch<
+      React.SetStateAction<Array<{ value: string; label: string }>>
+    >
   ];
   universityOptionsState: [
     Array<{ value: string; label: string }>,
-    React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
+    React.Dispatch<
+      React.SetStateAction<Array<{ value: string; label: string }>>
+    >
   ];
   dropdownOptionsState: [
     Array<{ value: string; label: string }>,
-    React.Dispatch<React.SetStateAction<Array<{ value: string; label: string }>>>
+    React.Dispatch<
+      React.SetStateAction<Array<{ value: string; label: string }>>
+    >
   ];
 
-  siteOptionState: [{ value: string; label: string }, React.Dispatch<React.SetStateAction<{ value: string, label: string }>>];
-  universityOptionState: [{ value: string, label: string }, React.Dispatch<React.SetStateAction<{ value: string, label: string }>>];
-  dropdownOptionState: [{ value: string, label: string }, React.Dispatch<React.SetStateAction<{ value: string, label: string }>>];
+  siteOptionState: [
+    { value: string; label: string },
+    React.Dispatch<React.SetStateAction<{ value: string; label: string }>>
+  ];
+  universityOptionState: [
+    { value: string; label: string },
+    React.Dispatch<React.SetStateAction<{ value: string; label: string }>>
+  ];
+  dropdownOptionState: [
+    { value: string; label: string },
+    React.Dispatch<React.SetStateAction<{ value: string; label: string }>>
+  ];
 }
 
-export const useCompetitionOutletContext = (page: string, reRender?: boolean, dropdown?: string) => {
+/**
+ * `useCompetitionOutletContext` is a custom hook that manages and provides the context for various states
+ * and configurations of a competition page. It updates state values such as filters, sorting options, team list,
+ * and button configurations based on the page being viewed (e.g., 'teams', 'students', 'staff', 'attendees').
+ * It also handles logic for dropdown options related to 'site' and 'university', and updates button configurations
+ * to enable/disable buttons based on the user's role (e.g., Admin, Coach).
+ *
+ * @param {string} page - The current page being viewed, which influences the button configurations and dropdown options.
+ * @param {boolean} [reRender] - An optional flag to trigger re-rendering and state updates.
+ * @param {string} [dropdown] - The dropdown type ('site' or 'university') for filtering options.
+ * @returns {CompetitionPageContext} The current context state with all relevant values and functions, including:
+ *  - Filters, sorting options, and search terms.
+ *  - States for editing status, team lists, students, attendees, staff, and button configurations.
+ *  - Dropdown options for site and university filtering.
+ */
+export const useCompetitionOutletContext = (
+  page: string,
+  reRender?: boolean,
+  dropdown?: string
+) => {
   const context = useOutletContext<CompetitionPageContext>();
   const {
     filters,
@@ -116,7 +150,7 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean, dr
     setIsEditingNameStatus(false);
     setRejectedTeamIds([]);
 
-    if (dropdown === 'site') {
+    if (dropdown === "site") {
       setDropdownOptions(siteOptions);
       setDropdownOption(siteOption);
     } else {
@@ -125,18 +159,20 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean, dr
     }
 
     // enable the team buttons on the team page and not on the non-team page
-    if (page === 'teams') {
+    if (page === "teams") {
       setButtonConfiguration((p) => ({
         ...p,
-        enableTeamButtons: (roles.includes(CompetitionRole.Admin) || roles.includes(CompetitionRole.Coach)),
+        enableTeamButtons:
+          roles.includes(CompetitionRole.Admin) ||
+          roles.includes(CompetitionRole.Coach),
         enableStudentButtons: false,
         enableStaffButtons: false,
         enableAttendeesButtons: false,
       }));
       return;
     }
-    
-    if (page === 'students') {
+
+    if (page === "students") {
       setButtonConfiguration((p) => ({
         ...p,
         enableTeamButtons: false,
@@ -146,8 +182,8 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean, dr
       }));
       return;
     }
-  
-    if (page === 'staff') {
+
+    if (page === "staff") {
       setButtonConfiguration((p) => ({
         ...p,
 
@@ -158,8 +194,8 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean, dr
       }));
       return;
     }
-  
-    if (page === 'attendees') {
+
+    if (page === "attendees") {
       setButtonConfiguration((p) => ({
         ...p,
 
@@ -182,7 +218,7 @@ export const useCompetitionOutletContext = (page: string, reRender?: boolean, dr
   }, [roles, siteOptions, universityOptions, reRender]);
 
   useEffect(() => {
-    if (dropdown === 'site') {
+    if (dropdown === "site") {
       setSiteOption(dropdownOption);
     } else {
       setUniversityOption(dropdownOption);

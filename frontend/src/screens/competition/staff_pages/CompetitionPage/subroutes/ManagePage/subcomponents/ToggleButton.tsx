@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-// Styled component for the container
 const StyledToggleContainer = styled.div<{ $isOn: boolean }>`
   display: flex;
   align-items: center;
@@ -16,7 +15,6 @@ const StyledToggleContainer = styled.div<{ $isOn: boolean }>`
   transition: background-color 0.3s;
 `;
 
-// Styled component for the circle
 const StyledToggleCircle = styled.div<{ $isOn: boolean }>`
   width: 20px;
   height: 20px;
@@ -29,8 +27,14 @@ const StyledToggleCircle = styled.div<{ $isOn: boolean }>`
 interface ToggleButtonProps {
   isOn: boolean;
   onToggle: () => void;
-}
+};
 
+/**
+ * A React toggle component that allows switching between an 'on' and 'off' state
+ *
+ * @param {ToggleButtonProps} props - React ToggleButtonProps specified above
+ * @returns {JSX.Element} - Web page styled toggle component.
+ */
 export const ToggleButton: React.FC<ToggleButtonProps> = ({
   isOn,
   onToggle,

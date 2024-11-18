@@ -74,8 +74,15 @@ interface JoinPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
   currentTeamCode?: string;
-}
+};
 
+/**
+ * `JoinPopUp` is a React web page component that displays a text input field
+ * for users to enter a code to join a team
+ *
+ * @returns JSX.Element - A styled container presenting a text input for users
+ * to enter the team code
+ */
 const JoinPopup: React.FC<JoinPopUpProps> = ({
   heading,
   onClose,
@@ -96,7 +103,9 @@ const JoinPopup: React.FC<JoinPopUpProps> = ({
           "/competition/team/join",
           { compId, teamCode }
         );
-        navigate("/dashboard", { state: { joined: true, teamName: response.data.teamName } });
+        navigate("/dashboard", {
+          state: { joined: true, teamName: response.data.teamName },
+        });
       };
       joinTeam();
     } catch (error) {

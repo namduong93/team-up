@@ -1,13 +1,12 @@
-import React, { FC } from 'react';
-import styled from 'styled-components';
+import React, { FC } from "react";
+import styled from "styled-components";
 
-// Styles
 const StyledContainer = styled.div<{ width?: string }>`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
   font-family: Arial, Helvetica, sans-serif;
-  width: ${({ width }) => width}; // Use width prop or default to auto
+  width: ${({ width }) => width};
 `;
 
 const StyledLabel = styled.label`
@@ -17,12 +16,12 @@ const StyledLabel = styled.label`
   margin-top: 10px;
   font-weight: bold;
   font-size: 18px;
-  color: ${({ theme}) => theme.fonts.colour};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const StyledAsterisk = styled.span`
   color: red;
-  margin-left: 5px; // Add space between label and asterisk
+  margin-left: 5px;
 `;
 
 const StyledDescriptor = styled.div`
@@ -32,37 +31,44 @@ const StyledDescriptor = styled.div`
 `;
 
 const StyledOptionsContainer = styled.div`
-  display: flex; // Use flex to arrange radio buttons side by side
-  flex-direction: row; // Arrange in a row
-  margin-top: 5px; // Optional: Add some space above the radio buttons
-  justify-content: space-between; // Correct the syntax
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+  justify-content: space-between;
   width: 100%;
 `;
 
 const StyledRadioButtonLabel = styled.label`
   display: flex;
   align-items: center;
-  flex: 1; // Allow labels to take equal space within the OptionsContainer
+  flex: 1;
   font-size: 16px;
   cursor: pointer;
-  color: ${({ theme}) => theme.fonts.colour};
+  color: ${({ theme }) => theme.fonts.colour};
 `;
 
 const StyledRadioInput = styled.input`
-  margin-right: 10px; // Space between radio input and label text
+  margin-right: 10px;
   cursor: pointer;
 `;
 
 interface RadioButtonGroupProps {
-  label?: string; // Make label optional
+  label?: string;
   options: string[];
   selectedOption: string;
   onOptionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
-  descriptor?: string | string[]; 
-  width?: string; // Optional width field
+  descriptor?: string | string[];
+  width?: string;
 }
 
+/**
+ * A React component to allow users to select a single option from a radio input.
+ *
+ * @param {RadioButtonGroupProps} props - React RadioButtonGroupProps specified above
+ * @returns {JSX.Element} - Web page component that allows users to select a single option
+ * from a radio input.
+ */
 const RadioButton: FC<RadioButtonGroupProps> = ({
   label,
   options,
@@ -70,7 +76,7 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
   onOptionChange,
   required = false,
   descriptor,
-  width, 
+  width,
 }) => {
   return (
     <StyledContainer width={width} className="radio-button--StyledContainer-0">
@@ -82,15 +88,14 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
       )}
       {descriptor && (
         <StyledDescriptor className="radio-button--StyledDescriptor-0">
-          {Array.isArray(descriptor) 
+          {Array.isArray(descriptor)
             ? descriptor.map((line, index) => (
                 <React.Fragment key={index}>
                   {line}
                   {index < descriptor.length - 1 && <br />}
                 </React.Fragment>
               ))
-            : descriptor
-          }
+            : descriptor}
         </StyledDescriptor>
       )}
       <StyledOptionsContainer className="radio-button--StyledOptionsContainer-0">
@@ -98,9 +103,7 @@ const RadioButton: FC<RadioButtonGroupProps> = ({
           <StyledRadioButtonLabel key={option} className="radio-button--StyledRadioButtonLabel-0">
             <StyledRadioInput
               type="radio"
-              // Add an id for accessibility
               id={option}
-              // Group name for the radio buttons
               name={label}
               value={option}
               checked={selectedOption === option}

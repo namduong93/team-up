@@ -4,7 +4,12 @@ import { UserAccess } from "../../../shared_types/User/User";
 import { fetchStaffRequests } from "./util/fetchStaffRequests";
 import Fuse from "fuse.js";
 import { sendRequest } from "../../utility/request";
-import { StyledFilterTagContainer, StyledPageBackground, StyledStaffContainer, StyledStaffRecords } from "./StaffAccessPage.styles";
+import {
+  StyledFilterTagContainer,
+  StyledPageBackground,
+  StyledStaffContainer,
+  StyledStaffRecords,
+} from "./StaffAccessPage.styles";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { StaffAccessButtons } from "./subcomponents/StaffAccessButtons";
 import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../dashboard/Dashboard.styles";
@@ -13,10 +18,13 @@ import { NarrowStaffAccessCard } from "./subcomponents/NarrowStaffAccessCard";
 import { WideStaffAccessHeader } from "./subcomponents/WideStaffAccessHeader";
 import { WideStaffAccessCard } from "./subcomponents/WideStaffAccessCard";
 
-
-export interface StaffAccessCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface StaffAccessCardProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   staffDetails: StaffInfo;
-  staffListState: [StaffInfo[], React.Dispatch<React.SetStateAction<StaffInfo[]>>];
+  staffListState: [
+    StaffInfo[],
+    React.Dispatch<React.SetStateAction<StaffInfo[]>>
+  ];
 }
 
 const STAFF_DISPLAY_SORT_OPTIONS = [
@@ -28,6 +36,15 @@ const STAFF_DISPLAY_FILTER_OPTIONS: Record<string, Array<string>> = {
   Access: [UserAccess.Accepted, UserAccess.Pending, UserAccess.Rejected],
 };
 
+/**
+ * A React compoenent displaying and managing staff account requests.
+ *
+ * `StaffAccessPage` allows for the filtering, sorting, and searching of staff requests based on different criteria
+ * such as access status, name, university affiliation, and email. It also supports approving or rejecting
+ * multiple staff requests at once.
+ *
+ * @returns {JSX.Element} - The rendered Staff Access page component with filtering, searching, and approval/rejection functionality.
+ */
 export const StaffAccessPage: FC = () => {
   const [staffList, setStaffList] = useState<Array<StaffInfo>>([]);
   const [sortOption, setSortOption] = useState<string | null>(null);
@@ -38,7 +55,9 @@ export const StaffAccessPage: FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Check if filters contain only "Pending"
-  const isPendingOnly = filters["Access"]?.length === 1 && filters["Access"].includes(UserAccess.Pending);
+  const isPendingOnly =
+    filters["Access"]?.length === 1 &&
+    filters["Access"].includes(UserAccess.Pending);
 
   useEffect(() => {
     setSortOption(STAFF_DISPLAY_SORT_OPTIONS[0].value);
@@ -46,13 +65,19 @@ export const StaffAccessPage: FC = () => {
     fetchStaffRequests(setStaffList);
   }, []);
 
+  // Filtering for staff based on selected filters
   const filteredStaff = staffList.filter((staffDetails) => {
-    if (filters["Access"] && filters["Access"].length > 0 && !filters["Access"].includes(staffDetails.userAccess)) {
+    if (
+      filters["Access"] &&
+      filters["Access"].length > 0 &&
+      !filters["Access"].includes(staffDetails.userAccess)
+    ) {
       return false;
     }
     return true;
   });
 
+  // Sorting logic based on the selected sorting option
   const sortedStaff = filteredStaff.sort((staffDetails1, staffDetails2) => {
     if (sortOption === "name") {
       return staffDetails1.name.localeCompare(staffDetails2.name);
@@ -60,6 +85,7 @@ export const StaffAccessPage: FC = () => {
     return 0;
   });
 
+  // Searching for staff based on the selected sort option
   const fuse = new Fuse(sortedStaff, {
     keys: ["name", "universityName", "access", "email"],
     threshold: 0.5,
@@ -69,7 +95,9 @@ export const StaffAccessPage: FC = () => {
   if (searchTerm) {
     searchedStaff = fuse.search(searchTerm);
   } else {
-    searchedStaff = sortedStaff.map((staff) => { return { item: staff } });
+    searchedStaff = sortedStaff.map((staff) => {
+      return { item: staff };
+    });
   }
 
   const removeFilter = (field: string, value: string) => {
@@ -85,12 +113,20 @@ export const StaffAccessPage: FC = () => {
 
   const handleApproveAll = async (): Promise<boolean> => {
     // Filter by pending
-    const pendingStaffListIds = searchedStaff.filter((staffDetails) => staffDetails.item.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.item.userId);
-  
+    const pendingStaffListIds = searchedStaff
+      .filter(
+        (staffDetails) => staffDetails.item.userAccess === UserAccess.Pending
+      )
+      .map((staffDetails) => staffDetails.item.userId);
+
     try {
-      await sendRequest.post("/user/staff_requests", { staffRequests: pendingStaffListIds.map((userId) => ({ userId, access: UserAccess.Accepted })) });
-    }
-    catch (error) {
+      await sendRequest.post("/user/staff_requests", {
+        staffRequests: pendingStaffListIds.map((userId) => ({
+          userId,
+          access: UserAccess.Accepted,
+        })),
+      });
+    } catch (error) {
       console.error("Error updating staff access: ", error);
       return false;
     }
@@ -99,12 +135,20 @@ export const StaffAccessPage: FC = () => {
 
   const handleRejectAll = async (): Promise<boolean> => {
     // Filter by pending
-    const pendingStaffListIds = searchedStaff.filter((staffDetails) => staffDetails.item.userAccess === UserAccess.Pending).map((staffDetails) => staffDetails.item.userId);
-  
+    const pendingStaffListIds = searchedStaff
+      .filter(
+        (staffDetails) => staffDetails.item.userAccess === UserAccess.Pending
+      )
+      .map((staffDetails) => staffDetails.item.userId);
+
     try {
-      await sendRequest.post("/user/staff_requests", { staffRequests: pendingStaffListIds.map((userId) => ({ userId, access: UserAccess.Rejected })) });
-    }
-    catch (error) {
+      await sendRequest.post("/user/staff_requests", {
+        staffRequests: pendingStaffListIds.map((userId) => ({
+          userId,
+          access: UserAccess.Rejected,
+        })),
+      });
+    } catch (error) {
       console.error("Error updating staff access: ", error);
       return false;
     }
@@ -122,7 +166,11 @@ export const StaffAccessPage: FC = () => {
         filtersState={{ filters, setFilters }}
         searchTermState={{ searchTerm, setSearchTerm }}
       >
-        <StaffAccessButtons onApproveAll={handleApproveAll} onRejectAll={handleRejectAll} editingForAll={isPendingOnly}/>
+        <StaffAccessButtons
+          onApproveAll={handleApproveAll}
+          onRejectAll={handleRejectAll}
+          editingForAll={isPendingOnly}
+        />
       </PageHeader>
       <StyledFilterTagContainer className="staff-access-page--StyledFilterTagContainer-0">
         {Object.entries(filters).map(([field, values]) =>
@@ -146,9 +194,9 @@ export const StaffAccessPage: FC = () => {
           <StyledStaffRecords className="staff-access-page--StyledStaffRecords-0">
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }) => (
-                <NarrowStaffAccessCard 
-                  key={`staff-wide-${staffDetails.userId}`}  
-                  staffDetails={staffDetails} 
+                <NarrowStaffAccessCard
+                  key={`staff-wide-${staffDetails.userId}`}
+                  staffDetails={staffDetails}
                   staffListState={[staffList, setStaffList]}
                 />
               ))
@@ -162,9 +210,9 @@ export const StaffAccessPage: FC = () => {
           <StyledStaffRecords className="staff-access-page--StyledStaffRecords-1">
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }) => (
-                <WideStaffAccessCard 
-                  key={`staff-wide-${staffDetails.userId}`}  
-                  staffDetails={staffDetails} 
+                <WideStaffAccessCard
+                  key={`staff-wide-${staffDetails.userId}`}
+                  staffDetails={staffDetails}
                   staffListState={[staffList, setStaffList]}
                 />
               ))

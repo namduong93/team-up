@@ -9,7 +9,12 @@ import { sendRequest } from "../../utility/request";
 import { ParticipantTeamDetails } from "../../../shared_types/Competition/team/TeamDetails";
 
 import { Announcement } from "../../../shared_types/Competition/staff/Announcement";
-import { StyledMainPageDiv, StyledOverflowFlexBackground, StyledPageOptionsContainerDiv, StyledToggleOptionDiv } from "../competition/staff_pages/CompetitionPage/subroutes/CommonSubStyles.styles";
+import {
+  StyledMainPageDiv,
+  StyledOverflowFlexBackground,
+  StyledPageOptionsContainerDiv,
+  StyledToggleOptionDiv,
+} from "../competition/staff_pages/CompetitionPage/subroutes/CommonSubStyles.styles";
 import { WithdrawPopupChain } from "./subcomponents/WithdrawPopupChain/WithdrawPopupChain";
 
 const StyledTeamToggleOptionDiv = styled(StyledToggleOptionDiv)``;
@@ -24,9 +29,7 @@ const StyledTeamOverflowFlexBackground = styled(StyledOverflowFlexBackground)`
   height: 98%;
 `;
 
-const StyledTeamProvileOutlet = styled(Outlet)`
-  /* box-sizing: border-box; */
-`;
+const StyledTeamProvileOutlet = styled(Outlet)``;
 
 const StyledOverlay = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? "block" : "none")};
@@ -50,6 +53,14 @@ In 2021, more than 50,000 of the finest students in computing disciplines from o
 The detail can be seen at: [sppcontests.org/south-pacific-icpc](https://sppcontests.org/south-pacific-icpc/)
 `;
 
+/**
+ * `TeamProfile` is a React page component that displays detailed information about a participant's team
+ * in a competition. It fetches and displays the team's details, competition announcements, and provides
+ * navigation options to view the team's profile or manage their competition settings.
+ *
+ * @returns {JSX.Element} - The rendered team profile page, including a toggle for navigating between team
+ * details and management.
+ */
 export const TeamProfile: FC = () => {
   const navigate = useNavigate();
   const { compId } = useParams();
@@ -68,7 +79,7 @@ export const TeamProfile: FC = () => {
       bio: "",
     },
   });
-  const [announcements, setAnnouncements] = useState("");  // for coach to set specific comp details/announcements
+  const [announcements, setAnnouncements] = useState(""); // for coach to set specific comp details/announcements
 
   useEffect(() => {
     const fetchTeamDetails = async () => {
@@ -84,8 +95,11 @@ export const TeamProfile: FC = () => {
     fetchTeamDetails();
 
     const fetchCompAnnouncements = async () => {
-      const response = await sendRequest.get<{announcement: Announcement}>("/competition/announcement", { compId });
-      if(response.data.announcement === undefined) {
+      const response = await sendRequest.get<{ announcement: Announcement }>(
+        "/competition/announcement",
+        { compId }
+      );
+      if (response.data.announcement === undefined) {
         setAnnouncements(defaultAnnouncement);
         return;
       }

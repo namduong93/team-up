@@ -2,15 +2,32 @@ import { FC } from "react";
 import { NotificationButton } from "../../../../components/page_header/components/NotificationButton";
 
 import { CompCountdownBar } from "../CompCountdownBar";
-import { StyledButtonContainer, StyledHeaderContent, StyledHeaderRightSection, StyledResponsiveHeader, StyledTeamDescription, StyledTeamTitle, StyledWithdrawButton } from "./TeamHeader.styles";
+import {
+  StyledButtonContainer,
+  StyledHeaderContent,
+  StyledHeaderRightSection,
+  StyledResponsiveHeader,
+  StyledTeamDescription,
+  StyledTeamTitle,
+  StyledWithdrawButton,
+} from "./TeamHeader.styles";
 
 interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   compName: string;
   teamName: string;
   compCountdown: number;
   onWithdrawClick: () => void;
-}
+};
 
+/**
+ * `TeamHeader` is a React web page component header that displays competition and team details 
+ * at the top of the page.It includes the competition name, the team name, a countdown bar for 
+ * the competition, a withdraw button with a confirmation prompt, and a notification button.
+
+ * @param {HeaderAttributes} props - React HeaderAttributes specified above
+ * 
+ * @returns {JSX.Element} - The rendered header component.
+ */
 export const TeamHeader: FC<HeaderAttributes> = ({
   compName,
   teamName,

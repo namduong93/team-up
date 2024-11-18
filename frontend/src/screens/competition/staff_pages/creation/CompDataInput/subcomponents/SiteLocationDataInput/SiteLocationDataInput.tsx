@@ -1,29 +1,48 @@
 import { useEffect, useState } from "react";
 import { sendRequest } from "../../../../../../../utility/request";
-import { StyledAddButton, StyledAddButtonContainer, StyledContainer, StyledDoubleInputContainer, StyledTitle } from "./SiteLocationDataInput.styles";
+import {
+  StyledAddButton,
+  StyledAddButtonContainer,
+  StyledContainer,
+  StyledDoubleInputContainer,
+  StyledTitle,
+} from "./SiteLocationDataInput.styles";
 import { StyledLabel } from "../../CompDataInput.styles";
 import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 import TextInputLight from "../../../../../../../components/general_utility/TextInputLight";
 
-
-// pass the a boolean too and receive on CompDetails
 interface SiteLocationFormProps {
-  onAddLocation: (currentOption: {
-    value: string;
-    label: string;
-}, defaultSite: string) => void;
-}
+  onAddLocation: (
+    currentOption: {
+      value: string;
+      label: string;
+    },
+    defaultSite: string
+  ) => void;
+};
 
 interface University {
   id: string;
   name: string;
-}
- 
-const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({ onAddLocation }) => {
-  const [defaultSite, setDefaultSite] = useState('');
-  const [institutionOptions, setInstitutionOptions] = useState<Array<{ value: string, label: string }>>([]);
+};
 
-  const [currentOption, setCurrentOption] = useState({ value: '', label: '' });
+/**
+ * `SiteLocationDataInput` is a React functional component that facilitates the selection and input of site locations
+ * associated with a competition. It provides a dropdown to select an institution and a text input field to specify a
+ * default site location. Users can add the selected institution and site location to the parent component's state.
+ *
+ * @returns JSX.Element - A styled container with inputs for selecting a university and specifying its default site location,
+ * along with a button to add the entry.
+ */
+const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({
+  onAddLocation,
+}) => {
+  const [defaultSite, setDefaultSite] = useState("");
+  const [institutionOptions, setInstitutionOptions] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
+
+  const [currentOption, setCurrentOption] = useState({ value: "", label: "" });
 
   const handleAddLocation = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -36,7 +55,9 @@ const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({ onAddLocation 
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
-        const response = await sendRequest.get<{ universities: University[] }>('/universities/list');
+        const response = await sendRequest.get<{ universities: University[] }>(
+          "/universities/list"
+        );
         const universities = response.data;
 
         const options = universities.universities.map((university) => ({
@@ -62,7 +83,7 @@ const SiteLocationDataInput: React.FC<SiteLocationFormProps> = ({ onAddLocation 
           <AdvancedDropdown
             setCurrentSelected={setCurrentOption}
             optionsState={[institutionOptions, setInstitutionOptions]}
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
           />
         </div>
         <TextInputLight

@@ -1,14 +1,21 @@
-import React, { FC, useEffect, useRef, useState } from "react"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { FC, useEffect, useRef, useState } from "react";
 import { FaArrowRight, FaSave } from "react-icons/fa";
 import { RxReset } from "react-icons/rx";
-import { Student, TeamDetails } from "../../../../../../../../shared_types/Competition/team/TeamDetails";
+import {
+  Student,
+  TeamDetails,
+} from "../../../../../../../../shared_types/Competition/team/TeamDetails";
 import { ButtonConfiguration } from "../../../hooks/useCompetitionOutletContext";
 import styled, { useTheme } from "styled-components";
 import { StyledTextArea } from "../../../../../../student/subcomponents/EditCompUserDetails/EditCompUserDetails.styles";
 import { useParams } from "react-router-dom";
 import { addStudentToTeam } from "../../../subroutes/TeamPage/utility/addStudentToTeam";
 import { sendRequest } from "../../../../../../../utility/request";
-import { StyledEditIcon, StyledEditIconButton } from "../../../../../../Account/Account.styles";
+import {
+  StyledEditIcon,
+  StyledEditIconButton,
+} from "../../../../../../Account/Account.styles";
 import { StyledLabelSpan } from "../TeamInfoBar/TeamInfoBar.styles";
 import { CopyButton } from "../../../../../../../components/general_utility/CopyButton";
 import { StyledBooleanStatus } from "../../../subroutes/AttendeesPage/subcomponents/BooleanStatus";
@@ -16,18 +23,8 @@ import { ResponsiveActionButton } from "../../../../../../../components/responsi
 import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
 
-interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
-  student: Student;
-  teamDetails: TeamDetails;
-  popupOpenState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
-  buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
-  isEditable: boolean;
-}
-
 const StyledMemberFieldDiv = styled.div`
   display: flex;
-  /* flex-direction: column; */
   column-gap: 4px;
   align-items: center;
 `;
@@ -69,7 +66,6 @@ export const StyledEditableTextArea = styled(StyledTextArea)`
   resize: both;
   padding: 2px 0 0 3px;
   font: inherit;
-  
 `;
 
 export const StyledToggleSelect = styled.select<{ $toggled: boolean }>`
@@ -77,86 +73,152 @@ export const StyledToggleSelect = styled.select<{ $toggled: boolean }>`
   width: 75%;
   height: 30px;
   border: 1px solid ${({ theme }) => theme.colours.sidebarBackground};
-  background-color: ${({ $toggled, theme }) => $toggled ? theme.colours.confirm : theme.colours.cancel};
-`
+  background-color: ${({ $toggled, theme }) =>
+    $toggled ? theme.colours.confirm : theme.colours.cancel};
+`;
 
+interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
+  student: Student;
+  teamDetails: TeamDetails;
+  popupOpenState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  teamListState: [
+    Array<TeamDetails>,
+    React.Dispatch<React.SetStateAction<Array<TeamDetails>>>
+  ];
+  buttonConfigurationState: [
+    ButtonConfiguration,
+    React.Dispatch<React.SetStateAction<ButtonConfiguration>>
+  ];
+  isEditable: boolean;
+}
+
+/**
+ * A React component for displaying and editing student information within a competition team.
+ *
+ * The `TeamStudentInfoCard` component allows for viewing and updating a student's details, such as name,
+ * email, bio, competition eligibility, and prizes. It includes features for editing the student's information,
+ * switching teams, saving changes, and resetting modifications. The card also supports conditional rendering
+ * of form fields based on the editing state
+ *
+ * @param {TeamStudentInfoProps} props - React TeamStudentInfoProps specified above, where teamDetails is the information
+ * about the team to which the student belongs, teamListState  manages the list of all teams in the competition and
+ * buttonConfigurationState manages button configurations.
+ * @returns {JSX.Element} - A UI component that displays a student's information and provides editing options.
+ */
 export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
   student,
   teamDetails,
-  buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
+  buttonConfigurationState: [, setButtonConfiguration],
   teamListState: [teamList, setTeamList],
-  popupOpenState: [isPopupOpen, setPopupOpen],
-  isEditable
+  popupOpenState: [, setPopupOpen],
+  isEditable,
 }) => {
   const theme = useTheme();
   const { compId } = useParams();
   const cardRef = useRef(null);
-  
-  const [teamOptions, setTeamOptions] 
-  = useState(teamList.map((team) => ({ value: String(team.teamId), label: team.teamName })));
-  const [currentTeamOption, setCurrentTeamOption] = useState({ value: '', label: '' });
 
+  const [teamOptions, setTeamOptions] = useState(
+    teamList.map((team) => ({
+      value: String(team.teamId),
+      label: team.teamName,
+    }))
+  );
+  const [currentTeamOption, setCurrentTeamOption] = useState({
+    value: "",
+    label: "",
+  });
+
+  // Handles a student's change of team when the user selects a different team from
+  // the dropdown. It updates the team's student list by moving the student to the new
+  // team and displaying the confirm team changes button
   const handleSubmitTeamChange = async (student: Student) => {
-
     const newTeamId = parseInt(currentTeamOption.value);
     const currentTeamId = teamDetails.teamId;
-    
-    const newTeamIndex = teamList.findIndex((team) => team.teamId === newTeamId);
-    const currentTeamIndex = teamList.findIndex((team) => team.teamId === currentTeamId);
 
-    if (addStudentToTeam(student, currentTeamIndex, newTeamIndex, [teamList, setTeamList])) {
+    const newTeamIndex = teamList.findIndex(
+      (team) => team.teamId === newTeamId
+    );
+    const currentTeamIndex = teamList.findIndex(
+      (team) => team.teamId === currentTeamId
+    );
+
+    if (
+      addStudentToTeam(student, currentTeamIndex, newTeamIndex, [
+        teamList,
+        setTeamList,
+      ])
+    ) {
       setButtonConfiguration((p) => ({
         ...p,
-        enableTeamsChangedButtons: true
+        enableTeamsChangedButtons: true,
       }));
-    };
+    }
     setPopupOpen(false);
     return true;
-  }
+  };
 
   const [isEditingCard, setIsEditingCard] = useState(false);
-
   const [studentData, setStudentData] = useState(student);
-
   const [isEdited, setIsEdited] = useState(false);
 
+  // Triggered when the 'studentData' object changes, it checks whether the
+  // 'studentData' is different from the initial and toggles the
+  // Edit state
   useEffect(() => {
-    if (Object.keys(studentData).every((key) => (studentData as Record<string, any>)[key] === (student as Record<string, any>)[key])) {
+    if (
+      Object.keys(studentData).every(
+        (key) =>
+          (studentData as Record<string, any>)[key] ===
+          (student as Record<string, any>)[key]
+      )
+    ) {
       setIsEdited(false);
       return;
     }
     setIsEdited(true);
-
   }, [studentData]);
 
+  // Saves the edited student information and updates the team list
   const handleSaveEdit = async () => {
-
-    const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
-    const studentIndex = teamDetails.students.findIndex((stud) => stud.userId === student.userId);
-    const newStudentsArray =  [
+    const currentTeamIndex = teamList.findIndex(
+      (team) => team.teamId === teamDetails.teamId
+    );
+    const studentIndex = teamDetails.students.findIndex(
+      (stud) => stud.userId === student.userId
+    );
+    const newStudentsArray = [
       ...teamDetails.students.slice(0, studentIndex),
       studentData,
-      ...teamDetails.students.slice(studentIndex + 1) ];
-      
+      ...teamDetails.students.slice(studentIndex + 1),
+    ];
+
     setTeamList([
       ...teamList.slice(0, currentTeamIndex),
       { ...teamDetails, students: newStudentsArray },
-      ...teamList.slice(currentTeamIndex + 1)
+      ...teamList.slice(currentTeamIndex + 1),
     ]);
 
-    await sendRequest.post('/competition/teams/update', { teamList: [{ ...teamDetails, students: newStudentsArray }], compId });
+    await sendRequest.post("/competition/teams/update", {
+      teamList: [{ ...teamDetails, students: newStudentsArray }],
+      compId,
+    });
     setIsEdited(false);
-  }
+  };
 
   const handleClickEdit = () => {
     setIsEditingCard((p) => !p);
-  }
+  };
 
+  // Triggered when the Editing state changes, it scrolls the card into
+  // view smoothly to provide a better editing experience using cardRef to
+  // target the card element
   useEffect(() => {
-    cardRef.current 
-    && isEditingCard 
-    && (cardRef.current as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'end' });
-
+    if (cardRef.current && isEditingCard) {
+      (cardRef.current as HTMLElement).scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
   }, [isEditingCard, isEdited]);
 
   return (
@@ -252,7 +314,9 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
           className="team-student-info-card--StyledLabelSpan-6">National Prizes:</StyledLabelSpan>
         {isEditingCard ?
           <StyledEditableTextArea
-            onChange={(e) => setStudentData((p) => ({ ...p, nationalPrizes: e.target.value }))}
+            onChange={(e) =>
+              setStudentData((p) => ({ ...p, nationalPrizes: e.target.value }))
+            }
             value={studentData.nationalPrizes}
             className="team-student-info-card--StyledEditableTextArea-1" />
           : <span>{studentData.nationalPrizes ? studentData.nationalPrizes : 'None'}</span>
@@ -264,7 +328,12 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
           className="team-student-info-card--StyledLabelSpan-7">International Prizes:</StyledLabelSpan>
         {isEditingCard ?
           <StyledEditableTextArea
-            onChange={(e) => setStudentData((p) => ({ ...p, internationalPrizes: e.target.value }))}
+            onChange={(e) =>
+              setStudentData((p) => ({
+                ...p,
+                internationalPrizes: e.target.value,
+              }))
+            }
             value={studentData.internationalPrizes}
             className="team-student-info-card--StyledEditableTextArea-2" />
           : <span>{studentData.internationalPrizes ? studentData.internationalPrizes : 'None'}</span>
@@ -292,7 +361,12 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
           className="team-student-info-card--StyledLabelSpan-9">Past Regional:</StyledLabelSpan>
         {isEditingCard ?
           <StyledToggleSelect
-            onChange={(e) => setStudentData((p) => ({ ...p, pastRegional: e.target.value === 'true' }))}
+            onChange={(e) =>
+              setStudentData((p) => ({
+                ...p,
+                pastRegional: e.target.value === "true",
+              }))
+            }
             $toggled={studentData.pastRegional}
             className="team-student-info-card--StyledToggleSelect-2">
             <option
@@ -342,8 +416,10 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
               icon={<FaSave />}
               style={{
                 backgroundColor: theme.colours.confirm,
-              }} />
-        </div>}
+              }}
+            />
+          </div>
+        }
       </div>
     </StyledMemberListItem>
   );

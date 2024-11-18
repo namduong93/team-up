@@ -1,7 +1,11 @@
 import { FC, useState } from "react";
 import { InfoBar, InfoBarProps } from "../InfoBar";
 import { AttendeesDetails } from "../../../../../../../../shared_types/Competition/staff/AttendeesDetails";
-import { StyledInfoBarField, StyledLabelSpan, StyledVerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
+import {
+  StyledInfoBarField,
+  StyledLabelSpan,
+  StyledVerticalInfoBarField,
+} from "../TeamInfoBar/TeamInfoBar.styles";
 import { StyledProfilePic } from "../../../../../../Account/Account.styles";
 import { CompRoles } from "../../../subroutes/StaffPage/subcomponents/CompRoles";
 import { backendURL } from "../../../../../../../../config/backendURLConfig";
@@ -10,12 +14,21 @@ interface AttendeesInfoProps extends InfoBarProps {
   attendeesDetails: AttendeesDetails;
 }
 
+/**
+ * A functional component for displaying attendee information in a collapsible info bar.
+ *
+ * The `AttendeesInfoBar` component provides a detailed view of attendee information,
+ * including their name, contact details, roles, dietary requirements, and site-related information.
+ *
+ * @param {AttendeesInfoProps} props - React AttendeesInfoProps specified above, where isOpenState manages
+ * the open/closed state of the `InfoBar`.
+ * @returns {JSX.Element} - A collapsible information bar displaying attendee details.
+ */
 export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
   attendeesDetails,
   isOpenState: [isOpen, setIsOpen],
 }) => {
-
-  const [attendeesData, setAttendeesData] = useState(attendeesDetails);
+  const [attendeesData] = useState(attendeesDetails);
 
   return (
     <InfoBar isOpenState={[isOpen, setIsOpen]}>
@@ -26,7 +39,7 @@ export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
       </StyledInfoBarField>
 
       <StyledProfilePic
-        style={{ marginBottom: '15px' }}
+        style={{ marginBottom: "15px" }}
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
         className="attendees-info-bar--StyledProfilePic-0" />
 
@@ -98,7 +111,6 @@ export const AttendeesInfoBar: FC<AttendeesInfoProps> = ({
         <StyledLabelSpan className="attendees-info-bar--StyledLabelSpan-13">Pending Site Capacity:</StyledLabelSpan>
         <span>{attendeesData.pendingSiteCapacity ? attendeesData.pendingSiteCapacity : 'N/A'}</span>
       </StyledInfoBarField>
-
     </InfoBar>
   );
 }

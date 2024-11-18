@@ -1,38 +1,24 @@
-import { FC, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { sendRequest } from '../../../utility/request';
-import { 
-  FaTimes, FaUserMinus, FaCalendarAlt, FaUsers, FaMapMarkerAlt, 
-  FaUserEdit, FaThumbsUp, FaUserPlus, FaClipboardList, 
-  FaTrophy, FaHandshake, FaBell, FaAddressCard, FaIdBadge,
-} from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import { StyledAlertButton } from '../../../screens/dashboard/Dashboard.styles';
-
-export interface Notification {
-  id: number;
-  type:
-    | 'withdrawal'
-    | 'name'
-    | 'site'
-    | 'deadline'
-    | 'teamStatus'
-    | 'cheer'
-    | 'invite'
-    | 'welcomeAccount'
-    | 'welcomeCompetition'
-    | 'update'
-    | 'staffAccount';
-  message: string;
-  createdAt: Date;
-  competitionId?: string;
-  competitionName?: string;
-  decision?: 'substitution' | 'replacement';
-  teamName?: string;
-  studentName?: string;
-  newTeamName?: string;
-  siteLocation?: string;
-}
+import { FC, useEffect, useState } from "react";
+import styled from "styled-components";
+import { sendRequest } from "../../../utility/request";
+import {
+  FaTimes,
+  FaUserMinus,
+  FaCalendarAlt,
+  FaUsers,
+  FaMapMarkerAlt,
+  FaUserEdit,
+  FaThumbsUp,
+  FaUserPlus,
+  FaClipboardList,
+  FaTrophy,
+  FaHandshake,
+  FaBell,
+  FaAddressCard,
+  FaIdBadge,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { StyledAlertButton } from "../../../screens/dashboard/Dashboard.styles";
 
 const StyledNotificationsContainer = styled.div`
   position: absolute;
@@ -107,35 +93,66 @@ const StyledNotificationButtonContainer = styled.div`
   min-width: 33px;
 `;
 
-const getNotificationIcon = (type: Notification['type']) => {
+const getNotificationIcon = (type: Notification["type"]) => {
   switch (type) {
-    case 'withdrawal':
+    case "withdrawal":
       return <FaUserMinus />;
-    case 'name':
+    case "name":
       return <FaUserEdit />;
-    case 'site':
+    case "site":
       return <FaMapMarkerAlt />;
-    case 'deadline':
+    case "deadline":
       return <FaCalendarAlt />;
-    case 'teamStatus':
+    case "teamStatus":
       return <FaUsers />;
-    case 'cheer':
+    case "cheer":
       return <FaThumbsUp />;
-    case 'invite':
+    case "invite":
       return <FaUserPlus />;
-    case 'welcomeAccount':
+    case "welcomeAccount":
       return <FaHandshake />;
-    case 'welcomeCompetition':
+    case "welcomeCompetition":
       return <FaTrophy />;
-    case 'update':
+    case "update":
       return <FaAddressCard />;
-    case 'staffAccount':
+    case "staffAccount":
       return <FaIdBadge />;
     default:
       return <FaClipboardList />;
   }
 };
 
+export interface Notification {
+  id: number;
+  type:
+    | "withdrawal"
+    | "name"
+    | "site"
+    | "deadline"
+    | "teamStatus"
+    | "cheer"
+    | "invite"
+    | "welcomeAccount"
+    | "welcomeCompetition"
+    | "update"
+    | "staffAccount";
+  message: string;
+  createdAt: Date;
+  competitionId?: string;
+  competitionName?: string;
+  decision?: "substitution" | "replacement";
+  teamName?: string;
+  studentName?: string;
+  newTeamName?: string;
+  siteLocation?: string;
+}
+
+/**
+ * A React notification button component
+ *
+ * @returns {JSX.Element} - Web page component for displaying and managing
+ * notifications
+ */
 export const NotificationButton: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isStaff, setIsStaff] = useState(false);
@@ -143,16 +160,19 @@ export const NotificationButton: FC = () => {
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const navigate = useNavigate();
 
+  // Check the role of the user to redirect them to different pages when clicking notifications
   useEffect(() => {
     (async () => {
       try {
-        const typeResponse = await sendRequest.get<{ type: string }>('/user/type');
-        setIsStaff(typeResponse.data.type !== 'student');
+        const typeResponse = await sendRequest.get<{ type: string }>(
+          "/user/type"
+        );
+        setIsStaff(typeResponse.data.type !== "student");
         setIsAdmin(typeResponse.data.type === "system_admin");
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
-          navigate('/');
-          console.log('Notification Error: ', error);
+          navigate("/");
+          console.log("Notification Error: ", error);
         });
       }
     })();
@@ -162,15 +182,17 @@ export const NotificationButton: FC = () => {
     (async () => {
       try {
         // Fetch notifications from the backend
-        const notifResponse = await sendRequest.get<Notification[]>('/user/notifications');
+        const notifResponse = await sendRequest.get<Notification[]>(
+          "/user/notifications"
+        );
 
         // Transform the backend response to match the frontend Notification structure
         const transformedNotifications = notifResponse.data.map((notif) => ({
           id: notif.id,
-          type: notif.type as Notification['type'],
+          type: notif.type as Notification["type"],
           message: notif.message,
-          createdAt: new Date(notif.createdAt),  // Use createdAt as date
-          competitionId: notif.competitionId,  // Convert competitionId to compId and string
+          createdAt: new Date(notif.createdAt), // Use createdAt as date
+          competitionId: notif.competitionId, // Convert competitionId to compId and string
           competitionName: notif.competitionName,
           decision: notif.decision,
           teamName: notif.teamName,
@@ -178,35 +200,38 @@ export const NotificationButton: FC = () => {
           newTeamName: notif.newTeamName,
           siteLocation: notif.siteLocation,
         }));
-  
+
         setNotifications(transformedNotifications); // Set transformed data
       } catch (error: unknown) {
-        console.log('Error fetching notifications:', error);
+        console.log("Error fetching notifications:", error);
       }
     })();
   }, [isStaff]);
 
+  // Redirect the user when notification is clicked based on their role for them 
+  // to perform the requested action
   const handleNavigate = (notification: Notification) => {
-    const { type, decision, studentName, teamName, competitionId } = notification;
+    const { type, decision, studentName, teamName, competitionId } =
+      notification;
 
     if (isStaff) {
-      if (type === 'withdrawal') {
-        if (decision === 'substitution') {
+      if (type === "withdrawal") {
+        if (decision === "substitution") {
           navigate(`/coach/page/students/${competitionId}/${studentName}`);
         } else {
           navigate(`/coach/page/teams/${competitionId}/${teamName}`);
         }
-      } else if (type === 'name' || type === 'site' || type === 'teamStatus') {
+      } else if (type === "name" || type === "site" || type === "teamStatus") {
         navigate(`/coach/page/teams/${teamName}`);
-      } else if (type === 'deadline' || type === 'welcomeCompetition') {
+      } else if (type === "deadline" || type === "welcomeCompetition") {
         navigate(`/coach/page/teams/`);
-      } else if (type === 'welcomeAccount') {
-        navigate('/dashboard');
-      } else if (isAdmin && type === 'staffAccount') {
-        navigate('/staffAccounts');
+      } else if (type === "welcomeAccount") {
+        navigate("/dashboard");
+      } else if (isAdmin && type === "staffAccount") {
+        navigate("/staffAccounts");
       }
     } else {
-      if (type === 'update') {
+      if (type === "update") {
         navigate(`/account`);
       } else {
         navigate(`/competition/participant/${competitionId}`);
@@ -214,22 +239,26 @@ export const NotificationButton: FC = () => {
     }
   };
 
-  const handleRemoveNotification = async(notificationId: number) => {
+  // When a notification is removed, it should not appear again when the user logs in
+  const handleRemoveNotification = async (notificationId: number) => {
     try {
-      await sendRequest.delete<{}>('/notification', { notificationId });
-      setNotifications((prev) => prev.filter((notif) => notif.id !== notificationId));
+      await sendRequest.delete("/notification", { notificationId });
+      setNotifications((prev) =>
+        prev.filter((notif) => notif.id !== notificationId)
+      );
     } catch (error: unknown) {
-      console.log('Error fetching notifications:', error);
+      console.log("Error fetching notifications:", error);
     }
   };
 
+  // Fortmat the date for readbility by users
   const formatDate = (date: Date) => {
     return date.toLocaleString(undefined, {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 

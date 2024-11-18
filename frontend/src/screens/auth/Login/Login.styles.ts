@@ -6,11 +6,10 @@ export const StyledFormContainer = styled.form`
   height: 500px;
   flex-shrink: 1;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   text-align: center;
   color: ${({ theme }) => theme.fonts.colour};
 `;
-
 
 export const StyledSignUpLink = styled.span`
   cursor: pointer;

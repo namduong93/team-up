@@ -3,15 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { TimeoutButton } from "../../general_utility/TimeoutButton";
 
-interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
-  actionName: string;
-  question: string;
-  redirectPath: string;
-  actionType: "primary" | "secondary" | "error";
-  handleClick?: () => void; // Optional function prop for a custom click handler
-}
-
-const StyledButton = styled.button<{$actionType: "primary" | "secondary" | "error";}>`
+const StyledButton = styled.button<{ $actionType: "primary" | "secondary" | "error" }>`
   border-radius: 10px;
   padding: 10px;
   border: none;
@@ -34,13 +26,13 @@ const StyledButton = styled.button<{$actionType: "primary" | "secondary" | "erro
       return theme.background;
     } else {
       return theme.fonts.colour;
-    }
+    };
   }};
 
   font-weight: ${({ $actionType: actionType, theme }) => {
     if (actionType === "error") {
       return theme.fonts.fontWeights.bold;
-    }
+    };
   }};
 
   &:hover {
@@ -56,7 +48,7 @@ const StyledButton = styled.button<{$actionType: "primary" | "secondary" | "erro
     }};
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  }
+  };
 `;
 
 export const StyledPopUpOverlay = styled.div`
@@ -139,6 +131,22 @@ export const StyledCancelButton = styled.button`
   }
 `;
 
+interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+  actionName: string;
+  question: string;
+  redirectPath: string;
+  actionType: "primary" | "secondary" | "error";
+  handleClick?: () => void;
+};
+
+/**
+ * A React A button component that triggers an action on the website, such as navigating to a
+ * different path or displaying a confirmation pop-up.
+ * The button's style and behavior depend on the action type (`primary`, `secondary`, `error`).
+ *
+ * @param {ActionButtonProps} props - React ActionButtonProps specified above
+ * @returns {JSX.Element} - Web page button component showing an optional confirmation pop-up upon click
+ */
 export const ActionButton: FC<ActionButtonProps> = ({
   actionName,
   question,
@@ -150,14 +158,14 @@ export const ActionButton: FC<ActionButtonProps> = ({
   const navigate = useNavigate();
 
   const handleConfirm = () => {
-    navigate(redirectPath); // Go to the correct redirected path
+    navigate(redirectPath);
   };
 
   const handleButtonClick = () => {
     if (handleClick) {
-      handleClick(); // Call the custom click handler if provided
+      handleClick();
     } else {
-      setIsOpen(true); // Open the confirmation pop-up
+      setIsOpen(true);
     }
   };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC, useEffect, useRef, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { RxReset } from "react-icons/rx";
@@ -6,20 +7,29 @@ import { useParams } from "react-router-dom";
 import { InfoBar, InfoBarProps } from "../InfoBar";
 import { StudentInfo } from "../../../../../../../../shared_types/Competition/student/StudentInfo";
 import { sendRequest } from "../../../../../../../utility/request";
-import { StyledEditIcon, StyledEditIconButton, StyledProfilePic } from "../../../../../../Account/Account.styles";
+import {
+  StyledEditIcon,
+  StyledEditIconButton,
+  StyledProfilePic,
+} from "../../../../../../Account/Account.styles";
 import { backendURL } from "../../../../../../../../config/backendURLConfig";
 import { CompRoles } from "../../../subroutes/StaffPage/subcomponents/CompRoles";
-import { StyledEditableInput, StyledEditableTextArea, StyledToggleSelect } from "../components/TeamStudentInfoCard";
+import {
+  StyledEditableInput,
+  StyledEditableTextArea,
+  StyledToggleSelect,
+} from "../components/TeamStudentInfoCard";
 import { StyledBooleanStatus } from "../../../subroutes/AttendeesPage/subcomponents/BooleanStatus";
 import { CompetitionLevel } from "../../../../../../../../shared_types/Competition/CompetitionLevel";
 import { StudentStatus } from "../../../subroutes/StudentsPage/subcomponents/StudentStatus";
 import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
-import { StyledInfoBarField, StyledLabelSpan, StyledNoWrapLabelSpan, StyledSelect, StyledVerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
-
-interface StudentsInfoProps extends InfoBarProps {
-  studentInfo: StudentInfo;
-  studentsState: [Array<StudentInfo>, React.Dispatch<React.SetStateAction<Array<StudentInfo>>>];
-}
+import {
+  StyledInfoBarField,
+  StyledLabelSpan,
+  StyledNoWrapLabelSpan,
+  StyledSelect,
+  StyledVerticalInfoBarField,
+} from "../TeamInfoBar/TeamInfoBar.styles";
 
 export const StyledCompetitionInfoContainerDiv = styled.div`
   display: flex;
@@ -38,43 +48,68 @@ const StyledContainer = styled.div`
   width: 100%;
 `;
 
-export const StudentsInfoBar: FC<StudentsInfoProps> = (
-  { studentInfo,
-    studentsState: [students, setStudents],
-    isOpenState: [isOpen, setIsOpen],
-    children,
-    ...props
-  }) => {
-  
+interface StudentsInfoProps extends InfoBarProps {
+  studentInfo: StudentInfo;
+  studentsState: [
+    Array<StudentInfo>,
+    React.Dispatch<React.SetStateAction<Array<StudentInfo>>>
+  ];
+};
+
+/**
+ * A React component for displaying and editing student information within an info bar.
+ *
+ * The `StudentsInfoBar` component includes fields like user ID, name, email, and other student-related details,
+ * with options to edit certain fields.
+ *
+ * @param {StudentsInfoProps} props - React StudentInfoProps as specified above, where studentInfo is the student data
+ * to display and edit, studentsState contains functions to manage the list of students and isOpenState manages the
+ * info bar's open/close status.
+ * @returns {JSX.Element} - A UI component that displays a student's information and provides editing options.
+ */
+export const StudentsInfoBar: FC<StudentsInfoProps> = ({
+  studentInfo,
+  studentsState: [students, setStudents],
+  isOpenState: [isOpen, setIsOpen],
+  ...props
+}) => {
   const { compId } = useParams();
-  
   const theme = useTheme();
   const cardRef = useRef(null);
-
   const [studentData, setStudentData] = useState(studentInfo);
-  
   const [isEditing, setIsEditing] = useState(false);
-
   const [isEdited, setIsEdited] = useState(false);
 
+  // Detects if the student data has been edited
   useEffect(() => {
-    if (Object.keys(studentData).every((key) => (studentData as Record<string, any>)[key] === (studentInfo as Record<string, any>)[key])) {
+    if (
+      Object.keys(studentData).every(
+        (key) =>
+          (studentData as Record<string, any>)[key] ===
+          (studentInfo as Record<string, any>)[key]
+      )
+    ) {
       setIsEdited(false);
       return;
     }
     setIsEdited(true);
   }, [studentData]);
 
+  // Triggered when the Editing state changes, it auto scrolls the info bar when the user
+  // starts editing
   useEffect(() => {
-    cardRef.current 
-    && isEditing
-    && (cardRef.current as HTMLDivElement).scrollIntoView({ behavior: 'smooth', block: 'end' });
+    if (cardRef.current && isEditing) {
+      (cardRef.current as HTMLElement).scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    };
   }, [isEditing, isEdited]);
 
   const handleSaveEdit = async () => {
-    
-
-    const currentStudentIndex = students.findIndex((stud) => stud.userId === studentData.userId);
+    const currentStudentIndex = students.findIndex(
+      (stud) => stud.userId === studentData.userId
+    );
     if (currentStudentIndex < 0) {
       return;
     }
@@ -86,10 +121,13 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
     ];
 
     setStudents(newStudents);
-    await sendRequest.post('/competition/students/update', { studentList: [studentData], compId });
+    await sendRequest.post("/competition/students/update", {
+      studentList: [studentData],
+      compId,
+    });
 
     setIsEdited(false);
-  }
+  };
 
   return (
     <InfoBar isOpenState={[isOpen, setIsOpen]} {...props}>
@@ -99,7 +137,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
           <span>{studentInfo.userId}</span>
         </StyledInfoBarField>
         <StyledProfilePic
-          style={{ margin: 'auto', marginBottom: '15px' }}
+          style={{ margin: "auto", marginBottom: "15px" }}
           $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
           className="students-info-bar--StyledProfilePic-0" />
         <StyledVerticalInfoBarField className="students-info-bar--StyledVerticalInfoBarField-0">
@@ -381,4 +419,4 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
         </StyledCompetitionInfoContainerDiv>
     </InfoBar>
   );
-}
+};

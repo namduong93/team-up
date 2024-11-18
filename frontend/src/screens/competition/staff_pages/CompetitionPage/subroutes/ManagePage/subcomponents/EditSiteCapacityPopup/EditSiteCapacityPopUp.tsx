@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
 import { sendRequest } from "../../../../../../../../utility/request";
 import { CompetitionSiteCapacity } from "../../../../../../../../../shared_types/Competition/CompetitionSite";
-import { StyledButton, StyledCloseButton, StyledContainer, StyledModal, StyledModalOverlay, StyledView } from "./EditSiteCapacity.styles";
+import {
+  StyledButton,
+  StyledCloseButton,
+  StyledContainer,
+  StyledModal,
+  StyledModalOverlay,
+  StyledView,
+} from "./EditSiteCapacity.styles";
 import { FaTimes } from "react-icons/fa";
 import { StyledHeading } from "../../ManagePage.styles";
 import { StyledText } from "../EditCompRegistrationPopup/EditCompRegistrationPopup.styles";
@@ -14,13 +21,18 @@ import { NumberInputLight } from "../../../../../../../../components/general_uti
 interface EditSiteCapacityPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
-  onSubmit: (site: {label: string, value: number}, capacity: number) => void;
 };
 
+/**
+ * `EditSiteCapacityPopUp is a React web page component that displays a pop up for editing the capacity of
+ * sites associated with that competition.
+ * @param {EditSiteCapacityPopUpProps} - The title for the pop-up and allow the user to handle closing the pop-up.
+ * @returns JSX.Element - A styled container presenting a text input field to change the capacity of the site
+ * selected from a dropdow
+ */
 export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   heading,
   onClose,
-  onSubmit,
 }) => {
   const { compId } = useParams();
   const { roles, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext("manage");
@@ -29,26 +41,30 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   const [capacity, setCapacity] = useState<number>(0);
   const [currentCapacity, setCurrentCapacity] = useState<number>(0);
 
-  const [siteCapacities, setSiteCapacities] = useState<CompetitionSiteCapacity[] | undefined>()
+  const [siteCapacities, setSiteCapacities] = useState<
+    CompetitionSiteCapacity[] | undefined
+  >();
 
   useEffect(() => {
-
     const fetchSiteCapacities = async () => {
+      const ids = roles.includes(CompetitionRole.Admin)
+        ? siteOptions.map((site) => site.value)
+        : [];
 
-      const ids = (roles.includes(CompetitionRole.Admin) ? siteOptions.map((site) => site.value) : []);
+      const response = await sendRequest.get<{
+        site: CompetitionSiteCapacity[];
+      }>("/competition/site/capacity", { compId, ids });
 
-      const response = await sendRequest.get<{ site: CompetitionSiteCapacity[] }>(
-        '/competition/site/capacity',
-        { compId, ids });
-      
       const { site: siteCapacities } = response.data;
       setSiteCapacities(siteCapacities);
-    }
+    };
     fetchSiteCapacities();
   }, []);
 
   useEffect(() => {
-    const newCapacity = siteCapacities?.find((site) => site.id === parseInt(selectedSite.value));
+    const newCapacity = siteCapacities?.find(
+      (site) => site.id === parseInt(selectedSite.value)
+    );
     console.log(newCapacity);
     setCurrentCapacity(newCapacity?.capacity || 0);
   }, [selectedSite, siteCapacities]);
@@ -56,16 +72,6 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   useEffect(() => {
     setSelectedSite(siteOptions[0]);
   }, [siteOptions]);
-
-
-  // const handleSiteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const selected = siteOptions.find((site) => site.value === e.target.value);
-  //   if (selected) {
-  //     setSelectedSite(selected); // Update selectedSite state
-  //   }
-
-  //   console.log(selected?.label);
-  // };
 
   const handleCapacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCapacity = Number(e.target.value);
@@ -75,11 +81,14 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   };
 
   const handleSubmit = async () => {
-    // Call onSubmit with the site and capacity
-    // onSubmit({label: selectedSite.label, value: parseInt(selectedSite.value)}, capacity);
+    // Update with the site and capacity
     onClose();
-    
-    await sendRequest.put('/competition/site/capacity/update', { compId, siteId: parseInt(selectedSite.value), capacity });
+
+    await sendRequest.put("/competition/site/capacity/update", {
+      compId,
+      siteId: parseInt(selectedSite.value),
+      capacity,
+    });
   };
 
   return (

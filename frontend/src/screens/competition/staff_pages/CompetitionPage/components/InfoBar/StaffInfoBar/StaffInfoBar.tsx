@@ -3,45 +3,77 @@ import { RxReset } from "react-icons/rx";
 import { FaSave } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { InfoBar, InfoBarProps } from "../InfoBar";
-import { StaffAccess, StaffInfo } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
+import {
+  StaffAccess,
+  StaffInfo,
+} from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
 import { useTheme } from "styled-components";
 import { sendRequest } from "../../../../../../../utility/request";
-import { StyledEditIcon, StyledEditIconButton, StyledProfilePic } from "../../../../../../Account/Account.styles";
+import {
+  StyledEditIcon,
+  StyledEditIconButton,
+  StyledProfilePic,
+} from "../../../../../../Account/Account.styles";
 import { backendURL } from "../../../../../../../../config/backendURLConfig";
 import { StyledEditableTextArea } from "../components/TeamStudentInfoCard";
-import { StyledAccessLabelDiv, StyledCustomCheckbox, StyledCustomRadio, StyledRoleLabelDiv } from "./StaffInfoBar.styles";
+import {
+  StyledAccessLabelDiv,
+  StyledCustomCheckbox,
+  StyledCustomRadio,
+  StyledRoleLabelDiv,
+} from "./StaffInfoBar.styles";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { CompRoles } from "../../../subroutes/StaffPage/subcomponents/CompRoles";
 import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
 import { StyledStaffAccessLevel } from "../../../subroutes/StaffPage/StaffPage.styles";
-import { StyledInfoBarField, StyledLabelSpan, StyledNoWrapLabelSpan, StyledVerticalInfoBarField } from "../TeamInfoBar/TeamInfoBar.styles";
+import {
+  StyledInfoBarField,
+  StyledLabelSpan,
+  StyledNoWrapLabelSpan,
+  StyledVerticalInfoBarField,
+} from "../TeamInfoBar/TeamInfoBar.styles";
 import { StyledCompetitionInfoContainerDiv } from "../StudentsInfoBar/StudentsInfoBar";
-
 
 interface StaffInfoProps extends InfoBarProps {
   staffInfo: StaffInfo;
-  staffListState: [Array<StaffInfo>, React.Dispatch<React.SetStateAction<Array<StaffInfo>>>];
+  staffListState: [
+    Array<StaffInfo>,
+    React.Dispatch<React.SetStateAction<Array<StaffInfo>>>
+  ];
 }
 
-export const StaffInfoBar: FC<StaffInfoProps> = ({ 
+/**
+ * A React component for displaying and editing staff information
+ *
+ * The `StaffInfoBar` component shows details such as user ID, university name, email,
+ * bio, roles, access level, and more. The component allows for editing and saving staff information,
+ * with an option to toggle roles and modify access levels.
+ *
+ * @param {StaffInfoProps} props - React StaffInfoProps specified above, where staffInfo is the initial
+ * staff data to display, staffListState containes the functions to update the list and isOpenState controls
+ * the visibility of the info bar.
+ * @returns {JSX.Element} - A UI component that displays a staff information bar with editable fields.
+ */
+export const StaffInfoBar: FC<StaffInfoProps> = ({
   staffInfo,
   staffListState: [staffList, setStaffList],
-  isOpenState: [isOpen, setIsOpen]
- }) => {
+  isOpenState: [isOpen, setIsOpen],
+}) => {
   const theme = useTheme();
   const { compId } = useParams();
-
   const [staffData, setStaffData] = useState(staffInfo);
-
   const [isEditing, setIsEditing] = useState(false);
-
   const [isEdited, setIsEdited] = useState(false);
 
+  // Checks if the 'staffData' has been mofiied compared to the original
   useEffect(() => {
-    if (staffData.access === staffInfo.access
-      && staffData.bio === staffInfo.bio
-      && staffData.roles.every((staffRole) => staffInfo.roles.includes(staffRole))
-      && staffInfo.roles.every((staffRole) => staffData.roles.includes(staffRole))
+    if (
+      staffData.access === staffInfo.access &&
+      staffData.bio === staffInfo.bio &&
+      staffData.roles.every((staffRole) =>
+        staffInfo.roles.includes(staffRole)
+      ) &&
+      staffInfo.roles.every((staffRole) => staffData.roles.includes(staffRole))
     ) {
       setIsEdited(false);
       return;
@@ -49,35 +81,46 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
     setIsEdited(true);
   }, [staffData]);
 
+  // Handles role assignment by adding the role to the staff members array, otherwise
+  // it removes the role
   const handleToggleRole = (role: CompetitionRole) => {
     const roleIndex = staffData.roles.indexOf(role);
+    // adding the role since it doesn't exist currently
     if (roleIndex < 0) {
-      setStaffData((p) => ({ ...p, roles: [ ...staffData.roles, role ] }));
+      setStaffData((p) => ({ ...p, roles: [...staffData.roles, role] }));
       return;
     }
 
-    setStaffData((p) => ({ ...p, roles: [
-      ...staffData.roles.slice(0, roleIndex),
-      ...staffData.roles.slice(roleIndex + 1)
-    ] }));
+    // removing the role since it exists
+    setStaffData((p) => ({
+      ...p,
+      roles: [
+        ...staffData.roles.slice(0, roleIndex),
+        ...staffData.roles.slice(roleIndex + 1),
+      ],
+    }));
+  };
 
-  }
-
+  // Updates the staff list and sends it to the backend for processing
+  // and storage
   const handleSaveEdit = async () => {
-    // send backend request here
-
-    const currentStaffIndex = staffList.findIndex((staff) => staff.userId === staffData.userId);
+    const currentStaffIndex = staffList.findIndex(
+      (staff) => staff.userId === staffData.userId
+    );
     if (currentStaffIndex < 0) {
       return;
     }
     setStaffList([
       ...staffList.slice(0, currentStaffIndex),
       staffData,
-      ...staffList.slice(currentStaffIndex + 1)
+      ...staffList.slice(currentStaffIndex + 1),
     ]);
-    await sendRequest.post('/competition/staff/update', { staffList: [staffData], compId });
+    await sendRequest.post("/competition/staff/update", {
+      staffList: [staffData],
+      compId,
+    });
     setIsEdited(false);
-  }
+  };
 
   return (
     <InfoBar isOpenState={[isOpen, setIsOpen]}>
@@ -88,7 +131,7 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
       </StyledInfoBarField>
 
       <StyledProfilePic
-        style={{ marginBottom: '15px' }}
+        style={{ marginBottom: "15px" }}
         $imageUrl={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
         className="staff-info-bar--StyledProfilePic-0" />
 
@@ -139,7 +182,7 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
 
       <StyledCompetitionInfoContainerDiv className="staff-info-bar--StyledCompetitionInfoContainerDiv-0">
         <StyledEditIconButton
-          style={{ position: 'absolute', right: 0, top: 0 }}
+          style={{ position: "absolute", right: 0, top: 0 }}
           onClick={() => setIsEditing((p) => !p)}
           className="staff-info-bar--StyledEditIconButton-0">
           <StyledEditIcon className="staff-info-bar--StyledEditIcon-0" />
@@ -266,8 +309,6 @@ export const StaffInfoBar: FC<StaffInfoProps> = ({
         </div>
       </div>}
       </StyledCompetitionInfoContainerDiv>
-
-
     </InfoBar>
   );
 }

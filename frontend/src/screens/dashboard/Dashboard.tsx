@@ -1,10 +1,15 @@
-import styled from "styled-components";
-import { StyledFlexBackground } from "../../components/general_utility/Background";
 import { DashInfo } from "./hooks/useDashInfo";
 import { FC, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { sendRequest } from "../../utility/request";
-import { StyledCompetitionGrid, StyledContentArea, StyledDashboardContent, StyledFilterTagButton, StyledRemoveFilterIcon } from "./Dashboard.styles";
+import {
+  StyledCompetitionGrid,
+  StyledContentArea,
+  StyledDashboardContent,
+  StyledFilterTagButton,
+  StyledOverflowFlexBackground,
+  StyledRemoveFilterIcon,
+} from "./Dashboard.styles";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { ResponsiveActionButton } from "../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { IoIosCreate } from "react-icons/io";
@@ -17,22 +22,29 @@ import { RegisterPopUp } from "../../components/general_utility/RegisterPopUp";
 export interface Competition {
   compName: string;
   location: string;
-  compDate: string; // format: "YYYY-MM-DD"
+  compDate: string;
   roles: string[];
   compId: string;
   compCreatedDate: string;
-}
+};
 
 interface DashboardsProps {
   dashInfo: DashInfo;
-}
+};
 
-const StyledOverflowFlexBackground = styled(StyledFlexBackground)`
-  font-family: ${({ theme }) => theme.fonts.fontFamily};
-  height: 100vh;
-  background-color: ${({ theme }) => theme.background};
-`;
-
+/**
+ * A React component that is the central dashboard interface for all ysers
+ *
+ * A functional component that represents the user's dashboard, displaying a list of competitions,
+ * and allowing users to register for competitions, filter and sort the competitions, and manage their
+ * dashboard settings. The component dynamically adjusts based on whether the user is an admin or a student.
+ * It includes a registration button and filters competitions based on search, location, roles, status, and year.
+ *
+ * @param {DashboardsProps} dashInfo - The dashboard information of the logged-in user, including their
+ * preferred name, affiliation, and profile picture.
+ * @returns {JSX.Element} - The dashboard page with competitions displayed as cards, a filter bar,
+ * and a registration section with popups for success or team join notifications.
+ */
 export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [filters, setFilters] = useState<{ [field: string]: string[] }>({});
 
@@ -50,10 +62,10 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [competitions, setCompetitions] = useState<Competition[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userType, setUserType] = useState<string>("");
   const navigate = useNavigate();
 
+  // Fetches the user type and competitions data when the component mounts
   useEffect(() => {
     (async () => {
       try {
@@ -83,7 +95,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
           navigate("/");
           console.log("Authentication Error: ", error);
         });
-        // can handle other codes or types of errors here if needed.
       }
     })();
   }, []);
@@ -91,7 +102,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   // "YYYY-MM-DD" format
   const today = new Date().toISOString().split("T")[0];
 
-  // filter options based on the Competition fields (location, role, status, year)
+  // Filter options based on the Competition fields (location, role, status, year)
   const filterOptions = {
     Location: Array.from(
       new Set(competitions.map((comp) => comp.location))
@@ -110,10 +121,11 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
       if (updatedFilters[field].length === 0) {
         delete updatedFilters[field];
       }
-      return updatedFilters; // trigger render to update filter dropdown
+      return updatedFilters;
     });
   };
 
+  // Checks if a competition matches the current search term
   const matchesSearch = (comp: Competition) => {
     const searchLower = searchTerm.toLowerCase();
     const compDateMonth = new Date(comp.compDate)
@@ -128,9 +140,10 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     );
   };
 
+  // Filters the list of competitions based on the current search term
   const filteredCompetitions = competitions.filter((comp) => {
     return (
-      matchesSearch(comp) && // filter by search criteria
+      matchesSearch(comp) &&
       Object.keys(filters).every((field) => {
         if (!filters[field].length) return true;
         if (field === "Status") {
@@ -155,6 +168,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
     );
   });
 
+  // Sorts the filtered competitions based on the selected sort option
   const sortedCompetitions = [...filteredCompetitions].sort((a, b) => {
     const defaultIndices = filteredCompetitions.map((comp) => comp.compId);
 
@@ -200,7 +214,6 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
 
   useEffect(() => {
     if (location.state?.joined) {
-      console.log(location.state.teamName)
       setTeamName(location.state.teamName);
       setIsJoinPopUpOpen(true);
     }
@@ -212,16 +225,15 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const handleRegisterConfirm = async () => {
     const validateCode = async () => {
       try {
-        await sendRequest.get<{}>("/competition/student/status", {
+        await sendRequest.get("/competition/student/status", {
           code: compRegisterCode,
         });
-        // above line will throw if the code is invalid
 
-        setErrorMessage(null); // Clear any previous error message
+        setErrorMessage(null);
         return true;
       } catch (error) {
         console.error("Failed to validate competition code:", error);
-        setErrorMessage("Invalid competition code. Please try again."); // Set error message
+        setErrorMessage("Invalid competition code. Please try again.");
         return false;
       }
     };

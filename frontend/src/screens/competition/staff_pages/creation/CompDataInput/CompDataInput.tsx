@@ -4,31 +4,42 @@ import { CompetitionInformation } from "../../../../../../shared_types/Competiti
 import { dateToUTC, formatDate } from "../util/formatDate";
 import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { CompCreationProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledContainer, StyledDeleteIcon, StyledDescriptor, StyledDoubleInputContainer, StyledFormContainer, StyledLabel, StyledLocationItem, StyledLocationList, StyledTitle } from "./CompDataInput.styles";
+import {
+  StyledAsterisk,
+  StyledButton,
+  StyledButtonContainer,
+  StyledContainer,
+  StyledDeleteIcon,
+  StyledDescriptor,
+  StyledDoubleInputContainer,
+  StyledFormContainer,
+  StyledLabel,
+  StyledLocationItem,
+  StyledLocationList,
+  StyledTitle,
+} from "./CompDataInput.styles";
 import TextInput from "../../../../../components/general_utility/TextInput";
 import TextInputLight from "../../../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../../../components/general_utility/RadioButton";
 import SiteLocationDataInput from "./subcomponents/SiteLocationDataInput/SiteLocationDataInput";
 
-
 export interface SiteLocation {
   universityId: number;
   defaultSite: string;
-}
+};
 
 export interface OtherSiteLocation {
   universityName: string;
   defaultSite: string;
-}
+};
 
-// const createTimezoneOptions = () => {
-//   const timezones = moment.tz.names().map((tz) => ({
-//     value: tz,
-//     label: tz.replace(/_/g, " ").replace(/\/(.+)/, " - $1"), // Format label for better readability
-//   }));
-
-//   return [{ value: "", label: "Please Select" }, ...timezones];
-// };
+/**
+ * `CompDataInput` is a React web page form component that manages the input of competition details for a competition setup process.
+ * It allows the user to input competition-specific information such as the competition name, region, start date, registration deadlines,
+ * and site locations.
+ *
+ * @returns JSX.Element - The rendered component containing form inputs for competition details, site location management, and form submission buttons.
+ */
 
 export const CompDataInput: FC = () => {
   const navigate = useNavigate();
@@ -70,9 +81,12 @@ export const CompDataInput: FC = () => {
       ...prev,
       siteLocations: [
         ...prev.siteLocations,
-        { universityId: parseInt(option.value), defaultSite, universityName: option.label },
+        {
+          universityId: parseInt(option.value),
+          defaultSite,
+          universityName: option.label,
+        },
       ],
-      // convert universityId to number before we send to backend;
     }));
 
     setOptionDisplayList((prev) => [
@@ -128,7 +142,6 @@ export const CompDataInput: FC = () => {
 
     setLocationError("");
 
-    // if currentOptions value is empty which will be the case when it's a custom option.
     if (!currentOption.value) {
       addOtherSite(currentOption, defaultSite);
 
@@ -175,20 +188,19 @@ export const CompDataInput: FC = () => {
   const isButtonDisabled = () => {
     const {
       name,
-      earlyRegDeadline,
       code,
       siteLocations,
       otherSiteLocations,
       region,
-      startDate,
-      generalRegDeadline
+      generalRegDeadline,
     } = competitionInfo;
     return (
       name === "" ||
       region === "" ||
       !generalRegDeadline ||
       code === "" ||
-      (siteLocations.length === 0 && (!otherSiteLocations || otherSiteLocations.length === 0))
+      (siteLocations.length === 0 &&
+        (!otherSiteLocations || otherSiteLocations.length === 0))
     );
   };
 
@@ -217,7 +229,7 @@ export const CompDataInput: FC = () => {
     }
     setCompetitionInfo((p) => ({
       ...p,
-      startDate: dateToUTC(startDateInput)
+      startDate: dateToUTC(startDateInput),
     }));
   }, [startDateInput]);
 
@@ -227,7 +239,7 @@ export const CompDataInput: FC = () => {
     }
     setCompetitionInfo((p) => ({
       ...p,
-      earlyRegDeadline: dateToUTC(earlyRegInput)
+      earlyRegDeadline: dateToUTC(earlyRegInput),
     }));
   }, [earlyRegInput]);
 
@@ -237,11 +249,9 @@ export const CompDataInput: FC = () => {
     }
     setCompetitionInfo((p) => ({
       ...p,
-      generalRegDeadline: dateToUTC(generalRegInput)
+      generalRegDeadline: dateToUTC(generalRegInput),
     }));
   }, [generalRegInput]);
-
-
 
   const [isEarlyReg, setIsEarlyReg] = useState(false);
 
@@ -297,14 +307,10 @@ export const CompDataInput: FC = () => {
             label=""
             options={["Yes", "No"]}
             selectedOption={
-              isEarlyReg === null
-                ? ""
-                : isEarlyReg
-                ? "Yes"
-                : "No"
+              isEarlyReg === null ? "" : isEarlyReg ? "Yes" : "No"
             }
             onOptionChange={(e) => {
-              setIsEarlyReg(e.target.value === 'Yes');
+              setIsEarlyReg(e.target.value === "Yes");
             }}
             required={true}
             descriptor="Will your Competition have an Early Bird Registration Deadline?"

@@ -3,12 +3,6 @@ import { UserAccess } from "../../../../shared_types/User/User";
 import { FC, useEffect, useState } from "react";
 import { sendRequest } from "../../../utility/request";
 
-interface AccessDropdownProps {
-  staffId: number | undefined;
-  currentAccess: UserAccess;
-  onChange: (newAccess: UserAccess) => void;
-}
-
 const StyledDropdown = styled.select<{ $access: UserAccess }>`
   width: 80%;
   height: 50%;
@@ -26,12 +20,13 @@ const StyledDropdown = styled.select<{ $access: UserAccess }>`
       ? theme.access.pendingBackground
       : theme.access.rejectedBackground};
 
-  border: 1px solid ${({ theme, $access }) =>
-    $access === UserAccess.Accepted
-      ? theme.access.acceptedText
-      : $access === UserAccess.Pending
-      ? theme.access.pendingText
-      : theme.access.rejectedText};
+  border: 1px solid
+    ${({ theme, $access }) =>
+      $access === UserAccess.Accepted
+        ? theme.access.acceptedText
+        : $access === UserAccess.Pending
+        ? theme.access.pendingText
+        : theme.access.rejectedText};
 
   color: ${({ theme, $access }) =>
     $access === UserAccess.Accepted
@@ -59,17 +54,37 @@ const StyledOption = styled.option<{ $access: UserAccess }>`
       : theme.access.rejectedText};
 `;
 
-export const AccessDropdown: FC<AccessDropdownProps> = ({ staffId, currentAccess, onChange }) => {
-  const [selectedAccess, setSelectedAccess] = useState<UserAccess>(currentAccess);
+interface AccessDropdownProps {
+  staffId: number | undefined;
+  currentAccess: UserAccess;
+  onChange: (newAccess: UserAccess) => void;
+}
 
-  const handleChange = async(event: React.ChangeEvent<HTMLSelectElement>) => {
+/**
+ * A React dropdown component for selecting and updating the access status of staff members.
+ *
+ * The `AccessDropdown` allows the user to change the access level (Accepted, Pending, Rejected) of a staff member.
+ *
+ * @param {AccessDropdownProps} props - React AccessDropdownProps as specified above
+ * @returns {JSX.Element} - The rendered dropdown component for selecting the staff member's access level.
+ */
+export const AccessDropdown: FC<AccessDropdownProps> = ({
+  staffId,
+  currentAccess,
+  onChange,
+}) => {
+  const [selectedAccess, setSelectedAccess] =
+    useState<UserAccess>(currentAccess);
+
+  const handleChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newAccess = event.target.value as UserAccess;
     setSelectedAccess(newAccess);
     onChange(newAccess);
     try {
-      await sendRequest.post("/user/staff_requests", { staffRequests: [{ userId: staffId, access: newAccess }] });
-    }
-    catch (error) {
+      await sendRequest.post("/user/staff_requests", {
+        staffRequests: [{ userId: staffId, access: newAccess }],
+      });
+    } catch (error) {
       console.error("Error updating staff access: ", error);
     }
   };

@@ -4,6 +4,14 @@ import { StyledUserNameContainerDiv, StyledUsernameTextSpan, StyledWideInfoConta
 import { StyledStandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/CompRoles";
 import { StyledStandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
 
+/**
+ * A React functional component for rendering the header row in the wide staff access table.
+ *
+ * The `WideStaffAccessHeader` component displays column headers for the wide staff information card,
+ * including labels for "Full Name," "Role," "Affiliation," "Access," and "Email."
+ *
+ * @returns {JSX.Element} - A styled header row component for the wide staff access table
+ */
 export const WideStaffAccessHeader: FC = () => {
   const theme = useTheme();
   return (

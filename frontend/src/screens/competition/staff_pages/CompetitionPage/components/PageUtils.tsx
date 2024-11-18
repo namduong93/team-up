@@ -3,13 +3,26 @@ import { StyledSortButton } from "../../../../../components/responsive_fields/Re
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 
-interface ResponsiveSortButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface ResponsiveSortButtonProps
+  extends React.HTMLAttributes<HTMLButtonElement> {
   isOpen: boolean;
   icon: ReactNode;
   label: string;
-}
+};
 
-export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({ onClick, icon, label, style, isOpen, ...props }) => {
+/**
+ * `ResponsiveButton` is a flexible button component used to display a button with a custom icon and label.
+ *
+ * @returns {JSX.Element} The rendered button element with the specified icon and label.
+ */
+export const ResponsiveButton: FC<ResponsiveSortButtonProps> = ({
+  onClick,
+  icon,
+  label,
+  style,
+  isOpen,
+  ...props
+}) => {
   return (
     <StyledSortButton
       onClick={onClick}
@@ -81,7 +94,16 @@ const StyledSearchCell = styled.div`
   z-index: 1;
 `;
 
-export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ value, onChange, ...props }) => {
+/**
+ * `SearchBar` is a component that provides a stylized search input field with a search icon and label.
+ *
+ * @returns {JSX.Element} The rendered search bar with an input field and a dynamic search icon.
+ */
+export const SearchBar: FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
+  value,
+  onChange,
+  ...props
+}) => {
   return (
     <StyledSearchContainer className="page-utils--StyledSearchContainer-0">
       <StyledSearchInput

@@ -1,5 +1,16 @@
 import { FC } from "react";
-import { StyledButton, StyledCloseButton, StyledContainer, StyledContentBio, StyledContentMarkdown, StyledEditorContainer, StyledModal, StyledModalOverlay, StyledTextarea, StyledView } from "./BioChangePopup.styles";
+import {
+  StyledButton,
+  StyledCloseButton,
+  StyledContainer,
+  StyledContentBio,
+  StyledContentMarkdown,
+  StyledEditorContainer,
+  StyledModal,
+  StyledModalOverlay,
+  StyledTextarea,
+  StyledView,
+} from "./BioChangePopup.styles";
 import { FaTimes } from "react-icons/fa";
 import { StyledHeading } from "../../ManagePage.styles";
 import ReactMarkdownEditorLite from "react-markdown-editor-lite";
@@ -15,6 +26,13 @@ interface BioChangePopUpProps {
   onAnnouncementChange: (value: string) => void;
 }
 
+/**
+ * `BioChangePopUp` is a React web page component that displays a pop up for staff to edit their contact
+ * bio and customise announcements to be sent to teams registered in the competition
+ *
+ * @returns JSX.Element - A styled container presenting a text and markdown editor to customise biography and
+ * announcements
+ */
 export const BioChangePopUp: FC<BioChangePopUpProps> = ({
   onClose,
   onNext,

@@ -10,10 +10,25 @@ import { StaffInfoBar } from "../../../components/InfoBar/StaffInfoBar/StaffInfo
 
 export const StyledStandardSpan = styled.span``;
 
-export const WideStaffCard: FC<StaffCardProps> = ({
-  staffDetails, staffListState: [staffList, setStaffList],
-  ...props  }) => {
+/**
+ * A React functional component for displaying a detailed staff member information card.
+ *
+ * The `WideStaffCard` component provides an expanded view of a staff member's details, including their
+ * name, roles, university affiliation, access level, and email. It integrates with the `StaffInfoBar`
+ * for viewing and editing additional information in a collapsible sidebar.
+ *
+ * @param {StaffCardProps} props - React StaffCardProps, which include:
+ * 'staffDetails`, which is an object containing staff member details, and
+ *  'staffListState' which manages the list of staff members
+ * @returns {JSX.Element} - A styled, interactive UI component displaying detailed staff information,
+ * with functionality for opening an expandable sidebar to edit or view further details.
+ */
 
+export const WideStaffCard: FC<StaffCardProps> = ({
+  staffDetails,
+  staffListState: [staffList, setStaffList],
+  ...props
+}) => {
   const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
 
   return <>

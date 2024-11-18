@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC, useEffect, useState } from "react";
-import styled, { useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 import { FaSave } from "react-icons/fa";
 import { RxReset } from "react-icons/rx";
 import { useParams } from "react-router-dom";
@@ -7,55 +8,103 @@ import { InfoBar, InfoBarProps } from "../InfoBar";
 import { TeamDetails } from "../../../../../../../../shared_types/Competition/team/TeamDetails";
 import { ButtonConfiguration } from "../../../hooks/useCompetitionOutletContext";
 import { sendRequest } from "../../../../../../../utility/request";
-import { StyledInfoBarField, StyledMemberContainer, StyledMemberSpan, StyledMemberUl, StyledTeamContainer, StyledTeamDetailsLabelSpan, StyledTeamStatusDiv, StyledTitleDiv, StyledVerticalInfoBarField } from "./TeamInfoBar.styles";
-import { StyledEditIcon, StyledEditIconButton } from "../../../../../../Account/Account.styles";
-import { StyledEditableInput, TeamStudentInfoCard } from "../components/TeamStudentInfoCard";
+import {
+  StyledInfoBarField,
+  StyledMemberContainer,
+  StyledMemberSpan,
+  StyledMemberUl,
+  StyledTeamContainer,
+  StyledTeamDetailsLabelSpan,
+  StyledTeamStatusDiv,
+  StyledTitleDiv,
+  StyledVerticalInfoBarField,
+} from "./TeamInfoBar.styles";
+import {
+  StyledEditIcon,
+  StyledEditIconButton,
+} from "../../../../../../Account/Account.styles";
+import {
+  StyledEditableInput,
+  TeamStudentInfoCard,
+} from "../components/TeamStudentInfoCard";
 import { AdvancedDropdown } from "../../../../../../../components/AdvancedDropdown/AdvancedDropdown";
 import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
 
 interface TeamInfoBarProps extends InfoBarProps {
   teamDetails: TeamDetails;
-  teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
-  buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
+  teamListState: [
+    Array<TeamDetails>,
+    React.Dispatch<React.SetStateAction<Array<TeamDetails>>>
+  ];
+  buttonConfigurationState: [
+    ButtonConfiguration,
+    React.Dispatch<React.SetStateAction<ButtonConfiguration>>
+  ];
   siteOptionsState: [
-    Array<{ value: string, label: string }>,
-    React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>
+    Array<{ value: string; label: string }>,
+    React.Dispatch<
+      React.SetStateAction<Array<{ value: string; label: string }>>
+    >
   ];
   isEditable: boolean;
 }
 
+/**
+ * A React component for displaying and editing team information.
+ *
+ * The `TeamInfoBar` component displays and manages the details of a team, including the team ID, name, coach, status, level, site, and seat.
+ * It allows for editing these details if the `isEditable` prop is set to true. The component also features a list of students
+ * associated with the team, with editable functionality for the team name, site, and seat.
+ *
+ * @param {TeamInfoBarProps} props - React TeamInfoBarProps specified above, where teamDetails containes the details of the team to display,
+ * teamListState contains functions to update the list of teams, buttonConfigurationState alters the button configurations, siteOptionsState
+ * contains the functions to manage the site options and isEditable determines whether the details can be edited.
+ * @returns {JSX.Element} - A UI component that displays a teams's information and provides editing options.
+ */
 export const TeamInfoBar: FC<TeamInfoBarProps> = ({
-  teamDetails, isOpenState: [isOpen, setIsOpen],
+  teamDetails,
+  isOpenState: [isOpen, setIsOpen],
   teamListState: [teamList, setTeamList],
   buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
   siteOptionsState: [siteOptions, setSiteOptions],
   isEditable,
-  children, ...props }) => {
-  
+  ...props
+}) => {
   const { compId } = useParams();
   const theme = useTheme();
 
-
   const [isPopupOpen, setPopupOpen] = useState(false);
-
   const [isEditing, setIsEditing] = useState(false);
-
   const [teamData, setTeamData] = useState(teamDetails);
-
-  const [currentSiteOption, setCurrentSiteOption] = useState({ value: '', label: '' });
-
+  const [currentSiteOption, setCurrentSiteOption] = useState({
+    value: "",
+    label: "",
+  });
   const [isEdited, setIsEdited] = useState(false);
+
+  // Updates the 'teamData' whenever the currentSitOption changes, ensuring
+  // that 'teamData' reflects the selected site when editing team information
   useEffect(() => {
     if (!currentSiteOption.label || !currentSiteOption.value) {
       return;
     }
-    setTeamData((p) => ({ ...p, teamSite: currentSiteOption.label, siteId: parseInt(currentSiteOption.value) }));
-
+    setTeamData((p) => ({
+      ...p,
+      teamSite: currentSiteOption.label,
+      siteId: parseInt(currentSiteOption.value),
+    }));
   }, [currentSiteOption]);
 
-
+  // Determines if there are any changes to 'teamData' compared to the original and
+  // updates the Edit state accordingly
   useEffect(() => {
-    if (Object.keys(teamData).every((key) => (teamData as Record<string, any>)[key] === (teamDetails as Record<string, any>)[key])) {
+    if (
+      Object.keys(teamData).every(
+        (key) =>
+          (teamData as Record<string, any>)[key] ===
+          (teamDetails as Record<string, any>)[key]
+      )
+    ) {
       setIsEdited(false);
       return;
     }
@@ -64,22 +113,28 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
 
   useEffect(() => {
     setTeamData(teamDetails);
-  }, [teamDetails])
+  }, [teamDetails]);
 
-
+  // Asynchronously handles the save operation after editing is complete.
+  // It finds the index of the current team by matching 'teamId' and replaces the
+  // old teamData with the edited version, sending a request to the backend to update
+  // the information
   const handleSaveEdit = async () => {
-    // send to the backend route here.
-
-    const currentTeamIndex = teamList.findIndex((team) => team.teamId === teamDetails.teamId);
+    const currentTeamIndex = teamList.findIndex(
+      (team) => team.teamId === teamDetails.teamId
+    );
     setTeamList([
       ...teamList.slice(0, currentTeamIndex),
       teamData,
-      ...teamList.slice(currentTeamIndex + 1)
+      ...teamList.slice(currentTeamIndex + 1),
     ]);
 
-    await sendRequest.post('/competition/teams/update', { teamList: [teamData], compId });
+    await sendRequest.post("/competition/teams/update", {
+      teamList: [teamData],
+      compId,
+    });
     setIsEdited(false);
-  }
+  };
 
   return (
     <InfoBar isOpenState={[isOpen || isPopupOpen, setIsOpen]} {...props}>
@@ -152,8 +207,13 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
               icon={<RxReset />}
               style={{
                 backgroundColor: theme.colours.cancel,
-              }} />
-        <TransparentResponsiveButton actionType="confirm" label="Save Changes" isOpen={false} onClick={handleSaveEdit}
+              }}
+            />
+            <TransparentResponsiveButton
+              actionType="confirm"
+              label="Save Changes"
+              isOpen={false}
+              onClick={handleSaveEdit}
               icon={<FaSave />}
               style={{
                 backgroundColor: theme.colours.confirm,
@@ -169,21 +229,22 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
             {teamDetails.students.map((student) => {
               return (
                 <TeamStudentInfoCard
-                key={`${student.userId}`}
-                student={student}
-                teamDetails={teamDetails}
-                buttonConfigurationState={[buttonConfiguration, setButtonConfiguration]}
-                teamListState={[teamList, setTeamList]}
-                popupOpenState={[isPopupOpen, setPopupOpen]}
-                isEditable={isEditable}
+                  key={`${student.userId}`}
+                  student={student}
+                  teamDetails={teamDetails}
+                  buttonConfigurationState={[
+                    buttonConfiguration,
+                    setButtonConfiguration,
+                  ]}
+                  teamListState={[teamList, setTeamList]}
+                  popupOpenState={[isPopupOpen, setPopupOpen]}
+                  isEditable={isEditable}
                 />
-              )
+              );
             })}
           </StyledMemberUl>
         </StyledInfoBarField>
       </StyledMemberContainer>
-
-
     </InfoBar>
   );
 }

@@ -1,3 +1,30 @@
+import React, { FC, useEffect, useState } from "react";
+import { DashInfo } from "../dashboard/hooks/useDashInfo";
+import { useNavigate } from "react-router-dom";
+import { backendURL } from "../../../config/backendURLConfig";
+import { sendRequest } from "../../utility/request";
+import {
+  StyledAccountCard,
+  StyledAccountContainer,
+  StyledAccountItem,
+  StyledActionButtons,
+  StyledBackground,
+  StyledButton,
+  StyledButtonGroup,
+  StyledCardContainer,
+  StyledDetailsCard,
+  StyledDetailsText,
+  StyledEditIcon,
+  StyledEditIconButton,
+  StyledInput,
+  StyledLabel,
+  StyledOption,
+  StyledProfileContainer,
+  StyledProfileEditContainer,
+  StyledProfilePic,
+  StyledSelect,
+} from "./Account.styles";
+import { tShirtOptions } from "../auth/RegisterForm/subroutes/SiteDataInput/SiteDataOptions";
 
 interface User {
   role: "student" | "staff";
@@ -14,26 +41,18 @@ interface User {
   accessibilityReqs: string;
 };
 
-import React, { FC, useEffect, useState } from "react";
-import { DashInfo } from "../dashboard/hooks/useDashInfo";
-import { useNavigate } from "react-router-dom";
-import { backendURL } from "../../../config/backendURLConfig";
-import { sendRequest } from "../../utility/request";
-import { StyledAccountCard, StyledAccountContainer, StyledAccountItem, StyledActionButtons, StyledBackground, StyledButton, StyledButtonGroup, StyledCardContainer, StyledDetailsCard, StyledDetailsText, StyledEditIcon, StyledEditIconButton, StyledInput, StyledLabel, StyledOption, StyledProfileContainer, StyledProfileEditContainer, StyledProfilePic, StyledSelect } from "./Account.styles";
-import { tShirtOptions } from "../auth/RegisterForm/subroutes/SiteDataInput/SiteDataOptions";
-
 interface AccountProps {
   setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;
 };
 
 /**
  * A React component to view and edit the current users' account information.
- * 
- * @param {AccountProps} props - React AccountProps specified above
- * @returns {JSX.Element} - Web page that requests from the backend the users information which 
+*
+* @param {AccountProps} props - React AccountProps specified above
+* @returns {JSX.Element} - Web page that requests from the backend the users information which
  * it then displays and allows users to edit before saving and sending the edit request to the
  * backend to save it
- */
+*/
 export const Account: FC<AccountProps> = ({ setDashInfo }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -53,24 +72,33 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
   });
 
   const [isEditingUser, setIsEditingUser] = useState(false);
-  
+
   const [newDetails, setNewDetails] = useState<User>({
     ...user,
     profilePic: `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`,
   });
 
+  // Initialises the editing process by setting newDetails to match the user
+  // and toggling to editing mode
   const handleEditUser = () => {
     setNewDetails(user);
     setIsEditingUser(true);
   };
 
+  // updates the user with the edited details and sends a request to backend
   const handleSaveUser = async () => {
     setUser(newDetails);
     setIsEditingUser(false);
-    await sendRequest.put('/user/profile_info', newDetails);
-    setDashInfo({ preferredName: newDetails.preferredName, affiliation: newDetails.affiliation, profilePic: newDetails.profilePic });
+    await sendRequest.put("/user/profile_info", newDetails);
+    setDashInfo({
+      preferredName: newDetails.preferredName,
+      affiliation: newDetails.affiliation,
+      profilePic: newDetails.profilePic,
+    });
   };
 
+  // Resets the newDetails to the original user information and toggles
+  // the edit mode off
   const handleCancelUser = () => {
     setNewDetails(user);
     setIsEditingUser(false);
@@ -80,7 +108,7 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     const photoFile = e.target.files?.[0];
 
     if (photoFile) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!allowedTypes.includes(photoFile.type)) {
         alert("Unsupported file format. Please upload a JPEG, PNG, or GIF.");
         return;
@@ -94,17 +122,18 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
     }
   };
 
+  // Fetches the user profile data from the backend
   useEffect(() => {
     (async () => {
       try {
-        const infoResponse = await sendRequest.get<User>('/user/profile_info');
+        const infoResponse = await sendRequest.get<User>("/user/profile_info");
         setUser(infoResponse.data);
         setIsLoaded(true);
       } catch (error: unknown) {
         sendRequest.handleErrorStatus(error, [403], () => {
           setIsLoaded(false);
-          navigate('/');
-          console.log('Error fetching account details: ', error);
+          navigate("/");
+          console.log("Error fetching account details: ", error);
         });
       }
     })();
@@ -289,4 +318,3 @@ export const Account: FC<AccountProps> = ({ setDashInfo }) => {
       </StyledAccountContainer>
     </StyledBackground>;
 };
-

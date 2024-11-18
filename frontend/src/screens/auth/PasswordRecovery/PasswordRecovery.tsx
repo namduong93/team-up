@@ -1,38 +1,52 @@
 import { FC, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { StyledCenteredFormBackground, StyledFormContainer } from "./PasswordRecovery.styles";
+import {
+  StyledCenteredFormBackground,
+  StyledFormContainer,
+} from "./PasswordRecovery.styles";
 import TextInput from "../../../components/general_utility/TextInput";
 import { StyledErrorMessage } from "../../general_styles/error_styles";
 import { StyledCustomButton } from "../../general_styles/button_styles";
 
-export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({ style, ...props }) => {
+/**
+ * PasswordCodeRecoverForm Component
+ *
+ * This component provides a user interface for entering a new password and verifying it
+ * using a password recovery code.
+ *
+ * @param {React.HTMLAttributes<HTMLFormElement>} props - Standard HTML form attributes for customization.
+ * @param {React.CSSProperties} style - Optional inline styles applied to the form container.
+ * @returns {JSX.Element} - A styled form with input fields for a new password and password confirmation.
+ */
+export const PasswordCodeRecoverForm: FC<
+  React.HTMLAttributes<HTMLFormElement>
+> = ({ style, ...props }) => {
   const { code } = useParams();
   const navigate = useNavigate();
-  
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-    
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+
+  // Sends the password reset code to backed - currently empty as email system is not
+  // implemented
   const handleCodeSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      // TODO: Send Backend the verification code to check
+      navigate("/");
+    } catch (error: unknown) {
+      console.log("Error resetting password: ", error);
+    }
+  };
 
-      
-      // ON SUCCESS FROM BACKEND
-      navigate('/');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error: unknown) { /* empty */ }
-  
-  }
-
+  // Ensures that the new password matches the password re-entry
   const handleConfirmPasswordChange = (value: string) => {
     setConfirmPassword(value);
     if (value !== password) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
     } else {
-      setError('');
+      setError("");
     }
   };
 
@@ -64,7 +78,9 @@ export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> 
           type="password"
           required={true}
           value={confirmPassword}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleConfirmPasswordChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleConfirmPasswordChange(e.target.value)
+          }
           width="100%"
         />
       </div>
@@ -79,6 +95,12 @@ export const PasswordCodeRecoverForm: FC<React.HTMLAttributes<HTMLFormElement>> 
 }
 
 
+/**
+ * A React web page component that is the container for the password recovery process. It displays a
+ * header image and renders nested routes using `Outlet` for the specific recovery steps.
+ *
+ * @returns {JSX.Element} - A styled container with a logo and child components.
+ */
 export const PasswordRecovery: FC = () => {
   return (
     <StyledCenteredFormBackground className="password-recovery--StyledCenteredFormBackground-0">

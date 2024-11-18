@@ -1,16 +1,34 @@
 import { FC, useState } from "react";
 import { AttendeesCardProps } from "./AttendeesCardProps";
-import { Field, StyledStudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
+import {
+  Field,
+  StyledStudentInfoContainerDiv,
+} from "../../StudentsPage/subcomponents/StudentInfoCard";
 import { StyledNarrowStatusDiv } from "../../StaffPage/StaffPage.styles";
 import { CompRoles } from "../../StaffPage/subcomponents/CompRoles";
 import { StyledBooleanStatus } from "./BooleanStatus";
 import { AttendeesInfoBar } from "../../../components/InfoBar/AttendeesInfoBar/AttendeesInfoBar";
 
+/**
+ * A React component for displaying attendee information in a compact card format within
+ * a competition context.
+ *
+ * The `NarrowAttendeesCard` component displays an attendee's details, such as their full name,
+ * gender, role, university, T-shirt size, dietary needs, allergies, and accessibility requirements.
+ * It includes a feature where double-clicking the card toggles the visibility of the AttendeesInfoBar,
+ * which provides additional information about the attendee. The card is styled for narrow displays and
+ * provides a compact view of the attendee details.
+ *
+ * @param {AttendeesCardProps} props - React props containing attendeeDetails, which includes information
+ * about the attendee, such as name, gender, role, university, T-shirt size, dietary needs, allergies, and
+ * accessibility needs. The component also accepts other props that are passed down to the outermost container
+ * element.
+ * @returns {JSX.Element} - A UI component that displays the attendee's information in a compact card format.
+ */
 export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
   attendeesDetails,
   ...props
 }) => {
-
   const [isInfoBarOpen, setIsInfoBarOpen] = useState(false);
 
   return <>

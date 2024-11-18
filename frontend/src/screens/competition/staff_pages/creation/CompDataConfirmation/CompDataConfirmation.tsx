@@ -4,54 +4,94 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { sendRequest } from "../../../../../utility/request";
 import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { CompCreationProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { StyledButton, StyledButtonContainer, StyledContainer, StyledContentContainer, StyledDoubleInputContainer, StyledHalfText, StyledLabel, StyledLocationItem, StyledLocationList, StyledText, StyledTitle } from "./CompDataConfirmation.styles";
+import {
+  StyledButton,
+  StyledButtonContainer,
+  StyledContainer,
+  StyledContentContainer,
+  StyledDoubleInputContainer,
+  StyledHalfText,
+  StyledLabel,
+  StyledLocationItem,
+  StyledLocationList,
+  StyledText,
+  StyledTitle,
+} from "./CompDataConfirmation.styles";
 
 interface University {
   id: number;
   name: string;
-}
+};
 
 interface LocationState {
   competitionInfo: CompetitionInformation;
-  optionDisplayList: Array<{ value: string, label: string, defaultSite: string }>;
-}
+  optionDisplayList: Array<{
+    value: string;
+    label: string;
+    defaultSite: string;
+  }>;
+};
 
+/**
+ * `CompDataConfirmation` is a React web page form component that displays a confirmation page for reviewing and finalizing
+ * competition details during the creation process. It provides navigation options to edit the information or confirm
+ * and submit the competition data to the backend.
+ *
+ * @returns JSX.Element - A styled container presenting the previously entered competition details.
+ */
 export const CompDataConfirmation: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  
-  const { competitionInfo, optionDisplayList } = location.state as LocationState|| {};
-  const [institutionOptions, setInstitutionOptions] = useState<{ value: number; label: string; }[]>([]);
+
+  const { competitionInfo, optionDisplayList } =
+    (location.state as LocationState) || {};
+  const [institutionOptions, setInstitutionOptions] = useState<
+    { value: number; label: string }[]
+  >([]);
 
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
-        const response = await sendRequest.get<{ universities: University[] }>('/universities/list');
+        const response = await sendRequest.get<{ universities: University[] }>(
+          "/universities/list"
+        );
         const universities = response.data;
-  
+
         const options = universities.universities.map((university) => ({
           value: university.id,
           label: university.name,
         }));
-  
-        setInstitutionOptions(options); 
+
+        setInstitutionOptions(options);
       } catch (error) {
         console.error("Error fetching universities:", error);
       }
     };
-  
+
     fetchUniversities();
   }, []);
 
   const handleBack = () => {
     console.log(competitionInfo);
-    navigate("/competition/create", { state: { competitionInfo, optionDisplayList } });
+    navigate("/competition/create", {
+      state: { competitionInfo, optionDisplayList },
+    });
   };
 
+  // packages the information and sends to the backend for storage
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const { name, earlyRegDeadline, generalRegDeadline, startDate, region, code, siteLocations, otherSiteLocations } = competitionInfo;
+    const {
+      name,
+      earlyRegDeadline,
+      generalRegDeadline,
+      startDate,
+      region,
+      code,
+      siteLocations,
+      otherSiteLocations,
+    } = competitionInfo;
     const payload = {
       name,
       earlyRegDeadline,
@@ -59,26 +99,30 @@ export const CompDataConfirmation: FC = () => {
       startDate,
       region: region,
       code,
-      siteLocations: siteLocations.map(location => ({
-        universityId: location.universityId, 
-        defaultSite: location.defaultSite, 
+      siteLocations: siteLocations.map((location) => ({
+        universityId: location.universityId,
+        defaultSite: location.defaultSite,
       })),
-      otherSiteLocations: (otherSiteLocations || []).map(location => ({
-        universityName: location.universityName, 
-        defaultSite: location.defaultSite, 
+      otherSiteLocations: (otherSiteLocations || []).map((location) => ({
+        universityName: location.universityName,
+        defaultSite: location.defaultSite,
       })),
     };
-    console.log(payload)
     try {
-      const response = await sendRequest.post<{competitionId: number }>('/competition/system_admin/create', payload);
+      const response = await sendRequest.post<{ competitionId: number }>(
+        "/competition/system_admin/create",
+        payload
+      );
       console.log("Response:", response.data);
 
       const compId = response.data.competitionId;
-      navigate(`/competition/page/${compId}`, { state: { isSuccessPopUpOpen: true } }); 
+      navigate(`/competition/page/${compId}`, {
+        state: { isSuccessPopUpOpen: true },
+      });
     } catch (error) {
       console.error("Error creating competition:", error);
     }
-};
+  };
 
   return (
     <StyledFlexBackground
@@ -141,7 +185,7 @@ export const CompDataConfirmation: FC = () => {
           <StyledLabel className="comp-data-confirmation--StyledLabel-6">Site Locations</StyledLabel>
           <StyledLocationList className="comp-data-confirmation--StyledLocationList-0">
             {optionDisplayList.map((displayObject, index) => {
-              console.log(institutionOptions)
+              console.log(institutionOptions);
               return (
                 <StyledLocationItem key={index} className="comp-data-confirmation--StyledLocationItem-0">
                   <div>{displayObject.label}</div>

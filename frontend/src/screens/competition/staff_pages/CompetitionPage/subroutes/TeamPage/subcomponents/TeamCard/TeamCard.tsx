@@ -1,10 +1,22 @@
 import { PanInfo } from "framer-motion";
-import { Student, TeamDetails } from "../../../../../../../../../shared_types/Competition/team/TeamDetails";
+import {
+  Student,
+  TeamDetails,
+} from "../../../../../../../../../shared_types/Competition/team/TeamDetails";
 import { DragEndEvent } from "../../TeamPage";
 import { ButtonConfiguration } from "../../../../hooks/useCompetitionOutletContext";
 import { CompetitionRole } from "../../../../../../../../../shared_types/Competition/CompetitionRole";
 import { FC, useState } from "react";
-import { StyledCardHeaderDiv, StyledRedTeamNameAlert, StyledHoverDiv, StyledTeamLevelDiv, StyledTeamMatesContainerDiv, StyledTeamMemberMotionDiv, StyledTeamNameApprovalDiv, StyledTitleSpan } from "./TeamCard.styles";
+import {
+  StyledCardHeaderDiv,
+  StyledRedTeamNameAlert,
+  StyledHoverDiv,
+  StyledTeamLevelDiv,
+  StyledTeamMatesContainerDiv,
+  StyledTeamMemberMotionDiv,
+  StyledTeamNameApprovalDiv,
+  StyledTitleSpan,
+} from "./TeamCard.styles";
 import { TeamCardMember } from "./subcomponents/TeamCardMember/TeamCardMember";
 import { ApproveRadio } from "./subcomponents/ApproveRadio/ApproveRadio";
 import { ApproveNameRadios } from "./subcomponents/ApproveNameRadios/ApproveNameRadios";
@@ -17,13 +29,13 @@ export enum Member {
   level = 3,
   boersenEligible = 4,
   isRemote = 5,
-}
+};
 
 export const enum RadioOption {
-  Neither = 'Neither',
-  Check = 'Check',
-  Cross = 'Cross',
-}
+  Neither = "Neither",
+  Check = "Check",
+  Cross = "Cross",
+};
 
 export const DRAG_ANIMATION_DURATION = 0.2;
 
@@ -31,36 +43,62 @@ interface TeamCardProps extends React.HTMLAttributes<HTMLDivElement> {
   teamDetails: TeamDetails;
   isEditingStatus: boolean;
   teamIdsState: [number[], React.Dispatch<React.SetStateAction<number[]>>];
-  rejectedTeamIdsState: [number[], React.Dispatch<React.SetStateAction<number[]>>];
+  rejectedTeamIdsState: [
+    number[],
+    React.Dispatch<React.SetStateAction<number[]>>
+  ];
   isEditingNameStatus: boolean;
   isDraggingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  handleDragDropCard?: (event: DragEndEvent, info: PanInfo, member: Student, currentTeamId: number) => void;
-  teamListState: [Array<TeamDetails>, React.Dispatch<React.SetStateAction<Array<TeamDetails>>>];
-  buttonConfigurationState: [ButtonConfiguration, React.Dispatch<React.SetStateAction<ButtonConfiguration>>];
+  handleDragDropCard?: (
+    event: DragEndEvent,
+    info: PanInfo,
+    member: Student,
+    currentTeamId: number
+  ) => void;
+  teamListState: [
+    Array<TeamDetails>,
+    React.Dispatch<React.SetStateAction<Array<TeamDetails>>>
+  ];
+  buttonConfigurationState: [
+    ButtonConfiguration,
+    React.Dispatch<React.SetStateAction<ButtonConfiguration>>
+  ];
   siteOptionsState: [
-    Array<{ value: string, label: string }>,
-    React.Dispatch<React.SetStateAction<Array<{ value: string, label: string }>>>
+    Array<{ value: string; label: string }>,
+    React.Dispatch<
+      React.SetStateAction<Array<{ value: string; label: string }>>
+    >
   ];
   roles: Array<CompetitionRole>;
-};
+}
 
-export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = false,
+/**
+ * A React component that displays detailed information about a team, including team members,
+ * their level, and their approval status. It supports drag-and-drop functionality for team members
+ * and allows for editing of team status and name approval based on user roles.
+ *
+ * @param {TeamCardProps} props - React TeamCardProps specified above
+ * @returns {JSX.Element} - A team card component displaying the team information and allowing status/name edits.
+ */
+export const TeamCard: FC<TeamCardProps> = ({
+  teamDetails,
+  isEditingStatus = false,
   teamListState: [teamList, setTeamlist],
-  teamIdsState: [teamIds, setTeamIds],
-  rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+  teamIdsState: [, setTeamIds],
+  rejectedTeamIdsState: [, setRejectedTeamIds],
   buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
-  isEditingNameStatus = false, isDraggingState: [isDragging, setIsDragging],
-  handleDragDropCard = () => {}, 
+  isEditingNameStatus = false,
+  isDraggingState: [isDragging, setIsDragging],
+  handleDragDropCard = () => {},
   siteOptionsState: [siteOptions, setSiteOptions],
   roles,
   ...props
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [status, _ ] = useState(teamDetails.status);
+  const [status, ] = useState(teamDetails.status);
   const colorMap = {
-    'Pending': '#F48385',
-    'Unregistered': '#FDD386',
-    'Registered': '#8BDFA5',
+    Pending: "#F48385",
+    Unregistered: "#FDD386",
+    Registered: "#8BDFA5",
   };
 
   const toggleCurrentId = () => {
@@ -70,22 +108,23 @@ export const TeamCard: FC<TeamCardProps> = ({ teamDetails, isEditingStatus = fal
         // if the team isn't in the list yet then add it
         return [...pTeamIds, teamDetails.teamId];
       }
-      
+
       // otherwise remove it
-      return [
-        ...(pTeamIds.slice(0, index)),
-        ...(pTeamIds.slice(index + 1))
-      ];
+      return [...pTeamIds.slice(0, index), ...pTeamIds.slice(index + 1)];
     });
+  };
 
-  }
-
-  const isEditThisCard = isEditingStatus && (teamDetails.status === 'Pending');
-  const isEditNameThisCard = isEditingNameStatus && (teamDetails.teamNameApproved === false);
+  const isEditThisCard = isEditingStatus && teamDetails.status === "Pending";
+  const isEditNameThisCard =
+    isEditingNameStatus && teamDetails.teamNameApproved === false;
 
   const [infoBarOpen, setInfoBarOpen] = useState(false);
 
-  const isEditable = !(roles.includes(CompetitionRole.SiteCoordinator) && !roles.includes(CompetitionRole.Coach) && !roles.includes(CompetitionRole.Admin));
+  const isEditable = !(
+    roles.includes(CompetitionRole.SiteCoordinator) &&
+    !roles.includes(CompetitionRole.Coach) &&
+    !roles.includes(CompetitionRole.Admin)
+  );
   const levelChar = teamDetails.teamLevel.slice(-1);
   return <>
   <TeamInfoBar

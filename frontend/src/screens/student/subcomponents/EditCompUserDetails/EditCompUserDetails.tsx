@@ -1,8 +1,26 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
-import { StyledButtonContainer, StyledCloseButton, StyledCloseContainer, StyledContentContainer, StyledField, StyledForm, StyledHeaderContainer, StyledModalContent, StyledModalOverlay, StyledTitle, StyledTitleContainer } from "./EditCompUserDetails.styles";
+import {
+  StyledButtonContainer,
+  StyledCloseButton,
+  StyledCloseContainer,
+  StyledContentContainer,
+  StyledField,
+  StyledForm,
+  StyledHeaderContainer,
+  StyledModalContent,
+  StyledModalOverlay,
+  StyledTitle,
+  StyledTitleContainer,
+} from "./EditCompUserDetails.styles";
 import { FaTimes } from "react-icons/fa";
-import { StyledColon, StyledDescriptor, StyledDoubleInputContainer, StyledFormLabel, StyledText } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
+import {
+  StyledColon,
+  StyledDescriptor,
+  StyledDoubleInputContainer,
+  StyledFormLabel,
+  StyledText,
+} from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
 import DropdownInputLight from "../../../../components/general_utility/DropDownLight";
 import { yearOptions } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput";
 import TextInputLight from "../../../../components/general_utility/TextInputLight";
@@ -17,6 +35,14 @@ interface EditCompPreferencesProps {
   onClose: () => void;
 };
 
+/**
+ * `EditCompDetailsPopUp` is a React web page component that displays a pop up for editing and reviewing
+ * entered competition preferences after the user has registered for a competition. It provides relevant input fields
+ * to allow users to change their degree, ICPC eligibility, competition level, site attendance,
+ * biography, and preferred contact method
+ *
+ * @returns JSX.Element - A styled container presenting input fields to edit the student's competition preferences
+ */
 export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
   student,
   onSubmit,
@@ -29,10 +55,6 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
     onClose();
     return true;
   };
-
-  useEffect(() => {
-    console.log(student);
-  },[])
 
   return (
     <StyledModalOverlay className="edit-comp-user-details--StyledModalOverlay-0">
@@ -104,7 +126,10 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 options={["Level A", "Level B", "No Preference"]}
                 selectedOption={formData.level}
                 onOptionChange={(e) => {
-                  setFormData({ ...formData, level: e.target.value as CompetitionLevel });
+                  setFormData({
+                    ...formData,
+                    level: e.target.value as CompetitionLevel,
+                  });
                 }}
                 required={true}
                 width="100%"

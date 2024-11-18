@@ -5,7 +5,19 @@ import { sendRequest } from "../../../../../../utility/request";
 import { SiteLocation } from "../../FormState";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
 import { CompRegistrationProgressBar } from "../../../../../../components/progress_bar/ProgressBar";
-import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledColon, StyledContainer, StyledContentContainer, StyledDescriptor, StyledDoubleInputContainer, StyledFormLabel, StyledText, StyledTitle } from "./CompIndividualInput.styles";
+import {
+  StyledAsterisk,
+  StyledButton,
+  StyledButtonContainer,
+  StyledColon,
+  StyledContainer,
+  StyledContentContainer,
+  StyledDescriptor,
+  StyledDoubleInputContainer,
+  StyledFormLabel,
+  StyledText,
+  StyledTitle,
+} from "./CompIndividualInput.styles";
 import DropdownInputLight from "../../../../../../components/general_utility/DropDownLight";
 import TextInputLight from "../../../../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../../../../components/general_utility/RadioButton";
@@ -40,6 +52,17 @@ export const yearOptions = [
   { value: "10", label: "10th" },
 ];
 
+/**
+ * A React web page form component for collecting a user's competition preferneces during registration
+ * for a competition
+ *
+ * The `CompExperienceInput` component gathers user data like degree, competition level, ICPC eligibility,
+ * and site attendance. The form allows users to input and submit their individual information, including
+ * degree details, ICPC eligibility, competition level, and personal biography.
+ *
+ * @returns {JSX.Element} - A form UI for collecting a user's competition preferences during the competition
+ * registration.
+ */
 export const CompIndividualInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepCompRegoForm();
@@ -87,6 +110,8 @@ export const CompIndividualInput: FC = () => {
     accessibilityReqs: "",
   });
 
+  // Obtains the User's information from the backend and the default
+  // site assigned to the user's institution
   useEffect(() => {
     (async () => {
       try {
@@ -97,7 +122,6 @@ export const CompIndividualInput: FC = () => {
           { code }
         );
         setFormData({ ...formData, siteLocation: siteResponse.data.site });
-        console.log("Site info:", siteResponse.data.site);
       } catch (error: unknown) {
         console.log("Error fetching user info:", error);
       }

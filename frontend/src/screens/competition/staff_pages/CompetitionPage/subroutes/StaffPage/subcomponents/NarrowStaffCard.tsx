@@ -1,13 +1,31 @@
 import { FC, useState } from "react";
 import { StaffCardProps } from "./StaffCardProps";
-import { Field, StyledStudentInfoContainerDiv } from "../../StudentsPage/subcomponents/StudentInfoCard";
-import { StyledNarrowStatusDiv, StyledStaffAccessLevel } from "../StaffPage.styles";
+import {
+  Field,
+  StyledStudentInfoContainerDiv,
+} from "../../StudentsPage/subcomponents/StudentInfoCard";
+import {
+  StyledNarrowStatusDiv,
+  StyledStaffAccessLevel,
+} from "../StaffPage.styles";
 import { CompRoles } from "./CompRoles";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../../shared_types/Competition/staff/StaffInfo";
 import { StaffInfoBar } from "../../../components/InfoBar/StaffInfoBar/StaffInfoBar";
 
-
+/**
+ * A React functional component for displaying a compact staff member information card.
+ *
+ * The `NarrowStaffCard` component renders key details about a staff member, including their
+ * full name, role, affiliation, access level, and email. It integrates with the `StaffInfoBar`
+ * to allow detailed information to be displayed in an expandable panel upon user interaction.
+ *
+ * @param {StaffCardProps} props - React StaffCardProps, which include:
+ * 'staffDetails`, which is an object containing staff member details, and
+ *  'staffListState' which manages the list of staff members
+ * @returns {JSX.Element} - A styled, interactive UI component displaying summarized staff information,
+ * with expandable functionality for more detailed views.
+ */
 export const NarrowStaffCard: FC<StaffCardProps> = ({
   staffDetails,
   staffListState: [staffList, setStaffList],
