@@ -16,6 +16,8 @@ services:
       - "5173:5173"
     environment:
       - REACT_APP_BACKEND_URL=http://localhost:8000
+      # HTTPS-Migrate, Uncomment when moving to https
+      # - REACT_APP_BACKEND_URL=https://localhost:8000
     depends_on:
       - backend
     networks:
