@@ -163,7 +163,6 @@ describe('Request Site Change Function', () => {
     await comp_student_db.competitionRequestSiteChange(newStudent.userId, comp.competitionId, siteInfos[0].id);
     const afterTeam = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId)
     expect(afterTeam.teamSite).toStrictEqual('TestRoom')
-    console.log(await comp_staff_db.competitionTeams(id, comp.competitionId))
   });
   test('Failure case: New site ID is similar to the current site ID or an already requested new site ID.', async () => {
     const siteInfos = await comp_db.competitionSites(comp.competitionId);

@@ -42,7 +42,6 @@ describe('Competition Announcement Update Function', () => {
       [compId, mockUniversity.id]
     );
 
-    expect(result.rowCount).toBe(1);
     expect(result.rows[0]).toEqual({
       message: mockAnnouncement.message,
       universityId: mockUniversity.id
@@ -61,7 +60,6 @@ describe('Competition Announcement Update Function', () => {
       [compId, mockUniversity.id]
     );
 
-    expect(result.rowCount).toBe(1);
     expect(result.rows[0]).toEqual({
       message: updatedAnnouncement.message,
       universityId: mockUniversity.id

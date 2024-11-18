@@ -47,4 +47,8 @@ describe('Session Find Function', () => {
       createdAt: expect.any(Date)
     });
   });
+
+  test('Fail cases', async () => {
+    expect(await session_db.find('ezID2')).toStrictEqual(null);
+  });
 });
