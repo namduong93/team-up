@@ -68,7 +68,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
   useEffect(() => {
     cardRef.current 
     && isEditing
-    && (cardRef.current as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'end' });
+    && (cardRef.current as HTMLDivElement).scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [isEditing, isEdited]);
 
   const handleSaveEdit = async () => {
@@ -107,7 +107,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
           <span>{studentInfo.name}</span>
         </StyledVerticalInfoBarField>
         <StyledVerticalInfoBarField className="students-info-bar--StyledVerticalInfoBarField-1">
-          <StyledLabelSpan className="students-info-bar--StyledLabelSpan-2">Perferred Name:</StyledLabelSpan>
+          <StyledLabelSpan className="students-info-bar--StyledLabelSpan-2">Preferred Name:</StyledLabelSpan>
           <span>{studentInfo.preferredName}</span>
         </StyledVerticalInfoBarField>
         <StyledVerticalInfoBarField className="students-info-bar--StyledVerticalInfoBarField-2">
@@ -175,7 +175,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
             : <span>{studentData.bio}</span>}
           </StyledVerticalInfoBarField>
           <StyledVerticalInfoBarField className="students-info-bar--StyledVerticalInfoBarField-10">
-            <StyledLabelSpan className="students-info-bar--StyledLabelSpan-15">ICPC Eligibile:</StyledLabelSpan>
+            <StyledLabelSpan className="students-info-bar--StyledLabelSpan-15">ICPC Eligible:</StyledLabelSpan>
             {isEditing ?
               <StyledToggleSelect
                 onChange={(e) => setStudentData((p) => ({ ...p, ICPCEligible: e.target.value === 'yes' }))}
@@ -198,7 +198,7 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = (
               className="students-info-bar--StyledBooleanStatus-0" />}
           </StyledVerticalInfoBarField>
           <StyledVerticalInfoBarField className="students-info-bar--StyledVerticalInfoBarField-11">
-            <StyledLabelSpan className="students-info-bar--StyledLabelSpan-16">boersen Eligibile:</StyledLabelSpan>
+            <StyledLabelSpan className="students-info-bar--StyledLabelSpan-16">boersen Eligible:</StyledLabelSpan>
             {isEditing ?
               <StyledToggleSelect
                 onChange={(e) => setStudentData((p) => ({ ...p, boersenEligible: e.target.value === 'yes' }))}
