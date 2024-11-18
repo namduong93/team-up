@@ -21,7 +21,7 @@ import { testTeam } from './testTeam';
 
 export const handlers = [
 
-  http.get(`${backendURL.HOST}:${backendURL.PORT}/user/type`, async ({ params }) => {
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/user/type`, async () => {
 
     const res = HttpResponse.json({ type: 'system_admin' }, { status: 200 });
     return res;

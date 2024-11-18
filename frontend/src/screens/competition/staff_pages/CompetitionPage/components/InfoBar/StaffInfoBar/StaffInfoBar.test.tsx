@@ -5,7 +5,6 @@ import { screen, waitFor } from '@testing-library/react';
 import { server } from '../../../../../../../test_utils/mock_server';
 import { contextRender } from '../../../../../../../test_utils/contextRender';
 import { useState } from 'react';
-import { testAttendee } from '../../../../../../../test_utils/testAttendee';
 import { StaffInfoBar } from './StaffInfoBar';
 import { testStaff } from '../../../../../../../test_utils/testStaff';
 import { StaffInfo } from '../../../../../../../../shared_types/Competition/staff/StaffInfo';

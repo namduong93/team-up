@@ -5,7 +5,6 @@ import { screen, waitFor } from '@testing-library/react';
 import { server } from '../../../../../../../test_utils/mock_server';
 import { contextRender } from '../../../../../../../test_utils/contextRender';
 import { useState } from 'react';
-import { testStudent } from '../../../../../../../test_utils/testStudent';
 import userEvent from '@testing-library/user-event';
 import { TeamInfoBar } from './TeamInfoBar';
 import { testTeam } from '../../../../../../../test_utils/testTeam';
@@ -70,13 +69,13 @@ describe('TeamInfoBar', () => {
     expect(screen.getByText(testTeam.status)).toBeVisible();
     expect(screen.getByText(testTeam.teamLevel)).toBeVisible();
     expect(screen.getByText(testTeam.teamSite)).toBeVisible();
-    expect(screen.getByText(testTeam.teamSeat)).toBeVisible();
+    testTeam.teamSeat && expect(screen.getByText(testTeam.teamSeat)).toBeVisible();
 
     const editTeamButton = document.getElementsByClassName('team-info-bar--StyledEditIconButton-0')[0];
     await userEvent.click(editTeamButton);
     expect(screen.getByDisplayValue(testTeam.teamName)).toBeInstanceOf(HTMLInputElement);
     expect(screen.getByDisplayValue(testTeam.teamSite)).toBeInstanceOf(HTMLInputElement);
-    expect(screen.getByDisplayValue(testTeam.teamSeat)).toBeInstanceOf(HTMLInputElement);
+    testTeam.teamSeat && expect(screen.getByDisplayValue(testTeam.teamSeat)).toBeInstanceOf(HTMLInputElement);
 
     const testMember = testTeam.students[0];
     expect(screen.getByText(testMember.name)).toBeVisible();

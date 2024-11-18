@@ -7,8 +7,6 @@ import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from '../../../../../../themes/defaultTheme';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { CompetitionPage } from '../../CompetitionPage';
-import userEvent from '@testing-library/user-event';
-import { StaffAccess } from '../../../../../../../shared_types/Competition/staff/StaffInfo';
 import { StudentPage } from './StudentPage';
 import { CompetitionLevel } from '../../../../../../../shared_types/Competition/CompetitionLevel';
 
