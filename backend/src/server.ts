@@ -27,6 +27,10 @@ import { CompetitionStudentController } from './controllers/CompetitionStudentCo
 import { SqlDbCompetitionStaffRepository } from './repository/competition_staff/SqlDbCompetitionStaffRepository.js';
 import { CompetitionStaffService } from './services/CompetitionStaffService.js';
 import { CompetitionStaffController } from './controllers/CompetitionStaffController.js';
+import { frontendURL } from '../config/frontendURL.js';
+// HTTPS-Migrate, Uncomment when using https
+// import { readFileSync } from 'fs';
+// import https from 'https';
 
 /* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -34,11 +38,19 @@ import { CompetitionStaffController } from './controllers/CompetitionStaffContro
  */
 const { HOST, PORT } = serverAddress;
 const app = express();
+
+// HTTPS-Migrate, Uncomment when moving to https
+// const ssl = {
+//   key: readFileSync('localhost-key.pem'),
+//   cert: readFileSync('localhost.pem')
+// }
+
 app.use(morgan('dev'));
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: `${frontendURL.HOST}:${frontendURL.PORT}`,
   credentials: true,
 }));
+
 app.use(cookieParser());
 app.use(json());
 
@@ -409,7 +421,12 @@ app.put('/competition/staff/update_courses', competitionStaffController.competit
  */
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
-});
+})
+
+// HTTPS-Migrate, Uncomment when migrating to https
+// const server = https.createServer(ssl, app).listen(Number(PORT), HOST, () => {
+//   console.log(`Listening on port ${PORT} ✨`);
+// });
 
 process.on('SIGINT', () => {
   server.close(() => console.log('server closing'));

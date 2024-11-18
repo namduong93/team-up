@@ -4,3 +4,9 @@ export const backendURL = {
   HOST: 'http://127.0.0.1',
   PORT: '8000'
 }
+
+// HTTPS-Migrate Uncomment when migrating to https
+// export const backendURL = {
+//   HOST: 'https://127.0.0.1',
+//   PORT: '8000'
+// }
