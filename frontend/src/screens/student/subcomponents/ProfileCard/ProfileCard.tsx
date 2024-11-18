@@ -2,7 +2,6 @@ import { FC } from "react";
 import { CopyButton } from "../../../../components/general_utility/CopyButton";
 import { FaUserTie } from "react-icons/fa";
 import { backendURL } from "../../../../../config/backendURLConfig";
-import { StyledInfoButton } from "../../subroutes/TeamManage";
 import {
   StyledCoachContact,
   StyledContactEdit,
@@ -20,6 +19,7 @@ import {
   StyledStudentInfo,
   StyledStudentName,
 } from "./ProfileCard.styles";
+import { StyledInfoButton } from "../../subroutes/TeamManage/TeamManage";
 
 interface ProfileCardProps {
   name: string;

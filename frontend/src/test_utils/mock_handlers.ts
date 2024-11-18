@@ -10,13 +10,14 @@ import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo'
 import { CompetitionLevel } from '../../shared_types/Competition/CompetitionLevel';
 import { AttendeesDetails } from '../../shared_types/Competition/staff/AttendeesDetails';
 import { CompetitionSite, CompetitionSiteCapacity } from '../../shared_types/Competition/CompetitionSite';
-import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails';
+import { ParticipantTeamDetails, TeamDetails } from '../../shared_types/Competition/team/TeamDetails';
 import { TeamStatus } from '../../shared_types/Competition/team/TeamStatus';
 import { testStudent } from './testStudent';
 import { Announcement } from '../../shared_types/Competition/staff/Announcement';
 import { testCompDetails } from './testCompDetails';
 import { EditRego } from '../../shared_types/Competition/staff/Edit';
 import { Competition } from '../screens/dashboard/Dashboard';
+import { testTeam } from './testTeam';
 
 export const handlers = [
 
@@ -405,5 +406,23 @@ export const handlers = [
         ]
       }
     )
-  })
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/student/details`, () => {
+    return HttpResponse.json<{ studentDetails: StudentInfo }>({
+      studentDetails: testStudent
+    });
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/team/details`, () => {
+    return HttpResponse.json<ParticipantTeamDetails>(testTeam)
+  }),
+
+  http.get(`${backendURL.HOST}:${backendURL.PORT}/competition/team/invite_code`, () => {
+    return HttpResponse.json<{ code: string }>(
+      {
+        code: 'code1234'
+      }
+    )
+  }),
 ]

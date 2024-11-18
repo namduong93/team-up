@@ -1,11 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { StudentInfo } from "../../../../shared_types/Competition/student/StudentInfo";
-import { sendRequest } from "../../../utility/request";
-import { ProfileCard } from "../subcomponents/ProfileCard/ProfileCard";
-import { backendURL } from "../../../../config/backendURLConfig";
-import { EditCompUserDetails } from "../subcomponents/EditCompUserDetails/EditCompUserDetails";
+import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
+import { sendRequest } from "../../../../utility/request";
+import { ProfileCard } from "../../subcomponents/ProfileCard/ProfileCard";
+import { EditCompUserDetails } from "../../subcomponents/EditCompUserDetails/EditCompUserDetails";
+import { backendURL } from "../../../../../config/backendURLConfig";
+
 
 const StyledDetailsContainer = styled.div`
   display: flex;

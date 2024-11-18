@@ -1,11 +1,11 @@
 import { useOutletContext } from "react-router-dom";
 import styled from "styled-components";
-import { Student } from "../../../../shared_types/Competition/team/TeamDetails";
 import { useState } from "react";
-import { TeamActionCard } from "../../../components/general_utility/TeamActionCard";
-import { ProfileCard } from "../subcomponents/ProfileCard/ProfileCard";
 import { FaTimes } from "react-icons/fa";
-import { MarkdownDisplay } from "../../general_components/MarkdownDisplay";
+import { Student } from "../../../../../shared_types/Competition/team/TeamDetails";
+import { TeamActionCard } from "../../../../components/general_utility/TeamActionCard";
+import { ProfileCard } from "../../subcomponents/ProfileCard/ProfileCard";
+import { MarkdownDisplay } from "../../../general_components/MarkdownDisplay";
 
 const StyledManageContainer = styled.div`
   display: flex;
