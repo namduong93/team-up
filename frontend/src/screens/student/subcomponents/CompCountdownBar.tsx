@@ -68,7 +68,7 @@ const StyledMedalIcon = styled(FaMedal)`
 export const CompCountdownBar: React.FC<ProgressBarProps> = ({ daysRemaining, progress }) => {
   return (
     <StyledContainer className="comp-countdown-bar--StyledContainer-0">
-      <StyledTitle className="comp-countdown-bar--StyledTitle-0">{daysRemaining}days to go!</StyledTitle>
+      <StyledTitle className="comp-countdown-bar--StyledTitle-0">{daysRemaining} days to go!</StyledTitle>
       <StyledProgressWrapper className="comp-countdown-bar--StyledProgressWrapper-0">
         <StyledProgressBarContainer className="comp-countdown-bar--StyledProgressBarContainer-0">
           <StyledProgress $progress={progress} className="comp-countdown-bar--StyledProgress-0" />

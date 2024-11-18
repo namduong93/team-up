@@ -17,7 +17,7 @@ const TestSitePopup = () => {
   return (<SitePopupChain siteOptionsState={[siteOptions, setSiteOptions]} handleClose={() => {}} />)
 }
 
-describe('EditCompUserDetails', () => {
+describe('SitePopupChain', () => {
   it('Renders correctly', async () => {
     // ARRANGE
     await waitFor(() => contextRender(<TestSitePopup />));

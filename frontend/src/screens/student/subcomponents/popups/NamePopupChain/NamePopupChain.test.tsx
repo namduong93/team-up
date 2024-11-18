@@ -10,7 +10,7 @@ import userEvent from '@testing-library/user-event';
 server.listen();
 
 
-describe('EditCompUserDetails', () => {
+describe('NamePopupChain', () => {
   it('Renders correctly', async () => {
     // ARRANGE
     await waitFor(() => contextRender(<NamePopupChain handleClose={() => {}} />));

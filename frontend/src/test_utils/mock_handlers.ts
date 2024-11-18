@@ -317,5 +317,9 @@ export const handlers = [
 
   http.put(`${backendURL.HOST}:${backendURL.PORT}/competition/student/site_change`, async () => {
     return HttpResponse.json({}, { status: 200 });
+  }),
+
+  http.post(`${backendURL.HOST}:${backendURL.PORT}/competition/student/withdraw`, async () => {
+    return HttpResponse.text('code1234', { status: 200 });
   })
 ]
