@@ -1,13 +1,9 @@
 import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
-import { CompetitionRole } from '../../../../shared_types/Competition/CompetitionRole';
-import { StaffAccess, StaffInfo } from '../../../../shared_types/Competition/staff/StaffInfo';
 import { UserAccess } from '../../../../shared_types/User/User';
 import { DbError } from '../../../errors/DbError';
 import { Competition } from '../../../models/competition/competition';
-import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
-import { University } from '../../../models/university/university';
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUserRole } from '../../../models/competition/competitionUser';
 import { Staff } from '../../../models/user/staff/staff';
-import { Student } from '../../../models/user/student/student';
 import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
 import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
 import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
@@ -120,7 +116,7 @@ describe('Notification Request Team Name Function', () => {
       expect.arrayContaining([
         expect.objectContaining({
           type: 'staffAccount',
-          message: expect.stringContaining(`New staff account(s) pending approval. Please review in the staff management panel.`),
+          message: expect.stringContaining('New staff account(s) pending approval. Please review in the staff management panel.'),
         }),
       ])
     );
@@ -131,7 +127,7 @@ describe('Notification Request Team Name Function', () => {
       expect.arrayContaining([
         expect.objectContaining({
           type: 'staffAccount',
-          message: expect.stringContaining(`New staff account(s) pending approval. Please review in the staff management panel.`),
+          message: expect.stringContaining('New staff account(s) pending approval. Please review in the staff management panel.'),
         }),
       ])
     );
