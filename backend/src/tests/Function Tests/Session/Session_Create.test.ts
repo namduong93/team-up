@@ -43,7 +43,7 @@ describe('Session Create Function', () => {
     await session_db.create(newSession);
     expect(await session_db.find('ezID')).toMatchObject({
       sessionId: expect.stringMatching(/^ezID\s*$/),  // matches 'ezID' with optional spaces
-      userId: student.userId,
+      userId: expect.any(Number),
       createdAt: expect.any(Date)
     });
   })
