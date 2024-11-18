@@ -263,7 +263,25 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
    * @throws {DbError} If there is an error updating a user in the database.
    */
   competitionStaffUpdate = async (userId: number, staffList: StaffInfo[], compId: number) => {
+    const updatedAccessStaff: Array<number> = [];
+
     for (const staff of staffList) {
+      // Find out if this staff is getting accepted into their registering competition
+      const oldInfoResult = await this.pool.query(
+      `SELECT access_level
+        FROM competition_users
+        WHERE user_id = ${staff.userId} AND competition_id = ${compId};
+      `
+      );
+
+      if (oldInfoResult.rows.length > 0) {
+        const oldAccessLevel = oldInfoResult.rows[0].access_level;
+        if (oldAccessLevel === 'Pending' && staff.access === 'Accepted') {
+          updatedAccessStaff.push(staff.userId);
+        }
+      }
+
+      // Update the staff details
       try {
         await this.pool.query(
           `UPDATE competition_users
@@ -274,13 +292,12 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
             WHERE user_id = ${staff.userId} AND competition_id = ${compId};
           `
         );
-
       } catch (error: unknown) {
         throw new DbError(DbError.Insert, 'Failed to update a user in the db');
       }
     }
 
-    return;
+    return updatedAccessStaff;
   }
 
   /**
