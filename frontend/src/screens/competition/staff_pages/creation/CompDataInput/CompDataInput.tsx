@@ -4,31 +4,42 @@ import { CompetitionInformation } from "../../../../../../shared_types/Competiti
 import { dateToUTC, formatDate } from "../util/formatDate";
 import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { CompCreationProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { StyledAsterisk, StyledButton, StyledButtonContainer, StyledContainer, StyledDeleteIcon, StyledDescriptor, StyledDoubleInputContainer, StyledFormContainer, StyledLabel, StyledLocationItem, StyledLocationList, StyledTitle } from "./CompDataInput.styles";
+import {
+  StyledAsterisk,
+  StyledButton,
+  StyledButtonContainer,
+  StyledContainer,
+  StyledDeleteIcon,
+  StyledDescriptor,
+  StyledDoubleInputContainer,
+  StyledFormContainer,
+  StyledLabel,
+  StyledLocationItem,
+  StyledLocationList,
+  StyledTitle,
+} from "./CompDataInput.styles";
 import TextInput from "../../../../../components/general_utility/TextInput";
 import TextInputLight from "../../../../../components/general_utility/TextInputLight";
 import RadioButton from "../../../../../components/general_utility/RadioButton";
 import SiteLocationDataInput from "./subcomponents/SiteLocationDataInput/SiteLocationDataInput";
 
-
 export interface SiteLocation {
   universityId: number;
   defaultSite: string;
-}
+};
 
 export interface OtherSiteLocation {
   universityName: string;
   defaultSite: string;
-}
+};
 
-// const createTimezoneOptions = () => {
-//   const timezones = moment.tz.names().map((tz) => ({
-//     value: tz,
-//     label: tz.replace(/_/g, " ").replace(/\/(.+)/, " - $1"), // Format label for better readability
-//   }));
-
-//   return [{ value: "", label: "Please Select" }, ...timezones];
-// };
+/**
+ * `CompDataInput` is a React web page form component that manages the input of competition details for a competition setup process.
+ * It allows the user to input competition-specific information such as the competition name, region, start date, registration deadlines,
+ * and site locations.
+ *
+ * @returns JSX.Element - The rendered component containing form inputs for competition details, site location management, and form submission buttons.
+ */
 
 export const CompDataInput: FC = () => {
   const navigate = useNavigate();
@@ -70,9 +81,12 @@ export const CompDataInput: FC = () => {
       ...prev,
       siteLocations: [
         ...prev.siteLocations,
-        { universityId: parseInt(option.value), defaultSite, universityName: option.label },
+        {
+          universityId: parseInt(option.value),
+          defaultSite,
+          universityName: option.label,
+        },
       ],
-      // convert universityId to number before we send to backend;
     }));
 
     setOptionDisplayList((prev) => [
@@ -128,7 +142,6 @@ export const CompDataInput: FC = () => {
 
     setLocationError("");
 
-    // if currentOptions value is empty which will be the case when it's a custom option.
     if (!currentOption.value) {
       addOtherSite(currentOption, defaultSite);
 
@@ -175,20 +188,19 @@ export const CompDataInput: FC = () => {
   const isButtonDisabled = () => {
     const {
       name,
-      earlyRegDeadline,
       code,
       siteLocations,
       otherSiteLocations,
       region,
-      startDate,
-      generalRegDeadline
+      generalRegDeadline,
     } = competitionInfo;
     return (
       name === "" ||
       region === "" ||
       !generalRegDeadline ||
       code === "" ||
-      (siteLocations.length === 0 && (!otherSiteLocations || otherSiteLocations.length === 0))
+      (siteLocations.length === 0 &&
+        (!otherSiteLocations || otherSiteLocations.length === 0))
     );
   };
 
@@ -217,7 +229,7 @@ export const CompDataInput: FC = () => {
     }
     setCompetitionInfo((p) => ({
       ...p,
-      startDate: dateToUTC(startDateInput)
+      startDate: dateToUTC(startDateInput),
     }));
   }, [startDateInput]);
 
@@ -227,7 +239,7 @@ export const CompDataInput: FC = () => {
     }
     setCompetitionInfo((p) => ({
       ...p,
-      earlyRegDeadline: dateToUTC(earlyRegInput)
+      earlyRegDeadline: dateToUTC(earlyRegInput),
     }));
   }, [earlyRegInput]);
 
@@ -237,11 +249,9 @@ export const CompDataInput: FC = () => {
     }
     setCompetitionInfo((p) => ({
       ...p,
-      generalRegDeadline: dateToUTC(generalRegInput)
+      generalRegDeadline: dateToUTC(generalRegInput),
     }));
   }, [generalRegInput]);
-
-
 
   const [isEarlyReg, setIsEarlyReg] = useState(false);
 
@@ -253,12 +263,13 @@ export const CompDataInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      className="comp-data-input--StyledFlexBackground-0">
       <CompCreationProgressBar progressNumber={0} />
-      <StyledContainer>
-        <StyledFormContainer onSubmit={handleSubmit}>
-          <StyledTitle>Competition Details</StyledTitle>
-
+      <StyledContainer className="comp-data-input--StyledContainer-0">
+        <StyledFormContainer
+          onSubmit={handleSubmit}
+          className="comp-data-input--StyledFormContainer-0">
+          <StyledTitle className="comp-data-input--StyledTitle-0">Competition Details</StyledTitle>
           <TextInput
             label="Competition Name"
             placeholder="Please type"
@@ -268,7 +279,6 @@ export const CompDataInput: FC = () => {
             onChange={(e) => handleChange(e, "name")}
             width="100%"
           />
-
           <TextInput
             label="Competition Region"
             placeholder="Please type"
@@ -279,73 +289,54 @@ export const CompDataInput: FC = () => {
             width="100%"
             descriptor="Please specify the region your Competition will be held in"
           />
-
-          <StyledLabel>
-            Competition Start<StyledAsterisk>*</StyledAsterisk>
+          <StyledLabel className="comp-data-input--StyledLabel-0">Competition Start<StyledAsterisk className="comp-data-input--StyledAsterisk-0">*</StyledAsterisk>
           </StyledLabel>
-
-          <StyledDoubleInputContainer>
-              <TextInputLight
-                label="Date and Time (UTC Timezone)"
-                placeholder="dd/mm/yyyy"
-                type="datetime-local"
-                required={false}
-                value={formatDate(startDateInput)}
-                onChange={(e) => setStartDateInput(new Date(e.target.value))}
-                width="45%"
-              />
-
+          <StyledDoubleInputContainer className="comp-data-input--StyledDoubleInputContainer-0">
+            <TextInputLight
+              label="Date and Time (UTC Timezone)"
+              placeholder="dd/mm/yyyy"
+              type="datetime-local"
+              required={false}
+              value={formatDate(startDateInput)}
+              onChange={(e) => setStartDateInput(new Date(e.target.value))}
+              width="45%"
+            />
           </StyledDoubleInputContainer>
-
-          <StyledLabel>Early Bird Registration Deadline</StyledLabel>
-
+          <StyledLabel className="comp-data-input--StyledLabel-1">Early Bird Registration Deadline</StyledLabel>
           <RadioButton
             label=""
             options={["Yes", "No"]}
             selectedOption={
-              isEarlyReg === null
-                ? ""
-                : isEarlyReg
-                ? "Yes"
-                : "No"
+              isEarlyReg === null ? "" : isEarlyReg ? "Yes" : "No"
             }
             onOptionChange={(e) => {
-              setIsEarlyReg(e.target.value === 'Yes');
+              setIsEarlyReg(e.target.value === "Yes");
             }}
             required={true}
             descriptor="Will your Competition have an Early Bird Registration Deadline?"
             width="100%"
           />
-
           {isEarlyReg && (
             <>
-              <StyledDescriptor>
-                Please set the Date and Time of your Early Bird Registration
-                Deadline
-              </StyledDescriptor>
-              <StyledDoubleInputContainer>
-                  <TextInputLight
-                    label="Date and Time (UTC Timezone)"
-                    placeholder="dd/mm/yyyy"
-                    type="datetime-local"
-                    required={false}
-                    value={formatDate(earlyRegInput)}
-                    onChange={(e) => setEarlyRegInput(new Date(e.target.value))}
-                    width="45%"
-                  />
-
+              <StyledDescriptor className="comp-data-input--StyledDescriptor-0">Please set the Date and Time of your Early Bird Registration
+                                Deadline</StyledDescriptor>
+              <StyledDoubleInputContainer className="comp-data-input--StyledDoubleInputContainer-1">
+                <TextInputLight
+                  label="Date and Time (UTC Timezone)"
+                  placeholder="dd/mm/yyyy"
+                  type="datetime-local"
+                  required={false}
+                  value={formatDate(earlyRegInput)}
+                  onChange={(e) => setEarlyRegInput(new Date(e.target.value))}
+                  width="45%"
+                />
               </StyledDoubleInputContainer>
             </>
           )}
-
-          <StyledLabel>
-            General Registration Deadline<StyledAsterisk>*</StyledAsterisk>
+          <StyledLabel className="comp-data-input--StyledLabel-2">General Registration Deadline<StyledAsterisk className="comp-data-input--StyledAsterisk-1">*</StyledAsterisk>
           </StyledLabel>
-          <StyledDescriptor>
-            Please set the Date and Time of your General Registration Deadline
-          </StyledDescriptor>
-
-          <StyledDoubleInputContainer>
+          <StyledDescriptor className="comp-data-input--StyledDescriptor-1">Please set the Date and Time of your General Registration Deadline</StyledDescriptor>
+          <StyledDoubleInputContainer className="comp-data-input--StyledDoubleInputContainer-2">
             <TextInputLight
               label="Date and Time (UTC Timezone)"
               placeholder="dd/mm/yyyy"
@@ -355,9 +346,7 @@ export const CompDataInput: FC = () => {
               onChange={(e) => setGeneralRegInput(new Date(e.target.value))}
               width="45%"
             />
-
           </StyledDoubleInputContainer>
-
           <TextInput
             label="Competition Code"
             placeholder="COMP1234"
@@ -368,9 +357,7 @@ export const CompDataInput: FC = () => {
             width="100%"
             descriptor="Please type a unique code that will be used to identify your Competition"
           />
-
           <SiteLocationDataInput onAddLocation={handleAddSiteLocation} />
-
           {locationError && (
             <div
               style={{ color: "red", marginTop: "30px", textAlign: "center" }}
@@ -378,28 +365,27 @@ export const CompDataInput: FC = () => {
               {locationError}
             </div>
           )}
-
-          <StyledLocationList>
+          <StyledLocationList className="comp-data-input--StyledLocationList-0">
             {optionDisplayList.map((displayObject, index) => {
               return (
-                <StyledLocationItem key={index}>
+                <StyledLocationItem key={index} className="comp-data-input--StyledLocationItem-0">
                   <div>{displayObject.label}</div>
                   <div>{displayObject.defaultSite}</div>
                   <StyledDeleteIcon
                     onClick={() => handleDeleteSiteLocation(displayObject)}
-                  >
-                    x
-                  </StyledDeleteIcon>
+                    className="comp-data-input--StyledDeleteIcon-0">x</StyledDeleteIcon>
                 </StyledLocationItem>
               );
             })}
           </StyledLocationList>
-
-          <StyledButtonContainer>
-            <StyledButton onClick={() => navigate("/dashboard")}>Back</StyledButton>
-            <StyledButton type="submit" disabled={isButtonDisabled()}>
-              Next
-            </StyledButton>
+          <StyledButtonContainer className="comp-data-input--StyledButtonContainer-0">
+            <StyledButton
+              onClick={() => navigate("/dashboard")}
+              className="comp-data-input--StyledButton-0">Back</StyledButton>
+            <StyledButton
+              type="submit"
+              disabled={isButtonDisabled()}
+              className="comp-data-input--StyledButton-1">Next</StyledButton>
           </StyledButtonContainer>
         </StyledFormContainer>
       </StyledContainer>

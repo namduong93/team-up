@@ -6,11 +6,6 @@ import { WithdrawPopup1 } from "./subcomponents/WithdrawPopup1";
 import { SecondStepPopup } from "../popups/SecondStepPopup";
 import InvitePopup from "../InvitePopup";
 
-
-interface WithdrawPopupChainProps {
-  handleClose: () => void;
-}
-
 const StyledHeading = styled.h2`
   font-size: ${({ theme }) => theme.fonts.fontSizes.large};
   margin-top: 40px;
@@ -20,6 +15,20 @@ const StyledHeading = styled.h2`
   word-break: break-word;
 `;
 
+interface WithdrawPopupChainProps {
+  handleClose: () => void;
+};
+
+/**
+ * A component for handling the multi-step process of withdrawing a participant from a competition, starting
+ * with a pop-up prompting users of the consequences of withdrawal, then another pop-up asking users to confirm
+ * their choice, and finally displaying the team code for distribution to a substitute and a message of random
+ * replacement if applicable
+ *
+ * @param {SitePopupChainProps} props - React SitePopupChainProps as specified above
+ *
+ * @returns {JSX.Element} - A modal component that displays different steps of the withdrawal process.
+ */
 export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
   handleClose,
 }) => {
@@ -32,21 +41,24 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
     setCurrentStep((prevStep) => prevStep + 1);
   };
 
+  // Closes the Pop-Up chain and resets the numerical index to 1
+  // so the Pop-Up displays from the first Pop-Up
   const handleCloseWithReset = () => {
     setCurrentStep(1);
     handleClose();
     navigate("/dashboard");
   };
 
+  // Send a request to the backend to withdraw from the team and
+  // updating the competition code with the response from the backend
+  // request
   const handleSubmit = async () => {
     try {
-      // Send a request to the backend to withdraw from the team.
       const withdrawResponse = await sendRequest.post<string>(
         "/competition/student/withdraw",
         { compId }
       );
 
-      // Retrieve the competition code from the response and update the state.
       setCompCode(withdrawResponse.data);
 
       setCurrentStep((prevStep) => prevStep + 1);
@@ -61,9 +73,7 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
         return (
           <WithdrawPopup1
             heading={
-              <StyledHeading>
-                Withdrawing from the Team
-                {"\nwill make you ineligible"}
+              <StyledHeading className="withdraw-popup-chain--StyledHeading-0">Withdrawing from the Team{"\nwill make you ineligible"}
                 {"\n to compete in the Competition"}
                 {"\n\nThis action is final and"}
                 {"\ncannot be undone"}
@@ -80,7 +90,7 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
         return (
           <SecondStepPopup
             heading={
-              <StyledHeading>Are you sure you would {"\nlike to withdraw?"}</StyledHeading>
+              <StyledHeading className="withdraw-popup-chain--StyledHeading-1">Are you sure you would{"\nlike to withdraw?"}</StyledHeading>
             }
             onClose={handleCloseWithReset}
             onNext={handleSubmit}
@@ -90,9 +100,7 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
         return (
           <InvitePopup
             heading={
-              <StyledHeading>
-                Copy and send your
-                {"\nTeam Code"}
+              <StyledHeading className="withdraw-popup-chain--StyledHeading-2">Copy and send your{"\nTeam Code"}
                 {"\nto invite your Substitute"}
                 {"\nto the Team"}
                 {"\n\nAlternatively, you can wait"}

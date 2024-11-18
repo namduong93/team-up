@@ -11,6 +11,12 @@ interface PasswordInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: string;
 }
 
+/**
+ * A React component to allow users to enter their password.
+ *
+ * @param {PasswordInputLightProps} props - React PasswordInputLightProps specified above
+ * @returns {JSX.Element} - Web page component that allows users to enter their password
+ */
 export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
   label,
   placeholder,
@@ -22,10 +28,13 @@ export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
   style
 }) => {
   return (
-    <StyledContainer $width={width} style={style}>
-      <StyledLabel>
+    <StyledContainer
+      $width={width}
+      style={style}
+      className="password-input--StyledContainer-0">
+      <StyledLabel className="password-input--StyledLabel-0">
         {label}
-        {required && <StyledAsterisk>*</StyledAsterisk>}
+        {required && <StyledAsterisk className="password-input--StyledAsterisk-0">*</StyledAsterisk>}
       </StyledLabel>
       <StyledInput
         type={type}
@@ -33,7 +42,7 @@ export const PasswordInputLight: React.FC<PasswordInputLightProps> = ({
         value={value}
         onChange={onChange}
         required={required}
-      />
+        className="password-input--StyledInput-0" />
     </StyledContainer>
   );
 };
@@ -71,3 +80,4 @@ export const StyledInput = styled.input`
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
 `;
+

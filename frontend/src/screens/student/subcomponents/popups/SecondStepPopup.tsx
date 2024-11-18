@@ -1,6 +1,9 @@
 import { FaTimes } from "react-icons/fa";
 import { styled } from "styled-components";
-import { StyledCancelButton, StyledConfirmButton } from "../../../../components/responsive_fields/action_buttons/ActionButton";
+import {
+  StyledCancelButton,
+  StyledConfirmButton,
+} from "../../../../components/responsive_fields/action_buttons/ActionButton";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -51,26 +54,30 @@ interface SecondStepPopupProps {
   heading: React.ReactNode;
   onClose: () => void;
   onNext: () => void;
-}
+};
 
+/**
+ * `SecondStepPopUp` is a React web page component that displays a pop up asking users to confirm
+ * their change
+ *
+ * @returns JSX.Element - A styled container presenting a 'Yes' and 'No' button prompting users
+ * to confirm their choice
+ */
 export const SecondStepPopup: React.FC<SecondStepPopupProps> = ({
   heading,
   onClose,
   onNext,
 }) => {
-  return (
-    <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
-          <FaTimes />
-        </StyledCloseButton>
-        <div>{heading}</div>
-
-        <StyledButtonContainer>
-          <StyledConfirmButton onClick={onNext}>Yes</StyledConfirmButton>
-          <StyledCancelButton onClick={onClose}>No</StyledCancelButton>
-        </StyledButtonContainer>
-      </StyledModal>
-    </>
-  );
+  return <>
+    <StyledModal className="second-step-popup--StyledModal-0">
+      <StyledCloseButton onClick={onClose} className="second-step-popup--StyledCloseButton-0">
+        <FaTimes />
+      </StyledCloseButton>
+      <div>{heading}</div>
+      <StyledButtonContainer className="second-step-popup--StyledButtonContainer-0">
+        <StyledConfirmButton onClick={onNext} className="second-step-popup--StyledConfirmButton-0">Yes</StyledConfirmButton>
+        <StyledCancelButton onClick={onClose} className="second-step-popup--StyledCancelButton-0">No</StyledCancelButton>
+      </StyledButtonContainer>
+    </StyledModal>
+  </>;
 };

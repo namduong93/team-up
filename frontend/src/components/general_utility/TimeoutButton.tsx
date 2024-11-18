@@ -7,11 +7,26 @@ interface TimeoutButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   bgColor?: string;
 }
 
-export const TimeoutButton: FC<TimeoutButtonProps> = ({ seconds = 5,
-    bgColor, onClick = () => {}, style, children, ...props }) => {
-
+/**
+ * A React button component with a built-in timer
+ *
+ * @param {TimeoutButtonProps} props - React TimeoutButtonProps specified above
+ * @returns {JSX.Element} - Web page component button that resets after a
+ * timer
+ */
+export const TimeoutButton: FC<TimeoutButtonProps> = ({
+  seconds = 5,
+  bgColor,
+  onClick = () => {},
+  style,
+  children,
+  ...props
+}) => {
   const theme = useTheme();
   const [timeoutSeconds, setTimeoutSeconds] = useState(0);
+
+  // Starts a countdown timer, updating the `timeoutSeconds` state every second,
+  // disabling the button while the timer is active.
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -27,10 +42,18 @@ export const TimeoutButton: FC<TimeoutButtonProps> = ({ seconds = 5,
     setTimeout(countdown, 1000, seconds);
 
     onClick(e);
-  }
+  };
+
   return (
-    <StyledButton $bgColor={bgColor || theme.colours.primaryLight} type="button" style={style} $disabled={!!timeoutSeconds} onClick={handleClick} {...props}>
+    <StyledButton
+      $bgColor={bgColor || theme.colours.primaryLight}
+      type="button"
+      style={style}
+      $disabled={!!timeoutSeconds}
+      onClick={handleClick}
+      {...props}
+      className="timeout-button--StyledButton-0">
       {timeoutSeconds > 0 ? timeoutSeconds : children}
     </StyledButton>
-  )
+  );
 }

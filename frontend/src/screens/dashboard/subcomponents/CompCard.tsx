@@ -1,7 +1,20 @@
 import { FC } from "react";
-import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { format, differenceInDays } from 'date-fns';
+import { format, differenceInDays } from "date-fns";
+import {
+  StyledCardBottom,
+  StyledCardHeader,
+  StyledCardMiddle,
+  StyledCardText,
+  StyledCardTop,
+  StyledCompCardContainer,
+  StyledCompHeader,
+  StyledCountdown,
+  StyledProgress,
+  StyledProgressBar,
+  StyledRole,
+  StyledRoleContainer,
+} from "./CompCard.styles";
 
 interface CardProps {
   compName: string;
@@ -10,154 +23,77 @@ interface CardProps {
   roles: string[];
   compId: string;
   compCreationDate: string;
-}
+};
 
-const StyledCompCardContainer = styled.div`
-  background-color: ${({ theme }) => theme.colours.sidebarBackground};
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 285px;
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out !important;
-  box-sizing: border-box;
-
-  &:hover {
-    transform: translate(3px, 3px);
-  }
-`;
-
-const StyledCardHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const StyledCardTop = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const StyledCompHeader = styled.div`
-  text-align: left;
-
-  h2 {
-    margin: 0;
-    font-size: ${({ theme }) => theme.fonts.fontSizes.large};
-    color: ${({ theme }) => theme.fonts.colour};
-  }
-`;
-
-const StyledCardMiddle = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  color: ${({ theme }) => theme.fonts.colour};
-`;
-
-const StyledCardText = styled.div`
-  color: ${({ theme }) => theme.fonts.colour};
-  font-size: ${({ theme }) => theme.fonts.fontSizes.medium};
-`;
-
-const StyledCardBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-`;
-
-const StyledRoleContainer = styled.div`
-  display: flex;
-  gap: 5px;
-  flex-direction: column;
-`;
-
-const StyledRole = styled.div`
-  background-color: ${({ theme }) => theme.colours.primaryDark};
-  color: ${({ theme }) => theme.background};
-  border: none;
-  border-radius: 20px;
-  box-sizing: border-box;
-  padding: 8px 10px;
-  width: fit-content;
-  font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  font-size: ${({ theme }) => theme.fonts.fontSizes.small};
-`;
-
-const StyledCountdown = styled.div`
-  color: ${({ theme }) => theme.colours.primaryDark};
-  font-size: ${({ theme }) => theme.fonts.fontSizes.small};
-`;
-
-const StyledProgressBar = styled.div`
-  background-color: ${({ theme }) => theme.colours.primaryLight};
-  border-radius: 20px;
-  height: 15px;
-  overflow: hidden;
-  margin-top: 20px;
-  box-sizing: border-box;
-`;
-
-const StyledProgress = styled.div<{ $width: number }>`
-  background-color: ${({ theme }) => theme.colours.primaryDark};
-  height: 100%;
-  width: ${({ $width: width }) => `${width}%`};
-`;
-
-export const CompCard: FC<CardProps> = ({ compName, location, compDate, roles, compId, compCreationDate }) => {
+/**
+ * A React component for displaying information about a competition.
+ *
+ * The `CompCard` component displays a competition card with key details, such as
+ * the competition name, location, date, and the user's roles. It also includes
+ * a countdown to the competition date and a progress bar indicating how much time has
+ * passed since the competition was created.
+ *
+ * @param {CardProps} props - React CardProps specified above
+ * @returns {JSX.Element} - A card displaying the competition details, a countdown to the competition,
+ * and a progress bar showing the time elapsed since creation.
+ */
+export const CompCard: FC<CardProps> = ({
+  compName,
+  location,
+  compDate,
+  roles,
+  compId,
+  compCreationDate,
+}) => {
   const navigate = useNavigate();
 
-  // for demo A
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const roleUrl = (_: string) => {
-    if (roles.includes('Participant')) {
+  const roleUrl = () => {
+    if (roles.includes("Participant")) {
       return `/competition/participant/${compId}`;
     }
     return `/competition/page/${compId}`;
   };
 
-  const compDateFormatted = format(new Date(compDate), 'MMMM yyyy');
+  const compDateFormatted = format(new Date(compDate), "MMMM yyyy");
   const today = new Date(); // Today's date
   const daysRemaining = differenceInDays(new Date(compDate), today);
-  
+
   // calculate the width of the progress bar as a percentage of the total days
   const compCreationDateFormatted = new Date(compCreationDate);
-  let totalDays = differenceInDays(new Date(compDate), compCreationDateFormatted);
+  let totalDays = differenceInDays(
+    new Date(compDate),
+    compCreationDateFormatted
+  );
   totalDays = Math.max(totalDays, daysRemaining);
-  
+
   // calculate the progress width
-  const progressWidth = totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100; // set to 100% if no days left
+  const progressWidth =
+    totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100;
   return (
-    <StyledCompCardContainer onClick={() => navigate(roleUrl(roles[0]))}>
-      <StyledCardHeader>
-        <StyledCardTop>
-          <StyledCompHeader>
+    <StyledCompCardContainer
+      onClick={() => navigate(roleUrl())}
+      className="comp-card--StyledCompCardContainer-0">
+      <StyledCardHeader className="comp-card--StyledCardHeader-0">
+        <StyledCardTop className="comp-card--StyledCardTop-0">
+          <StyledCompHeader className="comp-card--StyledCompHeader-0">
             <h2>{compName}</h2>
           </StyledCompHeader>
         </StyledCardTop>
       </StyledCardHeader>
-
-      <StyledCardMiddle>
-        <StyledCardText>{location}</StyledCardText>
-        <StyledCardText>{compDateFormatted}</StyledCardText>
+      <StyledCardMiddle className="comp-card--StyledCardMiddle-0">
+        <StyledCardText className="comp-card--StyledCardText-0">{location}</StyledCardText>
+        <StyledCardText className="comp-card--StyledCardText-1">{compDateFormatted}</StyledCardText>
       </StyledCardMiddle>
-
-      <StyledCardBottom>
-        <StyledRoleContainer>
+      <StyledCardBottom className="comp-card--StyledCardBottom-0">
+        <StyledRoleContainer className="comp-card--StyledRoleContainer-0">
           {roles.map((role, index) => (
-            <StyledRole key={index}>{role}</StyledRole>
+            <StyledRole key={index} className="comp-card--StyledRole-0">{role}</StyledRole>
           ))}
         </StyledRoleContainer>
-        <StyledCountdown>{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</StyledCountdown>
+        <StyledCountdown className="comp-card--StyledCountdown-0">{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</StyledCountdown>
       </StyledCardBottom>
-
-      <StyledProgressBar>
-        <StyledProgress $width={progressWidth} />
+      <StyledProgressBar className="comp-card--StyledProgressBar-0">
+        <StyledProgress $width={progressWidth} className="comp-card--StyledProgress-0" />
       </StyledProgressBar>
     </StyledCompCardContainer>
   );

@@ -159,6 +159,11 @@ export class CompetitionStudentService {
     }
 
     await this.competitionStudentRepository.competitionStudentJoin(competitionUserInfo, university);
+
+    // Send a welcome notification to the user
+    const compId = await this.competitionRepository.competitionIdFromCode(code);
+    await this.notificationRepository.notificationWelcomeToCompetition(competitionUserInfo.userId, compId);
+    
     return;
   };
 

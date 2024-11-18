@@ -1,17 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-interface DescriptiveTextInputProps {
-  label?: string;
-  descriptor: string;
-  placeholder: string;
-  required?: boolean;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  width?: string;
-  height?: string;
-}
-
 const StyledContainer = styled.div<{ width: string }>`
   display: flex;
   flex-direction: column;
@@ -55,6 +44,23 @@ const StyledTextarea = styled.textarea<{ $height: string }>`
   border-color: ${({ theme }) => theme.colours.sidebarLine};
 `;
 
+interface DescriptiveTextInputProps {
+  label?: string;
+  descriptor: string;
+  placeholder: string;
+  required?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  width?: string;
+  height?: string;
+}
+
+/**
+ * A React component to allow users to enter long form input.
+ *
+ * @param {DescriptiveTextInputProps} props - React DescriptiveTextInputProps specified above
+ * @returns {JSX.Element} - Web page component that accepts long form user text input
+ */
 const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   label,
   descriptor,
@@ -66,21 +72,21 @@ const DescriptiveTextInput: React.FC<DescriptiveTextInputProps> = ({
   height = "100px",
 }) => {
   return (
-    <StyledContainer width={width}>
+    <StyledContainer width={width} className="descriptive-text-input--StyledContainer-0">
       {label && (
-        <StyledLabel>
+        <StyledLabel className="descriptive-text-input--StyledLabel-0">
           {label}
-          {required && <StyledAsterisk>*</StyledAsterisk>}
+          {required && <StyledAsterisk className="descriptive-text-input--StyledAsterisk-0">*</StyledAsterisk>}
         </StyledLabel>
       )}
-      <StyledDescriptor>{descriptor}</StyledDescriptor>
+      <StyledDescriptor className="descriptive-text-input--StyledDescriptor-0">{descriptor}</StyledDescriptor>
       <StyledTextarea
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         $height={height}
         required={required}
-      />
+        className="descriptive-text-input--StyledTextarea-0" />
     </StyledContainer>
   );
 };

@@ -3,10 +3,6 @@ import React, { FC, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { CompetitionRole } from "../../../../../../../../shared_types/Competition/CompetitionRole";
 
-interface StaffRolesProps extends React.HTMLAttributes<HTMLDivElement> {
-  roles: CompetitionRole[];
-}
-
 export const StyledStandardContainerDiv = styled.div`
   width: 20%;
   height: 100%;
@@ -31,61 +27,62 @@ export const StyledStaffRoleDisplay = styled.div<{ $role: CompetitionRole, $isMu
   line-height: 1;
   justify-content: center;
 
-  background-color: ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminBackground :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachBackground :
-    $role === CompetitionRole.SiteCoordinator ?
-    theme.roles.siteCoordinatorBackground :
-    theme.roles.participantBackground
-  )};
+  background-color: ${({ theme, $role }) =>
+    $role === CompetitionRole.Admin
+      ? theme.roles.adminBackground
+      : $role === CompetitionRole.Coach
+      ? theme.roles.coachBackground
+      : $role === CompetitionRole.SiteCoordinator
+      ? theme.roles.siteCoordinatorBackground
+      : theme.roles.participantBackground};
 
-  border: 1px solid ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminText :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachText :
-    $role === CompetitionRole.SiteCoordinator ?
-    theme.roles.siteCoordinatorText :
-    theme.roles.participantText
-  )};
+  border: 1px solid
+    ${({ theme, $role }) =>
+      $role === CompetitionRole.Admin
+        ? theme.roles.adminText
+        : $role === CompetitionRole.Coach
+        ? theme.roles.coachText
+        : $role === CompetitionRole.SiteCoordinator
+        ? theme.roles.siteCoordinatorText
+        : theme.roles.participantText};
 
-  color: ${({ theme, $role }) => (
-    $role === CompetitionRole.Admin ?
-    theme.roles.adminText :
-    $role === CompetitionRole.Coach ?
-    theme.roles.coachText :
-    $role === CompetitionRole.SiteCoordinator ?
-    theme.roles.siteCoordinatorText :
-    theme.roles.participantText
-  )};
-  
+  color: ${({ theme, $role }) =>
+    $role === CompetitionRole.Admin
+      ? theme.roles.adminText
+      : $role === CompetitionRole.Coach
+      ? theme.roles.coachText
+      : $role === CompetitionRole.SiteCoordinator
+      ? theme.roles.siteCoordinatorText
+      : theme.roles.participantText};
+
   &:hover {
-    ${({ $isMulti, theme, $role }) => $isMulti && 
-    `background-color: 
-      ${$role === CompetitionRole.Admin ?
-      theme.roles.adminText :
-      $role === CompetitionRole.Coach ?
-      theme.roles.coachText :
-      $role === CompetitionRole.SiteCoordinator ?
-      theme.roles.siteCoordinatorText :
-      theme.roles.participantText};
+    ${({ $isMulti, theme, $role }) =>
+      $isMulti &&
+      `background-color: 
+      ${
+        $role === CompetitionRole.Admin
+          ? theme.roles.adminText
+          : $role === CompetitionRole.Coach
+          ? theme.roles.coachText
+          : $role === CompetitionRole.SiteCoordinator
+          ? theme.roles.siteCoordinatorText
+          : theme.roles.participantText
+      };
 
     color: 
-      ${$role === CompetitionRole.Admin ?
-      theme.roles.adminBackground :
-      $role === CompetitionRole.Coach ?
-      theme.roles.coachBackground :
-      $role === CompetitionRole.SiteCoordinator ?
-      theme.roles.siteCoordinatorBackground :
-      theme.roles.siteCoordinatorBackground};`
-    }
+      ${
+        $role === CompetitionRole.Admin
+          ? theme.roles.adminBackground
+          : $role === CompetitionRole.Coach
+          ? theme.roles.coachBackground
+          : $role === CompetitionRole.SiteCoordinator
+          ? theme.roles.siteCoordinatorBackground
+          : theme.roles.siteCoordinatorBackground
+      };`}
   }
 `;
 
 const StyledStaffRolesContainerDiv = styled(StyledStandardContainerDiv)`
-  /* min-width: 20%; */
   overflow: visible;
   flex: 1;
   display: flex;
@@ -93,7 +90,6 @@ const StyledStaffRolesContainerDiv = styled(StyledStandardContainerDiv)`
     justify-content: center;
   }
 `;
-
 
 const StyledStaffRoleContainer = styled.div<{ $isOpen: boolean }>`
   width: 100%;
@@ -106,7 +102,9 @@ const StyledStaffRoleContainer = styled.div<{ $isOpen: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  ${({ $isOpen, theme }) => $isOpen && `
+  ${({ $isOpen, theme }) =>
+    $isOpen &&
+    `
     border-bottom: 3px solid ${theme.colours.sidebarLine};
     margin-top: 2px;
     background-color: ${theme.colours.sidebarLine};
@@ -132,48 +130,66 @@ const StyledAdditionalRolesContainer = styled.div<{ $numContents: number }>`
   top: calc(100% + 2px);
 `;
 
-export const CompRoles: FC<StaffRolesProps> = ({ roles, children, ...props }) => {
-  const isMulti = roles.length > 1;
+interface StaffRolesProps extends React.HTMLAttributes<HTMLDivElement> {
+  roles: CompetitionRole[];
+};
 
+/**
+ * A React functional component for displaying and interacting with competition roles.
+ *
+ * The `CompRoles` component renders a list of competition roles, with a primary role visible
+ * and additional roles available in a dropdown if multiple roles are assigned. It allows for
+ * interactive role selection and dynamically updates the UI based on user actions.
+ *
+ * @param {StaffRolesProps} props - React StaffRolesProps as specified above.
+ * @returns {JSX.Element} - A styled UI component that displays competition roles with dropdown
+ * functionality for multiple roles.
+ */
+export const CompRoles: FC<StaffRolesProps> = ({
+  roles
+}) => {
+  const isMulti = roles.length > 1;
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
-    isMulti && setIsOpen((prevState) => !prevState);
-  }
+    if (isMulti) {
+      setIsOpen((prevState) => !prevState);
+    };
+  };  
 
   const numContents = roles.length - 1;
 
   return (
-    <StyledStaffRolesContainerDiv>
-      <StyledStaffRoleContainer $isOpen={isOpen}>
-
+    <StyledStaffRolesContainerDiv className="comp-roles--StyledStaffRolesContainerDiv-0">
+      <StyledStaffRoleContainer $isOpen={isOpen} className="comp-roles--StyledStaffRoleContainer-0">
         <StyledStaffRoleDisplay
           tabIndex={0}
           onClick={handleClick}
           onBlur={() => setIsOpen(false)}
           $isMulti={isMulti}
           $role={roles[0]}
-        >
+          className="comp-roles--StyledStaffRoleDisplay-0">
           <div style={{ pointerEvents: 'none' }}>{roles[0]}</div>
         </StyledStaffRoleDisplay>
-
         {isOpen &&
         <StyledAdditionalRolesContainer
           onMouseDown={(e) => { e.preventDefault(); }}
           $numContents={numContents}
-        >
+          className="comp-roles--StyledAdditionalRolesContainer-0">
           {roles.slice(1).map((role, index) => 
-          <StyledStaffRoleDisplay style={{ height: `${100 / numContents}%` }} key={`${role}${index}`} $role={role}>
+          <StyledStaffRoleDisplay
+            style={{ height: `${100 / numContents}%` }}
+            key={`${role}${index}`}
+            $role={role}
+            className="comp-roles--StyledStaffRoleDisplay-1">
             <span style={{ pointerEvents: 'none' }}>{role}</span>
           </StyledStaffRoleDisplay>
           )}
         </StyledAdditionalRolesContainer>}
-
         {isMulti &&
-        <StyledRoleDropdownIcon />}
-
+        <StyledRoleDropdownIcon className="comp-roles--StyledRoleDropdownIcon-0" />}
       </StyledStaffRoleContainer>
     </StyledStaffRolesContainerDiv>
-  )
+  );
 }

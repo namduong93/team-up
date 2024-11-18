@@ -74,8 +74,15 @@ interface JoinPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
   currentTeamCode?: string;
-}
+};
 
+/**
+ * `JoinPopUp` is a React web page component that displays a text input field
+ * for users to enter a code to join a team
+ *
+ * @returns JSX.Element - A styled container presenting a text input for users
+ * to enter the team code
+ */
 const JoinPopup: React.FC<JoinPopUpProps> = ({
   heading,
   onClose,
@@ -96,7 +103,9 @@ const JoinPopup: React.FC<JoinPopUpProps> = ({
           "/competition/team/join",
           { compId, teamCode }
         );
-        navigate("/dashboard", { state: { joined: true, teamName: response.data.teamName } });
+        navigate("/dashboard", {
+          state: { joined: true, teamName: response.data.teamName },
+        });
       };
       joinTeam();
     } catch (error) {
@@ -104,30 +113,28 @@ const JoinPopup: React.FC<JoinPopUpProps> = ({
     }
   };
 
-  return (
-    <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
-          <FaTimes />
-        </StyledCloseButton>
-        <div>{heading}</div>
-        <div style={{ width: "80%" }}>
-          <TextInputLight
-            label="Team Code"
-            placeholder="Please enter"
-            required={true}
-            value={teamCode}
-            onChange={(e) => setTeamCode(e.target.value)}
-            width="100%"
-          />
-        </div>
-
-        <StyledButton disabled={isButtonDisabled()} onClick={handleJoin}>
-          Join
-        </StyledButton>
-      </StyledModal>
-    </>
-  );
+  return <>
+    <StyledModal className="join-popup--StyledModal-0">
+      <StyledCloseButton onClick={onClose} className="join-popup--StyledCloseButton-0">
+        <FaTimes />
+      </StyledCloseButton>
+      <div>{heading}</div>
+      <div style={{ width: "80%" }}>
+        <TextInputLight
+          label="Team Code"
+          placeholder="Please enter"
+          required={true}
+          value={teamCode}
+          onChange={(e) => setTeamCode(e.target.value)}
+          width="100%"
+        />
+      </div>
+      <StyledButton
+        disabled={isButtonDisabled()}
+        onClick={handleJoin}
+        className="join-popup--StyledButton-0">Join</StyledButton>
+    </StyledModal>
+  </>;
 };
 
 export default JoinPopup;

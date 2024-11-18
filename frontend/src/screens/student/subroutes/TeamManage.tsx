@@ -116,6 +116,16 @@ const StyledCloseButton = styled.button`
   }
 `;
 
+/**
+ * `TeamManage` is a React web page component that manages and displays information
+ * for a competition team.It renders a `TeamActionCard` displaying the number of students
+ * in the team, a `ProfileCard` for the team's coach, and a section for viewing competition
+ * details and announcements. When the "see competition details" link is clicked,
+ * a modal is opened to display the competition details and announcements in markdown
+ * format.
+ *
+ * @returns {JSX.Element} - The rendered component showing team details and coach info.
+ */
 export const TeamManage: React.FC = () => {
   const { students, coach, announcements } = useOutletContext<{
     students: Student[];
@@ -137,32 +147,30 @@ export const TeamManage: React.FC = () => {
   };
 
   return (
-    <StyledManageContainer>
+    <StyledManageContainer className="team-manage--StyledManageContainer-0">
       <TeamActionCard
         numMembers={students.filter((s) => s.name !== null).length}
       />
-      <StyledInfoContainer>
+      <StyledInfoContainer className="team-manage--StyledInfoContainer-0">
         <ProfileCard
           name={coach.name}
           email={coach.email}
           bio={coach.bio}
           isCoach={true}
         />
-
-        <StyledInfoCard>
-          <StyledInfoContent>
-            <StyledInfoLabel>Competition Details and Announcements:</StyledInfoLabel>
-            <StyledInfoLink onClick={handleOpenModal}>
-              see competition details →
-            </StyledInfoLink>
+        <StyledInfoCard className="team-manage--StyledInfoCard-0">
+          <StyledInfoContent className="team-manage--StyledInfoContent-0">
+            <StyledInfoLabel className="team-manage--StyledInfoLabel-0">Competition Details and Announcements:</StyledInfoLabel>
+            <StyledInfoLink onClick={handleOpenModal} className="team-manage--StyledInfoLink-0">see competition details →</StyledInfoLink>
           </StyledInfoContent>
         </StyledInfoCard>
       </StyledInfoContainer>
-
       {isModalOpen && (
-        <StyledModalOverlay>
-          <StyledModalContent>
-            <StyledCloseButton onClick={handleCloseModal}>
+        <StyledModalOverlay className="team-manage--StyledModalOverlay-0">
+          <StyledModalContent className="team-manage--StyledModalContent-0">
+            <StyledCloseButton
+              onClick={handleCloseModal}
+              className="team-manage--StyledCloseButton-0">
               <FaTimes />
             </StyledCloseButton>
             <MarkdownDisplay content={announcements} />

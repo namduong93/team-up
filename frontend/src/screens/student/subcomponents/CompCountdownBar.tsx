@@ -2,11 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { FaMedal } from "react-icons/fa";
 
-interface ProgressBarProps {
-  daysRemaining: number;
-  progress: number; // %
-}
-
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -55,7 +50,11 @@ const StyledProgressBarContainer = styled.div`
 const StyledProgress = styled.div<{ $progress: number }>`
   height: 100%;
   width: ${({ $progress }) => $progress * 100}%;
-  background: linear-gradient(90deg, ${({ theme }) => theme.colours.progressStart}, ${({ theme }) => theme.colours.progressEnd});
+  background: linear-gradient(
+    90deg,
+    ${({ theme }) => theme.colours.progressStart},
+    ${({ theme }) => theme.colours.progressEnd}
+  );
   transition: width 0.5s ease;
 `;
 
@@ -65,15 +64,32 @@ const StyledMedalIcon = styled(FaMedal)`
   background-color: ${({ theme }) => theme.background};
 `;
 
-export const CompCountdownBar: React.FC<ProgressBarProps> = ({ daysRemaining, progress }) => {
+interface ProgressBarProps {
+  daysRemaining: number;
+  progress: number;
+};
+
+/**
+ * `CompCountdownBar` is a React web page component that displays a countdown
+ * and progress bar for a competition. It shows the number of days remaining until
+ * the competition and the progress towards its completion.
+ *
+ * @param {ProgressBarProps} props - React ProgressBar as specified above
+ *
+ * @returns {JSX.Element} - The rendered progress bar and countdown component.
+ */
+export const CompCountdownBar: React.FC<ProgressBarProps> = ({
+  daysRemaining,
+  progress,
+}) => {
   return (
-    <StyledContainer>
-      <StyledTitle>{daysRemaining} days to go!</StyledTitle>
-      <StyledProgressWrapper>
-        <StyledProgressBarContainer>
-          <StyledProgress $progress={progress} />
+    <StyledContainer className="comp-countdown-bar--StyledContainer-0">
+      <StyledTitle className="comp-countdown-bar--StyledTitle-0">{daysRemaining} days to go!</StyledTitle>
+      <StyledProgressWrapper className="comp-countdown-bar--StyledProgressWrapper-0">
+        <StyledProgressBarContainer className="comp-countdown-bar--StyledProgressBarContainer-0">
+          <StyledProgress $progress={progress} className="comp-countdown-bar--StyledProgress-0" />
         </StyledProgressBarContainer>
-        <StyledMedalIcon />
+        <StyledMedalIcon className="comp-countdown-bar--StyledMedalIcon-0" />
       </StyledProgressWrapper>
     </StyledContainer>
   );

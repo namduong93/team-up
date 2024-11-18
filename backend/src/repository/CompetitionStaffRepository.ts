@@ -18,7 +18,7 @@ export interface CompetitionStaffRepository {
   competitionStaffUpdateRegoToggles(userId: number, compId: number, regoFields: EditRego, universityId?: number): Promise<void>;
   competitionStaffRegoToggles(userId: number, compId: number, universityId?: number): Promise<EditRego>;
   competitionCoachCheck(userId: number, compId: number): Promise<void>;
-  competitionStaffUpdate(userId: number, staffList: StaffInfo[], compId: number): Promise<void>;
+  competitionStaffUpdate(userId: number, staffList: StaffInfo[], compId: number): Promise<Array<number>>;
   competitionStudentsUpdate(userId: number, studentList: StudentInfo[], compId: number): Promise<void>;
   coachCheckIdsStudent (userId: number, userIds: Array<number>, compId: number): Promise<void>;
   coachCheckIds(userId: number, teamIds: Array<number>, compId: number): Promise<void>;

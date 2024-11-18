@@ -1,43 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
-
-interface TextInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
-  label: string;
-  name?: string;
-  placeholder?: string;
-  type?: string;
-  required?: boolean;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  width?: string;
-}
-
-export const TextInputLight: React.FC<TextInputLightProps> = ({
-  label,
-  placeholder,
-  type = 'text',
-  required = false,
-  value,
-  onChange,
-  width = '300px',
-  style
-}) => {
-  return (
-    <Container $width={width} style={style}>
-      <Label>
-        {label}
-        {required && <Asterisk>*</Asterisk>}
-      </Label>
-      <Input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        required={required}
-      />
-    </Container>
-  );
-};
+import React from "react";
+import styled from "styled-components";
 
 const Container = styled.div<{ $width: string }>`
   display: flex;
@@ -72,5 +34,50 @@ export const Input = styled.input`
   background-color: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.fonts.colour};
 `;
+
+interface TextInputLightProps extends React.HTMLAttributes<HTMLDivElement> {
+  label: string;
+  name?: string;
+  placeholder?: string;
+  type?: string;
+  required?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  width?: string;
+}
+
+/**
+ * A React component to allow users to enter textual input without heading.
+ *
+ * @param {TextInputProps} props - React TextInputProps specified above
+ * @returns {JSX.Element} - Web page component to allow users to enter
+ * textual input without heading
+ */
+export const TextInputLight: React.FC<TextInputLightProps> = ({
+  label,
+  placeholder,
+  type = "text",
+  required = false,
+  value,
+  onChange,
+  width = "300px",
+  style,
+}) => {
+  return (
+    <Container $width={width} style={style}>
+      <Label>
+        {label}
+        {required && <Asterisk>*</Asterisk>}
+      </Label>
+      <Input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        required={required}
+      />
+    </Container>
+  );
+};
 
 export default TextInputLight;

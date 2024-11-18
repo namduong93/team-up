@@ -3,12 +3,29 @@ import { useNavigate } from "react-router-dom";
 import { useMultiStepRegoForm } from "../../hooks/useMultiStepRegoForm";
 import { StyledFlexBackground } from "../../../../../components/general_utility/Background";
 import { RegoProgressBar } from "../../../../../components/progress_bar/ProgressBar";
-import { Button, ButtonContainer, Container, ContentContainer, NextButton, Title } from "./SiteDataInput.styles";
+import {
+  Button,
+  ButtonContainer,
+  Container,
+  ContentContainer,
+  NextButton,
+  Title,
+} from "./SiteDataInput.styles";
 import DropdownInput from "../../../../../components/general_utility/DropDownInput";
 import DescriptiveTextInput from "../../../../../components/general_utility/DescriptiveTextInput";
 import MultiRadio from "../../../../../components/general_utility/MultiRadio";
 import { dietaryOptions, tShirtOptions } from "./SiteDataOptions";
 
+/**
+ * A React web page form component for collecting site-related information during the registration process.
+ *
+ * The `SiteDataInput` component collects details about the user's T-shirt size, food allergies, dietary requirements,
+ * and accessibility needs. The information is saved to the form context using `useMultiStepRegoForm`.
+ * The form provides a dropdown for T-shirt size, text inputs for allergies and accessibility, and multi-radio selection
+ * for dietary requirements.
+ *
+ * @returns {JSX.Element} - A form UI for collecting site-related information during registration.
+ */
 export const SiteDataInput: FC = () => {
   const navigate = useNavigate();
   const { formData, setFormData } = useMultiStepRegoForm(); // Access the form context
@@ -24,7 +41,7 @@ export const SiteDataInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      className="site-data-input--StyledFlexBackground-0">
       <RegoProgressBar progressNumber={2} />
       <Container>
         <ContentContainer>

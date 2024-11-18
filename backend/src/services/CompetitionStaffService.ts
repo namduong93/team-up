@@ -1,18 +1,19 @@
-import { CompetitionSiteCapacity } from '../../shared_types/Competition/CompetitionSite.js';
-import { EditCourse, EditRego } from '../../shared_types/Competition/staff/Edit.js';
-import { StaffInfo } from '../../shared_types/Competition/staff/StaffInfo.js';
-import { StudentInfo } from '../../shared_types/Competition/student/StudentInfo.js';
-import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails.js';
-import { ServiceError } from '../errors/ServiceError.js';
-import { Competition, CompetitionIdObject } from '../models/competition/competition.js';
-import { CompetitionStaff, CompetitionUserRole } from '../models/competition/competitionUser.js';
-import { SeatAssignment } from '../models/team/team.js';
-import { University } from '../models/university/university.js';
-import { UserType } from '../models/user/user.js';
-import { CompetitionRepository } from '../repository/CompetitionRepository.js';
-import { CompetitionStaffRepository } from '../repository/CompetitionStaffRepository.js';
-import { NotificationRepository } from '../repository/NotificationRepository.js';
-import { UserRepository } from '../repository/UserRepository.js';
+import { access } from "fs";
+import { CompetitionSiteCapacity } from "../../shared_types/Competition/CompetitionSite.js";
+import { EditCourse, EditRego } from "../../shared_types/Competition/staff/Edit.js";
+import { StaffInfo } from "../../shared_types/Competition/staff/StaffInfo.js";
+import { StudentInfo } from "../../shared_types/Competition/student/StudentInfo.js";
+import { TeamDetails } from "../../shared_types/Competition/team/TeamDetails.js";
+import { ServiceError } from "../errors/ServiceError.js";
+import { Competition, CompetitionIdObject } from "../models/competition/competition.js";
+import { CompetitionStaff, CompetitionUserRole } from "../models/competition/competitionUser.js";
+import { SeatAssignment } from "../models/team/team.js";
+import { University } from "../models/university/university.js";
+import { UserType } from "../models/user/user.js";
+import { CompetitionRepository } from "../repository/CompetitionRepository.js";
+import { CompetitionStaffRepository } from "../repository/CompetitionStaffRepository.js";
+import { NotificationRepository } from "../repository/NotificationRepository.js";
+import { UserRepository } from "../repository/UserRepository.js";
 
 
 export class CompetitionStaffService {
@@ -184,7 +185,12 @@ export class CompetitionStaffService {
       throw new ServiceError(ServiceError.Auth, 'User is not an Admin for this competition');
     }
 
-    await this.competitionStaffRepository.competitionStaffUpdate(userId, staffList, compId);
+    const accessUpdatedStaff = await this.competitionStaffRepository.competitionStaffUpdate(userId, staffList, compId);
+    for (const staff of accessUpdatedStaff) {
+      // Send a welcome notification to the user
+      await this.notificationRepository.notificationWelcomeToCompetition(staff, compId);
+    }
+    
     return;
   };
 

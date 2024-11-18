@@ -2,16 +2,29 @@ import { FC, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useTheme } from "styled-components";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
-import { Student, TeamDetails } from "../../../../../../../shared_types/Competition/team/TeamDetails";
+import {
+  Student,
+  TeamDetails,
+} from "../../../../../../../shared_types/Competition/team/TeamDetails";
 import Fuse from "fuse.js";
 import { PanInfo } from "framer-motion";
 import { addStudentToTeam } from "./utility/addStudentToTeam";
 import { fetchTeams } from "../../utils/fetchTeams";
-import { DRAG_ANIMATION_DURATION, TeamCard } from "./subcomponents/TeamCard/TeamCard";
+import {
+  DRAG_ANIMATION_DURATION,
+  TeamCard,
+} from "./subcomponents/TeamCard/TeamCard";
 import { sendRequest } from "../../../../../../utility/request";
-import { StyledHeading, StyledOverlay, StyledTeamCardGridDisplay } from "./TeamPage.styles";
+import {
+  StyledHeading,
+  StyledOverlay,
+  StyledTeamCardGridDisplay,
+} from "./TeamPage.styles";
 import { ThirdStepPopup } from "../../../../../student/subcomponents/popups/ThirdStepPopup";
-import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../../../../../dashboard/Dashboard.styles";
+import {
+  StyledFilterTagButton,
+  StyledRemoveFilterIcon,
+} from "../../../../../dashboard/Dashboard.styles";
 import { ResponsiveActionButton } from "../../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { FaSave } from "react-icons/fa";
 import { TransparentResponsiveButton } from "../../../../../../components/responsive_fields/ResponsiveButton";
@@ -30,6 +43,19 @@ const TEAM_DISPLAY_FILTER_OPTIONS = {
   "Team Level": ["Level A", "Level B"],
 };
 
+/**
+ * A React component for displaying and managing competition teams within the "Team Page".
+ *
+ * `TeamPage` allows the viewing, filtering, and sorting of teams, as well as the ability to drag and drop
+ * students between teams. It integrates various features like updating team details, saving changes, and
+ * handling team filters, search, and sorting options.
+ *
+ * The component also manages popups, including one for successful team creation, and uses context to
+ * manage global application state such as team data, filters, and button configurations.
+ *
+ * @returns {JSX.Element} - A UI component that displays teams, allows the manipulation of student data between
+ * teams, and offers options to filter, search, and save changes to the team list.
+ */
 export const TeamPage: FC = () => {
   const { compId } = useParams();
   const theme = useTheme();
@@ -38,15 +64,14 @@ export const TeamPage: FC = () => {
     sortOption,
     searchTerm,
     removeFilter,
-    setFilters,
-    editingStatusState: [isEditingStatus, setIsEditingStatus],
+    editingStatusState: [isEditingStatus, ],
     teamIdsState: [approveTeamIds, setApproveTeamIds],
     rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
 
     teamListState: [teamList, setTeamList],
-    universityOptionState: [universityOption, setUniversityOption],
+    universityOptionState: [universityOption, ],
     roles,
-    editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
+    editingNameStatusState: [isEditingNameStatus, ],
     buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
     siteOptionsState: [siteOptions, setSiteOptions],
     setFilterOptions,
@@ -82,16 +107,21 @@ export const TeamPage: FC = () => {
     }
 
     if (filters["Team Level"]) {
-      if (!filters["Team Level"].some(
-        (filterLevel) =>
-          filterLevel === team.teamLevel
-      )) {
+      if (
+        !filters["Team Level"].some(
+          (filterLevel) => filterLevel === team.teamLevel
+        )
+      ) {
         return false;
       }
     }
 
     // if admin, check filter by chosen uni
-    if (universityOption.value && !(team.universityId === parseInt(universityOption.value))) return false;
+    if (
+      universityOption.value &&
+      !(team.universityId === parseInt(universityOption.value))
+    )
+      return false;
 
     return true;
   });
@@ -109,7 +139,13 @@ export const TeamPage: FC = () => {
   });
 
   const fuse = new Fuse(sortedTeamList, {
-    keys: ["teamName", "memberName1", "memberName2", "memberName3", "teamLevel"],
+    keys: [
+      "teamName",
+      "memberName1",
+      "memberName2",
+      "memberName3",
+      "teamLevel",
+    ],
     threshold: 0.5,
   });
 
@@ -130,9 +166,9 @@ export const TeamPage: FC = () => {
     setIsCreationSuccessPopUpOpen(false);
   };
 
+  // Triggers the Competition Creation Success Pop Up depending on
+  // success state sent after backend completion
   useEffect(() => {
-    console.log("hello");
-    console.log(location.state);
     if (location.state?.isSuccessPopUpOpen) {
       setIsCreationSuccessPopUpOpen(true);
     }
@@ -140,6 +176,9 @@ export const TeamPage: FC = () => {
 
   const [isDragging, setIsDragging] = useState(false);
 
+  // Handles the drag-and-drop action for moving a student between teams, updating the team
+  // list by removing the student from the current team and adding them to the new team,
+  // while ensuring the team level is appropriately set.
   const handleDragDropCard = (
     event: DragEndEvent,
     info: PanInfo,
@@ -191,6 +230,9 @@ export const TeamPage: FC = () => {
     }
   };
 
+  // Closes the current team view and refreshes the team list from the server.
+  // It sets the "isDragging" state to true while fetching the updated teams.
+  // Once the teams are updated, it resets the button configuration.
   const handleClose = async () => {
     setIsDragging(true);
     await fetchTeams(compId, setTeamList);
@@ -208,94 +250,93 @@ export const TeamPage: FC = () => {
     return true;
   };
 
-  return (
-    <>
-      {isCreationSuccessPopUpOpen && (
-        <>
-          <StyledOverlay $isOpen={true} />
-          <ThirdStepPopup
-            heading={
-              <StyledHeading>
-                The competition has successfully {"\nbeen created"}{" "}
-              </StyledHeading>
-            }
-            onClose={handleClosePopUp}
-          />
-        </>
+  return <>
+    {isCreationSuccessPopUpOpen && (
+      <>
+        <StyledOverlay $isOpen={true} className="team-page--StyledOverlay-0" />
+        <ThirdStepPopup
+          heading={
+            <StyledHeading className="team-page--StyledHeading-0">The competition has successfully{"\nbeen created"}{" "}
+            </StyledHeading>
+          }
+          onClose={handleClosePopUp}
+        />
+      </>
+    )}
+    <div>
+      {Object.entries(filters).map(([field, values]) =>
+        values.map((value) => (
+          <StyledFilterTagButton
+            key={`${field}-${value}`}
+            className="team-page--StyledFilterTagButton-0">
+            {value}
+            <StyledRemoveFilterIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                removeFilter(field, value);
+              }}
+              className="team-page--StyledRemoveFilterIcon-0" />
+          </StyledFilterTagButton>
+        ))
       )}
-      <div>
-        {Object.entries(filters).map(([field, values]) =>
-          values.map((value) => (
-            <StyledFilterTagButton key={`${field}-${value}`}>
-              {value}
-              <StyledRemoveFilterIcon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFilter(field, value);
-                }}
-              />
-            </StyledFilterTagButton>
-          ))
-        )}
-        {
-          <div
-            style={{
-              display: "flex",
-              marginTop: "5px",
-              marginBottom: "-25px",
-              width: "100%",
-              height: buttonConfiguration.enableTeamsChangedButtons
-                ? "35px"
-                : "0",
-              transition: "height 0.25s ease",
-            }}
-          >
-            <ResponsiveActionButton
-              style={{ height: "100%" }}
-              icon={<FaSave />}
-              label="Save"
-              question="Do you want to save your changes"
-              actionType="confirm"
-              handleSubmit={handleSaveChanges}
+      {
+        <div
+          style={{
+            display: "flex",
+            marginTop: "5px",
+            marginBottom: "-25px",
+            width: "100%",
+            height: buttonConfiguration.enableTeamsChangedButtons
+              ? "35px"
+              : "0",
+            transition: "height 0.25s ease",
+          }}
+        >
+          <ResponsiveActionButton
+            style={{ height: "100%" }}
+            icon={<FaSave />}
+            label="Save"
+            question="Do you want to save your changes"
+            actionType="confirm"
+            handleSubmit={handleSaveChanges}
+          />
+          <div style={{ maxWidth: "150px", width: "100%", height: "100%" }}>
+            <TransparentResponsiveButton
+              style={{ backgroundColor: theme.colours.cancel }}
+              isOpen={false}
+              icon={<GiCancel />}
+              label="Cancel"
+              actionType="error"
+              onClick={handleClose}
             />
-            <div style={{ maxWidth: "150px", width: "100%", height: "100%" }}>
-              <TransparentResponsiveButton
-                style={{ backgroundColor: theme.colours.cancel }}
-                isOpen={false}
-                icon={<GiCancel />}
-                label="Cancel"
-                actionType="error"
-                onClick={handleClose}
-              />
-            </div>
           </div>
-        }
-      </div>
-      <StyledTeamCardGridDisplay>
-        {searchedCompetitions.map(({ item: teamDetails }, index) => {
-          return (
-            <TeamCard
-              // handler to take in memberId and newTeamID (updates list of teams)
-              data-index={index}
-              roles={roles}
-              siteOptionsState={[siteOptions, setSiteOptions]}
-              handleDragDropCard={handleDragDropCard}
-              isDraggingState={[isDragging, setIsDragging]}
-              teamIdsState={[approveTeamIds, setApproveTeamIds]}
-              rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
-              isEditingStatus={isEditingStatus}
-              isEditingNameStatus={isEditingNameStatus}
-              teamListState={[teamList, setTeamList]}
-              buttonConfigurationState={[
-                buttonConfiguration,
-                setButtonConfiguration,
-              ]}
-              key={`${teamDetails.teamName}${teamDetails.status}${index}`}
-              teamDetails={teamDetails}
-            />
-          );
-        })}
-      </StyledTeamCardGridDisplay>
-    </>
-  );
+        </div>
+      }
+    </div>
+    <StyledTeamCardGridDisplay className="team-page--StyledTeamCardGridDisplay-0">
+      {searchedCompetitions.map(({ item: teamDetails }, index) => {
+        return (
+          <TeamCard
+            // handler to take in memberId and newTeamID (updates list of teams)
+            data-index={index}
+            roles={roles}
+            siteOptionsState={[siteOptions, setSiteOptions]}
+            handleDragDropCard={handleDragDropCard}
+            isDraggingState={[isDragging, setIsDragging]}
+            teamIdsState={[approveTeamIds, setApproveTeamIds]}
+            rejectedTeamIdsState={[rejectedTeamIds, setRejectedTeamIds]}
+            isEditingStatus={isEditingStatus}
+            isEditingNameStatus={isEditingNameStatus}
+            teamListState={[teamList, setTeamList]}
+            buttonConfigurationState={[
+              buttonConfiguration,
+              setButtonConfiguration,
+            ]}
+            key={`${teamDetails.teamName}${teamDetails.status}${index}`}
+            teamDetails={teamDetails}
+          />
+        );
+      })}
+    </StyledTeamCardGridDisplay>
+  </>;
 };

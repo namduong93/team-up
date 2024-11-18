@@ -1,8 +1,26 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
-import { StyledButtonContainer, StyledCloseButton, StyledCloseContainer, StyledContentContainer, StyledField, StyledForm, StyledHeaderContainer, StyledModalContent, StyledModalOverlay, StyledTitle, StyledTitleContainer } from "./EditCompUserDetails.styles";
+import {
+  StyledButtonContainer,
+  StyledCloseButton,
+  StyledCloseContainer,
+  StyledContentContainer,
+  StyledField,
+  StyledForm,
+  StyledHeaderContainer,
+  StyledModalContent,
+  StyledModalOverlay,
+  StyledTitle,
+  StyledTitleContainer,
+} from "./EditCompUserDetails.styles";
 import { FaTimes } from "react-icons/fa";
-import { StyledColon, StyledDescriptor, StyledDoubleInputContainer, StyledFormLabel, StyledText } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
+import {
+  StyledColon,
+  StyledDescriptor,
+  StyledDoubleInputContainer,
+  StyledFormLabel,
+  StyledText,
+} from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput.styles";
 import DropdownInputLight from "../../../../components/general_utility/DropDownLight";
 import { yearOptions } from "../../../competition/register/RegisterForm/subroutes/CompIndividualInput/CompIndividualInput";
 import TextInputLight from "../../../../components/general_utility/TextInputLight";
@@ -17,6 +35,14 @@ interface EditCompPreferencesProps {
   onClose: () => void;
 };
 
+/**
+ * `EditCompDetailsPopUp` is a React web page component that displays a pop up for editing and reviewing
+ * entered competition preferences after the user has registered for a competition. It provides relevant input fields
+ * to allow users to change their degree, ICPC eligibility, competition level, site attendance,
+ * biography, and preferred contact method
+ *
+ * @returns JSX.Element - A styled container presenting input fields to edit the student's competition preferences
+ */
 export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
   student,
   onSubmit,
@@ -30,27 +56,27 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
     return true;
   };
 
-  useEffect(() => {
-    console.log(student);
-  },[])
-
   return (
-    <StyledModalOverlay>
-      <StyledModalContent>
-        <StyledContentContainer>
-          <StyledHeaderContainer>
-            <StyledTitleContainer>
-              <StyledTitle>Edit Competition Details</StyledTitle>
+    <StyledModalOverlay className="edit-comp-user-details--StyledModalOverlay-0">
+      <StyledModalContent className="edit-comp-user-details--StyledModalContent-0">
+        <StyledContentContainer className="edit-comp-user-details--StyledContentContainer-0">
+          <StyledHeaderContainer className="edit-comp-user-details--StyledHeaderContainer-0">
+            <StyledTitleContainer className="edit-comp-user-details--StyledTitleContainer-0">
+              <StyledTitle className="edit-comp-user-details--StyledTitle-0">Edit Competition Details</StyledTitle>
             </StyledTitleContainer>
-            <StyledCloseContainer>
-              <StyledCloseButton onClick={onClose}>
+            <StyledCloseContainer className="edit-comp-user-details--StyledCloseContainer-0">
+              <StyledCloseButton
+                onClick={onClose}
+                className="edit-comp-user-details--StyledCloseButton-0">
                 <FaTimes />
               </StyledCloseButton>
             </StyledCloseContainer>
           </StyledHeaderContainer>
-          <StyledForm onSubmit={handleSubmit}>
-            <StyledField>
-              <StyledFormLabel>Degree</StyledFormLabel>
+          <StyledForm
+            onSubmit={handleSubmit}
+            className="edit-comp-user-details--StyledForm-0">
+            <StyledField className="edit-comp-user-details--StyledField-0">
+              <StyledFormLabel className="edit-comp-user-details--StyledFormLabel-0">Degree</StyledFormLabel>
               <DropdownInputLight
                 label="Current Year of Study"
                 options={yearOptions}
@@ -94,20 +120,23 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField>
+            <StyledField className="edit-comp-user-details--StyledField-1">
               <RadioButton
                 label="Competition Level"
                 options={["Level A", "Level B", "No Preference"]}
                 selectedOption={formData.level}
                 onOptionChange={(e) => {
-                  setFormData({ ...formData, level: e.target.value as CompetitionLevel });
+                  setFormData({
+                    ...formData,
+                    level: e.target.value as CompetitionLevel,
+                  });
                 }}
                 required={true}
                 width="100%"
               />
-              <StyledFormLabel>Site Attendance</StyledFormLabel>
+              <StyledFormLabel className="edit-comp-user-details--StyledFormLabel-1">Site Attendance</StyledFormLabel>
               <div style={{ display: "flex", alignContent: "center" }}>
-                <StyledText>
+                <StyledText className="edit-comp-user-details--StyledText-0">
                   <em>{formData.siteName}</em>
                 </StyledText>
               </div>
@@ -129,7 +158,7 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField>
+            <StyledField className="edit-comp-user-details--StyledField-2">
               <DescriptiveTextInput
                 label="Competition Biography"
                 descriptor="Please write a short description about yourself that would help others get to know you"
@@ -142,45 +171,41 @@ export const EditCompUserDetails: FC<EditCompPreferencesProps> = ({
                 width="100%"
               />
             </StyledField>
-            <StyledField>
-              <StyledFormLabel>Preferred Contact Method</StyledFormLabel>
-              <StyledDescriptor>
-                Please specify your preferred contact method if you have another preference
-              </StyledDescriptor>
-              <StyledDoubleInputContainer>
-              <TextInputLight
-                label="Platform"
-                placeholder="Please enter"
-                type="text"
-                required={false}
-                value={formData.preferredContact.split(":")[0] || ""}
-                onChange={(e) => {
-                  const newPlatform = e.target.value;
-                  const currentHandle = formData.preferredContact.split(":")[1] || "";
-                  setFormData({ ...formData, preferredContact: `${newPlatform}:${currentHandle}` });
-                }}
-                width="45%"
-              />
-
-              <StyledColon>:</StyledColon>
-
-              <TextInputLight
-                label="Handle"
-                placeholder="Please enter"
-                type="text"
-                required={false}
-                value={formData.preferredContact.split(":")[1] || ""}
-                onChange={(e) => {
-                  const newHandle = e.target.value;
-                  const currentPlatform = formData.preferredContact.split(":")[0] || "";
-                  setFormData({ ...formData, preferredContact: `${currentPlatform}:${newHandle}` });
-                }}
-                width="45%"
-              />
+            <StyledField className="edit-comp-user-details--StyledField-3">
+              <StyledFormLabel className="edit-comp-user-details--StyledFormLabel-2">Preferred Contact Method</StyledFormLabel>
+              <StyledDescriptor className="edit-comp-user-details--StyledDescriptor-0">Please specify your preferred contact method if you have another preference</StyledDescriptor>
+              <StyledDoubleInputContainer className="edit-comp-user-details--StyledDoubleInputContainer-0">
+                <TextInputLight
+                  label="Platform"
+                  placeholder="Please enter"
+                  type="text"
+                  required={false}
+                  value={formData.preferredContact.split(":")[0] || ""}
+                  onChange={(e) => {
+                    const newPlatform = e.target.value;
+                    const currentHandle = formData.preferredContact.split(":")[1] || "";
+                    setFormData({ ...formData, preferredContact: `${newPlatform}:${currentHandle}` });
+                  }}
+                  width="45%"
+                />
+                <StyledColon className="edit-comp-user-details--StyledColon-0">:</StyledColon>
+                <TextInputLight
+                  label="Handle"
+                  placeholder="Please enter"
+                  type="text"
+                  required={false}
+                  value={formData.preferredContact.split(":")[1] || ""}
+                  onChange={(e) => {
+                    const newHandle = e.target.value;
+                    const currentPlatform = formData.preferredContact.split(":")[0] || "";
+                    setFormData({ ...formData, preferredContact: `${currentPlatform}:${newHandle}` });
+                  }}
+                  width="45%"
+                />
               </StyledDoubleInputContainer>
             </StyledField>
           </StyledForm>
-          <StyledButtonContainer>
+          <StyledButtonContainer className="edit-comp-user-details--StyledButtonContainer-0">
             <ResponsiveActionButton 
               actionType="primary" 
               label="Save Changes" 

@@ -65,6 +65,15 @@ const StyledStudentsContainer = styled.div`
   flex-direction: column;
 `;
 
+/**
+ * `TeamDetails` is a React web page component that displays the details of a competition team,
+ * including the team's name, site location, seat, and level. It also lists all the students in the team
+ * along with their details in the form of `ProfileCard` components. Clicking Edit,
+ * the component displays an editable form (`EditCompUserDetails`) to allow modification
+ * of the student's information.
+ *
+ * @returns {JSX.Element} - A component that renders the team details and student profiles.
+ */
 export const TeamDetails: FC = () => {
   const { teamName, teamSite, teamSeat, teamLevel, students } =
     useOutletContext<{
@@ -75,14 +84,16 @@ export const TeamDetails: FC = () => {
       students: StudentInfo[];
     }>();
   const { compId } = useParams();
-  const [studentInfo, setStudentInfo] = useState<StudentInfo>({} as StudentInfo);
-  const [isEditing, setIsEditing] = useState<boolean>(false); 
+  const [studentInfo, setStudentInfo] = useState<StudentInfo>(
+    {} as StudentInfo
+  );
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchStudentInfo = async () => {
       try {
         const response = await sendRequest.get<{ studentDetails: StudentInfo }>(
-          '/competition/student/details',
+          "/competition/student/details",
           { compId }
         );
         setStudentInfo(response.data.studentDetails);
@@ -97,10 +108,10 @@ export const TeamDetails: FC = () => {
   const handleSave = async (studentDetails: StudentInfo): Promise<boolean> => {
     try {
       setStudentInfo(studentDetails);
-      await sendRequest.put(
-        '/competition/student/details',
-        { compId, studentDetails }
-      );
+      await sendRequest.put("/competition/student/details", {
+        compId,
+        studentDetails,
+      });
       return true;
     } catch (err) {
       console.error("Error updating student info:", err);
@@ -108,44 +119,39 @@ export const TeamDetails: FC = () => {
     }
   };
 
-
   return (
-    <StyledDetailsContainer>
-      <StyledTeamDetailsContainer>
-        <StyledTeamInfo>
+    <StyledDetailsContainer className="team-details--StyledDetailsContainer-0">
+      <StyledTeamDetailsContainer className="team-details--StyledTeamDetailsContainer-0">
+        <StyledTeamInfo className="team-details--StyledTeamInfo-0">
           <div>
-            <StyledTeamLabel>Team Name:</StyledTeamLabel>
-            <StyledTeamField>{teamName}</StyledTeamField>
+            <StyledTeamLabel className="team-details--StyledTeamLabel-0">Team Name:</StyledTeamLabel>
+            <StyledTeamField className="team-details--StyledTeamField-0">{teamName}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Site Location:</StyledTeamLabel>
-            <StyledTeamField>{teamSite}</StyledTeamField>
+            <StyledTeamLabel className="team-details--StyledTeamLabel-1">Site Location:</StyledTeamLabel>
+            <StyledTeamField className="team-details--StyledTeamField-1">{teamSite}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Seat:</StyledTeamLabel>
-            <StyledTeamField>{teamSeat}</StyledTeamField>
+            <StyledTeamLabel className="team-details--StyledTeamLabel-2">Seat:</StyledTeamLabel>
+            <StyledTeamField className="team-details--StyledTeamField-2">{teamSeat}</StyledTeamField>
           </div>
           <div>
-            <StyledTeamLabel>Level:</StyledTeamLabel>
-            <StyledTeamField>{teamLevel}</StyledTeamField>
+            <StyledTeamLabel className="team-details--StyledTeamLabel-3">Level:</StyledTeamLabel>
+            <StyledTeamField className="team-details--StyledTeamField-3">{teamLevel}</StyledTeamField>
           </div>
         </StyledTeamInfo>
       </StyledTeamDetailsContainer>
-      <StyledStudentsContainer>
+      <StyledStudentsContainer className="team-details--StyledStudentsContainer-0">
         {students.map((student, index) => (
           <ProfileCard
             key={`student-${index}`}
             name={student.preferredName}
             email={student.email}
             bio={student.bio}
-            image={
-              `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
-            }
+            image={`${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`}
             preferredContact={student.preferredContact}
             isFirst={index === 0}
-            onEdit={() =>
-              setIsEditing(true)
-            }
+            onEdit={() => setIsEditing(true)}
           />
         ))}
       </StyledStudentsContainer>

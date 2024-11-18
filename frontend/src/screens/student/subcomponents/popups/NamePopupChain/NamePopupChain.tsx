@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 import { sendRequest } from "../../../../../utility/request";
 import { NamePopup1 } from "./subcomponents/NamePopup1/NamePopup1";
 import { SecondStepPopup } from "../SecondStepPopup";
 import { ThirdStepPopup } from "../ThirdStepPopup";
+import { StyledHeading } from "./NamePopupChain.styles";
 
 interface NamePopupChainProps {
   handleClose: () => void;
-}
+};
 
-const StyledHeading = styled.h2`
-  font-size: ${({ theme }) => theme.fonts.fontSizes.large};
-  margin-top: 40px;
-  color: ${({ theme }) => theme.colours.notifDark};
-  margin-bottom: 10%;
-  white-space: pre-wrap;
-  word-break: break-word;
-`;
-
+/**
+ * A component for handling the multi-step process of changing a team name, starting with
+ * a pop-up prompting users to enter the new name, then confirming the change, and finally displaying a
+ * confirmation message that the change is pending approval from the coach.
+ *
+ * @param {NamePopupChainProps} props - React NamePopUpChainProps as specified above
+ *
+ * @returns {JSX.Element} - A modal component that displays different steps of the team name change process.
+ */
 export const NamePopupChain: React.FC<NamePopupChainProps> = ({
   handleClose,
 }) => {
@@ -37,7 +37,7 @@ export const NamePopupChain: React.FC<NamePopupChainProps> = ({
 
   const handleSubmit = async () => {
     try {
-      await sendRequest.put<{}>("/competition/student/team_name_change", {
+      await sendRequest.put("/competition/student/team_name_change", {
         compId,
         newTeamName,
       });
@@ -52,7 +52,7 @@ export const NamePopupChain: React.FC<NamePopupChainProps> = ({
       case 1:
         return (
           <NamePopup1
-            heading={<StyledHeading>Change Team {"\n Name"}</StyledHeading>}
+            heading={<StyledHeading className="name-popup-chain--StyledHeading-0">Change Team{"\n Name"}</StyledHeading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter new name"
@@ -64,8 +64,7 @@ export const NamePopupChain: React.FC<NamePopupChainProps> = ({
         return (
           <SecondStepPopup
             heading={
-              <StyledHeading>
-                Are you sure you would {"\nlike to change your Team's"}{" "}
+              <StyledHeading className="name-popup-chain--StyledHeading-1">Are you sure you would{"\nlike to change your Team's"}{" "}
                 {"\nname?"}
               </StyledHeading>
             }
@@ -77,8 +76,7 @@ export const NamePopupChain: React.FC<NamePopupChainProps> = ({
         return (
           <ThirdStepPopup
             heading={
-              <StyledHeading>
-                Your team's new name {"\nis now pending approval"}{" "}
+              <StyledHeading className="name-popup-chain--StyledHeading-2">Your team's new name{"\nis now pending approval"}{" "}
                 {"\nfrom your coach"}
               </StyledHeading>
             }
