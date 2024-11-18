@@ -1,10 +1,7 @@
 // IMPORTANT!!!!! Make sure you import these from vitest
 import { describe, expect, it } from 'vitest';
 // 
-import { render, screen, waitFor } from '@testing-library/react';
-import { ThemeProvider } from 'styled-components';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
+import { screen, waitFor } from '@testing-library/react';
 import { contextRender } from '../../../../../../../../test_utils/contextRender';
 import { BioChangePopUp } from './BioChangePopUp';
 import { server } from '../../../../../../../../test_utils/mock_server';
