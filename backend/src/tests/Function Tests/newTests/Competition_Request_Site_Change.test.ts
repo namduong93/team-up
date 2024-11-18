@@ -1,8 +1,11 @@
 import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
+import { CompetitionRole } from '../../../../shared_types/Competition/CompetitionRole';
 import { EditCourse } from '../../../../shared_types/Competition/staff/Edit';
+import { StaffAccess, StaffInfo } from '../../../../shared_types/Competition/staff/StaffInfo';
 import { CourseCategory } from '../../../../shared_types/University/Course';
-import { CompetitionIdObject } from '../../../models/competition/competition';
-import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
+import { UserAccess } from '../../../../shared_types/User/User';
+import { Competition, CompetitionIdObject } from '../../../models/competition/competition';
+import { CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
 import { University } from '../../../models/university/university';
 import { Staff } from '../../../models/user/staff/staff';
 import { Student } from '../../../models/user/student/student';
@@ -14,12 +17,12 @@ import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepositor
 import { UserIdObject } from '../../../repository/UserRepository';
 import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
-describe.skip('Template tests', () => {
+describe('Request Site Change Function', () => {
   let user_db;
   let comp_db;
+  let uni_db;
   let comp_staff_db;
   let comp_student_db;
-  let uni_db;
 
   let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
@@ -33,7 +36,7 @@ describe.skip('Template tests', () => {
     defaultSite: 'TestRoom',
   };
 
-  const mockCompetition = {
+  const mockCompetition: Competition = {
     name: 'TestComp',
     teamSize: 5,
     createdDate: dateNow,
@@ -41,14 +44,14 @@ describe.skip('Template tests', () => {
     startDate: startDate,
     generalRegDeadline: generalDate,
     siteLocations: [userSiteLocation],
-    code: 'NEW5',
+    code: 'NEW21',
     region: 'Australia'
   };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
     preferredName: 'X',
-    email: 'newadmin5@odmin.com',
+    email: 'newadmin21@odmin.com',
     password: 'testPassword',
     gender: 'Male',
     pronouns: 'He/Him',
@@ -63,38 +66,37 @@ describe.skip('Template tests', () => {
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
-    comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
-    comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
     user_db = new SqlDbUserRepository(pool);
     uni_db = new SqlDbUniversityRepository(pool);
+    comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
+    comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
     comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
 
-    const newCoach: CompetitionStaff = {
+    const newStaffInfo: StaffInfo = {
       userId: id,
-      competitionRoles: [CompetitionUserRole.COACH],
-      accessLevel: CompetitionAccessLevel.ACCEPTED,
-      university: {
-        id: 1,
-        name: 'University of Melbourne'
-      },
-      competitionBio: 'i good, trust',
-      siteLocation: { id: 1, name: 'TestRoom' }
+      universityId: 1,
+      universityName: 'University of Melbourne',
+      name: 'Maximillian Maverick',
+      email: 'newadmin21@odmin.com',
+      sex: 'Male',
+      pronouns: 'He/Him',
+      tshirtSize: 'M',
+      allergies: null,
+      dietaryReqs: '{}',
+      accessibilityReqs: null,
+      userAccess: UserAccess.Pending,
+      bio: 'good bio, trust',
+      roles: [CompetitionRole.Admin, CompetitionRole.Coach, CompetitionRole.SiteCoordinator],
+      access: StaffAccess.Accepted
     };
-    const newCoordinator: CompetitionStaff = {
-      userId: id,
-      competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
-      accessLevel: CompetitionAccessLevel.ACCEPTED,
-      siteLocation: { id: 1, name: 'TestRoom' }
-    };
-    await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach);
-    await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator);
+    await comp_staff_db.competitionStaffUpdate(id, [newStaffInfo], comp.competitionId);
 
     const mockStudent: Student = {
       name: 'Maximillian Maverick',
       preferredName: 'X',
-      email: 'newcontender@gmail.com',
+      email: 'newcontender21@gmail.com',
       password: 'testPassword',
       gender: 'Male',
       pronouns: 'He/Him',
@@ -142,10 +144,29 @@ describe.skip('Template tests', () => {
     await comp_staff_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1);
   });
 
+
   afterAll(async () => {
     await dropTestDatabase(pool);
   });
 
-  test('Case: Husk', async () => {
+  test('Failure case: User is not a member of any team in this competition.', async () => {
+    const beforeTeam = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId)
+    expect(beforeTeam.teamSite).toStrictEqual('Library')
+    const siteInfos = await comp_db.competitionSites(comp.competitionId);
+    await expect(comp_student_db.competitionRequestSiteChange(newStudent.userId + 10, comp.competitionId, siteInfos[0].id)).rejects.toThrow("User is not a member of any team in this competition.")
+  });
+
+  test('Success case: pending site id is changed', async () => {
+    const beforeTeam = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId)
+    expect(beforeTeam.teamSite).toStrictEqual('Library')
+    const siteInfos = await comp_db.competitionSites(comp.competitionId);
+    await comp_student_db.competitionRequestSiteChange(newStudent.userId, comp.competitionId, siteInfos[0].id);
+    const afterTeam = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId)
+    expect(afterTeam.teamSite).toStrictEqual('TestRoom')
+    console.log(await comp_staff_db.competitionTeams(id, comp.competitionId))
+  });
+  test('Failure case: New site ID is similar to the current site ID or an already requested new site ID.', async () => {
+    const siteInfos = await comp_db.competitionSites(comp.competitionId);
+    await expect(comp_student_db.competitionRequestSiteChange(newStudent.userId, comp.competitionId, siteInfos[0].id)).rejects.toThrow("New site ID is similar to the current site ID or an already requested new site ID.")
   });
 });
