@@ -199,7 +199,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
       <StyledVerticalMemberFieldDiv className="team-student-info-card--StyledVerticalMemberFieldDiv-3">
         <StyledLabelSpan
           $isEditing={isEditingCard}
-          className="team-student-info-card--StyledLabelSpan-4">ICPC Eligibile:</StyledLabelSpan>
+          className="team-student-info-card--StyledLabelSpan-4">ICPC Eligible:</StyledLabelSpan>
         {isEditingCard ?
           <StyledToggleSelect
             onChange={(e) => setStudentData((p) => ({ ...p, ICPCEligible: e.target.value === 'yes' }))}
@@ -224,7 +224,7 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
       <StyledVerticalMemberFieldDiv className="team-student-info-card--StyledVerticalMemberFieldDiv-4">
         <StyledLabelSpan
           $isEditing={isEditingCard}
-          className="team-student-info-card--StyledLabelSpan-5">Boersen Eligibile:</StyledLabelSpan>
+          className="team-student-info-card--StyledLabelSpan-5">Boersen Eligible:</StyledLabelSpan>
         {isEditingCard ?
           <StyledToggleSelect
             onChange={(e) => setStudentData((p) => ({ ...p, boersenEligible: e.target.value === 'yes' }))}
