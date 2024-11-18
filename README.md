@@ -26,8 +26,6 @@ There are a few notes that one should take notice of:
 - Ensure Docker is installed and running on your machine.
 - Make sure you have the necessary environment variables set up.
 - Check that the required ports are not in use by other applications.
-- Backend and Frontend can be run separately without starting the other. However, the database must always be started before running the others.
-- Reset the database (running the first string of code above again) to reset the data.
 
 # Chrome Extension - Auto Coach
 This section details how to build and use the Chrome Extension to auto-fill participant details into the ICPC Global system.
