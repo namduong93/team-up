@@ -1344,7 +1344,14 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         VALUES ($1, $2, $3, 'Pending'::competition_access_enum)
       `;
 
-      await this.pool.query(addAdminQuery, [userId, competitionId, [CompetitionUserRole.ADMIN]]);
+      try {
+        await this.pool.query(addAdminQuery, [userId, competitionId, [CompetitionUserRole.ADMIN]]);
+      } catch (error) {
+        if (error.constraint === 'unique_competition_user') {
+          throw new DbError(DbError.Insert, 'User is already an admin for this competition.');
+        }
+        throw new DbError(DbError.Insert, 'Failed to insert admin.');
+      }
     }
 
     // Coach staff
@@ -1358,8 +1365,14 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         INSERT INTO competition_users (user_id, competition_id, competition_roles, bio, access_level)
         VALUES ($1, $2, $3, $4, 'Pending'::competition_access_enum)
       `;
-
-      await this.pool.query(addCoachQuery, [userId, competitionId, [CompetitionUserRole.COACH], competitionBio]);
+      try {
+        await this.pool.query(addCoachQuery, [userId, competitionId, [CompetitionUserRole.COACH], competitionBio]);
+      } catch (error) {
+        if (error.constraint === 'unique_competition_user') {
+          throw new DbError(DbError.Insert, 'User is already a coach for this competition.');
+        }
+        throw new DbError(DbError.Insert, 'Failed to insert coach.');
+      }
     }
 
     // Site coordinator staff
@@ -1374,7 +1387,14 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         VALUES ($1, $2, $3, $4, 'Pending'::competition_access_enum)
       `;
 
-      await this.pool.query(addSiteCoordinatorQuery, [userId, competitionId, [CompetitionUserRole.SITE_COORDINATOR], siteId]);
+      try {
+        await this.pool.query(addSiteCoordinatorQuery, [userId, competitionId, [CompetitionUserRole.SITE_COORDINATOR], siteId]);
+      } catch (error) {
+        if (error.constraint === 'unique_competition_user') {
+          throw new DbError(DbError.Insert, 'User is already an site coordinator for this competition.');
+        }
+        throw new DbError(DbError.Insert, 'Failed to insert site coordinator.');
+      }    
     }
 
     return {};
