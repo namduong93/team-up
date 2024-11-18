@@ -8,7 +8,6 @@ import { defaultTheme } from '../../../../../../themes/defaultTheme';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { CompetitionPage } from '../../CompetitionPage';
 import { AttendeesDisplay } from './AttendeesPage';
-import userEvent from '@testing-library/user-event';
 
 server.listen();
 
@@ -61,7 +60,7 @@ describe('AttendeesPage', () => {
     const siteTextList = screen.getAllByText('test site');
     siteTextList.forEach(
       (siteText) => {
-        let sideBar = siteText.parentElement?.parentElement?.parentElement;
+        const sideBar = siteText.parentElement?.parentElement?.parentElement;
         expect(sideBar).toHaveStyle('width: 0')
       }
     );

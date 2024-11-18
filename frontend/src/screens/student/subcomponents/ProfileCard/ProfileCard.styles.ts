@@ -17,12 +17,14 @@ export const StyledStudentCard = styled.div<{ $isFirst?: boolean }>`
   box-sizing: border-box;
   min-height: 200px;
   max-height: 500px;
+  max-width: 610px;
 `;
 
 export const StyledContactEdit = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
+  position: relative;
 `;
 
 export const StyledStudentCardContent = styled.div`
@@ -38,7 +40,7 @@ export const StyledStudentCardContent = styled.div`
 export const StyledContentContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 5%;
 `;
 
@@ -124,12 +126,15 @@ export const StyledEditIcon = styled(FaEdit)`
   &:hover {
     color: ${({ theme }) => theme.colours.secondaryLight};
   }
+  position: absolute;
+  right: 0;
+  top: 0;
 `;
 
 export const StyledStudentContact = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
 `;
 
 export const StyledCoachContact = styled.div`

@@ -7,7 +7,6 @@ import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from '../../../../../../themes/defaultTheme';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { CompetitionPage } from '../../CompetitionPage';
-import userEvent from '@testing-library/user-event';
 import { StaffPage } from './StaffPage';
 import { StaffAccess } from '../../../../../../../shared_types/Competition/staff/StaffInfo';
 
@@ -64,7 +63,7 @@ describe('StaffPage', () => {
     const bioTextList = screen.getAllByText('he/him');
     bioTextList.forEach(
       (bioText) => {
-        let sideBar = bioText.parentElement?.parentElement?.parentElement;
+        const sideBar = bioText.parentElement?.parentElement?.parentElement;
         expect(sideBar).toHaveStyle('width: 0')
       }
     );

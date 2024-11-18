@@ -604,7 +604,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
             actionType="primary"
             label="Run Algorithm"
             icon={<FaRunning />}
-            question={`Run the Algorithm for ${universityOption.label} ?`}
+            question={`Run the Algorithm ${universityOption.label} ?`}
             handleSubmit={handleAlgorithmButton}
           />
         </StyledButtonContainer>

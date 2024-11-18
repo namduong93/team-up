@@ -2,7 +2,6 @@
 import { describe, expect, it } from 'vitest';
 // 
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { server } from '../../../../test_utils/mock_server';
 import { ThemeProvider } from 'styled-components';
 import { defaultTheme } from '../../../../themes/defaultTheme';

@@ -5,7 +5,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { server } from '../../../../../../../../test_utils/mock_server';
 
 import { EditSiteCapacityPopUp } from './EditSiteCapacityPopUp';
-import { contextRender } from '../../../../../../../../test_utils/contextRender';
 import { ThemeProvider } from 'styled-components';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { defaultTheme } from '../../../../../../../../themes/defaultTheme';
@@ -18,7 +17,6 @@ const TestEditSiteCapacityPopup = () => {
     <EditSiteCapacityPopUp
       heading={<>test heading</>}
       onClose={() => {}}
-      onSubmit={() => {}}
     />
   )
 }

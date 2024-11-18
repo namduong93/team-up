@@ -2,7 +2,6 @@
 import { describe, expect, it } from 'vitest';
 // 
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { server } from '../../../../test_utils/mock_server';
 import { TeamDetails } from './TeamDetails';
 import { ThemeProvider } from 'styled-components';
@@ -35,7 +34,7 @@ describe('TeamDetails', () => {
     
     expect(screen.getByText(testTeam.teamName)).toBeVisible();
     expect(screen.getByText(testTeam.teamSite)).toBeVisible();
-    testTeam.teamSeat && expect(screen.getByText(testTeam.teamSeat)).toBeVisible();
+    if (testTeam.teamSeat) expect(screen.getByText(testTeam.teamSeat)).toBeVisible();
     expect(screen.getByText(testTeam.teamLevel)).toBeVisible();
 
     testTeam.students.forEach((student) => {

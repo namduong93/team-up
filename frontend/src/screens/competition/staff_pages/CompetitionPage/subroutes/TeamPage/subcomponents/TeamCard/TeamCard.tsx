@@ -157,7 +157,7 @@ export const TeamCard: FC<TeamCardProps> = ({
       </StyledCardHeaderDiv>
   
         <StyledTeamMatesContainerDiv className="team-card--StyledTeamMatesContainerDiv-0">
-          {teamDetails.students.map((member, index) => (
+          {teamDetails.students.map((member) => (
             <StyledTeamMemberMotionDiv
               key={`${member.userId}`}
               layoutId={`${member.userId}`}

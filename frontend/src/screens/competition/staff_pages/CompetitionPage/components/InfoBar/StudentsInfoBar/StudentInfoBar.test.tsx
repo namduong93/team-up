@@ -64,9 +64,9 @@ describe('StudentsInfoBar', () => {
     expect(screen.getByText(testStudent.sex)).toBeVisible();
     expect(screen.getByText(testStudent.pronouns)).toBeVisible();
     expect(screen.getByText(testStudent.tshirtSize)).toBeVisible();
-    testStudent.allergies && expect(screen.getByText(testStudent.allergies)).toBeVisible();
-    testStudent.dietaryReqs && expect(screen.getByText(testStudent.dietaryReqs)).toBeVisible();
-    testStudent.accessibilityReqs && expect(screen.getByText(testStudent.accessibilityReqs)).toBeVisible();
+    if (testStudent.allergies) expect(screen.getByText(testStudent.allergies)).toBeVisible();
+    if (testStudent.dietaryReqs) expect(screen.getByText(testStudent.dietaryReqs)).toBeVisible();
+    if (testStudent.accessibilityReqs) expect(screen.getByText(testStudent.accessibilityReqs)).toBeVisible();
     expect(screen.getByText(testStudent.studentId)).toBeVisible();
     expect(screen.getByText(testStudent.teamName)).toBeVisible();
     expect(screen.getByText(testStudent.siteName)).toBeVisible();
@@ -80,8 +80,8 @@ describe('StudentsInfoBar', () => {
     expect(screen.getByText(testStudent.degree)).toBeVisible();
 
     expect(screen.getByText(testStudent.preferredContact)).toBeVisible();
-    testStudent.nationalPrizes && expect(screen.getByText(testStudent.nationalPrizes)).toBeVisible();
-    testStudent.internationalPrizes && expect(screen.getByText(testStudent.internationalPrizes)).toBeVisible();
+    if (testStudent.nationalPrizes) expect(screen.getByText(testStudent.nationalPrizes)).toBeVisible();
+    if (testStudent.internationalPrizes) expect(screen.getByText(testStudent.internationalPrizes)).toBeVisible();
     expect(screen.getByText(testStudent.codeforcesRating)).toBeVisible();
     expect(screen.getByText(testStudent.status)).toBeVisible();
 
@@ -94,8 +94,8 @@ describe('StudentsInfoBar', () => {
     expect(screen.getByDisplayValue(testStudent.degreeYear)).toBeInstanceOf(HTMLInputElement);
     expect(screen.getByDisplayValue(testStudent.degree)).toBeInstanceOf(HTMLInputElement);
     expect(screen.getByDisplayValue(testStudent.preferredContact)).toBeInstanceOf(HTMLInputElement);
-    testStudent.nationalPrizes && expect(screen.getByDisplayValue(testStudent.nationalPrizes)).toBeInstanceOf(HTMLInputElement);
-    testStudent.internationalPrizes && expect(screen.getByDisplayValue(testStudent.internationalPrizes)).toBeInstanceOf(HTMLInputElement);
+    if (testStudent.nationalPrizes) expect(screen.getByDisplayValue(testStudent.nationalPrizes)).toBeInstanceOf(HTMLInputElement);
+    if (testStudent.internationalPrizes) expect(screen.getByDisplayValue(testStudent.internationalPrizes)).toBeInstanceOf(HTMLInputElement);
     expect(screen.getByDisplayValue(testStudent.codeforcesRating)).toBeInstanceOf(HTMLInputElement);
     
   });

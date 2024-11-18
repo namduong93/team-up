@@ -77,9 +77,9 @@ export const ManagePage: FC = () => {
   const [announcementMessage, setAnnouncementMessage] = useState("");
 
   const { 
-    universityOptionState: [universityOption, setUniversityOption],
+    universityOptionState: [universityOption],
     siteOptionState: [siteOption, setSiteOption], teamListState: [teamList, setTeamList],
-    siteOptionsState: [siteOptions, setSiteOptions],
+    siteOptionsState: [siteOptions],
     roles: staffRoles,
     compDetails
   } = useCompetitionOutletContext(
