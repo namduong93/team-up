@@ -193,6 +193,13 @@ export class UserService {
     return this.userRepository.staffRequests();
   }
 
+  /**
+   * Updates the access levels of multiple staff users in the database.
+   *
+   * @param staffRequests An array of `StaffRequests` objects containing user IDs and their corresponding access levels.
+   * @returns A promise that resolves when the update operation is complete.
+   * @throws {ServiceError} If the user is not a system admin.
+   */
   staffRequestsUpdate = async (userId: number, staffRequests: Array<StaffRequests>): Promise<void> => {
     const userCheckAdmin:UserTypeObject = await this.userRepository.userType(userId);
     if (userCheckAdmin.type !== UserType.SYSTEM_ADMIN) {

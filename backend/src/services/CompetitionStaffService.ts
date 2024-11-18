@@ -31,6 +31,17 @@ export class CompetitionStaffService {
     this.notificationRepository = notificationRepository;
   }
 
+  /**
+   * Updates the courses for a given competition and university.
+   * 
+   * @param userId The ID of the user performing the update.
+   * @param compId The ID of the competition.
+   * @param editCourse An object containing the courses to be edited.
+   * @param universityId The ID of the university.
+   * 
+   * @returns {Promise<void>} A promise that resolves when the operation is complete.
+   * @throws {ServiceError} If the user is not an Admin or Coach.
+   */
   competitionStaffUpdateCourses = async (userId: number, compId: number, editCourse: EditCourse, universityId?: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 
@@ -46,6 +57,15 @@ export class CompetitionStaffService {
     return;
   }
 
+  /**
+   * Retrieves detailed information about a competition, including its general details
+   * and associated site locations.
+   *
+   * @param userId The ID of the user requesting the competition information.
+   * @param compId The ID of the competition to retrieve information for.
+   * @returns {Promise<Object>} A promise that resolves to an object containing the competition's details.
+   * @throws {ServiceError} If the user is not an Admin of the competition.
+   */
   competitionInformation = async (userId: number, compId: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 
@@ -56,7 +76,16 @@ export class CompetitionStaffService {
     return await this.competitionStaffRepository.competitionInformation(compId);
   }
 
-
+  /**
+   * Updates the capacity of a competition site in the database.
+   *
+   * @param userId The ID of the user performing the update.
+   * @param compId The ID of the competition.
+   * @param siteId The ID of the competition site to update.
+   * @param capacity The new capacity value to set for the competition site.
+   * @returns {Promise<void>} A promise that resolves when the update operation is complete.
+   * @throws {ServiceError} If the user is not an Admin or Site Coordinator.
+   */
   competitionSiteCapacityUpdate = async (userId: number, compId: number, capacity: number, siteId?: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 
@@ -67,13 +96,22 @@ export class CompetitionStaffService {
 
       // (site Id can't be 0 btw cos it's a postgres SERIAL)
       !siteId && (siteId = await this.competitionStaffRepository.competitionGetCoordinatingSiteId(userId, siteId));
-      console.log(siteId);
     }
 
     await this.competitionStaffRepository.competitionSiteCapacityUpdate(siteId, capacity);
     return;
   }
 
+  /**
+   * Update whether certain competitive programming relevant fields are enabled for registration for a competition site.
+   *
+   * @param userId The ID of the user performing the update.
+   * @param compId The ID of the competition.
+   * @param regoFields An object containing the fields to update.
+   * @param universityId The ID of the university.
+   * @returns {Promise<void>} A promise that resolves when the update operation is complete.
+   * @throws {ServiceError} If the user is not an Admin or Coach.
+   */
   competitionStaffUpdateRegoToggles = async (userId: number, compId: number, regoFields: EditRego, universityId: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 
@@ -97,6 +135,15 @@ export class CompetitionStaffService {
     return;
   }
 
+  /**
+   * Retrieve what competitive programming relevant fields are enabled for registration for a competition site.
+   *
+   * @param userId The ID of the user.
+   * @param compId The ID of the competition.
+   * @param universityId The ID of the university.
+   * @returns {Promise<void>} A promise that resolves when the update operation is complete.
+   * @throws {ServiceError} If the user is not an Admin or Coach.
+   */
   competitionStaffRegoToggles = async (userId: number, compId: number, universityId?: number) => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
 
@@ -121,7 +168,7 @@ export class CompetitionStaffService {
     return await this.competitionStaffRepository.competitionStaffRegoToggles(userId, compId);
   }
 
-    /**
+  /**
    * Updates the competition user details for a list of staff in a specific competition.
    *
    * @param userId The ID of the user making the request.
@@ -141,7 +188,7 @@ export class CompetitionStaffService {
     return;
   }
 
-    /**
+  /**
    * Updates the competition user details for a list of students in a specific competition.
    * 
    * @param userId The ID of the user performing the update.
@@ -164,7 +211,7 @@ export class CompetitionStaffService {
     return;
   }
 
-    /**
+  /**
    * Updates the details of teams in a competition.
    *
    * @param userId The ID of the user making the request.
@@ -483,6 +530,18 @@ export class CompetitionStaffService {
     return {};
   }
 
+
+  /**
+   * Updates the competition announcement with the provided message.
+   *
+   * @param userId The ID of the user making the announcement.
+   * @param compId The ID of the competition.
+   * @param announcementMessage - The message to be announced.
+   * @param universityId The ID of the university (optional).
+   * @returns A promise that resolves when the announcement is updated.
+   * @throws {ServiceError} If the user is not a coach or admin for the competition.
+   * @throws {ServiceError} If the user does not belong to any university and no universityId is provided.
+   */
   competitionAnnouncementUpdate = async (userId: number, compId: number, announcementMessage: string, universityId: number | undefined): Promise<void> => {
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (!roles.includes(CompetitionUserRole.COACH) && !roles.includes(CompetitionUserRole.ADMIN)) {
@@ -510,6 +569,15 @@ export class CompetitionStaffService {
     await this.competitionStaffRepository.competitionAnnouncementUpdate(compId, university, announcement);
   }
 
+  /**
+   * Executes the competition algorithm for a given competition.
+   *
+   * @param compId The ID of the competition.
+   * @param userId The ID of the user.
+   * @returns A promise that resolves to an object containing the teams participating in the competition.
+   * @throws {ServiceError} If the competition is not found.
+   * @throws {ServiceError} If the user is not a coach.
+   */
   competitionAlgorithm = async (compId: number, userId: number): Promise<{}> => {
     const competition = await this.competitionRepository.competitionGetDetails(compId);
     if (!competition) {
@@ -523,6 +591,14 @@ export class CompetitionStaffService {
     return teamsParticipating;
   }
 
+  /**
+   * Retrieves the capacity information for competition sites.
+   *
+   * @param userId The ID of the user requesting the information.
+   * @param compId The ID of the competition.
+   * @param siteIds Optional array of site IDs to get capacity information for. If not provided, the coordinating site ID for the user and competition will be used.
+   * @returns A promise that resolves to an array of `CompetitionSiteCapacity` objects.
+   */
   competitionSiteCapacity = async (userId: number, compId: number, siteIds?: number[]): Promise<Array<CompetitionSiteCapacity>> => {
 
     if (!siteIds.length) {
@@ -531,5 +607,4 @@ export class CompetitionStaffService {
 
     return await this.competitionRepository.competitionSiteCapacity(compId, siteIds)
   }
-
 }

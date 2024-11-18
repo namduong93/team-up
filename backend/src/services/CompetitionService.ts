@@ -59,6 +59,12 @@ export class CompetitionService {
     this.notificationRepository = notificationRepository;
   }
 
+  /**
+   * Retrieves the competition sites associated with a given competition code.
+   *
+   * @param code The unique code representing the competition.
+   * @returns A promise that resolves to the competition sites associated with the given competition code.
+   */
   competitionSitesCodes = async (code: string) => {
     const compId = await this.competitionRepository.competitionIdFromCode(code);
 
@@ -74,17 +80,7 @@ export class CompetitionService {
   competitionSites = async (compId: number) => {
     return await this.competitionRepository.competitionSites(compId);
   }
-
-  /**
-   * Retrieves the attendees of a competition for a given user.
-   * 
-   * @param userId The ID of the user requesting the attendees.
-   * @param compId The ID of the competition.
-   * @returns A promise that resolves to the list of competition attendees.
-   * @throws {ServiceError} If the user does not have the required role (SITE_COORDINATOR or ADMIN).
-   */
   
-
   /**
    * Retrieves the roles of a user in a specific competition.
    *
@@ -179,22 +175,15 @@ export class CompetitionService {
   }
 
 
-
-
-  competitionStudentJoin1 = async (sessionToken: string, code: string, individualInfo: IndividualTeamInfo, teamMate1: TeamMateData): Promise<IncompleteTeamIdObject | undefined> => {
-
-    return { incompleteTeamId: 1 };
-  }
-
-  competitionStudentJoin2 = async (sessionToken: string, code: string, teamInfo: TeamDetails,
-    teamMate1: TeamMateData, teamMate2: TeamMateData): Promise<TeamIdObject | undefined> => {
-
-    return { teamId: 1 };
-  }
-
-
-
-
+  /**
+   * Fetches the competition announcement for a given user and competition.
+   *
+   * @param userId The ID of the user.
+   * @param compId The ID of the competition.
+   * @param universityId The ID of the university (optional).
+   * @returns A promise that resolves to an object containing the competition announcement, or undefined.
+   * @throws {ServiceError} If the user does not belong to any university.
+   */
   competitionAnnouncement = async (userId: number, compId: number, universityId: number | undefined): Promise<{} | undefined> => {
     let university: University = { id: 0, name: '' };
     if (!universityId) {
@@ -210,19 +199,13 @@ export class CompetitionService {
     return { announcement };
   }
 
-
-
-  competitionUniversitiesList = async (competitionId: number): Promise<Array<UniversityDisplayInfo> | undefined> => {
-
-    return [{ id: 1, name: 'Macquarie University' }]
-  }
-
-
-
+  /**
+   * Retrieves the competition ID associated with the given competition code.
+   *
+   * @param code The unique code of the competition.
+   * @returns A promise that resolves to the competition ID.
+   */
   competitionIdFromCode = async (code: string): Promise<number> => {
     return await this.competitionRepository.competitionIdFromCode(code);
   }
-
-
-
 }
