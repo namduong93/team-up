@@ -5,9 +5,11 @@ import { useTheme } from "styled-components";
 import {
   StyledButtonContainer,
   StyledCloseButton,
+  StyledCompDetailsEditContainer,
   StyledDeleteIcon,
   StyledDescriptor,
   StyledEditorContainer,
+  StyledInfoEditContainer,
   StyledLabel,
   StyledLocationItem,
   StyledLocationList,
@@ -45,7 +47,7 @@ interface EditCompDetailsProps {
  * the user to open/close the pop-up, update the competition information, and perform some action when submitted.
  * @returns JSX.Element - A styled container presenting input fields to edit the competition details
  */
-export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
+export const EditCompDataPopup: FC<EditCompDetailsProps> = ({
   onClose,
   competitionInfo,
   setCompetitionInfo,
@@ -269,11 +271,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
         <StyledTitle2 className="edit-comp-details-pop-up--StyledTitle2-0">Edit Competition Details</StyledTitle2>
         <div></div>
         <StyledRowContainer2 className="edit-comp-details-pop-up--StyledRowContainer2-0">
-          <div
-            style={{
-              textAlign: "left",
-            }}
-          >
+          <StyledInfoEditContainer>
             <StyledLabel className="edit-comp-details-pop-up--StyledLabel-0">Competition Information</StyledLabel>
             <StyledEditorContainer className="edit-comp-details-pop-up--StyledEditorContainer-0">
               <ReactMarkdownEditorLite
@@ -307,12 +305,8 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 }}
               />
             </StyledEditorContainer>
-          </div>
-          <div
-            style={{
-              textAlign: "left",
-            }}
-          >
+          </StyledInfoEditContainer>
+          <StyledCompDetailsEditContainer>
             <TextInput
               label="Competition Name"
               placeholder="Please type"
@@ -344,7 +338,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 required={false}
                 value={formatDate(startDateInput)}
                 onChange={(e) => setStartDateInput(new Date(e.target.value))}
-                width="45%"
+                width="100%"
               />
             </StyledDoubleInputContainer>
 
@@ -361,7 +355,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                     required={false}
                     value={formatDate(earlyRegInput)}
                     onChange={(e) => setEarlyRegInput(new Date(e.target.value))}
-                    width="45%"
+                    width="100%"
                   />
                 </StyledDoubleInputContainer>
               </>
@@ -378,7 +372,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 required={false}
                 value={formatDate(generalRegInput)}
                 onChange={(e) => setGeneralRegInput(new Date(e.target.value))}
-                width="45%"
+                width="100%"
               />
             </StyledDoubleInputContainer>
 
@@ -418,7 +412,7 @@ export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({
                 );
               })}
             </StyledLocationList>
-          </div>
+          </StyledCompDetailsEditContainer>
         </StyledRowContainer2>
         <StyledButtonContainer className="edit-comp-details-pop-up--StyledButtonContainer-0">
           <TransparentResponsiveButton
