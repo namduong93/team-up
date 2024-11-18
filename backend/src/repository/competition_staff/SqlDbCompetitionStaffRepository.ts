@@ -268,7 +268,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     for (const staff of staffList) {
       // Find out if this staff is getting accepted into their registering competition
       const oldInfoResult = await this.pool.query(
-      `SELECT access_level
+        `SELECT access_level
         FROM competition_users
         WHERE user_id = ${staff.userId} AND competition_id = ${compId};
       `
@@ -298,7 +298,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     }
 
     return updatedAccessStaff;
-  }
+  };
 
   /**
    * Updates the competition user details for a list of students in a specific competition.

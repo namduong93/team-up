@@ -40,7 +40,7 @@ export class SqlDbNotificationRepository implements NotificationRepository {
     await this.pool.query(notificationQuery, [userId, notificationMessage, compId]);
 
     return {};
-  }
+  };
 
   /**
    * Sends notifications to other team members and the coach when a user withdraws from a competition.
