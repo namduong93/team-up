@@ -1,7 +1,6 @@
 import { Pool } from 'pg';
-import { UniversityDisplayInfo } from '../../services/CompetitionService.js';
 import { CompetitionRepository } from '../CompetitionRepository.js';
-import { Competition, CompetitionShortDetailsObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionInput } from '../../models/competition/competition.js';
+import { CompetitionShortDetailsObject, CompetitionSiteObject, DEFAULT_COUNTRY, CompetitionInput } from '../../models/competition/competition.js';
 
 import { UserType } from '../../models/user/user.js';
 import { parse } from 'postgres-array';

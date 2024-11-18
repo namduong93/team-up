@@ -4,7 +4,6 @@ import { CompetitionInput, CompetitionShortDetailsObject, CompetitionSiteObject 
 import { CompetitionRepository } from '../repository/CompetitionRepository.js';
 import { NotificationRepository } from '../repository/NotificationRepository.js';
 import { UserRepository } from '../repository/UserRepository.js';
-import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails.js';
 import { University } from '../models/university/university.js';
 
 export type IncompleteTeamIdObject = { incompleteTeamId: number };

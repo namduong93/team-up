@@ -1,9 +1,5 @@
-import { UniversityController } from '../../controllers/UniversityController';
-import { SessionRepository } from '../../repository/SessionRepository';
 import { SqlDbUniversityRepository } from '../../repository/university/SqlDbUniversityRepository';
-import { UniversityRepository } from '../../repository/UniversityRepository';
 import { UniversityService } from '../../services/UniversityService';
-import { Request, Response } from 'express';
 import pool from '../test_util/test_utilities';
 
 describe('GET universities/list', () => {

@@ -1,5 +1,6 @@
 import tseslint from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
+import unusedImports from "eslint-plugin-unused-imports";
 
 export default [
   {
@@ -13,7 +14,8 @@ export default [
       }
     },
     plugins: {
-      '@typescript-eslint': tseslint
+      '@typescript-eslint': tseslint,
+      'unused-imports': unusedImports  // Keep this
     },
     linterOptions: {
       reportUnusedDisableDirectives: true
@@ -33,6 +35,17 @@ export default [
       'indent': ['warn', 2, { SwitchCase: 1 }],
       'quotes': ['warn', 'single', { avoidEscape: true }],
       'semi': ['warn', 'always'],
+      "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+          "warn",
+          {
+              "vars": "all",
+              "varsIgnorePattern": "^_",
+              "args": "after-used",
+              "argsIgnorePattern": "^_",
+          },
+      ]
     }
   }
 ];

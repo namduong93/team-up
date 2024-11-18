@@ -2,10 +2,8 @@ import { CompetitionInput, CompetitionShortDetailsObject, CompetitionSiteObject 
 import { CompetitionUserRole } from '../models/competition/competitionUser.js';
 import { University } from '../models/university/university.js';
 import { UserType } from '../models/user/user.js';
-import { IncompleteTeamIdObject, IndividualTeamInfo, TeamIdObject, TeamMateData, UniversityDisplayInfo } from '../services/CompetitionService.js';
 import './competition/SqlDbCompetitionRepository.js';
 import { CompetitionSite, CompetitionSiteCapacity } from '../../shared_types/Competition/CompetitionSite.js';
-import { TeamDetails } from '../../shared_types/Competition/team/TeamDetails.js';
 import { Announcement } from '../../shared_types/Competition/staff/Announcement.js';
 
 export type CompetitionRole = 'Participant' | 'Coach' | 'Admin' | 'Site-Coordinator';

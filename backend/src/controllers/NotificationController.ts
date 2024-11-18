@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { Notification } from '../models/notification/notification.js';
 import { NotificationService } from '../services/NotificationService.js';
 import { httpErrorHandler } from './controller_util/httpErrorHandler.js';
 

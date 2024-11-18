@@ -1,4 +1,3 @@
-import { BAD_REQUEST } from '../controllers/controller_util/httpErrorHandler.js';
 import { Notification } from '../models/notification/notification.js';
 import { SeatAssignment } from '../models/team/team.js';
 import { UserType } from '../models/user/user.js';

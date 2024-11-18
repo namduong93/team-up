@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { CompetitionService } from '../services/CompetitionService.js';
 import { httpErrorHandler } from './controller_util/httpErrorHandler.js';
 import { UniversityService } from '../services/UniversityService.js';
 
