@@ -69,28 +69,28 @@ describe('TeamInfoBar', () => {
     expect(screen.getByText(testTeam.status)).toBeVisible();
     expect(screen.getByText(testTeam.teamLevel)).toBeVisible();
     expect(screen.getByText(testTeam.teamSite)).toBeVisible();
-    testTeam.teamSeat && expect(screen.getByText(testTeam.teamSeat)).toBeVisible();
+    if (testTeam.teamSeat) expect(screen.getByText(testTeam.teamSeat)).toBeVisible();
 
     const editTeamButton = document.getElementsByClassName('team-info-bar--StyledEditIconButton-0')[0];
     await userEvent.click(editTeamButton);
     expect(screen.getByDisplayValue(testTeam.teamName)).toBeInstanceOf(HTMLInputElement);
     expect(screen.getByDisplayValue(testTeam.teamSite)).toBeInstanceOf(HTMLInputElement);
-    testTeam.teamSeat && expect(screen.getByDisplayValue(testTeam.teamSeat)).toBeInstanceOf(HTMLInputElement);
+    if (testTeam.teamSeat) expect(screen.getByDisplayValue(testTeam.teamSeat)).toBeInstanceOf(HTMLInputElement);
 
     const testMember = testTeam.students[0];
     expect(screen.getByText(testMember.name)).toBeVisible();
     expect(screen.getByText(testMember.email)).toBeVisible();
     expect(screen.getByText(testMember.bio)).toBeVisible();
 
-    testMember.nationalPrizes && expect(screen.getByText(testMember.nationalPrizes)).toBeVisible();
-    testMember.internationalPrizes && expect(screen.getByText(testMember.internationalPrizes)).toBeVisible();
+    if (testMember.nationalPrizes) expect(screen.getByText(testMember.nationalPrizes)).toBeVisible();
+    if (testMember.internationalPrizes) expect(screen.getByText(testMember.internationalPrizes)).toBeVisible();
     expect(screen.getByText(testMember.codeforcesRating)).toBeVisible();
 
     const editMemberButton = document.getElementsByClassName('team-student-info-card--StyledEditIconButton-0')[0];
     await userEvent.click(editMemberButton);
     expect(screen.getByDisplayValue(testMember.bio)).toBeInstanceOf(HTMLTextAreaElement);
-    testMember.nationalPrizes && expect(screen.getByDisplayValue(testMember.nationalPrizes)).toBeInstanceOf(HTMLTextAreaElement);
-    testMember.internationalPrizes && expect(screen.getByDisplayValue(testMember.internationalPrizes)).toBeInstanceOf(HTMLTextAreaElement);
+    if (testMember.nationalPrizes) expect(screen.getByDisplayValue(testMember.nationalPrizes)).toBeInstanceOf(HTMLTextAreaElement);
+    if (testMember.internationalPrizes) expect(screen.getByDisplayValue(testMember.internationalPrizes)).toBeInstanceOf(HTMLTextAreaElement);
     expect(screen.getByDisplayValue(testMember.codeforcesRating)).toBeInstanceOf(HTMLInputElement);
     
   });

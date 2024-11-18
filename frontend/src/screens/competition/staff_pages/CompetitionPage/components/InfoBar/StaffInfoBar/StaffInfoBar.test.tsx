@@ -45,13 +45,13 @@ describe('StaffInfoBar', () => {
     expect(screen.getByText(testStaff.sex));
     expect(screen.getByText(testStaff.pronouns));
     expect(screen.getByText(testStaff.tshirtSize));
-    testStaff.allergies && expect(screen.getByText(testStaff.allergies));
-    testStaff.dietaryReqs && expect(screen.getByText(testStaff.dietaryReqs));
-    testStaff.accessibilityReqs && expect(screen.getByText(testStaff.accessibilityReqs));
+    if (testStaff.allergies) expect(screen.getByText(testStaff.allergies));
+    if (testStaff.dietaryReqs) expect(screen.getByText(testStaff.dietaryReqs));
+    if (testStaff.accessibilityReqs) expect(screen.getByText(testStaff.accessibilityReqs));
     
-    testStaff.bio && expect(screen.getByText(testStaff.bio));
-    testStaff.roles.length && expect(screen.getByText(testStaff.roles[0]));
-    testStaff.access && expect(screen.getByText(testStaff.access));
+    if (testStaff.bio) expect(screen.getByText(testStaff.bio));
+    if (testStaff.roles.length) expect(screen.getByText(testStaff.roles[0]));
+    if (testStaff.access) expect(screen.getByText(testStaff.access));
 
     const editButton = document.getElementsByClassName('staff-info-bar--StyledEditIconButton-0')[0];
     

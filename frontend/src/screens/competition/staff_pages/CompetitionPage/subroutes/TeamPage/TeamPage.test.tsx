@@ -48,7 +48,7 @@ describe('StaffPage', () => {
     const bioTextList = screen.getAllByText('test student bio');
     bioTextList.forEach(
       (bioText) => {
-        let sideBar 
+        const sideBar 
           = bioText.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement;
         expect(sideBar).toHaveStyle('width: 0')
       }

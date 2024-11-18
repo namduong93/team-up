@@ -137,7 +137,7 @@ const DropdownOptions: FC<OptionsProps> = ({
       {searchTerm &&
         isExtendable &&
         !options.some(
-          ({ item: { value: _, label } }) => label === searchTerm
+          ({ item: {  label } }) => label === searchTerm
         ) && (
           <StyledOptionContainerDiv
             $isLast={true}

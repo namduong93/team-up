@@ -41,15 +41,14 @@ describe('CompetitionPage', () => {
     expect(screen.getByText(testAttendee.email)).toBeVisible();
     expect(screen.getByText(testAttendee.sex)).toBeVisible();
     expect(screen.getByText(testAttendee.tshirtSize)).toBeVisible();
-    testAttendee.dietaryNeeds && expect(screen.getByText(testAttendee.dietaryNeeds)).toBeVisible();
-    testAttendee.allergies && expect(screen.getByText(testAttendee.allergies)).toBeVisible();
-    testAttendee.accessibilityNeeds && expect(screen.getByText(testAttendee.accessibilityNeeds)).toBeVisible();
+    if (testAttendee.dietaryNeeds) expect(screen.getByText(testAttendee.dietaryNeeds)).toBeVisible();
+    if (testAttendee.allergies) expect(screen.getByText(testAttendee.allergies)).toBeVisible();
+    if (testAttendee.accessibilityNeeds) expect(screen.getByText(testAttendee.accessibilityNeeds)).toBeVisible();
     expect(screen.getByText(testAttendee.roles[0])).toBeVisible();
     expect(screen.getByText(testAttendee.siteName)).toBeVisible();
     expect(screen.getByText(testAttendee.siteCapacity)).toBeVisible();
-    testAttendee.pendingSiteName && expect(screen.getByText(testAttendee.pendingSiteName)).toBeVisible();
-    testAttendee.pendingSiteCapacity && expect(screen.getByText(testAttendee.pendingSiteCapacity)).toBeVisible();
-
+    if (testAttendee.pendingSiteName) expect(screen.getByText(testAttendee.pendingSiteName)).toBeVisible();
+    if (testAttendee.pendingSiteCapacity) expect(screen.getByText(testAttendee.pendingSiteCapacity)).toBeVisible();
 
   });
 

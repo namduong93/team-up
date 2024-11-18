@@ -63,7 +63,7 @@ describe('StudentsPage', () => {
     const bioTextList = screen.getAllByText('test bio');
     bioTextList.forEach(
       (bioText) => {
-        let sideBar = bioText.parentElement?.parentElement?.parentElement?.parentElement;
+        const sideBar = bioText.parentElement?.parentElement?.parentElement?.parentElement;
         expect(sideBar).toHaveStyle('width: 0')
       }
     );

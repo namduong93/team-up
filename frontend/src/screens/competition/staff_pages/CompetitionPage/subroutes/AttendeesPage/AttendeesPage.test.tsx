@@ -60,7 +60,7 @@ describe('AttendeesPage', () => {
     const siteTextList = screen.getAllByText('test site');
     siteTextList.forEach(
       (siteText) => {
-        let sideBar = siteText.parentElement?.parentElement?.parentElement;
+        const sideBar = siteText.parentElement?.parentElement?.parentElement;
         expect(sideBar).toHaveStyle('width: 0')
       }
     );

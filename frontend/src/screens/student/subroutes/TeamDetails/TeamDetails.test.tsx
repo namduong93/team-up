@@ -34,7 +34,7 @@ describe('TeamDetails', () => {
     
     expect(screen.getByText(testTeam.teamName)).toBeVisible();
     expect(screen.getByText(testTeam.teamSite)).toBeVisible();
-    testTeam.teamSeat && expect(screen.getByText(testTeam.teamSeat)).toBeVisible();
+    if (testTeam.teamSeat) expect(screen.getByText(testTeam.teamSeat)).toBeVisible();
     expect(screen.getByText(testTeam.teamLevel)).toBeVisible();
 
     testTeam.students.forEach((student) => {

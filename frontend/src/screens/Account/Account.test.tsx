@@ -12,7 +12,7 @@ import { DashInfo } from '../dashboard/hooks/useDashInfo';
 server.listen();
 
 const TestAccount = () => {
-  const [_, setDashInfo] = useState<DashInfo>({
+  const [, setDashInfo] = useState<DashInfo>({
     preferredName: 'test preferred',
     affiliation: 'test affiliation',
     profilePic: 'test profilepic'
