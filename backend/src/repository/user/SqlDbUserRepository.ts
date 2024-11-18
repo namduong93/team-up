@@ -87,7 +87,7 @@ export class SqlDbUserRepository implements UserRepository {
   staffRegister = async (staff: Staff): Promise<UserIdObject> => {
     // Use the params to run an sql insert on the db
     let name = staff.name;
-    let preferredName = staff.preferredName;
+    let preferredName = staff.preferredName === "" ? null : staff.preferredName;
     let email = staff.email;
     let hashed_password = await bcrypt.hash(staff.password, 10);
     let gender = staff.gender;
@@ -186,12 +186,15 @@ export class SqlDbUserRepository implements UserRepository {
    */
   userDashInfo = async (userId: number): Promise<UserDashInfo> => {
     const dbResult = await this.pool.query(
-      `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = ${userId} LIMIT 1`
-    );
+      `SELECT preferred_name AS "preferredName", affiliation FROM user_dash_info WHERE id = $1 LIMIT 1`
+    , [userId]);
 
     if (dbResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'User not found');
     }
+
+    const userDashInfo = dbResult.rows[0];
+    userDashInfo.preferredName = userDashInfo.preferredName.split(' ')[0];
 
     return dbResult.rows[0];
   };
@@ -282,8 +285,8 @@ export class SqlDbUserRepository implements UserRepository {
   userType = async (userId: number): Promise<UserTypeObject> => {
 
     const dbResult = await this.pool.query(
-      `SELECT user_type AS "userType" FROM users WHERE id = ${userId} LIMIT 1`
-    );
+      `SELECT user_type AS "userType" FROM users WHERE id = $1 LIMIT 1`
+    , [userId]);
 
     if (dbResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'User not found');

@@ -1,5 +1,5 @@
-import { SqlDbUniversityRepository } from '../../repository/university/SqlDbUniversityRepository';
-import { UniversityService } from '../../services/UniversityService';
+import { SqlDbUniversityRepository } from '../../../repository/university/SqlDbUniversityRepository';
+import { UniversityService } from '../../../services/UniversityService';
 import pool from '../test_util/test_utilities';
 
 describe('GET universities/list', () => {

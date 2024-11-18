@@ -50,10 +50,6 @@ export class SqlDbSessionRepository implements SessionRepository {
     return {};
   }
 
-  async update(session: Session): Promise<Session | null> {
-    return null;
-  }
-
   /**
      * Deletes a session from the database based on the provided session token.
      *
