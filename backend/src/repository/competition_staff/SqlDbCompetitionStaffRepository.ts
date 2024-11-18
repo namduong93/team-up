@@ -913,7 +913,7 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         access_level = $3
       WHERE user_id = $4 AND competition_id = $5;
       `
-    , [staffInfo.bio, staffInfo.roles, staffInfo.userId, compId]);
+    , [staffInfo.bio, staffInfo.roles, staffInfo.access, staffInfo.userId, compId]);
 
     if (dbResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'Staff does not exist or is not a part of this competition.');
