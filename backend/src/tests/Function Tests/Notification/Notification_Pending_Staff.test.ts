@@ -124,6 +124,17 @@ describe('Notification Request Team Name Function', () => {
         }),
       ])
     );
+
+    await notif_db.notificationPendingStaffApproval(staff1.userId);
+    const notifications2 = await notif_db.userNotificationsList(staff1.userId);
+    expect(notifications2).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'staffAccount',
+          message: expect.stringContaining(`New staff account(s) pending approval. Please review in the staff management panel.`),
+        }),
+      ])
+    );
   });
 
   test('Fail Case: User not an admin for any competition', async () => {

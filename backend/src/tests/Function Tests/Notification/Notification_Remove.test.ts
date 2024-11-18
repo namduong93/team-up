@@ -2,6 +2,7 @@ import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDe
 import { CompetitionRole } from '../../../../shared_types/Competition/CompetitionRole';
 import { StaffAccess, StaffInfo } from '../../../../shared_types/Competition/staff/StaffInfo';
 import { UserAccess } from '../../../../shared_types/User/User';
+import { DbError } from '../../../errors/DbError';
 import { Competition } from '../../../models/competition/competition';
 import { CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
 import { University } from '../../../models/university/university';
@@ -163,5 +164,9 @@ describe('Notification Remove Function', () => {
     await notif_db.notificationRemove(notifications1[0].id);
     const notifications2 = await notif_db.userNotificationsList(teamMate1.userId);
     expect(notifications2).toEqual([]);
+  });
+
+  test('Fail Case', async () => {
+    await expect(notif_db.notificationRemove(999)).rejects.toThrow(DbError);
   });
 });
