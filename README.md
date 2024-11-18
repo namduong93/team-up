@@ -1,26 +1,31 @@
 # Running the Application
-We run Docker to build only the database, then start the backend and frontend server in development mode in separate windows through npm:
-```bash
-# Window 1
-docker compose -f docker-compose-db.yaml up --build
-```
+Installation Manual<br/>
+To launch the main application, clone the repository:
 
-```bash
-# Window 2 (in backend/ directory)
-npm run dev
-```
+<code>git clone https://github.com/unsw-cse-comp99-3900/capstone-project-2024-t3-3900w18agooglegurlies.git</code>
 
-```bash
-# Window 3 (in frontend/ directory)
-npm run dev
-```
+
+Then change into the root directory of the repository and run the command:
+
+<code>docker compose up --build</code>
+
+
+Then wait for the system to load and once it is finished it can be found at:
+
+http://localhost:5173/
+
+
+Note: An HTTPS implementation can be found commented out in the code, (server.ts + docker compose files + config files). Once a domain is obtained, certbot can be used to generate an SSL token and from there, the HTTPS implementation can be uncommented to run the server on HTTPS.
+
+Import information for testing:
+
+For testing purposes, the database is cleared and refreshed with test users every time docker compose up -- build is run. In order to stop this and have the database persist, simply remove the first line (or comment it out) of database/db.sql, which drops the database every time.
+
 
 There are a few notes that one should take notice of:
 - Ensure Docker is installed and running on your machine.
 - Make sure you have the necessary environment variables set up.
 - Check that the required ports are not in use by other applications.
-- Backend and Frontend can be run separately without starting the other. However, the database must always be started before running the others.
-- Reset the database (running the first string of code above again) to reset the data.
 
 # Chrome Extension - Auto Coach
 This section details how to build and use the Chrome Extension to auto-fill participant details into the ICPC Global system.
