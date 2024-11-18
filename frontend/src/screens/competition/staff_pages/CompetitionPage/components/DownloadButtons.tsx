@@ -41,7 +41,7 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({
   downloadQuestion,
   isSiteDownload,
   hasTeamsToDownload,
-  hasAttendeesToDownload,
+  // hasAttendeesToDownload,
 }) => {
   const theme = useTheme();
 
@@ -69,7 +69,7 @@ export const DownloadButtons: FC<DownloadButtonProps> = ({
           />
         </StyledButtonContainer>
       )}
-      {isDownloading && (hasTeamsToDownload || hasAttendeesToDownload) && (
+      {isDownloading && (
         <ResponsiveButtonContainer>
           <StyledButtonContainer>
             <TransparentResponsiveButton
