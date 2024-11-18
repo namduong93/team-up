@@ -150,7 +150,6 @@ describe('Coach Id From Comp Id Function', () => {
   });
 
   test('Success case: succesfully returns coach ids', async () => {
-    console.log(id)
     expect(await comp_db.competitionCoachIdFromCompId(comp.competitionId, id)).toStrictEqual(expect.any(Number))
   });
   test('Failure case: User is not a coach for this competition.', async () => {

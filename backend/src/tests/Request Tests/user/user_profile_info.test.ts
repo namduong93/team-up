@@ -1,21 +1,21 @@
 import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
 import { SqlDbSessionRepository } from '../../../repository/session/SqlDbSessionRepository';
-import pool from '../test_util/test_utilities';
+// import pool from '../test_util/test_utilities';
 import { UserService } from '../../../services/UserService';
 
 describe('GET /user/profile_info', () => {
-  let userService: UserService;
+  // let userService: UserService;
 
 
-  beforeAll(async () => {
-    // Initialize the UserService with real repositories that connect to the test database
-    userService = new UserService(new SqlDbUserRepository(pool), new SqlDbSessionRepository(pool));
-  });
+  // beforeAll(async () => {
+  //   // Initialize the UserService with real repositories that connect to the test database
+  //   userService = new UserService(new SqlDbUserRepository(pool), new SqlDbSessionRepository(pool));
+  // });
 
-  afterAll(() => {
-    // Clean up and close the database connection
-    pool.end();
-  });
+  // afterAll(() => {
+  //   // Clean up and close the database connection
+  //   pool.end();
+  // });
 
   describe('successful cases', () => {
     test('student success', async () => {
