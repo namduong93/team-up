@@ -160,6 +160,7 @@ export const NotificationButton: FC = () => {
   const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
   const navigate = useNavigate();
 
+  // Check the role of the user to redirect them to different pages when clicking notifications
   useEffect(() => {
     (async () => {
       try {
@@ -207,6 +208,8 @@ export const NotificationButton: FC = () => {
     })();
   }, [isStaff]);
 
+  // Redirect the user when notification is clicked based on their role for them 
+  // to perform the requested action
   const handleNavigate = (notification: Notification) => {
     const { type, decision, studentName, teamName, competitionId } =
       notification;
@@ -236,9 +239,10 @@ export const NotificationButton: FC = () => {
     }
   };
 
+  // When a notification is removed, it should not appear again when the user logs in
   const handleRemoveNotification = async (notificationId: number) => {
     try {
-      await sendRequest.delete<{}>("/notification", { notificationId });
+      await sendRequest.delete("/notification", { notificationId });
       setNotifications((prev) =>
         prev.filter((notif) => notif.id !== notificationId)
       );
@@ -247,6 +251,7 @@ export const NotificationButton: FC = () => {
     }
   };
 
+  // Fortmat the date for readbility by users
   const formatDate = (date: Date) => {
     return date.toLocaleString(undefined, {
       day: "numeric",

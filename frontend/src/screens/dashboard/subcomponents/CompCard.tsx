@@ -23,7 +23,7 @@ interface CardProps {
   roles: string[];
   compId: string;
   compCreationDate: string;
-}
+};
 
 /**
  * A React component for displaying information about a competition.
@@ -47,7 +47,7 @@ export const CompCard: FC<CardProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const roleUrl = (_: string) => {
+  const roleUrl = () => {
     if (roles.includes("Participant")) {
       return `/competition/participant/${compId}`;
     }
@@ -70,7 +70,7 @@ export const CompCard: FC<CardProps> = ({
   const progressWidth =
     totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100;
   return (
-    <StyledCompCardContainer onClick={() => navigate(roleUrl(roles[0]))}>
+    <StyledCompCardContainer onClick={() => navigate(roleUrl())}>
       <StyledCardHeader>
         <StyledCardTop>
           <StyledCompHeader>

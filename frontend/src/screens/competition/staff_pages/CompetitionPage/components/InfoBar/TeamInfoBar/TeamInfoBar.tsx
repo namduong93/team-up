@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC, useEffect, useState } from "react";
-import styled, { useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 import { FaSave } from "react-icons/fa";
 import { RxReset } from "react-icons/rx";
 import { useParams } from "react-router-dom";
@@ -67,7 +68,6 @@ export const TeamInfoBar: FC<TeamInfoBarProps> = ({
   buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
   siteOptionsState: [siteOptions, setSiteOptions],
   isEditable,
-  children,
   ...props
 }) => {
   const { compId } = useParams();

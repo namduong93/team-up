@@ -67,7 +67,7 @@ const StyledMedalIcon = styled(FaMedal)`
 interface ProgressBarProps {
   daysRemaining: number;
   progress: number;
-}
+};
 
 /**
  * `CompCountdownBar` is a React web page component that displays a countdown

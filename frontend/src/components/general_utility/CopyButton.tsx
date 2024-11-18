@@ -25,6 +25,9 @@ const StyledCheckIcon = styled(FaCheck)`
   box-sizing: border-box;
 `;
 
+/**
+ * @param {string} textToCopy - The text to be copied to clipboard.
+ */
 interface CopyButtonProps {
   textToCopy: string;
 }

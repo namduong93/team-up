@@ -17,7 +17,7 @@ interface HeaderAttributes extends React.HTMLAttributes<HTMLDivElement> {
   teamName: string;
   compCountdown: number;
   onWithdrawClick: () => void;
-}
+};
 
 /**
  * `TeamHeader` is a React web page component header that displays competition and team details 

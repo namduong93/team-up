@@ -12,7 +12,7 @@ interface ApprovalNameRadiosProps extends React.HTMLAttributes<HTMLDivElement> {
   setTeamIds: React.Dispatch<React.SetStateAction<Array<number>>>;
   setRejectedTeamIds: React.Dispatch<React.SetStateAction<Array<number>>>;
   teamId: number;
-}
+};
 
 /**
  * A React component that displays radio buttons for approving or rejecting a team.

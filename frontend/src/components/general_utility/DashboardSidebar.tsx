@@ -104,7 +104,6 @@ const StyledNavButton = styled.button<{ $active: boolean }>`
   }
 
   svg {
-    /* margin-right: 10px; */
     min-width: 16px;
   }
 
@@ -167,6 +166,13 @@ const StyledLogoutButton = styled.button`
   }
 `;
 
+/**
+ * @param {boolean} cropState - Determines if the screen dimensions are too narrow so sidebar only displays the icons.
+ * @param {JSX.Element} sidebarInfo - The relevant information displayed on the sidebar.
+ * @param {string} preferredName - The user's name they prefer to be called.
+ * @param {string} affiliation - The university or site the user is registered under.
+ * @param {string} profile - The profile picture of the user.
+ */
 export interface DashboardSidebarProps
   extends React.HTMLAttributes<HTMLDivElement> {
   cropState: boolean;
@@ -219,6 +225,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   return (
     <StyledSidebarContainer $cropState={cropState} style={style} {...props}>
       <StyledSidebarContent>
+        {/* If the screen dimensions are too narrow, remove the text and only display the icons */}
         {!cropState && (
           <StyledProfileSection>
             <StyledProfilePic
@@ -233,6 +240,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           </StyledProfileSection>
         )}
 
+        {/* Clicking on each section should redirect the user to the relevant page */}
         <StyledNavLinks>
           <StyledNavButton
             $active={location.pathname === "/dashboard"}

@@ -74,19 +74,16 @@ export const WideAttendeesCard: FC<AttendeesCardProps> = ({
 
         <StyledStandardContainerDiv>
           <StyledBooleanStatus $toggled={!!attendeesDetails.dietaryNeeds}>
-            {/* {!!attendeesDetails.dietaryNeeds ? 'Yes' : 'No'} */}
           </StyledBooleanStatus>
         </StyledStandardContainerDiv>
 
         <StyledStandardContainerDiv>
           <StyledBooleanStatus $toggled={!!attendeesDetails.allergies}>
-            {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
           </StyledBooleanStatus>
         </StyledStandardContainerDiv>
 
         <StyledStandardContainerDiv>
           <StyledBooleanStatus $toggled={!!attendeesDetails.accessibilityNeeds}>
-            {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
           </StyledBooleanStatus>
         </StyledStandardContainerDiv>
       </StyledWideInfoContainerDiv>

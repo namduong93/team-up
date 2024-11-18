@@ -2,7 +2,6 @@ import React, { FC, SetStateAction, useState } from "react";
 import { FaSort } from "react-icons/fa";
 import styled from "styled-components";
 import {
-  StyledSortOption,
   SortSelect,
   SortOption,
 } from "./components/SortSelect";
@@ -157,6 +156,7 @@ export const PageHeader: FC<HeaderAttributes> = ({
       </div>
 
       <MenuOptionsContainerDiv>
+        {/* Display sort, filter, search and their respective pop-ups */}
         <SortFilterSearchContainerDiv>
           {sortOptions && sortOptionState && (
             <ButtonContainer>

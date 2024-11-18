@@ -74,7 +74,7 @@ interface JoinPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
   currentTeamCode?: string;
-}
+};
 
 /**
  * `JoinPopUp` is a React web page component that displays a text input field

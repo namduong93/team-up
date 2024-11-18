@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { CompetitionRole } from "../../../../../../../shared_types/Competition/CompetitionRole";
 import { StaffAccess } from "../../../../../../../shared_types/Competition/staff/StaffInfo";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
@@ -43,14 +42,12 @@ const STAFF_DISPLAY_FILTER_OPTIONS = {
  *
  */
 export const StaffPage: FC = () => {
-  const { compId } = useParams();
   const {
     filters,
     sortOption,
     searchTerm,
     removeFilter,
-    setFilters,
-    universityOptionState: [universityOption, setUniversityOption],
+    universityOptionState: [universityOption, ],
     setFilterOptions,
     setSortOptions,
     staffListState: [staffList, setStaffList],

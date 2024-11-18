@@ -7,13 +7,12 @@ import { ThirdStepPopup } from "../ThirdStepPopup";
 import { StyledHeading } from "./SitePopupChain.styles";
 
 interface SitePopupChainProps {
-  compId?: number;
   handleClose: () => void;
   siteOptionsState?: [
     { value: string; label: string }[],
     React.Dispatch<React.SetStateAction<{ value: string; label: string }[]>>
   ];
-}
+};
 
 /**
  * `SitePopupChain` is a React web page component for handling the multi-step process of changing a
@@ -25,12 +24,12 @@ interface SitePopupChainProps {
  * @returns {JSX.Element} - A modal component that displays different steps of the team site change process.
  */
 export const SitePopupChain: React.FC<SitePopupChainProps> = ({
-  compId = useParams().compId,
   handleClose,
   siteOptionsState = [[{ value: "", label: "" }], () => {}],
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [newSite, setNewSite] = useState({ value: "", label: "" });
+  const { compId } = useParams();
 
   const handleNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -47,7 +46,9 @@ export const SitePopupChain: React.FC<SitePopupChainProps> = ({
         compId,
         newSiteId: parseInt(newSite.value),
       });
-    } catch (error: unknown) {}
+    } catch (error: unknown) {
+      console.log("Error getting site: ", error);
+    }
 
     setCurrentStep((prevStep) => prevStep + 1);
   };

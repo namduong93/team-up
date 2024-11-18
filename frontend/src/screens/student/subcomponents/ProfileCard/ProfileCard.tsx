@@ -30,7 +30,7 @@ interface ProfileCardProps {
   isFirst?: boolean;
   onEdit?: () => void;
   isCoach?: boolean;
-}
+};
 
 /**
  * The ProfileCard component is used to display the profile information of a student or coach,

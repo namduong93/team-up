@@ -2,7 +2,7 @@ import { FC } from "react";
 
 interface StudentStatusProps extends React.HTMLAttributes<HTMLDivElement> {
   isMatched: boolean;
-}
+};
 
 /**
  * A React component for displaying the status of a student.

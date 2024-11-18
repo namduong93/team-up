@@ -23,11 +23,11 @@ import { backendURL } from "../../../config/backendURLConfig";
 interface FAQ {
   question: string;
   answer: string;
-}
+};
 
 export interface ThemeButtonProps {
   $newTheme: "light" | "dark" | "christmas" | "colourblind";
-}
+};
 
 /**
  * A React component for managing user settings and preferences.

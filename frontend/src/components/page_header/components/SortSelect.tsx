@@ -32,6 +32,11 @@ export const StyledSortOption = styled.div<{ $isSelected: boolean }>`
   }
 `;
 
+export const SortIcon = styled(FaSort)`
+  height: 50%;
+  flex: 0 0 auto;
+`;
+
 export interface SortOption {
   label: string;
   value: string;
@@ -78,8 +83,3 @@ export const SortSelect: FC<SortSelectProps> = ({
     </StyledSortContainer>
   );
 };
-
-export const SortIcon = styled(FaSort)`
-  height: 50%;
-  flex: 0 0 auto;
-`;

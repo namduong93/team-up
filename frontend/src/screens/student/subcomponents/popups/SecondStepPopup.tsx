@@ -54,7 +54,7 @@ interface SecondStepPopupProps {
   heading: React.ReactNode;
   onClose: () => void;
   onNext: () => void;
-}
+};
 
 /**
  * `SecondStepPopUp` is a React web page component that displays a pop up asking users to confirm

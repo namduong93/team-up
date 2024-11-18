@@ -6,7 +6,7 @@ interface StaffAccessButtonsProps {
   onApproveAll: () => Promise<boolean>;
   onRejectAll: () => Promise<boolean>;
   editingForAll: boolean;
-}
+};
 
 /**
  * A React component that displays action buttons for approving or rejecting all pending staff account requests.

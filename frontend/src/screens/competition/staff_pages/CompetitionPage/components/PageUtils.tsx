@@ -8,7 +8,7 @@ interface ResponsiveSortButtonProps
   isOpen: boolean;
   icon: ReactNode;
   label: string;
-}
+};
 
 /**
  * `ResponsiveButton` is a flexible button component used to display a button with a custom icon and label.

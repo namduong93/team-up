@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC, useEffect, useRef, useState } from "react";
 import { FaArrowRight, FaSave } from "react-icons/fa";
 import { RxReset } from "react-icons/rx";
@@ -107,9 +108,9 @@ interface TeamStudentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
   student,
   teamDetails,
-  buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
+  buttonConfigurationState: [, setButtonConfiguration],
   teamListState: [teamList, setTeamList],
-  popupOpenState: [isPopupOpen, setPopupOpen],
+  popupOpenState: [, setPopupOpen],
   isEditable,
 }) => {
   const theme = useTheme();
@@ -212,12 +213,12 @@ export const TeamStudentInfoCard: FC<TeamStudentInfoProps> = ({
   // view smoothly to provide a better editing experience using cardRef to
   // target the card element
   useEffect(() => {
-    cardRef.current &&
-      isEditingCard &&
+    if (cardRef.current && isEditingCard) {
       (cardRef.current as HTMLElement).scrollIntoView({
         behavior: "smooth",
         block: "end",
       });
+    }
   }, [isEditingCard, isEdited]);
 
   return (

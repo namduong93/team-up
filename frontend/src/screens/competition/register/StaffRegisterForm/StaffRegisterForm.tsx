@@ -154,6 +154,7 @@ export const StaffRegisterForm: FC = () => {
     fetchSites();
   }, []);
 
+  // Check if the correct fields have been filled before submitting the request
   const isButtonDisabled = () => {
     console.log(staffRegistrationData);
     const { roles: role, competitionBio, site: site } = staffRegistrationData;

@@ -50,6 +50,7 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({
 }) => {
   const [borderIndex, setBorderIndex] = useState(defaultBorderIndex);
 
+  // When a tab is selected, navigate to that view
   function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();
     const target = e.currentTarget as HTMLDivElement;

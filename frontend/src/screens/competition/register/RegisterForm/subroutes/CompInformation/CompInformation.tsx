@@ -51,7 +51,7 @@ Additionally, all teams must choose whether to compete in Level A or Level B.
 export const CompetitionInformation: FC = () => {
   const navigate = useNavigate();
   const { code } = useParams<{ code?: string }>();
-  const [compInformation, setCompInformation] = useState<string>("");
+  const [compInformation, setCompInformation] = useState<string>(defaultCompInformation);
 
   useEffect(() => {
     const fetchCompInformation = async () => {

@@ -33,7 +33,7 @@ const StyledWarningMessage = styled.p<{ $isSuccess: boolean }>`
 
 interface UpdatePasswordProps {
   isOpen: boolean;
-}
+};
 
 /**
  * A React component that allows users to update their password.

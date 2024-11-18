@@ -62,7 +62,7 @@ const StyledFieldValue = styled.div`
 interface FieldContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   value: ReactNode;
-}
+};
 
 /**
  * A React component that displays a labeled field with a title and value in a container.
@@ -93,7 +93,7 @@ export interface StudentCardProps extends React.HTMLAttributes<HTMLDivElement> {
     Array<StudentInfo>,
     React.Dispatch<React.SetStateAction<Array<StudentInfo>>>
   ];
-}
+};
 
 /**
  * A React component for displaying detailed student information within a competition.

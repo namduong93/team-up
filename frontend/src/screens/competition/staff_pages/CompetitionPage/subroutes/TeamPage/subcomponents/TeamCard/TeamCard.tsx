@@ -29,13 +29,13 @@ export enum Member {
   level = 3,
   boersenEligible = 4,
   isRemote = 5,
-}
+};
 
 export const enum RadioOption {
   Neither = "Neither",
   Check = "Check",
   Cross = "Cross",
-}
+};
 
 export const DRAG_ANIMATION_DURATION = 0.2;
 
@@ -84,8 +84,8 @@ export const TeamCard: FC<TeamCardProps> = ({
   teamDetails,
   isEditingStatus = false,
   teamListState: [teamList, setTeamlist],
-  teamIdsState: [teamIds, setTeamIds],
-  rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
+  teamIdsState: [, setTeamIds],
+  rejectedTeamIdsState: [, setRejectedTeamIds],
   buttonConfigurationState: [buttonConfiguration, setButtonConfiguration],
   isEditingNameStatus = false,
   isDraggingState: [isDragging, setIsDragging],
@@ -94,7 +94,7 @@ export const TeamCard: FC<TeamCardProps> = ({
   roles,
   ...props
 }) => {
-  const [status, _] = useState(teamDetails.status);
+  const [status, ] = useState(teamDetails.status);
   const colorMap = {
     Pending: "#F48385",
     Unregistered: "#FDD386",
@@ -156,7 +156,7 @@ export const TeamCard: FC<TeamCardProps> = ({
             </StyledCardHeaderDiv>
 
             <StyledTeamMatesContainerDiv>
-              {teamDetails.students.map((member, index) => (
+              {teamDetails.students.map((member) => (
                 <StyledTeamMemberMotionDiv
                   key={`${member.userId}`}
                   layoutId={`${member.userId}`}
@@ -165,7 +165,6 @@ export const TeamCard: FC<TeamCardProps> = ({
                     type: isDragging ? "spring" : false,
                     duration: DRAG_ANIMATION_DURATION,
                   }}
-                  // animate={{ opacity: isDragging ? 0.8 : 1 }}
                   className="team-member-cell"
                   drag={isEditable}
                   $isDraggable={isEditable}

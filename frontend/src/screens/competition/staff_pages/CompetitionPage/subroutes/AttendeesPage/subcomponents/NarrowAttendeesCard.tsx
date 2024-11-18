@@ -93,7 +93,6 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
           value={
             <StyledNarrowStatusDiv>
               <StyledBooleanStatus $toggled={!!attendeesDetails.allergies}>
-                {/* {!!attendeesDetails.allergies ? 'Yes' : 'No'} */}
               </StyledBooleanStatus>
             </StyledNarrowStatusDiv>
           }
@@ -107,7 +106,6 @@ export const NarrowAttendeesCard: FC<AttendeesCardProps> = ({
               <StyledBooleanStatus
                 $toggled={!!attendeesDetails.accessibilityNeeds}
               >
-                {/* {!!attendeesDetails.accessibilityNeeds ? 'Yes' : 'No'} */}
               </StyledBooleanStatus>
             </StyledNarrowStatusDiv>
           }

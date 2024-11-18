@@ -1,5 +1,4 @@
 import { FC, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useCompetitionOutletContext } from "../../hooks/useCompetitionOutletContext";
 import Fuse from "fuse.js";
 import { AttendeesDetails } from "../../../../../../../shared_types/Competition/staff/AttendeesDetails";
@@ -34,19 +33,15 @@ const ATTENDEES_DISPLAY_FILTER_OPTIONS = {};
  * filter options.
  */
 export const AttendeesDisplay: FC = () => {
-  const { compId } = useParams();
   const {
     filters,
     sortOption,
     searchTerm,
     removeFilter,
-    setFilters,
-    siteOptionState: [siteOption, setSiteOption],
-    siteOptionsState: [siteOptions, setSiteOptions],
-    dropdownOptionsState: [dropdownOptions, setDropdownOptions],
+    siteOptionState: [siteOption, ],
     setFilterOptions,
     setSortOptions,
-    attendeesListState: [attendeesList, setAttendeesList],
+    attendeesListState: [attendeesList, ],
   } = useCompetitionOutletContext("attendees", undefined, "site");
 
   useEffect(() => {

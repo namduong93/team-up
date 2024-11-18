@@ -251,7 +251,7 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     e.currentTarget.blur();
   };
 
-  // Mnages the keyboard navigation within the drpdown, selecting the first
+  // Manages the keyboard navigation within the drpdown, selecting the first
   // filtered option on Enter
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {

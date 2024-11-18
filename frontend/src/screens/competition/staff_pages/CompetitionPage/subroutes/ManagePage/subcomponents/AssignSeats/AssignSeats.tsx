@@ -1,7 +1,4 @@
-// SITE COORDS CAN UPLOAD A .CSV OF AVAILABLE SEATS/ROOMS
-// CAN SORT TEAMS (ASSIGN 1 SEAT PER TEAM AND SKIP 2 EACH TIME)
-// SEAT ASSIGNMENT NOTIFICATION TO ALL STUDENTS UPON CLOSE OF REGISTRATION TIME
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEvent, FC, ReactNode, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TeamDetails } from "../../../../../../../../../shared_types/Competition/team/TeamDetails";
@@ -45,7 +42,7 @@ interface AssignSeatsProps {
   siteCapacity: number;
   teamListState: any;
   siteOptionState: any;
-}
+};
 
 interface SeatAssignment {
   siteId: number; // ID of the site
@@ -54,26 +51,35 @@ interface SeatAssignment {
   teamId: string; // ID of team who have been assigned that seat
   teamName: string; // name of team at the assigned seat
   teamLevel: string; // level of the team
-}
+};
 
 interface exportSeatAssignment {
   siteName: string; // e.g. "CSE Building K17"
   siteCapacity: number; // e.g. 30
   teams: SeatAssignment[]; // teams who have been assigned to that seat
-}
+};
 
 interface Room {
   roomName: string;
   level: "Level A" | "Level B";
   seatCodes: string[]; // text string input of available seat codes for this room
   numSeats: number; // length of the seat codes array
-}
+};
 
+/**
+ * A React component for assigning seats to attendees of a particular site within a competition.
+ *
+ * The `AssignSeats` component handles the input and assignment of seats to attending teams, allowing
+ * site staff to download the asssignments and notify the respective teams of their seat assignment when complete. 
+ * @param {AssignSeatsProps} props - React props containing the site details (name and capacity), the list of teams
+ * attending the particular site including their details, and the chosen site option (if the user is an admin of this competition). 
+ * @returns {JSX.Element} - A UI component displaying the fields to provide seat codes and assign them amongst attending teams.
+ */
 export const AssignSeats: FC<AssignSeatsProps> = ({
   siteName,
   siteCapacity,
-  teamListState: [teamList, setTeamList],
-  siteOptionState: [siteOption, setSiteOption],
+  teamListState: [teamList, ],
+  siteOptionState: [siteOption, ],
 }) => {
   const { compId } = useParams();
   const [seatInputType, setSeatInputType] = useState<string>("Text"); // either string or inputs
@@ -89,7 +95,6 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
   const [error, setError] = useState<ReactNode>("");
   const [seatCount, setSeatCount] = useState<number>(0);
   const [seatModalState, setSeatModalState] = useState<boolean>(false);
-
   const [generatedSeats, setGeneratedSeats] = useState<string[]>([]);
   const [existingSeats, setExistingSeats] = useState<string[]>([]);
   const [teamSeatAssignments, setTeamSeatAssignments] = useState<
@@ -105,6 +110,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
     );
   }
 
+  // Determine the number of teams for each level that require seats
   const numATeamsToAssign = teamListToAssign.filter(
     (team: TeamDetails) => team.teamLevel === "Level A"
   ).length;
@@ -122,6 +128,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
     setSeatCount(calculatedSeats);
   }, [seatString]);
 
+  // Make sure that the same seats can be given twice and each level has assigned
+  // assigned seats once for a room
   const validateRoomAndSeatCodes = (
     roomName: string,
     level: string,
@@ -285,6 +293,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
     return isFormAInvalid && isFormBInvalid;
   };
 
+  // Based on the seats provided, assign them to the available teams attending
+  // the particular site
   const distributeSeats = async () => {
     const seatAssignments: SeatAssignment[] = [];
     const teamsToAssign = teamListToAssign;
@@ -300,6 +310,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
       }
     }
 
+    // If the input is a text input of seat codes, process them, then assign based
+    // on level proximity chosen
     if (isTextInput) {
       const availableSeats = seatString.split(",");
       if (!isSeatedTogether) {
@@ -325,6 +337,8 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
         });
       }
     } else {
+      // For all the provided rooms and seat codes within the rooms, assign according
+      // to available seats for each level with 3 seats per team
       const availableRooms = rooms;
       const assignedTeamIds = new Set<number>();
 
@@ -368,6 +382,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
       }
     }
 
+    // Display the button to assign the seats if there exists enough input
     setEnoughSeats(true);
     try {
       await sendRequest.put("/competition/staff/seat_assignments", {
@@ -378,6 +393,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
       console.error("Error withdrawing from the team:", error);
     }
 
+    // Clear fields
     setTeamSeatAssignments(seatAssignments);
     setSeatString("");
     setRooms([]);
@@ -386,7 +402,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
 
   useEffect(() => {
     const seatToTeams = teamListToAssign.length;
-    setEnoughSeats(seatCount < seatToTeams);
+    setEnoughSeats(seatCount >= seatToTeams);
   }, [rooms, seatString, seatCount, teamListToAssign.length]);
 
   const handleDownload = () => {
@@ -453,7 +469,7 @@ export const AssignSeats: FC<AssignSeatsProps> = ({
       <StyledHeader>
         <div>
           <StyledTitle>Manage Seats for {siteOption.label}</StyledTitle>
-          {enoughSeats && (
+          {!enoughSeats && (
             <StyledAlert>
               Warning! You do not have enough seats for your teams!
             </StyledAlert>

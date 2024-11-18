@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode } from "react";
 import styled from "styled-components";
 
 export const StyledSortButton = styled.button<{ $isSortOpen: boolean }>`
@@ -79,10 +79,7 @@ export const ResponsiveButton: FC<ResponsiveButtonProps> = ({
   );
 };
 
-export const StyledTransparentButton = styled.button<{
-  $isSortOpen: boolean;
-  $actionType: "primary" | "secondary" | "confirm" | "error";
-}>`
+export const StyledTransparentButton = styled.button<{ $isSortOpen: boolean, $actionType: "primary" | "secondary" | "confirm" | "error"}>`
   background-color: transparent;
   border-radius: 10px;
   box-sizing: border-box;
@@ -109,13 +106,11 @@ export const StyledTransparentButton = styled.button<{
       }
     }} !important;
     color: ${({ theme }) => theme.background};
-    /* font-weight: ${({ theme }) => theme.fonts.fontWeights.bold}; */
   }
 `;
 
 interface ResponsiveActionButtonProps extends ResponsiveButtonProps {
   actionType: "primary" | "secondary" | "confirm" | "error";
-  question?: string;
 }
 
 /**
@@ -132,10 +127,8 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
   label,
   style,
   isOpen = false,
-  question,
   ...props
 }) => {
-  const [showPopUp, setShowPopUp] = useState(false);
 
   return (
     <StyledTransparentButton

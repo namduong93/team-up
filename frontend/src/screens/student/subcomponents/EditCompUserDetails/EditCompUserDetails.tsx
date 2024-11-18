@@ -33,7 +33,7 @@ interface EditCompPreferencesProps {
   student: StudentInfo;
   onSubmit: (updatedStudent: StudentInfo) => Promise<boolean>;
   onClose: () => void;
-}
+};
 
 /**
  * `EditCompDetailsPopUp` is a React web page component that displays a pop up for editing and reviewing

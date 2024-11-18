@@ -24,7 +24,9 @@ export const EmailForm: FC<React.HTMLAttributes<HTMLFormElement>> = ({
 
     try {
       navigate("/password/recovery/email/success");
-    } catch (error: unknown) {}
+    } catch (error: unknown) {
+      console.log("Error recovering account: ", error);
+    }
   };
 
   return (

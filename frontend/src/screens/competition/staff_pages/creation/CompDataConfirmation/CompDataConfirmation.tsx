@@ -21,7 +21,7 @@ import {
 interface University {
   id: number;
   name: string;
-}
+};
 
 interface LocationState {
   competitionInfo: CompetitionInformation;
@@ -30,7 +30,7 @@ interface LocationState {
     label: string;
     defaultSite: string;
   }>;
-}
+};
 
 /**
  * `CompDataConfirmation` is a React web page form component that displays a confirmation page for reviewing and finalizing

@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { TimeoutButton } from "../../general_utility/TimeoutButton";
 
-const StyledButton = styled.button<{
-  $actionType: "primary" | "secondary" | "error";
-}>`
+const StyledButton = styled.button<{ $actionType: "primary" | "secondary" | "error" }>`
   border-radius: 10px;
   padding: 10px;
   border: none;
@@ -28,13 +26,13 @@ const StyledButton = styled.button<{
       return theme.background;
     } else {
       return theme.fonts.colour;
-    }
+    };
   }};
 
   font-weight: ${({ $actionType: actionType, theme }) => {
     if (actionType === "error") {
       return theme.fonts.fontWeights.bold;
-    }
+    };
   }};
 
   &:hover {
@@ -50,7 +48,7 @@ const StyledButton = styled.button<{
     }};
     color: ${({ theme }) => theme.background};
     font-weight: ${({ theme }) => theme.fonts.fontWeights.bold};
-  }
+  };
 `;
 
 export const StyledPopUpOverlay = styled.div`
@@ -139,7 +137,7 @@ interface ActionButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   redirectPath: string;
   actionType: "primary" | "secondary" | "error";
   handleClick?: () => void;
-}
+};
 
 /**
  * A React A button component that triggers an action on the website, such as navigating to a

@@ -12,7 +12,7 @@ import { backendURL } from "../../../../../../../../config/backendURLConfig";
 
 interface AttendeesInfoProps extends InfoBarProps {
   attendeesDetails: AttendeesDetails;
-}
+};
 
 /**
  * A functional component for displaying attendee information in a collapsible info bar.

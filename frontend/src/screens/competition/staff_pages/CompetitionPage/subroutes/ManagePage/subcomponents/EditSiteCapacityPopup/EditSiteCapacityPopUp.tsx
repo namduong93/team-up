@@ -21,20 +21,18 @@ import { NumberInputLight } from "../../../../../../../../components/general_uti
 interface EditSiteCapacityPopUpProps {
   heading: React.ReactNode;
   onClose: () => void;
-  onSubmit: (site: { label: string; value: number }, capacity: number) => void;
-}
+};
 
 /**
  * `EditSiteCapacityPopUp is a React web page component that displays a pop up for editing the capacity of
  * sites associated with that competition.
- *
+ * @param {EditSiteCapacityPopUpProps} - The title for the pop-up and allow the user to handle closing the pop-up.
  * @returns JSX.Element - A styled container presenting a text input field to change the capacity of the site
  * selected from a dropdow
  */
 export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   heading,
   onClose,
-  onSubmit,
 }) => {
   const { compId } = useParams();
   const {
@@ -80,15 +78,6 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
     setSelectedSite(siteOptions[0]);
   }, [siteOptions]);
 
-  // const handleSiteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const selected = siteOptions.find((site) => site.value === e.target.value);
-  //   if (selected) {
-  //     setSelectedSite(selected); // Update selectedSite state
-  //   }
-
-  //   console.log(selected?.label);
-  // };
-
   const handleCapacityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCapacity = Number(e.target.value);
     if (newCapacity >= 0) {
@@ -97,8 +86,7 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   };
 
   const handleSubmit = async () => {
-    // Call onSubmit with the site and capacity
-    // onSubmit({label: selectedSite.label, value: parseInt(selectedSite.value)}, capacity);
+    // Update with the site and capacity
     onClose();
 
     await sendRequest.put("/competition/site/capacity/update", {

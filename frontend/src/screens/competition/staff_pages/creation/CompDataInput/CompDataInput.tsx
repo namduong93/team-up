@@ -26,12 +26,12 @@ import SiteLocationDataInput from "./subcomponents/SiteLocationDataInput/SiteLoc
 export interface SiteLocation {
   universityId: number;
   defaultSite: string;
-}
+};
 
 export interface OtherSiteLocation {
   universityName: string;
   defaultSite: string;
-}
+};
 
 /**
  * `CompDataInput` is a React web page form component that manages the input of competition details for a competition setup process.
@@ -188,12 +188,10 @@ export const CompDataInput: FC = () => {
   const isButtonDisabled = () => {
     const {
       name,
-      earlyRegDeadline,
       code,
       siteLocations,
       otherSiteLocations,
       region,
-      startDate,
       generalRegDeadline,
     } = competitionInfo;
     return (

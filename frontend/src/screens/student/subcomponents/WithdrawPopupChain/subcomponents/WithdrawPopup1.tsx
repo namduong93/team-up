@@ -55,7 +55,7 @@ interface OptionPopUpProps {
   onClose: () => void;
   onNext: () => void;
   actionButtonText: string;
-}
+};
 
 /**
  * `WithdrawPopup1` is a React web page component that displays the conseqeunces of withdrawing

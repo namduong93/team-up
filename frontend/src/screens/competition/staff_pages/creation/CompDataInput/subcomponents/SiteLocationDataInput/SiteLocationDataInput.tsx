@@ -19,12 +19,12 @@ interface SiteLocationFormProps {
     },
     defaultSite: string
   ) => void;
-}
+};
 
 interface University {
   id: string;
   name: string;
-}
+};
 
 /**
  * `SiteLocationDataInput` is a React functional component that facilitates the selection and input of site locations

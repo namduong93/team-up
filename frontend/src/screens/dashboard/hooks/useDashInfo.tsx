@@ -5,7 +5,7 @@ export interface DashInfo {
   preferredName: string;
   affiliation: string;
   profilePic: string;
-}
+};
 
 /**
  * A custom hook that fetches and manages the dashboard information for the user.

@@ -35,7 +35,9 @@ export const PasswordCodeRecoverForm: FC<
 
     try {
       navigate("/");
-    } catch (error: unknown) {}
+    } catch (error: unknown) {
+      console.log("Error resetting password: ", error);
+    }
   };
 
   // Ensures that the new password matches the password re-entry

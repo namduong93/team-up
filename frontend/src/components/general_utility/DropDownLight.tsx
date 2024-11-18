@@ -20,7 +20,7 @@ const StyledLabel = styled.label`
 `;
 
 const StyledAsterisk = styled.span`
-  color: red;
+  color: ${({ theme }) => theme.colours.error};
 `;
 
 const StyledDescriptor = styled.div`

@@ -17,7 +17,7 @@ const StyledHeading = styled.h2`
 
 interface WithdrawPopupChainProps {
   handleClose: () => void;
-}
+};
 
 /**
  * A component for handling the multi-step process of withdrawing a participant from a competition, starting

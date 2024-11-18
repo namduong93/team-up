@@ -138,13 +138,14 @@ export const CompExperienceInput: FC = () => {
       );
       const { courses } = response.data;
 
-      courses.length &&
+      if (courses.length) {
         setCourseOptions(
           courses.map((course) => ({
             value: course.category,
             label: course.courseName,
           }))
         );
+      };      
     };
 
     fetchCourses();
@@ -183,7 +184,7 @@ export const CompExperienceInput: FC = () => {
     enableRegionalParticipationField: false,
   });
 
-  // obtains the editRego object that specifies question fields that staff
+  // Obtains the editRego object that specifies question fields that staff
   // would like to hide
   useEffect(() => {
     const fetchEditRego = async () => {

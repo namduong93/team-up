@@ -19,7 +19,7 @@ interface DownloadButtonProps {
   isSiteDownload: boolean;
   hasTeamsToDownload?: boolean;
   hasAttendeesToDownload?: boolean;
-}
+};
 
 /**
  * `DownloadButtons` is a React functional component that provides download options for CSV and PDF files, as well as the ability to update team status.

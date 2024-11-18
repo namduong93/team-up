@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 import { sendRequest } from "../../../../../utility/request";
 import { NamePopup1 } from "./subcomponents/NamePopup1/NamePopup1";
 import { SecondStepPopup } from "../SecondStepPopup";
@@ -9,7 +8,7 @@ import { StyledHeading } from "./NamePopupChain.styles";
 
 interface NamePopupChainProps {
   handleClose: () => void;
-}
+};
 
 /**
  * A component for handling the multi-step process of changing a team name, starting with
@@ -38,7 +37,7 @@ export const NamePopupChain: React.FC<NamePopupChainProps> = ({
 
   const handleSubmit = async () => {
     try {
-      await sendRequest.put<{}>("/competition/student/team_name_change", {
+      await sendRequest.put("/competition/student/team_name_change", {
         compId,
         newTeamName,
       });

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const StyledInfoBarContainerDiv = styled.div<{ $isOpen: boolean }>`
@@ -45,7 +45,7 @@ const StyledInfoContainer = styled.div`
 
 export interface InfoBarProps extends React.HTMLAttributes<HTMLDivElement> {
   isOpenState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-}
+};
 
 /**
  *  A React component for toggling the applicable information sidebar.

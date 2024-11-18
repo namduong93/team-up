@@ -40,8 +40,6 @@ import { EditCompRegoPopUp } from "./subcomponents/EditCompRegistrationPopup/Edi
 import { EditSiteCapacityPopUp } from "./subcomponents/EditSiteCapacityPopup/EditSiteCapacityPopUp";
 import { EditCompDetailsPopUp } from "./subcomponents/EditCompDataPopup/EditCompDetailsPopUp";
 
-interface ManagePageProps {}
-
 const defaultAnnouncement = `
 The ICPC is the premier global programming competition conducted by and for the world’s universities. It fosters creativity, teamwork, and innovation in building new software programs, and enables students to test their ability to perform well under pressure.
 
@@ -67,7 +65,7 @@ export const DEFAULT_REGO_FIELDS = {
  *
  * @returns JSX.Element - A web page with tiles to allow staff members to update competition information.
  */
-export const ManagePage: FC<ManagePageProps> = ({}) => {
+export const ManagePage: FC = () => {
   const { compId } = useParams();
   const [showManageSite, setShowManageSite] = useState(false);
   const [showContactBio, setShowContactBio] = useState(false);
@@ -93,10 +91,10 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
   }, []);
 
   const {
-    universityOptionState: [universityOption, setUniversityOption],
+    universityOptionState: [universityOption, ],
     siteOptionState: [siteOption, setSiteOption],
     teamListState: [teamList, setTeamList],
-    siteOptionsState: [siteOptions, setSiteOptions],
+    siteOptionsState: [siteOptions, ],
     compDetails,
   } = useCompetitionOutletContext(
     "manage",
@@ -339,17 +337,7 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
         : undefined,
     });
   };
-
-  const handleSiteCapacityChange = (
-    site: { label: string; value: number },
-    capacity: number
-  ) => {
-    console.log(
-      `updating site ${site.label} with id ${site.value} with capacity: ${capacity}`
-    );
-    setShowEditCapacity(false);
-  };
-
+  
   const [siteList, setSiteList] = useState<
     CompetitionSiteCapacity[] | undefined
   >();
@@ -456,8 +444,8 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
                 siteOption.value ? siteOption.label : teamList[0].teamSite
               }
               siteCapacity={
-                universityOption.value
-                  ? getSiteCapacity(parseInt(universityOption.value))
+                siteOption.value
+                  ? getSiteCapacity(parseInt(siteOption.value))
                   : getSiteCapacity(teamList[0].siteId)
               }
               teamListState={[teamList, setTeamList]}
@@ -529,7 +517,6 @@ export const ManagePage: FC<ManagePageProps> = ({}) => {
               <EditSiteCapacityPopUp
                 heading={"Update Site Capacities"}
                 onClose={() => setShowEditCapacity(false)}
-                onSubmit={handleSiteCapacityChange}
               />
             )}
 

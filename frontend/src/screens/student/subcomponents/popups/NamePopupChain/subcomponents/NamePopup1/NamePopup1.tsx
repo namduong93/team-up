@@ -13,7 +13,7 @@ interface NamePopup1Props {
   text: string;
   inputValue: string;
   setInputValue: (value: string) => void;
-}
+};
 
 /**
  * `NamePopUp1` is a React web page component that displays a pop up for editing a team's name. It provides

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC, useState } from "react";
 import jsPDF from "jspdf";
 import { AttendeesDetails } from "../../../../../../../../shared_types/Competition/staff/AttendeesDetails";
@@ -56,7 +57,7 @@ interface AccessibilityRequirement {
  * information
  */
 export const AttendeesPageButtons: FC<AttendeesButtonsProps> = ({
-  attendeesListState: [attendeesList, setAttendeesList],
+  attendeesListState: [attendeesList, ],
   siteOption: siteOption,
 }) => {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);

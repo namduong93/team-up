@@ -42,7 +42,7 @@ const StyledCloseButton = styled.button`
 interface ThirdStepPopupProps {
   heading: React.ReactNode;
   onClose: () => void;
-}
+};
 
 /**
  * `ThirdStepPopup` is a React web page component that displays a pop up displaying the message that

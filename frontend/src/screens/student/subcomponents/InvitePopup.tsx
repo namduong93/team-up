@@ -68,7 +68,7 @@ interface InvitePopUpProps {
   heading: React.ReactNode;
   text: string;
   onClose: () => void;
-}
+};
 
 /**
  * `InvitePopUp` is a React web page component that displays the team code for

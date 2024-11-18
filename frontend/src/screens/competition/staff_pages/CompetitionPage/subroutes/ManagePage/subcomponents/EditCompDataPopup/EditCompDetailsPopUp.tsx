@@ -1,6 +1,5 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import { CompetitionInformation } from "../../../../../../../../../shared_types/Competition/CompetitionDetails";
-import { useLocation } from "react-router-dom";
 import { dateToUTC, formatDate } from "../../../../../creation/util/formatDate";
 import { useTheme } from "styled-components";
 import {
@@ -35,13 +34,15 @@ interface EditCompDetailsProps {
     React.SetStateAction<CompetitionInformation>
   >;
   onSubmit: (competitionInfo: CompetitionInformation) => void;
-}
+};
 
 /**
  * `EditCompDetailsPopUp is a React web page component that displays a pop up for editing and reviewing
  * entered competition details after the competition has been created. It provides relevant input fields
  * to change the information, name, code, dates, deadlines and site locations for that competition
- *
+ * 
+ * @param {EditCompDetailsProps} props - Contains the competition information and functions handling allowing
+ * the user to open/close the pop-up, update the competition information, and perform some action when submitted.
  * @returns JSX.Element - A styled container presenting input fields to edit the competition details
  */
 export const EditCompDetailsPopUp: FC<EditCompDetailsProps> = ({

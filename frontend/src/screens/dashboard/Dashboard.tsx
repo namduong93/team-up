@@ -26,11 +26,11 @@ interface Competition {
   roles: string[];
   compId: string;
   compCreatedDate: string;
-}
+};
 
 interface DashboardsProps {
   dashInfo: DashInfo;
-}
+};
 
 /**
  * A React component that is the central dashboard interface for all ysers
@@ -225,7 +225,7 @@ export const Dashboard: FC<DashboardsProps> = ({ dashInfo }) => {
   const handleRegisterConfirm = async () => {
     const validateCode = async () => {
       try {
-        await sendRequest.get<{}>("/competition/student/status", {
+        await sendRequest.get("/competition/student/status", {
           code: compRegisterCode,
         });
 

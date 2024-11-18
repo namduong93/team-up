@@ -8,7 +8,6 @@ import {
   FaStamp,
 } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
-
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { TeamDetails } from "../../../../../../../../shared_types/Competition/team/TeamDetails";
@@ -50,7 +49,7 @@ export interface PageButtonsProps {
   ];
   universityOption: { value: string; label: string };
   compDetails: CompetitionDetails;
-}
+};
 
 /**
  * A React component for managing team actions within a competition, including status updates, name approvals,
@@ -74,10 +73,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   editingStatusState: [isEditingStatus, setIsEditingStatus],
   teamIdsState: [approveTeamIds, setApproveTeamIds],
   universityOption,
-
   rejectedTeamIdsState: [rejectedTeamIds, setRejectedTeamIds],
   editingNameStatusState: [isEditingNameStatus, setIsEditingNameStatus],
-  registeredTeamIdsState: [registeredTeamIds, setRegisteredTeamIds],
   teamListState: [teamList, setTeamList],
   compDetails,
 }) => {
@@ -103,7 +100,9 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
         approveIds: approveTeamIds,
       });
       await fetchTeams(compId, setTeamList);
-    } catch (error: unknown) {}
+    } catch (error: unknown) {
+      console.log("Error fetching team data: ", error);
+    }
     disableEditTeamStatus();
   };
 
@@ -174,6 +173,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
     return true;
   };
 
+  // run the algorithm
   const handleAlgorithmButton = async () => {
     const response = await sendRequest.post<{ algorithm: string }>(
       "/competition/algorithm",

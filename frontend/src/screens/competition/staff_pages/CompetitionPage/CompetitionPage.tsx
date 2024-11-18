@@ -3,10 +3,7 @@ import { CompetitionInformation as CompetitionDetails } from "../../../../../sha
 import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { CompetitionRole } from "../../../../../shared_types/Competition/CompetitionRole";
 import { ButtonConfiguration } from "./hooks/useCompetitionOutletContext";
-import {
-  SortOption,
-  StyledSortOption,
-} from "../../../../components/page_header/components/SortSelect";
+import { SortOption } from "../../../../components/page_header/components/SortSelect";
 import { TeamDetails } from "../../../../../shared_types/Competition/team/TeamDetails";
 import { StudentInfo } from "../../../../../shared_types/Competition/student/StudentInfo";
 import { AttendeesDetails } from "../../../../../shared_types/Competition/staff/AttendeesDetails";
@@ -42,15 +39,12 @@ export const CompetitionPage: FC = () => {
   const { compId } = useParams();
   const [sortOption, setSortOption] = useState<string | null>(null);
   const [sortOptions, setSortOptions] = useState<Array<SortOption>>([]);
-
   const [filters, setFilters] = useState<Record<string, Array<string>>>({});
   const [filterOptions, setFilterOptions] = useState<
     Record<string, Array<string>>
   >({});
   const [searchTerm, setSearchTerm] = useState("");
-
   const [roles, setRoles] = useState<Array<CompetitionRole>>([]);
-
   const [buttonConfiguration, setButtonConfiguration] =
     useState<ButtonConfiguration>({
       enableTeamButtons: false,
@@ -62,7 +56,6 @@ export const CompetitionPage: FC = () => {
 
   const [isEditingStatus, setIsEditingStatus] = useState<boolean>(false);
   const [approveTeamIds, setApproveTeamIds] = useState<Array<number>>([]);
-
   const [rejectedTeamIds, setRejectedTeamIds] = useState<Array<number>>([]);
   const [registeredTeamIds, setRegisteredTeamIds] = useState<Array<number>>([]);
   const [isEditingNameStatus, setIsEditingNameStatus] =
@@ -111,7 +104,9 @@ export const CompetitionPage: FC = () => {
         }>("/competition/details", { compId });
         const { competition } = response.data;
         setCompDetails(competition);
-      } catch (err: unknown) {}
+      } catch (error: unknown) {
+        console.log("Error fetching competition details: ", error);
+      }
     };
 
     const fetchCompetitionTeams = async () => {

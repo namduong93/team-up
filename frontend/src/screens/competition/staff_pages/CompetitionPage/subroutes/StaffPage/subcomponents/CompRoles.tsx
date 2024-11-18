@@ -14,10 +14,7 @@ export const StyledStandardContainerDiv = styled.div`
   box-sizing: border-box;
 `;
 
-export const StyledStaffRoleDisplay = styled.div<{
-  $role: CompetitionRole;
-  $isMulti?: boolean;
-}>`
+export const StyledStaffRoleDisplay = styled.div<{ $role: CompetitionRole, $isMulti?: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
@@ -135,7 +132,7 @@ const StyledAdditionalRolesContainer = styled.div<{ $numContents: number }>`
 
 interface StaffRolesProps extends React.HTMLAttributes<HTMLDivElement> {
   roles: CompetitionRole[];
-}
+};
 
 /**
  * A React functional component for displaying and interacting with competition roles.
@@ -149,17 +146,17 @@ interface StaffRolesProps extends React.HTMLAttributes<HTMLDivElement> {
  * functionality for multiple roles.
  */
 export const CompRoles: FC<StaffRolesProps> = ({
-  roles,
-  children,
-  ...props
+  roles
 }) => {
   const isMulti = roles.length > 1;
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
-    isMulti && setIsOpen((prevState) => !prevState);
-  };
+    if (isMulti) {
+      setIsOpen((prevState) => !prevState);
+    };
+  };  
 
   const numContents = roles.length - 1;
 

@@ -28,6 +28,7 @@ export const Login: FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // If the user logs in successfully, redirect them to their dashboard
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {

@@ -28,7 +28,7 @@ interface EditCompRegoPopUpProps {
   onSubmit: (regoFields: EditRego) => void;
   editCourses: EditCourse;
   setCourses: (category: CourseCategory, value: string) => void;
-}
+};
 
 /**
  * `EditCompRegoPopUp is a React web page component that displays a pop up for editing and reviewing
@@ -36,7 +36,10 @@ interface EditCompRegoPopUpProps {
  * registration questions, as well as text inputs to change the courses assigned to the University course categories
  * appearing on the registration form
  *
- * @returns JSX.Element - A styled container presenting toggles to remove competition registration fields and text boxes to
+ * @param {EditCompRegoPopUpProps} - The heading of the pop-up, the required registration form fields to display, 
+ * and the course codes the user can edit, it also allows the handling of closing the pop-up, updating the 
+ * registration form fields, performing an action when submitting, and updating the course codes.
+ * @returns {JSX.Element} - A styled container presenting toggles to remove competition registration fields and text boxes to
  * alter course codes.
  */
 export const EditCompRegoPopUp: React.FC<EditCompRegoPopUpProps> = ({

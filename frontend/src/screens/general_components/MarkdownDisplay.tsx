@@ -5,7 +5,7 @@ import rehypeRaw from "rehype-raw";
 
 interface MarkdownDisplayProps {
   content: string;
-}
+};
 
 const StyledMarkdown = styled(ReactMarkdown)`
   font-size: 1rem;

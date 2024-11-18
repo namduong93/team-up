@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { FC, useEffect, useRef, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { RxReset } from "react-icons/rx";
@@ -53,7 +54,7 @@ interface StudentsInfoProps extends InfoBarProps {
     Array<StudentInfo>,
     React.Dispatch<React.SetStateAction<Array<StudentInfo>>>
   ];
-}
+};
 
 /**
  * A React component for displaying and editing student information within an info bar.
@@ -70,7 +71,6 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = ({
   studentInfo,
   studentsState: [students, setStudents],
   isOpenState: [isOpen, setIsOpen],
-  children,
   ...props
 }) => {
   const { compId } = useParams();
@@ -98,12 +98,12 @@ export const StudentsInfoBar: FC<StudentsInfoProps> = ({
   // Triggered when the Editing state changes, it auto scrolls the info bar when the user
   // starts editing
   useEffect(() => {
-    cardRef.current &&
-      isEditing &&
+    if (cardRef.current && isEditing) {
       (cardRef.current as HTMLElement).scrollIntoView({
         behavior: "smooth",
         block: "end",
       });
+    };
   }, [isEditing, isEdited]);
 
   const handleSaveEdit = async () => {

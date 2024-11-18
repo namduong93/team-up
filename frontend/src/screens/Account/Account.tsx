@@ -1,18 +1,3 @@
-interface User {
-  role: "student" | "staff";
-  profilePic: string;
-  name: string;
-  preferredName: string;
-  email: string;
-  affiliation: string;
-  gender: "Male" | "Female" | "Other";
-  pronouns: "She/Her" | "He/Him" | "They/Them" | "Other";
-  tshirtSize: string;
-  allergies: string;
-  dietaryReqs: string;
-  accessibilityReqs: string;
-}
-
 import React, { FC, useEffect, useState } from "react";
 import { DashInfo } from "../dashboard/hooks/useDashInfo";
 import { useNavigate } from "react-router-dom";
@@ -40,18 +25,33 @@ import {
   StyledSelect,
 } from "./Account.styles";
 
+interface User {
+  role: "student" | "staff";
+  profilePic: string;
+  name: string;
+  preferredName: string;
+  email: string;
+  affiliation: string;
+  gender: "Male" | "Female" | "Other";
+  pronouns: "She/Her" | "He/Him" | "They/Them" | "Other";
+  tshirtSize: string;
+  allergies: string;
+  dietaryReqs: string;
+  accessibilityReqs: string;
+};
+
 interface AccountProps {
   setDashInfo: React.Dispatch<React.SetStateAction<DashInfo>>;
-}
+};
 
 /**
  * A React component to view and edit the current users' account information.
- *
- * @param {AccountProps} props - React AccountProps specified above
- * @returns {JSX.Element} - Web page that requests from the backend the users information which
+*
+* @param {AccountProps} props - React AccountProps specified above
+* @returns {JSX.Element} - Web page that requests from the backend the users information which
  * it then displays and allows users to edit before saving and sending the edit request to the
  * backend to save it
- */
+*/
 export const Account: FC<AccountProps> = ({ setDashInfo }) => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
