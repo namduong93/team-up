@@ -22,14 +22,6 @@ There are a few notes that one should take notice of:
 - Backend and Frontend can be run separately without starting the other. However, the database must always be started before running the others.
 - Reset the database (running the first string of code above again) to reset the data.
 
-
-# Tests
-Since we are using a test database, we need to run Docker first, then run the tests. However, some tests do not delete data they created and logged into the database. Therefore, if there is any issue, Docker should be restarted because data is cleaned when the database schema is built. The general procedure is to first run the backend server and database as previously instructed. Then we run tests.
-
-```bash
-npm test
-```
-
 # Chrome Extension - Auto Coach
 This section details how to build and use the Chrome Extension to auto-fill participant details into the ICPC Global system.
 
