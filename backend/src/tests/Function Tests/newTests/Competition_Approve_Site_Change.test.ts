@@ -18,11 +18,11 @@ import { UserIdObject } from '../../../repository/UserRepository';
 import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Request Site Change Function', () => {
-  let user_db;
-  let comp_db;
-  let uni_db;
-  let comp_staff_db;
-  let comp_student_db;
+  let user_db: SqlDbUserRepository;
+  let comp_db: SqlDbCompetitionRepository;
+  let uni_db: SqlDbUniversityRepository;
+  let comp_staff_db: SqlDbCompetitionStaffRepository;
+  let comp_student_db: SqlDbCompetitionStudentRepository;
 
   let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
