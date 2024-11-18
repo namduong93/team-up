@@ -45,15 +45,15 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
               name,
               category
             )
-            VALUES (${compId}, ${universityId},
-              '${courseName}', '${courseCategory}'
+            VALUES ($1, $2,
+              $3, $4
             )
             ON CONFLICT (competition_id, university_id, category)
             DO UPDATE
             SET
-              name = '${courseName}'
+              name = $3
             `
-        );
+        , [compId, universityId, courseName, courseCategory]);
       } catch (error: unknown) {
         throw new DbError(DbError.Insert, 'Error inserting / updating course');
       }
@@ -92,12 +92,12 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       FROM competitions AS c
       JOIN competition_sites AS cs ON cs.competition_id = c.id
       JOIN universities AS uni ON uni.id = cs.university_id
-      WHERE c.id = ${compId}
+      WHERE c.id = $1
       GROUP BY c.information, c.name,
         c.region, c.start_date, c.early_reg_deadline,
         c.general_reg_deadline, c.code
       `
-    );
+    , [compId]);
 
 
     return dbResult.rows[0];
@@ -114,9 +114,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const dbResult = await this.pool.query(
       `SELECT site_id
       FROM competition_users AS cu
-      WHERE cu.user_id = ${userId}
+      WHERE cu.user_id = $1
       `
-    );
+    , [userId]);
 
     if (!dbResult.rowCount) {
       throw new DbError(DbError.Auth, 'Site Coordinator is not coordinating this site');
@@ -138,10 +138,10 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       await this.pool.query(
         `UPDATE competition_sites
         SET
-          capacity = ${capacity}
-        WHERE id = ${siteId}
+          capacity = $1
+        WHERE id = $2
         `
-      );
+      , [capacity, siteId]);
     } catch (error: unknown) {
       throw new DbError(DbError.Query, 'Error with database Update competition site');
     }
@@ -161,8 +161,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const uniId = universityId || (await this.pool.query(
       `SELECT u.university_id AS "universityId"
       FROM users AS u
-      WHERE u.id = ${userId}
-      `)).rows[0].universityId;
+      WHERE u.id = $1
+      `
+    , [userId])).rows[0].universityId;
 
     await this.pool.query(
       `INSERT INTO competition_registration_toggles (
@@ -173,19 +174,26 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
           enable_international_prizes_field,
           enable_regional_participation_field
         )
-        VALUES (${compId}, ${uniId},
-          ${regoFields.enableCodeforcesField}, ${regoFields.enableNationalPrizesField},
-          ${regoFields.enableInternationalPrizesField}, ${regoFields.enableRegionalParticipationField}
+        VALUES ($1, $2,
+          $3, $4,
+          $5, $6
         )
         ON CONFLICT (competition_id, university_id)
         DO UPDATE
         SET
-          enable_codeforces_field = ${regoFields.enableCodeforcesField},
-          enable_national_prizes_field = ${regoFields.enableNationalPrizesField},
-          enable_international_prizes_field = ${regoFields.enableInternationalPrizesField},
-          enable_regional_participation_field = ${regoFields.enableRegionalParticipationField}
+          enable_codeforces_field = $3,
+          enable_national_prizes_field = $4,
+          enable_international_prizes_field = $5,
+          enable_regional_participation_field = $6
         `
-    );
+    , [
+        compId,
+        uniId,
+        regoFields.enableCodeforcesField,
+        regoFields.enableNationalPrizesField,
+        regoFields.enableInternationalPrizesField,
+        regoFields.enableRegionalParticipationField
+      ]);
     return;
   };
 
@@ -209,9 +217,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         FROM competition_registration_toggles AS crt
         JOIN competition_users AS cu ON cu.competition_id = crt.competition_id
         JOIN users AS u ON u.id = cu.user_id
-        WHERE u.id = ${userId} AND u.university_id = crt.university_id AND crt.competition_id = ${compId};
+        WHERE u.id = $1 AND u.university_id = crt.university_id AND crt.competition_id = $2;
         `
-      );
+      , [userId, compId]);
 
       return dbResult.rows[0];
     }
@@ -224,9 +232,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         enable_international_prizes_field AS "enableInternationalPrizesField",
         enable_regional_participation_field AS "enableRegionalParticipationField"
       FROM competition_registration_toggles AS crt
-      WHERE crt.university_id = ${universityId} AND crt.competition_id = ${compId};
+      WHERE crt.university_id = $1 AND crt.competition_id = $2;
       `
-    );
+    , [universityId, compId]);
     return dbResult.rows[0];
   };
 
@@ -242,9 +250,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const dbResult = await this.pool.query(
       `SELECT cu.competition_id AS "competitionId"
       FROM competition_users AS cu
-      WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId}
+      WHERE cu.user_id = $1 AND cu.competition_id = $2
       `
-    );
+    , [userId, compId]);
 
     if (!dbResult.rowCount) {
       throw new DbError(DbError.Auth, 'User is not a coach for this competition');
@@ -270,9 +278,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       const oldInfoResult = await this.pool.query(
         `SELECT access_level
         FROM competition_users
-        WHERE user_id = ${staff.userId} AND competition_id = ${compId};
+        WHERE user_id = $1 AND competition_id = $2;
       `
-      );
+      , [staff.userId, compId]);
 
       if (oldInfoResult.rows.length > 0) {
         const oldAccessLevel = oldInfoResult.rows[0].access_level;
@@ -286,12 +294,12 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         await this.pool.query(
           `UPDATE competition_users
           SET
-            bio = '${staff.bio}',
-            competition_roles = '{${staff.roles}}',
-            access_level = '${staff.access}'
-            WHERE user_id = ${staff.userId} AND competition_id = ${compId};
+            bio = $1,
+            competition_roles = $2,
+            access_level = $3
+            WHERE user_id = $4 AND competition_id = $5;
           `
-        );
+        , [staff.bio, staff.roles, staff.access, staff.userId, compId]);
       } catch (error: unknown) {
         throw new DbError(DbError.Insert, 'Failed to update a user in the db');
       }
@@ -315,21 +323,36 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
         await this.pool.query(
           `UPDATE competition_users
           SET
-            bio = '${student.bio}',
-            icpc_eligible = ${student.ICPCEligible},
-            boersen_eligible = ${student.boersenEligible},
-            competition_level = '${student.level}',
-            degree_year = ${student.degreeYear},
-            degree = '${student.degree}',
-            is_remote = ${student.isRemote},
-            is_official = ${student.isOfficial},
-            preferred_contact = '${student.preferredContact}',
-            national_prizes = '${student.nationalPrizes}',
-            international_prizes = '${student.internationalPrizes}',
-            codeforces_rating = ${student.codeforcesRating}
-          WHERE user_id = ${student.userId} AND competition_id = ${compId};
+            bio = $1,
+            icpc_eligible = $2,
+            boersen_eligible = $3,
+            competition_level = $4,
+            degree_year = $5,
+            degree = $6,
+            is_remote = $7,
+            is_official = $8,
+            preferred_contact = $9,
+            national_prizes = $10,
+            international_prizes = $11,
+            codeforces_rating = $12
+          WHERE user_id = $13 AND competition_id = $14;
           `
-        );
+        , [
+            student.bio,
+            student.ICPCEligible,
+            student.boersenEligible,
+            student.level,
+            student.degreeYear,
+            student.degree,
+            student.isRemote,
+            student.isOfficial,
+            student.preferredContact,
+            student.nationalPrizes,
+            student.internationalPrizes,
+            student.codeforcesRating,
+            student.userId,
+            compId
+          ]);
 
       } catch (error: unknown) {
         throw new DbError(DbError.Insert, 'Failed to update a user in the db');
@@ -353,9 +376,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       `SELECT cu.user_id AS "userId"
       FROM competition_users AS cu_coach
       JOIN competition_users AS cu ON cu.competition_coach_id = cu_coach.id
-      WHERE cu_coach.user_id = ${userId} AND cu_coach.competition_id = ${compId}
+      WHERE cu_coach.user_id = $1 AND cu_coach.competition_id = $2
       `
-    );
+    , [userId, compId]);
 
     const resultIds = dbResult.rows.map((row) => row.userId);
 
@@ -417,18 +440,30 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
           await this.pool.query(
             `UPDATE competition_users
             SET
-              bio = '${participant.bio}',
-              icpc_eligible = ${participant.ICPCEligible},
-              boersen_eligible = ${participant.boersenEligible},
-              competition_level = '${participant.level}',
-              is_remote = ${participant.isRemote},
-              national_prizes = '${participant.nationalPrizes}',
-              international_prizes = '${participant.internationalPrizes}',
-              codeforces_rating = ${participant.codeforcesRating},
-              past_regional = ${participant.pastRegional}
-            WHERE user_id = ${participant.userId} AND competition_id = ${compId};
+              bio = $1,
+              icpc_eligible = $2,
+              boersen_eligible = $3,
+              competition_level = $4,
+              is_remote = $5,
+              national_prizes = $6,
+              international_prizes = $7,
+              codeforces_rating = $8,
+              past_regional = $9
+            WHERE user_id = $10 AND competition_id = $11;
             `
-          );
+          , [
+              participant.bio,
+              participant.ICPCEligible,
+              participant.boersenEligible,
+              participant.level,
+              participant.isRemote,
+              participant.nationalPrizes,
+              participant.internationalPrizes,
+              participant.codeforcesRating,
+              participant.pastRegional,
+              participant.userId,
+              compId
+            ]);
           participantIds.push(participant.userId);
 
         } catch (error: unknown) {
@@ -439,13 +474,13 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       await this.pool.query(
         `UPDATE competition_teams
         SET
-          name = '${team.teamName}',
-          team_seat = '${team.teamSeat}',
-          site_attending_id = ${team.siteId},
-          participants = '{${participantIds}}'
-        WHERE id = ${team.teamId}
+          name = $1,
+          team_seat = $2,
+          site_attending_id = $3,
+          participants = $4
+        WHERE id = $5
         `
-      );
+      , [team.teamName, team.teamSeat, team.siteId, participantIds, team.teamId]);
     }
 
     return;
@@ -536,8 +571,8 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       const dbResult = await this.pool.query(
-        `SELECT * FROM competition_staff(${compId})`
-      );
+        `SELECT * FROM competition_staff($1)`
+      , [compId]);
 
       return dbResult.rows;
     }
@@ -561,15 +596,15 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
     const roles = await this.competitionRepository.competitionRoles(userId, compId);
     if (roles.includes(CompetitionUserRole.ADMIN)) {
       const dbResult = await this.pool.query(
-        `SELECT * FROM competition_admin_students(${compId})`
-      );
+        `SELECT * FROM competition_admin_students($1)`
+      , [compId]);
       return dbResult.rows;
     }
 
     if (roles.includes(CompetitionUserRole.COACH)) {
       const dbResult = await this.pool.query(
-        `SELECT * FROM competition_coach_students(${userId}, ${compId})`
-      );
+        `SELECT * FROM competition_coach_students($1, $2)`
+      , [userId, compId]);
       return dbResult.rows;
     }
 
@@ -600,9 +635,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
           src_site_attending_id AS "siteId", "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
-        WHERE ctd.src_competition_id = ${compId};
+        WHERE ctd.src_competition_id = $1;
         `
-      );
+      , [compId]);
       return dbResult.rows;
     }
 
@@ -612,9 +647,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
           src_site_attending_id AS "siteId", "teamId", "universityId", "status", "teamNameApproved", "compName", "teamName", "teamSite", "teamSeat",
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
-        WHERE ctd.coach_user_id = ${userId} AND ctd.src_competition_id = ${compId};
+        WHERE ctd.coach_user_id = $1 AND ctd.src_competition_id = $2;
         `
-      );
+      , [userId, compId]);
 
       return dbResult.rows;
     }
@@ -626,9 +661,9 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
           "teamLevel", "startDate", students, coach
         FROM competition_team_details AS ctd
         JOIN competition_users AS csu ON csu.site_id = ctd.src_site_attending_id
-        WHERE csu.user_id = ${userId} AND ctd.src_competition_id = ${compId};
+        WHERE csu.user_id = $1 AND ctd.src_competition_id = $2;
         `
-      );
+      , [userId, compId]);
 
       return dbResult.rows;
     }
@@ -682,16 +717,16 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
 
     await this.pool.query(
       `INSERT INTO competition_users (user_id, competition_id, competition_roles, access_level)
-      VALUES (${userId}, ${competitionId}, ARRAY['Admin']::competition_role_enum[], 'Accepted'::competition_access_enum)`
-    );
+      VALUES ($1, $2, ARRAY['Admin']::competition_role_enum[], 'Accepted'::competition_access_enum)`
+    , [userId, competitionId]);
 
 
     // for the normal siteLocations that have university Ids:
     competition.siteLocations.forEach(async ({ universityId, defaultSite: name }) => {
       await this.pool.query(
         `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
-        VALUES (${competitionId}, ${universityId}, '${name}', 0)`
-      );
+        VALUES ($1, $2, $3, 0)`
+      , [competitionId, universityId, name]);
     });
 
     // handle otherSiteLocations with universityName
@@ -770,13 +805,12 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
       try {
         await this.pool.query(
           `INSERT INTO competition_sites (competition_id, university_id, name, capacity)
-          VALUES (${competition.id}, ${universityId}, '${name}', 0)
+          VALUES ($1, $2, $3, 0)
           ON CONFLICT (competition_id, university_id)
             DO UPDATE
-            SET name = '${name}'
+            SET name = $3
           `
-
-        );
+        , [competition.id, universityId, name]);
       } catch (error: unknown) {
         
       }
@@ -868,18 +902,18 @@ export class SqlDbCompetitionStaffRepository implements CompetitionStaffReposito
    * @throws {DbError} If the staff does not exist
    */
   competitionStaffDetailsUpdate = async (userId: number, compId: number, staffInfo: StaffInfo): Promise<{}> => {
-    if(!staffInfo) {
+    if (!staffInfo) {
       return {};
     }
     const dbResult = await this.pool.query(
       `UPDATE competition_users
       SET
-        bio = '${staffInfo.bio}',
-        competition_roles = '{${staffInfo.roles}}',
-        access_level = '${staffInfo.access}'
-      WHERE user_id = ${staffInfo.userId} AND competition_id = ${compId};
+        bio = $1,
+        competition_roles = $2,
+        access_level = $3
+      WHERE user_id = $4 AND competition_id = $5;
       `
-    );
+    , [staffInfo.bio, staffInfo.roles, staffInfo.access, staffInfo.userId, compId]);
 
     if (dbResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'Staff does not exist or is not a part of this competition.');
