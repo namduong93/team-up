@@ -1,3 +1,4 @@
+import { DbError } from '../../../errors/DbError';
 import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
 import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
 import { University } from '../../../models/university/university';
@@ -142,5 +143,25 @@ describe('Staff Register Function', () => {
     const newTeamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
 
     expect(newTeamInfo.teamName).toStrictEqual('notBulbasaur');
+  });
+
+  test('Sucess case: name was successfully rejected', async () => {
+    const teamId = await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'Bulbasaur');
+
+    await comp_staff_db.competitionApproveTeamNameChange(id, comp.competitionId, [], [teamId]);
+
+    const newTeamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+
+    expect(newTeamInfo.teamName).toStrictEqual('notBulbasaur');
+  });
+
+  test('Fail cases: non-existing competition', async () => {
+    const teamId = await comp_staff_db.competitionRequestTeamNameChange(newStudent.userId, comp.competitionId, 'Bulbasaur');
+
+    // User not a admin or coach
+    await expect(comp_staff_db.competitionApproveTeamNameChange(999, comp.competitionId, [teamId], [])).rejects.toThrow(DbError);
+    
+    // Competition does not exist
+    await expect(comp_staff_db.competitionApproveTeamNameChange(id, 999, [teamId], [])).rejects.toThrow(DbError);
   });
 });
