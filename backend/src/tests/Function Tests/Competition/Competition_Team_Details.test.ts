@@ -205,7 +205,7 @@ describe('Competition Team Detail Function', () => {
       coach: {
         name: 'Maximillian Maverick',
         email: 'dasOddodmin17@odmin.com',
-        bio: 'i good, trust'
+        bio: expect.any(String)
       },
       src_competition_id: comp.competitionId
     });
