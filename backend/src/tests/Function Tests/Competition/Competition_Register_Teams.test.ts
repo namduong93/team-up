@@ -36,6 +36,6 @@ describe('Competition Register Teams', () => {
   });
 
   test('Success case', async () => {
-    await expect(comp_staff_db.competitionRegisterTeams(3, 4, [8, 9])).resolves.toEqual({});
+    await expect(comp_staff_db.competitionRegisterTeams(3, 4, [5, 6, 7])).resolves.toEqual({});
   });
 });
