@@ -1,4 +1,3 @@
-import { sendRequest } from '../test_util/requests';
 
 describe('POST /user/logint', () => {
   describe('successful cases', () => {

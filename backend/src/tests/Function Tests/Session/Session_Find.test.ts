@@ -1,10 +1,10 @@
-import { SqlDbSessionRepository } from "../../../repository/session/SqlDbSessionRepository";
+import { SqlDbSessionRepository } from '../../../repository/session/SqlDbSessionRepository';
 
-import pool, { dropTestDatabase } from "../Utils/dbUtils"
-import { UserIdObject } from "../../../repository/UserRepository";
-import { Student } from "../../../models/user/student/student";
-import { Session } from "../../../models/session/session";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
+import { UserIdObject } from '../../../repository/UserRepository';
+import { Student } from '../../../models/user/student/student';
+import { Session } from '../../../models/session/session';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
 
 describe('Session Find Function', () => {
   let session_db;
@@ -27,12 +27,12 @@ describe('Session Find Function', () => {
   beforeAll(async () => {
     session_db = new SqlDbSessionRepository(pool);
     user_db = new SqlDbUserRepository(pool);
-    student = await user_db.studentRegister(mockStudent)
+    student = await user_db.studentRegister(mockStudent);
     const newSession: Session = {
       sessionId: 'ezID',
       createdAt: timeStamp,
       userId: student.userId
-    }
+    };
     await session_db.create(newSession);
   });
 
@@ -45,6 +45,6 @@ describe('Session Find Function', () => {
       sessionId: 'ezID                                ',
       userId: student.userId,
       createdAt: expect.any(Date)
-    })
-  })
-})
+    });
+  });
+});

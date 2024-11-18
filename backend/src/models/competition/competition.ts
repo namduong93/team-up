@@ -1,5 +1,5 @@
-import { OtherSiteLocation, SiteLocation } from "../../../shared_types/Competition/CompetitionDetails";
-import { CompetitionUserRole } from "./competitionUser";
+import { OtherSiteLocation, SiteLocation } from '../../../shared_types/Competition/CompetitionDetails';
+import { CompetitionUserRole } from './competitionUser';
 
 /**
  * Represents a competition.

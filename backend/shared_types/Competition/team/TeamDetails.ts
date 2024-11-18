@@ -1,4 +1,4 @@
-import { TeamStatus } from "./TeamStatus";
+import { TeamStatus } from './TeamStatus';
 
 export interface Student {
   userId: number;

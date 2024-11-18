@@ -1,15 +1,15 @@
-import { UserRepository } from "../repository/UserRepository.js";
-import { SessionRepository, SessionTokenObject } from "../repository/SessionRepository.js";
-import { Session } from "../models/session/session.js";
+import { UserRepository } from '../repository/UserRepository.js';
+import { SessionRepository, SessionTokenObject } from '../repository/SessionRepository.js';
+import { Session } from '../models/session/session.js';
 import { v4 as uuidv4 } from 'uuid';
-import { UserProfileInfo } from "../models/user/user_profile_info.js";
-import createHttpError from "http-errors";
-import { Student, validateStudent } from "../models/user/student/student.js";
-import { Staff, validateStaff } from "../models/user/staff/staff.js";
-import { convertGenderToP, UserType, UserTypeObject } from "../models/user/user.js";
-import { UserDashInfo } from "../models/user/user_dash_info.js";
-import { LooseStaffInfo, StaffRequests } from "../../shared_types/Competition/staff/StaffInfo.js";
-import { ServiceError } from "../errors/ServiceError.js";
+import { UserProfileInfo } from '../models/user/user_profile_info.js';
+import createHttpError from 'http-errors';
+import { Student, validateStudent } from '../models/user/student/student.js';
+import { Staff, validateStaff } from '../models/user/staff/staff.js';
+import { convertGenderToP, UserType, UserTypeObject } from '../models/user/user.js';
+import { UserDashInfo } from '../models/user/user_dash_info.js';
+import { LooseStaffInfo, StaffRequests } from '../../shared_types/Competition/staff/StaffInfo.js';
+import { ServiceError } from '../errors/ServiceError.js';
 
 export class UserService {
   private userRepository: UserRepository;
@@ -44,7 +44,7 @@ export class UserService {
     };
     await this.sessionRepository.create(session);
     return { sessionId: session.sessionId };
-  }
+  };
 
   /**
    * Registers a new staff member and creates a session for them.
@@ -71,7 +71,7 @@ export class UserService {
     await this.sessionRepository.create(session);
 
     return { sessionId: session.sessionId };
-  }
+  };
 
   /**
    * Logs in a user with the provided email and password.
@@ -98,7 +98,7 @@ export class UserService {
     await this.sessionRepository.create(session);
 
     return { sessionId: session.sessionId };
-  }
+  };
 
   /**
    * Logs out the user by deleting the session associated with the provided session token.
@@ -109,7 +109,7 @@ export class UserService {
   userLogout = async (sessionToken: string): Promise<void> => {
     await this.sessionRepository.delete(sessionToken);
     return;
-  }
+  };
 
   /**
    * Retrieves the profile information of a user by their user ID.
@@ -120,7 +120,7 @@ export class UserService {
   userProfileInfo = async (userId: number): Promise<UserProfileInfo | undefined> => {
     const userProfileInfo = await this.userRepository.userProfileInfo(userId);
     return userProfileInfo;
-  }
+  };
 
   /**
    * Retrieves the dashboard information for a specific user.
@@ -131,7 +131,7 @@ export class UserService {
   userDashInfo = async (userId: number): Promise<UserDashInfo | undefined> => {
     const userDashInfo = await this.userRepository.userDashInfo(userId);
     return userDashInfo;
-  }
+  };
 
   /**
    * Updates the profile information of a user.
@@ -143,7 +143,7 @@ export class UserService {
   userUpdateProfile = async (userId: number, userProfile: UserProfileInfo): Promise<void> => {
     await this.userRepository.userUpdateProfile(userId, userProfile);
     return;
-  }
+  };
 
   /**
    * Updates the password for a user.
@@ -165,7 +165,7 @@ export class UserService {
 
     await this.userRepository.userUpdatePassword(userId, oldPassword, newPassword);
     return;
-  }
+  };
 
   /**
    * Retrieves the user type for a given user ID.
@@ -176,7 +176,7 @@ export class UserService {
   userType = async (userId: number): Promise<UserTypeObject | undefined> => {
     const userTypeObject = await this.userRepository.userType(userId);
     return userTypeObject;
-  }
+  };
 
   /**
    * retrieves all staff in user. (Requested staff are included)
@@ -191,7 +191,7 @@ export class UserService {
     }
     
     return this.userRepository.staffRequests();
-  }
+  };
 
   /**
    * Updates the access levels of multiple staff users in the database.
@@ -207,5 +207,5 @@ export class UserService {
     }
 
     await this.userRepository.staffRequestsUpdate(staffRequests);
-  }
+  };
 }

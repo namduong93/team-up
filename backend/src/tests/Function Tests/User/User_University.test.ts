@@ -1,7 +1,7 @@
-import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { Student } from '../../../models/user/student/student';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 
 describe('User University Function', () => {
@@ -31,9 +31,9 @@ describe('User University Function', () => {
   });
 
   test('Failed case: user does not exist', async () => {
-    await expect(user_db.userUniversity(user.userId + 1000)).rejects.toThrow("User not found")
-  })
+    await expect(user_db.userUniversity(user.userId + 1000)).rejects.toThrow('User not found');
+  });
   test('Sucess case: returns a number', async () => {
-    expect(await user_db.userUniversity(user.userId)).toStrictEqual({ id: 1, name: "University of Melbourne" });
-  })
-})
+    expect(await user_db.userUniversity(user.userId)).toStrictEqual({ id: 1, name: 'University of Melbourne' });
+  });
+});

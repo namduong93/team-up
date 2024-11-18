@@ -1,7 +1,7 @@
-import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { Student } from '../../../models/user/student/student';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 
 describe('User Profile Info Function', () => {
@@ -30,8 +30,8 @@ describe('User Profile Info Function', () => {
     await dropTestDatabase(pool);
   });
   test('Failed case: Unknown Id', async () => {
-    await expect(user_db.userProfileInfo(id + 1000)).rejects.toThrow("User not found")
-  })
+    await expect(user_db.userProfileInfo(id + 1000)).rejects.toThrow('User not found');
+  });
   test('Sucess case: Returns user info', async () => {
     expect(await user_db.userProfileInfo(id)).toStrictEqual({
       id: id,
@@ -43,8 +43,8 @@ describe('User Profile Info Function', () => {
       pronouns: 'He/Him',
       tshirtSize: 'L',
       allergies: null,
-      dietaryReqs: "{}",
+      dietaryReqs: '{}',
       accessibilityReqs: null
-    })
-  })
-})
+    });
+  });
+});

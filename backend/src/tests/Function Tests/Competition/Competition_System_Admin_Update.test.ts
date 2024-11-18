@@ -1,16 +1,16 @@
-import { CompetitionIdObject } from "../../../models/competition/competition";
-import { Staff } from "../../../models/user/staff/staff";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { CompetitionIdObject } from '../../../models/competition/competition';
+import { Staff } from '../../../models/user/staff/staff';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 // system admin update seems buggy
 describe.skip('System Admin Update Function', () => {
   let user_db;
   let comp_db;
 
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -25,7 +25,7 @@ describe.skip('System Admin Update Function', () => {
     siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
     code: 'TC7',
     region: 'Australia'
-  }
+  };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
@@ -43,11 +43,11 @@ describe.skip('System Admin Update Function', () => {
 
   beforeAll(async () => {
     comp_db = new SqlDbCompetitionRepository(pool);
-    user_db = new SqlDbUserRepository(pool)
+    user_db = new SqlDbUserRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
     comp = await comp_db.competitionSystemAdminCreate(id, mockCompetition);
-    expect(comp).toStrictEqual({ competitionId: expect.any(Number) })
+    expect(comp).toStrictEqual({ competitionId: expect.any(Number) });
   });
 
   afterAll(async () => {
@@ -66,10 +66,10 @@ describe.skip('System Admin Update Function', () => {
       siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
       code: 'TC7',
       region: 'Australia'
-    }
+    };
 
-    await expect(comp_db.competitionSystemAdminUpdate(id + 1, UpdatedMockCompetition)).rejects.toThrow("User is not an admin for this competition.")
-  })
+    await expect(comp_db.competitionSystemAdminUpdate(id + 1, UpdatedMockCompetition)).rejects.toThrow('User is not an admin for this competition.');
+  });
 
   test('Failure case: competition does not exist', async () => {
     const UpdatedMockCompetition = {
@@ -83,10 +83,10 @@ describe.skip('System Admin Update Function', () => {
       siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
       code: 'TC7',
       region: 'Australia'
-    }
+    };
 
-    await expect(comp_db.competitionSystemAdminUpdate(1, UpdatedMockCompetition)).rejects.toThrow("Competition does not exist.")
-  })
+    await expect(comp_db.competitionSystemAdminUpdate(1, UpdatedMockCompetition)).rejects.toThrow('Competition does not exist.');
+  });
 
   test('Success case: Competition is updated ', async () => {
     const UpdatedMockCompetition = {
@@ -100,12 +100,12 @@ describe.skip('System Admin Update Function', () => {
       siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
       code: 'TC7',
       region: 'Australia'
-    }
+    };
 
     const result = await comp_db.competitionSystemAdminUpdate(id, UpdatedMockCompetition);
 
     await expect(result).toStrictEqual({});
     console.log(await comp_db.competitionGetDetails(comp.competitionId));
-  })
+  });
 
-})
+});

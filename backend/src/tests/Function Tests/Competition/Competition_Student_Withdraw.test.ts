@@ -1,14 +1,14 @@
-import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
-import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
-import { University } from "../../../models/university/university";
-import { Staff } from "../../../models/user/staff/staff";
-import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
-import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { CompetitionIdObject, CompetitionSiteObject } from '../../../models/competition/competition';
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
+import { University } from '../../../models/university/university';
+import { Staff } from '../../../models/user/staff/staff';
+import { Student } from '../../../models/user/student/student';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
+import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Student Withdraw Function', () => {
   let user_db;
@@ -16,7 +16,7 @@ describe('Student Withdraw Function', () => {
   let comp_staff_db;
   let comp_student_db;
 
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -35,7 +35,7 @@ describe('Student Withdraw Function', () => {
     }],
     code: 'TC12',
     region: 'Australia'
-  }
+  };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
@@ -56,7 +56,7 @@ describe('Student Withdraw Function', () => {
     comp_db = new SqlDbCompetitionRepository(pool);
     comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
     comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
-    user_db = new SqlDbUserRepository(pool)
+    user_db = new SqlDbUserRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
     comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
@@ -64,7 +64,7 @@ describe('Student Withdraw Function', () => {
     const userSiteLocation: CompetitionSiteObject = {
       id: 1,
       name: 'the place in the ring',
-    }
+    };
     const newCoach: CompetitionStaff = {
       userId: id,
       competitionRoles: [CompetitionUserRole.COACH],
@@ -75,13 +75,13 @@ describe('Student Withdraw Function', () => {
       },
       competitionBio: 'i good, trust',
       siteLocation: userSiteLocation
-    }
+    };
     const newCoordinator: CompetitionStaff = {
       userId: id,
       competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
       accessLevel: CompetitionAccessLevel.ACCEPTED,
       siteLocation: userSiteLocation
-    }
+    };
     await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach);
     await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator);
 
@@ -120,12 +120,12 @@ describe('Student Withdraw Function', () => {
       pastRegional: true,
       competitionBio: 'I good, promise',
       preferredContact: 'Pigeon Carrier',
-    }
+    };
     const studentUni: University = {
       id: 1,
       name: 'University of Melbourne'
-    }
-    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    };
+    await comp_student_db.competitionStudentJoin(newContender, studentUni);
   });
 
   afterAll(async () => {
@@ -133,22 +133,22 @@ describe('Student Withdraw Function', () => {
   });
 
   test('Failure case: competition does not exist', async () => {
-    await expect(comp_student_db.competitionStudentWithdraw(newStudent.userId, comp.competitionId + 10000)).rejects.toThrow("Competition does not exist.")
-  })
+    await expect(comp_student_db.competitionStudentWithdraw(newStudent.userId, comp.competitionId + 10000)).rejects.toThrow('Competition does not exist.');
+  });
 
   test('Failure case: participant is not competing in this competition', async () => {
-    await expect(comp_student_db.competitionStudentWithdraw(newStudent.userId + 10000, comp.competitionId)).rejects.toThrow("User is not a participant in any team in this competition.")
-  })
+    await expect(comp_student_db.competitionStudentWithdraw(newStudent.userId + 10000, comp.competitionId)).rejects.toThrow('User is not a participant in any team in this competition.');
+  });
 
   test('Sucess case: returns the users team details', async () => {
-    const teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId)
-    const teamCode = await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId)
+    const teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
+    const teamCode = await comp_student_db.competitionTeamInviteCode(newStudent.userId, comp.competitionId);
 
     expect(await comp_student_db.competitionStudentWithdraw(newStudent.userId, comp.competitionId)).toStrictEqual({
       competitionCode: teamCode,
       competitionName: 'TestComp',
       teamId: expect.any(Number),
       teamName: teamInfo.teamName
-    })
-  })
-})
+    });
+  });
+});

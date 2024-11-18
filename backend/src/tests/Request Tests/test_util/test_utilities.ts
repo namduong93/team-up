@@ -29,7 +29,7 @@ export const getUserIdFromSessionId = async(sessionId: string): Promise<number |
   }
 
   return userId;
-}
+};
 
 // Code to clean up the database (deleting all records in all tables)
 export const deleteAllRecords = async () => {

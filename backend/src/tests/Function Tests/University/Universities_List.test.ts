@@ -1,5 +1,5 @@
-import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { SqlDbUniversityRepository } from '../../../repository/university/SqlDbUniversityRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Universities List Function', () => {
   let user_db;
@@ -15,22 +15,22 @@ describe('Universities List Function', () => {
     expect(result).toStrictEqual({
       universities: [{
         id: 1,
-        name: "University of Melbourne",
+        name: 'University of Melbourne',
       },
       {
         id: 2,
-        name: "Monash University",
+        name: 'Monash University',
       }, {
         id: 3,
-        name: "RMIT University",
+        name: 'RMIT University',
       }, {
         id: 4,
-        name: "University of Sydney",
+        name: 'University of Sydney',
       }, {
-        "id": 5,
-        "name": "University of New South Wales",
+        'id': 5,
+        'name': 'University of New South Wales',
       }
       ]
     });
-  })
-})
+  });
+});

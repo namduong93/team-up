@@ -1,15 +1,15 @@
-import type {NextFunction, Request, Response} from "express";
-import { EXPIRED_TOKEN, INVALID_TOKEN, TOKEN_NOT_FOUND } from "../controllers/controller_util/httpErrorHandler.js";
-import { sessionExpirationTime } from "../models/session/session.js";
+import type {NextFunction, Request, Response} from 'express';
+import { EXPIRED_TOKEN, INVALID_TOKEN, TOKEN_NOT_FOUND } from '../controllers/controller_util/httpErrorHandler.js';
+import { sessionExpirationTime } from '../models/session/session.js';
 import { SessionRepository } from '../repository/SessionRepository.js';
 
 const ignoredRoutes = new Map();
-ignoredRoutes.set("/student/register", "POST");
-ignoredRoutes.set("/staff/register", "POST");
-ignoredRoutes.set("/user/login", "POST");
-ignoredRoutes.set("/universities/list", "GET");
-ignoredRoutes.set("/images/icpc_logo_landing.png", "GET");
-ignoredRoutes.set("/user/logout", "POST");
+ignoredRoutes.set('/student/register', 'POST');
+ignoredRoutes.set('/staff/register', 'POST');
+ignoredRoutes.set('/user/login', 'POST');
+ignoredRoutes.set('/universities/list', 'GET');
+ignoredRoutes.set('/images/icpc_logo_landing.png', 'GET');
+ignoredRoutes.set('/user/logout', 'POST');
 
 export class Authenticator {
   /**
@@ -69,6 +69,6 @@ export class Authenticator {
       } catch (err: any) {
         next(err);
       }
-    }
+    };
   }
 }

@@ -1,6 +1,6 @@
-import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { Student } from '../../../models/user/student/student';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 
 describe('Student Register Function', () => {
@@ -40,11 +40,11 @@ describe('Student Register Function', () => {
       pronouns: 'He/Him',
       tshirtSize: 'L',
       allergies: null,
-      dietaryReqs: "{}",
+      dietaryReqs: '{}',
       accessibilityReqs: null
-    })
-  })
+    });
+  });
   test('Failed case: Email Taken', async () => {
-    await expect(user_db.studentRegister(mockStudent)).rejects.toThrow("Student with this email already exists");
-  })
-})
+    await expect(user_db.studentRegister(mockStudent)).rejects.toThrow('Student with this email already exists');
+  });
+});

@@ -1,6 +1,6 @@
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 
 describe('User Update Profile Function', () => {
@@ -53,10 +53,10 @@ describe('User Update Profile Function', () => {
       pronouns: 'She/Him',
       tshirtSize: 'L',
       allergies: null,
-      dietaryReqs:"{}",
+      dietaryReqs:'{}',
       accessibilityReqs: null,
       id: id,
     };
-    expect(await user_db.userProfileInfo(id)).toStrictEqual(newTestUserInfo)
-  })
-})
+    expect(await user_db.userProfileInfo(id)).toStrictEqual(newTestUserInfo);
+  });
+});

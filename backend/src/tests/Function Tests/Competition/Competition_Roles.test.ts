@@ -1,11 +1,11 @@
-import { CompetitionIdObject } from "../../../models/competition/competition";
-import { Staff } from "../../../models/user/staff/staff";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
-import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { CompetitionIdObject } from '../../../models/competition/competition';
+import { Staff } from '../../../models/user/staff/staff';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
+import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Competition Roles Function', () => {
   let user_db;
@@ -13,7 +13,7 @@ describe('Competition Roles Function', () => {
   let comp_staff_db;
   let comp_student_db;
 
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -28,7 +28,7 @@ describe('Competition Roles Function', () => {
     siteLocations: [{ universityId: 1, name: 'TestRoom', capacity: 2000 }],
     code: 'TC5',
     region: 'Australia'
-  }
+  };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
@@ -48,7 +48,7 @@ describe('Competition Roles Function', () => {
     comp_db = new SqlDbCompetitionRepository(pool);
     comp_staff_db = new SqlDbCompetitionStaffRepository(pool, comp_db);
     comp_student_db = new SqlDbCompetitionStudentRepository(pool, comp_db);
-    user_db = new SqlDbUserRepository(pool)
+    user_db = new SqlDbUserRepository(pool);
     user = await user_db.staffRegister(SucessStaff);
     id = user.userId;
     comp = await comp_staff_db.competitionSystemAdminCreate(id, mockCompetition);
@@ -59,10 +59,10 @@ describe('Competition Roles Function', () => {
   });
 
   test('Failure case: returns an empty array', async () => {
-    expect(await comp_db.competitionRoles(id, comp.competitionId + 1)).toStrictEqual([])
-  })
+    expect(await comp_db.competitionRoles(id, comp.competitionId + 1)).toStrictEqual([]);
+  });
 
   test('Sucess case: returns the users team details', async () => {
-    expect(await comp_db.competitionRoles(id, comp.competitionId)).toStrictEqual(['Admin'])
-  })
-})
+    expect(await comp_db.competitionRoles(id, comp.competitionId)).toStrictEqual(['Admin']);
+  });
+});

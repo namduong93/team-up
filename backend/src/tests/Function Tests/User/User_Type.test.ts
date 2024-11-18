@@ -1,7 +1,7 @@
-import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { Student } from '../../../models/user/student/student';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 
 describe('User Type Function', () => {
@@ -33,5 +33,5 @@ describe('User Type Function', () => {
 
   test('Sucess case: returns user type', async () => {
     expect(await user_db.userType(id)).toStrictEqual({ type: 'student' });
-  })
-})
+  });
+});

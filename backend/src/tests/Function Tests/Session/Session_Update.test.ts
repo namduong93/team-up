@@ -1,10 +1,10 @@
-import { Session } from "../../../models/session/session";
-import { Student } from "../../../models/user/student/student";
-import { SqlDbSessionRepository } from "../../../repository/session/SqlDbSessionRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
+import { Session } from '../../../models/session/session';
+import { Student } from '../../../models/user/student/student';
+import { SqlDbSessionRepository } from '../../../repository/session/SqlDbSessionRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
 
-import pool, { dropTestDatabase } from "../Utils/dbUtils"
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 // session update has not been implemented
 describe.skip('Session Update Function', () => {
@@ -28,12 +28,12 @@ describe.skip('Session Update Function', () => {
   beforeAll(async () => {
     session_db = new SqlDbSessionRepository(pool);
     user_db = new SqlDbUserRepository(pool);
-    student = await user_db.studentRegister(mockStudent)
+    student = await user_db.studentRegister(mockStudent);
     const newSession: Session = {
       sessionId: 'ezID',
       createdAt: timeStamp,
       userId: student.userId
-    }
+    };
     await session_db.create(newSession);
   });
 
@@ -42,6 +42,6 @@ describe.skip('Session Update Function', () => {
   });
 
   test('husk', async () => {
-    expect(2 + 2).toStrictEqual(4)
-  })
-})
+    expect(2 + 2).toStrictEqual(4);
+  });
+});

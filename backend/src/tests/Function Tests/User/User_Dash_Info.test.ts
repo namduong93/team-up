@@ -1,6 +1,6 @@
-import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { Student } from '../../../models/user/student/student';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('User Dash Info Function', () => {
   let user_db;
@@ -27,6 +27,6 @@ describe('User Dash Info Function', () => {
 
   test('Sucess case: Returns user dash info', async () => {
     const userId = await user_db.studentRegister(mockUser);
-    expect(await user_db.userDashInfo(userId.userId)).toStrictEqual({ preferredName: 'X', affiliation: 'University of Melbourne' })
-  })
-})
+    expect(await user_db.userDashInfo(userId.userId)).toStrictEqual({ preferredName: 'X', affiliation: 'University of Melbourne' });
+  });
+});

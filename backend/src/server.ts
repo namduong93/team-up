@@ -93,7 +93,7 @@ const currentDir = path.dirname(fileURLToPath(import.meta.url));
 app.use('/images', express.static(path.join(currentDir, '../../public/images')));
 
 app.get('/', async (req: Request, res: Response) => {
-  res.json("Health check");
+  res.json('Health check');
 });
 
 /* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -169,12 +169,12 @@ app.post('/competition/system_admin/create', competitionStaffController.competit
 // PARAMS: { id: number, name?: string, teamSize?: number, earlyRegDeadline?: Date, generalRegDeadline?: Date,
 //          siteLocations?: Array<{ universityId: number, name: string, startDate?, region? }> }
 // RESPONSE: {}
-app.put('/competition/system_admin/update', competitionStaffController.competitionSystemAdminUpdate)
+app.put('/competition/system_admin/update', competitionStaffController.competitionSystemAdminUpdate);
 
 // Get a competition's details
 // PARAMS: { compId: number }
 // RESPONSE: { competition: CompetitionDetails}
-app.get('/competition/details', competitionController.competitionGetDetails)
+app.get('/competition/details', competitionController.competitionGetDetails);
 
 // Throw status codes for when getting the competition code fails
 // PARAMS: { code: string }
@@ -249,7 +249,7 @@ app.get('/competitions/list', competitionController.competitionsList);
 // Get the teams in a competition
 // PARAMS: { compId: number }
 // RESPONSE: { unknown }
-app.get('/competition/teams', competitionStaffController.competitionTeams)
+app.get('/competition/teams', competitionStaffController.competitionTeams);
 
 // Get the roles of the user in a competition
 // PARAMS: { compId: number }
@@ -409,8 +409,8 @@ app.put('/competition/staff/update_courses', competitionStaffController.competit
  */
 const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Listening on port ${PORT} ✨`);
-})
+});
 
 process.on('SIGINT', () => {
   server.close(() => console.log('server closing'));
-})
+});

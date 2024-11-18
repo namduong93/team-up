@@ -1,27 +1,27 @@
-import { SiteLocation } from "../../../../shared_types/Competition/CompetitionDetails";
-import { EditCourse } from "../../../../shared_types/Competition/staff/Edit";
-import { CourseCategory } from "../../../../shared_types/University/Course";
-import { CompetitionIdObject, CompetitionSiteObject } from "../../../models/competition/competition";
-import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from "../../../models/competition/competitionUser";
-import { University } from "../../../models/university/university";
-import { Staff } from "../../../models/user/staff/staff";
-import { Student } from "../../../models/user/student/student";
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import { SqlDbCompetitionStaffRepository } from "../../../repository/competition_staff/SqlDbCompetitionStaffRepository";
-import { SqlDbCompetitionStudentRepository } from "../../../repository/competition_student/SqlDbCompetitionStudentRepository";
-import { SqlDbUniversityRepository } from "../../../repository/university/SqlDbUniversityRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { SiteLocation } from '../../../../shared_types/Competition/CompetitionDetails';
+import { EditCourse } from '../../../../shared_types/Competition/staff/Edit';
+import { CourseCategory } from '../../../../shared_types/University/Course';
+import { CompetitionIdObject } from '../../../models/competition/competition';
+import { CompetitionAccessLevel, CompetitionStaff, CompetitionUser, CompetitionUserRole } from '../../../models/competition/competitionUser';
+import { University } from '../../../models/university/university';
+import { Staff } from '../../../models/user/staff/staff';
+import { Student } from '../../../models/user/student/student';
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import { SqlDbCompetitionStaffRepository } from '../../../repository/competition_staff/SqlDbCompetitionStaffRepository';
+import { SqlDbCompetitionStudentRepository } from '../../../repository/competition_student/SqlDbCompetitionStudentRepository';
+import { SqlDbUniversityRepository } from '../../../repository/university/SqlDbUniversityRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Site Capacity Update Function', () => {
   let user_db;
   let comp_db;
-  let uni_db
+  let uni_db;
   let comp_staff_db;
   let comp_student_db;
 
-  let dateNow = Date.now()
+  let dateNow = Date.now();
   let startDate = Date.now() + (420 * 1000 * 60 * 60 * 24);
   let earlyDate = Date.now() + (365 * 1000 * 60 * 60 * 24);
   let generalDate = Date.now() + (395 * 1000 * 60 * 60 * 24);
@@ -31,7 +31,7 @@ describe('Site Capacity Update Function', () => {
     universityName: 'University of Melbourne',
     siteId: 1,
     defaultSite: 'TestRoom',
-  }
+  };
 
   const mockCompetition = {
     name: 'TestComp',
@@ -43,7 +43,7 @@ describe('Site Capacity Update Function', () => {
     siteLocations: [userSiteLocation],
     code: 'NEW7',
     region: 'Australia'
-  }
+  };
 
   const SucessStaff: Staff = {
     name: 'Maximillian Maverick',
@@ -81,13 +81,13 @@ describe('Site Capacity Update Function', () => {
       },
       competitionBio: 'i good, trust',
       siteLocation: { id: 1, name: 'TestRoom' }
-    }
+    };
     const newCoordinator: CompetitionStaff = {
       userId: id,
       competitionRoles: [CompetitionUserRole.SITE_COORDINATOR],
       accessLevel: CompetitionAccessLevel.ACCEPTED,
       siteLocation: { id: 1, name: 'TestRoom', capacity: 5 }
-    }
+    };
     await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoach);
     await comp_staff_db.competitionStaffJoin(comp.competitionId, newCoordinator);
 
@@ -126,20 +126,20 @@ describe('Site Capacity Update Function', () => {
       pastRegional: true,
       competitionBio: 'I good, promise',
       preferredContact: 'Pigeon Carrier',
-    }
+    };
     const studentUni: University = {
       id: 1,
       name: 'University of Melbourne'
-    }
-    await comp_student_db.competitionStudentJoin(newContender, studentUni)
+    };
+    await comp_student_db.competitionStudentJoin(newContender, studentUni);
     teamInfo = await comp_student_db.competitionTeamDetails(newStudent.userId, comp.competitionId);
     const newCourses: EditCourse = {
       [CourseCategory.Introduction]: 'COMP1234',
       [CourseCategory.DataStructures]: 'COMP9999',
       [CourseCategory.AlgorithmDesign]: 'COMP7894',
       [CourseCategory.ProgrammingChallenges]: 'COMP9480',
-    }
-    await comp_staff_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1)
+    };
+    await comp_staff_db.competitionStaffUpdateCourses(comp.competitionId, newCourses, 1);
   });
 
 
@@ -148,8 +148,8 @@ describe('Site Capacity Update Function', () => {
   });
 
   test('Success case: successfully update the capacity of a given site', async () => {
-    const siteInfo = await comp_db.competitionSites(comp.competitionId)
+    const siteInfo = await comp_db.competitionSites(comp.competitionId);
     await comp_staff_db.competitionSiteCapacityUpdate(siteInfo[0].id, 200);
-    expect(await comp_db.competitionSiteCapacity(comp.competitionId, [siteInfo[0].id])).toStrictEqual([{ id: expect.any(Number), capacity: 200 }])
-  })
-})
+    expect(await comp_db.competitionSiteCapacity(comp.competitionId, [siteInfo[0].id])).toStrictEqual([{ id: expect.any(Number), capacity: 200 }]);
+  });
+});

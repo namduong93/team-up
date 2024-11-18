@@ -1,7 +1,7 @@
-import { Student } from "../../../models/user/student/student";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import { UserIdObject } from "../../../repository/UserRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { Student } from '../../../models/user/student/student';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 
 describe('User Update Password Function', () => {
@@ -31,17 +31,17 @@ describe('User Update Password Function', () => {
   });
 
   test('Failed case: user does not exist', async () => {
-    await expect(user_db.userUpdatePassword(user.userId + 1000, "ezpass", "newpass")).rejects.toThrow("User not found")
-  })
+    await expect(user_db.userUpdatePassword(user.userId + 1000, 'ezpass', 'newpass')).rejects.toThrow('User not found');
+  });
   test('Failed case: old password is wrong', async () => {
-    await expect(user_db.userUpdatePassword(user.userId, "wrongpass", "newpass")).rejects.toThrow("Current password is incorrect")
-  })
+    await expect(user_db.userUpdatePassword(user.userId, 'wrongpass', 'newpass')).rejects.toThrow('Current password is incorrect');
+  });
   test('Failed case: new password and old is too similar', async () => {
-    await expect(user_db.userUpdatePassword(user.userId, "ezpass", "ezpass")).rejects.toThrow("New password must be different from old password")
-  })
+    await expect(user_db.userUpdatePassword(user.userId, 'ezpass', 'ezpass')).rejects.toThrow('New password must be different from old password');
+  });
   test('Sucess case: returns a number', async () => {
-    await user_db.userUpdatePassword(user.userId, "ezpass", "newpass")
-    await expect(user_db.userLogin("userUserSacrifice1@OwO.com", "ezpass")).rejects.toThrow("Incorrect password")
-    expect(await user_db.userLogin("userUserSacrifice1@OwO.com", "newpass")).toEqual({ userId: user.userId });
-  })
-})
+    await user_db.userUpdatePassword(user.userId, 'ezpass', 'newpass');
+    await expect(user_db.userLogin('userUserSacrifice1@OwO.com', 'ezpass')).rejects.toThrow('Incorrect password');
+    expect(await user_db.userLogin('userUserSacrifice1@OwO.com', 'newpass')).toEqual({ userId: user.userId });
+  });
+});

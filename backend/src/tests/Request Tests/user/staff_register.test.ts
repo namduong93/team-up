@@ -1,5 +1,3 @@
-import { Staff } from '../../../models/user/staff/staff';
-import { sendRequest } from '../test_util/requests';
 
 describe('POST /staff/register', () => {
   describe('successful cases', () => {

@@ -1,10 +1,10 @@
-import { Session } from "../../../models/session/session";
-import { Student } from "../../../models/user/student/student";
-import { SqlDbSessionRepository } from "../../../repository/session/SqlDbSessionRepository";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository";
-import { UserIdObject } from "../../../repository/UserRepository";
+import { Session } from '../../../models/session/session';
+import { Student } from '../../../models/user/student/student';
+import { SqlDbSessionRepository } from '../../../repository/session/SqlDbSessionRepository';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import { UserIdObject } from '../../../repository/UserRepository';
 
-import pool, { dropTestDatabase } from "../Utils/dbUtils"
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 // need session create
 describe('Session Delete Function', () => {
@@ -28,12 +28,12 @@ describe('Session Delete Function', () => {
   beforeAll(async () => {
     session_db = new SqlDbSessionRepository(pool);
     user_db = new SqlDbUserRepository(pool);
-    student = await user_db.studentRegister(mockStudent)
+    student = await user_db.studentRegister(mockStudent);
     const newSession: Session = {
       sessionId: 'ezID',
       createdAt: timeStamp,
       userId: student.userId
-    }
+    };
     await session_db.create(newSession);
   });
 
@@ -42,10 +42,10 @@ describe('Session Delete Function', () => {
   });
 
   test('Failure case: token not identified', async () => {
-    expect(await session_db.delete('wrongId')).toStrictEqual(false)
-  })
+    expect(await session_db.delete('wrongId')).toStrictEqual(false);
+  });
 
   test('Success case: a new session is created', async () => {
-    expect(await session_db.delete('ezID')).toStrictEqual(true)
-  })
-})
+    expect(await session_db.delete('ezID')).toStrictEqual(true);
+  });
+});

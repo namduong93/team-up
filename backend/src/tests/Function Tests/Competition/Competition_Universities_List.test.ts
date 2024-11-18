@@ -1,5 +1,5 @@
-import { SqlDbCompetitionRepository } from "../../../repository/competition/SqlDbCompetitionRepository";
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { SqlDbCompetitionRepository } from '../../../repository/competition/SqlDbCompetitionRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 // have not been implemented*
 describe.skip('Staff Register Function', () => {
@@ -13,5 +13,5 @@ describe.skip('Staff Register Function', () => {
   });
   test.skip('Sucess case: returns the users team details', async () => {
     expect(2 + 2).toEqual(4);
-  })
-})
+  });
+});

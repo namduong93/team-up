@@ -1,7 +1,6 @@
-import { userInfo } from "os";
-import { Staff } from "../../../models/user/staff/staff";
-import { SqlDbUserRepository } from "../../../repository/user/SqlDbUserRepository"
-import pool, { dropTestDatabase } from "../Utils/dbUtils";
+import { Staff } from '../../../models/user/staff/staff';
+import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepository';
+import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
 describe('Staff Register Function', () => {
   let user_db;
@@ -38,11 +37,11 @@ describe('Staff Register Function', () => {
       pronouns: 'He/Him',
       tshirtSize: 'M',
       allergies: null,
-      dietaryReqs: "{}",
+      dietaryReqs: '{}',
       accessibilityReqs: null
-    })
-  })
+    });
+  });
   test('Failed case: Email Taken', async () => {
-    await expect(user_db.staffRegister(mockStaff)).rejects.toThrow("Staff with this email already exists")
-  })
-})
+    await expect(user_db.staffRegister(mockStaff)).rejects.toThrow('Staff with this email already exists');
+  });
+});

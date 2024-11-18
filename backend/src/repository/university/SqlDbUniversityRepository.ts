@@ -1,8 +1,8 @@
-import { Pool } from "pg";
-import { UniversityListObject } from "../../models/university/university.js";
-import { UniversityRepository } from "../UniversityRepository.js";
-import { Course } from "../../../shared_types/University/Course.js";
-import { DbError } from "../../errors/DbError.js";
+import { Pool } from 'pg';
+import { UniversityListObject } from '../../models/university/university.js';
+import { UniversityRepository } from '../UniversityRepository.js';
+import { Course } from '../../../shared_types/University/Course.js';
+import { DbError } from '../../errors/DbError.js';
 
 export class SqlDbUniversityRepository implements UniversityRepository {
   private readonly pool: Pool;
@@ -32,7 +32,7 @@ export class SqlDbUniversityRepository implements UniversityRepository {
     );
 
     return dbResult.rows;
-  }
+  };
 
   /**
    * Retrieves a list of universities from the database.
@@ -51,12 +51,12 @@ export class SqlDbUniversityRepository implements UniversityRepository {
     }
 
     const universitiesList: UniversityListObject = {
-      universities: universityResult.rows.map(row => ({
+      universities: universityResult.rows.map((row) => ({
         id: row.id,
         name: row.name,
       })),
     };
 
     return universitiesList;
-  }
+  };
 }

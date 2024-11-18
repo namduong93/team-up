@@ -1,4 +1,4 @@
-import { TeamDetails } from "./team/TeamDetails";
+import { TeamDetails } from './team/TeamDetails';
 
 export interface CompetitionSite {
   id: number;

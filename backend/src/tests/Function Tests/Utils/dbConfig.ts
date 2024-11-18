@@ -8,4 +8,4 @@ export const dbConfig = {
   DB_NAME: process.env.DB_NAME || 'capstone_db',
   DB_USER: process.env.DB_USER || 'postgres',
   DB_PASSWORD: process.env.DB_PASSWORD || 'ab'
-}
+};
