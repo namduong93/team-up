@@ -11,12 +11,12 @@ export const StyledStudentCard = styled.div<{ $isFirst?: boolean }>`
   border-radius: 12px;
   background-color: ${({ theme }) => theme.background};
   width: 100%;
-  margin: 10px 0;
+
   position: relative;
-  overflow-y: hidden;
-  overflow-x: auto;
-  height: fit-content;
+  overflow-y: auto;
   box-sizing: border-box;
+  min-height: 200px;
+  max-height: 500px;
 `;
 
 export const StyledContactEdit = styled.div`

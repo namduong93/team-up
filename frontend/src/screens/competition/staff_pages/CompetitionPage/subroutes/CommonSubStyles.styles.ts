@@ -4,13 +4,13 @@ import { FaSearch } from "react-icons/fa";
 
 export const StyledOverflowFlexBackground = styled(StyledFlexBackground)`
   font-family: ${({ theme }) => theme.fonts.fontFamily};
+  position: relative;
 `;
 
 export const StyledMainPageDiv = styled.div`
   flex: 0 1 auto;
   display: flex;
   width: 97%;
-  height: 100%;
   min-height: 600px;
   flex-direction: column;
 `;

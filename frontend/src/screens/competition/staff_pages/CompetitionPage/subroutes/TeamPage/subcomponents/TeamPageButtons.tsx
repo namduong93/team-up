@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useTheme } from "styled-components";
+import styled, { useTheme } from "styled-components";
 import {
   FaCheck,
   FaRegCheckCircle,
@@ -20,6 +20,19 @@ import { SiteDetails } from "../../../../../../../../shared_types/Competition/Co
 import { TransparentResponsiveButton } from "../../../../../../../components/responsive_fields/ResponsiveButton";
 import { ResponsiveActionButton } from "../../../../../../../components/responsive_fields/action_buttons/ResponsiveActionButton";
 import { DownloadButtons } from "../../../components/DownloadButtons";
+
+export const StyledButtonContainer = styled.div`
+  max-width: 150px;
+  width: 100%;
+  height: 35px;
+`;
+
+export const ResponsiveButtonContainer = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(49px, 1fr));
+  min-width: 100px;
+`;
 
 export interface PageButtonsProps {
   filtersState: [
@@ -483,9 +496,9 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
   };
 
   return (
-    <>
+    <ResponsiveButtonContainer>
       {!isEditingStatus && !isEditingNameStatus && !isDownloading && (
-        <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+        <StyledButtonContainer>
           <TransparentResponsiveButton
             actionType="confirm"
             onClick={enableEditTeamStatus}
@@ -496,12 +509,12 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
               backgroundColor: theme.colours.confirm,
             }}
           />
-        </div>
+        </StyledButtonContainer>
       )}
 
       {isEditingStatus && (
         <>
-          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+          <StyledButtonContainer>
             <TransparentResponsiveButton
               actionType="confirm"
               onClick={confirmTeams}
@@ -512,8 +525,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
                 backgroundColor: theme.colours.confirm,
               }}
             />
-          </div>
-          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+          </StyledButtonContainer>
+          <StyledButtonContainer>
             <TransparentResponsiveButton
               actionType="error"
               onClick={disableEditTeamStatus}
@@ -524,12 +537,12 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
                 backgroundColor: theme.colours.cancel,
               }}
             />
-          </div>
+          </StyledButtonContainer>
         </>
       )}
 
       {!isEditingStatus && !isEditingNameStatus && !isDownloading && (
-        <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+        <StyledButtonContainer>
           <TransparentResponsiveButton
             actionType="primary"
             onClick={enableEditNameStatus}
@@ -540,12 +553,12 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
               backgroundColor: theme.colours.primaryLight,
             }}
           />
-        </div>
+        </StyledButtonContainer>
       )}
 
       {isEditingNameStatus && (
         <>
-          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+          <StyledButtonContainer>
             <ResponsiveActionButton
               actionType="confirm"
               handleSubmit={approveAllNames}
@@ -556,8 +569,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
               }}
               question="Are you sure you want to approve all of these team names?"
             />
-          </div>
-          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+          </StyledButtonContainer>
+          <StyledButtonContainer>
             <TransparentResponsiveButton
               actionType="primary"
               onClick={confirmNames}
@@ -568,8 +581,8 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
                 backgroundColor: theme.colours.primaryLight,
               }}
             />
-          </div>
-          <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+          </StyledButtonContainer>
+          <StyledButtonContainer>
             <TransparentResponsiveButton
               actionType="error"
               onClick={disableEditNameStatus}
@@ -580,12 +593,12 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
                 backgroundColor: theme.colours.cancel,
               }}
             />
-          </div>
+          </StyledButtonContainer>
         </>
       )}
 
       {!isEditingStatus && !isEditingNameStatus && !isDownloading && (
-        <div style={{ maxWidth: "150px", width: "100%", height: "35px" }}>
+        <StyledButtonContainer>
           <ResponsiveActionButton
             actionType="primary"
             label="Run Algorithm"
@@ -593,7 +606,7 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
             question={`Run the Algorithm for ${universityOption.label} ?`}
             handleSubmit={handleAlgorithmButton}
           />
-        </div>
+        </StyledButtonContainer>
       )}
 
       <DownloadButtons
@@ -609,6 +622,6 @@ export const TeamPageButtons: FC<PageButtonsProps> = ({
         isSiteDownload={false}
         hasTeamsToDownload={checkHasTeamsToDownload()}
       />
-    </>
+    </ResponsiveButtonContainer>
   );
 };

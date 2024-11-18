@@ -103,7 +103,7 @@ export const InstitutionDataInput: FC = () => {
         studentId: formData.role === "Student" ? formData.studentId : undefined,
       });
 
-      navigate("/dashboard");
+      window.location.href = "/dashboard";
     } catch (error) {
       console.error("Error during registration:", error);
     }
