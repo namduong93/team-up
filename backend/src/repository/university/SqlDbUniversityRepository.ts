@@ -28,8 +28,8 @@ export class SqlDbUniversityRepository implements UniversityRepository {
       JOIN competitions AS comp ON comp.id = c.competition_id
       JOIN universities AS uni ON uni.id = c.university_id
       JOIN users AS u ON u.university_id = uni.id
-      WHERE u.id = ${userId} AND comp.code = '${code}';`
-    );
+      WHERE u.id = $1 AND comp.code = $2;`
+    , [userId, code]);
 
     return dbResult.rows;
   };

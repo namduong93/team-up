@@ -28,8 +28,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const dbResult = await this.pool.query(
       `SELECT university_id as "universityId"
       FROM users AS u
-      WHERE u.id = ${userId}`
-    );
+      WHERE u.id = $1`
+    , [userId]);
 
     return dbResult.rows[0].universityId;
   };
@@ -45,9 +45,9 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
     const dbResult = await this.pool.query(
       `SELECT cs.id AS "id", cs.name AS "name"
       FROM competition_sites AS cs
-      WHERE cs.competition_id = ${compId}
+      WHERE cs.competition_id = $1
       `
-    );
+    , [compId]);
 
     return dbResult.rows;
   };
@@ -63,8 +63,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionRoles = async (userId: number, compId: number): Promise<Array<CompetitionUserRole>> => {
     const dbResult = await this.pool.query(
       `SELECT cu.competition_roles AS roles
-      FROM competition_users AS cu WHERE cu.user_id = ${userId} AND cu.competition_id = ${compId} AND access_level = 'Accepted'::competition_access_enum`
-    );
+      FROM competition_users AS cu WHERE cu.user_id = $1 AND cu.competition_id = $2 AND access_level = 'Accepted'::competition_access_enum`
+    , [userId, compId]);
     if (dbResult.rows.length === 0) {
       return [];
     }
@@ -138,8 +138,8 @@ export class SqlDbCompetitionRepository implements CompetitionRepository {
   competitionsList = async(userId: number, userType: UserType): Promise<Array<CompetitionShortDetailsObject>> => {
     const comps = await this.pool.query(
       `SELECT id, name, created_date AS "createdDate", early_reg_deadline AS "earlyRegDeadline",
-        general_reg_deadline AS "generalRegDeadline" FROM competition_list(${userId})`
-    );
+        general_reg_deadline AS "generalRegDeadline" FROM competition_list($1)`
+    , [userId]);
     let competitions: Array<CompetitionShortDetailsObject> = [];
     for (let row of comps.rows) {
       let compId = row.id;
