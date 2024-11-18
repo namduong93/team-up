@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "cross-env jest --detectOpenHandles",
+    "coverage": "jest --coverage",
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
     "start": "node dist/src/server.js",
