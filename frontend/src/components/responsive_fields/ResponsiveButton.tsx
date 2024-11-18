@@ -61,7 +61,7 @@ export const ResponsiveButton: FC<ResponsiveButtonProps> = ({
       }}
       $isSortOpen={isOpen}
       {...props}
-    >
+      className="responsive-button--StyledSortButton-0" >
       <div
         style={{
           display: "flex",
@@ -144,6 +144,7 @@ export const TransparentResponsiveButton: FC<ResponsiveActionButtonProps> = ({
         ...style,
       }}
       $isSortOpen={isOpen}
+      className="responsive-button--StyledTransparentButton-0"
       {...props}
     >
       <div

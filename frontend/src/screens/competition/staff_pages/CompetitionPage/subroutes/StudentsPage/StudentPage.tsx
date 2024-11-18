@@ -8,10 +8,7 @@ import {
   StyledRemoveFilterIcon,
 } from "../../../../../dashboard/Dashboard.styles";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
-import {
-  StyledNarrowDisplayDiv,
-  StyledWideDisplayDiv,
-} from "./StudentsPage.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "./StudentPage.styles";
 import { StudentInfo } from "../../../../../../../shared_types/Competition/student/StudentInfo";
 import { StudentInfoCard } from "./subcomponents/StudentInfoCard";
 import { StudentInfoDiv } from "./subcomponents/StudentInfoDiv";
@@ -128,55 +125,45 @@ export const StudentPage: FC = () => {
     });
   }
 
-  return (
-    <>
-      <div>
-        {Object.entries(filters).map(([field, values]) =>
-          values.map((value) => (
-            <StyledFilterTagButton key={`${field}-${value}`}>
-              {value}
-              <StyledRemoveFilterIcon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFilter(field, value);
-                }}
-              />
-            </StyledFilterTagButton>
-          ))
-        )}
-      </div>
-      <StyledFlexBackground>
-        <StyledNarrowDisplayDiv>
-          {searchedStudents.map(
-            ({ item: studentInfo }: { item: StudentInfo }, index) => (
-              <StudentInfoCard
-                studentsState={[students, setStudents]}
-                key={`${studentInfo.email}${index}`}
-                studentInfo={studentInfo}
-              />
-            )
-          )}
-        </StyledNarrowDisplayDiv>
-
-        <StyledWideDisplayDiv>
-          <StudentInfoDiv
-            studentsState={[students, setStudents]}
-            style={{
-              backgroundColor: theme.colours.userInfoCardHeader,
-              fontWeight: "bold",
+  return <>
+  <div>
+      {Object.entries(filters).map(([field, values]) =>
+        values.map((value) => (
+        <StyledFilterTagButton
+          key={`${field}-${value}`}
+          className="student-page--StyledFilterTagButton-0">
+          {value}
+          <StyledRemoveFilterIcon
+            onClick={(e) => {
+            e.stopPropagation();
+            removeFilter(field, value);
             }}
-          ></StudentInfoDiv>
-          {searchedStudents.map(
-            ({ item: studentInfo }: { item: StudentInfo }, index) => (
-              <StudentInfoDiv
-                studentsState={[students, setStudents]}
-                key={`${studentInfo.email}${index + students.length}`}
-                studentInfo={studentInfo}
-              />
-            )
-          )}
-        </StyledWideDisplayDiv>
-      </StyledFlexBackground>
-    </>
-  );
-};
+            className="student-page--StyledRemoveFilterIcon-0" />
+        </StyledFilterTagButton>
+        ))
+      )}
+    </div>
+  <StyledFlexBackground className="student-page--StyledFlexBackground-0">
+    <StyledNarrowDisplayDiv className="student-page--StyledNarrowDisplayDiv-0">
+      {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
+        (<StudentInfoCard
+          studentsState={[students, setStudents]}
+          key={`${studentInfo.email}${index}`}
+          studentInfo={studentInfo}
+        />))}
+    </StyledNarrowDisplayDiv>
+    <StyledWideDisplayDiv className="student-page--StyledWideDisplayDiv-0">
+      <StudentInfoDiv studentsState={[students, setStudents]} style={{
+        backgroundColor: theme.colours.userInfoCardHeader,
+        fontWeight: 'bold'
+      }}></StudentInfoDiv>
+      {searchedStudents.map(({ item: studentInfo }: { item: StudentInfo }, index) => 
+        (<StudentInfoDiv
+          studentsState={[students, setStudents]}
+          key={`${studentInfo.email}${index + students.length}`}
+          studentInfo={studentInfo}
+        />))}
+    </StyledWideDisplayDiv>
+  </StyledFlexBackground>
+  </>;
+}

@@ -226,8 +226,8 @@ export const CompetitionPage: FC = () => {
   };
 
   return (
-    <StyledOverflowFlexBackground>
-      <StyledMainPageDiv>
+    <StyledOverflowFlexBackground className="competition-page--StyledOverflowFlexBackground-0">
+      <StyledMainPageDiv className="competition-page--StyledMainPageDiv-0">
         <PageHeader
           pageTitle={`${roles[0]} Page`}
           pageDescription="Manage teams and students for your competition"
@@ -272,7 +272,7 @@ export const CompetitionPage: FC = () => {
             />
           )}
         </PageHeader>
-        <StyledPageOptionsContainerDiv>
+        <StyledPageOptionsContainerDiv className="competition-page--StyledPageOptionsContainerDiv-0">
           <CustomToggleSwitch
             style={{ width: "100%", height: "100%" }}
             defaultBorderIndex={0}
@@ -284,8 +284,8 @@ export const CompetitionPage: FC = () => {
                 onClick={() => {
                   navigate(`/competition/page/teams/${compId}`);
                 }}
-              >
-                <StyledToggleOptionTextSpan>Teams</StyledToggleOptionTextSpan>
+                className="competition-page--StyledAdminToggleOptionDiv-0">
+                <StyledToggleOptionTextSpan className="competition-page--StyledToggleOptionTextSpan-0">Teams</StyledToggleOptionTextSpan>
               </StyledAdminToggleOptionDiv>
             )}
 
@@ -295,10 +295,8 @@ export const CompetitionPage: FC = () => {
                 onClick={() => {
                   navigate(`/competition/page/students/${compId}`);
                 }}
-              >
-                <StyledToggleOptionTextSpan>
-                  Students
-                </StyledToggleOptionTextSpan>
+                className="competition-page--StyledAdminToggleOptionDiv-1">
+                <StyledToggleOptionTextSpan className="competition-page--StyledToggleOptionTextSpan-1">Students</StyledToggleOptionTextSpan>
               </StyledAdminToggleOptionDiv>
             )}
 
@@ -307,8 +305,8 @@ export const CompetitionPage: FC = () => {
                 onClick={() => {
                   navigate(`/competition/page/staff/${compId}`);
                 }}
-              >
-                <StyledToggleOptionTextSpan>Staff</StyledToggleOptionTextSpan>
+                className="competition-page--StyledAdminToggleOptionDiv-2">
+                <StyledToggleOptionTextSpan className="competition-page--StyledToggleOptionTextSpan-2">Staff</StyledToggleOptionTextSpan>
               </StyledAdminToggleOptionDiv>
             )}
 
@@ -317,8 +315,8 @@ export const CompetitionPage: FC = () => {
                 onClick={() => {
                   navigate(`/competition/page/site/${compId}`);
                 }}
-              >
-                <StyledToggleOptionTextSpan>Site</StyledToggleOptionTextSpan>
+                className="competition-page--StyledAdminToggleOptionDiv-3">
+                <StyledToggleOptionTextSpan className="competition-page--StyledToggleOptionTextSpan-3">Site</StyledToggleOptionTextSpan>
               </StyledAdminToggleOptionDiv>
             )}
 
@@ -327,10 +325,8 @@ export const CompetitionPage: FC = () => {
                 onClick={() => {
                   navigate(`/competition/page/site/${compId}`);
                 }}
-              >
-                <StyledToggleOptionTextSpan>
-                  Attendees
-                </StyledToggleOptionTextSpan>
+                className="competition-page--StyledAdminToggleOptionDiv-4">
+                <StyledToggleOptionTextSpan className="competition-page--StyledToggleOptionTextSpan-4">Attendees</StyledToggleOptionTextSpan>
               </StyledAdminToggleOptionDiv>
             )}
 
@@ -341,13 +337,12 @@ export const CompetitionPage: FC = () => {
                 onClick={() => {
                   navigate(`/competition/page/manage/${compId}`);
                 }}
-              >
-                <StyledToggleOptionTextSpan>Manage</StyledToggleOptionTextSpan>
+                className="competition-page--StyledAdminToggleOptionDiv-5">
+                <StyledToggleOptionTextSpan className="competition-page--StyledToggleOptionTextSpan-5">Manage</StyledToggleOptionTextSpan>
               </StyledAdminToggleOptionDiv>
             )}
           </CustomToggleSwitch>
         </StyledPageOptionsContainerDiv>
-
         <Outlet
           context={{
             filters,

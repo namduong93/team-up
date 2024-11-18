@@ -102,8 +102,10 @@ export const InfoBar: FC<InfoBarProps> = ({
       $isOpen={isOpen}
       {...props}
       onClick={(e) => e.stopPropagation()}
-    >
-      <StyledInfoContainer>{children}</StyledInfoContainer>
+      className="info-bar--StyledInfoBarContainerDiv-0">
+      <StyledInfoContainer className="info-bar--StyledInfoContainer-0">
+        {children}
+      </StyledInfoContainer>
     </StyledInfoBarContainerDiv>
   );
-};
+}

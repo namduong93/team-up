@@ -40,8 +40,11 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
   onToggle,
 }) => {
   return (
-    <StyledToggleContainer $isOn={isOn} onClick={onToggle}>
-      <StyledToggleCircle $isOn={isOn} />
+    <StyledToggleContainer
+      $isOn={isOn}
+      onClick={onToggle}
+      className="toggle-button--StyledToggleContainer-0">
+      <StyledToggleCircle $isOn={isOn} className="toggle-button--StyledToggleCircle-0" />
     </StyledToggleContainer>
   );
 };

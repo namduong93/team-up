@@ -114,42 +114,40 @@ const DropdownOptions: FC<OptionsProps> = ({
   style,
   ...props
 }) => {
-  return (
-    display && (
-      <StyledDropdownOptionsDiv style={{ ...style }} {...props}>
-        {options.map(({ item: { value, label } }, index) => {
-          return (
-            <StyledOptionContainerDiv
-              type="button"
-              key={index}
-              $isLast={false}
-              onClick={(e) => handleSelectOption(e, value, label)}
-              onMouseDown={(e) => {
-                e.preventDefault();
-              }}
-            >
-              {label}
-            </StyledOptionContainerDiv>
-          );
-        })}
-
-        {searchTerm &&
-          isExtendable &&
-          !options.some(
-            ({ item: { value: _, label } }) => label === searchTerm
-          ) && (
-            <StyledOptionContainerDiv
-              $isLast={true}
-              onClick={handleCreate}
-              onMouseDown={(e) => {
-                e.preventDefault();
-              }}
-            >
-              Create "{searchTerm}"
-            </StyledOptionContainerDiv>
-          )}
-      </StyledDropdownOptionsDiv>
-    )
+  return display && (
+    <StyledDropdownOptionsDiv
+      style={{ ...style }}
+      {...props}
+      className="advanced-dropdown--StyledDropdownOptionsDiv-0">
+      {options.map(({ item: { value, label } }, index) => {
+        return (
+          <StyledOptionContainerDiv
+            type="button"
+            key={index}
+            $isLast={false}
+            onClick={(e) => handleSelectOption(e, value, label)}
+            onMouseDown={(e) => {
+              e.preventDefault();
+            }}
+            className="advanced-dropdown--StyledOptionContainerDiv-0">
+            {label}
+          </StyledOptionContainerDiv>
+        );
+      })}
+      {searchTerm &&
+        isExtendable &&
+        !options.some(
+          ({ item: { value: _, label } }) => label === searchTerm
+        ) && (
+          <StyledOptionContainerDiv
+            $isLast={true}
+            onClick={handleCreate}
+            onMouseDown={(e) => {
+              e.preventDefault();
+            }}
+            className="advanced-dropdown--StyledOptionContainerDiv-1">Create "{searchTerm}"</StyledOptionContainerDiv>
+        )}
+    </StyledDropdownOptionsDiv>
   );
 };
 
@@ -272,7 +270,10 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
     handleSelectOption(e, "", searchTerm);
   };
   return (
-    <StyledDropdownContainerDiv style={{ ...style }} {...props}>
+    <StyledDropdownContainerDiv
+      style={{ ...style }}
+      {...props}
+      className="advanced-dropdown--StyledDropdownContainerDiv-0">
       <StyledDropdownTextInput
         style={{ ...style }}
         type="text"
@@ -283,11 +284,10 @@ export const AdvancedDropdown: FC<DropdownProps> = ({
           setSearchTerm(e.target.value)
         }
         onKeyDown={handleKeyPress}
-      ></StyledDropdownTextInput>
-      <StyledDropdownIconDiv>
+        className="advanced-dropdown--StyledDropdownTextInput-0"></StyledDropdownTextInput>
+      <StyledDropdownIconDiv className="advanced-dropdown--StyledDropdownIconDiv-0">
         <IoIosArrowDown style={{ height: "50%", width: "50%" }} />
       </StyledDropdownIconDiv>
-
       <DropdownOptions
         onMouseDown={(e) => e.preventDefault()}
         isExtendable={isExtendable}

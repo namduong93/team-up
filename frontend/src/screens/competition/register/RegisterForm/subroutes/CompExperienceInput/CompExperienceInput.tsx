@@ -93,10 +93,9 @@ export const CompExperienceInput: FC = () => {
     };
 
     try {
-      const response = await sendRequest.post(
-        "/competition/student/join",
-        payload
-      );
+      console.log(payload);
+      
+      const response = await sendRequest.post('/competition/student/join', payload);
       console.log("Response:", response.data);
 
       navigate("/dashboard", {
@@ -137,6 +136,7 @@ export const CompExperienceInput: FC = () => {
         { code }
       );
       const { courses } = response.data;
+      console.log(courses);
 
       if (courses.length) {
         setCourseOptions(
@@ -206,12 +206,11 @@ export const CompExperienceInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      className="comp-experience-input--StyledFlexBackground-0">
       <CompRegistrationProgressBar progressNumber={2} />
-      <StyledContainer>
-        <StyledContentContainer>
-          <StyledTitle>Competitive Experience</StyledTitle>
-
+      <StyledContainer className="comp-experience-input--StyledContainer-0">
+        <StyledContentContainer className="comp-experience-input--StyledContentContainer-0">
+          <StyledTitle className="comp-experience-input--StyledTitle-0">Competitive Experience</StyledTitle>
           <MultiRadio
             options={courseOptions}
             selectedValues={formData.courses}
@@ -221,30 +220,27 @@ export const CompExperienceInput: FC = () => {
             label={
               <>
                 University Courses Completed
-                <StyledAsterisk>*</StyledAsterisk>
+                <StyledAsterisk className="comp-experience-input--StyledAsterisk-0">*</StyledAsterisk>
               </>
             }
             descriptor="Please select the courses you have completed"
             showOther={false}
           />
-
-          {editRego.enableCodeforcesField &&
-            formData.competitionLevel !== "Level B" && (
-              <TextInput
-                label="Codeforces Score"
-                placeholder="Please enter"
-                type="numeric"
-                required={false}
-                value={formData.codeforce?.toString() || ""}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setFormData({ ...formData, codeforce: Number(value) });
-                }}
-                width="100%"
-                descriptor="Please enter your current Codeforce score if applicable"
-              />
-            )}
-
+          {editRego.enableCodeforcesField && formData.competitionLevel !== "Level B" && (
+            <TextInput
+              label="Codeforces Score"
+              placeholder="Please enter"
+              type="numeric"
+              required={false}
+              value={formData.codeforce?.toString() || ""}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFormData({ ...formData, codeforce: Number(value) });
+              }}
+              width="100%"
+              descriptor="Please enter your current Codeforce score if applicable"
+            />
+          )}
           {editRego.enableRegionalParticipationField &&
             formData.degreeYear.toString() !== "1" &&
             formData.competitionLevel !== "Level B" && (
@@ -267,7 +263,6 @@ export const CompExperienceInput: FC = () => {
                 width="100%"
               />
             )}
-
           {editRego.enableNationalPrizesField &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
@@ -289,7 +284,6 @@ export const CompExperienceInput: FC = () => {
                 width="100%"
               />
             )}
-
           {hasNationalPrize && (
             <DescriptiveTextInput
               descriptor="Please enter any related National Olympiad prizes you may have (NOI, AIO, VNOI, etc) separated by commas"
@@ -302,7 +296,6 @@ export const CompExperienceInput: FC = () => {
               width="100%"
             />
           )}
-
           {editRego.enableInternationalPrizesField &&
             formData.competitionLevel !== "Level B" && (
               <RadioButton
@@ -324,7 +317,6 @@ export const CompExperienceInput: FC = () => {
                 width="100%"
               />
             )}
-
           {hasInternationalPrize && (
             <DescriptiveTextInput
               descriptor="Please enter any related International Olympiad prizes you may have (IOI, APIO, CEOI, etc) separated by commas"
@@ -340,7 +332,6 @@ export const CompExperienceInput: FC = () => {
               width="100%"
             />
           )}
-
           {formData.competitionLevel !== "Level B" && (
             <RadioButton
               label="Boersen Prize Eligibility"
@@ -369,15 +360,12 @@ export const CompExperienceInput: FC = () => {
               width="100%"
             />
           )}
-
-          <StyledButtonContainer>
-            <StyledButton onClick={handleBack}>Back</StyledButton>
+          <StyledButtonContainer className="comp-experience-input--StyledButtonContainer-0">
+            <StyledButton onClick={handleBack} className="comp-experience-input--StyledButton-0">Back</StyledButton>
             <StyledButton
               $disabled={isButtonDisabled()}
               onClick={handleRegister}
-            >
-              Register
-            </StyledButton>
+              className="comp-experience-input--StyledButton-1">Register</StyledButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

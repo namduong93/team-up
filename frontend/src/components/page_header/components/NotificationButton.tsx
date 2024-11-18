@@ -122,7 +122,7 @@ const getNotificationIcon = (type: Notification["type"]) => {
   }
 };
 
-interface Notification {
+export interface Notification {
   id: number;
   type:
     | "withdrawal"
@@ -263,42 +263,35 @@ export const NotificationButton: FC = () => {
   };
 
   return (
-    <StyledNotificationButtonContainer>
+    <StyledNotificationButtonContainer className="notification-button--StyledNotificationButtonContainer-0">
       <StyledAlertButton
-        onClick={() => setIsNotificationsVisible((prev) => !prev)}
-      >
+        onClick={() => setIsNotificationsVisible(prev => !prev)}
+        className="notification-button--StyledAlertButton-0">
         <FaBell size={15} />
       </StyledAlertButton>
-      {isNotificationsVisible && (
-        <StyledNotificationsContainer>
-          {notifications.map((notification) => (
-            <StyledNotificationItem
-              key={notification.id}
-              onClick={() => handleNavigate(notification)}
-            >
-              <StyledNotificationIcon>
-                {getNotificationIcon(notification.type)}
-              </StyledNotificationIcon>
-              <StyledNotificationMsg>
-                <div>{notification.message}</div>
-                {notification.type === "withdrawal" &&
-                  notification.decision && (
-                    <small>Decision: {notification.decision}</small>
-                  )}
-                <StyledNotificationDate>
-                  {formatDate(notification.createdAt)}
-                </StyledNotificationDate>
-              </StyledNotificationMsg>
-              <StyledCloseButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemoveNotification(notification.id);
-                }}
-              />
-            </StyledNotificationItem>
-          ))}
-        </StyledNotificationsContainer>
-      )}
+      {isNotificationsVisible && <StyledNotificationsContainer className="notification-button--StyledNotificationsContainer-0">
+        {notifications.map((notification) => (
+          <StyledNotificationItem
+            key={notification.id}
+            onClick={() => handleNavigate(notification)}
+            className="notification-button--StyledNotificationItem-0">
+            <StyledNotificationIcon className="notification-button--StyledNotificationIcon-0">{getNotificationIcon(notification.type)}</StyledNotificationIcon>
+            <StyledNotificationMsg className="notification-button--StyledNotificationMsg-0">
+              <div>{notification.message}</div>
+              {notification.type === 'withdrawal' && notification.decision && (
+                <small>Decision: {notification.decision}</small>
+              )}
+              <StyledNotificationDate className="notification-button--StyledNotificationDate-0">{formatDate(notification.createdAt)}</StyledNotificationDate>
+            </StyledNotificationMsg>
+            <StyledCloseButton
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveNotification(notification.id);
+              }}
+              className="notification-button--StyledCloseButton-0" />
+          </StyledNotificationItem>
+        ))}
+      </StyledNotificationsContainer>}
     </StyledNotificationButtonContainer>
   );
 };

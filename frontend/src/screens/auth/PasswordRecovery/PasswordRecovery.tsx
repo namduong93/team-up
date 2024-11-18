@@ -51,14 +51,16 @@ export const PasswordCodeRecoverForm: FC<
   };
 
   return (
-    <StyledFormContainer onSubmit={handleCodeSubmit} style={style} {...props}>
+    <StyledFormContainer
+      onSubmit={handleCodeSubmit}
+      style={style}
+      {...props}
+      className="password-recovery--StyledFormContainer-0">
       <h1>Verification Code</h1>
-
-      <div style={{ width: "68%" }}>
-        <h2 style={{ color: "red" }}>DEV: code = {code}</h2>
+      <div style={{ width: '68%' }}>
+        <h2 style={{ color: 'red' }}>DEV: code = {code}</h2>
       </div>
-
-      <div style={{ width: "68%" }}>
+      <div style={{ width: '68%' }}>
         <TextInput
           label="New Password"
           placeholder="Enter your password"
@@ -69,8 +71,7 @@ export const PasswordCodeRecoverForm: FC<
           width="100%"
         />
       </div>
-
-      <div style={{ width: "68%" }}>
+      <div style={{ width: '68%' }}>
         <TextInput
           label="Confirm Password"
           placeholder="Re-enter your password"
@@ -83,21 +84,16 @@ export const PasswordCodeRecoverForm: FC<
           width="100%"
         />
       </div>
-      {error && <StyledErrorMessage>{error}</StyledErrorMessage>}
-      <div
-        style={{
-          width: "68%",
-          display: "flex",
-          justifyContent: "space-around",
-        }}
-      >
-        <StyledCustomButton style={{ minWidth: "80px" }}>
-          Change Password
-        </StyledCustomButton>
+      {error && <StyledErrorMessage className="password-recovery--StyledErrorMessage-0">{error}</StyledErrorMessage>}
+      <div style={{ width: '68%', display: 'flex', justifyContent: 'space-around' }}>
+        <StyledCustomButton
+          style={{ minWidth: '80px' }}
+          className="password-recovery--StyledCustomButton-0">Change Password</StyledCustomButton>
       </div>
     </StyledFormContainer>
   );
-};
+}
+
 
 /**
  * A React web page component that is the container for the password recovery process. It displays a
@@ -107,15 +103,14 @@ export const PasswordCodeRecoverForm: FC<
  */
 export const PasswordRecovery: FC = () => {
   return (
-    <StyledCenteredFormBackground>
-      <div style={{ width: "600px", flex: "0 1 auto" }}>
+    <StyledCenteredFormBackground className="password-recovery--StyledCenteredFormBackground-0">
+      <div style={{ width: '600px', flex: '0 1 auto' }}>
         <img
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           src="https://sppcontests.org/wp-content/uploads/2024/02/RGB_SPCPA_Logo_24@4x-2.png"
-        />
+          className="password-recovery--img-0" />
       </div>
-
-      <Outlet />
+      <Outlet/>
     </StyledCenteredFormBackground>
   );
-};
+}

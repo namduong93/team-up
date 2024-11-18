@@ -12,14 +12,8 @@ import {
 } from "./StaffAccessPage.styles";
 import { PageHeader } from "../../components/page_header/PageHeader";
 import { StaffAccessButtons } from "./subcomponents/StaffAccessButtons";
-import {
-  StyledFilterTagButton,
-  StyledRemoveFilterIcon,
-} from "../dashboard/Dashboard.styles";
-import {
-  StyledNarrowDisplayDiv,
-  StyledWideDisplayDiv,
-} from "../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import { StyledFilterTagButton, StyledRemoveFilterIcon } from "../dashboard/Dashboard.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentPage.styles";
 import { NarrowStaffAccessCard } from "./subcomponents/NarrowStaffAccessCard";
 import { WideStaffAccessHeader } from "./subcomponents/WideStaffAccessHeader";
 import { WideStaffAccessCard } from "./subcomponents/WideStaffAccessCard";
@@ -162,7 +156,7 @@ export const StaffAccessPage: FC = () => {
   };
 
   return (
-    <StyledPageBackground>
+    <StyledPageBackground className="staff-access-page--StyledPageBackground-0">
       <PageHeader
         pageTitle="Staff Account Management"
         pageDescription="Review pending staff account requests"
@@ -178,26 +172,26 @@ export const StaffAccessPage: FC = () => {
           editingForAll={isPendingOnly}
         />
       </PageHeader>
-
-      <StyledFilterTagContainer>
+      <StyledFilterTagContainer className="staff-access-page--StyledFilterTagContainer-0">
         {Object.entries(filters).map(([field, values]) =>
           values.map((value) => (
-            <StyledFilterTagButton key={`${field}-${value}`}>
-              {value}
-              <StyledRemoveFilterIcon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFilter(field, value);
-                }}
-              />
-            </StyledFilterTagButton>
+          <StyledFilterTagButton
+            key={`${field}-${value}`}
+            className="staff-access-page--StyledFilterTagButton-0">
+            {value}
+            <StyledRemoveFilterIcon
+              onClick={(e) => {
+              e.stopPropagation();
+              removeFilter(field, value);
+              }}
+              className="staff-access-page--StyledRemoveFilterIcon-0" />
+          </StyledFilterTagButton>
           ))
         )}
       </StyledFilterTagContainer>
-
-      <StyledStaffContainer>
-        <StyledNarrowDisplayDiv>
-          <StyledStaffRecords>
+      <StyledStaffContainer className="staff-access-page--StyledStaffContainer-0">
+        <StyledNarrowDisplayDiv className="staff-access-page--StyledNarrowDisplayDiv-0">
+          <StyledStaffRecords className="staff-access-page--StyledStaffRecords-0">
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }) => (
                 <NarrowStaffAccessCard
@@ -211,9 +205,9 @@ export const StaffAccessPage: FC = () => {
             )}
           </StyledStaffRecords>
         </StyledNarrowDisplayDiv>
-        <StyledWideDisplayDiv>
+        <StyledWideDisplayDiv className="staff-access-page--StyledWideDisplayDiv-0">
           <WideStaffAccessHeader />
-          <StyledStaffRecords>
+          <StyledStaffRecords className="staff-access-page--StyledStaffRecords-1">
             {searchedStaff.length > 0 ? (
               searchedStaff.map(({ item: staffDetails }) => (
                 <WideStaffAccessCard

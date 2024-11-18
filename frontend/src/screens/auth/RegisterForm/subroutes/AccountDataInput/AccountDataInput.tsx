@@ -76,19 +76,13 @@ export const AccountDataInput: FC = () => {
 
   return (
     <StyledFlexBackground
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        fontFamily: "Arial, Helvetica, sans-serif",
-      }}
-    >
+      style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontFamily: 'Arial, Helvetica, sans-serif' }}
+      className="account-data-input--StyledFlexBackground-0">
       <RegoProgressBar progressNumber={1} />
-      <StyledContainer>
-        <StyledContentContainer>
-          <StyledTitle>Account Information</StyledTitle>
-
-          <StyledDoubleInputContainer>
+      <StyledContainer className="account-data-input--StyledContainer-0">
+        <StyledContentContainer className="account-data-input--StyledContentContainer-0">
+          <StyledTitle className="account-data-input--StyledTitle-0">Account Information</StyledTitle>
+          <StyledDoubleInputContainer className="account-data-input--StyledDoubleInputContainer-0">
             <TextInput
               label="First Name"
               placeholder="John"
@@ -100,7 +94,6 @@ export const AccountDataInput: FC = () => {
               }
               width="45%"
             />
-
             <TextInput
               label="Last Name"
               placeholder="Smith"
@@ -113,7 +106,6 @@ export const AccountDataInput: FC = () => {
               width="45%"
             />
           </StyledDoubleInputContainer>
-
           <TextInput
             label="Preferred Name"
             placeholder="Please Enter"
@@ -125,8 +117,7 @@ export const AccountDataInput: FC = () => {
             }
             width="100%"
           />
-
-          <StyledDoubleInputContainer>
+          <StyledDoubleInputContainer className="account-data-input--StyledDoubleInputContainer-1">
             <DropdownInput
               label="Gender"
               options={genderOptions}
@@ -148,7 +139,6 @@ export const AccountDataInput: FC = () => {
               />
             </div>
           </StyledDoubleInputContainer>
-
           {showOtherGenderInput && (
             <TextInput
               label="Please Specify Your Gender"
@@ -162,7 +152,6 @@ export const AccountDataInput: FC = () => {
               width="100%"
             />
           )}
-
           <TextInput
             label="Email"
             placeholder="example@email.com"
@@ -174,7 +163,6 @@ export const AccountDataInput: FC = () => {
             }
             width="100%"
           />
-
           <TextInput
             label="Password"
             placeholder="Enter your password"
@@ -186,7 +174,6 @@ export const AccountDataInput: FC = () => {
             }
             width="100%"
           />
-
           <TextInput
             label="Confirm Password"
             placeholder="Re-enter your password"
@@ -196,17 +183,15 @@ export const AccountDataInput: FC = () => {
             onChange={(e) => handleConfirmPasswordChange(e.target.value)}
             width="100%"
           />
-
-          {error && <StyledErrorMessage>{error}</StyledErrorMessage>}
-
-          <StyledButtonContainer>
-            <StyledButton onClick={() => navigate("/roleregistration")}>
-              Back
-            </StyledButton>
-
-            <StyledButton $disabled={isButtonDisabled()} onClick={handleNext}>
-              Next
-            </StyledButton>
+          {error && <StyledErrorMessage className="account-data-input--StyledErrorMessage-0">{error}</StyledErrorMessage>}
+          <StyledButtonContainer className="account-data-input--StyledButtonContainer-0">
+            <StyledButton
+              onClick={() => navigate('/roleregistration')}
+              className="account-data-input--StyledButton-0">Back</StyledButton>
+            <StyledButton
+              $disabled={isButtonDisabled()}
+              onClick={handleNext}
+              className="account-data-input--StyledButton-1">Next</StyledButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

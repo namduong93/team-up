@@ -127,17 +127,22 @@ export const ProgressBar: FC<ProgressBarProps> = ({
 }) => {
   return (
     <StyledRegoProgressContainer
-      style={{ position: "relative", ...style }}
+      style={{ position: 'relative', ...style }}
       {...props}
-    >
-      <StyledRegoProgressContainer style={{ ...style }} {...props}>
-        <StyledProgressItemsContainer>
+      className="progress-bar--StyledRegoProgressContainer-0">
+      <StyledRegoProgressContainer
+        style={{...style}}
+        {...props}
+        className="progress-bar--StyledRegoProgressContainer-1">
+        <StyledProgressItemsContainer className="progress-bar--StyledProgressItemsContainer-0">
           {React.Children.map(children, (child, index) => {
             return (
-              <StyledProgressBarOptionContainer key={index}>
+              <StyledProgressBarOptionContainer
+                key={index}
+                className="progress-bar--StyledProgressBarOptionContainer-0">
                 <StyledProgressCircle
                   $isCurrentProgress={index === progressNumber}
-                />
+                  className="progress-bar--StyledProgressCircle-0" />
                 {child}
               </StyledProgressBarOptionContainer>
             );
@@ -146,4 +151,4 @@ export const ProgressBar: FC<ProgressBarProps> = ({
       </StyledRegoProgressContainer>
     </StyledRegoProgressContainer>
   );
-};
+}

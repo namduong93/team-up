@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { StyledFlexBackground } from "../../components/general_utility/Background";
 import { ThemeButtonProps } from "./Settings";
 import { SearchBar } from "../competition/staff_pages/CompetitionPage/components/PageUtils";
+import React from "react";
 
 export const StyledBackground = styled(StyledFlexBackground)`
   background-color: ${({ theme }) => theme.background};
@@ -75,10 +76,8 @@ export const StyledDropdownContent = styled.div<{ $isOpen: boolean }>`
   max-height: ${({ $isOpen }) => ($isOpen ? "100%" : "0")};
   overflow: hidden;
   transition: max-height 0.3s ease !important;
-  margin: 10px 15px;
+  margin: 10px 0;
   width: 100%;
 `;
 
-export const StyledFAQSearchBar = styled(SearchBar)`
-  height: 40px;
-`;
+export const StyledFAQSearchBar = (props: React.InputHTMLAttributes<HTMLInputElement>) => <SearchBar style={{ height: '40px' }} {...props} />

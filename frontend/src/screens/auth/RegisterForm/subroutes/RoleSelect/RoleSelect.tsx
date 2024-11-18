@@ -38,34 +38,26 @@ export const RoleSelect: FC = () => {
 
   return (
     <StyledFlexBackground
-      style={{
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <StyledFormContainer onSubmit={handleSubmit}>
-        <StyledTitle>What is your role?</StyledTitle>
-
+      style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+      className="role-select--StyledFlexBackground-0">
+      <StyledFormContainer onSubmit={handleSubmit} className="role-select--StyledFormContainer-0">
+        <StyledTitle className="role-select--StyledTitle-0">What is your role?</StyledTitle>
         <RoleContainer>
           <StyledStudentButton
-            type="button"
-            isSelected={formData.role === "Student"}
-            onClick={() => handleRoleClick("Student")}
-          >
-            Student
-          </StyledStudentButton>
+            type='button'
+            // Pass isSelected prop
+            isSelected={formData.role === 'Student'}
+            onClick={() => handleRoleClick('Student')}
+            className="role-select--StyledStudentButton-0">Student</StyledStudentButton>
 
           <StyledStaffButton
-            type="button"
-            isSelected={formData.role === "Staff"}
-            onClick={() => handleRoleClick("Staff")}
-          >
-            Staff
-          </StyledStaffButton>
+            type='button'
+            // Pass isSelected prop
+            isSelected={formData.role === 'Staff'}
+            onClick={() => handleRoleClick('Staff')}
+            className="role-select--StyledStaffButton-0">Staff</StyledStaffButton>
         </RoleContainer>
-
-        <StyledButton disabled={!formData.role}>Next</StyledButton>
+        <StyledButton disabled={!formData.role} className="role-select--StyledButton-0">Next</StyledButton>
       </StyledFormContainer>
     </StyledFlexBackground>
   );
