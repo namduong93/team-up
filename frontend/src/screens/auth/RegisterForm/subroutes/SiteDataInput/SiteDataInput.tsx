@@ -41,7 +41,7 @@ export const SiteDataInput: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      className="site-data-input--StyledFlexBackground-0">
       <RegoProgressBar progressNumber={2} />
       <Container>
         <ContentContainer>

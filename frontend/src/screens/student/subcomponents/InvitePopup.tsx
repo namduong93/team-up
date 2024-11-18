@@ -82,22 +82,20 @@ const InvitePopup: React.FC<InvitePopUpProps> = ({
   text,
   onClose,
 }) => {
-  return (
-    <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
-          <FaTimes />
-        </StyledCloseButton>
-        <div>{heading}</div>
-        <StyledCopyContainer>
-          <StyledCopyText>{text}</StyledCopyText>
-          <StyledLargeCopyButtonWrapper>
-            <CopyButton textToCopy={text} />
-          </StyledLargeCopyButtonWrapper>
-        </StyledCopyContainer>
-      </StyledModal>
-    </>
-  );
+  return <>
+    <StyledModal className="invite-popup--StyledModal-0">
+      <StyledCloseButton onClick={onClose} className="invite-popup--StyledCloseButton-0">
+        <FaTimes />
+      </StyledCloseButton>
+      <div>{heading}</div>
+      <StyledCopyContainer className="invite-popup--StyledCopyContainer-0">
+        <StyledCopyText className="invite-popup--StyledCopyText-0">{text}</StyledCopyText>
+        <StyledLargeCopyButtonWrapper className="invite-popup--StyledLargeCopyButtonWrapper-0">
+          <CopyButton textToCopy={text} />
+        </StyledLargeCopyButtonWrapper>
+      </StyledCopyContainer>
+    </StyledModal>
+  </>;
 };
 
 export default InvitePopup;

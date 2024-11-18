@@ -35,24 +35,23 @@ export const TeamHeader: FC<HeaderAttributes> = ({
   onWithdrawClick,
 }) => {
   return (
-    <StyledResponsiveHeader>
-      <StyledHeaderContent>
-        <StyledTeamTitle>{compName}</StyledTeamTitle>
-        <StyledTeamDescription>Team {teamName}</StyledTeamDescription>
+    <StyledResponsiveHeader className="team-header--StyledResponsiveHeader-0">
+      <StyledHeaderContent className="team-header--StyledHeaderContent-0">
+        <StyledTeamTitle className="team-header--StyledTeamTitle-0">{compName}</StyledTeamTitle>
+        <StyledTeamDescription className="team-header--StyledTeamDescription-0">Team{teamName}</StyledTeamDescription>
+        {/* <div>{compCountdown}</div> */}
       </StyledHeaderContent>
-
-      <StyledHeaderRightSection>
-        <StyledButtonContainer>
+      <StyledHeaderRightSection className="team-header--StyledHeaderRightSection-0">
+        <StyledButtonContainer className="team-header--StyledButtonContainer-0">
           <StyledWithdrawButton
             actionName="Withdraw"
             question="Are you sure you want to withdraw from the competition?"
             redirectPath="/dashboard"
             actionType="error"
             handleClick={onWithdrawClick}
-          />
+            className="team-header--StyledWithdrawButton-0" />
           <NotificationButton />
         </StyledButtonContainer>
-
         <CompCountdownBar daysRemaining={compCountdown} progress={0.5} />
       </StyledHeaderRightSection>
     </StyledResponsiveHeader>

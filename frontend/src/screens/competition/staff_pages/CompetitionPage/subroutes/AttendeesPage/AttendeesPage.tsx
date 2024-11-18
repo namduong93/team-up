@@ -7,10 +7,7 @@ import {
   StyledRemoveFilterIcon,
 } from "../../../../../dashboard/Dashboard.styles";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
-import {
-  StyledNarrowDisplayDiv,
-  StyledWideDisplayDiv,
-} from "../StudentsPage/StudentsPage.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../StudentsPage/StudentPage.styles";
 import { NarrowAttendeesCard } from "./subcomponents/NarrowAttendeesCard";
 import { WideAttendeesHeader } from "./subcomponents/WideAttendeesHeader";
 import { WideAttendeesCard } from "./subcomponents/WideAttendeesCard";
@@ -83,47 +80,46 @@ export const AttendeesDisplay: FC = () => {
     });
   }
 
-  return (
-    <>
-      <div>
-        {Object.entries(filters).map(([field, values]) =>
-          values.map((value) => (
-            <StyledFilterTagButton key={`${field}-${value}`}>
-              {value}
-              <StyledRemoveFilterIcon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFilter(field, value);
-                }}
-              />
-            </StyledFilterTagButton>
-          ))
-        )}
-      </div>
-      <StyledFlexBackground>
-        <StyledNarrowDisplayDiv>
-          {searchedAttendees.map(({ item: attendeesDetails }, index) => {
-            return (
-              <NarrowAttendeesCard
-                key={`${attendeesDetails.email}${index}`}
-                attendeesDetails={attendeesDetails}
-              />
-            );
-          })}
-        </StyledNarrowDisplayDiv>
-
-        <StyledWideDisplayDiv>
-          <WideAttendeesHeader />
-          {searchedAttendees.map(({ item: attendeesDetails }, index) => {
-            return (
-              <WideAttendeesCard
-                key={`${attendeesDetails.email}${index}`}
-                attendeesDetails={attendeesDetails}
-              />
-            );
-          })}
-        </StyledWideDisplayDiv>
-      </StyledFlexBackground>
-    </>
-  );
+  return <>
+  <div>
+    {Object.entries(filters).map(([field, values]) =>
+      values.map((value) => (
+      <StyledFilterTagButton
+        key={`${field}-${value}`}
+        className="attendees-page--StyledFilterTagButton-0">
+        {value}
+        <StyledRemoveFilterIcon
+          onClick={(e) => {
+          e.stopPropagation();
+          removeFilter(field, value);
+          }}
+          className="attendees-page--StyledRemoveFilterIcon-0" />
+      </StyledFilterTagButton>
+      ))
+    )}
+  </div>
+  <StyledFlexBackground className="attendees-page--StyledFlexBackground-0">
+    <StyledNarrowDisplayDiv className="attendees-page--StyledNarrowDisplayDiv-0">
+      {searchedAttendees.map(({ item: attendeesDetails }, index) => {
+        return (
+          <NarrowAttendeesCard
+            key={`${attendeesDetails.email}${index}`}
+            attendeesDetails={attendeesDetails}
+          />
+        );
+      })}
+    </StyledNarrowDisplayDiv>
+    <StyledWideDisplayDiv className="attendees-page--StyledWideDisplayDiv-0">
+      <WideAttendeesHeader />
+      {searchedAttendees.map(({ item: attendeesDetails }, index) => {
+        return (
+          <WideAttendeesCard
+            key={`${attendeesDetails.email}${index}`}
+            attendeesDetails={attendeesDetails}
+          />
+        );
+      })}
+    </StyledWideDisplayDiv>
+  </StyledFlexBackground>
+  </>;
 };

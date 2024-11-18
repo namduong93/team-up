@@ -35,14 +35,9 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   onClose,
 }) => {
   const { compId } = useParams();
-  const {
-    roles,
-    siteOptionsState: [siteOptions, setSiteOptions],
-  } = useCompetitionOutletContext("manage");
-  const [selectedSite, setSelectedSite] = useState<{
-    value: string;
-    label: string;
-  }>({ label: "", value: "0" });
+  const { roles, siteOptionsState: [siteOptions, setSiteOptions] } = useCompetitionOutletContext("manage");
+
+  const [selectedSite, setSelectedSite] = useState<{ value: string; label: string }>({label: "", value: "0"});
   const [capacity, setCapacity] = useState<number>(0);
   const [currentCapacity, setCurrentCapacity] = useState<number>(0);
 
@@ -97,43 +92,43 @@ export const EditSiteCapacityPopUp: React.FC<EditSiteCapacityPopUpProps> = ({
   };
 
   return (
-    <StyledModalOverlay>
-      <StyledModal>
-        <StyledView>
-          <StyledCloseButton onClick={onClose}>
+    <StyledModalOverlay className="edit-site-capacity-pop-up--StyledModalOverlay-0">
+      <StyledModal className="edit-site-capacity-pop-up--StyledModal-0">
+        <StyledView className="edit-site-capacity-pop-up--StyledView-0">
+          <StyledCloseButton
+            onClick={onClose}
+            className="edit-site-capacity-pop-up--StyledCloseButton-0">
             <FaTimes />
           </StyledCloseButton>
-          <StyledContainer>
-            <StyledHeading>{heading}</StyledHeading>
+          <StyledContainer className="edit-site-capacity-pop-up--StyledContainer-0">
+            <StyledHeading className="edit-site-capacity-pop-up--StyledHeading-0">{heading}</StyledHeading>
             <div style={{ display: "flex", alignContent: "center" }}>
-              <StyledText>
-                <em>
-                  Capacity is the number of participants your site can host.
-                </em>
+              <StyledText className="edit-site-capacity-pop-up--StyledText-0">
+                <em>Capacity is the number of participants your site can host.</em>
               </StyledText>
             </div>
-
-            {roles.includes(CompetitionRole.Admin) && (
-              <div style={{ width: "300px" }}>
-                <AdvancedDropdown
-                  setCurrentSelected={setSelectedSite}
-                  optionsState={[siteOptions, setSiteOptions]}
-                  style={{ width: "100%" }}
-                  isExtendable={false}
-                  defaultSearchTerm={selectedSite.label}
-                />
-              </div>
-            )}
+            {roles.includes(CompetitionRole.Admin) && 
+            <div style={{ width: '300px' }}>
+              <AdvancedDropdown
+                setCurrentSelected={setSelectedSite}
+                optionsState={[siteOptions, setSiteOptions]}
+                style={{ width: "100%" }}
+                isExtendable={false}
+                defaultSearchTerm={selectedSite.label}
+              />
+            </div>
+            
+            }
             <NumberInputLight
               label="Provide a capacity"
               value={currentCapacity}
               onChange={handleCapacityChange}
               currentCapacity={currentCapacity}
             />
-
-            <StyledButton onClick={handleSubmit} disabled={capacity <= 0}>
-              Save Changes
-            </StyledButton>
+            <StyledButton
+              onClick={handleSubmit}
+              disabled={capacity <= 0}
+              className="edit-site-capacity-pop-up--StyledButton-0">Save Changes</StyledButton>
           </StyledContainer>
         </StyledView>
       </StyledModal>

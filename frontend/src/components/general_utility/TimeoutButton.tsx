@@ -52,8 +52,8 @@ export const TimeoutButton: FC<TimeoutButtonProps> = ({
       $disabled={!!timeoutSeconds}
       onClick={handleClick}
       {...props}
-    >
+      className="timeout-button--StyledButton-0">
       {timeoutSeconds > 0 ? timeoutSeconds : children}
     </StyledButton>
   );
-};
+}

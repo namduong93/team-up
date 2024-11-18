@@ -161,39 +161,35 @@ export const CompRoles: FC<StaffRolesProps> = ({
   const numContents = roles.length - 1;
 
   return (
-    <StyledStaffRolesContainerDiv>
-      <StyledStaffRoleContainer $isOpen={isOpen}>
+    <StyledStaffRolesContainerDiv className="comp-roles--StyledStaffRolesContainerDiv-0">
+      <StyledStaffRoleContainer $isOpen={isOpen} className="comp-roles--StyledStaffRoleContainer-0">
         <StyledStaffRoleDisplay
           tabIndex={0}
           onClick={handleClick}
           onBlur={() => setIsOpen(false)}
           $isMulti={isMulti}
           $role={roles[0]}
-        >
-          <div style={{ pointerEvents: "none" }}>{roles[0]}</div>
+          className="comp-roles--StyledStaffRoleDisplay-0">
+          <div style={{ pointerEvents: 'none' }}>{roles[0]}</div>
         </StyledStaffRoleDisplay>
-
-        {isOpen && (
-          <StyledAdditionalRolesContainer
-            onMouseDown={(e) => {
-              e.preventDefault();
-            }}
-            $numContents={numContents}
-          >
-            {roles.slice(1).map((role, index) => (
-              <StyledStaffRoleDisplay
-                style={{ height: `${100 / numContents}%` }}
-                key={`${role}${index}`}
-                $role={role}
-              >
-                <span style={{ pointerEvents: "none" }}>{role}</span>
-              </StyledStaffRoleDisplay>
-            ))}
-          </StyledAdditionalRolesContainer>
-        )}
-
-        {isMulti && <StyledRoleDropdownIcon />}
+        {isOpen &&
+        <StyledAdditionalRolesContainer
+          onMouseDown={(e) => { e.preventDefault(); }}
+          $numContents={numContents}
+          className="comp-roles--StyledAdditionalRolesContainer-0">
+          {roles.slice(1).map((role, index) => 
+          <StyledStaffRoleDisplay
+            style={{ height: `${100 / numContents}%` }}
+            key={`${role}${index}`}
+            $role={role}
+            className="comp-roles--StyledStaffRoleDisplay-1">
+            <span style={{ pointerEvents: 'none' }}>{role}</span>
+          </StyledStaffRoleDisplay>
+          )}
+        </StyledAdditionalRolesContainer>}
+        {isMulti &&
+        <StyledRoleDropdownIcon className="comp-roles--StyledRoleDropdownIcon-0" />}
       </StyledStaffRoleContainer>
     </StyledStaffRolesContainerDiv>
   );
-};
+}

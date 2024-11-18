@@ -70,35 +70,30 @@ export const CompCard: FC<CardProps> = ({
   const progressWidth =
     totalDays > 0 ? ((totalDays - daysRemaining) / totalDays) * 100 : 100;
   return (
-    <StyledCompCardContainer onClick={() => navigate(roleUrl())}>
-      <StyledCardHeader>
-        <StyledCardTop>
-          <StyledCompHeader>
+    <StyledCompCardContainer
+      onClick={() => navigate(roleUrl())}
+      className="comp-card--StyledCompCardContainer-0">
+      <StyledCardHeader className="comp-card--StyledCardHeader-0">
+        <StyledCardTop className="comp-card--StyledCardTop-0">
+          <StyledCompHeader className="comp-card--StyledCompHeader-0">
             <h2>{compName}</h2>
           </StyledCompHeader>
         </StyledCardTop>
       </StyledCardHeader>
-
-      <StyledCardMiddle>
-        <StyledCardText>{location}</StyledCardText>
-        <StyledCardText>{compDateFormatted}</StyledCardText>
+      <StyledCardMiddle className="comp-card--StyledCardMiddle-0">
+        <StyledCardText className="comp-card--StyledCardText-0">{location}</StyledCardText>
+        <StyledCardText className="comp-card--StyledCardText-1">{compDateFormatted}</StyledCardText>
       </StyledCardMiddle>
-
-      <StyledCardBottom>
-        <StyledRoleContainer>
+      <StyledCardBottom className="comp-card--StyledCardBottom-0">
+        <StyledRoleContainer className="comp-card--StyledRoleContainer-0">
           {roles.map((role, index) => (
-            <StyledRole key={index}>{role}</StyledRole>
+            <StyledRole key={index} className="comp-card--StyledRole-0">{role}</StyledRole>
           ))}
         </StyledRoleContainer>
-        <StyledCountdown>
-          {daysRemaining > 0
-            ? `${daysRemaining} days to go!`
-            : "Competition ended!"}
-        </StyledCountdown>
+        <StyledCountdown className="comp-card--StyledCountdown-0">{daysRemaining > 0 ? `${daysRemaining} days to go!` : "Competition ended!"}</StyledCountdown>
       </StyledCardBottom>
-
-      <StyledProgressBar>
-        <StyledProgress $width={progressWidth} />
+      <StyledProgressBar className="comp-card--StyledProgressBar-0">
+        <StyledProgress $width={progressWidth} className="comp-card--StyledProgress-0" />
       </StyledProgressBar>
     </StyledCompCardContainer>
   );

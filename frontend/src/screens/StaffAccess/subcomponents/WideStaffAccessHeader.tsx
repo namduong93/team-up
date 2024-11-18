@@ -1,10 +1,6 @@
 import { FC } from "react";
 import { useTheme } from "styled-components";
-import {
-  StyledUserNameContainerDiv,
-  StyledUsernameTextSpan,
-  StyledWideInfoContainerDiv,
-} from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentsPage.styles";
+import { StyledUserNameContainerDiv, StyledUsernameTextSpan, StyledWideInfoContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StudentsPage/StudentPage.styles";
 import { StyledStandardContainerDiv } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/CompRoles";
 import { StyledStandardSpan } from "../../competition/staff_pages/CompetitionPage/subroutes/StaffPage/subcomponents/WideStaffCard";
 
@@ -23,24 +19,21 @@ export const WideStaffAccessHeader: FC = () => {
       $isHeader={true}
       style={{
         backgroundColor: theme.colours.userInfoCardHeader,
-        fontWeight: "bold",
+        fontWeight: 'bold'
       }}
-    >
-      <StyledUserNameContainerDiv>
-        <StyledUsernameTextSpan>Full Name</StyledUsernameTextSpan>
+      className="wide-staff-access-header--StyledWideInfoContainerDiv-0">
+      <StyledUserNameContainerDiv className="wide-staff-access-header--StyledUserNameContainerDiv-0">
+        <StyledUsernameTextSpan className="wide-staff-access-header--StyledUsernameTextSpan-0">Full Name</StyledUsernameTextSpan>
       </StyledUserNameContainerDiv>
-
-      <StyledStandardContainerDiv>
-        <StyledStandardSpan>Affiliation</StyledStandardSpan>
+      <StyledStandardContainerDiv className="wide-staff-access-header--StyledStandardContainerDiv-0">
+        <StyledStandardSpan className="wide-staff-access-header--StyledStandardSpan-0">Affiliation</StyledStandardSpan>
       </StyledStandardContainerDiv>
-
-      <StyledStandardContainerDiv>
-        <StyledStandardSpan>Access</StyledStandardSpan>
+      <StyledStandardContainerDiv className="wide-staff-access-header--StyledStandardContainerDiv-1">
+        <StyledStandardSpan className="wide-staff-access-header--StyledStandardSpan-1">Access</StyledStandardSpan>
       </StyledStandardContainerDiv>
-
-      <StyledStandardContainerDiv>
-        <StyledStandardSpan>Email</StyledStandardSpan>
+      <StyledStandardContainerDiv className="wide-staff-access-header--StyledStandardContainerDiv-2">
+        <StyledStandardSpan className="wide-staff-access-header--StyledStandardSpan-2">Email</StyledStandardSpan>
       </StyledStandardContainerDiv>
     </StyledWideInfoContainerDiv>
   );
-};
+}

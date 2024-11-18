@@ -74,11 +74,11 @@ export const CustomToggleSwitch: FC<ToggleSwitchProps> = ({
             onClick={handleClick}
             data-index={index}
             key={index}
-          >
+            className="toggle-switch--StyledToggleDivOptionDiv-0">
             {child}
           </StyledToggleDivOptionDiv>
         );
       })}
     </StyledToggleDiv>
   );
-};
+}

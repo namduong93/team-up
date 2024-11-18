@@ -56,8 +56,8 @@ export const ThirdStepPopup: React.FC<ThirdStepPopupProps> = ({
 }) => {
   return (
     <>
-      <StyledModal>
-        <StyledCloseButton onClick={onClose}>
+      <StyledModal className="third-step-popup--StyledModal-0">
+        <StyledCloseButton className="third-step-popup--StyledCloseButton-0" onClick={onClose}>
           <FaTimes />
         </StyledCloseButton>
         <div>{heading}</div>

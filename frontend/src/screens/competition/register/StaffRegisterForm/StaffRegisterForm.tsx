@@ -203,10 +203,11 @@ export const StaffRegisterForm: FC = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
-    >
-      <StyledFormContainer onSubmit={handleSubmit}>
-        <StyledTitle>Staff Registration</StyledTitle>
-
+      className="staff-register-form--StyledFlexBackground-0">
+      <StyledFormContainer
+        onSubmit={handleSubmit}
+        className="staff-register-form--StyledFormContainer-0">
+        <StyledTitle className="staff-register-form--StyledTitle-0">Staff Registration</StyledTitle>
         <MultiRadio
           options={staffOptions}
           selectedValues={staffRegistrationData.roles}
@@ -229,13 +230,11 @@ export const StaffRegisterForm: FC = () => {
             });
           }}
           label={
-            <StyledLabel>
-              Role<StyledAsterisk>*</StyledAsterisk>
+            <StyledLabel className="staff-register-form--StyledLabel-0">Role<StyledAsterisk className="staff-register-form--StyledAsterisk-0">*</StyledAsterisk>
             </StyledLabel>
           }
           showOther={false}
         />
-
         {staffRegistrationData.roles.includes(
           CompetitionRole.SiteCoordinator
         ) && (
@@ -247,8 +246,7 @@ export const StaffRegisterForm: FC = () => {
                 width: "100%",
               }}
             >
-              <StyledLabel>
-                Site Overseeing<StyledAsterisk>*</StyledAsterisk>
+              <StyledLabel className="staff-register-form--StyledLabel-1">Site Overseeing<StyledAsterisk className="staff-register-form--StyledAsterisk-1">*</StyledAsterisk>
               </StyledLabel>
               <AdvancedDropdown
                 isExtendable={true}
@@ -281,7 +279,6 @@ export const StaffRegisterForm: FC = () => {
             />
           </>
         )}
-
         {staffRegistrationData.roles.includes(CompetitionRole.Coach) && (
           <>
             <DescriptiveTextInput
@@ -300,14 +297,14 @@ export const StaffRegisterForm: FC = () => {
             />
           </>
         )}
-
-        <StyledButtonContainer>
-          <StyledButton onClick={() => navigate("/dashboard")}>
-            Back
-          </StyledButton>
-          <StyledButton type="submit" disabled={isButtonDisabled()}>
-            Register
-          </StyledButton>
+        <StyledButtonContainer className="staff-register-form--StyledButtonContainer-0">
+          <StyledButton
+            onClick={() => navigate("/dashboard")}
+            className="staff-register-form--StyledButton-0">Back</StyledButton>
+          <StyledButton
+            type="submit"
+            disabled={isButtonDisabled()}
+            className="staff-register-form--StyledButton-1">Register</StyledButton>
         </StyledButtonContainer>
       </StyledFormContainer>
     </StyledFlexBackground>

@@ -8,10 +8,7 @@ import {
   StyledRemoveFilterIcon,
 } from "../../../../../dashboard/Dashboard.styles";
 import { StyledFlexBackground } from "../../../../../../components/general_utility/Background";
-import {
-  StyledNarrowDisplayDiv,
-  StyledWideDisplayDiv,
-} from "../StudentsPage/StudentsPage.styles";
+import { StyledNarrowDisplayDiv, StyledWideDisplayDiv } from "../StudentsPage/StudentPage.styles";
 import { NarrowStaffCard } from "./subcomponents/NarrowStaffCard";
 import { WideStaffHeader } from "./subcomponents/WideStaffHeader";
 import { WideStaffCard } from "./subcomponents/WideStaffCard";
@@ -118,49 +115,40 @@ export const StaffPage: FC = () => {
     });
   }
 
-  return (
-    <>
-      <div>
-        {Object.entries(filters).map(([field, values]) =>
-          values.map((value) => (
-            <StyledFilterTagButton key={`${field}-${value}`}>
-              {value}
-              <StyledRemoveFilterIcon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFilter(field, value);
-                }}
-              />
-            </StyledFilterTagButton>
-          ))
-        )}
-      </div>
-      <StyledFlexBackground>
-        <StyledNarrowDisplayDiv>
-          {searchedStaff.map(({ item: staffDetails }, index) => {
-            return (
-              <NarrowStaffCard
-                key={`${staffDetails.email}${index}`}
-                staffDetails={staffDetails}
-                staffListState={[staffList, setStaffList]}
-              />
-            );
-          })}
-        </StyledNarrowDisplayDiv>
-
-        <StyledWideDisplayDiv>
-          <WideStaffHeader />
-          {searchedStaff.map(({ item: staffDetails }, index) => {
-            return (
-              <WideStaffCard
-                key={`${staffDetails.email}${index}`}
-                staffDetails={staffDetails}
-                staffListState={[staffList, setStaffList]}
-              />
-            );
-          })}
-        </StyledWideDisplayDiv>
-      </StyledFlexBackground>
-    </>
-  );
+  return <>
+  <div>
+    {Object.entries(filters).map(([field, values]) =>
+      values.map((value) => (
+      <StyledFilterTagButton
+        key={`${field}-${value}`}
+        className="staff-page--StyledFilterTagButton-0">
+        {value}
+        <StyledRemoveFilterIcon
+          onClick={(e) => {
+          e.stopPropagation();
+          removeFilter(field, value);
+          }}
+          className="staff-page--StyledRemoveFilterIcon-0" />
+      </StyledFilterTagButton>
+      ))
+    )}
+  </div>
+  <StyledFlexBackground className="staff-page--StyledFlexBackground-0">
+    <StyledNarrowDisplayDiv className="staff-page--StyledNarrowDisplayDiv-0">
+      {searchedStaff.map(({ item: staffDetails }, index) => {
+        return (
+          <NarrowStaffCard key={`${staffDetails.email}${index}`} staffDetails={staffDetails} staffListState={[staffList, setStaffList]} />
+        );
+      })}
+    </StyledNarrowDisplayDiv>
+    <StyledWideDisplayDiv className="staff-page--StyledWideDisplayDiv-0">
+      <WideStaffHeader />
+      {searchedStaff.map(({ item: staffDetails }, index) => {
+        return (
+          <WideStaffCard key={`${staffDetails.email}${index}`} staffDetails={staffDetails} staffListState={[staffList, setStaffList]} />
+        );
+      })}
+    </StyledWideDisplayDiv>
+  </StyledFlexBackground>
+  </>;
 };

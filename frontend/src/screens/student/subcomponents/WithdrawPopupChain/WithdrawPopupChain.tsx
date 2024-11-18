@@ -73,9 +73,7 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
         return (
           <WithdrawPopup1
             heading={
-              <StyledHeading>
-                Withdrawing from the Team
-                {"\nwill make you ineligible"}
+              <StyledHeading className="withdraw-popup-chain--StyledHeading-0">Withdrawing from the Team{"\nwill make you ineligible"}
                 {"\n to compete in the Competition"}
                 {"\n\nThis action is final and"}
                 {"\ncannot be undone"}
@@ -92,9 +90,7 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
         return (
           <SecondStepPopup
             heading={
-              <StyledHeading>
-                Are you sure you would {"\nlike to withdraw?"}
-              </StyledHeading>
+              <StyledHeading className="withdraw-popup-chain--StyledHeading-1">Are you sure you would{"\nlike to withdraw?"}</StyledHeading>
             }
             onClose={handleCloseWithReset}
             onNext={handleSubmit}
@@ -104,9 +100,7 @@ export const WithdrawPopupChain: React.FC<WithdrawPopupChainProps> = ({
         return (
           <InvitePopup
             heading={
-              <StyledHeading>
-                Copy and send your
-                {"\nTeam Code"}
+              <StyledHeading className="withdraw-popup-chain--StyledHeading-2">Copy and send your{"\nTeam Code"}
                 {"\nto invite your Substitute"}
                 {"\nto the Team"}
                 {"\n\nAlternatively, you can wait"}

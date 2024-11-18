@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { sendRequest } from "../../../../../utility/request";
 import { SitePopup1 } from "./subcomponents/SitePopup1/SitePopup1";
 import { SecondStepPopup } from "../SecondStepPopup";
-import { ThirdStepPopup } from "../ThirdStepPopup";
 import { StyledHeading } from "./SitePopupChain.styles";
+import { ThirdStepPopup } from "../ThirdStepPopup";
 
 interface SitePopupChainProps {
   handleClose: () => void;
@@ -59,9 +59,7 @@ export const SitePopupChain: React.FC<SitePopupChainProps> = ({
         return (
           <SitePopup1
             siteOptionsState={siteOptionsState}
-            heading={
-              <StyledHeading>Change Team Site {"\nLocation"}</StyledHeading>
-            }
+            heading={<StyledHeading className="site-popup-chain--StyledHeading-0">Change Team Site{"\nLocation"}</StyledHeading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter a location"
@@ -73,8 +71,7 @@ export const SitePopupChain: React.FC<SitePopupChainProps> = ({
         return (
           <SecondStepPopup
             heading={
-              <StyledHeading>
-                Are you sure you would {"\nlike to change your Team's"}{" "}
+              <StyledHeading className="site-popup-chain--StyledHeading-1">Are you sure you would{"\nlike to change your Team's"}{" "}
                 {"\nsite location?"}
               </StyledHeading>
             }
@@ -86,8 +83,7 @@ export const SitePopupChain: React.FC<SitePopupChainProps> = ({
         return (
           <ThirdStepPopup
             heading={
-              <StyledHeading>
-                Your team's new site location {"\nis now pending approval"}{" "}
+              <StyledHeading className="site-popup-chain--StyledHeading-2">Your team's new site location{"\nis now pending approval"}{" "}
                 {"\nfrom your coach"}
               </StyledHeading>
             }

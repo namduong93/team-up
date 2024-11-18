@@ -47,9 +47,8 @@ export const CopyButton: FC<CopyButtonProps> = ({ textToCopy }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  return copied ? (
-    <StyledCheckIcon />
-  ) : (
-    <StyledIconButton $copied={copied} onClick={copyToClipboard} />
-  );
+  return copied ? <StyledCheckIcon className="copy-button--StyledCheckIcon-0" /> : <StyledIconButton
+    $copied={copied}
+    onClick={copyToClipboard}
+    className="copy-button--StyledIconButton-0" />;
 };

@@ -132,95 +132,75 @@ export const CompDataConfirmation: FC = () => {
         alignItems: "flex-start",
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
-    >
+      className="comp-data-confirmation--StyledFlexBackground-0">
       <CompCreationProgressBar progressNumber={1} />
-      <StyledContainer>
-        <StyledContentContainer>
-          <StyledTitle>Competition Details Confirmation</StyledTitle>
-
-          <StyledLabel>Competition Name</StyledLabel>
-          <StyledText>
-            <em>{competitionInfo?.name}</em>
-          </StyledText>
-
-          <StyledLabel>Competition Region</StyledLabel>
-          <StyledText>
-            <em>{competitionInfo?.region}</em>
-          </StyledText>
-
-          <StyledLabel>Competition Start</StyledLabel>
-          <StyledDoubleInputContainer>
-            <StyledHalfText>Date</StyledHalfText>
-            <StyledHalfText>Time</StyledHalfText>
+      <StyledContainer className="comp-data-confirmation--StyledContainer-0">
+        <StyledContentContainer className="comp-data-confirmation--StyledContentContainer-0">
+          <StyledTitle className="comp-data-confirmation--StyledTitle-0">Competition Details Confirmation</StyledTitle>
+          <StyledLabel className="comp-data-confirmation--StyledLabel-0">Competition Name</StyledLabel>
+          <StyledText className="comp-data-confirmation--StyledText-0"><em>{competitionInfo?.name}</em></StyledText>
+          <StyledLabel className="comp-data-confirmation--StyledLabel-1">Competition Region</StyledLabel>
+          <StyledText className="comp-data-confirmation--StyledText-1"><em>{competitionInfo?.region}</em></StyledText>
+          <StyledLabel className="comp-data-confirmation--StyledLabel-2">Competition Start</StyledLabel>
+          <StyledDoubleInputContainer className="comp-data-confirmation--StyledDoubleInputContainer-0">
+            <StyledHalfText className="comp-data-confirmation--StyledHalfText-0">Date</StyledHalfText>
+            <StyledHalfText className="comp-data-confirmation--StyledHalfText-1">Time</StyledHalfText>
           </StyledDoubleInputContainer>
-
-          <StyledDoubleInputContainer margin={true}>
-            <StyledHalfText>
-              <em>{competitionInfo.startDate.toDateString()}</em>
-            </StyledHalfText>
-            <StyledHalfText>
-              <em>{competitionInfo.startDate.toLocaleTimeString()}</em>
-            </StyledHalfText>
+          <StyledDoubleInputContainer
+            margin={true}
+            className="comp-data-confirmation--StyledDoubleInputContainer-1">
+            <StyledHalfText className="comp-data-confirmation--StyledHalfText-2"><em>{competitionInfo.startDate.toDateString()}</em></StyledHalfText>
+            <StyledHalfText className="comp-data-confirmation--StyledHalfText-3"><em>{competitionInfo.startDate.toLocaleTimeString()}</em></StyledHalfText>
           </StyledDoubleInputContainer>
-
           {competitionInfo?.earlyRegDeadline && (
             <>
-              <StyledLabel>Early Bird Registration Deadline</StyledLabel>
+            <StyledLabel className="comp-data-confirmation--StyledLabel-3">Early Bird Registration Deadline</StyledLabel>
 
-              <StyledDoubleInputContainer>
-                <StyledHalfText>Date</StyledHalfText>
-                <StyledHalfText>Time</StyledHalfText>
-              </StyledDoubleInputContainer>
+            <StyledDoubleInputContainer className="comp-data-confirmation--StyledDoubleInputContainer-2">
+              <StyledHalfText className="comp-data-confirmation--StyledHalfText-4">Date</StyledHalfText>
+              <StyledHalfText className="comp-data-confirmation--StyledHalfText-5">Time</StyledHalfText>
+            </StyledDoubleInputContainer>
 
-              <StyledDoubleInputContainer margin={true}>
-                <StyledHalfText>
-                  <em>{`${competitionInfo.earlyRegDeadline.toDateString()}`}</em>
-                </StyledHalfText>
-                <StyledHalfText>
-                  <em>{`${competitionInfo.earlyRegDeadline.toLocaleTimeString()}`}</em>
-                </StyledHalfText>
-              </StyledDoubleInputContainer>
+            <StyledDoubleInputContainer
+              margin={true}
+              className="comp-data-confirmation--StyledDoubleInputContainer-3">
+              <StyledHalfText className="comp-data-confirmation--StyledHalfText-6"><em>{`${competitionInfo.earlyRegDeadline.toDateString()}`}</em></StyledHalfText>
+              <StyledHalfText className="comp-data-confirmation--StyledHalfText-7"><em>{`${competitionInfo.earlyRegDeadline.toLocaleTimeString()}`}</em></StyledHalfText>
+            </StyledDoubleInputContainer>
             </>
           )}
-
-          <StyledLabel>General Registration Deadline</StyledLabel>
-
-          <StyledDoubleInputContainer>
-            <StyledHalfText>Date</StyledHalfText>
-            <StyledHalfText>Time</StyledHalfText>
+          <StyledLabel className="comp-data-confirmation--StyledLabel-4">General Registration Deadline</StyledLabel>
+          <StyledDoubleInputContainer className="comp-data-confirmation--StyledDoubleInputContainer-4">
+            <StyledHalfText className="comp-data-confirmation--StyledHalfText-8">Date</StyledHalfText>
+            <StyledHalfText className="comp-data-confirmation--StyledHalfText-9">Time</StyledHalfText>
           </StyledDoubleInputContainer>
-
-          <StyledDoubleInputContainer margin={true}>
-            <StyledHalfText>
-              <em>{`${competitionInfo?.generalRegDeadline.toDateString()}`}</em>
-            </StyledHalfText>
-            <StyledHalfText>
-              <em>{`${competitionInfo?.generalRegDeadline.toLocaleTimeString()}`}</em>
-            </StyledHalfText>
+          <StyledDoubleInputContainer
+            margin={true}
+            className="comp-data-confirmation--StyledDoubleInputContainer-5">
+            <StyledHalfText className="comp-data-confirmation--StyledHalfText-10"><em>{`${competitionInfo?.generalRegDeadline.toDateString()}`}</em></StyledHalfText>
+            <StyledHalfText className="comp-data-confirmation--StyledHalfText-11"><em>{`${competitionInfo?.generalRegDeadline.toLocaleTimeString()}`}</em></StyledHalfText>
           </StyledDoubleInputContainer>
-
-          <StyledLabel>Competition Code</StyledLabel>
-          <StyledText>
-            <em>{competitionInfo?.code}</em>
-          </StyledText>
-
-          <StyledLabel>Site Locations</StyledLabel>
-
-          <StyledLocationList>
+          <StyledLabel className="comp-data-confirmation--StyledLabel-5">Competition Code</StyledLabel>
+          <StyledText className="comp-data-confirmation--StyledText-2"><em>{competitionInfo?.code}</em></StyledText>
+          <StyledLabel className="comp-data-confirmation--StyledLabel-6">Site Locations</StyledLabel>
+          <StyledLocationList className="comp-data-confirmation--StyledLocationList-0">
             {optionDisplayList.map((displayObject, index) => {
               console.log(institutionOptions);
               return (
-                <StyledLocationItem key={index}>
+                <StyledLocationItem key={index} className="comp-data-confirmation--StyledLocationItem-0">
                   <div>{displayObject.label}</div>
                   <div>{displayObject.defaultSite}</div>
                 </StyledLocationItem>
               );
             })}
           </StyledLocationList>
-
-          <StyledButtonContainer>
-            <StyledButton onClick={handleBack}>Back</StyledButton>
-            <StyledButton onClick={handleConfirm}>Confirm</StyledButton>
+          <StyledButtonContainer className="comp-data-confirmation--StyledButtonContainer-0">
+            <StyledButton
+              onClick={handleBack}
+              className="comp-data-confirmation--StyledButton-0">Back</StyledButton>
+            <StyledButton
+              onClick={handleConfirm}
+              className="comp-data-confirmation--StyledButton-1">Confirm</StyledButton>
           </StyledButtonContainer>
         </StyledContentContainer>
       </StyledContainer>

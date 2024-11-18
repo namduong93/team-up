@@ -223,40 +223,40 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
   }, []);
 
   return (
-    <StyledSidebarContainer $cropState={cropState} style={style} {...props}>
-      <StyledSidebarContent>
+    <StyledSidebarContainer className="dashboard-sidebar--StyledSidebarContainer-0" $cropState={cropState} style={style} {...props}>
+      <StyledSidebarContent className="dashboard-sidebar--StyledSidebarContent-0">
         {/* If the screen dimensions are too narrow, remove the text and only display the icons */}
         {!cropState && (
-          <StyledProfileSection>
-            <StyledProfilePic
+          <StyledProfileSection className="dashboard-sidebar--StyledProfileSection-0">
+            <StyledProfilePic className="dashboard-sidebar--StyledProfilePic-0"
               $imageUrl={
                 sidebarInfo.profile ||
                 `${backendURL.HOST}:${backendURL.PORT}/images/default_profile.jpg`
               }
             />
             <div>Hello</div>
-            <StyledName>{sidebarInfo.preferredName}</StyledName>
+            <StyledName className="dashboard-sidebar--StyledName-0">{sidebarInfo.preferredName}</StyledName>
             <div>{sidebarInfo.affiliation}</div>
           </StyledProfileSection>
         )}
 
         {/* Clicking on each section should redirect the user to the relevant page */}
-        <StyledNavLinks>
-          <StyledNavButton
+        <StyledNavLinks className="dashboard-sidebar--StyledNavLinks-0">
+          <StyledNavButton className="dashboard-sidebar--StyledNavButton-0"
             $active={location.pathname === "/dashboard"}
             onClick={() => handleNavigation("/dashboard")}
           >
             <FaHome /> {!cropState && <span>Dashboard</span>}
           </StyledNavButton>
           {isSysAdmin && (
-            <StyledNavButton
+            <StyledNavButton className="dashboard-sidebar--StyledNavButton-1"
               $active={location.pathname === "/staffAccounts"}
               onClick={() => handleNavigation("/staffAccounts")}
             >
               <FaIdBadge /> {!cropState && <span>Staff Accounts</span>}
             </StyledNavButton>
           )}
-          <StyledNavButton
+          <StyledNavButton className="dashboard-sidebar--StyledNavButton-2"
             $active={location.pathname === "/account"}
             onClick={() => handleNavigation("/account")}
           >
@@ -264,14 +264,15 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
           </StyledNavButton>
           <StyledNavButton
             $active={location.pathname === "/settings"}
-            onClick={() => handleNavigation("/settings")}
-          >
+            onClick={() => handleNavigation('/settings')}
+            className="dashboard-sidebar--StyledNavButton-3">
             <FaCog /> {!cropState && <span>Settings</span>}
           </StyledNavButton>
         </StyledNavLinks>
       </StyledSidebarContent>
-
-      <StyledLogoutButton onClick={handleLogout}>
+      <StyledLogoutButton
+        onClick={handleLogout}
+        className="dashboard-sidebar--StyledLogoutButton-0">
         <FaSignOutAlt /> <span>Logout</span>
       </StyledLogoutButton>
     </StyledSidebarContainer>

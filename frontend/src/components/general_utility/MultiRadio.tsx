@@ -114,33 +114,34 @@ const MultiRadio: React.FC<MultiSelectCheckboxGroupProps> = ({
   };
 
   return (
-    <StyledContainer>
-      {label && <StyledLabel>{label}</StyledLabel>}
-      {descriptor && <StyledDescriptor>{descriptor}</StyledDescriptor>}
+    <StyledContainer className="multi-radio--StyledContainer-0">
+      {label && <StyledLabel className="multi-radio--StyledLabel-0">{label}</StyledLabel>}
+      {descriptor && <StyledDescriptor className="multi-radio--StyledDescriptor-0">{descriptor}</StyledDescriptor>}
       {options.map((option) => (
-        <StyledCheckboxContainer key={option.value}>
+        <StyledCheckboxContainer key={option.value} className="multi-radio--StyledCheckboxContainer-0">
           <StyledCheckboxInput
             type="checkbox"
             id={option.value}
             value={option.value}
             checked={selectedValues.includes(option.value)}
             onChange={() => handleCheckboxChange(option.value)}
+            className="multi-radio--StyledCheckboxInput-0"
           />
-          <StyledCheckboxLabel htmlFor={option.value}>
+          <StyledCheckboxLabel className="multi-radio--StyledCheckboxLabel-0" htmlFor={option.value}>
             {option.label}
           </StyledCheckboxLabel>
         </StyledCheckboxContainer>
       ))}
       {showOther && (
-        <StyledCheckboxContainer>
+        <StyledCheckboxContainer className="multi-radio--StyledCheckboxContainer-1">
           <StyledCheckboxInput
             type="checkbox"
             id="other"
             value="other"
             checked={selectedValues.includes("other")}
             onChange={handleOtherCheckboxChange}
-          />
-          <StyledCheckboxLabel htmlFor="other">Other:</StyledCheckboxLabel>
+            className="multi-radio--StyledCheckboxInput-1" />
+          <StyledCheckboxLabel htmlFor="other" className="multi-radio--StyledCheckboxLabel-1">Other:</StyledCheckboxLabel>
           <OtherInput
             type="text"
             value={otherValue}

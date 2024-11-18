@@ -72,16 +72,17 @@ const RelativeSelect: React.FC<RelativeSelectProps> = ({
   required,
   ...props
 }) => (
-  <StyledRelativeSelectGrid>
+  <StyledRelativeSelectGrid className="drop-down-light--StyledRelativeSelectGrid-0">
     <StyledRelativeSelectElement
       value={value}
       onChange={onChange}
       required={required}
       {...props}
+      className="drop-down-light--StyledRelativeSelectElement-0"
     >
       {children}
     </StyledRelativeSelectElement>
-    <StyledSelectDownArrow />
+    <StyledSelectDownArrow className="drop-down-light--StyledSelectDownArrow-0" />
   </StyledRelativeSelectGrid>
 );
 
@@ -113,15 +114,18 @@ const DropdownInputLight: React.FC<DropdownInputLightProps> = ({
   descriptor,
 }) => {
   return (
-    <StyledContainer $width={width}>
-      <StyledLabel>
+    <StyledContainer $width={width} className="drop-down-light--StyledContainer-0">
+      <StyledLabel className="drop-down-light--StyledLabel-0">
         {label}
-        {required && <StyledAsterisk>*</StyledAsterisk>}
+        {required && <StyledAsterisk className="drop-down-light--StyledAsterisk-0">*</StyledAsterisk>}
       </StyledLabel>
-      {descriptor && <StyledDescriptor>{descriptor}</StyledDescriptor>}
+      {descriptor && <StyledDescriptor className="drop-down-light--StyledDescriptor-0">{descriptor}</StyledDescriptor>}
       <RelativeSelect value={value} onChange={onChange} required={required}>
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+            className="drop-down-light--option-0">
             {option.label}
           </option>
         ))}

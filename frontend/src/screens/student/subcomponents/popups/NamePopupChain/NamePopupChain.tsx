@@ -52,7 +52,7 @@ export const NamePopupChain: React.FC<NamePopupChainProps> = ({
       case 1:
         return (
           <NamePopup1
-            heading={<StyledHeading>Change Team {"\n Name"}</StyledHeading>}
+            heading={<StyledHeading className="name-popup-chain--StyledHeading-0">Change Team{"\n Name"}</StyledHeading>}
             onClose={handleCloseWithReset}
             onNext={handleNext}
             text="Enter new name"
@@ -64,8 +64,7 @@ export const NamePopupChain: React.FC<NamePopupChainProps> = ({
         return (
           <SecondStepPopup
             heading={
-              <StyledHeading>
-                Are you sure you would {"\nlike to change your Team's"}{" "}
+              <StyledHeading className="name-popup-chain--StyledHeading-1">Are you sure you would{"\nlike to change your Team's"}{" "}
                 {"\nname?"}
               </StyledHeading>
             }
@@ -77,8 +76,7 @@ export const NamePopupChain: React.FC<NamePopupChainProps> = ({
         return (
           <ThirdStepPopup
             heading={
-              <StyledHeading>
-                Your team's new name {"\nis now pending approval"}{" "}
+              <StyledHeading className="name-popup-chain--StyledHeading-2">Your team's new name{"\nis now pending approval"}{" "}
                 {"\nfrom your coach"}
               </StyledHeading>
             }
