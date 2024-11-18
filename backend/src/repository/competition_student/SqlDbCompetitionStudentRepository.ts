@@ -37,9 +37,9 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
       FROM competition_registration_toggles AS crt
       JOIN competitions AS c ON c.id = crt.competition_id
       JOIN competition_users AS cu ON cu.competition_id = crt.competition_id
-      WHERE cu.user_id = ${userId} AND c.code = '{${code}}'
+      WHERE cu.user_id = ${userId} AND c.code = $1
       `
-    );
+    , [code]);
 
     return dbResult.rows[0];
   };
@@ -57,10 +57,10 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
       `SELECT "compName", "teamName", "teamSite", "teamSeat",
         "teamLevel", "startDate", students, coach, src_competition_id
       FROM competition_team_details AS ctd
-      WHERE ctd.src_user_id = ${userId} AND ctd.src_competition_id = ${compId}
+      WHERE ctd.src_user_id = $1 AND ctd.src_competition_id = $2
       LIMIT 1;
       `
-    );
+    , [userId, compId]);
 
     const teamDetails: ParticipantTeamDetails = dbResult.rows[0];
     const students = teamDetails.students;
@@ -166,10 +166,13 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     else {
       const leaveTeamQuery = `
       UPDATE competition_teams
-      SET participants = $1, team_size = ${currentTeamResult.rows[0].participants.length - 1}, team_status = 'Pending'::competition_team_status
+      SET participants = $1, team_size = $3, team_status = 'Pending'::competition_team_status
       WHERE id = $2
       `;
-      const leaveTeamResult = await this.pool.query(leaveTeamQuery, [currentTeamResult.rows[0].participants.filter((id) => id !== userId), currentTeamResult.rows[0].id]);
+      const leaveTeamResult = await this.pool.query(leaveTeamQuery, [
+        currentTeamResult.rows[0].participants.filter((id) => id !== userId),
+        currentTeamResult.rows[0].id,
+        currentTeamResult.rows[0].participants.length - 1]);
       if (leaveTeamResult.rowCount === 0) {
         throw new DbError(DbError.Query, 'Could not leave team.');
       }
@@ -287,22 +290,38 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
     const dbResult = await this.pool.query(
       `UPDATE competition_users
       SET
-        bio = '${studentInfo.bio}',
-        icpc_eligible = ${studentInfo.ICPCEligible},
-        boersen_eligible = ${studentInfo.boersenEligible},
-        competition_level = '${studentInfo.level}',
-        degree_year = ${studentInfo.degreeYear},
-        degree = '${studentInfo.degree}',
-        is_remote = ${studentInfo.isRemote},
-        is_official = ${studentInfo.isOfficial},
-        preferred_contact = '${studentInfo.preferredContact}',
-        national_prizes = '${studentInfo.nationalPrizes}',
-        international_prizes = '${studentInfo.internationalPrizes}',
-        codeforces_rating = ${studentInfo.codeforcesRating},
-        past_regional = ${studentInfo.pastRegional}
-      WHERE user_id = ${studentInfo.userId} AND competition_id = ${compId};
+        bio = $1,
+        icpc_eligible = $2,
+        boersen_eligible = $3,
+        competition_level = $4,
+        degree_year = $5,
+        degree = $6,
+        is_remote = $7,
+        is_official = $8,
+        preferred_contact = $9,
+        national_prizes = $10,
+        international_prizes = $11,
+        codeforces_rating = $12,
+        past_regional = $13
+      WHERE user_id = $14 AND competition_id = $15;
       `
-    );
+    , [
+      studentInfo.bio,
+      studentInfo.ICPCEligible,
+      studentInfo.boersenEligible,
+      studentInfo.level,
+      studentInfo.degreeYear,
+      studentInfo.degree,
+      studentInfo.isRemote,
+      studentInfo.isOfficial,
+      studentInfo.preferredContact,
+      studentInfo.nationalPrizes,
+      studentInfo.internationalPrizes,
+      studentInfo.codeforcesRating,
+      studentInfo.pastRegional,
+      studentInfo.userId,
+      compId
+    ]);
 
     if (dbResult.rowCount === 0) {
       throw new DbError(DbError.Query, 'Student does not exist or is not a part of this competition.');
@@ -479,11 +498,15 @@ export class SqlDbCompetitionStudentRepository implements CompetitionStudentRepo
       // Leave the team
       const leaveTeamQuery = `
         UPDATE competition_teams
-        SET participants = $1, team_size = ${teamResult.rows[0].participants.length - 1}, team_status = 'Pending'::competition_team_status
+        SET participants = $1, team_size = $3, team_status = 'Pending'::competition_team_status
         WHERE id = $2
         RETURNING id
       `;
-      const leaveTeamResult = await this.pool.query(leaveTeamQuery, [teamResult.rows[0].participants.filter((id) => id !== userId), teamResult.rows[0].id]);
+      const leaveTeamResult = await this.pool.query(leaveTeamQuery, [
+        teamResult.rows[0].participants.filter((id) => id !== userId),
+        teamResult.rows[0].id,
+        teamResult.rows[0].participants.length - 1
+      ]);
       if (leaveTeamResult.rowCount === 0) {
         throw new DbError(DbError.Query, 'Could not leave team.');
       }
