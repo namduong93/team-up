@@ -19,7 +19,7 @@ import { SqlDbUserRepository } from '../../../repository/user/SqlDbUserRepositor
 import { UserIdObject } from '../../../repository/UserRepository';
 import pool, { dropTestDatabase } from '../Utils/dbUtils';
 
-describe.skip('Team Update Function', () => {
+describe('Team Update Function', () => {
   let user_db;
   let comp_db;
   let uni_db;
@@ -231,7 +231,7 @@ describe.skip('Team Update Function', () => {
 
   test('Successful case: Husk', async () => {
     const teamInformation = await comp_staff_db.competitionTeams(id, comp.competitionId);
-    // console.log(teamInformation);
+    // console.log(teamInformation[0].teamId);
     expect(teamInformation).toStrictEqual([
       {
         siteId: 1,
@@ -319,7 +319,7 @@ describe.skip('Team Update Function', () => {
 
     const newTeamInfo: TeamDetails = {
       siteId: 2,
-      teamId: teamInformation.siteId,
+      teamId: teamInformation[0].teamId,
       universityId: 1,
       status: TeamStatus.Pending,
       teamNameApproved: true,
@@ -402,7 +402,88 @@ describe.skip('Team Update Function', () => {
 
     await comp_staff_db.competitionTeamsUpdate([newTeamInfo], comp.competitionId);
 
-    console.log(await comp_staff_db.competitionTeams(id, comp.competitionId));
-  });
-});
+    expect(await comp_staff_db.competitionTeams(id, comp.competitionId)).toStrictEqual([{
+      siteId: 2,
+      teamId: teamInformation[0].teamId,
+      universityId: 1,
+      status: TeamStatus.Pending,
+      teamNameApproved: true,
+      compName: 'TestComp',
+      teamName: 'Cooler Name',
+      teamSite: 'Computer Science Building',
+      teamSeat: 'null1',
+      teamLevel: 'Level B',
+      startDate: new Date(startDate),
+      students: [
+        {
+          userId: newStudent.userId,
+          name: 'Maximillian Maverick',
+          preferredName: 'X',
+          sex: 'Male',
+          email: 'newcontender13@gmail.com',
+          bio: 'is a lie',
+          preferredContact: 'Pigeon Carrier',
+          ICPCEligible: false,
+          level: 'Level A',
+          boersenEligible: false,
+          isRemote: false,
+          universityCourses: ["4511", "9911", "911"],
+          nationalPrizes: 'two',
+          internationalPrizes: 'three',
+          codeforcesRating: 11,
+          pastRegional: false
+        },
+        {
+          "ICPCEligible": true,
+          "bio": "I good, promise",
+          "boersenEligible": true,
+          "codeforcesRating": 7,
+          "email": "newteammate113@gmail.com",
+          "internationalPrizes": "none",
+          "isRemote": true,
+          "level": "No Preference",
+          "name": "Maximillian Maverick",
+          "nationalPrizes": "none",
+          "pastRegional": true,
+          "preferredContact": "Pigeon Carrier",
+          "preferredName": "X",
+          "sex": "Male",
+          "universityCourses": [
+            "4511",
+            "9911",
+            "911",
+          ],
+          "userId": teamMate1.userId,
+        },
+        {
+          "ICPCEligible": true,
+          "bio": "I good, promise",
+          "boersenEligible": true,
+          "codeforcesRating": 7,
+          "email": "newteammate213@gmail.com",
+          "internationalPrizes": "none",
+          "isRemote": true,
+          "level": "No Preference",
+          "name": "Maximillian Maverick",
+          "nationalPrizes": "none",
+          "pastRegional": true,
+          "preferredContact": "Pigeon Carrier",
+          "preferredName": "X",
+          "sex": "Male",
+          "universityCourses": [
+            "4511",
+            "9911",
+            "911",
+          ],
+          "userId": teamMate2.userId,
+        }
+      ],
+      coach: {
+        name: 'Maximillian Maverick',
+        email: 'newadmin13@odmin.com',
+        bio: 'good bio, trust'
+      }
+    }]);
+  })
+})
 
