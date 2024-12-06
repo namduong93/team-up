@@ -1,11 +1,5 @@
 
 export const frontendURL = {
-  HOST: 'http://localhost',
-  PORT: '5173'
+  HOST: process.env.FRONTEND_URL || '',
+  PORT: process.env.FRONTEND_PORT || ''
 }
-
-// HTTPS-Migrate, Uncomment when moving to https
-// export const frontendURL = {
-//   HOST: 'http://localhost',
-//   PORT: '5173'
-// }

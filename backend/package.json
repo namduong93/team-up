@@ -10,7 +10,7 @@
     "prestart": "npm run build",
     "start": "node dist/src/server.js",
     "predev": "npm run build",
-    "dev": "concurrently \"npx tsc -w\" \"nodemon dist/src/server.js\"",
+    "dev": "concurrently \"npx tsc -w\" \"dotenv -e .env.dev nodemon dist/src/server.js\"",
     "lint": "eslint '**/*.ts' --fix"
   },
   "keywords": [],
@@ -34,6 +34,7 @@
     "axios": "^1.7.7",
     "concurrently": "^9.0.1",
     "cross-env": "^7.0.3",
+    "dotenv-cli": "^7.4.4",
     "eslint": "^9.15.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-unused-imports": "^4.1.4",

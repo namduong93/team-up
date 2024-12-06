@@ -2,22 +2,41 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
+
+      - BACKEND_HOST=${BACKEND_HOST}
+      - BACKEND_PORT=${BACKEND_PORT}
+      - BACKEND_URL=${BACKEND_URL}
+
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - FRONTEND_URL=${FRONTEND_URL}
+      
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB_NAME=${POSTGRES_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - docker-network
     depends_on:
       - db
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        - VITE_BACKEND_HOST=${BACKEND_HOST}
+        - VITE_BACKEND_PORT=${BACKEND_PORT}
+        - VITE_BACKEND_URL=${BACKEND_URL}
+  
+        - VITE_FRONTEND_HOST=${FRONTEND_HOST}
+        - VITE_FRONTEND_PORT=${FRONTEND_PORT}
+        - VITE_FRONTEND_URL=${FRONTEND_URL}
     ports:
-      - "5173:5173"
-    environment:
-      - REACT_APP_BACKEND_URL=http://localhost:8000
-      # HTTPS-Migrate, Uncomment when moving to https
-      # - REACT_APP_BACKEND_URL=https://localhost:8000
+      - "${FRONTEND_PORT}:5173"
     depends_on:
       - backend
     networks:
@@ -27,12 +46,14 @@ services:
     build: ./database
     container_name: capstone_db_container
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=ab
-      - POSTGRES_DB=capstone_db
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB_NAME=${POSTGRES_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - docker-network
     volumes:
